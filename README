@@ -11,7 +11,7 @@ First of all, thanks a lot to download this software. We hope that this software
 
 Description:
 ============
-migasfree is a very simple, but effective, system management systems. Actually, it is used in 'Ayuntamiento de Zaragoza' (Spain) by initial authors in the project 'migration to open source software for desktops'. They use AZLinux distribution <http://zaragozaciudad.net/azlinux/>, which is based on SLED <http://www.novell.com/linux/>.
+migasfree is a very simple, but effective, system management systems. Actually, it is used in 'Ayuntamiento de Zaragoza' (Spain) by initial authors in the project 'migration to open source software for desktops'. They use AZLinux distribution http://zaragozaciudad.net/azlinux , which is based on SLED http://www.novell.com/linux
 
 You can learn over systems management systems at:
 http://en.wikipedia.org/wiki/Systems_management
@@ -79,15 +79,14 @@ For example: You want change the Firefox homepage in all PCs in range of IPs.
 
 Documentation:
 ==============
-All documentation is in <http://migasfree.org>
+All documentation is in http://migasfree.org
 
 
 Testing:
 ========
 You can test migasfree downloading a virtual machine file for VirtualBox with the server of migasfree installed in it.  
-you can go to download area of <http://migasfree.org>
+you can go to download area of http://migasfree.org
 
 
 That's all folks
-
-=======
+================
