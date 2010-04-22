@@ -33,7 +33,7 @@ Requirements
     * Server:
         o Apache with Mod_python
 	o Django 
-        o Sqlite3 (you can use others databases)
+        o Sqlite3 (you can use others databases Django aproved)
 
     * Clients:
         o
