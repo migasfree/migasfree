@@ -32,7 +32,7 @@ Requirements
 ============
     * Server:
         o Apache with Mod_python
-	o Django 
+        o Django 
         o Sqlite3 (you can use others databases Django aproved)
 
     * Clients:
@@ -68,7 +68,7 @@ Use:
 ====
 For example: You want change the Firefox homepage in all PCs in range of IPs.
 
-    1.- You must create a package (for example myorg-firefox-1-0.rpm or ) that realize this homepage change. You must investigate what file must modify and do that your package do it for you. This is hard!
+    1.- You must create a package (for example myorg-firefox-1-0.rpm or myorg-firefox-1-0.deb ) that realize this homepage change. You must investigate what file must modify and do that your package do it for you. This is hard!
 
     2.- You must upload your package to server. This is simple!
 
