@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Guía de documentación migasfree</title>
+
+    <author>
+      <firstname>Alberto</firstname>
+
+      <surname>Gacías</surname>
+
+      <affiliation>
+        <orgname>migasfree.org</orgname>
+      </affiliation>
+    </author>
+
+    <pubdate>29-4-2010</pubdate>
+  </articleinfo>
+
+  <section>
+    <title>Introducción</title>
+
+    <para>En este artículo se describe que debes tener en cuenta para generar
+    documentación en <orgname>migasfree</orgname>.</para>
+  </section>
+
+  <section>
+    <title>Formato fuente de los documentos</title>
+
+    <para><application>Según el proyecto GNOME, para la creación de artículos,
+    libros, tutoriales, etc. se hace necesario utilizar un medio de
+    documentación estándar de manera que tanto la modificación de los
+    documentos fuentes como la generación de estos en diferentes formatos sea
+    sencilla.</application></para>
+
+    <para><application>DocBook es un lenguaje para escribir documentos
+    estructurados usando XML. Es muy utilizado en la comunidad de software
+    libre dónde destaca</application> Linux Documentation Project, las
+    referencias de las APIs de GNOME y GTK+, así como la documentación del
+    núcleo y de las Distribuciones Linux más conocidas.</para>
+
+    <para>Puedes escribir y modificar documentos DocBook con cualquier editor
+    de texto, pero te resultará mucho más sencillo si usas un editor XML, como
+    por ejemplo <application>XMLmind Editor ("XXE").</application></para>
+  </section>
+
+  <section>
+    <title>Instalación y configuración de XMLmind Editor (XXE)</title>
+
+    <orderedlist>
+      <listitem>
+        <para>Instala <application><application>XMLmind Editor
+        (XXE)</application></application>.</para>
+
+        <para>Descarga <ulink
+        url="http://www.xmlmind.net/xmleditor/_download/xxe-perso-4_5_2.tar.gz">http://www.xmlmind.net/xmleditor/_download/xxe-perso-4_5_2.tar.gz</ulink>
+        y descomprimelo.</para>
+
+        <para>Ejecuta <filename>bin/xxe</filename></para>
+
+        <para>A continuación accede al menú <guimenu>Options-Install
+        Add-ons</guimenu> y selecciona:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>"<option>Spanish (español) translations</option>" para que
+            el Interfaz Gráfico de Usuario aparezca en español.</para>
+          </listitem>
+
+          <listitem>
+            <para>"<option>Spanish (español) Dictionary</option>" para hacer
+            las correcciones ortográficas.</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Reinicia XXE.</para>
+
+        <para>A continuación ve a <guimenu>Opciones - Preferencias</guimenu> y
+        en "Guardar" elige codificación UTF-8.</para>
+      </listitem>
+
+      <listitem>
+        <para>Instala el paquete <package>docbook-utils</package>:</para>
+
+        <programlisting>zypper install docbook-utils</programlisting>
+      </listitem>
+    </orderedlist>
+  </section>
+
+  <section>
+    <title>Primeros pasos con XXE</title>
+
+    <para>Desde XXE hacemos <guimenu>Archivo-Nuevo</guimenu>. Elegimos
+    Docbook-Artículo.</para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../media/images/guia_documentacion_01.png"
+                   scale="50" />
+      </imageobject>
+    </mediaobject>
+
+    <para>Inserta el título del artículo, tu nombre y apellidos, el nombre de
+    la organización (migasfree.org) y la fecha actual. Fíjate en la <emphasis
+    role="bold">barra de nodos</emphasis> para saber dónde está cada uno de
+    ellos.</para>
+
+    <para>A continuación escribiremos algo de contenido.</para>
+
+    <para>Sitúa el cursor a la derecha del "1" y escribe el título de la
+    sección.</para>
+
+    <para>Tabula para empezar a escribir un párrafo. Pulsa Enter para añadir
+    otro parrafo.</para>
+
+    <para>Una de las ventajas de DocBook es que se pueden establecer metadatos
+    (datos sobre los datos). Simplemente selecciona la palabra o palabras que
+    quieras definir, pulsa <keycap>Ctrl+T</keycap> (Convert) y a continuación
+    elige del panel de la derecha (Editar), el metadato adecuado. Cada tipo de
+    metadato aparecerá con un formato diferente.</para>
+
+    <table>
+      <title>Metadatos</title>
+
+      <tgroup cols="3">
+        <tbody>
+          <row>
+            <entry></entry>
+
+            <entry><emphasis role="bold">Convert
+            (<keycode>Ctrl+T</keycode>)</emphasis></entry>
+
+            <entry><emphasis role="bold">Ejemplo</emphasis></entry>
+          </row>
+
+          <row>
+            <entry>nombre de fichero</entry>
+
+            <entry>filename</entry>
+
+            <entry><filename>/etc/migas.conf</filename></entry>
+          </row>
+
+          <row>
+            <entry>comando</entry>
+
+            <entry>command</entry>
+
+            <entry><command>ssh</command></entry>
+          </row>
+
+          <row>
+            <entry>url</entry>
+
+            <entry>ulink</entry>
+
+            <entry><ulink
+            url="http:/www.migasfree.org">http:/www.migasfree.org</ulink> (en
+            atributos se especifica la url)</entry>
+          </row>
+
+          <row>
+            <entry>paquete</entry>
+
+            <entry>package</entry>
+
+            <entry><package>apache2</package></entry>
+          </row>
+
+          <row>
+            <entry>listado de programa</entry>
+
+            <entry>programlisting</entry>
+
+            <entry><programlisting>cd /home
+dir
+
+</programlisting></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </table>
+
+    <para>Ahora añade una <emphasis role="bold">sección</emphasis>. Para ello
+    sitúate en cualquier parte de un párrafo y selecciona en la barra de nodos
+    "article-seccion" pulsando en "<emphasis role="bold">section</emphasis>".
+    A continuacion haz <guimenu>Editar-Insertar Despues </guimenu>(<keycode>ó
+    Ctrl+J</keycode>). El cursor se habrá despalzado al <emphasis
+    role="bold">panel Editar</emphasis>. Escribe section y pulsa Enter.</para>
+
+    <para>Añade ahora una <emphasis role="bold">imágen</emphasis>. Sitúa el
+    cursor en el lugar del documento en donde quieres poner la imagen. Pulsa
+    <keycode>Ctrl+J</keycode> y elige <emphasis
+    role="bold">mediaobject</emphasis>. Haz doble click en el icono que
+    aparezca y elige la imagen. Si la imagen es grande, en el<emphasis
+    role="bold"> panel Atributos</emphasis> (a la derecha debajo del panel
+    Editar) especifica la escala de la imagen, por ejemplo scale 50.</para>
+
+    <note>
+      <para>Puedes leer <citation>Getting Started with XMLming XML
+      editor</citation> en la ayuda de XXE para familiarizarte con la
+      aplicación.</para>
+    </note>
+  </section>
+
+  <section>
+    <title>Recomendaciones para la escritura.</title>
+
+    <para>Una buena documentación técnica se caracteriza porque es:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para><emphasis role="bold">Comprensiva</emphasis>. Describe todas las
+        funcionalidades del producto. No omitas funcionalidades que consideras
+        irrelevantes para el usuario.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Conforme</emphasis>. Describe la realidad,
+        no lo que deseas transmitir. Presenta la información en el orden en
+        que los usuarios experimentan la materia.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Clara</emphasis>. Que tu texto no genere
+        dudas en el lector con rodeos o redundancias. Víctor Hurtado dice
+        “Escribir con claridad significa ser entendido a la primera
+        lectura”.</para>
+      </listitem>
+
+      <listitem>
+        <para><emphasis role="bold">Concisa</emphasis>. Revisa tu trabajo con
+        frecuencia a medida que escribes tu documento.</para>
+
+        <para>Existen unas reglas de oro para que la documentación sea
+        sencilla y fácil de leer.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis>Regla de oro 1</emphasis>. Limita cada frase a
+            menos de 25 palabras:</para>
+
+            <example>
+              <title>Sé conciso.</title>
+
+              <para><phrase><inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="../media/images/weather-storm.png"
+                               scale="50" />
+                  </imageobject>
+                </inlinemediaobject>"Bajo condiciones normales, el kernel no
+              siempre escribe los datos a disco inmediatamente, si no que los
+              guarda en un buffer de memoria para periódicamente escribirlos a
+              disco y así agilizar las operaciones</phrase>."</para>
+
+              <para><inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="../media/images/weather-clear.png"
+                               scale="50" />
+                  </imageobject>
+                </inlinemediaobject>"Generalmente, el kernel almacena el dato
+              en memoria antes de escribirlo periódicamente a disco."</para>
+
+              <para>Pregúntate que palabras puedes eliminar y
+              elimínalas.</para>
+
+              <para><inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="../media/images/weather-storm.png"
+                               scale="50" />
+                  </imageobject>
+                </inlinemediaobject>"Usa el comando <command>ssh</command>
+              para..."</para>
+
+              <para><inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="../media/images/weather-clear.png"
+                               scale="50" />
+                  </imageobject>
+                </inlinemediaobject>"Usa <command>ssh</command> para.."</para>
+            </example>
+          </listitem>
+        </itemizedlist>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis>Regla de oro 2</emphasis>.</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>Cada párrafo es un tema.</para>
+              </listitem>
+            </itemizedlist>
+
+            <itemizedlist>
+              <listitem>
+                <para>Cada frase una idea.</para>
+              </listitem>
+            </itemizedlist>
+
+            <para>Consejo: Planifica el orden de los párrafos antes de empezar
+            a escribir. Decide de qué tema quieres hablar en cada
+            párrafo</para>
+          </listitem>
+        </itemizedlist>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis>Regla de oro 3</emphasis>. Usa ejemplos explícitos
+            para demostrar cómo funciona una aplicación. Proporciona
+            instrucciones en vez de descripciones.</para>
+
+            <example>
+              <title>Proporciona instrucciones</title>
+
+              <para><inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="../media/images/weather-storm.png"
+                               scale="50" />
+                  </imageobject>
+                </inlinemediaobject>"Hay una caja de texto que se puede usar
+              para buscar la definición de una palabra."</para>
+
+              <para><inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="../media/images/weather-clear.png"
+                               scale="50" />
+                  </imageobject>
+                </inlinemediaobject>"Para buscar la definición de una palabra,
+              escríbala en la caja de texto y pulse el botón 'Buscar'."</para>
+            </example>
+          </listitem>
+        </itemizedlist>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis>Regla de oro 4</emphasis>. Escribe de un modo
+            neutral.</para>
+
+            <example>
+              <title>Sé neutral</title>
+
+              <para><inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="../media/images/weather-storm.png"
+                               scale="50" />
+                  </imageobject>
+                </inlinemediaobject>"La aplicación es un pequeño capturador de
+              pantallas"</para>
+
+              <para><inlinemediaobject>
+                  <imageobject>
+                    <imagedata fileref="../media/images/weather-clear.png"
+                               scale="50" />
+                  </imageobject>
+                </inlinemediaobject>"Puede usar la aplicación para hacer una
+              captura de pantalla."</para>
+            </example>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Generando la documentación a partir del XML</title>
+
+    <para>Antes de grabar debemos verificar la validez del documento XML con
+    <guimenu>Herramientas-Verificar validez</guimenu>, y verificar la
+    ortografía mediante <guimenu>Herramientas-Verificar
+    ortografía</guimenu>.</para>
+
+    <para>Una vez grabado el fichero fuente DocBook con
+    <guimenu>Archivo-Guardar</guimenu>, podemos utilizar
+    <command>db2pdf</command> desde un terminal para generar el fichero pdf, y
+    <command>db2html</command> para generar el documento en html.</para>
+
+    <programlisting>db2pdf miarticulo.xml
+
+db2html miarticulo.xml</programlisting>
+  </section>
+
+  <section>
+    <title>Ubicación de los archivos</title>
+
+    <itemizedlist>
+      <listitem>
+        <para>Los archivos fuentes XML se ubicarán en la carpeta doc del
+        proyecto ubicado en git@github.com:agacias/migasfree.git</para>
+
+        <para>Las imágenes se ubicarán en la carpeta doc/media/images</para>
+      </listitem>
+
+      <listitem>
+        <para>Los archivos html y pdf generados serán almacenados en
+        migasfree.org</para>
+      </listitem>
+    </itemizedlist>
+  </section>
+
+  <section>
+    <title>Enlaces</title>
+
+    <para><ulink
+    url="http://migasfree.org">http://migasfree.org</ulink></para>
+
+    <para><ulink
+    url="http://github.com/agacias/migasfree">http://github.com/agacias/migasfree</ulink></para>
+
+    <para><ulink
+    url="http://es.wikipedia.org/wiki/DocBook">http://es.wikipedia.org/wiki/DocBook</ulink></para>
+
+    <para><ulink
+    url="http://library.gnome.org/devel/gdp-style-guide/stable/fundamentals-1.html.en">http://library.gnome.org/devel/gdp-style-guide/stable/fundamentals-1.html.en</ulink></para>
+  </section>
+</article>
