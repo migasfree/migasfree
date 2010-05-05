@@ -96,8 +96,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../media/images/guia_documentacion_01.png"
-                   scale="50" />
+        <imagedata fileref="media/images/guia_documentacion_01.png" scale="50" />
       </imageobject>
     </mediaobject>
 
