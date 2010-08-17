@@ -3,7 +3,8 @@ _DIR_REPO=/var/www/htdocs/repo
 
 
 cd $_DIR_MIGASFREE
-
+ln -s $_DIR_MIGASFREE $_DIR_MIGASFREE/utils/db/migasfree 
+ 
 #remove DataBase
 rm migasfree.db
 #create DataBase

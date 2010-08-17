@@ -46,7 +46,6 @@ from django import forms
 from django.forms import ModelForm
 from django.db import models
 
-from clases import resumenHardware
 import pickle
 
 #html=""
