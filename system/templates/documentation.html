@@ -1,0 +1,102 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+{% load othertags %}
+
+
+
+{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
+
+{% block extrahead %}<link rel="shortcut icon" href="/repo/icons/favicon.png">{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+
+{% block extrastyle %}
+<style type="text/css">
+    #query
+    {font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;width:100%;border-collapse:collapse;}
+    #query td
+    {font-size:1em;border:0 px solid #eee;padding:0px 0px 0px 0px;}
+    #query th
+    {font-size:1.2em;text-align:left;padding-top:3px;padding-bottom:3px;background-color:#417690;color:#ffffff;}
+    #query tr.alt
+    {background-color:#eff3ff;}
+    #query tr
+    {background-color:#ffffff;}
+    #query pre
+    {font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;width:100%;border-collapse:collapse;font-size:1.2em;margin:0px 0px 0px 0px;color:#417690;padding-top: 0px;padding-bottom: 0px}
+    #query p
+    {margin:0px 0px 0px 0px;}
+
+</style>
+
+
+{% endblock %}
+
+
+
+{% block content %}
+<div>{{ description }}</div>
+<hr>
+
+    {% for column in filters %}
+        {{ column }} 
+    {% endfor %}
+
+
+<table id="main" border=0> <!-- main table -->  
+<tr>  <!-- row 1 -->
+
+
+
+<td> <!-- col 1 -->
+
+  <h2>{% trans 'Manuals' %}</h2>
+  <table id="status" border=0 width=500>
+        <tr class='alt'>
+                <td width=32><img src='/repo/icons/documentation.png'></td>
+                <td><a href='/repo/documentation/{{ LANGUAGE_CODE }}/quick_start.pdf'><h3>{% trans 'Quick Start' %}</h3></td>
+        </tr>
+        <tr class='alt'>
+                <td width=32><img src='/repo/icons/documentation.png'></td>
+                <td><a href='/repo/documentation/{{ LANGUAGE_CODE }}/user_manual.pdf'><h3>{% trans 'User Manual' %}</h3></td>
+        </tr>
+  </table> 
+
+  <h2>{% trans 'Development' %}</h2>
+  <table id="status" border=0 width=500>
+        <tr class='alt'>
+                <td width=32><img src='/repo/icons/documentation-model.png'></td>
+                <td><a href='/migasfree/doc/models/'><h3>{% trans 'model documentation' %}</h3></td>
+        </tr>
+  </table> 
+
+  <h2>{% trans 'Links' %}</h2>
+  <table id="status" border=0 width=500>
+        <tr class='alt'>
+                <td width=32><img src='/repo/icons/web-browser.png'></td>
+                <td><a href='http://www.migasfree.org'><h3>{% trans 'migasfree.org' %}</h3></td>
+        </tr>
+  </table> 
+</td> <!-- end col 1 -->
+
+
+</tr> <!-- end row 1 -->
+</table>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
