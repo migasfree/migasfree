@@ -893,8 +893,8 @@ def byVersion(oVersion,oPackage1,oPackage2,oPackage3):
     oRepository.save()
 
     print "Creating REPOSITORIES FILES in "+oVersion.name+"..."
-    os.system("wget -O /tmp/response http://127.0.0.1:80/migasfree/createrepositoriesofpackage/?VER="+oVersion.name+"\&PACKAGE="+oPackage1.name+"\&username=packager\&password=packager 2>/dev/null" )
-    os.system("wget -O /tmp/response http://127.0.0.1:80/migasfree/createrepositoriesofpackage/?VER="+oVersion.name+"\&PACKAGE="+oPackage3.name+"\&username=packager\&password=packager 2>/dev/null" )
+    os.system("http_proxy='';wget -O /tmp/response http://127.0.0.1:80/migasfree/createrepositoriesofpackage/?VER="+oVersion.name+"\&PACKAGE="+oPackage1.name+"\&username=packager\&password=packager 2>/dev/null" )
+    os.system("http_proxy="";wget -O /tmp/response http://127.0.0.1:80/migasfree/createrepositoriesofpackage/?VER="+oVersion.name+"\&PACKAGE="+oPackage3.name+"\&username=packager\&password=packager 2>/dev/null" )
 
 
 
