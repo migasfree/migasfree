@@ -165,7 +165,7 @@ def process_attributes(request,file):
                    if oProperty.kind == "-":
                        lista=data.split(",")
                        for elemento_lista in lista:
-                           lst_attributes.append(elemento_lista.split("~")[0]))
+                           lst_attributes.append(elemento_lista.split("~")[0])
                            auto_attribute(oProperty,elemento_lista)  
                            oLogin.attributes.add(Attribute.objects.get(value=elemento_lista.split("~")[0]))
 
