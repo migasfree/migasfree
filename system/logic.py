@@ -125,7 +125,10 @@ def process_attributes(request,file):
         except:
           oUser=User()
           oUser.name=dic_computer["USER"]
-          oUser.fullname=dic_computer["USER_FULLNAME"]
+          try:
+              oUser.fullname=dic_computer["USER_FULLNAME"]
+          except:
+              oUser.fullname="" 
           oUser.save()
  
 
