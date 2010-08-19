@@ -79,7 +79,11 @@ admin.site.register(Pms, PmsAdmin)
 class StoreAdmin(admin.ModelAdmin):
     list_display = ('name','version',)
     search_fields = ('name',)
-    actions = ['information']
+    actions = ['information','download']
+
+    def download(self,request,queryset):
+        return redirect("/repo/"+queryset[0].version.name+"/STORES/"+queryset[0].name+"/")
+    download.short_description = _("Download")
 
     def information(self,request,queryset):
         return redirect("/migasfree/info/STORES/"+queryset[0].name+"/")
@@ -247,11 +251,15 @@ class PackageAdmin(admin.ModelAdmin):
     ordering = ('name',)
 
 
-    actions = ['information']
+    actions = ['information','download']
 
     def information(self,request,queryset):
         return redirect("/migasfree/info/STORES/"+queryset[0].store.name+"/"+queryset[0].name+"/")
     information.short_description = _("Information of Package")
+
+    def download(self,request,queryset):
+        return redirect("/repo/"+queryset[0].version.name+"/STORES/"+queryset[0].store.name+"/"+queryset[0].name)
+    download.short_description = _("Download")
 
 admin.site.register(Package, PackageAdmin)
 

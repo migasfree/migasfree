@@ -240,6 +240,7 @@ class Package(models.Model):
         os.system("mkdir -p "+PATH_REPO+self.version.name+"/STORES/"+self.store.name+"/"+self.name)
         os.system("chown -R "+USER_WEB_SERVER+":root "+PATH_REPO+self.version.name+"/STORES/"+self.store.name+"/"+self.name)
 
+
     def __unicode__(self):
         return self.name
     class Meta:
