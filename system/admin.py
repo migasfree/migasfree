@@ -78,8 +78,13 @@ admin.site.register(Pms, PmsAdmin)
 
 class StoreAdmin(admin.ModelAdmin):
     list_display = ('name','version',)
-    list_filter = ('version',)
-    actions = None
+    search_fields = ('name',)
+    actions = ['information']
+
+    def information(self,request,queryset):
+        return redirect("/migasfree/info/STORES/"+queryset[0].name+"/")
+    information.short_description = _("Information of Package")
+
 admin.site.register(Store, StoreAdmin)
 
 
@@ -240,6 +245,13 @@ class PackageAdmin(admin.ModelAdmin):
     list_filter = ('store',)
     search_fields = ('name','information','log','store__name')
     ordering = ('name',)
+
+
+    actions = ['information']
+
+    def information(self,request,queryset):
+        return redirect("/migasfree/info/STORES/"+queryset[0].store.name+"/"+queryset[0].name+"/")
+    information.short_description = _("Information of Package")
 
 admin.site.register(Package, PackageAdmin)
 
