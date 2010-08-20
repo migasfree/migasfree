@@ -229,13 +229,13 @@ def process_attributes(request,file):
     dic_repos={}
 
     repositories=Repository.objects.filter(Q(attributes__id__in=lst_attributes),Q(version__id=oVersion.id)) 
-    repositories==repositories.filter(Q(modified=False),Q(version__id=oVersion.id),Q(active=True))
+    repositories=repositories.filter(Q(modified=False),Q(version__id=oVersion.id),Q(active=True))
 
     for r in repositories:
         dic_repos[r.name]=r.id
 
     repositories=Repository.objects.filter(Q(schedule__scheduledelay__attributes__id__in=lst_attributes),Q(active=True))
-    repositories==repositories.filter(Q(modified=False),Q(version__id=oVersion.id),Q(active=True))
+    repositories=repositories.filter(Q(modified=False),Q(version__id=oVersion.id),Q(active=True))
     repositories=repositories.extra(select={'delay': "system_scheduledelay.delay",})     
 
     for r in repositories:
