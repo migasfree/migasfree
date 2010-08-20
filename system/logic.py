@@ -57,7 +57,7 @@ def new_attribute(oLogin,oProperty,par):
 
     #Add the attribute to Login
     oLogin.attributes.add(oAttribute)
-    return str(value_att)
+    return oAttribute.id
 
 
 def horizon(mydate, delay):
@@ -175,7 +175,6 @@ def process_attributes(request,file):
                    if oProperty.kind == "-":
                        mylist=data.split(",")
                        for element in mylist:
-                           print element 
                            lst_attributes.append(new_attribute(oLogin,oProperty,element))
 
                    # ADDS RIGHT            
@@ -229,13 +228,13 @@ def process_attributes(request,file):
 
     dic_repos={}
 
-    repositories=Repository.objects.filter(Q(attributes__value__in=lst_attributes),Q(version__id=oVersion.id)) 
+    repositories=Repository.objects.filter(Q(attributes__id__in=lst_attributes),Q(version__id=oVersion.id)) 
     repositories==repositories.filter(Q(modified=False),Q(version__id=oVersion.id),Q(active=True))
 
     for r in repositories:
         dic_repos[r.name]=r.id
 
-    repositories=Repository.objects.filter(Q(schedule__scheduledelay__attributes__value__in=lst_attributes),Q(active=True))
+    repositories=Repository.objects.filter(Q(schedule__scheduledelay__attributes__id__in=lst_attributes),Q(active=True))
     repositories==repositories.filter(Q(modified=False),Q(version__id=oVersion.id),Q(active=True))
     repositories=repositories.extra(select={'delay': "system_scheduledelay.delay",})     
 
@@ -392,8 +391,6 @@ def compare_values(v1,v2):
     if len(v1)<>len(v2):
         return False
     for x in v1:
-        print v1[i]
-        print v2[i]
         if not v1[i] in v2:
             return False
         i=i+1
