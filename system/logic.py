@@ -29,19 +29,20 @@ from datetime import timedelta
 def getVariable(name_variable):
     return Variable.objects.get(name=name_variable).value
 
-# Add a attribute to the system. Par is a "value~name" string or only "valor" 
-def auto_attribute(oProperty,par):
 
 
+ 
+
+#Add a attribute to the system. Par is a "value~name" string or only "valor" 
+def new_attribute(oLogin,oProperty,par):
     reg=par.split("~")
-
-    value_att=reg[0]
+    value_att=reg[0].strip()
     if len(reg)>1:
         description_att=reg[1]
     else:
         description_att=""
     
-    
+    #Add the atribute
     if value_att <> "":  
         try:
             oAttribute=Attribute.objects.get(value=value_att,property_att__id=oProperty.id)
@@ -54,11 +55,19 @@ def auto_attribute(oProperty,par):
                 oAttribute.save()      
 
 
+    #Add the attribute to Login
+    oLogin.attributes.add(oAttribute)
+    return str(value_att)
+
+
 def horizon(mydate, delay):
     """No weekends"""
     iday=int(mydate.strftime("%w"))
     idelta=delay+(((delay+iday-1)/5)*2)
     return mydate+timedelta(days=idelta)
+
+
+
 
 
 # process the file attributes.xml and return a script bash for be execute in the client
@@ -159,18 +168,15 @@ def process_attributes(request,file):
                      
 	               # NORMAL
                    if oProperty.kind == "N":
-                       lst_attributes.append(data)                       
-                       auto_attribute(oProperty,data)
-                       oLogin.attributes.add(Attribute.objects.get(value=data))
+                       lst_attributes.append(new_attribute(oLogin,oProperty,data))                       
 
 
                    # LIST            
                    if oProperty.kind == "-":
-                       lista=data.split(",")
-                       for elemento_lista in lista:
-                           lst_attributes.append(elemento_lista.split("~")[0])
-                           auto_attribute(oProperty,elemento_lista)  
-                           oLogin.attributes.add(Attribute.objects.get(value=elemento_lista.split("~")[0]))
+                       mylist=data.split(",")
+                       for element in mylist:
+                           print element 
+                           lst_attributes.append(new_attribute(oLogin,oProperty,element))
 
                    # ADDS RIGHT            
                    if oProperty.kind == "R":
@@ -178,9 +184,7 @@ def process_attributes(request,file):
                        c=data
                        l=0
                        for x in lista:
-                           lst_attributes.append(c[l:])
-                           auto_attribute(oProperty,c[l:])
-                           oLogin.attributes.add(Attribute.objects.get(value=c[l:]))                   
+                           lst_attributes.append(new_attribute(oLogin,oProperty,c[l:]))
                            l=l+len(x)+1
 
 
@@ -191,9 +195,7 @@ def process_attributes(request,file):
                        l=0
                        for x in lista:
                            l=l+len(x)+1
-                           lst_attributes.append(c[0:l-1])
-                           auto_attribute(oProperty,c[0:l-1])  
-                           oLogin.attributes.add(Attribute.objects.get(value=c[0:l-1]))                  
+                           lst_attributes.append(new_attribute(oLogin,oProperty,c[0:l-1]))             
 
                    # we execute the after_insert function
                    if oProperty.after_insert<>"":
