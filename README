@@ -1,8 +1,9 @@
 ==================================================
 AT MOMENT THIS IS ONLY A DECLARATIONS OF INTENTION
          "WE ARE WORKING IN IT"
-==================================================
 
+      this software is in development. 
+==================================================
 
 Welcome to migasfree!
 
@@ -11,7 +12,7 @@ First of all, thanks a lot to download this software. We hope that this software
 
 Description:
 ============
-migasfree is a very simple, but effective, system management systems. Actually, it is used in 'Ayuntamiento de Zaragoza' (Spain) by initial authors in the project 'migration to open source software for desktops'. They use AZLinux distribution http://zaragozaciudad.net/azlinux , which is based on SLED http://www.novell.com/linux
+Migasfree is a very simple, but effective, system management systems. Actually, it is used in 'Ayuntamiento de Zaragoza' (Spain) by initial authors in the project 'migration to open source software for desktops'. They use AZLinux distribution http://zaragozaciudad.net/azlinux , which is based on SUSE (http://www.novell.com/linux)
 
 You can learn over systems management systems at:
 http://en.wikipedia.org/wiki/Systems_management
@@ -38,6 +39,7 @@ Requirements
     * Clients:
         o to define
 
+
 Features
 ========
     * Web administration
@@ -53,39 +55,42 @@ Features
 
 Behavior:
 =========
-How can you change the configuration of machines with migasfree?
+How can you change the software configuration of machines with migasfree?
 
 When the user opens session in the machine, a bash script queries to server migasfree and it responds with other bash script created 'ad hoc' for this client after consulting the database.
 
-This script is executed in the client and basically configure the repositories of packages (rpm or deb). Previously, these repositories have been created for the server when the migasfree's administrator configures a distribution.
+This script is executed in the client and basically configure the repositories of packages (rpm or deb). Previously, these repositories have been created for the server when the migasfree's administrator configures a repository.
 
-A distribution in migasfree defines the packages that should will be installed, updated or removed in the clients in function of its HOSTNAME, USER, CONTEXT LDAP, VIDEO CARD, ... (the administrator defines the variables that he wants to use in his organitation) 
+A repository in migasfree defines the packages that should will be installed, updated or removed in the clients in function of attributes of client computer: HOSTNAME, USER, CONTEXT LDAP, VIDEO CARD, ... (the administrator defines the properties that he wants to use in his organitation) 
 
-All changes of configuration in the client are made through packages. This is the main difference respected other systems management systems. Therefore it is necessary that you know how create packages in order you can realize the change of configuration in the machines that you want administrate. You can consider hiring a professional, this is the hard work, you were warned! 
+All changes of configuration in the client are made through packages. Therefore it is necessary that you know how create packages in order you can realize the change of configuration in the machines that you want administrate. You can consider hiring a professional, this is the hard work, you were warned! 
 
 
 Use:
 ====
-For example: You want change the Firefox homepage in all PCs in range of IPs.
+For example: You want change the Firefox homepage in all PCs in a range of IPs.
 
-    1.- You must create a package (for example myorg-firefox-1-0.rpm or myorg-firefox-1-0.deb ) that realize this homepage change. You must investigate what file must modify and do that your package do it for you. This is hard!
+    1.- You must create a package (for example myorg-firefox-1-0.rpm or myorg-firefox-1-0.deb ) that realize this homepage change. You must investigate what file must modify and do that your package do it for you. This is hard work!
 
     2.- You must upload your package to server. This is simple!
 
-    3.- You must create a distribution in migasfree. Add your package myorg-firefox-1-0.rpm and define the range of IPs. This is easy!
+    3.- You must create a repository in migasfree. Add your package myorg-firefox-1-0 and define the range of IPs. This is easy!
 
-    4.- Voilà! When a user opens a session and his IP is in range, will be install the package and changed Firefox homepage.
+    4.- Voilà! When a user opens a session and his IP is in range, migasfree install the package.
 
 
 Documentation:
 ==============
-All documentation is in http://migasfree.org
+
+You can start reading the document 'Quick Start' available in the 'doc' directory of project or in http://migasfree.org
+
+All documentation is also available in http://migasfree.org
 
 
 Testing:
 ========
-You can test migasfree downloading a virtual machine file for VirtualBox with the server of migasfree installed in it.  
-you can go to download area of http://migasfree.org
+
+You can test migasfree downloading a appliance for VirtualBox with a migasfree server full installed. This appliance is available in the download area of http://migasfree.org
 
 
 That's all folks
