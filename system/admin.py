@@ -77,7 +77,7 @@ class PmsAdmin(admin.ModelAdmin):
 admin.site.register(Pms, PmsAdmin)
 
 class StoreAdmin(admin.ModelAdmin):
-    list_display = ('name','version',)
+    list_display = ('name',)
     search_fields = ('name',)
     actions = ['information','download']
 
@@ -191,8 +191,8 @@ admin.site.register(Variable, VariableAdmin)
 
 
 class RepositoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'active', 'version', 'date', 'schedule','timeline', )
-    list_filter = ('active','version',)
+    list_display = ('name', 'active', 'date', 'schedule','timeline', )
+    list_filter = ('active',)
     ordering = ('name','packages__name')
     search_fields = ('name','packages__name')
     filter_horizontal = ('attributes','packages')
