@@ -229,13 +229,13 @@ def process_attributes(request,file):
     dic_repos={}
 
     repositories=Repository.objects.filter(Q(attributes__id__in=lst_attributes),Q(version__id=oVersion.id)) 
-    repositories=repositories.filter(Q(modified=False),Q(version__id=oVersion.id),Q(active=True))
+    repositories=repositories.filter(Q(version__id=oVersion.id),Q(active=True))
 
     for r in repositories:
         dic_repos[r.name]=r.id
 
     repositories=Repository.objects.filter(Q(schedule__scheduledelay__attributes__id__in=lst_attributes),Q(active=True))
-    repositories=repositories.filter(Q(modified=False),Q(version__id=oVersion.id),Q(active=True))
+    repositories=repositories.filter(Q(version__id=oVersion.id),Q(active=True))
     repositories=repositories.extra(select={'delay': "system_scheduledelay.delay",})     
 
     for r in repositories:
@@ -284,7 +284,7 @@ def process_attributes(request,file):
             cPackages=cPackages+" "+d.toremove
     if not cPackages=="":
         ret=ret+"icon_tooltip \""+ _("Removing packages") +"\"\n" 
-        ret=ret+"pms_remove_silent \""+cPackages+"\" 2>> $_FILE_ERR\n"
+        ret=ret+"pms_remove_silent \""+cPackages.replace("\n"," ")+"\" 2>> $_FILE_ERR\n"
 
     ret=ret+"\n\n# 7.- INSTALL PACKAGES\n"
     ret=ret+"icon_tooltip \""+ _("Checking packages to install") +"\"\n"
@@ -294,7 +294,7 @@ def process_attributes(request,file):
             cPackages=cPackages+" "+d.toinstall
     if not cPackages=="":
         ret=ret+"icon_tooltip \""+ _("Installing packages") +"\"\n" 
-        ret=ret+"pms_install_silent \""+cPackages+"\" 2>> $_FILE_ERR\n"
+        ret=ret+"pms_install_silent \""+cPackages.replace("\n"," ")+"\" 2>> $_FILE_ERR\n"
 
     ret=ret+"\n\n# 8.- UPDATE PACKAGES\n"
     ret=ret+"icon_tooltip \""+ _("Updating packages") +"\"\n" 
@@ -397,11 +397,13 @@ def compare_values(v1,v2):
     return True
 
  
-def CreateRepositories(version_id): # Crea los repositorios para la version
+def CreateRepositories(version_id): 
+    """
+    Create the repositories for the version_id, checking the packages field changed.
+    """
     import os
 
-    #Get the Package Management System
-    oPms=Pms.objects.get(id=version_id)
+
     
     def history(d):
         import time
@@ -416,6 +418,8 @@ def CreateRepositories(version_id): # Crea los repositorios para la version
     PATH_REPO=getVariable('PATH_REPO')
     _version=Version.objects.get(id=version_id)
 
+    #Get the Package Management System
+    oPms=Pms.objects.get(version=_version)
     bash=""
 
     #Set to True the modified field in the repositories that have been change yours packages from last time.
@@ -438,6 +442,7 @@ def CreateRepositories(version_id): # Crea los repositorios para la version
     ds=Repository.objects.filter(modified=True,active=False,version=_version)
     for d in ds:
         bash=bash+"rm -rf "+PATH_REPO+d.version.name+"/"+oPms.slug+"/"+d.name+"\n"
+
 
     #Loop the Repositories modified and active for this version
     ds=Repository.objects.filter(modified=True,active=True,version=_version)
@@ -470,7 +475,6 @@ def CreateRepositories(version_id): # Crea los repositorios para la version
     txt_err=RunInServer(bash)["err"]
     if not txt_err=="":
         txt=txt+"\n\n****ERROR*****\n"+txt_err
-
     return txt
 
 

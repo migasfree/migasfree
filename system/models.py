@@ -408,6 +408,8 @@ class Repository(models.Model):
 
     def save(self):       
         self.name=self.name.replace(" ","_")
+        self.toinstall=self.toinstall.replace("\r\n","\n")
+        self.toremove=self.toremove.replace("\r\n","\n")
         super(Repository, self).save() # Call the "real" save() method
 
 
