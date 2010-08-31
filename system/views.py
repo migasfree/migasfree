@@ -251,25 +251,30 @@ def directupload(request,self):
 
 
 
-        #SI RECICIMOS UN FICHERO inventario.dat (Inventario Hardware)
-        if f.name == "inventario.dat":
+        #SI RECICIMOS UN FICHERO hardware.xml (Inventario Hardware)
+        if f.name == "hardware.xml":
             grabar()
-            oResumen=resumenHardware() 
-            destination = file(MEDIA+pc+"."+f.name) 
-            oResumen=pickle.load(destination)
+#            oResumen=resumenHardware() 
+
+            import codecs
+            destination = codecs.open( MEDIA+pc+"."+f.name, "r", "utf-8" )
+#            destination = open(MEDIA+pc+"."+f.name,'rb') 
+#            oResumen=pickle.load(destination)
             try:
                 oComputer=Computer.objects.get(name=pc)
             except: #si no esta el Equipo lo añadimos
                 oComputer=Computer(name=pc)
                 oComputer.dateinput=t
 
-            oComputer.mac=oResumen.mac
+#            oComputer.mac=oResumen.mac
 #            oComputer.cpu=oResumen.cpu
 #            oComputer.hd=oResumen.hd
 #            oComputer.memoria=oResumen.memoria
 #            oComputer.so=oResumen.so
 #            oComputer.inventario=oResumen.inventario
-            oComputer.dateupdated=t
+#            oComputer.dateupdated=t
+
+            oComputer.hardware=destination.read()
             oComputer.save()
             ret="OK"
             os.remove(MEDIA+pc+"."+f.name)

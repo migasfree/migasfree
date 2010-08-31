@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+
 from django.utils.translation import ugettext as _
 
 from migasfree.system.models import Pms
@@ -249,14 +250,10 @@ def process_attributes(request,file):
     #SCRIPT FOR THE COMPUTER
     ret="#!/bin/bash\n\n"
 
-    ret=ret+"function icon_tooltip {\n"
-    ret=ret+"  echo \"tooltip: $1\" >&3\n"
-    ret=ret+"}\n\n"
-
     ret=ret+". /usr/share/migasfree/init\n\n"
     ret=ret+"_FILE_LOG=\"$_DIR_TMP/history_sw.log\"\n"
     ret=ret+"_FILE_ERR=\"$_DIR_TMP/migasfree.err\"\n"
-    ret=ret+"_FILE_INV_HW=\"$_DIR_TMP/inventory.dat\"\n"
+    ret=ret+"_FILE_INV_HW=\"$_DIR_TMP/hardware.xml\"\n"
 
     ret=ret+"\n\n# 1.- PRESERVE INITIAL DATE\n"
     ret=ret+"_INI=`date +'%d-%m-%Y %k:%M:%S'`\n"
@@ -268,45 +265,45 @@ def process_attributes(request,file):
     ret=ret+"directupload $_FILE_ERR 2>>$_FILE_ERR\n"
     
     ret=ret+"\n\n# 4.- SAVE REPOSITORIES\n"
-    s=_("Creating Repositories")
-    ret=ret+"icon_tooltip \""+ s +"\"\n"
+    s=_("Creating Repositories File")
+    ret=ret+"tooltip_status \""+ s +"\"\n"
     ret=ret+SaveRepositories(repositories,oVersion,oPms) 
 
     ret=ret+"\n\n# 5.- CLEAN CACHE OF PACKAGE MANAGEMENT SYSTEM\n"
-    ret=ret+"icon_tooltip \""+ _("Refresh cache") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("Refresh cache") +"\"\n" 
     ret=ret+"pms_cleanall 2>>$_FILE_ERR\n"
 
     ret=ret+"\n\n# 6.- REMOVE PACKAGES\n"
-    ret=ret+"icon_tooltip \""+ _("Checking packages to remove") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("Checking packages to remove") +"\"\n" 
     cPackages=""
     for d in repositories:
         if not d.toremove=="": 
             cPackages=cPackages+" "+d.toremove
     if not cPackages=="":
-        ret=ret+"icon_tooltip \""+ _("Removing packages") +"\"\n" 
+        ret=ret+"tooltip_status \""+ _("Removing packages") +"\"\n" 
         ret=ret+"pms_remove_silent \""+cPackages.replace("\n"," ")+"\" 2>> $_FILE_ERR\n"
 
     ret=ret+"\n\n# 7.- INSTALL PACKAGES\n"
-    ret=ret+"icon_tooltip \""+ _("Checking packages to install") +"\"\n"
+    ret=ret+"tooltip_status \""+ _("Checking packages to install") +"\"\n"
     cPackages="" 
     for d in repositories:
         if not d.toinstall=="": 
             cPackages=cPackages+" "+d.toinstall
     if not cPackages=="":
-        ret=ret+"icon_tooltip \""+ _("Installing packages") +"\"\n" 
+        ret=ret+"tooltip_status \""+ _("Installing packages") +"\"\n" 
         ret=ret+"pms_install_silent \""+cPackages.replace("\n"," ")+"\" 2>> $_FILE_ERR\n"
 
     ret=ret+"\n\n# 8.- UPDATE PACKAGES\n"
-    ret=ret+"icon_tooltip \""+ _("Updating packages") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("Updating packages") +"\"\n" 
     ret=ret+"pms_update_silent 2>> $_FILE_ERR\n"
 
 
     ret=ret+"\n\n# 9.- UPLOAD THE SOFTWARE HISTORY\n"
-    ret=ret+"icon_tooltip \""+ _("Upload changes of software") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("Upload changes of software") +"\"\n" 
     ret=ret+"soft_history $_FILE_LOG.0 $_FILE_LOG.1 $_FILE_LOG \"$_INI\"\n"
 
     ret=ret+"\n\n# 10.- UPLOAD THE SOFTWARE INVENTORY\n"
-    ret=ret+"icon_tooltip \""+ _("Upload inventory software") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("Upload inventory software") +"\"\n" 
     # If is the Computer with de Software Base we upload the list of packages
     if oVersion.computerbase==oComputer.name:
       ret=ret+"cp $_FILE_LOG.1 $_DIR_TMP/base.log\n"
@@ -316,28 +313,22 @@ def process_attributes(request,file):
     ret=ret+"soft_inventory $_DIR_TMP/softwarebase.log $_FILE_LOG.1 $_DIR_TMP/software.log\n"
 
     ret=ret+"\n\n# 11.- UPDATE THE HARDWARE INVENTORY\n"
-    ret=ret+"icon_tooltip \""+ _("Upload inventory hardware") +"\"\n" 
-    oComputer=Computer.objects.get(name=dic_computer["HOSTNAME"])
-    ret=ret+"/usr/bin/python /usr/local/bin/inventario.py 2>> $_FILE_ERR\n"
-    ret=ret+"directupload $_FILE_INV_HW 2>> $_FILE_ERR\n"
+    ret=ret+"tooltip_status \""+ _("Upload inventory hardware") +"\"\n" 
+#    oComputer=Computer.objects.get(name=dic_computer["HOSTNAME"])
+#    ret=ret+"/usr/bin/python /usr/local/bin/inventario.py 2>> $_FILE_ERR\n"
+    ret=ret+"_LSHW=`which lshw`\n"   
+    ret=ret+"if ! [ -z $_LSHW ] ; then\n"
+#    ret=ret+"  $_LSHW  -xml > $_FILE_INV_HW\n"
+    ret=ret+"  $_LSHW  -short > $_FILE_INV_HW\n"
+    ret=ret+"  directupload $_FILE_INV_HW 2>> $_FILE_ERR\n"
+    ret=ret+"fi\n"
 
     ret=ret+"\n\n\n# 12.- UPLOAD ERRORS OF 'migasfree -u' TO migasfree\n"
-    ret=ret+"icon_tooltip \""+ _("Upload errors") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("Upload errors") +"\"\n" 
     ret=ret+"directupload $_FILE_ERR 2>> $_FILE_ERR\n"
 
-#    ret=ret+"\n\n# 13.- NOTIFY USER\n"
-#    ret=ret+"icon_tooltip \""+ _("Notify user") +"\"\n" 
-#    ret=ret+"echo \"tooltip: System is updated.\" >&3\n"
-#    ret=ret+"DISPLAY=$_DISPLAY_GRAPHIC zenity --text-info --title=\"migasfree\" --filename=\"/home/alberto/Escritorio/info.txt\""
-
-#    ret=ret+"DISPLAY=$_DISPLAY_GRAPHIC notify-send --expire-time=0 --icon /usr/share/icons/hicolor/48x48/apps/migasfree.png 'REDES Y SISTEMAS' 'Se ha instalado bluefish'\n"
-#    ret=ret+"DISPLAY=$_DISPLAY_GRAPHIC evince /home/alberto/bluefish.pdf\n"
-#    ret=ret+"gnomesu -c 'evince -s /home/alberto/notification.pdf' -u alberto &\n"
-#    ret=ret+"DISPLAY=$_DISPLAY_GRAPHIC gnomesu -c 'ooimpress -show /home/alberto/notification.odp' -u alberto &\n"
-#    ret=ret+"echo \"message: You must reboot the computer\" >&3"
-
-
-    ret=ret+"icon_tooltip \""+ _("System is updated") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("System is updated") +"\"\n" 
+    ret=ret+"icon_status /usr/share/icons/hicolor/48x48/actions/migasfree-ok.png\n" 
     ret=ret+"sleep 3\n" 
 
     return ret
