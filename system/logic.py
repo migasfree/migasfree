@@ -145,6 +145,7 @@ def process_attributes(request,file):
         # Save Login
         SaveLogin(dic_computer["HOSTNAME"],dic_computer["USER"])
         oLogin=Login.objects.get(computer=Computer.objects.get(name=dic_computer["HOSTNAME"]),user=User.objects.get(name=dic_computer["USER"]))
+        oLogin.attributes.clear()
 
         # Get version
         version=dic_computer["VERSION"]
