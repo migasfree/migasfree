@@ -95,10 +95,11 @@
     centralizada (aunque no hace solamente eso)</para>
 
     <para>Migasfree realiza el cambio de la configuración haciendo uso de los
-    gestores de paquetes (yum, zypper, apt, etc.) ya que éstos han sido
-    diseñados específicamente para esa tarea. Es por esto que la complejidad
-    del cambio de la configuración reside en la creación de paquetes y no en
-    migasfree.</para>
+    gestores de paquetes (<application>yum</application>,
+    <application>zypper</application>, <application>apt</application>, etc.)
+    ya que éstos han sido diseñados específicamente para esa tarea. Es por
+    esto que la complejidad del cambio de la configuración reside en la
+    creación de paquetes y no en migasfree.</para>
 
     <note>
       <para>Recuerda esto: ¡Cualquier cambio en la configuración de un equipo
@@ -171,20 +172,23 @@
 
     <itemizedlist>
       <listitem>
-        <para>¿Qué cambio de configuración se pretende hacer? -&gt; PAQUETES
-        DEL REPOSITORIO</para>
+        <para>¿<emphasis role="bold">Qué</emphasis> cambio de configuración se
+        pretende hacer? -&gt; <emphasis role="bold">PAQUETES DEL
+        REPOSITORIO</emphasis></para>
       </listitem>
     </itemizedlist>
 
     <itemizedlist>
       <listitem>
-        <para>¿A quien? -&gt; ATRIBUTOS DE EQUIPO CLIENTE</para>
+        <para>¿A <emphasis role="bold">quien</emphasis>? -&gt;<emphasis
+        role="bold"> ATRIBUTOS DE EQUIPO CLIENTE</emphasis></para>
       </listitem>
     </itemizedlist>
 
     <itemizedlist>
       <listitem>
-        <para>¿Cuándo? -&gt; CALENDARIOS</para>
+        <para>¿<emphasis role="bold">Cuándo</emphasis>? -&gt; <emphasis
+        role="bold">CALENDARIOS</emphasis></para>
       </listitem>
     </itemizedlist>
 
@@ -198,7 +202,7 @@
     atributos vienen determinados mediante la creación de lo que llamamos
     <emphasis>propiedades</emphasis> de equipo cliente, o dicho más
     concretamente: podemos crear p.e. la PROPIEDAD: "USUARIO", y ésta será
-    resuelta en el cliente dando lugar al ATRIBUTO: "USUARIO=Juan". </para>
+    resuelta en el cliente dando lugar al ATRIBUTO: "USUARIO=Juan".</para>
 
     <para>Migasfree admite que una organización pueda querer trabajar
     basándose en las siguientes propiedades: "CONTEXTO LDAP" y "USUARIO", en
@@ -323,6 +327,50 @@
   </section>
 
   <section>
+    <title>¿ Con qué distribución GNU/Linux puede trabajar migasfree?</title>
+
+    <para>En el cliente hemos probado con las siguientes
+    distribuciones:</para>
+
+    <para>OPENSUSE, SLED, FEDORA, UBUNTU, DEBIAN, CENTOS</para>
+
+    <para>No obstante debería trabajar con cualquier otra distribución que use
+    los siguientes gestores de paquetes:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>zypper</para>
+      </listitem>
+
+      <listitem>
+        <para>yum</para>
+      </listitem>
+
+      <listitem>
+        <para>apt</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>Migasfree se ha diseñado para poder incorporar otros gestores de
+    paquetes con un poco de programación, con el tiempo esperamos poder ir
+    añadiéndolos al sistema.</para>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>¿ En qué tipo de entorno gráfico puedo usar migasfree ?</title>
+
+    <para>En los clientes, migasfree funciona actualmente con GNOME, KDE, XFCE
+    y LXDE.</para>
+
+    <para>También puedes usar migasfree en sistemas sin entorno gráfico
+    instalado (modo texto).</para>
+
+    <para></para>
+  </section>
+
+  <section>
     <title>¿ Cómo se puede evaluar migasfree ?</title>
 
     <para>Para las pruebas necesitamos dos equipos, uno con un servidor
@@ -330,14 +378,15 @@
 
     <itemizedlist>
       <listitem>
-        <para>SERVIDOR:</para>
+        <para><emphasis role="bold">SERVIDOR</emphasis>:</para>
 
         <para>En la página de descargas de <ulink
         url="http://www.migasfree.org">http://www.migasfree.org</ulink> se
-        encuentra un appliance para VirtualBox con un servidor migasfree
-        completamente instalado y listo para usar. Únicamente tendrás que
-        modificar la configuración de red. Sigue los pasos que se te indican
-        en el fichero README.txt de la página de descargas.</para>
+        encuentra un appliance para <application>VirtualBox</application> con
+        un servidor migasfree completamente instalado y listo para usar.
+        Únicamente tendrás que modificar la configuración de red. Sigue los
+        pasos que se te indican en el fichero <filename>README.txt</filename>
+        de la página de descargas.</para>
 
         <para>El servidor migasfree viene por defecto preparado para trabajar
         con 3 versiones de distribuciones GNU/Linux : OPENSUSE, FEDORA y
@@ -346,7 +395,7 @@
       </listitem>
 
       <listitem>
-        <para>CLIENTE:</para>
+        <para><emphasis role="bold">CLIENTE</emphasis>:</para>
 
         <para>A continuación créate una nueva máquina virtual para el equipo
         cliente e instala en ella la distribución GNU/Linux que quieras
@@ -368,7 +417,14 @@
 
             <para><code>MIGASFREE_SERVER="mi_migasfree_server:80"</code></para>
 
-            <para><code>MIGASFREE_PROXY=""</code></para>
+            <para><code>MIGASFREE_PROXY=""</code><note>
+                <para>Para poder actualizar el sistema cuando el usuario
+                inicia sesión gráfica en los equipos clientes, migasfree
+                utiliza sudo, y es necesario que éste pueda lanzarse sin tener
+                una tty abierta. En algunas distribuciones (p.e. en FEDORA) es
+                necesario que abras visudo y que comentes la siguiente línea :
+                #Defaults: requiretty</para>
+              </note></para>
           </listitem>
         </itemizedlist>
       </listitem>
@@ -381,15 +437,15 @@
     <title>¿ Existe algo parecido a un "hello world" en migasfree ?</title>
 
     <para>Sí, una vez que tengas el servidor migasfree debidamente configurado
-    y un equipo cliente con el paquete migasfree-client instalado, haz lo
-    siguiente:</para>
+    y un equipo cliente con el paquete <package>migasfree-client</package>
+    instalado, haz lo siguiente:</para>
 
     <para>En el cliente en el menú de aplicaciones ve al grupo sistema y
-    ejecuta "Actualización del sistema desde un servidor migasfree". Si todo
-    es correcto se te debería instalar el paquete migasfree-test añadiéndose
-    la aplicación "migasfree.org" en el mismo grupo de sistema del menú a
-    aplicaciones. Esta aplicación únicamente abre el explorador web con la
-    página web <ulink
+    ejecuta "<guimenuitem>Actualización del sistema desde un servidor
+    migasfree</guimenuitem>". Si todo es correcto se te debería instalar el
+    paquete migasfree-test añadiéndose la aplicación "migasfree.org" en el
+    mismo grupo de sistema del menú a aplicaciones. Esta aplicación únicamente
+    abre el explorador web en la página <ulink
     url="http://www.migasfree.org">http://www.migasfree.org</ulink>. Si éste
     es tu caso, enhorabuena, ya tienes funcionando tu migasfree. En caso
     contrario revisa la configuración del servidor y del cliente.</para>
@@ -511,7 +567,7 @@
           <itemizedlist>
             <listitem>
               <para>Programa una falla. Cuando se actualicen los equipos te
-              aparecerán en la sección "Estado" del menu principal del
+              aparecerán en la sección "Estado" del menú principal del
               servidor migasfree una falla por cada equipo que cumpla la
               condición programada.</para>
             </listitem>
