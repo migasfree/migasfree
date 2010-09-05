@@ -5,6 +5,9 @@ _DIR_REPO=/var/www/htdocs/repo
 cd $_DIR_MIGASFREE
 ln -s $_DIR_MIGASFREE $_DIR_MIGASFREE/utils/db/migasfree 
  
+#down documentation
+wget --nocache -O /var/www/htdocs/repo/documentation/es/quick_start.pdf http://migasfree.org/doc/es/quick_start.pdf 
+
 #remove DataBase
 rm migasfree.db
 #create DataBase
