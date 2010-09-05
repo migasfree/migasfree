@@ -339,15 +339,15 @@
 
     <itemizedlist>
       <listitem>
-        <para>zypper</para>
+        <para><application>zypper</application></para>
       </listitem>
 
       <listitem>
-        <para>yum</para>
+        <para><application>yum</application></para>
       </listitem>
 
       <listitem>
-        <para>apt</para>
+        <para><application>apt</application></para>
       </listitem>
     </itemizedlist>
 
@@ -392,6 +392,10 @@
         con 3 versiones de distribuciones GNU/Linux : OPENSUSE, FEDORA y
         UBUNTU, cada una de ellas con dos repositorios para poder ver a
         migasfree en funcionamiento fácilmente.</para>
+
+        <para>Podrás acceder al servidor migasfree como administrador a través
+        de un explorador web autenticándote como usuario 'admin' y contraseña
+        'admin' </para>
       </listitem>
 
       <listitem>
@@ -402,12 +406,13 @@
         evaluar (también puedes emplear un equipo físico en vez de uno
         virtualizado).</para>
 
-        <para>Instala el paquete migasfree-client (Accede a
-        http://mi_migasfree_server:80 y navega por ejemplo hasta
-        UBUNTU/STORES/third/migasfree/ )</para>
+        <para>Instala el paquete <package>migasfree-client</package> (Accede a
+        http://mi_migasfree_server:80/repo y navega por ejemplo hasta
+        UBUNTU/STORES/third/migasfree/ para descargarte el paquete)</para>
 
-        <para>Una vez instalado migasfree-client edita el fichero
-        /etc/migasfree.conf para configurarlo.</para>
+        <para>Una vez instalado <package>migasfree-client</package> edita el
+        fichero <filename>/etc/migasfree.conf</filename> para
+        configurarlo.</para>
 
         <itemizedlist>
           <listitem>
@@ -420,10 +425,13 @@
             <para><code>MIGASFREE_PROXY=""</code><note>
                 <para>Para poder actualizar el sistema cuando el usuario
                 inicia sesión gráfica en los equipos clientes, migasfree
-                utiliza sudo, y es necesario que éste pueda lanzarse sin tener
-                una tty abierta. En algunas distribuciones (p.e. en FEDORA) es
-                necesario que abras visudo y que comentes la siguiente línea :
-                #Defaults: requiretty</para>
+                utiliza <command>sudo</command>, y es necesario que éste pueda
+                lanzarse sin tener una tty abierta. En algunas distribuciones
+                (p.e. en FEDORA) es necesario que abras
+                <command>visudo</command> y que comentes la siguiente línea
+                :</para>
+
+                <para><code>#Defaults: requiretty</code></para>
               </note></para>
           </listitem>
         </itemizedlist>
@@ -440,12 +448,13 @@
     y un equipo cliente con el paquete <package>migasfree-client</package>
     instalado, haz lo siguiente:</para>
 
-    <para>En el cliente en el menú de aplicaciones ve al grupo sistema y
+    <para>En el cliente, en el menú de aplicaciones ve al grupo sistema y
     ejecuta "<guimenuitem>Actualización del sistema desde un servidor
     migasfree</guimenuitem>". Si todo es correcto se te debería instalar el
-    paquete migasfree-test añadiéndose la aplicación "migasfree.org" en el
-    mismo grupo de sistema del menú a aplicaciones. Esta aplicación únicamente
-    abre el explorador web en la página <ulink
+    paquete <package>migasfree-test</package> añadiéndose la aplicación
+    "<application>migasfree.org</application>" en el mismo grupo de sistema
+    del menú a aplicaciones. Esta aplicación únicamente abre el explorador web
+    en la página <ulink
     url="http://www.migasfree.org">http://www.migasfree.org</ulink>. Si éste
     es tu caso, enhorabuena, ya tienes funcionando tu migasfree. En caso
     contrario revisa la configuración del servidor y del cliente.</para>
