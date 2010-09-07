@@ -31,8 +31,8 @@ oVariable.value="www-data"
 oVariable.save()
 
 oVariable=Variable()
-oVariable.name="ORGANITATION"
-oVariable.value="My Organitation"
+oVariable.name="ORGANIZATION"
+oVariable.value="My Organization"
 oVariable.save()
 
 #PACKAGE MANAGEMENT SYSTEM

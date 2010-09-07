@@ -25,12 +25,12 @@ class TemplateVersion(template.Node):
         return obj
 
 @register.tag
-def organitation(parser, token):    
+def organization(parser, token):    
     """
-    Return the variable 'ORGANITATION'.
+    Return the variable 'ORGANIZATION'.
     """
-    return TemplateVariable("ORGANITATION")
-organitation=register.tag(organitation)
+    return TemplateVariable("ORGANIZATION")
+organization=register.tag(organization)
 
 
 @register.tag
