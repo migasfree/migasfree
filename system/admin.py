@@ -247,7 +247,7 @@ admin.site.register(Schedule, ScheduleAdmin)
 class PackageAdmin(admin.ModelAdmin):
     list_display = ('name', 'store')
     list_filter = ('store',)
-    search_fields = ('name','information','log','store__name')
+    search_fields = ('name','store__name')
     ordering = ('name',)
 
 
