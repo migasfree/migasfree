@@ -196,15 +196,15 @@ print "Version (add UBUNTU)"
 
 #CHECKING
 oChecking=Checking()
-oChecking.name=_("Errors to checking")
+oChecking.name=_("Errors to check")
 oChecking.description="Errors not marked as checked. You must mark the error as checked when the error is solutioned."
-oChecking.code="result=Error.objects.filter(checked__exact=0).count()\nurl='/migasfree/admin/system/error/?checked__exact=0'\nicon='error.png'\nmessage='Errors to checking'"
+oChecking.code="result=Error.objects.filter(checked__exact=0).count()\nurl='/migasfree/admin/system/error/?checked__exact=0'\nicon='error.png'\nmessage='Errors to check'"
 oChecking.save()
 
 oChecking=Checking()
-oChecking.name=_("Faults to checking")
+oChecking.name=_("Faults to check")
 oChecking.description="Faults not marked as checked. You must mark the fault as checked when the fault is solutioned"
-oChecking.code="result=Fault.objects.filter(checked__exact=0).count()\nurl='/migasfree/admin/system/fault/?checked__exact=0'\nicon='fault.png'\nmessage='Faults to checking'"
+oChecking.code="result=Fault.objects.filter(checked__exact=0).count()\nurl='/migasfree/admin/system/fault/?checked__exact=0'\nicon='fault.png'\nmessage='Faults to check'"
 oChecking.save()
 
 oChecking=Checking()
