@@ -599,7 +599,7 @@ print "Query (add PACKAGE/SET ORPHAN)"
 oQuery=Query()
 oQuery.name = "REPOSITORIES WITH A PACKAGE/SET"
 oQuery.description = "LIST THE REPOSITORIES THAT HAVE ASIGNNED A DETERMINATE PACKAGE/SET "
-oQuery.code = "query=Repository.objects.filter(version=VERSION).filter(Q(packages__name__contains=parameters['package'])).extra(select={'package': "system_package.name",})\nfields=('id','name','package')\ntitles=('id','Repository','Package',)"
+oQuery.code = "query=Repository.objects.filter(version=VERSION).filter(Q(packages__name__contains=parameters['package'])).extra(select={'package': 'system_package.name',})\nfields=('id','name','package')\ntitles=('id','Repository','Package',)"
 oQuery.parameters="def  formParams():\n    from migasfree.system.forms import ParametersForm\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm"
 oQuery.save()
 print "Query (add REPOSITORIES WITH A PACKAGE/SET)"
