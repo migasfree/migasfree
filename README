@@ -70,7 +70,7 @@ Use:
 ====
 For example: You want change the Firefox homepage in all PCs in a range of IPs.
 
-    1.- You must create a package (for example myorg-firefox-1-0.rpm or myorg-firefox-1-0.deb). You must investigate which files must be modify and do that the package performs this task for change of configuration. This is hard work!
+    1.- You must create a package (for example myorg-firefox-1-0.rpm or myorg-firefox-1-0.deb). You must investigate which files need to be modified and allow the package to perform the task of changing the configuration. This is hard work!
 
     2.- You must upload your package to the server. This is simple!
 
