@@ -205,7 +205,7 @@ msgstr "inventario hardware"
 
 #: system/models.py:134
 msgid "hardware history"
-msgstr "historia hardware"
+msgstr "historial hardware"
 
 #: system/models.py:135
 msgid "software inventory"
