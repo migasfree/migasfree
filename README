@@ -35,6 +35,8 @@ Requirements
         o Apache with Mod_python
         o Django 
         o Sqlite3 (you can use others databases Django approved)
+        o Python libraries:
+          o IPy (Debian/Ubuntu => python-ipy)
 
     * Clients:
         o to define

@@ -34,7 +34,7 @@ from migasfree.system.logic import *
 from django.forms.models import modelformset_factory
 
 
-from migasfree.system.IPy import IP
+from IPy import IP
 from django.shortcuts import get_object_or_404
 import codecs
 
