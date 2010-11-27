@@ -242,7 +242,7 @@ print "Property (add IP DIRECTION)"
 oProperty=Property()
 oProperty.prefix="NET"
 oProperty.function="  getip"
-oProperty.before_insert="#Convert the IP direction in the net direction, thanks to IPy module\nfrom migasfree.system.IPy import IP\ndata=str(IP(data,make_net=True))"
+oProperty.before_insert="#Convert the IP direction in the net direction, thanks to IPy module\nfrom IPy import IP\ndata=str(IP(data,make_net=True))"
 oProperty.name="NET"
 oProperty.save()
 print "Property (add NET)"

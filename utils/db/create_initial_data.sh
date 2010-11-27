@@ -1,6 +1,9 @@
 _DIR_MIGASFREE=/srv/Django/migasfree
 _DIR_REPO=/var/www/htdocs/repo
 
+#python-IPy must be installed 
+apt-get install python-IPy
+
 
 cd $_DIR_MIGASFREE
 ln -s $_DIR_MIGASFREE $_DIR_MIGASFREE/utils/db/migasfree 
