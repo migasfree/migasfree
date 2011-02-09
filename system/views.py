@@ -190,7 +190,7 @@ def directupload(request,self):
                 oComputer=Computer(name=pc)
                 oComputer.alta=t
 
-            oComputer.history_sw=str(oComputer.history_sw)+destination.read()
+            oComputer.history_sw=str(oComputer.history_sw)+unicode(destination.read(),"utf-8")
             oComputer.save()
             ret="OK"
             os.remove(MEDIA+pc+"."+f.name)
@@ -208,7 +208,7 @@ def directupload(request,self):
                 oComputer=Computer(name=pc)
                 oComputer.alta=t
 
-            oComputer.software=destination.read()
+            oComputer.software=unicode(destination.read(),"utf-8")
             oComputer.save()
             ret="OK"
             os.remove(MEDIA+pc+"."+f.name)
@@ -223,7 +223,7 @@ def directupload(request,self):
                 oVersion=Version.objects.get(name=Computer.objects.get(name=pc).version)
             except: #si no esta el Equipo lo añadimos
                 pass
-            oVersion.base=destination.read()
+            oVersion.base=unicode(destination.read(),"utf-8")
             oVersion.save()
             ret="OK"
             os.remove(MEDIA+pc+"."+f.name)
@@ -243,7 +243,7 @@ def directupload(request,self):
             oError=Error()
             oError.computer=oComputer
             oError.date=m
-            oError.error=destination.read()
+            oError.error=unicode(destination.read(),"utf-8")
             oError.save()
             ret="OK"
             os.remove(MEDIA+pc+"."+f.name)
@@ -290,7 +290,7 @@ def directupload(request,self):
 
             oDevice.model=DeviceModel.objects.get(name=request.COOKIES.get('MODEL'),devicetype__name=request.COOKIES.get('TYPE'))
             oDevice.connection=DeviceConnection.objects.get(name=request.COOKIES.get('PORT'),devicetype__name=request.COOKIES.get('TYPE'))
-            oDevice.values=destination.read()
+            oDevice.values=unicode(destination.read(),"utf-8")
             oDevice.save()
             ret="OK"
             os.remove(MEDIA+pc+"."+f.name)
