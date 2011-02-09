@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-10 14:56+0200\n"
+"POT-Creation-Date: 2011-02-09 19:23+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -37,12 +37,12 @@ msgid "desktop is not valid name for this computer: IP=%(ip)s"
 msgstr "desktop no es un nombre válido para ésta maquina: IP=%(ip)s"
 
 #: system/logic.py:269
-msgid "Creating Repositories Files"
+msgid "Creating Repositories File"
 msgstr "Creando Ficheros de Repositorios"
 
 #: system/logic.py:274
-msgid "Refresh cache"
-msgstr "Refrescando cache"
+msgid "Getting data"
+msgstr "Obteniendo datos"
 
 #: system/logic.py:278
 msgid "Checking packages to remove"
@@ -868,3 +868,6 @@ msgstr "Paquete/Lote huérfano"
 #: utils/db/initial_data.py:217
 msgid "Repositories files creation"
 msgstr "Creación de ficheros de Repositorios"
+
+#~ msgid "Refresh cache"
+#~ msgstr "Refrescando cache"

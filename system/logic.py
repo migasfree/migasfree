@@ -271,7 +271,7 @@ def process_attributes(request,file):
     ret=ret+SaveRepositories(repositories,oVersion,oPms) 
 
     ret=ret+"\n\n# 5.- CLEAN CACHE OF PACKAGE MANAGEMENT SYSTEM\n"
-    ret=ret+"tooltip_status \""+ _("Refresh cache") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("Getting data") +"\"\n" 
     ret=ret+"pms_cleanall 2>>$_FILE_ERR\n"
 
     ret=ret+"\n\n# 6.- REMOVE PACKAGES\n"
