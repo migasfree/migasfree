@@ -493,6 +493,7 @@ def query2(request,parameters,FormParam):
 
     from django.db.models import Q
     from django.template import Context, Template
+    from django.db.models import *
 
     oQuery=Query.objects.get(id=parameters["id_query"])
   
@@ -855,7 +856,8 @@ def info(request,param):
         cad=cad+"PACKAGE="+RUTA[:-1]+"\n"
         cad=cad+version.pms.info
         ret=RunInServer(cad)["out"]
-        return render_to_response("info-package.html",{"title": "Information of Package.","contentpage": ret,"user":request.user,"root_path":"/migasfree/admin/"})
+        return HttpResponse(render_to_response('info-package.html', Context({"title": _("Information of Package"),"contentpage": ret,"user":request.user,"root_path":"/migasfree/admin/","LANGUAGE_CODE": request.LANGUAGE_CODE})),mimetype='text/html;charset=utf-8')
+
 
     # NAVIGATION FOR FOLDERS
     vl_fields=[]
