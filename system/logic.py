@@ -307,7 +307,7 @@ def process_attributes(request,file):
     ret=ret+"tooltip_status \""+ _("Upload inventory software") +"\"\n" 
     # If is the Computer with de Software Base we upload the list of packages
     if oVersion.computerbase==oComputer.name:
-      ret=ret+"cp $_FILE_LOG.1 $_DIR_TMP/base.log\n"
+      ret=ret+"pms_queryall | sort> $_DIR_TMP/base.log\n"
       ret=ret+"directupload $_DIR_TMP/base.log 2>> $_FILE_ERR\n"
     #Get the software base of the version and upload the diff 
     ret=ret+"download_file \"softwarebase/?VERSION=$MIGASFREE_VERSION\" \"$_DIR_TMP/softwarebase.log\" 2>/dev/null\n" 
