@@ -763,6 +763,9 @@ oGroupSys.permissions.add(Permission.objects.get(codename="add_version").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="change_version").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="can_save_version").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="delete_version").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="change_message").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="can_save_message").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="delete_message").id)
 oGroupSys.save()
 
 
