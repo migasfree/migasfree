@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from django.utils.translation import gettext as _
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
 from django.shortcuts import render_to_response
@@ -157,16 +158,14 @@ def update(request,param):
 
 
     ret=ret+"# Create the file update.xml\n"
-    s=_("Creating Attibutes and Faults")
-    ret=ret+"tooltip_status \""+ s +"\"\n"
+    ret=ret+"tooltip_status \""+ _("Creating Attibutes and Faults") +"\"\n" 
     ret=ret+"_FILE_XML=\"$_DIR_TMP/update.xml\"\n"
     ret=ret+"cat > $_FILE_XML << EOF\n"
     ret=ret+creaxml(properties,faults)+"\n"
     ret=ret+"EOF\n\n"
 
     ret=ret+"# Upload an run update.xml\n"
-    s=_("Uploading Attibutes and Faults")
-    ret=ret+"tooltip_status \""+ s +"\"\n"
+    ret=ret+"tooltip_status \""+ _("Uploading Attibutes and Faults") +"\"\n"
     ret=ret+"directupload_and_run_response $_FILE_XML \n\n"
 
     return HttpResponse(ret,mimetype='text/plain')

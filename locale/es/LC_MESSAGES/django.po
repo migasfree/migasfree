@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-12 16:33+0100\n"
+"POT-Creation-Date: 2011-02-12 17:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 msgid "Download"
 msgstr "Descarga"
 
-#: system/admin.py:90 system/admin.py:258 system/views.py:893
+#: system/admin.py:90 system/admin.py:258 system/views.py:891
 msgid "Information of Package"
 msgstr "Información del Paquete"
 
@@ -625,7 +625,7 @@ msgstr "Comprobación"
 msgid "Checkings"
 msgstr "Comprobaciones"
 
-#: system/models.py:647 system/views.py:963
+#: system/models.py:647 system/views.py:961
 msgid "message"
 msgstr "mensaje"
 
@@ -645,33 +645,33 @@ msgstr "Auto Comprobación de Errores"
 
 #: system/views.py:160
 msgid "Creating Attibutes and Faults"
-msgstr "Subiendo Atributos y Fallas"
+msgstr "Creando Atributos y Fallas"
 
-#: system/views.py:168
+#: system/views.py:167
 msgid "Uploading Attibutes and Faults"
 msgstr "Subiendo Atributos y Fallas"
 
-#: system/views.py:618
+#: system/views.py:616
 msgid "Parameters for Query:"
 msgstr "Parametros de Consulta"
 
-#: system/views.py:987
+#: system/views.py:985
 msgid "All O.K."
 msgstr "Todo O.K."
 
-#: system/views.py:989
+#: system/views.py:987
 msgid "Main Menu"
 msgstr "Menú Principal"
 
-#: system/views.py:1010
+#: system/views.py:1008
 msgid "System Menu"
 msgstr "Menú de Sistema"
 
-#: system/views.py:1039
+#: system/views.py:1037
 msgid "Change version for"
 msgstr "Cambiar version para"
 
-#: system/views.py:1068
+#: system/views.py:1066
 msgid "Documentation"
 msgstr "Documentación"
 
@@ -709,8 +709,8 @@ msgstr ""
 
 #: system/templates/documentation.html:7 system/templates/info-folder.html:4
 #: system/templates/info-package.html:5 system/templates/info.html:5
-#: system/templates/parameters.html:5 system/templates/query (copia).html:5
-#: system/templates/query.html:5 system/templates/admin/base_site.html:4
+#: system/templates/parameters.html:5 system/templates/query.html:5
+#: system/templates/admin/base_site.html:4
 msgid "migasfree"
 msgstr "migasfree"
 

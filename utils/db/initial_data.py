@@ -222,7 +222,7 @@ oChecking.save()
 oChecking=Checking()
 oChecking.name=_("Computer updating now")
 oChecking.description="Check how many computers are being updated at this time"
-oChecking.code="oMessages=Message.objects.all()\nresult=oMessages.count()\nurl='/migasfree/query/?id=7'\nicon='computer.png'"
+oChecking.code="oMessages=Message.objects.all()\nresult=oMessages.count()\nurl='/migasfree/query/?id=7'\nicon='computer.png'\nmessage='Computer updating now'"
 oChecking.save()
 
 
