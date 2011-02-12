@@ -160,7 +160,7 @@ class Message(models.Model):
     class Meta:
         verbose_name = _("Message")
         verbose_name_plural = _("Messages")
-        permissions = (("can_save_variable", "Can save Variable"),)
+        permissions = (("can_save_message", "Can save Message"),)
 
 
 class Error(models.Model):

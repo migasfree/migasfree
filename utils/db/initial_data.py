@@ -617,7 +617,7 @@ oQuery.description = "LIST OF MESSAGES FROM COMPUTERS"
 oQuery.code = "query=Message.objects.all()\nfields=('computer__name','computer__version__name','text','date')\ntitles=('computer','version','text','date')\n"
 oQuery.parameters=""
 oQuery.save()
-print "Query (add REPOSITORIES WITH A PACKAGE/SET)"
+print "Query (add MESSAGES FROM COMPUTERS)"
 
 
 
@@ -763,9 +763,11 @@ oGroupSys.permissions.add(Permission.objects.get(codename="add_version").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="change_version").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="can_save_version").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="delete_version").id)
-oGroupSys.permissions.add(Permission.objects.get(codename="change_message").id)
+
+#oGroupSys.permissions.add(Permission.objects.get(codename="add_message").id)
+#oGroupSys.permissions.add(Permission.objects.get(codename="change_message").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="can_save_message").id)
-oGroupSys.permissions.add(Permission.objects.get(codename="delete_message").id)
+#oGroupSys.permissions.add(Permission.objects.get(codename="delete_message").id)
 oGroupSys.save()
 
 
