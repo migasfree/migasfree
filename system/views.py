@@ -68,6 +68,35 @@ def UserVersion(user):
 #    oVariable.save()
 
 
+def message(request,param):
+
+    import time
+    m=time.strftime("%Y-%m-%d %H:%M:%S")
+    pc=request.GET.get('PC')
+    msg=request.GET.get('TEXT')
+
+    try:
+        oComputer=Computer.objects.get(name=pc)
+    except: #si no esta el Equipo lo añadimos
+        oComputer=Computer(name=pc)
+        oComputer.alta=t
+
+    try:
+        oMessage=Message.objects.get(computer=oComputer)
+        if msg=="":
+            oMessage.delete()
+            return HttpResponse("OK",mimetype='text/plain')
+    except:
+        oMessage=Message(computer=oComputer)
+
+    oMessage.text=msg
+    oMessage.date=m
+    oMessage.save()
+
+    return HttpResponse("OK",mimetype='text/plain')
+
+
+
 # Devuelve el script a ejecutar en la maquina cliente 
 def update(request,param):
 
@@ -126,13 +155,18 @@ def update(request,param):
     ret=ret+"\n"
 
 
+
     ret=ret+"# Create the file update.xml\n"
+    s=_("Creating Attibutes and Faults")
+    ret=ret+"tooltip_status \""+ s +"\"\n"
     ret=ret+"_FILE_XML=\"$_DIR_TMP/update.xml\"\n"
     ret=ret+"cat > $_FILE_XML << EOF\n"
     ret=ret+creaxml(properties,faults)+"\n"
     ret=ret+"EOF\n\n"
 
     ret=ret+"# Upload an run update.xml\n"
+    s=_("Uploading Attibutes and Faults")
+    ret=ret+"tooltip_status \""+ s +"\"\n"
     ret=ret+"directupload_and_run_response $_FILE_XML \n\n"
 
     return HttpResponse(ret,mimetype='text/plain')

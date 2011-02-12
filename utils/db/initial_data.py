@@ -219,6 +219,12 @@ oChecking.description="Check if the current user version have to create the file
 oChecking.code="from migasfree.system.logic import compare_values\nresult=0\nds=Repository.objects.all()\nfor d in ds:\n    if not compare_values(d.packages.values('id'),d.createpackages.values('id')):\n        result=result+1\nurl='/migasfree/createrepositories'\nicon='repository.png'\nmessage='Repositories files creation'"
 oChecking.save()
 
+oChecking=Checking()
+oChecking.name=_("Computer updating now")
+oChecking.description="Check how many computers are being updated at this time"
+oChecking.code="oMessages=Message.objects.all()\nresult=oMessages.count()\nurl='/migasfree/query/?id=7'\nicon='computer.png'"
+oChecking.save()
+
 
 #PROPERTIES DEFINITION
 oProperty=Property()
@@ -603,6 +609,16 @@ oQuery.code = "query=Repository.objects.filter(version=VERSION).filter(Q(package
 oQuery.parameters="def  formParams():\n    from migasfree.system.forms import ParametersForm\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm"
 oQuery.save()
 print "Query (add REPOSITORIES WITH A PACKAGE/SET)"
+
+
+oQuery=Query()
+oQuery.name = "MESSAGES FROM COMPUTERS"
+oQuery.description = "LIST OF MESSAGES FROM COMPUTERS"
+oQuery.code = "query=Message.objects.all()\nfields=('computer__name','computer__version__name','text','date')\ntitles=('computer','version','text','date')\n"
+oQuery.parameters=""
+oQuery.save()
+print "Query (add REPOSITORIES WITH A PACKAGE/SET)"
+
 
 
 

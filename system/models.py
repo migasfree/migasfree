@@ -56,6 +56,11 @@ class Variable(models.Model):
 
 
 
+
+
+
+
+
 class Pms(models.Model):
     """Package Management System
 
@@ -144,6 +149,18 @@ class Computer(models.Model):
         verbose_name_plural = _("Computers")
         permissions = (("can_save_computer", "Can save Computer"),)
 
+
+class Message(models.Model):
+    computer= models.ForeignKey(Computer,verbose_name=_("computer"),unique=True)
+    text = models.CharField(_("text"),max_length=50,null=True, blank=True )
+    date= models.DateTimeField(_("date"),default=0)
+    def __unicode__(self):
+        return self.computer.name+" - "+self.text
+
+    class Meta:
+        verbose_name = _("Message")
+        verbose_name_plural = _("Messages")
+        permissions = (("can_save_variable", "Can save Variable"),)
 
 
 class Error(models.Model):

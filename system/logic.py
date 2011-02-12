@@ -18,6 +18,7 @@ from migasfree.system.models import FaultDef
 from migasfree.system.models import ScheduleDelay
 from migasfree.system.models import Schedule
 from migasfree.system.models import Package
+from migasfree.system.models import Message
 from migasfree.system.views import *
 from django.db.models import Q
 import os
@@ -127,7 +128,7 @@ def process_attributes(request,file):
           oComputer.ip=dic_computer["IP"]
           oComputer.version=Version.objects.get(name=dic_computer["VERSION"])
           oComputer.save()    
-
+   
 
         # if not exists the user, we add it
         try:
@@ -330,7 +331,9 @@ def process_attributes(request,file):
 
     ret=ret+"tooltip_status \""+ _("System is updated") +"\"\n" 
     ret=ret+"icon_status /usr/share/icons/hicolor/48x48/actions/migasfree-ok.png\n" 
-    ret=ret+"sleep 3\n" 
+    ret=ret+"sleep 5\n" 
+
+    ret=ret+"tooltip_status \"\"\n"
 
     return ret
 
