@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-12 17:50+0100\n"
+"POT-Creation-Date: 2011-02-12 21:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 msgid "Download"
 msgstr "Descarga"
 
-#: system/admin.py:90 system/admin.py:258 system/views.py:891
+#: system/admin.py:90 system/admin.py:258 system/views.py:892
 msgid "Information of Package"
 msgstr "Información del Paquete"
 
@@ -625,7 +625,7 @@ msgstr "Comprobación"
 msgid "Checkings"
 msgstr "Comprobaciones"
 
-#: system/models.py:647 system/views.py:961
+#: system/models.py:647 system/views.py:962
 msgid "message"
 msgstr "mensaje"
 
@@ -643,35 +643,35 @@ msgstr "Auto Comprobacion de Error"
 msgid "Auto Check Errors"
 msgstr "Auto Comprobación de Errores"
 
-#: system/views.py:160
-msgid "Creating Attibutes and Faults"
+#: system/views.py:161
+msgid "Creating Attributes and Faults"
 msgstr "Creando Atributos y Fallas"
 
-#: system/views.py:167
-msgid "Uploading Attibutes and Faults"
+#: system/views.py:168
+msgid "Uploading Attributes and Faults"
 msgstr "Subiendo Atributos y Fallas"
 
-#: system/views.py:616
+#: system/views.py:617
 msgid "Parameters for Query:"
-msgstr "Parametros de Consulta"
+msgstr "Parámetros de Consulta"
 
-#: system/views.py:985
+#: system/views.py:986
 msgid "All O.K."
 msgstr "Todo O.K."
 
-#: system/views.py:987
+#: system/views.py:988
 msgid "Main Menu"
 msgstr "Menú Principal"
 
-#: system/views.py:1008
+#: system/views.py:1009
 msgid "System Menu"
 msgstr "Menú de Sistema"
 
-#: system/views.py:1037
+#: system/views.py:1038
 msgid "Change version for"
 msgstr "Cambiar version para"
 
-#: system/views.py:1066
+#: system/views.py:1067
 msgid "Documentation"
 msgstr "Documentación"
 
@@ -889,6 +889,3 @@ msgstr "Creación de ficheros de Repositorios"
 #: utils/db/initial_data.py:223
 msgid "Computer updating now"
 msgstr "Equipos actualizándose"
-
-#~ msgid "Creating Attibutes"
-#~ msgstr "Creando Atributos"

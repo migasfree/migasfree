@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-from django.utils.translation import gettext as _
+from django.utils.translation import ugettext as _
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import auth
@@ -100,7 +100,6 @@ def message(request,param):
 
 # Devuelve el script a ejecutar en la maquina cliente 
 def update(request,param):
-
     def creaxml(properties,faults):
         ret='<?xml version="1.0" encoding="UTF-8" standalone= "yes"?>'+"\n"
         ret=ret+"<MIGASFREE>"
@@ -155,17 +154,15 @@ def update(request,param):
         ret=ret+"}\n"
     ret=ret+"\n"
 
-
-
     ret=ret+"# Create the file update.xml\n"
-    ret=ret+"tooltip_status \""+ _("Creating Attibutes and Faults") +"\"\n" 
+    ret=ret+"tooltip_status \""+ _("Creating Attributes and Faults") +"\"\n" 
     ret=ret+"_FILE_XML=\"$_DIR_TMP/update.xml\"\n"
     ret=ret+"cat > $_FILE_XML << EOF\n"
     ret=ret+creaxml(properties,faults)+"\n"
     ret=ret+"EOF\n\n"
 
     ret=ret+"# Upload an run update.xml\n"
-    ret=ret+"tooltip_status \""+ _("Uploading Attibutes and Faults") +"\"\n"
+    ret=ret+"tooltip_status \""+ _("Uploading Attributes and Faults") +"\"\n"
     ret=ret+"directupload_and_run_response $_FILE_XML \n\n"
 
     return HttpResponse(ret,mimetype='text/plain')
