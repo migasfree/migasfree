@@ -927,35 +927,65 @@ def UploadPkg(VERSION,PACKAGE):
     print "\nUploading "+PACKAGE+" en "+VERSION+"..." 
     os.system("curl -x '' -b 'username=packager; password=packager; VER="+VERSION+"; STORE=third/migasfree; NOPKG=' -F file=@"+PACKAGE+" http://127.0.0.1:80/migasfree/uploadPackage/")
 
+
+
+
+VERSION_CLIENT_RPM="1.0-0.4"
+VERSION_CLIENT_DEB="1.0"
+
+VERSION_TEST_RPM="1.0-0.0"
+VERSION_TEST_DEB="1.0"
+
+VERSION_PACKAGER_RPM="1.0-0.0"
+VERSION_PACKAGER_DEB="1.0"
+
+
+#down packages RPM
+os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-client-"+VERSION_CLIENT_RPM+".noarch.rpm  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-client-"+VERSION_CLIENT_RPM+".noarch.rpm") 
+
+os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-test-"+VERSION_TEST_RPM+".noarch.rpm  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-test-"+VERSION_TEST_RPM+".noarch.rpm") 
+
+os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_RPM+".noarch.rpm  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_RPM+".noarch.rpm") 
+
+#down packages DEB
+os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-client-"+VERSION_CLIENT_DEB+".deb  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-client-"+VERSION_CLIENT_DEB+".deb") 
+
+os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-test-"+VERSION_TEST_DEB+".deb  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-test-"+VERSION_TEST_DEB+".deb") 
+
+os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_DEB+".deb  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_DEB+".deb") 
+
+
+
+
 #UPLOADING PACKAGES
-UploadPkg("FEDORA","/srv/Django/migasfree/utils/db/packages/migasfree-client-1.0-0.0.noarch.rpm")
-UploadPkg("FEDORA","/srv/Django/migasfree/utils/db/packages/migasfree-test-1.0-0.0.noarch.rpm")
-UploadPkg("FEDORA","/srv/Django/migasfree/utils/db/packages/migasfree-packager-1.0-0.0.noarch.rpm")
+UploadPkg("FEDORA","/srv/Django/migasfree/utils/db/packages/migasfree-client-"+VERSION_CLIENT_RPM+".noarch.rpm")
+UploadPkg("FEDORA","/srv/Django/migasfree/utils/db/packages/migasfree-test-"+VERSION_TEST_RPM+".noarch.rpm")
+UploadPkg("FEDORA","/srv/Django/migasfree/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_RPM+".noarch.rpm")
 
-UploadPkg("OPENSUSE","/srv/Django/migasfree/utils/db/packages/migasfree-client-1.0-0.0.noarch.rpm")
-UploadPkg("OPENSUSE","/srv/Django/migasfree/utils/db/packages/migasfree-test-1.0-0.0.noarch.rpm")
-UploadPkg("OPENSUSE","/srv/Django/migasfree/utils/db/packages/migasfree-packager-1.0-0.0.noarch.rpm")
+UploadPkg("OPENSUSE","/srv/Django/migasfree/utils/db/packages/migasfree-client-"+VERSION_CLIENT_RPM+".noarch.rpm")
+UploadPkg("OPENSUSE","/srv/Django/migasfree/utils/db/packages/migasfree-test-"+VERSION_TEST_RPM+".noarch.rpm")
+UploadPkg("OPENSUSE","/srv/Django/migasfree/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_RPM+".noarch.rpm")
 
-UploadPkg("UBUNTU","/srv/Django/migasfree/utils/db/packages/migasfree-client-1.0.deb")
-UploadPkg("UBUNTU","/srv/Django/migasfree/utils/db/packages/migasfree-test-1.0.deb")
-UploadPkg("UBUNTU","/srv/Django/migasfree/utils/db/packages/migasfree-packager-1.0.deb")
+UploadPkg("UBUNTU","/srv/Django/migasfree/utils/db/packages/migasfree-client-"+VERSION_CLIENT_DEB+".deb")
+UploadPkg("UBUNTU","/srv/Django/migasfree/utils/db/packages/migasfree-test-"+VERSION_TEST_DEB+".deb")
+UploadPkg("UBUNTU","/srv/Django/migasfree/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_DEB+".deb")
 
 print "\n"
 
 oVersion=Version.objects.get(name="FEDORA")    
-oPackage1=Package.objects.get(name="migasfree-client-1.0-0.0.noarch.rpm",version=oVersion)
+oPackage1=Package.objects.get(name="migasfree-client-"+VERSION_CLIENT_RPM+".noarch.rpm",version=oVersion)
 oPackage2=Package.objects.get(name="migasfree-test-1.0-0.0.noarch.rpm",version=oVersion)
 oPackage3=Package.objects.get(name="migasfree-packager-1.0-0.0.noarch.rpm",version=oVersion)
 byVersion(oVersion,oPackage1,oPackage2,oPackage3)
 
 oVersion=Version.objects.get(name="OPENSUSE")    
-oPackage1=Package.objects.get(name="migasfree-client-1.0-0.0.noarch.rpm",version=oVersion)
+oPackage1=Package.objects.get(name="migasfree-client-"+VERSION_CLIENT_RPM+".noarch.rpm",version=oVersion)
 oPackage2=Package.objects.get(name="migasfree-test-1.0-0.0.noarch.rpm",version=oVersion)
 oPackage3=Package.objects.get(name="migasfree-packager-1.0-0.0.noarch.rpm",version=oVersion)
 byVersion(oVersion,oPackage1,oPackage2,oPackage3)
 
 oVersion=Version.objects.get(name="UBUNTU")    
-oPackage1=Package.objects.get(name="migasfree-client-1.0.deb",version=oVersion)
+oPackage1=Package.objects.get(name="migasfree-client-"+VERSION_CLIENT_DEB+".deb",version=oVersion)
 oPackage2=Package.objects.get(name="migasfree-test-1.0.deb",version=oVersion)
 oPackage3=Package.objects.get(name="migasfree-packager-1.0.deb",version=oVersion)
 byVersion(oVersion,oPackage1,oPackage2,oPackage3)
