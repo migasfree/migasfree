@@ -931,7 +931,7 @@ def UploadPkg(VERSION,PACKAGE):
 
 
 VERSION_CLIENT_RPM="1.0-0.4"
-VERSION_CLIENT_DEB="1.0"
+VERSION_CLIENT_DEB="1.4"
 
 VERSION_TEST_RPM="1.0-0.0"
 VERSION_TEST_DEB="1.0"
@@ -948,7 +948,7 @@ os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils
 os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_RPM+".noarch.rpm  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-packager-"+VERSION_PACKAGER_RPM+".noarch.rpm") 
 
 #down packages DEB
-os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-client-"+VERSION_CLIENT_DEB+".deb  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-client-"+VERSION_CLIENT_DEB+".deb") 
+os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-client-"+VERSION_CLIENT_DEB+".deb  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-client_"+VERSION_CLIENT_DEB+"_all.deb") 
 
 os.system("wget --no-cache --no-check-certificate -O /srv/Django/migasfree/utils/db/packages/migasfree-test-"+VERSION_TEST_DEB+".deb  https://github.com/agacias/migasfree/raw/master/utils/db/packages/migasfree-test-"+VERSION_TEST_DEB+".deb") 
 
