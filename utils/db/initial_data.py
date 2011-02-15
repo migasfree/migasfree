@@ -222,8 +222,12 @@ oChecking.save()
 oChecking=Checking()
 oChecking.name=_("Computer updating now")
 oChecking.description="Check how many computers are being updated at this time"
-oChecking.code="oMessages=Message.objects.all()\nresult=oMessages.count()\nurl='/migasfree/query/?id=7'\nicon='computer.png'\nmessage='Computer updating now'"
+oChecking.code="from datetime import datetime\nfrom datetime import timedelta\nSECONDS_ALERT=3600\noMessages=Message.objects.all()\nresult=oMessages.count()\nurl='/migasfree/query/?id=7'\nmessage='Computer updating now'\nt=datetime.now()-timedelta(0,SECONDS_ALERT)\nn= Message.objects.filter(date__lt = t).count()\nif n > 0:\n    icon='computer_alert.png'\nelse:\n    icon='computer.png'"
 oChecking.save()
+
+
+
+
 
 
 #PROPERTIES DEFINITION
