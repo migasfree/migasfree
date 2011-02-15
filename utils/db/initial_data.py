@@ -998,7 +998,7 @@ byVersion(oVersion,oPackage1,oPackage2,oPackage3)
 
 
 
-***********************************************************************************************
+#***********************************************************************************************
 #Server Files:
 os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/icons/computer_alert.png https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/icons/computer_alert.png") 
 
