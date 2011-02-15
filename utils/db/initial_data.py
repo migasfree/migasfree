@@ -877,8 +877,6 @@ oUser.save()
 
 
 
-
-
 #***********************************************************************************************
 def byVersion(oVersion,oPackage1,oPackage2,oPackage3):
 
@@ -995,4 +993,12 @@ oPackage2=Package.objects.get(name="migasfree-test"+VERSION_TEST_DEB,version=oVe
 oPackage3=Package.objects.get(name="migasfree-packager"+VERSION_PACKAGER_DEB,version=oVersion)
 byVersion(oVersion,oPackage1,oPackage2,oPackage3)
 
+
+
+
+
+
+***********************************************************************************************
+#Server Files:
+os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/icons/computer_alert.png https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/icons/computer_alert.png") 
 
