@@ -53,6 +53,8 @@ urlpatterns = patterns('',
     (r'^migasfree/createrepositoriesofpackage/(.*)', createrepositoriesofpackage),
     (r'^migasfree/login/(.*)', login),
     (r'^migasfree/documentation/(.*)', documentation),
+    (r'^migasfree/queryMessage/(.*)', queryMessage),
+
 )
 
 

@@ -139,6 +139,34 @@ class Computer(models.Model):
     history_hw=models.TextField(_("hardware history"),default="",null=True, blank=True) 
     software=models.TextField(_("software inventory"),null=True, blank=True,help_text=_("differences of packages respect the software base of the version"))  
     history_sw=models.TextField(_("software history"),default="",null=True, blank=True) 
+    
+    def lastLogin(self):
+        from django.db.models import Q
+        q=Login.objects.filter(Q(computer__id=self.id)).order_by('-date')
+        return q[0]
+
+    def lastUpdate(self):
+        from django.db.models import Q
+        q=Update.objects.filter(Q(computer__id=self.id)).order_by('-date')
+        if q.count()==0:
+            return Update()
+        else:
+            return q[0]
+        
+    def login_link(self):
+        return self.lastLogin().link()
+    login_link.allow_tags=True
+    login_link.short_description = _("Last login") 
+
+    def update_link(self):
+        return self.lastUpdate().link()
+    update_link.allow_tags=True
+    update_link.short_description = _("Last update") 
+
+
+    def link(self):
+        return '<a href="%s">%s</a>' % ( "../Computer/"+str(self.id), self.name )
+    link.allow_tags=True
 
 
     def __unicode__(self):
@@ -157,10 +185,39 @@ class Message(models.Model):
     def __unicode__(self):
         return self.computer.name+" - "+self.text
 
+    def computer_link(self):
+        return self.computer.link()
+    computer_link.allow_tags=True
+    computer_link.short_description = _("Computer") 
+
     class Meta:
         verbose_name = _("Message")
         verbose_name_plural = _("Messages")
         permissions = (("can_save_message", "Can save Message"),)
+
+
+class Update(models.Model):
+    computer= models.ForeignKey(Computer,verbose_name=_("computer"))
+    date= models.DateTimeField(_("date"),default=0)
+    def __unicode__(self):
+        return self.computer.name
+
+    def computer_link(self):
+        return self.computer.link()
+    computer_link.allow_tags=True
+    computer_link.short_description = _("Computer") 
+
+    def link(self):
+        return '<a href="%s">%s</a>' % ( "../Update/"+str(self.id), str(self.date) )
+    link.allow_tags=True
+
+
+    class Meta:
+        verbose_name = _("Update")
+        verbose_name_plural = _("Updates")
+        permissions = (("can_save_update", "Can save Update"),)
+
+
 
 
 class Error(models.Model):
@@ -177,10 +234,11 @@ class Error(models.Model):
         if msg=="":
             self.checked=True
 
+    def computer_link(self):
+        return self.computer.link()
+    computer_link.allow_tags=True
+    computer_link.short_description = _("Computer") 
 
-    def linkComputer(self):
-        return '<a href="%s">%s</a>' % ( "../Computer/"+str(self.computer.id), self.computer.name )
-    linkComputer.allow_tags=True
 
     def save(self):
         self.error=self.error.replace("\r\n","\n")
@@ -203,6 +261,11 @@ class User(models.Model):
     fullname = models.CharField(_("fullname"),max_length=50)
     def __unicode__(self):
         return self.name+" - "+self.fullname
+
+    def link(self):
+        return '<a href="%s">%s</a>' % ( "../User/"+str(self.id), self.name +"-"+self.fullname)
+    link.allow_tags=True
+
 
     class Meta:
         verbose_name = _("User") 
@@ -292,6 +355,10 @@ class Property(models.Model):
     def __unicode__(self):
         return self.name
 
+    def link(self):
+        return '<a href="%s">%s</a>' % ( "../Property/"+str(self.id), self.name )
+    link.allow_tags=True
+
     def save(self):
         self.before_insert=self.before_insert.replace("\r\n","\n")
         self.after_insert=self.after_insert.replace("\r\n","\n")
@@ -307,9 +374,14 @@ class Attribute(models.Model):
     value = models.CharField(_("value"),max_length=250)
     description = models.TextField(_("description"),null=True, blank=True)
 
-    def linkProperty(self):
-        return '<a href="%s">%s</a>' % ( "../Property/"+str(self.property_att.id), self.property_att.name )
-    linkProperty.allow_tags=True
+
+
+    def property_link(self):
+        return self.property_att.link()
+    property_link.allow_tags=True
+    property_link.short_description = _("Property") 
+
+
 
     def __unicode__(self):
         return self.property_att.prefix+"-"+self.value+" "+self.description
@@ -351,9 +423,10 @@ class Fault(models.Model):
     faultdef = models.ForeignKey(FaultDef,verbose_name=_("fault definition"))
     checked = models.BooleanField(_("checked"),default=False,help_text="")
 
-    def linkComputer(self):
-        return '<a href="%s">%s</a>' % ( "../Computer/"+str(self.computer.id), self.computer.name )
-    linkComputer.allow_tags=True
+    def computer_link(self):
+        return self.computer.link()
+    computer_link.allow_tags=True
+    computer_link.short_description = _("Computer") 
 
     def __unicode__(self):
         return str(self.id)+" - "+self.computer.name+" - "+ str(self.date)
@@ -498,16 +571,25 @@ class Login(models.Model):
     user= models.ForeignKey(User,verbose_name=_("user"))
     attributes = models.ManyToManyField(Attribute,null=True, blank=True,verbose_name=_("attributes"))
 
-    def linkComputer(self):
-        return '<a href="%s">%s</a>' % ( "../Computer/"+str(self.computer.id), self.computer.name )
-    linkComputer.allow_tags=True
+    def computer_link(self):
+        return self.computer.link()
+    computer_link.allow_tags=True
+    computer_link.short_description = _("Computer") 
 
-    def linkUser(self):
-        return '<a href="%s">%s</a>' % ( "../User/"+str(self.user.id), self.user.name )
-    linkUser.allow_tags=True
+
+    def user_link(self):
+        return self.user.link()
+    user_link.allow_tags=True
+    user_link.short_description = _("User") 
+
 
     def __unicode__(self):
         return str(self.id)+" - "+self.user.name+" - "+self.computer.name 
+
+    def link(self):
+#        return '<a href="%s">%s</a>' % ( "../Login/"+str(self.id), self.user.name + "-" + self.user.fullname )
+        return self.user.link()
+    link.allow_tags=True
 
     class Meta:
         verbose_name = _("Login")

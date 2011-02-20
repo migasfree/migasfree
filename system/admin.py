@@ -29,13 +29,14 @@ from migasfree.system.models import DeviceConnection
 from migasfree.system.models import Device
 from migasfree.system.models import Checking
 from migasfree.system.models import AutoCheckError
+from migasfree.system.models import Message
+from migasfree.system.models import Update
 
 admin.site.register(DeviceType)
 admin.site.register(DeviceManufacturer)
 admin.site.register(DeviceConnection)
 admin.site.register(UserProfile)
 admin.site.register(AutoCheckError)
-
 
 
 def user_version(user):
@@ -52,6 +53,14 @@ class VersionAdmin(admin.ModelAdmin):
     list_display = ('name','pms','computerbase')
     actions=None
 admin.site.register(Version,VersionAdmin)
+
+
+class UpdateAdmin(admin.ModelAdmin):
+    list_display = ('id','computer_link','date')
+    list_filter = ('date',)
+    search_fields = ('computer__name',)
+    actions=None
+admin.site.register(Update,UpdateAdmin)
 
 
 class CheckingAdmin(admin.ModelAdmin):
@@ -101,7 +110,7 @@ admin.site.register(Property, PropertyAdmin)
 
 
 class AttributeAdmin(admin.ModelAdmin):
-    list_display = ('value','description','linkProperty')
+    list_display = ('value','description','property_link')
     list_filter = ('property_att',)
     ordering = ('property_att','value',)
     search_fields = ('value','description')
@@ -109,7 +118,7 @@ admin.site.register(Attribute,AttributeAdmin)
 
 
 class LoginAdmin(admin.ModelAdmin):
-    list_display = ('id','linkUser','linkComputer','date')
+    list_display = ('id','user_link','computer_link','date')
     list_filter = ('date',)
     ordering = ('user','computer')
     search_fields = ('user__name','user__fullname','computer__name')
@@ -133,7 +142,7 @@ admin.site.register(User, UserAdmin)
 
 
 class ErrorAdmin(admin.ModelAdmin):
-    list_display = ('id','linkComputer','checked','date','error')
+    list_display = ('id','computer_link','checked','date','error')
     list_filter = ('checked','date',)
     ordering = ('date','computer')
     search_fields = ('date','computer__name','error')
@@ -152,7 +161,7 @@ admin.site.register(Error, ErrorAdmin)
 
 
 class FaultAdmin(admin.ModelAdmin):
-    list_display = ('id','linkComputer','checked','date','text','faultdef',)
+    list_display = ('id','computer_link','checked','date','text','faultdef',)
     list_filter = ('checked','date','faultdef',)
     ordering = ('date','computer',)
     search_fields = ('date','computer__name','fault',)
@@ -176,12 +185,19 @@ admin.site.register(FaultDef, FaultDefAdmin)
 
 
 class ComputerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'ip','version',)
+    list_display = ('name','login_link','update_link','ip','version',)
     ordering = ('name',)
     list_filter = ('version',)
     search_fields = ('name','ip','mac')
 admin.site.register(Computer, ComputerAdmin)
 
+
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ('id','computer_link','date','text')
+    ordering = ('date',)
+    list_filter = ('date',)
+    search_fields = ('computer','text','date')
+admin.site.register(Message, MessageAdmin)
 
 class VariableAdmin(admin.ModelAdmin):
     list_display = ('name','value')

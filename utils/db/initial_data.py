@@ -35,6 +35,13 @@ oVariable.name="ORGANIZATION"
 oVariable.value="My Organization"
 oVariable.save()
 
+
+oVariable=Variable()
+oVariable.name="SECONDS_MESSAGE_ALERT"
+oVariable.value="1800"
+oVariable.save()
+
+
 #PACKAGE MANAGEMENT SYSTEM
 oPms=Pms()
 oPms.name="yum"
@@ -222,10 +229,8 @@ oChecking.save()
 oChecking=Checking()
 oChecking.name=_("Computer updating now")
 oChecking.description="Check how many computers are being updated at this time"
-oChecking.code="from datetime import datetime\nfrom datetime import timedelta\nSECONDS_ALERT=3600\noMessages=Message.objects.all()\nresult=oMessages.count()\nurl='/migasfree/query/?id=7'\nmessage='Computer updating now'\nt=datetime.now()-timedelta(0,SECONDS_ALERT)\nn= Message.objects.filter(date__lt = t).count()\nif n > 0:\n    icon='computer_alert.png'\nelse:\n    icon='computer.png'"
+oChecking.code="from datetime import datetime\nfrom datetime import timedelta\nSECONDS_MESSAGE_ALERT=int(getVariable('SECONDS_MESSAGE_ALERT'))\noMessages=Message.objects.all()\nresult=oMessages.count()\nurl='/migasfree/queryMessage'\nmessage='Computer updating now'\nt=datetime.now()-timedelta(0,SECONDS_MESSAGE_ALERT)\nn= Message.objects.filter(date__lt = t).count()\nif n > 0:\n    icon='computer_alert.png'\nelse:\n    icon='computer.png'"
 oChecking.save()
-
-
 
 
 
@@ -616,12 +621,12 @@ print "Query (add REPOSITORIES WITH A PACKAGE/SET)"
 
 
 oQuery=Query()
-oQuery.name = "MESSAGES FROM COMPUTERS"
+oQuery.name = "LAST LOGIN"
 oQuery.description = "LIST OF MESSAGES FROM COMPUTERS"
-oQuery.code = "query=Message.objects.all()\nfields=('computer__name','computer__version__name','text','date')\ntitles=('computer','version','text','date')\n"
+oQuery.code = "query=Login.objects.values('computer_id').annotate(lastdate=Max('date')).order_by('lastdate')\nfields=('computer__name','computer__ip','lastdate')\ntitles=('computer','ip','lastdate')\n"
 oQuery.parameters=""
 oQuery.save()
-print "Query (add MESSAGES FROM COMPUTERS)"
+print "Query (add LAST LOGIN)"
 
 
 
@@ -656,6 +661,8 @@ oGroupRead.permissions.add(Permission.objects.get(codename="change_query").id)
 oGroupRead.permissions.add(Permission.objects.get(codename="change_package").id)
 oGroupRead.permissions.add(Permission.objects.get(codename="change_repository").id)
 oGroupRead.permissions.add(Permission.objects.get(codename="change_store").id)
+oGroupRead.permissions.add(Permission.objects.get(codename="change_message",content_type__app_label="system").id)
+oGroupRead.permissions.add(Permission.objects.get(codename="change_update").id)
 oGroupRead.save()
 
 
@@ -708,6 +715,14 @@ oGroupCheck.permissions.add(Permission.objects.get(codename="add_fault").id)
 oGroupCheck.permissions.add(Permission.objects.get(codename="change_fault").id)
 oGroupCheck.permissions.add(Permission.objects.get(codename="can_save_fault").id)
 oGroupCheck.permissions.add(Permission.objects.get(codename="delete_fault").id)
+oGroupCheck.permissions.add(Permission.objects.get(codename="add_message",content_type__app_label="system").id)
+oGroupCheck.permissions.add(Permission.objects.get(codename="change_message",content_type__app_label="system").id)
+oGroupCheck.permissions.add(Permission.objects.get(codename="can_save_message",content_type__app_label="system").id)
+oGroupCheck.permissions.add(Permission.objects.get(codename="delete_message",content_type__app_label="system").id)
+oGroupCheck.permissions.add(Permission.objects.get(codename="add_update").id)
+oGroupCheck.permissions.add(Permission.objects.get(codename="change_update").id)
+oGroupCheck.permissions.add(Permission.objects.get(codename="can_save_update").id)
+oGroupCheck.permissions.add(Permission.objects.get(codename="delete_update").id)
 oGroupCheck.save()
 
 oGroupDev=Group()
@@ -768,10 +783,16 @@ oGroupSys.permissions.add(Permission.objects.get(codename="change_version").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="can_save_version").id)
 oGroupSys.permissions.add(Permission.objects.get(codename="delete_version").id)
 
-#oGroupSys.permissions.add(Permission.objects.get(codename="add_message").id)
-#oGroupSys.permissions.add(Permission.objects.get(codename="change_message").id)
-oGroupSys.permissions.add(Permission.objects.get(codename="can_save_message").id)
-#oGroupSys.permissions.add(Permission.objects.get(codename="delete_message").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="add_message",content_type__app_label="system").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="change_message",content_type__app_label="system").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="can_save_message",content_type__app_label="system").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="delete_message",content_type__app_label="system").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="add_update").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="change_update").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="can_save_update").id)
+oGroupSys.permissions.add(Permission.objects.get(codename="delete_update").id)
+
+
 oGroupSys.save()
 
 

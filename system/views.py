@@ -12,6 +12,7 @@ from django.db import connection, transaction
 import os
 import sys
 
+
 from migasfree.system.models import User
 from migasfree.system.models import Computer
 from migasfree.system.models import Variable
@@ -29,6 +30,7 @@ from migasfree.system.models import DeviceModel
 from migasfree.system.models import DeviceConnection
 from migasfree.system.models import DeviceType
 from migasfree.system.models import Checking
+from migasfree.system.models import Update
 
 from migasfree.system.logic import *
 
@@ -69,6 +71,7 @@ def UserVersion(user):
 #    oVariable.save()
 
 
+# Get Messages from Client Computers
 def message(request,param):
 
     import time
@@ -86,6 +89,7 @@ def message(request,param):
         oMessage=Message.objects.get(computer=oComputer)
         if msg=="":
             oMessage.delete()
+            Update(computer=oComputer,date=m).save()
             return HttpResponse("OK",mimetype='text/plain')
     except:
         oMessage=Message(computer=oComputer)
@@ -534,7 +538,7 @@ def query2(request,parameters,FormParam):
     try:
         exec(oQuery.code.replace("\r",""))
 
-
+        
         if vars().has_key("fields")==False:
             fields=[]
             for k,v in query.values()[0].iteritems():
@@ -909,6 +913,40 @@ def info(request,param):
     return render_to_response('info-folder.html', Context({"title": "Information of Package.","description": "VERSION: "+version.name,"filters":filters, "query":vl_fields,"user":request.user,"root_path":"/migasfree/admin/"}))
 
 
+@login_required
+def queryMessage(request,param):
+    from django.template import Context, Template
+    from datetime import datetime
+    from datetime import timedelta
+    from django.shortcuts import render_to_response
+
+    vl_fields=[]
+
+
+    SECONDS_MESSAGE_ALERT=int(getVariable("SECONDS_MESSAGE_ALERT"))
+    q=Message.objects.all().order_by("-date")
+    t=datetime.now()-timedelta(0,SECONDS_MESSAGE_ALERT)
+
+    q=Message.objects.all()
+
+    vl_fields.append(["","","",_("Computer"),"",_("Login"),"IP",_("Date"),_("Message"),])
+    for e in q:
+
+        if e.date < t:
+            icon='computer_alert.png'
+        else:
+            icon='computer.png'
+
+        lastLogin=e.computer.lastLogin()
+        vl_fields.append([icon,"-",e.computer.id,e.computer.name,lastLogin.id,lastLogin.user.name + "-" + lastLogin.user.fullname,e.computer.ip,e.date,e.text])
+
+
+    return render_to_response('message.html', Context({"title": "Computer Messages", "query":vl_fields,"user":request.user,"root_path":"/migasfree/admin/"}))
+
+
+
+
+
 
 def login(request,param):
     from django.template import Context, Template
@@ -1062,4 +1100,6 @@ def documentation(request,param):
     filters.append(param)
 
     return HttpResponse(render_to_response('documentation.html', Context({"title": _("Documentation"),"description": "","filters":filters, "user":request.user,"root_path":"/migasfree/admin/","LANGUAGE_CODE": request.LANGUAGE_CODE})),mimetype='text/html;charset=utf-8')
+
+
 
