@@ -587,8 +587,7 @@ class Login(models.Model):
         return str(self.id)+" - "+self.user.name+" - "+self.computer.name 
 
     def link(self):
-#        return '<a href="%s">%s</a>' % ( "../Login/"+str(self.id), self.user.name + "-" + self.user.fullname )
-        return self.user.link()
+        return '<a href="%s">%s</a>' % ( "../Login/"+str(self.id), self.user.name + "-" + self.user.fullname )
     link.allow_tags=True
 
     class Meta:
