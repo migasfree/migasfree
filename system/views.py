@@ -929,7 +929,7 @@ def queryMessage(request,param):
 
     q=Message.objects.all()
 
-    vl_fields.append(["","","",_("Computer"),"",_("Login"),"IP",_("Date"),_("Message"),])
+    vl_fields.append(["","","",_("Computer"),"",_("Login"),_("Version"),"IP",_("Date"),_("Message"),])
     for e in q:
 
         if e.date < t:
@@ -938,7 +938,7 @@ def queryMessage(request,param):
             icon='computer.png'
 
         lastLogin=e.computer.lastLogin()
-        vl_fields.append([icon,"-",e.computer.id,e.computer.name,lastLogin.id,lastLogin.user.name + "-" + lastLogin.user.fullname,e.computer.ip,e.date,e.text])
+        vl_fields.append([icon,"-",e.computer.id,e.computer.name,lastLogin.id,lastLogin.user.name + "-" + lastLogin.user.fullname,e.computer.version.name,e.computer.ip,e.date,e.text])
 
 
     return render_to_response('message.html', Context({"title": "Computer Messages", "query":vl_fields,"user":request.user,"root_path":"/migasfree/admin/"}))
