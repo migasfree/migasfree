@@ -212,6 +212,8 @@ class Update(models.Model):
     link.allow_tags=True
 
 
+
+
     class Meta:
         verbose_name = _("Update")
         verbose_name_plural = _("Updates")

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-12 21:17+0100\n"
+"POT-Creation-Date: 2011-02-24 00:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,19 +15,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: system/admin.py:86 system/admin.py:262
+#: system/admin.py:95 system/admin.py:278
 msgid "Download"
 msgstr "Descarga"
 
-#: system/admin.py:90 system/admin.py:258 system/views.py:892
+#: system/admin.py:99 system/admin.py:274 system/views.py:899
 msgid "Information of Package"
 msgstr "Información del Paquete"
 
-#: system/admin.py:148 system/admin.py:167
+#: system/admin.py:157 system/admin.py:176
 msgid "Checking is O.K."
 msgstr "Comprobación es O.K."
 
-#: system/admin.py:274
+#: system/admin.py:290
 msgid "Run Query"
 msgstr "Ejecutar Consulta"
 
@@ -85,15 +85,15 @@ msgid "System is updated"
 msgstr "Sistema actualizado"
 
 #: system/models.py:47 system/models.py:76 system/models.py:97
-#: system/models.py:132 system/models.py:202 system/models.py:215
-#: system/models.py:248 system/models.py:280 system/models.py:327
-#: system/models.py:369 system/models.py:408 system/models.py:520
-#: system/models.py:535 system/models.py:545 system/models.py:555
-#: system/models.py:574 system/models.py:607 system/models.py:625
+#: system/models.py:132 system/models.py:262 system/models.py:280
+#: system/models.py:313 system/models.py:345 system/models.py:401
+#: system/models.py:444 system/models.py:483 system/models.py:603
+#: system/models.py:618 system/models.py:628 system/models.py:638
+#: system/models.py:657 system/models.py:690 system/models.py:708
 msgid "name"
 msgstr "nombre"
 
-#: system/models.py:48 system/models.py:307
+#: system/models.py:48 system/models.py:376
 msgid "value"
 msgstr "valor"
 
@@ -169,7 +169,7 @@ msgstr "software base"
 msgid "List ordered of packages base for this version"
 msgstr "Lista ordenada de paquetes base para esta versión"
 
-#: system/models.py:126
+#: system/models.py:126 system/views.py:938
 msgid "Version"
 msgstr "Versión"
 
@@ -177,8 +177,8 @@ msgstr "Versión"
 msgid "Versions"
 msgstr "Versiones"
 
-#: system/models.py:133 system/models.py:216 system/models.py:249
-#: system/models.py:409 system/models.py:475
+#: system/models.py:133 system/models.py:281 system/models.py:314
+#: system/models.py:484 system/models.py:550
 #: system/templates/admin/base.html:39
 msgid "version"
 msgstr "versión"
@@ -219,110 +219,128 @@ msgstr "diferencias de paquetes respecto al software base de esta version"
 msgid "software history"
 msgstr "historia software"
 
-#: system/models.py:148
+#: system/models.py:159
+msgid "Last login"
+msgstr "Último Login"
+
+#: system/models.py:164
+msgid "Last update"
+msgstr "Última actualización"
+
+#: system/models.py:176 system/models.py:191 system/models.py:208
+#: system/models.py:242 system/models.py:431 system/models.py:579
+#: system/views.py:938
 msgid "Computer"
 msgstr "Equipo"
 
-#: system/models.py:149 system/templates/main.html:55
+#: system/models.py:177 system/templates/main.html:55
 msgid "Computers"
 msgstr "Equipos"
 
-#: system/models.py:154 system/models.py:167 system/models.py:348
-#: system/models.py:497
+#: system/models.py:182 system/models.py:200 system/models.py:226
+#: system/models.py:422 system/models.py:572
 msgid "computer"
 msgstr "equipo"
 
-#: system/models.py:155 system/models.py:350
+#: system/models.py:183 system/models.py:424
 msgid "text"
 msgstr "texto"
 
-#: system/models.py:156 system/models.py:168 system/models.py:349
-#: system/models.py:411 system/models.py:496
+#: system/models.py:184 system/models.py:201 system/models.py:227
+#: system/models.py:423 system/models.py:486 system/models.py:571
 msgid "date"
 msgstr "fecha"
 
-#: system/models.py:161
+#: system/models.py:194 system/views.py:938
 msgid "Message"
 msgstr "Mensaje"
 
-#: system/models.py:162
+#: system/models.py:195
 msgid "Messages"
 msgstr "Mensajes"
 
-#: system/models.py:169
+#: system/models.py:218
+msgid "Update"
+msgstr "Actualización"
+
+#: system/models.py:219 system/views.py:1266
+msgid "Updates"
+msgstr "Actualizaciones"
+
+#: system/models.py:228
 msgid "error"
 msgstr "error"
 
-#: system/models.py:170 system/models.py:352
+#: system/models.py:229 system/models.py:426
 msgid "checked"
 msgstr "comprobado"
 
-#: system/models.py:194
+#: system/models.py:254
 msgid "Error"
 msgstr "Error"
 
-#: system/models.py:195 system/templates/main.html:76
+#: system/models.py:255 system/templates/main.html:76
 msgid "Errors"
 msgstr "Errores"
 
-#: system/models.py:203
+#: system/models.py:263
 msgid "fullname"
 msgstr "nombre completo"
 
-#: system/models.py:208
+#: system/models.py:273 system/models.py:585
 msgid "User"
 msgstr "Usuario"
 
-#: system/models.py:209 system/templates/main.html:65
+#: system/models.py:274 system/templates/main.html:65
 #: system/templates/system.html:112 system/templates/system.html.py:118
 msgid "Users"
 msgstr "Usuarios"
 
-#: system/models.py:240
+#: system/models.py:305
 msgid "Store"
 msgstr "Almacén"
 
-#: system/models.py:241 system/templates/main.html:138
+#: system/models.py:306 system/templates/main.html:128
 msgid "Stores"
 msgstr "Almacenes"
 
-#: system/models.py:251
+#: system/models.py:316
 msgid "store"
 msgstr "almacén"
 
-#: system/models.py:264
+#: system/models.py:329
 msgid "Package/Set"
 msgstr "Paquete/Lote"
 
-#: system/models.py:265 system/templates/main.html:143
+#: system/models.py:330 system/templates/main.html:133
 msgid "Packages/Sets"
 msgstr "Paquetes/Lotes"
 
-#: system/models.py:273
+#: system/models.py:338
 msgid "NORMAL"
 msgstr "NORMAL"
 
-#: system/models.py:274
+#: system/models.py:339
 msgid "LIST"
 msgstr "LISTA"
 
-#: system/models.py:275
+#: system/models.py:340
 msgid "ADDS LEFT"
 msgstr "AÑADE POR LA IZQUIERDA"
 
-#: system/models.py:276
+#: system/models.py:341
 msgid "ADDS RIGHT"
 msgstr "AÑADE POR LA DERECHA"
 
-#: system/models.py:279
+#: system/models.py:344
 msgid "prefix"
 msgstr "prefijo"
 
-#: system/models.py:281 system/models.py:329
+#: system/models.py:346 system/models.py:403
 msgid "function"
 msgstr "función"
 
-#: system/models.py:281
+#: system/models.py:346
 msgid ""
 "Code bash. This code will execute in the client computer, and it must put in "
 "the standard output the value of the attribute correspondent to this "
@@ -331,349 +349,369 @@ msgid ""
 "with the name of commputer<br> echo $HOSTNAME"
 msgstr ""
 
-#: system/models.py:282
+#: system/models.py:347
 msgid "before insert"
 msgstr "antes de insertar"
 
-#: system/models.py:282
+#: system/models.py:347
 msgid ""
 "Code django. This code will execute before insert the attribute in the "
 "server. You can modify the value of attribute here, using the variable "
 "'data'."
 msgstr ""
 
-#: system/models.py:283
+#: system/models.py:348
 msgid "after insert"
 msgstr "después de insertar"
 
-#: system/models.py:283
+#: system/models.py:348
 msgid ""
 "Code django. This code will execute after insert the attribute in the server."
 msgstr ""
 
-#: system/models.py:284 system/models.py:330 system/models.py:410
-#: system/models.py:628
+#: system/models.py:349 system/models.py:404 system/models.py:485
+#: system/models.py:711
 msgid "active"
 msgstr "activo"
 
-#: system/models.py:285
+#: system/models.py:350
 msgid "kind"
 msgstr "clase"
 
-#: system/models.py:286
+#: system/models.py:351
 msgid "auto"
 msgstr "auto"
 
-#: system/models.py:301
+#: system/models.py:370 system/models.py:384
 msgid "Property"
 msgstr "Propiedad"
 
-#: system/models.py:302 system/templates/system.html:54
+#: system/models.py:371 system/templates/system.html:54
 msgid "Properties"
 msgstr "Propiedades"
 
-#: system/models.py:306
+#: system/models.py:375
 msgid "Property of attribute"
 msgstr "Propiedad del atributo"
 
-#: system/models.py:308 system/models.py:328 system/models.py:370
-#: system/models.py:521 system/models.py:626
+#: system/models.py:377 system/models.py:402 system/models.py:445
+#: system/models.py:604 system/models.py:709
 msgid "description"
 msgstr "descripción"
 
-#: system/models.py:320
+#: system/models.py:394
 msgid "Attribute"
 msgstr "Atributo"
 
-#: system/models.py:321 system/templates/main.html:71
+#: system/models.py:395 system/templates/main.html:71
 msgid "Attributes"
 msgstr "Atributos"
 
-#: system/models.py:343
+#: system/models.py:417
 msgid "Fault Definition"
 msgstr "Falla (Definición)"
 
-#: system/models.py:344
+#: system/models.py:418
 msgid "Faults Definition"
 msgstr "Fallas (Definición)"
 
-#: system/models.py:351
+#: system/models.py:425
 msgid "fault definition"
 msgstr "definición de falla"
 
-#: system/models.py:362
+#: system/models.py:437
 msgid "Fault"
 msgstr "Falla"
 
-#: system/models.py:363 system/templates/main.html:81
+#: system/models.py:438 system/templates/main.html:81
 #: system/templates/system.html:142
 msgid "Faults"
 msgstr "Fallas"
 
-#: system/models.py:376
+#: system/models.py:451
 msgid "Schedule"
 msgstr "Calendario"
 
-#: system/models.py:377 system/templates/system.html:148
+#: system/models.py:452 system/templates/system.html:148
 #: system/templates/system.html.py:154
 msgid "Schedules"
 msgstr "Calendarios"
 
-#: system/models.py:383
+#: system/models.py:458
 msgid "delay"
 msgstr "demora"
 
-#: system/models.py:384 system/models.py:418
+#: system/models.py:459 system/models.py:493
 msgid "schedule"
 msgstr "calendario"
 
-#: system/models.py:385 system/models.py:395 system/models.py:416
-#: system/models.py:499
+#: system/models.py:460 system/models.py:470 system/models.py:491
+#: system/models.py:574
 msgid "attributes"
 msgstr "atributos"
 
-#: system/models.py:398
+#: system/models.py:473
 msgid "Schedule Delay"
 msgstr "Calendario (Demora)"
 
-#: system/models.py:399
+#: system/models.py:474
 msgid "Schedule Delays"
 msgstr "Calendario (Demoras)"
 
-#: system/models.py:410
+#: system/models.py:485
 msgid "if you uncheck this field, the repository is hidden for all computers."
 msgstr ""
 "si desmarcas este campo, el repositorio no estará disponible para ningún "
 "equipo"
 
-#: system/models.py:411
+#: system/models.py:486
 msgid "Date initial for distribute."
 msgstr "Fecha inicial para distribuir"
 
-#: system/models.py:412
+#: system/models.py:487
 msgid "comment"
 msgstr "comentario"
 
-#: system/models.py:413
+#: system/models.py:488
 msgid "packages to install"
 msgstr "paquetes a instalar"
 
-#: system/models.py:414
+#: system/models.py:489
 msgid "packages to remove"
 msgstr "paquetes a desinstalar"
 
-#: system/models.py:415
+#: system/models.py:490
 msgid "packages/sets"
 msgstr "paquetes/lotes"
 
-#: system/models.py:420
+#: system/models.py:495
 msgid "modified"
 msgstr "modificado"
 
-#: system/models.py:421
+#: system/models.py:496
 msgid "createpackages"
 msgstr "createpackages"
 
-#: system/models.py:464
+#: system/models.py:539
 msgid "timeline"
 msgstr "línea de tiempo"
 
-#: system/models.py:467
+#: system/models.py:542
 msgid "Repository"
 msgstr "Repositorio"
 
-#: system/models.py:468 system/templates/main.html:159
+#: system/models.py:543 system/templates/main.html:149
 msgid "Repositories"
 msgstr "Repositorios"
 
-#: system/models.py:489
+#: system/models.py:564
 msgid "User Profile"
 msgstr "Perfil de Usuario"
 
-#: system/models.py:490
+#: system/models.py:565
 msgid "Users Profile"
 msgstr "Perfil de Usuarios"
 
-#: system/models.py:498
+#: system/models.py:573
 msgid "user"
 msgstr "usuario"
 
-#: system/models.py:513
+#: system/models.py:596 system/views.py:938
 msgid "Login"
 msgstr "Login"
 
-#: system/models.py:514 system/templates/main.html:66
+#: system/models.py:597 system/templates/main.html:66
 msgid "Logins"
 msgstr "Logins"
 
-#: system/models.py:522 system/models.py:557 system/models.py:610
-#: system/models.py:627
+#: system/models.py:605 system/models.py:640 system/models.py:693
+#: system/models.py:710
 msgid "code"
 msgstr "código"
 
-#: system/models.py:523
+#: system/models.py:606
 msgid "parameters"
 msgstr "parametros"
 
-#: system/models.py:529
+#: system/models.py:612
 msgid "Query"
 msgstr "Consulta"
 
-#: system/models.py:530 system/templates/main.html:123
-#: system/templates/main.html.py:128
+#: system/models.py:613 system/templates/queries.html:68
+#: system/templates/queries.html.py:73 system/templates/admin/base.html:70
 msgid "Queries"
 msgstr "Consultas"
 
-#: system/models.py:540
+#: system/models.py:623
 msgid "Device (Type)"
 msgstr "Dispositivo (Tipo)"
 
-#: system/models.py:541
+#: system/models.py:624
 msgid "Device (Types)"
 msgstr "Dispositivo (Tipos)"
 
-#: system/models.py:550
+#: system/models.py:633
 msgid "Device (Manufacturer)"
 msgstr "Dispositivo (Fabricante)"
 
-#: system/models.py:551
+#: system/models.py:634
 msgid "Device (Manufacturers)"
 msgstr "Dispositivo (Fabricantes)"
 
-#: system/models.py:556
+#: system/models.py:639
 msgid "fields"
 msgstr "campos"
 
-#: system/models.py:558
+#: system/models.py:641
 msgid "device type"
 msgstr "tipo de dispositivo"
 
-#: system/models.py:568
+#: system/models.py:651
 msgid "Device (Connection)"
 msgstr "Dispositivo (Conexion)"
 
-#: system/models.py:569
+#: system/models.py:652
 msgid "Device (Connections)"
 msgstr "Dispositivo (Conexiones)"
 
-#: system/models.py:575
+#: system/models.py:658
 msgid "manufacturer"
 msgstr "fabricante"
 
-#: system/models.py:576
+#: system/models.py:659
 msgid "type"
 msgstr "tipo"
 
-#: system/models.py:577
+#: system/models.py:660
 msgid "file name"
 msgstr "nombre de fichero"
 
-#: system/models.py:578
+#: system/models.py:661
 msgid "connections"
 msgstr "conexiones"
 
-#: system/models.py:579
+#: system/models.py:662
 msgid "precode"
 msgstr "precódigo"
 
-#: system/models.py:580
+#: system/models.py:663
 msgid "postcode"
 msgstr "postcódigo"
 
-#: system/models.py:589
+#: system/models.py:672
 msgid "Device (Model)"
 msgstr "Dispositivo (Modelo)"
 
-#: system/models.py:590
+#: system/models.py:673
 msgid "Device (Models)"
 msgstr "Dispositivo (Modelos)"
 
-#: system/models.py:598
+#: system/models.py:681
 msgid "Port"
 msgstr "Puerto"
 
-#: system/models.py:601
+#: system/models.py:684
 msgid "Type"
 msgstr "Tipo"
 
-#: system/models.py:604 system/templates/system.html:168
+#: system/models.py:687 system/templates/system.html:168
 msgid "Manufacturer"
 msgstr "Fabricante"
 
-#: system/models.py:608
+#: system/models.py:691
 msgid "model"
 msgstr "modelo"
 
-#: system/models.py:609
+#: system/models.py:692
 msgid "connection"
 msgstr "conexión"
 
-#: system/models.py:614
+#: system/models.py:697
 msgid "Device"
 msgstr "Dispositivo"
 
-#: system/models.py:615 system/templates/main.html:60
+#: system/models.py:698 system/templates/main.html:60
 #: system/templates/system.html:160
 msgid "Devices"
 msgstr "Dispositivos"
 
-#: system/models.py:637
+#: system/models.py:720
 msgid "Checking"
 msgstr "Comprobación"
 
-#: system/models.py:638 system/templates/system.html:129
+#: system/models.py:721 system/templates/system.html:129
 msgid "Checkings"
 msgstr "Comprobaciones"
 
-#: system/models.py:647 system/views.py:962
+#: system/models.py:730 system/views.py:1003
 msgid "message"
 msgstr "mensaje"
 
-#: system/models.py:647
+#: system/models.py:730
 msgid ""
 "Text of error that is only a warning. You can copy/paste from the field "
 "'error' of a Error."
 msgstr ""
 
-#: system/models.py:656
+#: system/models.py:739
 msgid "Auto Check Error"
 msgstr "Auto Comprobacion de Error"
 
-#: system/models.py:657 system/templates/system.html:135
+#: system/models.py:740 system/templates/system.html:135
 msgid "Auto Check Errors"
 msgstr "Auto Comprobación de Errores"
 
-#: system/views.py:161
+#: system/views.py:168
 msgid "Creating Attributes and Faults"
 msgstr "Creando Atributos y Fallas"
 
-#: system/views.py:168
+#: system/views.py:175
 msgid "Uploading Attributes and Faults"
 msgstr "Subiendo Atributos y Fallas"
 
-#: system/views.py:617
+#: system/views.py:566
+msgid "Number of lines"
+msgstr "Número de lineas"
+
+#: system/views.py:624
 msgid "Parameters for Query:"
 msgstr "Parámetros de Consulta"
 
-#: system/views.py:986
+#: system/views.py:938
+msgid "Date"
+msgstr "fecha"
+
+#: system/views.py:1027
 msgid "All O.K."
 msgstr "Todo O.K."
 
-#: system/views.py:988
+#: system/views.py:1029
 msgid "Main Menu"
 msgstr "Menú Principal"
 
-#: system/views.py:1009
+#: system/views.py:1050
 msgid "System Menu"
 msgstr "Menú de Sistema"
 
-#: system/views.py:1038
+#: system/views.py:1070
+msgid "Queries Menu"
+msgstr "Menú de Consultas"
+
+#: system/views.py:1100
 msgid "Change version for"
 msgstr "Cambiar version para"
 
-#: system/views.py:1067
+#: system/views.py:1129
 msgid "Documentation"
 msgstr "Documentación"
+
+#: system/views.py:1304
+msgid "Hourly updated computers"
+msgstr "Equipos actualizados por horas"
+
+#: system/views.py:1351
+msgid "Daily updated computers"
+msgstr "Equipos actualizados diariamente"
 
 #: system/templates/404.html:4 system/templates/404.html.py:8
 msgid "Page not found"
@@ -709,8 +747,8 @@ msgstr ""
 
 #: system/templates/documentation.html:7 system/templates/info-folder.html:4
 #: system/templates/info-package.html:5 system/templates/info.html:5
-#: system/templates/parameters.html:5 system/templates/query.html:5
-#: system/templates/admin/base_site.html:4
+#: system/templates/message.html:4 system/templates/parameters.html:5
+#: system/templates/query.html:5 system/templates/admin/base_site.html:4
 msgid "migasfree"
 msgstr "migasfree"
 
@@ -743,6 +781,7 @@ msgid "migasfree.org"
 msgstr "migasfree.org"
 
 #: system/templates/info-folder.html:66 system/templates/info-package.html:53
+#: system/templates/message.html:79
 msgid "return to main menu"
 msgstr "volver al menu principal"
 
@@ -754,17 +793,29 @@ msgstr "Datos de Clientes"
 msgid "Status"
 msgstr "Estado"
 
-#: system/templates/main.html:133
+#: system/templates/main.html:123
 msgid "Packing"
 msgstr "Empaquetado"
 
-#: system/templates/main.html:148
+#: system/templates/main.html:138
 msgid "Packages information"
 msgstr "Información de paquetes"
 
-#: system/templates/main.html:154
+#: system/templates/main.html:144
 msgid "Configuration"
 msgstr "Cambio de Configuración"
+
+#: system/templates/queries.html:50
+msgid "Charts"
+msgstr "Gráficos"
+
+#: system/templates/queries.html:55
+msgid "daily updated computers"
+msgstr "Equipos actualizados diariamente"
+
+#: system/templates/queries.html:60
+msgid "hourly updated computers"
+msgstr "Equipos actualizados por horas"
 
 #: system/templates/system.html:49
 msgid "General"
@@ -870,22 +921,28 @@ msgstr "Gracias por usar migasfree"
 msgid "Log in again"
 msgstr "Iniciar sesión otra vez"
 
-#: utils/db/initial_data.py:199
+#: utils/db/initial_data.py:206
 msgid "Errors to check"
 msgstr "Errores por comprobar"
 
-#: utils/db/initial_data.py:205
+#: utils/db/initial_data.py:212
 msgid "Faults to check"
 msgstr "Fallas por comprobar"
 
-#: utils/db/initial_data.py:211
+#: utils/db/initial_data.py:218
 msgid "Package/Set orphan"
 msgstr "Paquete/Lote huérfano"
 
-#: utils/db/initial_data.py:217
+#: utils/db/initial_data.py:224
 msgid "Repositories files creation"
 msgstr "Creación de ficheros de Repositorios"
 
-#: utils/db/initial_data.py:223
+#: utils/db/initial_data.py:230
 msgid "Computer updating now"
 msgstr "Equipos actualizándose"
+
+#~ msgid "daily updated"
+#~ msgstr "Actualizados diariamente"
+
+#~ msgid "hourly updated"
+#~ msgstr "Actualizados por horas"

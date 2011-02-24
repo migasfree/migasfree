@@ -38,6 +38,7 @@ urlpatterns = patterns('',
 
 
     (r'^migasfree/main/(.*)', main),
+    (r'^migasfree/queries/(.*)', queries),
     (r'^migasfree/system/(.*)', system),
     (r'^migasfree/createrepositories/(.*)', createrepositories),
     (r'^migasfree/directupload/(.*)', directupload),
@@ -54,7 +55,9 @@ urlpatterns = patterns('',
     (r'^migasfree/login/(.*)', login),
     (r'^migasfree/documentation/(.*)', documentation),
     (r'^migasfree/queryMessage/(.*)', queryMessage),
-
+    (r'^migasfree/hourly_updated/(.*)', hourly_updated),
+    (r'^migasfree/daily_updated/(.*)', daily_updated),
+    (r'^migasfree/chart/(.*)', chart),
 )
 
 

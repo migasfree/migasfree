@@ -55,6 +55,12 @@ import pickle
 
 from django import http
 
+import	math
+
+from OpenFlashChart import Chart
+
+
+
 def UserVersion(user):
     try:
         userprofile=UserProfile.objects.get(id=user.id)
@@ -557,7 +563,7 @@ def query2(request,parameters,FormParam):
                 
                
 
-        return HttpResponse(render_to_response('query.html', Context({"title": oQuery.name,"description": oQuery.description, "titles": titles,"query":vl_fields,"filters":filters,"user":request.user,"root_path":"/migasfree/admin/"})),mimetype='text/html;charset=utf-8')
+        return HttpResponse(render_to_response('query.html', Context({"title": oQuery.name,"description": oQuery.description, "titles": titles,"query":vl_fields,"filters":filters,"row_count":_("Number of lines")+": "+str(query.count()),"user":request.user,"root_path":"/migasfree/admin/"})),mimetype='text/html;charset=utf-8')
     except:
 
         return HttpResponse("Error in field 'code' of query:\n"+str(sys.exc_info()),mimetype="text/plain")
@@ -1044,6 +1050,27 @@ def system(request,param):
     return HttpResponse(render_to_response('system.html', Context({"title": _("System Menu"),"description": "","filters":filters, "status":status,"user":request.user,"root_path":"/migasfree/admin/","LANGUAGE_CODE": request.LANGUAGE_CODE})),mimetype='text/html;charset=utf-8')
 
 
+
+def queries(request,param):
+    """
+    Queries Menu of migasfree 
+    """
+    from django.template import Context, Template
+
+
+    if not request.user.is_authenticated():
+            return HttpResponseRedirect('/migasfree/login')
+
+    version=UserVersion(request.user)
+    status=[]
+    filters=[]
+    titles=[]
+    filters.append(param)
+
+    return HttpResponse(render_to_response('queries.html', Context({"title": _("Queries Menu"),"description": "","filters":filters, "status":status,"user":request.user,"root_path":"/migasfree/admin/","LANGUAGE_CODE": request.LANGUAGE_CODE})),mimetype='text/html;charset=utf-8')
+
+
+
 LastUrl=""
 @login_required()
 def changeVersion(request,param):
@@ -1102,4 +1129,111 @@ def documentation(request,param):
     return HttpResponse(render_to_response('documentation.html', Context({"title": _("Documentation"),"description": "","filters":filters, "user":request.user,"root_path":"/migasfree/admin/","LANGUAGE_CODE": request.LANGUAGE_CODE})),mimetype='text/html;charset=utf-8')
 
 
+
+
+def chart(request,param):
+    from django.template import Context, Template
+
+
+    if not request.user.is_authenticated():
+            return HttpResponseRedirect('/migasfree/login')
+
+    version=UserVersion(request.user)
+    filters=[]
+    titles=[]
+    filters.append(param)
+
+    return HttpResponse(render_to_response('chart.html', Context({"user":request.user,"root_path":"/migasfree/admin/","LANGUAGE_CODE": request.LANGUAGE_CODE})),mimetype='text/html;charset=utf-8')
+
+
+def hourly_updated(request,param):
+    import datetime
+
+
+    chart = Chart()
+    chart.title.text = _("Hourly updated computers")
+
+    element1 = Chart()
+    element1.values =  []
+    labels=[]
+
+    y=35
+    delta=datetime.timedelta(hours = 1)
+    n=datetime.datetime.now()-((y-1)*delta)
+    n=datetime.datetime(n.year,n.month,n.day,n.hour)
+
+    for i in range(y): 
+        value=Update.objects.filter(date__gte = n, date__lt = n+delta).values('computer').distinct().count()
+        element1.values.append(value)
+        labels.append(str(n.hour))
+        n=n+delta
+
+
+    element1.type = "line_hollow"
+    element1.dot_style.type = "dot"
+    element1.width = 2
+    element1.colour = "#417690"
+    element1.text = "" #Label
+    element1.font_size = 10
+
+
+
+    chart.x_axis.labels.labels = labels
+    chart.title.style = "{font-size: 20px; color: #417690; text-align: center;}"
+
+
+    # y_axis 
+    chart.y_axis.max = max(element1.values)
+    chart.y_axis.steps = 10**( len(str(chart.y_axis.max*4))-2)
+    chart.y_axis.max= chart.y_axis.max + ( 10**( len(str(chart.y_axis.max*4))-2)/2)
+
+
+
+    chart.elements = [element1,]
+    return HttpResponse(chart.create(),mimetype="text/plain")
+
+    
+def daily_updated(request,param):
+    import datetime
+
+
+    chart = Chart()
+    chart.title.text = _("Daily updated computers")
+
+    element1 = Chart()
+    element1.values =  []
+    labels=[]
+
+    days=35
+    delta=datetime.timedelta(days = 1)
+    n=datetime.date.today()-((days-1)*delta)
+    for i in range(days): 
+        value=Update.objects.filter(date__gte = n, date__lt = n+delta).values('computer').distinct().count()
+        element1.values.append(value)
+        labels.append(str(n.day))
+        n=n+delta
+
+
+    element1.type = "line_hollow"
+    element1.dot_style.type = "dot"
+    element1.width = 2
+    element1.colour = "#417690"
+    element1.text = "" #Label
+    element1.font_size = 10
+
+
+
+    chart.x_axis.labels.labels = labels
+    chart.title.style = "{font-size: 20px; color: #417690; text-align: center;}"
+
+
+    # y_axis 
+    chart.y_axis.max = max(element1.values)
+    chart.y_axis.steps = 10**( len(str(chart.y_axis.max*4))-2)
+    chart.y_axis.max= chart.y_axis.max + ( 10**( len(str(chart.y_axis.max*4))-2)/2)
+
+
+
+    chart.elements = [element1,]
+    return HttpResponse(chart.create(),mimetype="text/plain")
 
