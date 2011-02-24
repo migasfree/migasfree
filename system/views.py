@@ -57,7 +57,7 @@ from django import http
 
 import	math
 
-from OpenFlashChart import Chart
+from migasfree.OpenFlashChart import Chart
 
 
 
