@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-02-24 00:46+0100\n"
+"POT-Creation-Date: 2011-02-27 17:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -233,7 +233,10 @@ msgstr "Última actualización"
 msgid "Computer"
 msgstr "Equipo"
 
-#: system/models.py:177 system/templates/main.html:55
+#: system/models.py:177 system/views.py:1188 system/views.py:1219
+#: system/views.py:1246 system/views.py:1274 system/views.py:1305
+#: system/views.py:1331 system/views.py:1379 system/views.py:1388
+#: system/templates/charts.html:50 system/templates/main.html:55
 msgid "Computers"
 msgstr "Equipos"
 
@@ -263,7 +266,7 @@ msgstr "Mensajes"
 msgid "Update"
 msgstr "Actualización"
 
-#: system/models.py:219 system/views.py:1266
+#: system/models.py:219
 msgid "Updates"
 msgstr "Actualizaciones"
 
@@ -537,8 +540,8 @@ msgstr "parametros"
 msgid "Query"
 msgstr "Consulta"
 
-#: system/models.py:613 system/templates/queries.html:68
-#: system/templates/queries.html.py:73 system/templates/admin/base.html:70
+#: system/models.py:613 system/templates/system.html:178
+#: system/templates/system.html.py:183 system/templates/admin/base.html:70
 msgid "Queries"
 msgstr "Consultas"
 
@@ -693,25 +696,65 @@ msgstr "Menú Principal"
 msgid "System Menu"
 msgstr "Menú de Sistema"
 
-#: system/views.py:1070
+#: system/views.py:1073
 msgid "Queries Menu"
 msgstr "Menú de Consultas"
 
-#: system/views.py:1100
+#: system/views.py:1088
+msgid "Charts Menu"
+msgstr "Menú de Gráficos"
+
+#: system/views.py:1117
 msgid "Change version for"
 msgstr "Cambiar version para"
 
-#: system/views.py:1129
+#: system/views.py:1146
 msgid "Documentation"
 msgstr "Documentación"
 
-#: system/views.py:1304
-msgid "Hourly updated computers"
-msgstr "Equipos actualizados por horas"
+#: system/views.py:1171 system/templates/charts.html:55
+msgid "Updated Computers / Hour"
+msgstr "Equipos actualizados / Hora"
 
-#: system/views.py:1351
-msgid "Daily updated computers"
-msgstr "Equipos actualizados diariamente"
+#: system/views.py:1221
+msgid "Hour"
+msgstr "Hora"
+
+#: system/views.py:1233 system/templates/charts.html:60
+msgid "Updated Computers / Day"
+msgstr "Equipos actualizados / Día"
+
+#: system/views.py:1276
+msgid "Day"
+msgstr "Día"
+
+#: system/views.py:1288 system/templates/charts.html:65
+msgid "Updated Computers / Month"
+msgstr "Equipos actualizados / Mes"
+
+#: system/views.py:1333
+msgid "Month"
+msgstr "Mes"
+
+#: system/views.py:1343 system/templates/charts.html:70
+msgid "Provided Computers / Delay"
+msgstr "Equipos Previstos / Demora"
+
+#: system/views.py:1379
+msgid "days"
+msgstr "días"
+
+#: system/views.py:1390
+msgid "Delay"
+msgstr "Demora"
+
+#: system/views.py:1398 system/templates/charts.html:75
+msgid "Computers / Version"
+msgstr "Equipos / Versión"
+
+#: system/views.py:1407
+msgid "of"
+msgstr "de"
 
 #: system/templates/404.html:4 system/templates/404.html.py:8
 msgid "Page not found"
@@ -805,18 +848,6 @@ msgstr "Información de paquetes"
 msgid "Configuration"
 msgstr "Cambio de Configuración"
 
-#: system/templates/queries.html:50
-msgid "Charts"
-msgstr "Gráficos"
-
-#: system/templates/queries.html:55
-msgid "daily updated computers"
-msgstr "Equipos actualizados diariamente"
-
-#: system/templates/queries.html:60
-msgid "hourly updated computers"
-msgstr "Equipos actualizados por horas"
-
 #: system/templates/system.html:49
 msgid "General"
 msgstr "General"
@@ -872,6 +903,10 @@ msgstr "Principal"
 #: system/templates/admin/base.html:70
 msgid "System"
 msgstr "Sistema"
+
+#: system/templates/admin/base.html:70
+msgid "Charts"
+msgstr "Gráficos"
 
 #: system/templates/admin/change_form.html:31
 msgid "History"
@@ -940,9 +975,3 @@ msgstr "Creación de ficheros de Repositorios"
 #: utils/db/initial_data.py:230
 msgid "Computer updating now"
 msgstr "Equipos actualizándose"
-
-#~ msgid "daily updated"
-#~ msgstr "Actualizados diariamente"
-
-#~ msgid "hourly updated"
-#~ msgstr "Actualizados por horas"
