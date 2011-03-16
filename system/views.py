@@ -59,6 +59,8 @@ import	math
 
 from migasfree.OpenFlashChart import Chart
 
+from migasfree.system.hardware import *
+
 
 
 def UserVersion(user):
@@ -170,6 +172,7 @@ def update(request,param):
     ret=ret+"cat > $_FILE_XML << EOF\n"
     ret=ret+creaxml(properties,faults)+"\n"
     ret=ret+"EOF\n\n"
+    ret=ret+"echo 'Done'\n"
 
     ret=ret+"# Upload an run update.xml\n"
     ret=ret+"tooltip_status \""+ _("Uploading Attributes and Faults") +"\"\n"
@@ -294,7 +297,6 @@ def directupload(request,self):
         #SI RECICIMOS UN FICHERO hardware.xml (Inventario Hardware)
         if f.name == "hardware.xml":
             grabar()
-#            oResumen=resumenHardware() 
 
             import codecs
             destination = codecs.open( MEDIA+pc+"."+f.name, "r", "utf-8" )
@@ -306,19 +308,31 @@ def directupload(request,self):
                 oComputer=Computer(name=pc)
                 oComputer.dateinput=t
 
-#            oComputer.mac=oResumen.mac
-#            oComputer.cpu=oResumen.cpu
-#            oComputer.hd=oResumen.hd
-#            oComputer.memoria=oResumen.memoria
-#            oComputer.so=oResumen.so
-#            oComputer.inventario=oResumen.inventario
-#            oComputer.dateupdated=t
-
             oComputer.hardware=destination.read()
             oComputer.save()
             ret="OK"
             os.remove(MEDIA+pc+"."+f.name)
             destination.close()
+
+        #SI RECICIMOS UN FICHERO hardware.json (Inventario Hardware)
+        if f.name == "hardware.json":
+            grabar()
+
+#            import codecs
+#            destination = codecs.open( MEDIA+pc+"."+f.name, "r", "utf-8" )
+
+            try:
+                oComputer=Computer.objects.get(name=pc)
+            except: #si no esta el Equipo lo añadimos
+                oComputer=Computer(name=pc)
+                oComputer.dateinput=t
+            oComputer.save()
+
+            process_HW(oComputer,MEDIA+pc+"."+f.name)
+
+            ret="OK"
+            os.remove(MEDIA+pc+"."+f.name)
+
 
 
         #SI RECICIMOS UN FICHERO install-device (Codigo de instalación de device)
@@ -873,6 +887,48 @@ def device(request,param):
 
 
 
+
+
+@login_required
+def hardware(request,param):
+    from django.template import Context, Template
+    from migasfree.system.models import HW_Node
+    from migasfree.system.models import HW_Capability
+    from migasfree.system.models import HW_Configuration
+
+    from django.shortcuts import render_to_response
+
+    version=UserVersion(request.user)
+
+    n=param
+    
+    template='hardware.html'
+    query=HW_Node.objects.filter(Q(id=n) | Q(parent=n))
+
+    if query.count>0:
+        computer=name=query[0].computer
+
+    return render_to_response('hardware.html', Context({"title": computer.name,"computer":computer,"description": "Hardware Information", "query":query,"user":request.user,"root_path":"/migasfree/hardware/"}))
+
+
+@login_required
+def hardware_resume(request,param):
+    from django.template import Context, Template
+    from migasfree.system.models import HW_Node
+    from migasfree.system.models import HW_Capability
+    from migasfree.system.models import HW_Configuration
+
+    from django.shortcuts import render_to_response
+
+    version=UserVersion(request.user)
+
+    query=HW_Node.objects.filter(Q(computer__id=param))
+
+    if query.count>0:
+        computer=name=query[0].computer
+
+    return render_to_response('hardware_resume.html', Context({"title": computer.name,"computer":computer,"description": "Hardware Information", "query":query,"user":request.user,"root_path":"/migasfree/hardware/"}))
+
         
 
 @login_required
@@ -1144,6 +1200,10 @@ def documentation(request,param):
     filters.append(param)
 
     return HttpResponse(render_to_response('documentation.html', Context({"title": _("Documentation"),"description": "","filters":filters, "user":request.user,"root_path":"/migasfree/admin/","LANGUAGE_CODE": request.LANGUAGE_CODE})),mimetype='text/html;charset=utf-8')
+
+
+
+
 
 
 

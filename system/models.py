@@ -152,6 +152,7 @@ class Computer(models.Model):
             return Update()
         else:
             return q[0]
+
         
     def login_link(self):
         return self.lastLogin().link()
@@ -162,6 +163,12 @@ class Computer(models.Model):
         return self.lastUpdate().link()
     update_link.allow_tags=True
     update_link.short_description = _("Last update") 
+
+    def hw_link(self):
+        node=HW_Node.objects.get(computer=self.id,parent=None)
+        return '<a href="%s">%s</a>' % ( "/migasfree/hardware_resume/"+str(self.id), node.product )
+    hw_link.allow_tags=True
+    hw_link.short_description = _("Hardware") 
 
 
     def link(self):
@@ -744,6 +751,66 @@ class AutoCheckError(models.Model):
 
 
 
+class HW_Node(models.Model):
+    parent=models.ForeignKey('self',blank=True,null=True,verbose_name=_("parent"),related_name="child")
+    level=width=models.IntegerField(_("width"),null=False)
+    computer= models.ForeignKey(Computer,verbose_name=_("computer"))
+    name= models.TextField(_("id"),null=False, blank=True) # This is the field "id" in lshw
+    classname= models.TextField(_("class"),null=False, blank=True) # This is the field "class" in lshw
+    enabled = models.BooleanField(_("enabled"),default=False,help_text="")
+    claimed = models.BooleanField(_("claimed"),default=False,help_text="")
+    description= models.TextField(_("description"),null=True, blank=True)
+    vendor= models.TextField(_("vendor"),null=True, blank=True)
+    product= models.TextField(_("product"),null=True, blank=True)
+    version= models.TextField(_("version"),null=True, blank=True)
+    serial= models.TextField(_("serial"),null=True, blank=True)
+    businfo= models.TextField(_("businfo"),null=True, blank=True)
+    physid= models.TextField(_("physid"),null=True, blank=True)
+    slot= models.TextField(_("slot"),null=True, blank=True)
+    size=models.IntegerField(_("size"),null=True)
+    capacity=models.IntegerField(_("capacity"),null=True)
+    clock=models.IntegerField(_("clock"),null=True)
+    width=models.IntegerField(_("width"),null=True)
+    dev= models.TextField(_("dev"),null=True, blank=True)
+    icon=models.TextField(_("icon"),null=True, blank=True)
+
+    def __unicode__(self):
+        return u'%s' % (self.name)
+    class Meta:
+        verbose_name = _("Hardware Node")
+        verbose_name_plural = _("Hardware Nodes")
 
 
+class HW_Capability(models.Model):
+    node= models.ForeignKey(HW_Node,verbose_name=_("hardware node"))
+    name= models.TextField(_("name"),null=False, blank=True)# This is the field "capability" in lshw
+    description= models.TextField(_("description"),null=True, blank=True)
+    def __unicode__(self):
+        return u'%s' % (self.name)
+    class Meta:
+        verbose_name = _("Hardware Capability")
+        verbose_name_plural = _("Hardware Capabilities")
+        unique_together=(("name","node"),)
+
+
+
+class HW_Configuration(models.Model):
+    node= models.ForeignKey(HW_Node,verbose_name=_("hardware node"))
+    name= models.TextField(_("name"),null=False, blank=True)# This is the field "config" in lshw
+    value= models.TextField(_("value"),null=True, blank=True)
+    def __unicode__(self):
+        return u'%s' % (self.name)
+    class Meta:
+        verbose_name = _("Hardware Capability")
+        verbose_name_plural = _("Hardware Capabilities")
+        unique_together=(("name","node"),)
+
+class HW_LogicalName(models.Model):
+    node= models.ForeignKey(HW_Node,verbose_name=_("hardware node"))
+    name= models.TextField(_("name"),null=False, blank=True)# This is the field "logicalname" in lshw
+    def __unicode__(self):
+        return u'%s' % (self.name)
+    class Meta:
+        verbose_name = _("Hardware Logical Name")
+        verbose_name_plural = _("Hardware Logical Names")
 

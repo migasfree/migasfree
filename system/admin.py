@@ -32,6 +32,7 @@ from migasfree.system.models import AutoCheckError
 from migasfree.system.models import Message
 from migasfree.system.models import Update
 
+
 admin.site.register(DeviceType)
 admin.site.register(DeviceManufacturer)
 admin.site.register(DeviceConnection)
@@ -46,7 +47,6 @@ def user_version(user):
     except:
         version=None
     return version
-
 
 
 class VersionAdmin(admin.ModelAdmin):
@@ -185,10 +185,11 @@ admin.site.register(FaultDef, FaultDefAdmin)
 
 
 class ComputerAdmin(admin.ModelAdmin):
-    list_display = ('name','login_link','update_link','ip','version',)
+    list_display = ('name','login_link','update_link','hw_link','ip','version',)
     ordering = ('name',)
     list_filter = ('version',)
     search_fields = ('name','ip','mac')
+
 admin.site.register(Computer, ComputerAdmin)
 
 

@@ -1033,4 +1033,9 @@ os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/icons/
 
 os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/icons/chart.png https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/icons/chart.png") 
 
+#icons hw
+os.system("mkdir -p /var/www/htdocs/repo/icons/hw")
+os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/icons/hw/icons.tar.gz https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/icons/hw/icons.tar.gz") 
+os.system("cd /var/www/htdocs/repo/icons/hw/;tar -xf icons.tar.gz")
+
 

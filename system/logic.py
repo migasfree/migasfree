@@ -255,21 +255,24 @@ def process_attributes(request,file):
     ret=ret+". /usr/share/migasfree/init\n\n"
     ret=ret+"_FILE_LOG=\"$_DIR_TMP/history_sw.log\"\n"
     ret=ret+"_FILE_ERR=\"$_DIR_TMP/migasfree.err\"\n"
-    ret=ret+"_FILE_INV_HW=\"$_DIR_TMP/hardware.xml\"\n"
+    ret=ret+"_FILE_INV_HW=\"$_DIR_TMP/hardware.json\"\n"
 
     ret=ret+"\n\n# 1.- PRESERVE INITIAL DATE\n"
     ret=ret+"_INI=`date +'%d-%m-%Y %k:%M:%S'`\n"
 
     ret=ret+"\n\n# 2.- IF HAVE BEEN INSTALED PACKAGES MANUALITY THE INFORMATION IS UPLOAD TO migasfree server\n"
+    ret=ret+"tooltip_status \""+ _("Upload changes of software") +"\"\n"
     ret=ret+"soft_history $_FILE_LOG.1 $_FILE_LOG.0 $_FILE_LOG \"\"\n"
 
     ret=ret+"\n\n# 3.- If WE HAVE OLD ERRORS, WE UPLOAD ITS TO migasfree SERVER\n" 
+    ret=ret+"tooltip_status \""+ _("Upload errors") +"\"\n" 
     ret=ret+"directupload $_FILE_ERR 2>>$_FILE_ERR\n"
     
     ret=ret+"\n\n# 4.- SAVE REPOSITORIES\n"
     s=_("Creating Repositories File")
     ret=ret+"tooltip_status \""+ s +"\"\n"
     ret=ret+SaveRepositories(repositories,oVersion,oPms) 
+    ret=ret+"cat $PMS_SOURCES_FILES\n"
 
     ret=ret+"\n\n# 5.- CLEAN CACHE OF PACKAGE MANAGEMENT SYSTEM\n"
     ret=ret+"tooltip_status \""+ _("Getting data") +"\"\n" 
@@ -316,12 +319,21 @@ def process_attributes(request,file):
 
     ret=ret+"\n\n# 11.- UPDATE THE HARDWARE INVENTORY\n"
     ret=ret+"tooltip_status \""+ _("Upload inventory hardware") +"\"\n" 
-#    oComputer=Computer.objects.get(name=dic_computer["HOSTNAME"])
-#    ret=ret+"/usr/bin/python /usr/local/bin/inventario.py 2>> $_FILE_ERR\n"
+
     ret=ret+"_LSHW=`which lshw`\n"   
     ret=ret+"if ! [ -z $_LSHW ] ; then\n"
-#    ret=ret+"  $_LSHW  -xml > $_FILE_INV_HW\n"
-    ret=ret+"  $_LSHW  -short > $_FILE_INV_HW\n"
+
+    # BUG in lshw<=2.14 : if exists partitions in ext4 in the computer. We do not get class volume (-c volume) 
+#    ret=ret+"  $_LSHW -c system -c bus -c memory -c processor -c bridge -c communication -c multimedia -c network -c display -c storage -c disk -c generic -c power > $_FILE_INV_HW\n"
+
+    ret=ret+"  $_LSHW -json > $_FILE_INV_HW\n"
+    ret=ret+"  if [ $? = 0 ]; then\n"
+    ret=ret+"    directupload $_FILE_INV_HW 2>> $_FILE_ERR\n"
+    ret=ret+"  else\n"
+    ret=ret+"    echo 'error in lshw version:' >> $_FILE_ERR\n"
+    ret=ret+"    $_LSHW -version >> $_FILE_ERR\n"
+    ret=ret+"    echo 'migasfree need: lshw >= B.02.15' >> $_FILE_ERR\n"
+    ret=ret+"  fi\n"
     ret=ret+"  directupload $_FILE_INV_HW 2>> $_FILE_ERR\n"
     ret=ret+"fi\n"
 

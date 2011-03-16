@@ -62,6 +62,8 @@ urlpatterns = patterns('',
     (r'^migasfree/delaySchedule/(.*)', delaySchedule),
     (r'^migasfree/version_Computer/(.*)', version_Computer),
     (r'^migasfree/chart/(.*)', chart),
+    (r'^migasfree/hardware/(.*)', hardware),
+    (r'^migasfree/hardware_resume/(.*)', hardware_resume),
 )
 
 

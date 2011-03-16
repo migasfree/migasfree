@@ -1,0 +1,196 @@
+{% extends "admin/base.html" %}
+
+{% load i18n %}
+
+{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
+
+{% block content_title %}<h1><img src='/repo/icons/computer.png' width=32><a href= /migasfree/admin/system/computer/{{computer.id}}> {{title}}</a></h1>{% endblock %}
+
+{% block extrahead %}<link rel="shortcut icon" href="/repo/icons/favicon.png">{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+
+
+
+{% block extrastyle %}
+<style type="text/css">
+    #query
+    {font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;width:100%;border-collapse:collapse;}
+    #query td
+    {font-size:1em;border:0 px solid #eee;padding:0px 0px 0px 0px;}
+    #query th
+    {font-size:1.2em;text-align:left;padding-top:3px;padding-bottom:3px;background-color:#417690;color:#ffffff;}
+    #query tr.alt
+    {background-color:#eff3ff;}
+    #query tr
+    {background-color:#ffffff;}
+    #query pre
+    {font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;width:100%;border-collapse:collapse;font-size:1.2em;margin:0px 0px 0px 0px;color:#417690;padding-top: 0px;padding-bottom: 0px}
+    #query p
+    {margin:0px 0px 0px 0px;}
+
+
+    .first {font-weight:  margin-left: none; padding-right: 1em;vertical-align: top; }
+    .second {padding-left: bold; 1em; width: 100%; vertical-align: center; }
+    .node { padding: 1em; background: #eff3ff; }
+    .node-unclaimed { padding: 1em; background: #FFFFCC ; color: #FF9900 }
+    .indented {margin-left: 2em; border-left: dotted thin #dde; padding-bottom: 1em; }
+
+
+
+</style>
+
+
+{% endblock %}
+
+
+{% block content %}
+<div><a href= /migasfree/hardware_resume/{{computer.id}}>{{ description }}</a></div>
+<hr>
+
+<table id="query2" >
+    {% for row in query %}
+
+<div style='margin-left: {{row.level}}em; margin-bottom: 5px'>
+
+      <tr  >
+<table class="node" id="query3" border=0>
+
+{% if row.claimed = 1  %}
+  <table class="node">
+{% else  %}
+  <table class="node-unclaimed">
+{% endif %}
+
+{% if row.name %}
+  <tr><td></td><td>
+
+   {% if row.icon %}
+     <img src='/repo/icons/hw/{{row.icon}}' alt='{{row.icon}}' />
+   {% endif %}
+
+   <h3><a href='{{row.id}}'>{{row.name}}</a></h3>
+  </td>
+  </tr>
+{% endif %}
+
+{% if row.description %}
+  <tr><td>Description:</td><td>{{row.description}}</td></tr>
+{% endif %}
+
+{% if row.classname %}
+  <tr><td>Class:</td><td>{{row.classname}}</td></tr>
+{% endif %}
+
+{% if row.product %}
+  <tr><td>Product:</td><td>{{row.product}}</td></tr>
+{% endif %}
+
+{% if row.vendor %}
+  <tr><td>Vendor:</td><td>{{row.vendor}}</td></tr>
+{% endif %}
+
+{% if row.version %}
+  <tr><td>Version:</td><td>{{row.version}}</td></tr>
+{% endif %}
+
+{% if row.serial %}
+  <tr><td>Serial:</td><td>{{row.serial}}</td></tr>
+{% endif %}
+
+{% if row.businfo %}
+  <tr><td>Bus info:</td><td>{{row.businfo}}</td></tr>
+{% endif %}
+
+{% if row.hw_logicalname_set.all %}
+  <tr><td>Logical name:</td>
+  <td>
+  {% for c in row.hw_logicalname_set.all %}
+    {{c}}
+  {% endfor %}
+  </td> 
+  </tr>
+{% endif %}   
+
+{% if row.phyid %}
+  <tr><td>Physical id:</td><td>{{row.phyid}}</td></tr>
+{% endif %}
+
+{% if row.slot %}
+  <tr><td>Slot:</td><td>{{row.slot}}</td></tr>
+{% endif %}
+
+{% if row.size %}
+  <tr><td>Size:</td><td>{{row.size}}</td></tr>
+{% endif %}
+
+
+{% if row.capacity %}
+  <tr><td>Capacity:</td><td>{{row.capacity}}</td></tr>
+{% endif %}
+
+{% if row.width %}
+  <tr><td>Width:</td><td>{{row.width}}</td></tr>
+{% endif %}
+
+{% if row.dev %}
+  <tr><td>Dev:</td><td>{{row.dev}}</td></tr>
+{% endif %}
+
+
+
+{% if row.hw_capability_set.all %}
+  <tr><td>Capabilities:</td>
+  <td>
+  {% for c in row.hw_capability_set.all %}
+    {{c.name}} = {{c.description}} <br>
+  {% endfor %}
+  </td>
+  </tr>
+{% endif %}   
+    
+{% if row.hw_configuration_set.all %}
+
+  {% for c in row.hw_configuration_set.all %}
+    <tr><td>{{c.name}}=</td><td>{{c.value}}</td></tr>
+  {% endfor %}
+ 
+{% endif %}   
+
+
+</table>
+
+</table>
+
+        </tr>
+
+
+</div>
+
+      {% endfor %}
+</table>
+
+
+<pre>
+{{ contentpage }}
+</pre>
+
+<br>
+<br>
+<a href='/migasfree/main'>{% trans 'return to main menu' %}</a>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
