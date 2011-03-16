@@ -1021,21 +1021,8 @@ byVersion(oVersion,oPackage1,oPackage2,oPackage3)
 
 #***********************************************************************************************
 #Server Files:
-os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/chart/expressInstall.swf https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/chart/expressInstall.swf")
 
-os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/chart/open-flash-chart.swf https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/chart/open-flash-chart.swf")
-
-os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/chart/swfobject.js https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/chart/swfobject.js")
-
-
-
-os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/icons/computer_alert.png https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/icons/computer_alert.png") 
-
-os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/icons/chart.png https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/icons/chart.png") 
-
-#icons hw
-os.system("mkdir -p /var/www/htdocs/repo/icons/hw")
-os.system("wget --no-cache --no-check-certificate -O /var/www/htdocs/repo/icons/hw/icons.tar.gz https://github.com/agacias/migasfree/raw/master/utils/htdocs/repo/icons/hw/icons.tar.gz") 
+os.system("cp -r /srv/Django/migasfree/utils/htdocs/repo /var/www/htdocs")
 os.system("cd /var/www/htdocs/repo/icons/hw/;tar -xf icons.tar.gz")
 
-
+os.system("chown -R www-data /var/www/htdocs")
