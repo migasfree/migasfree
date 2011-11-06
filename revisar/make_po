@@ -1,0 +1,27 @@
+#!/bin/bash
+# Create messages in a language
+# sintax: make_po <LANGUAGE>
+# example: ./make_po es
+
+_LANG="$1"
+
+if [ -z "$_LANG" ]
+then
+    echo "Error. Language not especified."
+    echo "  Sintax: make_po <LANGUAGE>"
+    echo "  Sample: ./make_po es"
+    exit 1
+fi
+
+cd /usr/lib/python2.6/site-packages/migasfree
+if [ -e locale ]
+then
+    django-admin.py makemessages --all
+    #nano locale/"$_LANG"/LC_MESSAGES/django.po
+    #django-admin.py compilemessages
+else
+    mkdir locale
+    django-admin.py makemessages --locale="$_LANG"
+    #nano locale/"$_LANG"/LC_MESSAGES/django.po
+    #django-admin.py compilemessages
+fi

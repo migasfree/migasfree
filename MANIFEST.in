@@ -1,0 +1,15 @@
+# http://docs.python.org/distutils/sourcedist.html#the-manifest-in-template
+
+include AUTHORS INSTALL COPYING README MANIFEST.in
+include bin/*
+recursive-include apache2 *
+recursive-include ssl *
+recursive-include migasfree *.py
+include keys/*
+include po/*
+recursive-include doc *
+recursive-include repo *
+recursive-include templates *
+
+# FIXME hacen falta?
+include packages/*

@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %} {{ title }} | {% trans 'migasfree' %}{% endblock %}
+
+{% block content_title %}
+    <h2><img src='/repo/icons/computer.png' width="32" /><a href="/migasfree/admin/server/computer/{{ computer.id }}"> {{title}}</a></h2>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content %}
+    <h3>{{ description }}</h3>
+
+    <ul class="hardware">
+    {% for row in query %}
+        {% if row.claimed = 1 %}
+            <li class="node" style="margin-left: {{ row.level }}em;">
+        {% else  %}
+            <li class="node-unclaimed" style="margin-left: {{ row.level }}em;">
+        {% endif %}
+
+        {% if row.name %}
+           {% if row.icon %}
+             <img src='/repo/icons/hw/{{ row.icon }}' alt='{{ row.icon }}' width="32" />
+           {% endif %}
+
+           <a href='/migasfree/hardware/{{ row.id }}'>{{ row.name }}</a>
+        {% endif %}
+        </li>
+    {% endfor %}
+{% endblock %}

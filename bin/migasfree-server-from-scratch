@@ -1,0 +1,257 @@
+#!/bin/bash
+
+function get_web_service
+{
+    service apache2 status &>/dev/null
+    if [ $? = 0 ]
+    then
+        echo -e "apache2"
+    fi
+
+    service httpd status &>/dev/null
+    if [ $? = 0 ]
+    then
+        echo -e "httpd"
+    fi
+
+    service cherokee status &>/dev/null
+    if [ $? = 0 ]
+    then
+        echo -e "cherokee"
+    fi
+}
+
+function get_user_web_service
+{
+    ps axho user,comm | grep -E "apache2|httpd|cherokee" | uniq | grep -v "root" | cut -d " " -f 1 | uniq
+}
+
+function web_service
+{
+    service $_WEB_SERVICE "$1"
+}
+
+function own_web_server
+{
+  chown -R $_USER_WEB_SERVICE "$1"
+}
+
+function verify_dependencies
+{
+    # TODO
+    # apache2, libapache2-mod-wsgi, doc-utils, etc...
+
+    which curl > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "Curl not found, install it and try again."
+        return 1
+    fi
+
+    python -c "import django" 2> /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "Django framework not found, install it and try again."
+        return 1
+    fi
+
+    python -c "import IPy" 2> /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "Python IPy library not found, install it and try again."
+        return 1
+    fi
+
+    which rpm > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "RPM not found, install it and try again."
+        return 1
+    fi
+
+    which dpkg-scanpackages > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "dpkg-scanpackages command not found, install it and try again."
+        return 1
+    fi
+
+    which createrepo > /dev/null
+    if [ $? -ne 0 ]
+    then
+        echo "createrepo command not found, install it and try again."
+        return 1
+    fi
+
+    echo "TODO verifying more dependencies..."
+}
+
+function configure_web_app
+{
+    if [ "$_WEB_SERVICE" == "apache2" -o "$_WEB_SERVICE" == "httpd" ]
+    then
+        _CODE="from migasfree.server.functions import config_apache; config_apache();"
+    else
+        _CODE="from migasfree.server.functions import config_cherokee; config_cherokee();"
+    fi
+
+    python -c "$_CODE"
+    if [ $? -ne 0 ]
+    then
+        echo "Problem found configuring web app in server."
+        return 1
+    fi
+}
+
+function remove_old_data
+{
+    # remove old data if exists (from scratch)
+
+    if [ "$_IS_DB_SQLITE" == 'True' ]
+    then
+        rm -f $_DB_PATH/$_DB_NAME
+    else
+        su - postgres -c "dropdb migasfree"
+        su - postgres -c "createdb -E utf8 -O migasfree migasfree"
+    fi
+
+    rm -rf $_DIR_REPO/FEDORA || :
+    rm -rf $_DIR_REPO/OPENSUSE || :
+    rm -rf $_DIR_REPO/UBUNTU || :
+}
+
+function set_permissions
+{
+    if [ "$_IS_DB_SQLITE" == 'True' ]
+    then
+        # owner and permissions for database
+        own_web_server $_DB_PATH
+        own_web_server $_DB_PATH/$_DB_NAME
+        chmod 600 $_DB_PATH/$_DB_NAME
+    fi
+
+    # owner for repositories
+    own_web_server $_DIR_REPO
+
+    # owner for keys
+    own_web_server $_PATH_APP/keys
+    chmod 700 $_PATH_APP/keys
+}
+
+function test_app
+{
+    # save fixture for test
+    python $_DIR_MIGASFREE/manage.py dumpdata > $_DB_PATH/test.json
+    if [ $? -ne 0 ]
+    then
+        echo "Problem found dumping data."
+        return 1
+    fi
+
+    # run test of migasfree
+    python $_DIR_MIGASFREE/manage.py test --verbosity=2
+    if [ $? -ne 0 ]
+    then
+        echo "Problem found running database tests."
+        return 1
+    fi
+
+    # remove fixture for test
+    rm -f $_DB_PATH/test.json
+}
+
+function create_server_keys
+{
+    python -c "from migasfree.server.security import create_keys_server; create_keys_server();"
+    if [ $? -ne 0 ]
+    then
+        echo "Problem found creating server keys. Server not operative."
+        return 1
+    fi
+}
+
+# main process
+
+verify_dependencies
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
+
+read -e -p "Have you checked migasfree.settings before start from scratch? This procedure remove existing data in app. [y/n] " _RESPONSE
+
+if [ -z "$_RESPONSE" -o "$_RESPONSE" != 'y' ]
+then
+    echo "Aborted process. Review migasfree.settings and try again."
+    exit 2
+fi
+
+_DIR_MIGASFREE=$(python -c "import os; import migasfree; print os.path.dirname(os.path.abspath(migasfree.__file__))")
+_DIR_REPO=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_REPO_DIR")
+_DB_PATH=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_DB_DIR")
+_DB_NAME=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_DB_NAME")
+_PATH_APP=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_APP_DIR")
+
+_PWD=$(dirname $(readlink -f $0))
+
+export _WEB_SERVICE=$(get_web_service)
+export _USER_WEB_SERVICE=$(get_user_web_service)
+
+_IS_DB_SQLITE=$(python -c "from migasfree.server.functions import is_db_sqlite; print is_db_sqlite()")
+
+if [ -z "$_USER_WEB_SERVICE" ]
+then
+    echo "user $_WEB_SERVICE not found. Service is running?"
+    exit 3
+fi
+
+cd $_DIR_MIGASFREE
+
+web_service stop
+
+configure_web_app
+if [ $? -ne 0 ]
+then
+    exit 4
+fi
+
+remove_old_data
+
+# create DataBase
+echo no | python $_DIR_MIGASFREE/manage.py syncdb
+if [ $? -ne 0 ]
+then
+    echo "Problem found creating database."
+    exit 5
+fi
+
+export DJANGO_SETTINGS_MODULE="migasfree.settings"
+
+web_service start
+
+create_server_keys
+if [ $? -ne 0 ]
+then
+    exit 6
+fi
+
+set_permissions
+
+# load initial data in database
+python $_PWD/migasfree-server-load-initial-data.py
+if [ $? -ne 0 ]
+then
+    exit 7
+fi
+
+test_app
+if [ $? -ne 0 ]
+then
+    exit 8
+fi
+
+echo
+echo "migasfree server operative. Test it at http://localhost/migasfree/main/"
+echo
+
+exit 0

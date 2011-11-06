@@ -1,0 +1,106 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
+'''
+Script to import data from a migasfree server wfe edition
+'''
+
+import os
+import json
+import shutil
+
+from migasfree.server.models import *
+from django.contrib.auth.models import User
+from migasfree.server.models import User as mUser
+
+_PATH_JSON = '/tmp/migration'
+
+def load_json(ref):
+    with open(os.path.join(_PATH_JSON, '%s.json' % ref), 'rb') as f:
+        data = json.load(f)
+    f.close()
+
+    return data
+
+def load_registers(obj, dict_default={}, map={}):
+    obj.__class__.objects.all().delete()
+    print "Importing %s..." % obj.__class__.__name__
+
+    data = load_json(obj.__class__.__name__)
+    dictm2m = {}
+    for r in data:
+        obj = obj.__class__(pk=r["pk"])
+        for f in r["fields"]:
+            d = obj.__dict__
+            if d.has_key("%s_id" % str(f)): # foreign fields
+                d["%s_id" % str(f)] = r["fields"][f]
+
+            elif type(r["fields"][f]) is list:  # Many2Many fields
+                #obj.__setattr__(f, r["fields"][f])
+                dictm2m[f] = r["fields"][f]
+
+            elif d.has_key(f): # regular fields
+                d[f]=r["fields"][f]
+
+            else: # field not found -> mapping?
+                if map.has_key(f):
+                    obj.__setattr__(map[f], r["fields"][f])
+                else:
+                    print "    *** FIELD NOT FOUND %s? ***" % str(f)
+
+        #Defaults
+        for e in dict_default:
+            obj.__setattr__(e, dict_default[e])
+
+        #print obj # DEBUG
+        obj.save()
+
+        # M2M fields
+        for e in dictm2m:
+            obj.__setattr__(e, dictm2m[e])
+
+        obj.save()
+
+def main():
+    # Versions
+    load_registers(Pms())
+    load_registers(Version(), {"autoregister": True})
+
+    # Users
+    User.objects.all().delete()
+    shutil.copy2(
+        os.path.join(_PATH_JSON, "auth.User.json"),
+        os.path.join(_PATH_JSON, "UserProfile.json")
+    )
+    load_registers(UserProfile(), {"version": Version(pk=1)})
+
+    Schedule.objects.all().delete()
+    ScheduleDelay.objects.all().delete()
+
+    # Properties
+    load_registers(Property(), {}, {"function": "code"})
+    load_registers(Attribute())
+    load_registers(Schedule())
+    load_registers(ScheduleDelay())
+
+    # Repositories
+    load_registers(Store())
+    load_registers(Package())
+    load_registers(Repository())
+
+    # Clients data
+    load_registers(Computer())
+    load_registers(mUser())
+    load_registers(Login())
+    load_registers(Update())
+
+    # Errors
+    load_registers(AutoCheckError())
+    load_registers(Error())
+
+    # Faults
+    load_registers(FaultDef(), {}, {"function": "code"})
+    load_registers(Fault())
+
+if __name__ == '__main__':
+    main()

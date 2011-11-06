@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content %}
+    {% if description %}<div>{{ description }}</div>{% endif %}
+
+    {% for column in filters %}
+        <pre>   {{ column }}</pre>
+    {% endfor %}
+
+    <pre>
+    {{ contentpage }}
+    </pre>
+{% endblock %}

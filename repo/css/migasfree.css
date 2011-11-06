@@ -1,0 +1,174 @@
+table#query {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table#query td {
+    font-size: 1em;
+    border: 0 solid #eee;
+    padding: 0;
+}
+
+table#query th {
+    font-size: 1.2em;
+    text-align: left;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    background-color: #417690;
+    color: #fff;
+    text-transform: capitalize;
+}
+
+table#query tr.alt {
+    background-color: #eff3ff;
+}
+
+table#query tr {
+    background-color: #fff;
+}
+
+table#query pre {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.2em;
+    margin: 0;
+    color: #417690;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+table#query p {
+    margin: 0;
+}
+
+ul.query {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+ul.query li {
+    font-size: 140%;
+    list-style-type: none;
+}
+
+li.odd {
+    background-color: #eff3ff; /* #f6f6f6; */
+}
+
+.first {
+    margin-left: 0;
+    padding-right: 1em;
+    vertical-align: top;
+    font-weight: bold;
+}
+
+.second {
+    padding-left: 1em;
+    width: 100%;
+    vertical-align: center;
+}
+
+.indented {
+    margin-left: 2em;
+    border-left: dotted thin #dde;
+    padding-bottom: 1em;
+}
+
+.module table {
+    width:100%;
+}
+
+.module table p {
+    padding: 0;
+    margin: 0;
+}
+
+#footer {
+    clear: both;
+    text-align: center;
+}
+
+#shortcuts li {
+    float: left;
+    list-style-type: none;
+    margin-left: 0.5em;
+}
+
+#content.colM h2 {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #dfdfdf;
+}
+
+li img, td img, td, th img, th {
+    vertical-align: middle;
+}
+
+p.info {
+    margin: 2em 0;
+    padding: 1em 4em;
+    background: #EFF3FF url(/repo/icons/documentation-model.png) no-repeat 5px center;
+    font-weight: bold;
+}
+
+/* main.html */
+#client-data, #issues-dashboard, #version-dashboard {
+    width: 20%;
+    float: left;
+}
+
+#issues-dashboard {
+    width: 50%;
+    padding: 0 5%;
+}
+
+#client-data ul, #issues-dashboard ul, #version-dashboard ul {
+    margin-left: 0.5em;
+    padding-left: 0;
+}
+
+#client-data li, #issues-dashboard li, #version-dashboard li {
+    list-style-type: none;
+    padding: 0.5em 0;
+}
+
+#client-data li {
+    border-bottom: 1px solid #dfdfdf;
+}
+
+#issues-dashboard li {
+    padding: 0.5em 1em;
+    font-size: 140%;
+}
+
+/* system.html */
+#system-general, #system-users-status, #system-schedules-devices {
+    width: 30%;
+    float: left;
+}
+
+#system-general li,
+#system-users-status li,
+#system-schedules-devices li {
+    list-style-type: none;
+    padding: 0.5em 0;
+}
+
+/* hardware_resume.html */
+ul.hardware li {
+    list-style-type: none;
+    width: 20%;
+    margin: 5px 0;
+}
+
+.node {
+    padding: 1em;
+    background: #eff3ff;
+}
+
+.node-unclaimed {
+    padding: 1em;
+    background: #FFFFCC;
+    color: #FF9900;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ LANGUAGE_CODE }}" xml:lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+
+{% block extrahead %}{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+
+<meta name="generator" content="migasfree no-trans" />
+
+<link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/base.css{% endblock %}" />
+
+<link rel="shortcut icon" href="/repo/icons/favicon.png" />
+
+<link rel="stylesheet" type="text/css" href="/repo/css/migasfree.css" />
+
+{% block extrastyle %}{% endblock %}
+
+<!--[if lte IE 7]><link rel="stylesheet" type="text/css" href="{% block stylesheet_ie %}{% load adminmedia %}{% admin_media_prefix %}css/ie.css{% endblock %}" /><![endif]-->
+
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% admin_media_prefix %}css/rtl.css{% endblock %}" />{% endif %}
+
+<script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
+</head>
+
+{% load i18n %}
+{% load server_tags %}
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
+
+<div id="container">
+    {% if not is_popup %}
+        <div id="header">
+            <div id="branding">
+                {% block branding %}
+                <h1 id="site-name"><a href="/migasfree/main"><img src="/repo/icons/favicon.png" height="16" /> <img src="/repo/icons/migasfree_16.png" height="16" alt="migasfree" /> {% organization %}</a></h1>
+                {% endblock %}
+            </div>
+
+            {% if user.is_active and user.is_staff %}
+                <div id="user-tools">
+                    <strong>{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</strong>
+
+                    {% block userlinks %}
+                        [<a href="/migasfree/version/">{% trans 'version' %}: {% version %}</a>]
+
+                        <ul id="shortcuts">
+                            <li><a href="/migasfree/documentation/"><img src="/repo/icons/documentation.png" title="{% trans 'documentation' %}" height="24" /></a></li>
+
+                            <li>{% block documentation %}<a href="/migasfree/doc/models/"><img src="/repo/icons/documentation-model.png" title="{% trans 'model documentation' %}" height="24" /></a>{% endblock %}</li>
+
+                            <li><a href="/migasfree/admin/password_change/"><img src="/repo/icons/auth.png" title="{% trans 'change password' %}" height="24" /></a></li>
+
+                            <li><a href="/migasfree/admin/logout/"><img src="/repo/icons/logout.png" title="{% trans 'logout' %}" height="24" /></a></li>
+                        </ul>
+                    {% endblock %}
+                </div>
+            {% endif %}
+            {% block nav-global %}{% endblock %}
+        </div>
+        <!-- END Header -->
+
+        {% block breadcrumbs %}
+        <div class="breadcrumbs">
+            <a href="/migasfree/main">{% trans 'Main' %}</a> |
+            <a href="/migasfree/system">{% trans 'System' %}</a> |
+            <a href="/migasfree/query_selection">{% trans 'Queries' %}</a> |
+            <a href="/migasfree/chart_selection">{% trans 'Charts' %}</a>
+        </div>
+        {% endblock %}
+    {% endif %}
+
+    {% if messages %}
+        <ul class="messagelist">
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+
+        {% block content_title %}
+            {% if title %}<h2>{{ title }}</h2>{% endif %}
+        {% endblock %}
+
+        {% block content %}
+            {% block object-tools %}{% endblock %}
+            {{ content }}
+        {% endblock %}
+
+        {% block sidebar %}{% endblock %}
+    </div>
+
+    {% block footer %}
+    <div id="footer">
+        <p>Copyright &copy; 2010-2011 <a href="http://www.migasfree.org/">migasfree Team</a></p>
+    </div>
+    {% endblock %}
+</div>
+</body>
+</html>
