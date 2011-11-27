@@ -74,7 +74,7 @@ def submit_row(context):
     is_popup = context['is_popup']
     save_as = context['save_as']
     user_id = context['user'].id
-    can_save = UserSystem.objects.get(id=user_id).has_perm('system.can_save_%s' % opts.module_name)
+    can_save = UserSystem.objects.get(id=user_id).has_perm('server.can_save_%s' % opts.module_name)
 
     return {
         'onclick_attrib': (opts.get_ordered_objects() and change
