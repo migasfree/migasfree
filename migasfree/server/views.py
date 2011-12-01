@@ -1118,7 +1118,7 @@ def daily_updated(request, param):
 
     days = 35
     delta = timedelta(days = 1)
-    n = datetime.today()-((days-1)*delta)
+    n = date.today()-((days-1)*delta)
     for i in range(days):
         value = Update.objects.filter(date__gte = n, date__lt = n+delta).values('computer').distinct().count()
         element1.values.append(value)
