@@ -91,6 +91,7 @@ source!1!host = 127.0.0.1:32942
 source!1!interpreter = /usr/sbin/uwsgi -s 127.0.0.1:32942 -M -p 2 -z 15 -L -l 128 %(migasfree_app_dir)s/django.wsgi
 source!1!nick = uWSGI 1
 source!1!type = interpreter
+server!timeout = 300
 """
 
     _filename = '/etc/cherokee/migasfree.conf'
