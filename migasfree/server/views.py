@@ -1307,7 +1307,7 @@ def hardware(request, param):
 
 @login_required
 def hardware_resume(request, param):
-    qry = HwNode.objects.filter(Q(computer__id=param))
+    qry = HwNode.objects.filter(Q(computer__id=param)).order_by("id")
     if qry.count > 0:
         computer = qry[0].computer
 
