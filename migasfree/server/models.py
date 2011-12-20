@@ -1259,7 +1259,8 @@ class Login(models.Model):
         Attribute,
         null=True,
         blank=True,
-        verbose_name=unicode(_("attributes"))
+        verbose_name=unicode(_("attributes")),
+        help_text=_("Sent attributes")
     )
 
     def computer_link(self):
@@ -1976,14 +1977,16 @@ class Repository(models.Model):
         Package,
         null=True,
         blank=True,
-        verbose_name=unicode(_("packages/sets"))
+        verbose_name=unicode(_("Packages/Set")),
+        help_text="Assigned Packages"
     )
 
     attributes = models.ManyToManyField(
         Attribute,
         null=True,
         blank=True,
-        verbose_name=unicode(_("attributes"))
+        verbose_name=unicode(_("attributes")),
+        help_text="Assigned Attributes"
     )
 
     schedule = models.ForeignKey(

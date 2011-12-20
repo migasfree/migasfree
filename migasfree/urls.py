@@ -12,6 +12,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from migasfree.server.views import *
+from ajax_select import urls as ajax_select_urls
 
 urlpatterns = patterns(
     '',
@@ -22,6 +23,8 @@ urlpatterns = patterns(
     # to INSTALLED_APPS to enable admin documentation:
     #(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^migasfree/doc/', include('django.contrib.admindocs.urls')),
+
+    (r'^migasfree/admin/lookups/', include(ajax_select_urls)),
 
     # Uncomment the next line to enable the admin:
     (r'^migasfree/admin/', include(admin.site.urls)),

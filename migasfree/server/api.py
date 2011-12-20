@@ -571,10 +571,6 @@ def upload_server_package(request, computer, data):
                 o_package = Package(name=f.name, version=o_version)
             o_package.store = o_store
             o_package.save()
-
-            #recreate repositories
-            create_repositories_package(o_package.name, o_version.name)
-            
     except:
         return return_message(cmd, error(GENERIC))
 

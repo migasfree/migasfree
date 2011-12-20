@@ -11,6 +11,8 @@ from django import forms
 from django.db import models
 
 from migasfree.server.functions import trans
+from migasfree.server.functions import writefile
+
 
 from migasfree.server.models import *
 
@@ -19,6 +21,10 @@ admin.site.register(DeviceManufacturer)
 admin.site.register(DeviceConnection)
 admin.site.register(UserProfile)
 admin.site.register(AutoCheckError)
+
+#AJAX_SELECT 
+from ajax_select import make_ajax_form
+from ajax_select.admin import AjaxSelectAdmin
 
 def user_version(user):
     """
@@ -156,15 +162,28 @@ class AttributeAdmin(admin.ModelAdmin):
 admin.site.register(Attribute, AttributeAdmin)
 
 class LoginAdmin(admin.ModelAdmin):
+    form = make_ajax_form(Login,{'attributes':'attribute',})
+
     list_display = ('id', 'user_link', 'computer_link', 'date',)
     list_filter = ('date',)
     ordering = ('user', 'computer',)
     search_fields = ('user__name', 'user__fullname', 'computer__name')
 
+    fieldsets = (
+        (None, {
+            'fields': ('date', 'user', 'computer',)
+        }),
+        ('Atributtes', {
+            'classes': ('collapse',),
+            'fields': ( 'attributes',)
+        }),
+    	)
+
+
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "attributes":
             kwargs["queryset"] = Attribute.objects.filter(property_att__active=True)
-            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
+#            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
             return db_field.formfield(**kwargs)
 
         return super(LoginAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
@@ -262,13 +281,37 @@ class MessageAdmin(admin.ModelAdmin):
 
 admin.site.register(Message, MessageAdmin)
 
-class RepositoryAdmin(admin.ModelAdmin):
+class RepositoryAdmin(AjaxSelectAdmin):
+    form = make_ajax_form(Repository,{'attributes':'attribute','packages':'package'})
+
     list_display = ('name', 'active', 'date', 'schedule', 'timeline',)
     list_filter = ('active',)
     ordering = ('name', 'packages__name',)
     search_fields = ('name', 'packages__name',)
-    filter_horizontal = ('attributes', 'packages',)
+#    filter_horizontal = ('attributes', 'packages',)
     actions = None
+
+    fieldsets = (
+        ('General', {
+            'classes': ('collapse',),
+            'fields': ('name', 'version',  'active', 'comment', )
+        }),
+        ('Schedule', {
+            'classes': ('collapse',),
+            'fields': ( 'date', 'schedule',)
+        }),
+        ('Packages', {
+            'classes': ('collapse',),
+            'fields': ( 'packages', 'toinstall', 'toremove',)
+        }),
+        ('Atributtes', {
+            'classes': ('collapse',),
+            'fields': ( 'attributes',)
+        }),
+    	)
+
+
+
 
     # QuerySet filter by user version.
     def queryset(self, request):
@@ -281,13 +324,13 @@ class RepositoryAdmin(admin.ModelAdmin):
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "packages":
             kwargs["queryset"] = Package.objects.filter(version=user_version(request.user))
-            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
+#            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
 
             return db_field.formfield(**kwargs)
 
         if db_field.name == "attributes":
             kwargs["queryset"] = Attribute.objects.filter(property_att__active=True)
-            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
+#            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
             return db_field.formfield(**kwargs)
 
         return super(RepositoryAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
@@ -295,16 +338,27 @@ class RepositoryAdmin(admin.ModelAdmin):
 admin.site.register(Repository, RepositoryAdmin)
 
 class ScheduleDelayAdmin(admin.ModelAdmin):
+    form = make_ajax_form(ScheduleDelay,{'attributes':'attribute',})
     list_display = ('delay', 'schedule', 'list_attributes',)
     list_filter = ('schedule',)
     ordering = ('schedule', 'delay',)
     search_fields = ('schedule', 'attributes_value',)
 
+    fieldsets = (
+        ('None', {
+            'fields': ('delay', 'schedule',)
+        }),
+        ('Atributtes', {
+            'classes': ('collapse',),
+            'fields': ( 'attributes',)
+        }),
+    	)
+
     # Packages filter by identyties active
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "attributes":
             kwargs["queryset"] = Attribute.objects.filter(property_att__active=True)
-            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
+#            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
 
             return db_field.formfield(**kwargs)
 
