@@ -22,7 +22,7 @@ admin.site.register(DeviceConnection)
 admin.site.register(UserProfile)
 admin.site.register(AutoCheckError)
 
-#AJAX_SELECT 
+#AJAX_SELECT
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
@@ -177,7 +177,7 @@ class LoginAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
             'fields': ( 'attributes',)
         }),
-    	)
+        )
 
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
@@ -308,7 +308,7 @@ class RepositoryAdmin(AjaxSelectAdmin):
             'classes': ('collapse',),
             'fields': ( 'attributes',)
         }),
-    	)
+        )
 
 
 
@@ -337,37 +337,17 @@ class RepositoryAdmin(AjaxSelectAdmin):
 
 admin.site.register(Repository, RepositoryAdmin)
 
-class ScheduleDelayAdmin(admin.ModelAdmin):
+
+class ScheduleDelayline(admin.TabularInline):
+    model = ScheduleDelay
     form = make_ajax_form(ScheduleDelay,{'attributes':'attribute',})
-    list_display = ('delay', 'schedule', 'list_attributes',)
-    list_filter = ('schedule',)
-    ordering = ('schedule', 'delay',)
-    search_fields = ('schedule', 'attributes_value',)
-
-    fieldsets = (
-        ('None', {
-            'fields': ('delay', 'schedule',)
-        }),
-        ('Atributtes', {
-            'classes': ('collapse',),
-            'fields': ( 'attributes',)
-        }),
-    	)
-
-    # Packages filter by identyties active
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
-        if db_field.name == "attributes":
-            kwargs["queryset"] = Attribute.objects.filter(property_att__active=True)
-#            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
-
-            return db_field.formfield(**kwargs)
-
-        return super(ScheduleDelayAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
-
-admin.site.register(ScheduleDelay, ScheduleDelayAdmin)
+    extra=0
+    ordering = ('delay',)
 
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = ('name', 'description',)
+    inlines = [ ScheduleDelayline, ]
+    extra=0
 
 admin.site.register(Schedule, ScheduleAdmin)
 

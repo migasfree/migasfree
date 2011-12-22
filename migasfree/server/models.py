@@ -1827,7 +1827,8 @@ class ScheduleDelay(models.Model):
     )
 
     def __unicode__(self):
-        return '%s - %s' % (str(self.delay), self.schedule.name)
+#        return '%s - %s' % (str(self.delay), self.schedule.name)
+        return ''
 
     def list_attributes(self):
         cattributes = ""
