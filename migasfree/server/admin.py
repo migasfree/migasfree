@@ -293,11 +293,9 @@ class RepositoryAdmin(AjaxSelectAdmin):
 
     fieldsets = (
         ('General', {
-            'classes': ('collapse',),
             'fields': ('name', 'version',  'active', 'comment', )
         }),
         ('Schedule', {
-            'classes': ('collapse',),
             'fields': ( 'date', 'schedule',)
         }),
         ('Packages', {
