@@ -1160,10 +1160,11 @@ def monthly_updated(request, param):
     element1.values = []
     labels = []
 
-    years = [2010, 2011]
+    year= int(date.today().strftime("%Y"))
+    years = [year-1, year]
     months = []
     for i in range(1, 13):
-        months.append(date(2011, i, 1).strftime(timeformat))
+        months.append(date(year, i, 1).strftime(timeformat))
 
     for y in years:
         for m in range(1, 13):
