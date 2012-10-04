@@ -1991,6 +1991,15 @@ class Repository(models.Model):
         help_text="Assigned Attributes"
     )
 
+    excludes = models.ManyToManyField(
+        Attribute,
+        related_name="ExcludeAttribute",
+        null=True,
+        blank=True,
+        verbose_name=unicode(_("excludes")),
+        help_text="Excluded Attributes"
+    )
+
     schedule = models.ForeignKey(
         Schedule,
         null=True,
