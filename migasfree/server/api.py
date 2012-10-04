@@ -374,13 +374,15 @@ def upload_computer_faults(request, computer, data):
         for e in faults:
             o_faultdef = FaultDef.objects.get(name=e)
             try:
-                # we add the fault
-                o_fault = Fault()
-                o_fault.computer = o_computer
-                o_fault.date = m
-                o_fault.text = faults.get(e)
-                o_fault.faultdef = o_faultdef
-                o_fault.save()
+                msg = faults.get(e)
+                if msg <> "":
+                    # we add the fault
+                    o_fault = Fault()
+                    o_fault.computer = o_computer
+                    o_fault.date = m
+                    o_fault.text = msg
+                    o_fault.faultdef = o_faultdef
+                    o_fault.save()
             except:
                 pass
 
@@ -392,6 +394,7 @@ def upload_computer_faults(request, computer, data):
         ret = return_message(cmd, error(GENERIC))
 
     return ret
+
 
 
 #DEVICES
