@@ -35,6 +35,8 @@ urlpatterns = patterns(
 
     # migasfree.server.urls
     #(r'^migasfree', main),
+    (r'^$', bootstrap),
+    (r'^migasfree/$', bootstrap),
     (r'^migasfree/main/(.*)', main),
     (r'^migasfree/system/(.*)', system),
     (r'^migasfree/query_selection/(.*)', query_selection),
