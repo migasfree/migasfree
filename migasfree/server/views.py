@@ -77,7 +77,12 @@ def option_description(field, value):
 
 @login_required
 def info(request, param):
-    version = user_version(request.user)
+    ver = request.GET.get('version')
+    if not ver:
+        version = user_version(request.user)
+    else:
+        version = Version.objects.get(name=ver)
+
     ruta = os.path.join(MIGASFREE_REPO_DIR, version.name, param)
 
     try:

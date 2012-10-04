@@ -1950,7 +1950,8 @@ class Package(models.Model):
         permissions = (("can_save_package", "Can save Package"),)
 
     def link(self):
-        info = "/migasfree/info/STORES/%s/%s/" % (self.store.name, self.name)
+        info = "/migasfree/info/STORES/%s/%s/?version=%s" % (self.store.name, self.name, self.version.name)
+
 
         return '<a href="%s"><img src="/repo/icons/package-info.png" height="16px" alt="information" /></a> <a href="%s">%s</a>' % (
             info,
