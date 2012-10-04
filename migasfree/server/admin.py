@@ -243,11 +243,22 @@ class FaultAdmin(admin.ModelAdmin):
 admin.site.register(Fault, FaultAdmin)
 
 class FaultDefAdmin(admin.ModelAdmin):
+    form = make_ajax_form(FaultDef,{'attributes':'attribute',})
     list_display = ('name', 'active', 'list_attributes',)
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'function',)
     filter_horizontal = ('attributes',)
+
+    fieldsets = (
+        (None, {
+            'fields': ('name', 'description', 'active','language','code')
+        }),
+        ('Atributtes', {
+            'classes': ('collapse',),
+            'fields': ( 'attributes',)
+        }),
+        )
 
 admin.site.register(FaultDef, FaultDefAdmin)
 
