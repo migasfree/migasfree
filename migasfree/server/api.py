@@ -310,7 +310,7 @@ def upload_computer_info(request, computer, data):
         repositories = Repository.objects.filter(Q(id__in=dic_repos.values()) )
 
         #FILTER EXCLUDED ATTRIBUTES
-        repositories = repositories.filter(~Q(excludes__id__in=lst_exclude))
+        repositories = repositories.filter(~Q(excludes__id__in=lst_attributes))
 
         #4.- CREATE JSON
         lst_repos = []
