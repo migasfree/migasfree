@@ -87,6 +87,8 @@ def info(request, param):
 
     try:
         elements = os.listdir(ruta)
+        elements.sort()
+
     except:
         # GET INFORMATION OF PACKAGE
         cad = "echo \"VERSION: " + version.name + "\"\n"
