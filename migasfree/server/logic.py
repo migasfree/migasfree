@@ -366,7 +366,8 @@ def create_repositories_package(packagename, versionname):
         package = Package.objects.get(name=packagename, version=o_version)
         qset = Repository.objects.filter(packages__id=package.id)
         for r in qset:
-            r.createpackages = []
+            for p in r.createpackages.all():
+                r.createpackages.remove(p.id)
             r.save()
         create_repositories(package.version.id)
     except:
