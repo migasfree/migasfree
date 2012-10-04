@@ -1117,7 +1117,7 @@ class Message(models.Model):
 
     text = models.CharField(
         unicode(_("text")),
-        max_length=50,
+        max_length=100,
         null=True,
         blank=True
     )
