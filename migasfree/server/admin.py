@@ -293,7 +293,7 @@ class MessageAdmin(admin.ModelAdmin):
 admin.site.register(Message, MessageAdmin)
 
 class RepositoryAdmin(AjaxSelectAdmin):
-    form = make_ajax_form(Repository,{'attributes':'attribute','packages':'package'})
+    form = make_ajax_form(Repository,{'attributes':'attribute','packages':'package','excludes':'attribute'})
 
     list_display = ('name', 'active', 'date', 'schedule', 'timeline',)
     list_filter = ('active',)
@@ -315,7 +315,7 @@ class RepositoryAdmin(AjaxSelectAdmin):
         }),
         ('Atributtes', {
             'classes': ('collapse',),
-            'fields': ( 'attributes',)
+            'fields': ( 'attributes','excludes')
         }),
         )
 
