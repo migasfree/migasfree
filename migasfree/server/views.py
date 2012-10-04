@@ -56,9 +56,12 @@ __all__ = (
     'query',
 
     # from main
-    'change_version', 'documentation', 'info', 'login', 'main',
+    'change_version', 'documentation', 'info', 'login', 'main', 'bootstrap',
     'query_selection', 'query_message', 'softwarebase', 'system',
 )
+
+def bootstrap(request):
+    return HttpResponseRedirect('/migasfree/main/')
 
 def user_version(user):
     try:
