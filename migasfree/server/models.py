@@ -1044,6 +1044,13 @@ class Computer(models.Model):
         editable=False
     ) # used to "createrepositories"
 
+    datelastupdate = models.DateTimeField(
+        unicode(_("last update")),
+        null=True,
+        help_text=unicode(_("last update date"))
+    )
+
+    
     def last_login(self):
         qry = Login.objects.filter(Q(computer__id=self.id)).order_by('-date')
         if qry.count() == 0:
@@ -1171,6 +1178,16 @@ class Update(models.Model):
         verbose_name = unicode(_("Update"))
         verbose_name_plural = unicode(_("Updates"))
         permissions = (("can_save_update", "Can save Update"),)
+
+    def save(self, *args, **kwargs):
+        super(Update, self).save(*args, **kwargs)
+
+        #update last update in computer
+        self.computer.datelastupdate=self.date
+        self.computer.save()
+
+
+
 
     def link(self):
         return link(self, self._meta.object_name)

@@ -267,7 +267,7 @@ class ComputerAdmin(admin.ModelAdmin):
         'link',
         'ip',
         'login_link',
-        'update_link',
+        'datelastupdate',
         'hw_link',
         'version',
     )
