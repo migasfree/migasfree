@@ -270,6 +270,19 @@ else:
 """
     ochecking.save()
 
+ochecking = Checking()
+    ochecking.name = _("Server Messages")
+    ochecking.description = "Server Messages"
+    ochecking.code = \
+"""
+oMessages = MessageServer.objects.all()
+result = oMessages.count()
+url = '/migasfree/queryMessageServer'
+msg = 'process run in server'
+icon = 'spinner.gif'
+"""
+    ochecking.save()
+
 def create_properties():
     """
     Insert docstring here

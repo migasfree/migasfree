@@ -42,6 +42,7 @@ urlpatterns = patterns(
     (r'^migasfree/query_selection/(.*)', query_selection),
     (r'^migasfree/query/(.*)', query),
     (r'^migasfree/queryMessage/(.*)', query_message),
+    (r'^migasfree/queryMessageServer/(.*)', query_message_server),
     (r'^migasfree/update/(.*)', update),
     (r'^migasfree/info/(.*)', info),
     (r'^migasfree/version/(.*)', change_version),
