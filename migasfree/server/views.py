@@ -57,7 +57,7 @@ __all__ = (
 
     # from main
     'change_version', 'documentation', 'info', 'login', 'main', 'bootstrap',
-    'query_selection', 'query_message', 'softwarebase', 'system',
+    'query_selection', 'query_message', 'query_message_server' ,'softwarebase', 'system',
 )
 
 def bootstrap(request):
@@ -181,6 +181,36 @@ def query_message(request, param):
             "root_path": "/migasfree/admin/"
         }
     )
+
+@login_required
+def query_message_server(request, param):
+    vl_fields = []
+
+    q = MessageServer.objects.all().order_by("-date")
+
+    for e in q:
+        icon = 'spinner.gif'
+
+        vl_fields.append(
+            [
+                icon,
+                "-",
+                e.date,
+                e.text
+            ]
+        )
+
+    return render_to_response(
+        'messageserver.html',
+        {
+            "title": _("Messages Server"),
+            "query": vl_fields,
+            "user": request.user,
+            "root_path": "/migasfree/admin/"
+        }
+    )
+
+
 
 def login(request, param):
     if request.method == 'GET':

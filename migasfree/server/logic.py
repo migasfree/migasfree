@@ -377,6 +377,13 @@ def create_repositories(version_id):
     """
     Create the repositories for the version_id, checking the packages field changed.
     """
+    m = time.strftime("%Y-%m-%d %H:%M:%S")
+    msg=MessageServer()
+    msg.text= _("Creating Repositories of %s ...") % Version.objects.get(id=version_id).name
+    msg.date = m
+    msg.save()
+
+    
 
     def history(d):
         txt = ""
@@ -461,6 +468,9 @@ def create_repositories(version_id):
     # DEBUG os.system('echo -e "%s" >> /var/tmp/tmp.txt' % bash)
 
     txt_err = run_in_server(bash)["err"]
+
+    msg.delete()
+
     if not txt_err == "":
         txt = txt+"\n\n****ERROR*****\n"+txt_err
 
