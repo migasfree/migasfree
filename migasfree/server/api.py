@@ -624,6 +624,23 @@ def upload_server_set(request, computer, data):
 
         save_request_file(f, filename)
 
+        #if exists path move it
+        if ("path" in data) and (data["path"] <> "") :
+            dst=os.path.join(
+                MIGASFREE_REPO_DIR,
+                data['version'],
+                "STORES",
+                data['store'],
+                data['packageset'],
+                data['path'],
+                f.name)
+            try:
+                os.makedirs(os.path.dirname(dst))
+            except:
+                pass
+            os.rename(filename, dst)
+
+
     except:
         return return_message(cmd, error(GENERIC))
 
