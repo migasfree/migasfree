@@ -20,7 +20,7 @@ from django.utils.translation import ugettext_lazy as _
 
 __all__ = (
     # from common
-    'Attribute', 'AutoCheckError', 'Checking', 'Pms', 'Property',
+    'Attribute', 'AutoCheckError', 'MessageServer', 'Checking', 'Pms', 'Property',
     'Query', 'User', 'Version', 'LANGUAGES_CHOICES',
 
     # from device
@@ -1050,7 +1050,7 @@ class Computer(models.Model):
         help_text=unicode(_("last update date"))
     )
 
-    
+
     def last_login(self):
         qry = Login.objects.filter(Q(computer__id=self.id)).order_by('-date')
         if qry.count() == 0:
