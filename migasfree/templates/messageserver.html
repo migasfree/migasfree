@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
+
+{# TODO Ajax to messages #}
+{% block extrahead %}<meta http-equiv="refresh" content="5" />{% endblock %}
+
+{% block content %}
+    {% if query %}
+        <table id="query">
+            <tr>
+                <th>{% trans ' ' %}</th>
+                <th>{% trans 'Date' %}</th>
+                <th>{% trans 'Message' %}</th>
+            </tr>
+
+            {% for item in query %}
+                <tr class="{% cycle '' 'alt' %}">
+                    <td><img src="/repo/icons/{{ item.0 }}" width="36" /> </td>
+
+                    <td>{{ item.2 }}</td>
+
+                    <td>{{ item.3 }}</td>
+
+
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p class="info">{% trans 'No messages to show' %}</p>
+    {% endif %}
+{% endblock %}
