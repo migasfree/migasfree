@@ -270,7 +270,7 @@ else:
 """
     ochecking.save()
 
-ochecking = Checking()
+    ochecking = Checking()
     ochecking.name = _("Server Messages")
     ochecking.description = "Server Messages"
     ochecking.code = \
