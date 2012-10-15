@@ -1201,7 +1201,7 @@ def monthly_updated(request, param):
     labels = []
 
     year= int(date.today().strftime("%Y"))
-    years = [year-1, year]
+    years = [year-2, year-1, year]
     months = []
     for i in range(1, 13):
         months.append(date(year, i, 1).strftime(timeformat))
