@@ -11,5 +11,3 @@ recursive-include doc *
 recursive-include repo *
 recursive-include templates *
 
-# FIXME hacen falta?
-include packages/*
