@@ -185,31 +185,6 @@ dpkg-deb -c $PACKAGE | awk '{print $6}'
     opms.save()
     print "Package Management System (add apt)"
 
-def create_versions():
-    """
-    Insert docstring here
-    """
-    oversion = Version()
-    oversion.name = "FEDORA"
-    oversion.pms = Pms.objects.get(name="yum")
-    oversion.save()
-    print "Version (add FEDORA)"
-
-    oversion = Version()
-    oversion.name = "OPENSUSE"
-    oversion.pms = Pms.objects.get(name="zypper")
-    oversion.save()
-    print "Version (add OPENSUSE)"
-
-    oversion = Version()
-    oversion.name = "UBUNTU"
-    oversion.pms = Pms.objects.get(name="apt")
-    oversion.save()
-    print "Version (add UBUNTU)"
-
-    user_web_service=os.environ["_USER_WEB_SERVICE"]
-    cmd = 'chown -R %s %s' % (user_web_service, migasfree.settings.MIGASFREE_REPO_DIR)
-    os.system(cmd)
 
 def create_checkings():
     """
@@ -1045,7 +1020,6 @@ def create_users():
     """
     Insert docstring here
     """
-    oversion = Version.objects.get(name="UBUNTU")
     ogroupread = Group.objects.get(name="Read")
     ogroupsys = Group.objects.get(name="System")
     ogroupdev = Group.objects.get(name="Devices")
@@ -1146,136 +1120,11 @@ def create_users():
     ouser.groups.add(ogroupread.id)
     ouser.save()
 
-def by_version(oversion, opackage1, opackage2, opackage3):
-    #STORES
-    ostore = Store()
-    ostore.name = "org"
-    ostore.version = oversion
-    ostore.save()
-
-    ostore = Store()
-    ostore.name = "update"
-    ostore.version = oversion
-    ostore.save()
-
-    #REPOSITORIES
-    print "Creating REPOSITORY 'MIGASFREE-CLIENT' in %s..." % oversion.name
-    orepository = Repository()
-    orepository.name = "MIGASFREE-CLIENT"
-    orepository.active = True
-    orepository.version = oversion
-    orepository.date = datetime.now().date()
-    orepository.schedule = Schedule.objects.get(name="STANDARD")
-    orepository.toinstall = "migasfree-test"
-    orepository.toremove = ""
-    orepository.save()
-    orepository.packages.add(opackage1, opackage2)
-    orepository.attributes.add(Attribute.objects.get(value="ALL SYSTEMS"))
-    orepository.save()
-
-    print "Creating REPOSITORY 'MIGASFREE-PACKAGER' in %s..." % oversion.name
-    orepository = Repository()
-    orepository.name = "MIGASFREE-PACKAGER"
-    orepository.active = True
-    orepository.version = oversion
-    orepository.date = datetime.now().date()
-#    orepository.schedule = Schedule.objects.get(name="STANDARD")
-    orepository.toinstall = "migasfree-packager"
-    orepository.toremove = ""
-    orepository.save()
-    orepository.packages.add(opackage3)
-#    orepository.attributes.add(Attribute.objects.get(name="ALL SYSTEMS"))
-    orepository.save()
-
-    print "Creating REPOSITORIES FILES in %s..." % oversion.name
-
-    host = migasfree.settings.MIGASFREE_HOSTNAME
-
-    url = 'http://%s/migasfree/createrepositoriesofpackage/?VER=%s\&PACKAGE=%s\&username=%s\&password=%s'
-    cmd = "curl -x '' %s" % (url % (host, oversion.name, opackage1.name, 'packager', 'packager'))
-    ret = os.WEXITSTATUS(os.system(cmd))
-    if ret != 0:
-        print 'create repository failure!!!'
-        sys.exit(1)
-
-    cmd = "curl -x '' %s" % (url % (host, oversion.name, opackage3.name, 'packager', 'packager'))
-    ret = os.WEXITSTATUS(os.system(cmd))
-    if ret != 0:
-        print 'create repository failure!!!'
-        sys.exit(1)
-
-def upload_pkg(version, package):
-    print
-    print "Uploading %s in %s..." % (package, version)
-
-    host = migasfree.settings.MIGASFREE_HOSTNAME
-
-    cmd = "curl -x '' -b 'username=packager; password=packager; VER=" + version + "; STORE=third\/migasfree; NOPKG=0' -F file=@" + package + " http://" + host + "/migasfree/uploadPackage/"
-    ret = os.WEXITSTATUS(os.system(cmd))
-    if ret != 0:
-        print 'upload failure!!!'
-        sys.exit(1)
-
-def create_repositories():
-    """
-    Insert docstring here
-    """
-    path_pkg = os.path.join(migasfree.settings.MIGASFREE_APP_DIR, "packages")
-
-    rpm_version = ['FEDORA', 'OPENSUSE']
-    rpm = [
-        'migasfree-client-1.0-0.4.noarch.rpm',
-        'migasfree-test-1.0-0.0.noarch.rpm',
-        'migasfree-packager-1.0-0.0.noarch.rpm'
-    ]
-
-    deb_version = ['UBUNTU']
-    deb = [
-        'migasfree-client-1.0.deb',
-        'migasfree-test-1.0.deb',
-        'migasfree-packager-1.0.deb'
-    ]
-
-    for item in rpm_version:
-        for pkg in rpm:
-            upload_pkg(item, os.path.join(path_pkg, pkg))
-
-    for item in deb_version:
-        for pkg in deb:
-            upload_pkg(item, os.path.join(path_pkg, pkg))
-
-    print
-
-    o_version = Version.objects.get(name="FEDORA")
-    by_version(
-        o_version,
-        Package.objects.get(name=rpm[0], version=o_version),
-        Package.objects.get(name=rpm[1], version=o_version),
-        Package.objects.get(name=rpm[2], version=o_version)
-    )
-
-    o_version = Version.objects.get(name="OPENSUSE")
-    by_version(
-        o_version,
-        Package.objects.get(name=rpm[0], version=o_version),
-        Package.objects.get(name=rpm[1], version=o_version),
-        Package.objects.get(name=rpm[2], version=o_version)
-    )
-
-    o_version = Version.objects.get(name="UBUNTU")
-    by_version(
-        o_version,
-        Package.objects.get(name=deb[0], version=o_version),
-        Package.objects.get(name=deb[1], version=o_version),
-        Package.objects.get(name=deb[2], version=o_version)
-    )
-
 def main():
     """
     LOAD DATA TO migasfree database
     """
     create_pms()
-    create_versions()
     create_checkings()
     create_properties()
     create_faultdefs()
@@ -1286,7 +1135,6 @@ def main():
     create_queries()
     create_users_groups()
     create_users()
-    create_repositories()
 
 if __name__ == '__main__':
     main()

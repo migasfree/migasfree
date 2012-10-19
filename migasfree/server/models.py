@@ -2174,7 +2174,8 @@ class UserProfile(UserSystem):
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version"))
+        verbose_name=unicode(_("version")),
+        null=True
     )
 
     # Use UserManager to get the create_user method, etc.
