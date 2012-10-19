@@ -1033,7 +1033,6 @@ def create_users():
     ouser.is_staff = True
     ouser.is_active = True
     ouser.is_superuser = True
-    ouser.version = oversion
     ouser.set_password("admin")
     ouser.save()
 
@@ -1042,7 +1041,6 @@ def create_users():
     ouser.is_staff = True
     ouser.is_active = True
     ouser.is_superuser = False
-    ouser.version = oversion
     ouser.set_password("system")
     ouser.save()
     ouser.groups.add(ogroupread.id)
@@ -1054,7 +1052,6 @@ def create_users():
     ouser.is_staff = True
     ouser.is_active = True
     ouser.is_superuser = False
-    ouser.version = oversion
     ouser.set_password("device")
     ouser.save()
     ouser.groups.add(ogroupread.id)
@@ -1066,7 +1063,6 @@ def create_users():
     ouser.is_staff = True
     ouser.is_active = True
     ouser.is_superuser = False
-    ouser.version = oversion
     ouser.set_password("query")
     ouser.save()
     ouser.groups.add(ogroupread.id)
@@ -1078,7 +1074,6 @@ def create_users():
     ouser.is_staff = True
     ouser.is_active = True
     ouser.is_superuser = False
-    ouser.version = oversion
     ouser.set_password("packager")
     ouser.save()
     ouser.groups.add(ogroupread.id)
@@ -1090,7 +1085,6 @@ def create_users():
     ouser.is_staff = True
     ouser.is_active = True
     ouser.is_superuser = False
-    ouser.version = oversion
     ouser.set_password("repo")
     ouser.save()
     ouser.groups.add(ogroupread.id)
@@ -1102,7 +1096,6 @@ def create_users():
     ouser.is_staff = True
     ouser.is_active = True
     ouser.is_superuser = False
-    ouser.version = oversion
     ouser.set_password("check")
     ouser.save()
     ouser.groups.add(ogroupread.id)
@@ -1114,7 +1107,6 @@ def create_users():
     ouser.is_staff = True
     ouser.is_active = True
     ouser.is_superuser = False
-    ouser.version = oversion
     ouser.set_password("read")
     ouser.save()
     ouser.groups.add(ogroupread.id)

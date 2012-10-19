@@ -365,11 +365,18 @@ def change_version(request, param):
 
         return HttpResponseRedirect('/migasfree/main')
     else:
+
+        try:
+            oversion=user_version(request.user).id
+        except:
+            oversion=None
+
         dic_initial = {
-            'user_version': user_version(request.user).id,
+            'user_version': oversion,
             "root_path": "/migasfree/admin",
-            'version': user_version(request.user).id
+            'version': oversion
         }
+
         g_form_param = form_params_version()(initial=dic_initial)
         try:
             request.session["LastUrl"] = request.META["HTTP_REFERER"]
