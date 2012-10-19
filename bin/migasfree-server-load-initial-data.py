@@ -153,12 +153,30 @@ echo ****OBSOLETES****
 dpkg-deb --showformat='${Replaces}\n' --show $PACKAGE
 echo
 echo
-echo ****SCRIPTS****
-dpkg-deb --showformat='${Source}\n' --show $PACKAGE
+echo "****SCRIPT PREINST****"
+#dpkg-deb --showformat='${Source}' --show $PACKAGE
+dpkg-deb -I $PACKAGE preinst
+echo
+echo
+echo "****SCRIPT POSTINST****"
+dpkg-deb -I $PACKAGE postinst
+echo
+echo
+echo "****SCRIPT PRERM****"
+dpkg-deb -I $PACKAGE prerm
+echo
+echo
+echo "****SCRIPT POSTRM****"
+dpkg-deb -I $PACKAGE postrm
 echo
 echo
 echo ****CHANGELOG****
-# FIXME dpkg-deb --showformat='{Changelog}\n' --show $PACKAGE
+_DIR="/tmp/changelog"
+_NAME=`dpkg-deb --showformat='${Package}' --show $PACKAGE`
+dpkg -X $PACKAGE $_DIR > /dev/null
+gzip -d $_DIR/usr/share/doc/$_NAME/changelog.Debian.gz
+cat $_DIR/usr/share/doc/$_NAME/changelog.Debian
+rm -r $_DIR
 echo
 echo
 echo ****FILES****
