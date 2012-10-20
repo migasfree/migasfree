@@ -3,7 +3,7 @@ Thanks for downloading migasfree server.
 To install migasfree-server: Download the script "install-migasfree-server.sh" and run it as root
 
 1.- Download install-migasfree-server.sh:
-    # wget https://github.com/downloads/agacias/migasfree/install-migasfree-server.sh
+    # wget --no-check-certificate https://github.com/downloads/agacias/migasfree/install-migasfree-server.sh
 
 
 2.- Run for your distro:
