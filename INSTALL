@@ -1,6 +1,6 @@
 Thanks for downloading migasfree server.
 
-To install migasfree-server get the script "install-migasfree-server" and run it as root
+To install migasfree-server: Download the script "install-migasfree-server.sh" and run it as root
 
 1.- Download install-migasfree-server.sh:
     # wget https://github.com/downloads/agacias/migasfree/install-migasfree-server.sh
@@ -8,8 +8,8 @@ To install migasfree-server get the script "install-migasfree-server" and run it
 
 2.- Run for your distro:
     for debian or ubuntu:
-        # ./install-migasfree-server debian devel
+        # bash install-migasfree-server.sh debian devel
 
     for centos:
-        # ./install-migasfree-server centos devel
+        # bash install-migasfree-server.sh centos devel
 
