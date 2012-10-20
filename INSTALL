@@ -1,8 +1,14 @@
 Thanks for downloading migasfree server.
 
-To install it, make sure you have Python 2.6 or greater installed.
-Then run this command from the command prompt:
+To install migasfree-server get the script "install-migasfree-server" anr run it as root
 
-    python setup.py install
+EXAMPLES:
+=========
 
-Añadir las dependencias de la instalación
+for debian or ubuntu:
+    # wget https://github.com/agacias/migasfree/blob/devel/install-migasfree-server
+    # ./install-migasfree-server debian devel
+
+for centos:
+    # wget https://github.com/agacias/migasfree/blob/devel/install-migasfree-server
+    # ./install-migasfree-server centos devel
