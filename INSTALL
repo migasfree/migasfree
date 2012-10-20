@@ -1,8 +1,11 @@
 Thanks for downloading migasfree server.
 
-To install migasfree-server: Download the script "install-migasfree-server.sh" and run it as root
+This process will create and install the packages: 
+    - django-ajax-select
+    - migasfree-server
 
-1.- Download install-migasfree-server.sh:
+
+1.- Download install-migasfree-server.sh file:
     # wget --no-check-certificate https://github.com/downloads/agacias/migasfree/install-migasfree-server.sh
 
 
