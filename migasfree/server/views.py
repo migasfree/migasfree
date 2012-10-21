@@ -157,6 +157,12 @@ def query_message(request, param):
             icon = 'computer.png'
 
         last = e.computer.last_login()
+
+        try:
+            user=last.user.name + "-" + last.user.fullname
+        except:
+            user="None"
+
         vl_fields.append(
             [
                 icon,
@@ -164,7 +170,7 @@ def query_message(request, param):
                 e.computer.id,
                 e.computer.name,
                 last.id,
-                last.user.name + "-" + last.user.fullname,
+                user,
                 e.computer.version.name,
                 e.computer.ip,
                 e.date,
