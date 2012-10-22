@@ -265,11 +265,12 @@ admin.site.register(FaultDef, FaultDefAdmin)
 class ComputerAdmin(admin.ModelAdmin):
     list_display = (
         'link',
+        'version',
         'ip',
         'login_link',
         'datelastupdate',
         'hw_link',
-        'version',
+
     )
     ordering = ('name',)
     list_filter = ('version',)
