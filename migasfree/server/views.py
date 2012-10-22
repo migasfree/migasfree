@@ -148,8 +148,6 @@ def query_message(request, param):
     q = Message.objects.all().order_by("-date")
     t = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)
 
-    q = Message.objects.all()
-
     for e in q:
         if e.date < t:
             icon = 'computer_alert.png'
