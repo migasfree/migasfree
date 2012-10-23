@@ -1190,6 +1190,11 @@ class Update(models.Model):
         verbose_name=unicode(_("computer"))
     )
 
+    version = models.ForeignKey(
+        Version,
+        verbose_name=unicode(_("version"))
+    )
+
     date = models.DateTimeField(
         unicode(_("date")),
         default=0
