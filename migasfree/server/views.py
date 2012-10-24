@@ -449,12 +449,13 @@ def message(request, param):
         if msg == "":
             omessage.delete()
             Update(computer=ocomputer, date=m, version=Version.objects.get(name=ocomputer.version)).save()
-        return HttpResponse("OK", mimetype='text/plain')
+            return HttpResponse("OK", mimetype='text/plain')
     except:
         omessage = Message(computer=ocomputer)
-        omessage.text = msg
-        omessage.date = m
-        omessage.save()
+
+    omessage.text = msg
+    omessage.date = m
+    omessage.save()
 
     return HttpResponse("OK", mimetype='text/plain')
 
