@@ -456,7 +456,7 @@ def message(request, param):
         omessage.date = m
         omessage.save()
 
-    return HttpResponse("OKOK", mimetype='text/plain')
+    return HttpResponse("OK", mimetype='text/plain')
 
 def api(request, param):
     message = "message"
