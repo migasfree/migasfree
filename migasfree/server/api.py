@@ -106,7 +106,7 @@ def upload_computer_message(request, computer, data):
             o_message = Message.objects.get(computer=o_computer)
             if data[cmd] == "":
                 o_message.delete()
-                Update(computer=o_computer, date=m).save()
+                Update(computer=o_computer, date=m, version=Version.objects.get(name=o_computer.version)).save()
                 return return_message(cmd, ok())
         except:
             o_message = Message(computer=o_computer)

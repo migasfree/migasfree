@@ -440,24 +440,23 @@ def message(request, param):
     msg = request.GET.get('TEXT')
 
     try:
-        computer = Computer.objects.get(name=pc)
+        ocomputer = Computer.objects.get(name=pc)
     except:
         return HttpResponse("Computer not exits", mimetype='text/plain')
 
     try:
-        omessage = Message.objects.get(computer=computer)
+        omessage = Message.objects.get(computer=ocomputer)
         if msg == "":
             omessage.delete()
-            Update(computer=computer, date=m).save()
-            return HttpResponse("OK", mimetype='text/plain')
+            Update(computer=ocomputer, date=m, version=Version.objects.get(name=ocomputer.version)).save()
+        return HttpResponse("OK", mimetype='text/plain')
     except:
-        omessage = Message(computer=computer)
+        omessage = Message(computer=ocomputer)
+        omessage.text = msg
+        omessage.date = m
+        omessage.save()
 
-    omessage.text = msg
-    omessage.date = m
-    omessage.save()
-
-    return HttpResponse("OK", mimetype='text/plain')
+    return HttpResponse("OKOK", mimetype='text/plain')
 
 def api(request, param):
     message = "message"

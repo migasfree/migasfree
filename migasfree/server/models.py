@@ -1192,7 +1192,8 @@ class Update(models.Model):
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version"))
+        verbose_name=unicode(_("version")),
+        null=True
     )
 
     date = models.DateTimeField(
