@@ -53,7 +53,7 @@ admin.site.register(Version, VersionAdmin)
 
 
 class UpdateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'computer_link', 'date')
+    list_display = ('id', 'computer_link', 'date','version')
     list_filter = ('date', )
     search_fields = ('computer__name', 'date',)
     actions = None
