@@ -1328,8 +1328,7 @@ class Login(models.Model):
     user_link.short_description = unicode(_("User"))
 
     def __unicode__(self):
-        return '%s-%s@%s' % (
-            str(self.id),
+        return '%s@%s' % (
             self.user.name,
             self.computer.name
         )
