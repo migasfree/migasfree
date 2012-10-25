@@ -102,23 +102,25 @@ def upload_computer_message(request, computer, data):
         return return_message(cmd, error(COMPUTERNOTFOUND))
 
     try:
-        try:
-            o_message = Message.objects.get(computer=o_computer)
-            if data[cmd] == "":
-                o_message.delete()
-                Update(computer=o_computer, date=m, version=Version.objects.get(name=o_computer.version)).save()
-                return return_message(cmd, ok())
-        except:
-            o_message = Message(computer=o_computer)
+        o_message = Message.objects.get(computer=o_computer)
+        if data[cmd] == "":
+            o_message.delete()
+    except:
+        o_message = Message(computer=o_computer)
 
-        o_message.text = data[cmd]
-        o_message.date = m
-        o_message.save()
+    try:
+        if data[cmd] == "":
+            Update(computer=o_computer, date=m, version=Version.objects.get(name=o_computer.version)).save()
+        else:
+            o_message.text = data[cmd]
+            o_message.date = m
+            o_message.save()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
 
     return ret
+
 
 def return_message(cmd, data):
     return {'%s.return' % cmd: data}
