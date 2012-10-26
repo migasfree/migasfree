@@ -10,25 +10,25 @@
     {% if query %}
         <table id="query">
             <tr>
+                <th>{% trans 'Date' %}</th>
                 <th>{% trans 'Computer' %}</th>
-                <th>{% trans 'Login' %}</th>
                 <th>{% trans 'Version' %}</th>
                 <th>{% trans 'IP' %}</th>
-                <th>{% trans 'Date' %}</th>
+                <th>{% trans 'Login' %}</th>
                 <th>{% trans 'Message' %}</th>
             </tr>
 
             {% for item in query %}
                 <tr class="{% cycle '' 'alt' %}">
-                    <td><img src="/repo/icons/{{ item.0 }}" width="36" /> <a href="../admin/server/computer/{{ item.2 }}/">{{ item.3 }}</a></td>
+                    <td>{{ item.8 }}</td>
 
-                    <td><a href="../admin/server/login/{{ item.4 }}/">{{ item.5 }}</a></td>
+                    <td><img src="/repo/icons/{{ item.0 }}" width="36" /> <a href="../admin/server/computer/{{ item.2 }}/">{{ item.3 }}</a></td>
 
                     <td>{{ item.6 }}</td>
 
                     <td>{{ item.7 }}</td>
 
-                    <td>{{ item.8 }}</td>
+                    <td><a href="../admin/server/login/{{ item.4 }}/">{{ item.5 }}</a></td>
 
                     <td>{{ item.9 }}</td>
             </tr>
