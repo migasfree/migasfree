@@ -46,7 +46,7 @@ class WideTextarea(forms.Textarea):
         super(WideTextarea, self).__init__(*args, **kwargs)
 
 class VersionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'pms', 'computerbase', 'autoregister')
+    list_display = ('name',  'platform', 'pms', 'computerbase', 'autoregister')
     actions = None
 
 admin.site.register(Version, VersionAdmin)
