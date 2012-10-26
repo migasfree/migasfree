@@ -55,6 +55,13 @@ LANGUAGES_CHOICES = (
     (4, 'ruby'),
 )
 
+PLATFORM_CHOICES = (
+    (0, '---'),
+    (1, 'Windows'),
+    (2, 'GNU/Linux'),
+)
+
+
 def user_version():
     """
     Return the user version that logged
@@ -437,6 +444,13 @@ class Version(models.Model):
         default=False,
         help_text="Is not neccesary a user for register the computer in database and get the keys."
     )
+    
+    platform = models.IntegerField(
+        unicode(_("platform")),
+        default=0,
+        choices=PLATFORM_CHOICES
+    )
+
 
     def __unicode__(self):
         return self.name
