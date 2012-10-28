@@ -444,7 +444,7 @@ class Version(models.Model):
         default=False,
         help_text="Is not neccesary a user for register the computer in database and get the keys."
     )
-    
+
     platform = models.IntegerField(
         unicode(_("platform")),
         default=0,
@@ -1268,6 +1268,11 @@ class Error(models.Model):
         help_text=""
     )
 
+    version = models.ForeignKey(
+        Version,
+        verbose_name=unicode(_("version"))
+    )
+
     def auto_check(self):
         msg = self.error
         for ace in AutoCheckError.objects.all():
@@ -1456,6 +1461,11 @@ class Fault(models.Model):
         unicode(_("checked")),
         default=False,
         help_text=""
+    )
+
+    version = models.ForeignKey(
+        Version,
+        verbose_name=unicode(_("version"))
     )
 
     def computer_link(self):

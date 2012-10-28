@@ -199,13 +199,8 @@ admin.site.register(User, UserAdmin)
 
 class ErrorAdmin(admin.ModelAdmin):
 
-    def computer__version(obj):
-       return obj.computer.version
-    computer__version.admin_order_field = "computer__version"
-    computer__version.short_description = trans("version")
-
-    list_display = ('id', 'computer_link', computer__version, 'checked', 'date', 'error',)
-    list_filter = ('checked', 'date',"computer__version" )
+    list_display = ('id', 'computer_link', 'version', 'checked', 'date', 'error',)
+    list_filter = ('checked', 'date', "version" )
     ordering = ('date', 'computer',)
     search_fields = ('date', 'computer__name', 'error',)
 
@@ -226,12 +221,13 @@ class FaultAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'computer_link',
+        'version',
         'checked',
         'date',
         'text',
         'faultdef',
     )
-    list_filter = ('checked', 'date', 'faultdef',)
+    list_filter = ('checked', 'date', 'version','faultdef',)
     ordering = ('date', 'computer',)
     search_fields = ('date', 'computer__name', 'fault',)
 

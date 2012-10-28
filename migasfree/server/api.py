@@ -81,10 +81,12 @@ def upload_computer_errors(request, computer, data):
     m = time.strftime("%Y-%m-%d %H:%M:%S")
     try:
         o_computer = Computer.objects.get(name=computer)
+        o_version = Version.objects.get(id=o_computer.version_id)
         o_error = Error()
         o_error.computer = o_computer
         o_error.date = m
         o_error.error = data[cmd]
+        o_error.version = o_version
         o_error.save()
         ret = return_message(cmd, ok())
     except:
@@ -369,6 +371,7 @@ def upload_computer_faults(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     faults = data.get(cmd).get("faults")
     o_computer = Computer.objects.get(name=computer)
+    o_version = Version.objects.get(id=o_computer.version_id)
     m = time.strftime("%Y-%m-%d %H:%M:%S")
 
     try:
@@ -384,6 +387,7 @@ def upload_computer_faults(request, computer, data):
                     o_fault.date = m
                     o_fault.text = msg
                     o_fault.faultdef = o_faultdef
+                    o_fault.version = o_version
                     o_fault.save()
             except:
                 pass
