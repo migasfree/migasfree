@@ -108,7 +108,7 @@ class User(models.Model):
 
     fullname = models.CharField(
         unicode(_("fullname")),
-        max_length=50
+        max_length=100
     )
 
     def __unicode__(self):
