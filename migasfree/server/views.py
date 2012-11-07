@@ -522,6 +522,16 @@ def api(request, param):
                 data = unwrap(filename, version)
                 if data.has_key("errmfs"):
                     ret = return_message(command, data)
+                    
+                    if data["errmfs"]["code"]==SIGNNOTOK:
+                        # add a error
+                        oerr=Error()
+                        oerr.computer=Computer.objects.get(name=computer)
+                        oerr.version=Version.objects.get(name=version)
+                        oerr.error="%s - %s " % (command, DSTR[SIGNNOTOK] )
+                        oerr.date=datetime.now()
+                        oerr.save()
+                        
                 else:
                     ret = functs_version[command](request, computer, data)
 
