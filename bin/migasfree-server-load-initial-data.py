@@ -258,6 +258,8 @@ t = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)
 n = Message.objects.filter(date__lt=t).count()
 if n > 0:
     icon = 'computer_alert.png'
+    result=result -n
+    msg = 'Computer updating now (%d delayed)' % n 
 else:
     icon = 'computer.png'
 """
