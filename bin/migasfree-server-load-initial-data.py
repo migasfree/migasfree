@@ -250,20 +250,28 @@ for d in ds:
 """from migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT
 from datetime import datetime
 from datetime import timedelta
-oMessages = Message.objects.all()
-result = oMessages.count()
 url = '/migasfree/queryMessage'
 msg = 'Computer updating now'
 t = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)
-n = Message.objects.filter(date__lt=t).count()
-if n > 0:
-    icon = 'computer_alert.png'
-    result=result -n
-    msg = 'Computer updating now (%d delayed)' % n 
-else:
-    icon = 'computer.png'
+result=Message.objects.all().count()-Message.objects.filter(date__lt=t).count()
+icon = 'computer.png'
 """
     ochecking.save()
+    
+    ochecking = Checking()
+    ochecking.name = _("Computer delayed")
+    ochecking.description = "Check how many computers are delayed"
+    ochecking.code = \
+"""from migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT
+from datetime import datetime
+from datetime import timedelta
+url = '/migasfree/queryMessage'
+msg = 'Computer delayed' 
+t = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)
+result = Message.objects.filter(date__lt=t).count()
+icon = 'computer_alert.png'
+"""
+    ochecking.save()    
 
     ochecking = Checking()
     ochecking.name = _("Server Messages")
