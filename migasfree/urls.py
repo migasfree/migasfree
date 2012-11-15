@@ -5,6 +5,7 @@ set up our admin URLs
 """
 
 import os
+import settings
 
 from django.conf.urls.defaults import patterns, include
 
@@ -48,8 +49,10 @@ urlpatterns = patterns(
     (r'^migasfree/version/(.*)', change_version),
     (r'^migasfree/softwarebase/(.*)', softwarebase),
     (r'^migasfree/message/(.*)', message),
-    (r'^migasfree/login/(.*)', login),
     (r'^migasfree/documentation/(.*)', documentation),
+
+    (r'^migasfree/login/(.*)', login),
+    (r'^accounts/login/(.*)', login),
 
     (r'^migasfree/device/(.*)', device),
 
@@ -77,5 +80,9 @@ urlpatterns = patterns(
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': os.path.join(os.path.dirname(__file__), 'media')
+    }),
+
+    (r'^repo/(?P<path>.*)$', 'django.views.static.serve', {
+        'document_root': settings.STATIC_ROOT
     }),
 )
