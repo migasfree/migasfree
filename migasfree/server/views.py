@@ -12,7 +12,7 @@ from datetime import date
 from django.utils.translation import ugettext as _
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
@@ -54,14 +54,10 @@ __all__ = (
     'query',
 
     # from main
-    'change_version', 'documentation', 'info', 'login', 'main', 'bootstrap',
+    'change_version', 'documentation', 'info', 'login', 'main',
     'query_selection', 'query_message', 'query_message_server',
     'softwarebase', 'system',
 )
-
-
-def bootstrap(request):
-    return HttpResponseRedirect('/migasfree/main/')
 
 
 def user_version(user):
@@ -104,13 +100,12 @@ def info(request, param):
         cad += version.pms.info
         ret = run_in_server(cad)["out"]
 
-        return render_to_response(
+        return render(
+            request,
             'info_package.html',
             {
                 "title": _("Information of Package"),
                 "contentpage": ret,
-                "user": request.user,
-                "LANGUAGE_CODE": request.LANGUAGE_CODE
             }
         )
 
@@ -132,14 +127,14 @@ def info(request, param):
         except:
             pass
 
-    return render_to_response(
+    return render(
+        request,
         'info_folder.html',
         {
             "title": "Information of Package.",
             "description": "VERSION: %s" % version.name,
             "filters": filters,
             "query": vl_fields,
-            "user": request.user,
         }
     )
 
@@ -178,12 +173,12 @@ def query_message(request, param):
             ]
         )
 
-    return render_to_response(
+    return render(
+        request,
         'message.html',
         {
             "title": _("Computer Messages"),
             "query": vl_fields,
-            "user": request.user,
         }
     )
 
@@ -206,23 +201,21 @@ def query_message_server(request, param):
             ]
         )
 
-    return render_to_response(
+    return render(
+        request,
         'messageserver.html',
         {
             "title": _("Messages Server"),
             "query": vl_fields,
-            "user": request.user,
         }
     )
 
 
 def login(request, param):
     if request.method == 'GET':
-        return render_to_response(
+        return render(
+            request,
             'admin/login.html',
-            {
-                "user": request.user,
-            }
         )
 
     username = request.POST['username']
@@ -283,15 +276,14 @@ def main(request, param):
             }
         )
 
-    return render_to_response(
+    return render(
+        request,
         'main.html',
         {
             "title": _("Main Menu"),
             "description": "",
             "filters": filters,
             "status": status,
-            "user": request.user,
-            "LANGUAGE_CODE": request.LANGUAGE_CODE
         }
     )
 
@@ -305,14 +297,13 @@ def system(request, param):
     filters = []
     filters.append(param)
 
-    return render_to_response(
+    return render(
+        request,
         'system.html',
         {
             "title": _("System Menu"),
             "description": "",
             "filters": filters,
-            "user": request.user,
-            "LANGUAGE_CODE": request.LANGUAGE_CODE
         }
     )
 
@@ -328,13 +319,12 @@ def query_selection(request, param):
     for e in qry:
         vl_fields.append([e.id, e.name])
 
-    return render_to_response(
+    return render(
+        request,
         'query_selection.html',
         {
             "title": _("Queries Menu"),
             "query": vl_fields,
-            "user": request.user,
-            "LANGUAGE_CODE": request.LANGUAGE_CODE
         }
     )
 
@@ -374,12 +364,12 @@ def change_version(request, param):
             'HTTP_REFERER', '/migasfree/main'
         )
 
-        return render_to_response(
+        return render(
+            request,
             'parameters.html',
             {
                 'form': g_form_param,
                 'title': _("Change version for %s") % request.user.username,
-                "user": request.user,
             }
         )
 
@@ -403,14 +393,13 @@ def documentation(request, param):
     filters = []
     filters.append(param)
 
-    return render_to_response(
+    return render(
+        request,
         'documentation.html',
         {
             "title": _("Documentation"),
             "description": "",
             "filters": filters,
-            "user": request.user,
-            "LANGUAGE_CODE": request.LANGUAGE_CODE
         }
     )
 
@@ -876,12 +865,12 @@ def createrepositories(request, param):
     """
     version = user_version(request.user)
     html = create_repositories(version.id)
-    return render_to_response(
+    return render(
+        request,
         "info.html",
         {
             "title": "Create Repository Files.",
             "contentpage": html,
-            "user": request.user,
         }
     )
 
@@ -1088,13 +1077,12 @@ def chart_selection(request, param):
     Charts Menu of migasfree
     """
 
-    return render_to_response(
+    return render(
+        request,
         'chart_selection.html',
         {
             "title": _("Charts Menu"),
             "description": "",
-            "user": request.user,
-            "LANGUAGE_CODE": request.LANGUAGE_CODE
         }
     )
 
@@ -1104,12 +1092,9 @@ def chart(request, param):
     filters = []
     filters.append(param)
 
-    return render_to_response(
+    return render(
+        request,
         'chart.html',
-        {
-            "user": request.user,
-            "LANGUAGE_CODE": request.LANGUAGE_CODE
-        }
     )
 
 
@@ -1383,14 +1368,14 @@ def hardware(request, param):
     if qry.count > 0:
         computer = qry[0].computer
 
-    return render_to_response(
+    return render(
+        request,
         'hardware.html',
         {
             "title": computer.name,
             "computer": computer,
             "description": _("Hardware Information"),
             "query": qry,
-            "user": request.user,
         }
     )
 
@@ -1401,14 +1386,14 @@ def hardware_resume(request, param):
     if qry.count > 0:
         computer = qry[0].computer
 
-    return render_to_response(
+    return render(
+        request,
         'hardware_resume.html',
         {
             "title": computer.name,
             "computer": computer,
             "description": _("Hardware Information"),
             "query": qry,
-            "user": request.user,
         }
     )
 
@@ -1447,7 +1432,8 @@ def query2(request, parameters, form_param):
                     parameters[x.name + "_display"]
                 ))
 
-        return render_to_response(
+        return render(
+            request,
             'query.html',
             {
                 "title": o_query.name,
@@ -1456,7 +1442,6 @@ def query2(request, parameters, form_param):
                 "query": vl_fields,
                 "filters": filters,
                 "row_count": query.count(),
-                "user": request.user,
             }
         )
     except:
@@ -1514,12 +1499,12 @@ def query(request, param):
             exec(o_query.parameters.replace("\r", ""))
             g_form_param = form_params()(initial=dic_initial)
 
-            return render_to_response(
+            return render(
+                request,
                 'parameters.html',
                 {
                     'form': g_form_param,
                     'title': _("Parameters for Query: %s") % o_query.name,
-                    "user": request.user,
                 }
             )
         except:
