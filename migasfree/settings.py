@@ -6,15 +6,16 @@ Django settings for migasfree project
 
 import os
 
-MIGASFREE_PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 MIGASFREE_DB_DIR = '/var/tmp'
 MIGASFREE_DB_NAME = 'migasfree'
-MIGASFREE_APP_DIR = '/usr/share/migasfree-server'
-MIGASFREE_REPO_DIR = '/var/migasfree/repo'
+
+MIGASFREE_PROJECT_DIR = os.path.dirname(os.getcwd())
+MIGASFREE_APP_DIR = os.path.dirname(__file__)
+MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
+
 MIGASFREE_TMP_DIR = '/tmp/migasfree-server'
 MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
 MIGASFREE_ORGANIZATION = "My Organization"
-MIGASFREE_HOSTNAME = 'www.myorganization.com'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -29,23 +30,19 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.path.join(MIGASFREE_DB_DIR, MIGASFREE_DB_NAME),  # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(MIGASFREE_DB_DIR, MIGASFREE_DB_NAME),
     }
 }
 """
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': MIGASFREE_DB_NAME,  # Or path to database file if using sqlite3.
-        'USER': 'migasfree',                      # Not used with sqlite3.
-        'PASSWORD': 'migasfree',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': MIGASFREE_DB_NAME,
+        'USER': 'migasfree',
+        'PASSWORD': 'migasfree',
+        'HOST': '',
+        'PORT': '',
     }
 }
 """
@@ -62,7 +59,6 @@ TIME_ZONE = 'Europe/Madrid'
 #LANGUAGE_CODE = 'es-ES'
 LANGUAGE_CODE = 'en-us'
 
-
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -74,10 +70,9 @@ USE_I18N = True
 USE_L10N = False
 
 STATIC_ROOT = MIGASFREE_REPO_DIR
-STATIC_URL = 'http://%s/repo' % MIGASFREE_HOSTNAME
+STATIC_URL = '/repo/'
 
 FILE_UPLOAD_TEMP_DIR = MIGASFREE_TMP_DIR
-LOGIN_REDIRECT_URL = '/migasfree/main/'
 
 #LOCALE_PATHS = (
 #    '/usr/share/locale'
@@ -112,7 +107,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(MIGASFREE_PROJECT_DIR, 'templates'),
+    os.path.join(MIGASFREE_APP_DIR, 'templates'),
 )
 
 DEFAULT_CHARSET = 'utf-8'
@@ -133,16 +128,13 @@ INSTALLED_APPS = (
 
 AJAX_LOOKUP_CHANNELS = {
     # simplest way, automatically construct a search channel by passing a dictionary
-    'label'  : {'model':'server.label', 'search_field':'name'},
-    
+    'label': {'model':'server.label', 'search_field':'name'},
+
     # Custom channels are specified with a tuple
     # channel: ( module.where_lookup_is, ClassNameOfLookup )
-    'attribute' : ('migasfree.server.lookups', 'AttributeLookup'),
-    'package' : ('migasfree.server.lookups', 'PackageLookup'),
-
-
+    'attribute': ('migasfree.server.lookups', 'AttributeLookup'),
+    'package': ('migasfree.server.lookups', 'PackageLookup'),
 }
-
 
 AJAX_SELECT_BOOTSTRAP = True
 # True: [easiest]
@@ -151,7 +143,6 @@ AJAX_SELECT_BOOTSTRAP = True
 #   use jqueryUI theme if present else load one from jquery's CDN
 # False/None/Not set: [default]
 #   you should include jQuery, jqueryUI + theme in your template
-
 
 AJAX_SELECT_INLINES = 'inline'
 # 'inline': [easiest]
@@ -169,7 +160,6 @@ AJAX_SELECT_INLINES = 'inline'
 #   this is the most efficient but takes the longest to configure
 
 # when using staticfiles you may implement your own ajax_select.css and customize to taste
-
 
 
 ###########################################################################
