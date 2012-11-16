@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """
-set up our admin URLs
+set up our URLs
 """
 
 import os
 import settings
 
-from django.conf.urls.defaults import patterns, include
+from django.conf.urls.defaults import patterns, include, url
+from django.views.generic.simple import redirect_to
 
 from django.contrib import admin
 admin.autodiscover()
@@ -23,55 +24,95 @@ urlpatterns = patterns(
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
     #(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    (r'^migasfree/doc/', include('django.contrib.admindocs.urls')),
+    url(r'^migasfree/doc/', include('django.contrib.admindocs.urls')),
 
-    (r'^migasfree/admin/lookups/', include(ajax_select_urls)),
+    url(r'^migasfree/admin/lookups/', include(ajax_select_urls)),
 
     # Uncomment the next line to enable the admin:
-    (r'^migasfree/admin/', include(admin.site.urls)),
-    # (r'^migasfree/admin/(.*)', admin.site.root),
+    url(r'^migasfree/admin/', include(admin.site.urls)),
 
     # (r'^migasfree/jsi18n/(?P<packages>\S+?)/$', 'django.views.i18n.javascript_catalog'),
     # (r'^migasfree/jsi18n', 'django.views.i18n.javascript_catalog'),
 
     # migasfree.server.urls
-    #(r'^migasfree', main),
-    (r'^$', bootstrap),
-    (r'^migasfree/$', bootstrap),
-    (r'^migasfree/main/(.*)', main),
-    (r'^migasfree/system/(.*)', system),
-    (r'^migasfree/query_selection/(.*)', query_selection),
-    (r'^migasfree/query/(.*)', query),
-    (r'^migasfree/queryMessage/(.*)', query_message),
-    (r'^migasfree/queryMessageServer/(.*)', query_message_server),
-    (r'^migasfree/update/(.*)', update),
-    (r'^migasfree/info/(.*)', info),
-    (r'^migasfree/version/(.*)', change_version),
-    (r'^migasfree/softwarebase/(.*)', softwarebase),
-    (r'^migasfree/message/(.*)', message),
-    (r'^migasfree/documentation/(.*)', documentation),
+    url(
+        r'^$',
+        redirect_to,
+        {'url': '/migasfree/main/'},
+        name='bootstrap'
+    ),
 
-    (r'^migasfree/login/(.*)', login),
-    (r'^accounts/login/(.*)', login),
+    url(
+        r'^migasfree/$',
+        redirect_to,
+        {'url': '/migasfree/main/'},
+    ),
+
+    url(r'^migasfree/main/$', main, name='dashboard'),
+    url(r'^migasfree/system/$', system, name='system_menu'),
+    url(r'^migasfree/query_selection/$', query_selection, name='query_menu'),
+    url(r'^migasfree/query/(?P<query_id>\d+)/$', query, name='query'),
+    url(r'^migasfree/queryMessage/$', query_message, name='computer_messages'),
+    (r'^migasfree/queryMessageServer/(.*)', query_message_server),
+    url(r'^migasfree/info/(.*)', info, name='package_info'),
+    url(
+        r'^migasfree/version/$',
+        change_version,
+        name='change_version'
+    ),  # TODO ajax popup
+    (r'^migasfree/message/(.*)', message),
+    url(r'^migasfree/documentation/$', documentation, name='documentation'),
+
+    url(r'^accounts/login/$', login, name='login'),
 
     (r'^migasfree/device/(.*)', device),
 
-    (r'^migasfree/chart_selection/(.*)', chart_selection),
-    (r'^migasfree/chart/(.*)', chart),
-    (r'^migasfree/hourly_updated/(.*)', hourly_updated),
-    (r'^migasfree/daily_updated/(.*)', daily_updated),
-    (r'^migasfree/monthly_updated/(.*)', monthly_updated),
-    (r'^migasfree/delaySchedule/(.*)', delay_schedule),
-    (r'^migasfree/version_Computer/(.*)', version_computer),
+    url(r'^migasfree/chart_selection/$', chart_selection, name='chart_menu'),
+    url(r'^migasfree/chart/(?P<chart_type>.*)/$', chart, name='chart_type'),
+    url(
+        r'^migasfree/hourly_updated/$',
+        hourly_updated,
+        name='chart_hourly_updated'
+    ),
+    url(
+        r'^migasfree/daily_updated/$',
+        daily_updated,
+        name='chart_daily_updated'
+    ),
+    url(
+        r'^migasfree/monthly_updated/$',
+        monthly_updated,
+        name='chart_monthly_updated'
+    ),
+    url(
+        r'^migasfree/delaySchedule/$',
+        delay_schedule,
+        name='chart_delay_schedule'
+    ),
+    url(
+        r'^migasfree/version_Computer/$',
+        version_computer,
+        name='chart_version_computer'
+    ),
 
-    (r'^migasfree/hardware/(.*)', hardware),
-    (r'^migasfree/hardware_resume/(.*)', hardware_resume),
+    url(
+        r'^migasfree/hardware/(.*)',
+        hardware,
+        name='hardware'
+    ),
+    url(
+        r'^migasfree/hardware_resume/(.*)',
+        hardware_resume,
+        name='hardware_resume'
+    ),
 
     # migasfree.api.urls
     # (r'^migasfree/get_device/(.*)', get_device),
 
     (r'^migasfree/api/(.*)', api),
 
+    (r'^migasfree/softwarebase/(.*)', softwarebase),
+    (r'^migasfree/update/(.*)', update),
     (r'^migasfree/uploadPackage/(.*)', upload_package),
     (r'^migasfree/uploadSet/(.*)', upload_set),
     (r'^migasfree/createrepositoriesofpackage/(.*)', createrepositoriesofpackage),
