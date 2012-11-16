@@ -1,8 +1,6 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
-
 {# TODO Ajax to messages #}
 {% block extrahead %}<meta http-equiv="refresh" content="5" />{% endblock %}
 
@@ -22,13 +20,13 @@
                 <tr class="{% cycle '' 'alt' %}">
                     <td>{{ item.8 }}</td>
 
-                    <td><img src="/repo/icons/{{ item.0 }}" width="36" /> <a href="../admin/server/computer/{{ item.2 }}/">{{ item.3 }}</a></td>
+                    <td><img src="{{ STATIC_URL }}icons/{{ item.0 }}" width="36" /> <a href="{% url admin:server_computer_change item.2 %}">{{ item.3 }}</a></td>
 
                     <td>{{ item.6 }}</td>
 
                     <td>{{ item.7 }}</td>
 
-                    <td><a href="../admin/server/login/{{ item.4 }}/">{{ item.5 }}</a></td>
+                    <td><a href="{% url admin:server_login_change item.4 %}">{{ item.5 }}</a></td>
 
                     <td>{{ item.9 }}</td>
             </tr>
