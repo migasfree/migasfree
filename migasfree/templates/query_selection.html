@@ -3,8 +3,6 @@
 {% load server_tags %}
 
 {% block content %}
-    {% if description %}<div>{{ description }}</div>{% endif %}
-
     {% if filters %}
         <p>
         {% for column in filters %}
@@ -17,7 +15,7 @@
         <ul class="query">
         {% for item in query %}
             <li class="{% cycle 'odd' 'even' %}">
-                <a href='/migasfree/query/?id={{ item.0 }}'><img src='/repo/icons/query.png' /> {{ item.1 }}</a>
+                <a href="{% url query item.0 %}"><img src="{{ STATIC_URL }}icons/query.png" /> {{ item.1 }}</a>
             </li>
         {% endfor %}
         </ul>
