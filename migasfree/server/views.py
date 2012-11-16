@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from django.db.models import Max
 from django.db.models import Count
@@ -70,7 +71,9 @@ def user_version(user):
 
 def option_description(field, value):
     try:
-        return field.split('<option value="' + value + '">')[1].split("</option>")[0]
+        return field.split(
+            '<option value="' + value + '">'
+        )[1].split("</option>")[0]
     except:
         return value
 
@@ -78,22 +81,19 @@ def option_description(field, value):
 
 
 @login_required
-def info(request, param):
+def info(request, package):  # package info
     ver = request.GET.get('version')
     if not ver:
         version = user_version(request.user)
     else:
         version = Version.objects.get(name=ver)
 
-    ruta = os.path.join(MIGASFREE_REPO_DIR, version.name, param)
+    ruta = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
 
-    try:
-        elements = os.listdir(ruta)
-        elements.sort()
-    except:
+    if os.path.isfile(ruta):
         # GET INFORMATION OF PACKAGE
         cad = "echo \"VERSION: " + version.name + "\"\n"
-        cad += "echo \"PACKAGE: " + param[:-1] + "\"\n"
+        cad += "echo \"PACKAGE: " + package[:-1] + "\"\n"
         cad += "echo \n"
         cad += "echo \n"
         cad += "PACKAGE=" + ruta[:-1] + "\n"
@@ -109,38 +109,46 @@ def info(request, param):
             }
         )
 
-    # NAVIGATION FOR FOLDERS
-    vl_fields = []
-    filters = []
-    filters.append(param)
-    if param > "/":
-        vl_fields.append(["folder.png", ".."])
+    if os.path.isdir(ruta):
+        elements = os.listdir(ruta)
+        elements.sort()
 
-    for e in elements:
-        try:
-            # TODO: asegurarse de que esto sirve para identificar
-            # si es un archivo o un directorio
-            if (os.stat(ruta + e).st_mode < 32000):
-                vl_fields.append(["folder.png", e + "/"])
-            else:
-                vl_fields.append(["package.png", e + "/"])
-        except:
-            pass
+        # NAVIGATION FOR FOLDERS
+        vl_fields = []
+        filters = []
+        filters.append(package)
+        if package > "/":
+            vl_fields.append(["folder.png", ".."])
 
-    return render(
-        request,
-        'info_folder.html',
-        {
-            "title": "Information of Package.",
-            "description": "VERSION: %s" % version.name,
-            "filters": filters,
-            "query": vl_fields,
-        }
-    )
+        for e in elements:
+            try:
+                # TODO: asegurarse de que esto sirve para identificar
+                # si es un archivo o un directorio
+                if (os.stat(ruta + e).st_mode < 32000):
+                    vl_fields.append(["folder.png", e + "/"])
+                else:
+                    vl_fields.append(["package.png", e + "/"])
+            except:
+                pass
 
+        return render(
+            request,
+            'info_folder.html',
+            {
+                "title": "Information of Package.",
+                "description": "VERSION: %s" % version.name,
+                "filters": filters,
+                "query": vl_fields,
+            }
+        )
+
+    return HttpResponse(
+        'No package info exists.',
+        mimetype="text/plain"
+    )  # FIXME
 
 @login_required
-def query_message(request, param):
+def query_message(request):
     vl_fields = []
 
     q = Message.objects.all().order_by("-date")
@@ -211,7 +219,7 @@ def query_message_server(request, param):
     )
 
 
-def login(request, param):
+def login(request):
     if request.method == 'GET':
         return render(
             request,
@@ -226,21 +234,19 @@ def login(request, param):
         # Correct password, and the user is marked "active"
         auth.login(request, user)
         # Redirect to a success page.
-        return HttpResponseRedirect("/migasfree/main/")
+        return HttpResponseRedirect(reverse('bootstrap'))
 
     # Show the login page
-    return HttpResponseRedirect("/migasfree/login/")
+    return HttpResponseRedirect(reverse('login'))
 
 
 @login_required
-def main(request, param):
+def main(request):
     """
     dashboard of migasfree
     """
 
     status = []
-    filters = []
-    filters.append(param)
 
     for obj in Checking.objects.filter(active=True):
         msg = ""
@@ -249,7 +255,7 @@ def main(request, param):
             result = vars().get('result', 0)
             if result != 0:
                 msg = _(vars().get('msg', obj.name))
-                url = vars().get('url', '/migasfree/main')
+                url = vars().get('url', reverse('bootstrap'))
                 icon = vars().get('icon', 'information.png')
 
                 status.append(
@@ -280,36 +286,29 @@ def main(request, param):
         request,
         'main.html',
         {
-            "title": _("Main Menu"),
-            "description": "",
-            "filters": filters,
+            "title": _("Dashboard"),
             "status": status,
         }
     )
 
 
 @login_required
-def system(request, param):
+def system(request):
     """
     System Menu of migasfree
     """
-
-    filters = []
-    filters.append(param)
 
     return render(
         request,
         'system.html',
         {
             "title": _("System Menu"),
-            "description": "",
-            "filters": filters,
         }
     )
 
 
 @login_required
-def query_selection(request, param):
+def query_selection(request):
     """
     Queries Menu of migasfree
     """
@@ -330,7 +329,7 @@ def query_selection(request, param):
 
 
 @login_required()
-def change_version(request, param):
+def change_version(request):
     def form_params_version():
         class MyForm(ParametersForm):
             version = forms.ModelChoiceField(Version.objects.all())
@@ -346,7 +345,7 @@ def change_version(request, param):
         o_userprofile.version = Version.objects.get(id=parameters["version"])
         o_userprofile.save()
 
-        return HttpResponseRedirect('/migasfree/main')
+        return HttpResponseRedirect(reverse('bootstrap'))
     else:
 
         try:
@@ -361,7 +360,7 @@ def change_version(request, param):
 
         g_form_param = form_params_version()(initial=dic_initial)
         request.session['LastUrl'] = request.META.get(
-            'HTTP_REFERER', '/migasfree/main'
+            'HTTP_REFERER', reverse('bootstrap')
         )
 
         return render(
@@ -385,21 +384,16 @@ def softwarebase(request, param):
 
 
 @login_required
-def documentation(request, param):
+def documentation(request):
     """
     Manuals Page
     """
-
-    filters = []
-    filters.append(param)
 
     return render(
         request,
         'documentation.html',
         {
             "title": _("Documentation"),
-            "description": "",
-            "filters": filters,
         }
     )
 
@@ -1072,7 +1066,7 @@ def upload_set(request, param):
 
 
 @login_required
-def chart_selection(request, param):
+def chart_selection(request):
     """
     Charts Menu of migasfree
     """
@@ -1082,23 +1076,20 @@ def chart_selection(request, param):
         'chart_selection.html',
         {
             "title": _("Charts Menu"),
-            "description": "",
         }
     )
 
 
 @login_required
-def chart(request, param):
-    filters = []
-    filters.append(param)
-
+def chart(request, chart_type):
     return render(
         request,
         'chart.html',
+        {'ofc': reverse('chart_%s' % chart_type)}
     )
 
 
-def hourly_updated(request, param):
+def hourly_updated(request):
     o_chart = Chart()
     timeformat = "%H h. %b %d "
     o_chart.title.text = _("Updated Computers / Hour")
@@ -1152,7 +1143,7 @@ def hourly_updated(request, param):
     return HttpResponse(o_chart.create(), mimetype="text/plain")
 
 
-def daily_updated(request, param):
+def daily_updated(request):
     o_chart = Chart()
     timeformat = "%b %d"
     o_chart.title.text = _("Updated Computers / Day")
@@ -1200,7 +1191,7 @@ def daily_updated(request, param):
     return HttpResponse(o_chart.create(), mimetype="text/plain")
 
 
-def monthly_updated(request, param):
+def monthly_updated(request):
     o_chart = Chart()
     timeformat = "%b"
     o_chart.title.text = _("Updated Computers / Month")
@@ -1251,7 +1242,7 @@ def monthly_updated(request, param):
     return HttpResponse(o_chart.create(), mimetype="text/plain")
 
 
-def delay_schedule(request, param):
+def delay_schedule(request):
     o_chart = Chart()
     o_chart.title.text = _("Provided Computers / Delay")
     o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
@@ -1315,7 +1306,7 @@ def delay_schedule(request, param):
     return HttpResponse(o_chart.create(), mimetype="text/plain")
 
 
-def version_computer(request, param):
+def version_computer(request):
     o_chart = Chart()
     o_chart.title.text = _("Computers / Version")
     o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
@@ -1452,7 +1443,7 @@ def query2(request, parameters, form_param):
 
 
 @login_required
-def query(request, param):
+def query(request, query_id):
     if request.method == 'POST':
         parameters = {}
         for p in request.POST:
@@ -1474,19 +1465,22 @@ def query(request, param):
                 g_form_param = form_params()(initial=dic_initial)
 
                 for x in g_form_param:
-                    parameters[x.name + "_display"] = option_description(str(x), parameters[x.name])
+                    parameters[x.name + "_display"] = option_description(
+                        str(x), parameters[x.name]
+                    )
 
                 return query2(request, parameters, g_form_param)
             except:
                 return HttpResponse(
-                    "Error in field 'parameters' of query:\n" + str(sys.exc_info()[1]),
+                    "Error in field 'parameters' of query:\n"
+                        + str(sys.exc_info()[1]),
                     mimetype="text/plain"
                 )
 
     # show parameters form
-    o_query = Query.objects.get(id=request.GET.get('id', ''))
+    o_query = Query.objects.get(id=query_id)
     dic_initial = {
-        'id_query': request.GET.get('id', ''),
+        'id_query': query_id,
         'user_version': user_version(request.user).id
     }
     if o_query.parameters == "":
