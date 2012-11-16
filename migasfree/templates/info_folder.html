@@ -1,11 +1,7 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
-
 {% block content %}
-    {% if description %}<div>{{ description }}</div>{% endif %}
-
     {% if filters %}
         <p>
         {% for column in filters %}
@@ -18,10 +14,10 @@
         <ul class="query">
         {% for item in query %}
             <li class="{% cycle 'odd' 'even' %}">
-                <img src='/repo/icons/{{ item.0 }}' />
+                <img src="{{ STATIC_URL }}icons/{{ item.0 }}" />
                 <a href="{{ item.1 }}">{{ item.1 }}</a>
             </li>
         {% endfor %}
         </ul>
     {% endif %}
-{% endblock %}
+{% endblock content %}
