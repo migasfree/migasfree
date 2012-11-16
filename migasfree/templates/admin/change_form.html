@@ -15,10 +15,10 @@
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
 
 {% block documentation %}
-<a href="/migasfree/doc/models/{{ opts.app_label }}.{{ opts.object_name.lower }}"><img src="/repo/icons/documentation-model.png" height="24px" /></a>
+<a href="/migasfree/doc/models/{{ opts.app_label }}.{{ opts.object_name.lower }}"><img src="{{ STATIC_URL }}icons/documentation-model.png" height="24px" /></a>
 {% endblock %}
 
-{% block content_title %}{% if title %}<h1><img src='/repo/icons/{{ opts.module_name }}.png' width="32" /> {{ opts.verbose_name }}:  {% autoescape off %}{% link opts %}{% endautoescape %}</h1>  {% endif %}{% endblock %}
+{% block content_title %}{% if title %}<h1><img src="{{ STATIC_URL }}icons/{{ opts.module_name }}.png" width="32" /> {{ opts.verbose_name }}:  {% autoescape off %}{% link opts %}{% endautoescape %}</h1>  {% endif %}{% endblock %}
 
 {% block content %}
 <div id="content-main">
