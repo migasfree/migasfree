@@ -1,8 +1,6 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
-
 {# TODO Ajax to messages #}
 {% block extrahead %}<meta http-equiv="refresh" content="5" />{% endblock %}
 
@@ -17,13 +15,11 @@
 
             {% for item in query %}
                 <tr class="{% cycle '' 'alt' %}">
-                    <td><img src="/repo/icons/{{ item.0 }}" width="36" /> </td>
+                    <td><img src="{{ STATIC_URL }}icons/{{ item.0 }}" width="36" /></td>
 
                     <td>{{ item.2 }}</td>
 
                     <td>{{ item.3 }}</td>
-
-
             </tr>
             {% endfor %}
         </table>
