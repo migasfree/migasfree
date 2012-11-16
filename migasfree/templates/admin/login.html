@@ -1,7 +1,7 @@
 {% extends "admin/base_site.html" %}
 {% load i18n %}
 
-{% block title %}{% trans 'migasfree login' %}{% endblock %}
+{% block title %}{% trans 'Log in' %}{% endblock %}
 
 {% block extrastyle %}
     {% load adminmedia %}
@@ -17,7 +17,7 @@
 
 {% block content %}
     {% if error_message %}
-    <p class="errornote">{{ error_message }}</p>
+        <p class="errornote">{{ error_message }}</p>
     {% endif %}
 
     <div id="content-main">
@@ -39,4 +39,4 @@
         document.getElementById('id_username').focus()
         </script>
     </div>
-{% endblock %}
+{% endblock content %}
