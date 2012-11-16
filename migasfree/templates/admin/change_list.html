@@ -36,12 +36,16 @@
 {% block bodyclass %}change-list{% endblock %}
 
 {% block documentation %}
-<a href="/migasfree/doc/models/{{ cl.opts.app_label }}.{{ cl.opts.object_name.lower }}"><img src="/repo/icons/documentation-model.png" height="24px" /></a>
+<a href="/migasfree/doc/models/{{ cl.opts.app_label }}.{{ cl.opts.object_name.lower }}"><img src="{{ STATIC_URL }}icons/documentation-model.png" height="24px" /></a>
 {% endblock %}
 
 {% block coltype %}flex{% endblock %}
 
-{% block content_title %}{% if title %}<h1><img src='/repo/icons/{{ cl.opts.module_name }}.png' width="32" /> {% trans 'List of' %}  {{ cl.opts.verbose_name_plural|capfirst }}</h1>  {% endif %}{% endblock %}
+{% block content_title %}
+    {% if title %}
+        <h1><img src="{{ STATIC_URL }}icons/{{ cl.opts.module_name }}.png" width="32" /> {% trans 'List of' %}  {{ cl.opts.verbose_name_plural|capfirst }}</h1>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
   <div id="content-main">
