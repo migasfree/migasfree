@@ -2,35 +2,27 @@
 {% load i18n %}
 {% load server_tags %}
 
-{% block title %}{% trans 'migasfree dashboard' %}{% endblock %}
-
 {# TODO Ajax to issues-dashboard #}
 {% block extrahead %}<meta http-equiv="refresh" content="10" />{% endblock %}
 
 {% block content %}
-    {% if description %}<div>{{ description }}</div>{% endif %}
-
-    {% for column in filters %}
-        {{ column }}
-    {% endfor %}
-
     <div id="client-data">
         <h3>{% trans 'Clients Data' %}</h3>
 
         <ul>
-            <li><a href='/migasfree/admin/server/computer/'><img src='/repo/icons/computer.png' width="24" /> {% trans 'Computers' %}</a></li>
+            <li><a href="{% url admin:server_computer_changelist %}"><img src="{{ STATIC_URL }}icons/computer.png" width="24" /> {% trans 'Computers' %}</a></li>
 
-            <li><a href='/migasfree/admin/server/device/'><img src='/repo/icons/device.png' width="24" /> {% trans 'Devices' %}</a></li>
+            <li><a href="{% url admin:server_device_changelist %}"><img src="{{ STATIC_URL }}icons/device.png" width="24" /> {% trans 'Devices' %}</a></li>
 
-            <li><a href='/migasfree/admin/server/user/'><img src='/repo/icons/user.png' width="24" /> {% trans 'Users' %}</a></li>
+            <li><a href="{% url admin:server_user_changelist %}"><img src="{{ STATIC_URL }}icons/user.png" width="24" /> {% trans 'Users' %}</a></li>
 
-            <li><a href='/migasfree/admin/server/login'><img src='/repo/icons/login.png' width="24" /> {% trans 'Logins' %}</a></li>
+            <li><a href="{% url admin:server_login_changelist %}"><img src="{{ STATIC_URL }}icons/login.png" width="24" /> {% trans 'Logins' %}</a></li>
 
-            <li><a href='/migasfree/admin/server/attribute'><img src='/repo/icons/attribute.png' width="24" /> {% trans 'Attributes' %}</a></li>
+            <li><a href="{% url admin:server_attribute_changelist %}"><img src="{{ STATIC_URL }}icons/attribute.png" width="24" /> {% trans 'Attributes' %}</a></li>
 
-            <li><a href='/migasfree/admin/server/error'><img src='/repo/icons/error.png' width="24" /> {% trans 'Errors' %}</a></li>
+            <li><a href="{% url admin:server_error_changelist %}"><img src="{{ STATIC_URL }}icons/error.png" width="24" /> {% trans 'Errors' %}</a></li>
 
-            <li><a href='/migasfree/admin/server/fault'><img src='/repo/icons/fault.png' width="24" /> {% trans 'Faults' %}</a></li>
+            <li><a href="{% url admin:server_fault_changelist %}"><img src="{{ STATIC_URL }}icons/fault.png" width="24" /> {% trans 'Faults' %}</a></li>
         </ul>
     </div>
 
@@ -39,7 +31,7 @@
 
         <ul>
         {% for item in status %}
-            <li class="{% cycle 'odd' 'even' %}"><a href='{{ item.url }}'><img src='/repo/icons/{{ item.icon }}' /> {{ item.result }}</a></li>
+            <li class="{% cycle 'odd' 'even' %}"><a href='{{ item.url }}'><img src="{{ STATIC_URL }}icons/{{ item.icon }}" /> {{ item.result }}</a></li>
         {% endfor %}
         </ul>
     </div>
@@ -48,17 +40,17 @@
         <h3>{% trans 'Packing' %} [{% version %}]</h3>
 
         <ul>
-            <li><a href='/migasfree/admin/server/store/'><img src='/repo/icons/store.png' /> {% trans 'Stores' %}</a></li>
+            <li><a href="{% url admin:server_store_changelist %}"><img src="{{ STATIC_URL }}icons/store.png" /> {% trans 'Stores' %}</a></li>
 
-            <li><a href='/migasfree/admin/server/package/'><img src='/repo/icons/package.png' /> {% trans 'Packages/Sets' %}</a></li>
+            <li><a href="{% url admin:server_package_changelist %}"><img src="{{ STATIC_URL }}icons/package.png" /> {% trans 'Packages/Sets' %}</a></li>
 
-            <li><a href='/migasfree/info/'><img src='/repo/icons/package-info.png' /> {% trans 'Packages information' %}</a></li>
+            <li><a href='/migasfree/info/'><img src="{{ STATIC_URL }}icons/package-info.png" /> {% trans 'Packages information' %}</a></li>
         </ul>
 
         <h3>{% trans 'Liberation' %} [{% version %}]</h3>
 
         <ul>
-            <li><a href='/migasfree/admin/server/repository/?active__exact=1'><img src='/repo/icons/repository.png' /> {% trans 'Repositories' %}</a></li>
+            <li><a href="{% url admin:server_repository_changelist %}?active__exact=1"><img src="{{ STATIC_URL }}icons/repository.png" /> {% trans 'Repositories' %}</a></li>
         </ul>
     </div>
-{% endblock %}
+{% endblock content %}
