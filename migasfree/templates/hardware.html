@@ -1,127 +1,118 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
-
 {% block content_title %}
-    <h2><img src='/repo/icons/computer.png' width="32" /><a href="/migasfree/admin/server/computer/{{ computer.id }}"> {{ title }}</a></h2>
+    <p><a href="{% url hardware_resume computer.id %}">&lt; {% trans 'Back to main tree information' %}</a></p>
+
+    <h2><img src="{{ STATIC_URL }}icons/computer.png" width="32" /><a href="{% url admin:server_computer_change computer.id %}"> {{ title }}</a></h2>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
 
 {% block content %}
-    <h3><a href="/migasfree/hardware_resume/{{ computer.id }}">{{ description }}</a></h3>
-
 <table>
     {% for row in query %}
+        <div style="margin-left: {{row.level}}em; margin-bottom: 5px">
+            <tr>
+                {% if row.claimed = 1  %}
+                    <table class="node">
+                {% else  %}
+                    <table class="node-unclaimed">
+                {% endif %}
+                    {% if row.name %}
+                      <tr>
+                        <th colspan="2">
+                           {% if row.icon %}
+                               <img src="{{ STATIC_URL }}icons/hw/{{ row.icon }}" alt="{{ row.icon }}" />
+                           {% endif %}
+                           <strong><a href="{{ row.id }}">{{row.name}}</a></strong>
+                        </th>
+                      </tr>
+                    {% endif %}
 
-<div style='margin-left: {{row.level}}em; margin-bottom: 5px'>
+                    {% if row.description %}
+                        <tr><td>Description:</td><td>{{row.description}}</td></tr>
+                    {% endif %}
 
-      <tr>
-<table class="node">
+                    {% if row.classname %}
+                        <tr><td>Class:</td><td>{{row.classname}}</td></tr>
+                    {% endif %}
 
-{% if row.claimed = 1  %}
-  <table class="node">
-{% else  %}
-  <table class="node-unclaimed">
-{% endif %}
+                    {% if row.product %}
+                        <tr><td>Product:</td><td>{{row.product}}</td></tr>
+                    {% endif %}
 
-{% if row.name %}
-  <tr>
-    <th colspan="2">
-       {% if row.icon %}
-         <img src='/repo/icons/hw/{{ row.icon }}' alt='{{ row.icon }}' />
-       {% endif %}
+                    {% if row.vendor %}
+                        <tr><td>Vendor:</td><td>{{row.vendor}}</td></tr>
+                    {% endif %}
 
-       <strong><a href='{{ row.id }}'>{{row.name}}</a></strong>
-    </th>
-  </tr>
-{% endif %}
+                    {% if row.version %}
+                        <tr><td>Version:</td><td>{{row.version}}</td></tr>
+                    {% endif %}
 
-{% if row.description %}
-  <tr><td>Description:</td><td>{{row.description}}</td></tr>
-{% endif %}
+                    {% if row.serial %}
+                        <tr><td>Serial:</td><td>{{row.serial}}</td></tr>
+                    {% endif %}
 
-{% if row.classname %}
-  <tr><td>Class:</td><td>{{row.classname}}</td></tr>
-{% endif %}
+                    {% if row.businfo %}
+                        <tr><td>Bus info:</td><td>{{row.businfo}}</td></tr>
+                    {% endif %}
 
-{% if row.product %}
-  <tr><td>Product:</td><td>{{row.product}}</td></tr>
-{% endif %}
+                    {% if row.hw_logicalname_set.all %}
+                        <tr>
+                            <td>Logical name:</td>
+                            <td>
+                                {% for c in row.hw_logicalname_set.all %}
+                                    {{c}}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endif %}
 
-{% if row.vendor %}
-  <tr><td>Vendor:</td><td>{{row.vendor}}</td></tr>
-{% endif %}
+                    {% if row.phyid %}
+                        <tr><td>Physical id:</td><td>{{row.phyid}}</td></tr>
+                    {% endif %}
 
-{% if row.version %}
-  <tr><td>Version:</td><td>{{row.version}}</td></tr>
-{% endif %}
+                    {% if row.slot %}
+                        <tr><td>Slot:</td><td>{{row.slot}}</td></tr>
+                    {% endif %}
 
-{% if row.serial %}
-  <tr><td>Serial:</td><td>{{row.serial}}</td></tr>
-{% endif %}
+                    {% if row.size %}
+                        <tr><td>Size:</td><td>{{row.size}}</td></tr>
+                    {% endif %}
 
-{% if row.businfo %}
-  <tr><td>Bus info:</td><td>{{row.businfo}}</td></tr>
-{% endif %}
+                    {% if row.capacity %}
+                        <tr><td>Capacity:</td><td>{{row.capacity}}</td></tr>
+                    {% endif %}
 
-{% if row.hw_logicalname_set.all %}
-  <tr><td>Logical name:</td>
-  <td>
-  {% for c in row.hw_logicalname_set.all %}
-    {{c}}
-  {% endfor %}
-  </td>
-  </tr>
-{% endif %}
+                    {% if row.width %}
+                        <tr><td>Width:</td><td>{{row.width}}</td></tr>
+                    {% endif %}
 
-{% if row.phyid %}
-  <tr><td>Physical id:</td><td>{{row.phyid}}</td></tr>
-{% endif %}
+                    {% if row.dev %}
+                        <tr><td>Dev:</td><td>{{row.dev}}</td></tr>
+                    {% endif %}
 
-{% if row.slot %}
-  <tr><td>Slot:</td><td>{{row.slot}}</td></tr>
-{% endif %}
+                    {% if row.hw_capability_set.all %}
+                        <tr>
+                            <td>Capabilities:</td>
+                            <td>
+                                {% for c in row.hw_capability_set.all %}
+                                    {{c.name}} = {{c.description}} <br />
+                                {% endfor %}
+                            </td>
+                        </tr>
+                    {% endif %}
 
-{% if row.size %}
-  <tr><td>Size:</td><td>{{row.size}}</td></tr>
-{% endif %}
-
-{% if row.capacity %}
-  <tr><td>Capacity:</td><td>{{row.capacity}}</td></tr>
-{% endif %}
-
-{% if row.width %}
-  <tr><td>Width:</td><td>{{row.width}}</td></tr>
-{% endif %}
-
-{% if row.dev %}
-  <tr><td>Dev:</td><td>{{row.dev}}</td></tr>
-{% endif %}
-
-{% if row.hw_capability_set.all %}
-  <tr><td>Capabilities:</td>
-  <td>
-  {% for c in row.hw_capability_set.all %}
-    {{c.name}} = {{c.description}} <br>
-  {% endfor %}
-  </td>
-  </tr>
-{% endif %}
-
-{% if row.hw_configuration_set.all %}
-
-  {% for c in row.hw_configuration_set.all %}
-    <tr><td>{{c.name}}=</td><td>{{c.value}}</td></tr>
-  {% endfor %}
-
-{% endif %}
+                    {% if row.hw_configuration_set.all %}
+                        {% for c in row.hw_configuration_set.all %}
+                            <tr><td>{{c.name}}=</td><td>{{c.value}}</td></tr>
+                        {% endfor %}
+                    {% endif %}
+                    </table>
+                </table>
+            </tr>
+        </div>
+    {% endfor %}
 </table>
-
-</table>
-        </tr>
-</div>
-      {% endfor %}
-</table>
-{% endblock %}
+{% endblock content %}
