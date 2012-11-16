@@ -2,11 +2,7 @@
 {% load i18n %}
 {% load server_tags %}
 
-{% block title %}   {{ title }} | {% trans 'migasfree' %}{% endblock %}
-
 {% block content %}
-    <div>{{ description }}</div>
-
     <form action="." method="post">
         <table>
             {{ form.as_table }}
