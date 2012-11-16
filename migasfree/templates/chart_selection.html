@@ -3,27 +3,17 @@
 {% load server_tags %}
 
 {% block content %}
-    {% if description %}<div>{{ description }}</div>{% endif %}
-
-    {% if filters %}
-        <p>
-        {% for column in filters %}
-            {{ column }}
-        {% endfor %}
-        </p>
-    {% endif %}
-
     <h3>{% trans 'Computers' %}</h3>
 
     <ul class="query">
-        <li class="odd"><a href='/migasfree/chart/?ofc=/migasfree/hourly_updated'><img src='/repo/icons/chart.png' /> {% trans 'Updated Computers / Hour' %}</a></li>
+        <li class="odd"><a href="{% url chart_type 'hourly_updated' %}"><img src="{{ STATIC_URL }}icons/chart.png" /> {% trans 'Updated Computers / Hour' %}</a></li>
 
-        <li class="even"><a href='/migasfree/chart/?ofc=/migasfree/daily_updated'><img src='/repo/icons/chart.png' /> {% trans 'Updated Computers / Day' %}</a></li>
+        <li class="even"><a href="{% url chart_type 'daily_updated' %}"><img src="{{ STATIC_URL }}icons/chart.png" /> {% trans 'Updated Computers / Day' %}</a></li>
 
-        <li class="odd"><a href='/migasfree/chart/?ofc=/migasfree/monthly_updated'><img src='/repo/icons/chart.png' /> {% trans 'Updated Computers / Month' %}</a></li>
+        <li class="odd"><a href="{% url chart_type 'monthly_updated' %}"><img src="{{ STATIC_URL }}icons/chart.png" /> {% trans 'Updated Computers / Month' %}</a></li>
 
-        <li class="even"><a href='/migasfree/chart/?ofc=/migasfree/delaySchedule'><img src='/repo/icons/chart.png' /> {% trans 'Provided Computers / Delay' %}</a></li>
+        <li class="even"><a href="{% url chart_type 'delay_schedule' %}"><img src="{{ STATIC_URL }}icons/chart.png" /> {% trans 'Provided Computers / Delay' %}</a></li>
 
-        <li class="odd"><a href='/migasfree/chart/?ofc=/migasfree/version_Computer'><img src='/repo/icons/chart.png' /> {% trans 'Computers / Version' %}</a></li>
+        <li class="odd"><a href="{% url chart_type 'version_computer' %}"><img src="{{ STATIC_URL }}icons/chart.png" /> {% trans 'Computers / Version' %}</a></li>
     </ul>
 {% endblock %}
