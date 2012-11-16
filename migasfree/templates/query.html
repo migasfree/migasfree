@@ -1,11 +1,7 @@
 {% extends "admin/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ title }} | {% trans 'migasfree' %}{% endblock %}
-
 {% block content %}
-    {% if description %}<div>{{ description }}</div>{% endif %}
-
     {% for column in filters %}
         <pre>   {{ column }}</pre>
     {% endfor %}
@@ -33,4 +29,4 @@
     {% else %}
         <p class="info">{% trans 'No results for query' %}</p>
     {% endif %}
-{% endblock %}
+{% endblock content %}
