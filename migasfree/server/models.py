@@ -1,27 +1,27 @@
 # -*- coding: utf-8 -*-
 
 import os
-from datetime import datetime
+import json
+from datetime import datetime, time
 
 from django.db import models
 from django.db.models import Q
 from django.contrib.auth.models import User as UserSystem
 from django.contrib.auth.models import UserManager
+from django.core.urlresolvers import reverse
 
 from migasfree.middleware import threadlocals
-from migasfree.server.functions import trans
 from migasfree.server.functions import horizon
 
-from migasfree.settings import ADMIN_SITE_ROOT_URL
-from migasfree.settings import MIGASFREE_REPO_DIR
-
+from migasfree.settings import ADMIN_SITE_ROOT_URL, STATIC_URL
+from migasfree.settings import MIGASFREE_REPO_DIR, MIGASFREE_TMP_DIR
 
 from django.utils.translation import ugettext_lazy as _
 
 __all__ = (
     # from common
-    'Attribute', 'AutoCheckError', 'MessageServer', 'Checking', 'Pms', 'Property',
-    'Query', 'User', 'Version', 'LANGUAGES_CHOICES',
+    'Attribute', 'AutoCheckError', 'MessageServer', 'Checking', 'Pms',
+    'Property', 'Query', 'User', 'Version', 'LANGUAGES_CHOICES',
 
     # from device
     'Device', 'DeviceConnection', 'DeviceFile', 'DeviceManufacturer',
@@ -67,12 +67,15 @@ def user_version():
     Return the user version that logged
     """
     try:
-        return UserProfile.objects.get(id=threadlocals.get_current_user().id).version
+        return UserProfile.objects.get(
+            id=threadlocals.get_current_user().id
+        ).version
     except:
         return None
 
+
 def link(obj, description):
-    if obj.id == None or obj.id == "":
+    if obj.id is None or obj.id == "":
         return ''
     else:
         return '<a href="%s">%s</a>' % (os.path.join(
@@ -82,22 +85,25 @@ def link(obj, description):
             str(obj.id)
         ), obj.__unicode__())
 
+
 class VersionManager(models.Manager):
     """
-    VersionManager is used for filter the property "objects" of somethings class by the version of user logged.
+    VersionManager is used for filter the property "objects" of somethings
+    class by the version of user logged.
     """
     def get_query_set(self):
         user = user_version()
-        if user == None:
+        if user is None:
             return self.version(0)
         else:
             return self.version(user)
 
     def version(self, version):
-        if version == 0: # return the objects of ALL VERSIONS
+        if version == 0:  # return the objects of ALL VERSIONS
             return super(VersionManager, self).get_query_set()
-        else: # return only the objects of this VERSION
+        else:  # return only the objects of this VERSION
             return super(VersionManager, self).get_query_set().filter(version=version)
+
 
 class User(models.Model):
     name = models.CharField(
@@ -112,7 +118,7 @@ class User(models.Model):
     )
 
     def __unicode__(self):
-        return '%s - %s' % (self.name, self.fullname)
+        return u'%s - %s' % (self.name, self.fullname)
 
     class Meta:
         verbose_name = unicode(_("User"))
@@ -124,6 +130,7 @@ class User(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class Query(models.Model):
     name = models.CharField(
@@ -169,9 +176,11 @@ class Query(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class Checking(models.Model):
     """
-    For each register of this model, migasfree will show in the section Status of main menu the result of this 'checking'.
+    For each register of this model, migasfree will show in the section Status
+    of main menu the result of this 'checking'.
     The system only will show the checking if 'result' != 0
     """
     name = models.CharField(
@@ -205,7 +214,7 @@ class Checking(models.Model):
 
     def save(self, *args, **kwargs):
         self.code = self.code.replace("\r\n", "\n")
-        super(Checking, self).save(*args, **kwargs) # Call the "real" save() method
+        super(Checking, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return u'%s' % self.name
@@ -221,9 +230,12 @@ class Checking(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class AutoCheckError(models.Model):
     """
-    This model is used to autocheck the errors and marked as 'check' when they are introducing in the system (Sometimes the Package Management System, in the clients, return a string error when in reliaty it is only a warning)
+    This model is used to autocheck the errors and marked as 'check' when they
+    are introducing in the system (Sometimes the Package Management System, in
+    the clients, return a string error when in reliaty it is only a warning)
     The origen of this problem is that the package is bad packed.
     """
     message = models.TextField(
@@ -251,18 +263,20 @@ class AutoCheckError(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class Pms(models.Model):
     """
     Package Management System
 
-    Each distribution of linux have a P.M.S. For example Fedora uses yum, Ubuntu uses apt, openSUSE zypper, etc.
+    Each distribution of linux have a P.M.S. For example Fedora uses yum,
+    Ubuntu uses apt, openSUSE zypper, etc.
 
     By default, migasfree is configured for work whith apt, yum and zypper.
 
     This model is used for say to migasfree server how must:
-        - create the metadata of the repositories in the server.
-        - define the source list file of repositories for the client.
-        - get info of packages in the server for the view 'Packages Information'.
+      - create the metadata of the repositories in the server.
+      - define the source list file of repositories for the client.
+      - get info of packages in the server for the view 'Packages Information'.
     """
 
     name = models.CharField(
@@ -308,7 +322,7 @@ class Pms(models.Model):
         self.createrepo = self.createrepo.replace("\r\n", "\n")
         self.repository = self.repository.replace("\r\n", "\n")
         self.info = self.info.replace("\r\n", "\n")
-        super(Pms, self).save(*args, **kwargs) # Call the "real" save() method
+        super(Pms, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = unicode(_("Package Management System"))
@@ -320,6 +334,7 @@ class Pms(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class Property(models.Model):
     KIND_CHOICES = (
@@ -396,7 +411,7 @@ class Property(models.Model):
         self.code = self.code.replace("\r\n", "\n")
         self.before_insert = self.before_insert.replace("\r\n", "\n")
         self.after_insert = self.after_insert.replace("\r\n", "\n")
-        super(Property, self).save(*args, **kwargs) # Call the "real" save() method
+        super(Property, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = unicode(_("Property"))
@@ -409,10 +424,12 @@ class Property(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class Version(models.Model):
     """
     Version of S.O. by example 'Ubuntu natty 32bit' or 'AZLinux-2'
-    This is 'your distribution', a set of computers with a determinate Distribution for personalize.
+    This is 'your distribution', a set of computers with a determinate
+    Distribution for personalize.
     """
     name = models.CharField(
         unicode(_("name")),
@@ -451,7 +468,6 @@ class Version(models.Model):
         choices=PLATFORM_CHOICES
     )
 
-
     def __unicode__(self):
         return self.name
 
@@ -468,13 +484,12 @@ class Version(models.Model):
         self.name = self.name.replace(" ", "-")
         self.create_dirs()
         self.base = self.base.replace("\r\n", "\n")
-        super(Version, self).save( *args, **kwargs) # Call the "real" save() method
+        super(Version, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # remove the directory of this version
-        _path = os.path.join(MIGASFREE_REPO_DIR, self.name)
-        os.system("rm -rf %s" % _path)
-        super(Version, self).delete(*args, **kwargs) # Call the real delete() method
+        os.system("rm -rf %s" % os.path.join(MIGASFREE_REPO_DIR, self.name))
+        super(Version, self).delete(*args, **kwargs)
 
     class Meta:
         verbose_name = unicode(_("Version"))
@@ -486,6 +501,7 @@ class Version(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class Attribute(models.Model):
     property_att = models.ForeignKey(
@@ -511,7 +527,7 @@ class Attribute(models.Model):
     property_link.short_description = unicode(_("Property"))
 
     def __unicode__(self):
-        return '%s-%s %s' % (
+        return u'%s-%s %s' % (
             self.property_att.prefix,
             self.value,
             self.description
@@ -530,6 +546,7 @@ class Attribute(models.Model):
     link.allow_tags = True
 
 # ---- device.py ----
+
 
 def load_devices(jsonfile):
     with open(jsonfile, "r") as f:
@@ -561,7 +578,7 @@ def load_devices(jsonfile):
             )
 
             try:
-#                o_device=Device.objects.get(name=device["name"],connection=o_deviceconnection)
+                # o_device=Device.objects.get(name=device["name"],connection=o_deviceconnection)
                 o_device = Device.objects.get(name=device["name"])
             except:
                 o_device = Device()
@@ -596,7 +613,7 @@ def load_devices(jsonfile):
         )
 
         try:
-#            o_device=Device.objects.get(name=e["name"],connection=o_deviceconnection)
+            # o_device=Device.objects.get(name=e["name"],connection=o_deviceconnection)
             o_device = Device.objects.get(name=e["name"])
         except:
             o_device = Device()
@@ -619,7 +636,8 @@ def load_devices(jsonfile):
         o_computer.devices.add(o_device.id)
         o_computer.save()
 
-    return "" # ???
+    return ""  # ???
+
 
 class DeviceType(models.Model):
     name = models.CharField(
@@ -644,6 +662,7 @@ class DeviceType(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class DeviceManufacturer(models.Model):
     name = models.CharField(
         unicode(_("name")),
@@ -667,6 +686,7 @@ class DeviceManufacturer(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class DeviceConnection(models.Model):
     name = models.CharField(
         unicode(_("name")),
@@ -680,7 +700,7 @@ class DeviceConnection(models.Model):
         max_length=50,
         null=True,
         blank=True
-    ) #DEPRECATED
+    )  # DEPRECATED
 
     uri = models.CharField(
         unicode(_("uri")),
@@ -694,14 +714,14 @@ class DeviceConnection(models.Model):
         null=True,
         blank=True,
         help_text="install"
-    ) #DEPRECATED
+    )  # DEPRECATED
 
     remove = models.TextField(
         unicode(_("remove")),
         null=True,
         blank=True,
         help_text="remove"
-    ) #DEPRECATED
+    )  # DEPRECATED
 
     devicetype = models.ForeignKey(
         DeviceType,
@@ -712,9 +732,9 @@ class DeviceConnection(models.Model):
         return u'(%s) %s' % (self.devicetype.name, self.name)
 
     def save(self, *args, **kwargs):
-        self.install = self.install.replace("\r\n","\n")
-        self.remove = self.remove.replace("\r\n","\n")
-        super(DeviceConnection, self).save(*args, **kwargs) # Call the "real" save() method
+        self.install = self.install.replace("\r\n", "\n")
+        self.remove = self.remove.replace("\r\n", "\n")
+        super(DeviceConnection, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = unicode(_("Device (Connection)"))
@@ -727,6 +747,7 @@ class DeviceConnection(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class DeviceFile(models.Model):
     name = models.FileField(upload_to="devices")
@@ -744,6 +765,7 @@ class DeviceFile(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class DeviceModel(models.Model):
     name = models.CharField(
@@ -814,7 +836,7 @@ class DeviceModel(models.Model):
         self.postinstall = self.postinstall.replace("\r\n", "\n")
         self.preremove = self.preremove.replace("\r\n", "\n")
         self.postremove = self.postremove.replace("\r\n", "\n")
-        super(DeviceModel, self).save(*args, **kwargs) # Call the "real" save() method
+        super(DeviceModel, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = unicode(_("Device (Model)"))
@@ -828,20 +850,21 @@ class DeviceModel(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class Device(models.Model):
 
     def device_connection_name(self):
-        return ("%s" % (self.connection.name))
+        return u"%s" % (self.connection.name)
 
     device_connection_name.short_description = unicode(_('Port'))
 
     def device_connection_type(self):
-        return ("%s" % (self.connection.devicetype.name))
+        return u"%s" % (self.connection.devicetype.name)
 
     device_connection_type.short_description = unicode(_('Type'))
 
     def device_manufacturer_name(self):
-        return ("%s" % (self.model.manufacturer.name))
+        return u"%s" % (self.model.manufacturer.name)
 
     device_manufacturer_name.short_description = unicode(_('Manufacturer'))
 
@@ -897,7 +920,7 @@ class Device(models.Model):
     def computers_link(self):
         ret = ""
         for c in self.computer_set.all():
-            ret = ret + c.link() + " "
+            ret += c.link() + " "
         return ret
 
     computers_link.allow_tags = True
@@ -905,9 +928,13 @@ class Device(models.Model):
 
     def fullname(self):
         if self.alias == "":
-            return self.model.manufacturer.name+"-"+self.model.name+"_["+self.name+"]"
+            return u'%s-%s_[%s]' % (
+                self.model.manufacturer.name,
+                self.model.name,
+                self.name
+            )
         else:
-            return self.alias+"_["+self.name+"]"
+            return u'%s_[%s]' % (self.alias, self.name)
 
     def data(self):
         return {
@@ -923,19 +950,22 @@ class Device(models.Model):
             "INFORMATION": self.information
         }
 
-    def render_install(self): #DEPRECATED
-        ret = self.values+"\n"
+    def render_install(self):  # DEPRECATED
+        ret = self.values + "\n"
 
         #Spaces in device name is not allowed.
-        ret = ret+"_NAME=`echo $_NAME|sed \"s/ /_/g\"`\n"
+        ret += "_NAME=`echo $_NAME|sed \"s/ /_/g\"`\n"
 
         #codes
-        ret = ret+self.model.preinstall+"\n"
-        ret = ret+self.connection.install+"\n"
-        ret = ret+self.model.postinstall+"\n"
+        ret += self.model.preinstall + "\n"
+        ret += self.connection.install + "\n"
+        ret += self.model.postinstall + "\n"
 
         #replaces
-        ret = ret.replace("$_FILE", "/tmp/migasfree/"+str(self.model.devicefile.name))
+        ret = ret.replace(
+            "$_FILE",
+            os.path.join(MIGASFREE_TMP_DIR, str(self.model.devicefile.name))
+        )
         ret = ret.replace("$_NUMBER", self.name)
         ret = ret.replace("$_DEVICETYPE", self.connection.devicetype.name)
         ret = ret.replace("$_MANUFACTURER", self.model.manufacturer.name)
@@ -944,19 +974,22 @@ class Device(models.Model):
 
         return ret
 
-    def render_remove(self): #DEPRECATED
-        ret = self.values+"\n"
+    def render_remove(self):  # DEPRECATED
+        ret = self.values + "\n"
 
         #Spaces in device name is not allowed.
-        ret = ret+"_NAME=`echo $_NAME|sed \"s/ /_/g\"`\n"
+        ret += "_NAME=`echo $_NAME|sed \"s/ /_/g\"`\n"
 
         #codes
-        ret = ret+self.model.preremove+"\n"
-        ret = ret+self.connection.remove+"\n"
-        ret = ret+self.model.postremove+"\n"
+        ret += self.model.preremove + "\n"
+        ret += self.connection.remove + "\n"
+        ret += self.model.postremove + "\n"
 
         #replaces
-        ret = ret.replace("$_FILE", "/tmp/migasfree/"+str(self.model.devicefile.name))
+        ret = ret.replace(
+            "$_FILE",
+            os.path.join(MIGASFREE_TMP_DIR, str(self.model.devicefile.name))
+        )
         ret = ret.replace("$_NUMBER", self.name)
         ret = ret.replace("$_DEVICETYPE", self.connection.devicetype.name)
         ret = ret.replace("$_MANUFACTURER", self.model.manufacturer.name)
@@ -965,17 +998,16 @@ class Device(models.Model):
         return ret
 
     def save(self, *args, **kwargs):
-
-#        if self.values == None or self.values == "":
+#        if self.values is None or self.values == "":
 #            self.values=""
 #            for p in self.connection.fields.split(" "):
-#                self.values=self.values+"_"+p+"=''\n"
-#        self.values=self.values.replace("\r\n","\n")
+#                self.values += "_" + p + "=''\n"
+#        self.values = self.values.replace("\r\n","\n")
 
-        if self.uri == None or self.uri == "":
+        if self.uri is None or self.uri == "":
             self.uri = self.connection.uri
 
-        super(Device, self).save(*args, **kwargs) # Call the "real" save() method
+        super(Device, self).save(*args, **kwargs)
         for computer in self.computer_set.all():
             #remove the device in devices_copy
             computer.devices_modified = True
@@ -997,6 +1029,7 @@ class Device(models.Model):
     link.allow_tags = True
 
 # ---- computer.py ----
+
 
 class Computer(models.Model):
     name = models.CharField(
@@ -1056,14 +1089,13 @@ class Computer(models.Model):
         unicode(_("devices modified")),
         default=False,
         editable=False
-    ) # used to "createrepositories"
+    )  # used to "createrepositories"
 
     datelastupdate = models.DateTimeField(
         unicode(_("last update")),
         null=True,
         help_text=unicode(_("last update date"))
     )
-
 
     def last_login(self):
         qry = Login.objects.filter(Q(computer__id=self.id)).order_by('-date')
@@ -1094,7 +1126,7 @@ class Computer(models.Model):
     def hw_link(self):
         node = HwNode.objects.get(computer=self.id, parent=None)
         return '<a href="%s">%s</a>' % (
-            "/migasfree/hardware_resume/" + str(self.id),
+            reverse('hardware_resume', args=(self.id, )),
             node.product
         )
 
@@ -1104,7 +1136,7 @@ class Computer(models.Model):
     def devices_link(self):
         ret = ""
         for dev in self.devices.all():
-            ret = ret + dev.link() + " "
+            ret += dev.link() + " "
 
         return ret
 
@@ -1119,18 +1151,19 @@ class Computer(models.Model):
         verbose_name_plural = unicode(_("Computers"))
         permissions = (("can_save_computer", "Can save Computer"),)
 
-    def link(self): #for be used with firessh
-        return '<a href="%s"><img src="/repo/icons/terminal.png" height="16px" alt="ssh" /></a> <a href="%s">%s</a>' % (
+    def link(self):  # for be used with firessh
+        return '<a href="%s"><img src="%sicons/terminal.png" height="16px" alt="ssh" /></a> <a href="%s">%s</a>' % (
             "ssh://root@%s" % str(self.ip),
-            ADMIN_SITE_ROOT_URL + "server/computer/" + str(self.id),
+            STATIC_URL,
+            reverse('admin:server_computer_change', args=(self.id, )),
             self.name
         )
 
     link.allow_tags = True
     link.short_description = Meta.verbose_name
 
-class MessageServer(models.Model):
 
+class MessageServer(models.Model):
     text = models.CharField(
         unicode(_("text")),
         max_length=100,
@@ -1144,7 +1177,7 @@ class MessageServer(models.Model):
     )
 
     def __unicode__(self):
-        return '%s' % (self.text)
+        return u'%s' % (self.text)
 
     class Meta:
         verbose_name = unicode(_("Message Server"))
@@ -1156,7 +1189,6 @@ class MessageServer(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
-
 
 
 class Message(models.Model):
@@ -1179,7 +1211,7 @@ class Message(models.Model):
     )
 
     def __unicode__(self):
-        return '%s - %s' % (self.computer.name, self.text)
+        return u'%s - %s' % (self.computer.name, self.text)
 
     def computer_link(self):
         return self.computer.link()
@@ -1197,6 +1229,7 @@ class Message(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class Update(models.Model):
     computer = models.ForeignKey(
@@ -1216,7 +1249,7 @@ class Update(models.Model):
     )
 
     def __unicode__(self):
-        return '%s-%s' % (self.computer.name, self.date)
+        return u'%s-%s' % (self.computer.name, self.date)
 
     def computer_link(self):
         return self.computer.link()
@@ -1233,17 +1266,15 @@ class Update(models.Model):
         super(Update, self).save(*args, **kwargs)
 
         #update last update in computer
-        self.computer.datelastupdate=self.date
+        self.computer.datelastupdate = self.date
         self.computer.save()
-
-
-
 
     def link(self):
         return link(self, self._meta.object_name)
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class Error(models.Model):
     computer = models.ForeignKey(
@@ -1294,7 +1325,7 @@ class Error(models.Model):
         super(Error, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return '%s - %s - %s' % (
+        return u'%s - %s - %s' % (
             str(self.id),
             self.computer.name,
             str(self.date)
@@ -1310,6 +1341,7 @@ class Error(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class Login(models.Model):
     date = models.DateTimeField(
@@ -1348,7 +1380,7 @@ class Login(models.Model):
     user_link.short_description = unicode(_("User"))
 
     def __unicode__(self):
-        return '%s@%s' % (
+        return u'%s@%s' % (
             self.user.name,
             self.computer.name
         )
@@ -1366,6 +1398,7 @@ class Login(models.Model):
     link.allow_tags = True
 
 # ---- fault.py ----
+
 
 class FaultDef(models.Model):
     name = models.CharField(
@@ -1407,7 +1440,7 @@ class FaultDef(models.Model):
     def list_attributes(self):
         cattributes = ""
         for i in self.attributes.all():
-            cattributes = cattributes + i.value + ","
+            cattributes += i.value + ","
 
         return cattributes[0:len(cattributes) - 1]
 
@@ -1434,6 +1467,7 @@ class FaultDef(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
 
 class Fault(models.Model):
     computer = models.ForeignKey(
@@ -1475,7 +1509,7 @@ class Fault(models.Model):
     computer_link.short_description = unicode(_("Computer"))
 
     def __unicode__(self):
-        return '%s - %s - %s' % (
+        return u'%s - %s - %s' % (
             str(self.id),
             self.computer.name,
             str(self.date)
@@ -1493,6 +1527,7 @@ class Fault(models.Model):
     link.allow_tags = True
 
 # ---- hardware.py ----
+
 
 def load_hw(computer, node, parent, level):
     n = HwNode()
@@ -1533,25 +1568,27 @@ def load_hw(computer, node, parent, level):
         n.dev = node["dev"]
 
     #set icons
-    if not n.product == None:
+    if n.product is not None:
         if n.classname == "system" and n.product == "VirtualBox ()":
             n.icon = "virtualbox.png"
 
-        if n.classname == "system" and n.product == "VMware Virtual Platform ()":
+        if n.classname == "system" \
+        and n.product == "VMware Virtual Platform ()":
             n.icon = "vmplayer.png"
 
-    if not n.businfo == None:
+    if n.businfo is not None:
         if n.classname == "processor" and "cpu@" in n.businfo:
             n.icon = "cpu.png"
 
     if n.classname == "display":
         n.icon = "display.png"
 
-    if not n.description == None:
+    if n.description is not None:
 #    if n.classname=="system" and n.description.lower() in ["notebook",]:
 #      n.icon="laptop.png"
 
-        if n.classname == "memory" and n.description.lower() == "system memory":
+        if n.classname == "memory" \
+        and n.description.lower() == "system memory":
             n.icon = "memory.png"
 
         if n.classname == "bus" and n.description.lower() == "motherboard":
@@ -1560,13 +1597,17 @@ def load_hw(computer, node, parent, level):
         if n.classname == "memory" and n.description.lower() == "bios":
             n.icon = "chip.png"
 
-        if n.classname == "network" and n.description.lower() == "ethernet interface":
+        if n.classname == "network" \
+        and n.description.lower() == "ethernet interface":
             n.icon = "network.png"
 
-        if n.classname == "network" and n.description.lower() == "wireless interface":
+        if n.classname == "network" \
+        and n.description.lower() == "wireless interface":
             n.icon = "radio.png"
 
-        if n.classname == "multimedia" and n.description.lower() in ["audio device", "multimedia audio controller", ]:
+        if n.classname == "multimedia" \
+        and n.description.lower() \
+        in ["audio device", "multimedia audio controller"]:
             n.icon = "audio.png"
 
         if n.classname == "bus" and n.description.lower() == "smbus":
@@ -1575,7 +1616,7 @@ def load_hw(computer, node, parent, level):
         if n.classname == "bus" and n.description.lower() == "usb controller":
             n.icon = "usb.png"
 
-        if not n.name == None:
+        if n.name is not None:
             if n.classname == "disk" and n.name.lower() == "disk":
                 n.icon = "disc.png"
 
@@ -1589,7 +1630,7 @@ def load_hw(computer, node, parent, level):
             n.icon = "scsi.png"
 
     n.save()
-    level = level+3
+    level += 3
 
     for e in node:
         if e == "children":
@@ -1644,7 +1685,8 @@ def load_hw(computer, node, parent, level):
         except:
             pass
 
-    return # ???
+    return  # ???
+
 
 def process_hw(computer, jsonfile):
     with open(jsonfile, "r") as f:
@@ -1653,7 +1695,8 @@ def process_hw(computer, jsonfile):
     HwNode.objects.filter(computer=computer).delete()
     load_hw(computer, data, None, 1)
 
-    return # ???
+    return  # ???
+
 
 class HwNode(models.Model):
     parent = models.ForeignKey(
@@ -1683,13 +1726,13 @@ class HwNode(models.Model):
         unicode(_("id")),
         null=False,
         blank=True
-    ) # This is the field "id" in lshw
+    )  # This is the field "id" in lshw
 
     classname = models.TextField(
         unicode(_("class")),
         null=False,
         blank=True
-    ) # This is the field "class" in lshw
+    )  # This is the field "class" in lshw
 
     enabled = models.BooleanField(
         unicode(_("enabled")),
@@ -1785,6 +1828,7 @@ class HwNode(models.Model):
         verbose_name = unicode(_("Hardware Node"))
         verbose_name_plural = unicode(_("Hardware Nodes"))
 
+
 class HwCapability(models.Model):
     node = models.ForeignKey(
         HwNode,
@@ -1795,7 +1839,7 @@ class HwCapability(models.Model):
         unicode(_("name")),
         null=False,
         blank=True
-    ) # This is the field "capability" in lshw
+    )  # This is the field "capability" in lshw
 
     description = models.TextField(
         unicode(_("description")),
@@ -1811,6 +1855,7 @@ class HwCapability(models.Model):
         verbose_name_plural = unicode(_("Hardware Capabilities"))
         unique_together = (("name", "node"),)
 
+
 class HwConfiguration(models.Model):
     node = models.ForeignKey(
         HwNode,
@@ -1821,7 +1866,7 @@ class HwConfiguration(models.Model):
         unicode(_("name")),
         null=False,
         blank=True
-    ) # This is the field "config" in lshw
+    )  # This is the field "config" in lshw
 
     value = models.TextField(
         unicode(_("value")),
@@ -1837,6 +1882,7 @@ class HwConfiguration(models.Model):
         verbose_name_plural = unicode(_("Hardware Capabilities"))
         unique_together = (("name", "node"),)
 
+
 class HwLogicalName(models.Model):
     node = models.ForeignKey(
         HwNode,
@@ -1847,7 +1893,7 @@ class HwLogicalName(models.Model):
         unicode(_("name")),
         null=False,
         blank=True
-    ) # This is the field "logicalname" in lshw
+    )  # This is the field "logicalname" in lshw
 
     def __unicode__(self):
         return u'%s' % (self.name)
@@ -1857,6 +1903,7 @@ class HwLogicalName(models.Model):
         verbose_name_plural = unicode(_("Hardware Logical Names"))
 
 # ---- schedule.py ----
+
 
 class Schedule(models.Model):
     name = models.CharField(
@@ -1887,6 +1934,7 @@ class Schedule(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class ScheduleDelay(models.Model):
     delay = models.IntegerField(unicode(_("delay")))
 
@@ -1903,8 +1951,8 @@ class ScheduleDelay(models.Model):
     )
 
     def __unicode__(self):
-#        return '%s - %s' % (str(self.delay), self.schedule.name)
-        return ''
+        # return u'%s - %s' % (str(self.delay), self.schedule.name)
+        return u''
 
     def list_attributes(self):
         cattributes = ""
@@ -1929,6 +1977,7 @@ class ScheduleDelay(models.Model):
 
 # ---- repository.py ----
 
+
 class Store(models.Model):
     """
     Ubicacion: rutas donde se guardaran los paquetes. P.e. /terceros/vmware
@@ -1943,7 +1992,7 @@ class Store(models.Model):
         verbose_name=unicode(_("version"))
     )
 
-    objects = VersionManager() # manager by user version
+    objects = VersionManager()  # manager by user version
 
     def create_dir(self):
         _path = os.path.join(
@@ -1986,8 +2035,8 @@ class Store(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class Package(models.Model):
-    "Package:"
     name = models.CharField(
         unicode(_("name")),
         max_length=100
@@ -2003,7 +2052,7 @@ class Package(models.Model):
         verbose_name=unicode(_("store"))
     )
 
-    objects = VersionManager() # manager by user version
+    objects = VersionManager()  # manager by user version
 
     def create_dir(self):
         _path = os.path.join(
@@ -2026,21 +2075,25 @@ class Package(models.Model):
         permissions = (("can_save_package", "Can save Package"),)
 
     def link(self):
-        info = "/migasfree/info/STORES/%s/%s/?version=%s" % (self.store.name, self.name, self.version.name)
+        info = "%s/STORES/%s/%s/?version=%s" % (
+            reverse('package_info'),
+            self.store.name,
+            self.name,
+            self.version.name
+        )
 
-
-        return '<a href="%s"><img src="/repo/icons/package-info.png" height="16px" alt="information" /></a> <a href="%s">%s</a>' % (
+        return '<a href="%s"><img src="%sicons/package-info.png" height="16px" alt="information" /></a> <a href="%s">%s</a>' % (
             info,
-            ADMIN_SITE_ROOT_URL + "server/package/" + str(self.id),
+            STATIC_URL,
+            reverse('admin:server_package_change', args=(self.id, )),
             self.__unicode__()
         )
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
-class Repository(models.Model):
-    "Repository:"
 
+class Repository(models.Model):
     name = models.CharField(
         unicode(_("name")),
         max_length=50
@@ -2090,7 +2143,7 @@ class Repository(models.Model):
         verbose_name=unicode(_("createpackages")),
         related_name="createpackages",
         editable=False
-    ) # used to know when "createrepositories"
+    )  # used to know when "createrepositories"
 
     active = models.BooleanField(
         unicode(_("active")),
@@ -2125,9 +2178,9 @@ class Repository(models.Model):
         unicode(_("modified")),
         default=False,
         editable=False
-    ) # used to "createrepositories"
+    )  # used to "createrepositories"
 
-    objects = VersionManager() # manager by user version
+    objects = VersionManager()  # manager by user version
 
     def packages_link(self):
         ret = ""
@@ -2146,7 +2199,7 @@ class Repository(models.Model):
         self.name = self.name.replace(" ", "_")
         self.toinstall = self.toinstall.replace("\r\n", "\n")
         self.toremove = self.toremove.replace("\r\n", "\n")
-        super(Repository, self).save(*args, **kwargs) # Call the "real" save() method
+        super(Repository, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         # remove the directory of repository
@@ -2157,31 +2210,33 @@ class Repository(models.Model):
             self.name
         )
         os.system("rm -rf %s" % _path)
-        super(Repository, self).delete(*args, **kwargs) # Call the real delete() method
+        super(Repository, self).delete(*args, **kwargs)
 
     def timeline(self):
-        ret = "<table class=\"\">"
-        delays = ScheduleDelay.objects.filter(schedule__id=self.schedule.id).order_by('delay')
+        ret = '<table class="">'
+        delays = ScheduleDelay.objects.filter(
+            schedule__id=self.schedule.id
+        ).order_by('delay')
 
         for d in delays:
             hori = horizon(self.date, d.delay)
             if hori <= datetime.now().date():
-                ret = ret+"<tr class=\"\"><td><b>"
+                ret += '<tr class=""><td><b>'
                 l = d.attributes.values_list("value")
-                ret = ret+"<b>"+hori.strftime("%a-%b-%d")+"</b></td><td><b>"
+                ret += "<b>" + hori.strftime("%a-%b-%d") + "</b></td><td><b>"
                 for e in l:
-                    ret = ret+e[0]+" "
-                ret = ret+"</b></td></tr>"
+                    ret += e[0] + " "
+                ret += "</b></td></tr>"
             else:
-                ret = ret+"<tr class=\"\"><td>"
+                ret += '<tr class=""><td>'
                 l = d.attributes.values_list("value")
-                ret = ret+hori.strftime("%a-%b-%d")+"</td><td>"
+                ret += hori.strftime("%a-%b-%d") + "</td><td>"
                 for e in l:
-                    ret = ret+e[0]+" "
+                    ret += e[0] + " "
 
-                ret = ret+"</td></tr>"
+                ret += "</td></tr>"
 
-        return ret+"</table>"
+        return ret + "</table>"
 
     timeline.allow_tags = True
     timeline.short_description = unicode(_('timeline'))
@@ -2198,8 +2253,12 @@ class Repository(models.Model):
     link.short_description = Meta.verbose_name
     link.allow_tags = True
 
+
 class UserProfile(UserSystem):
-    info = "For designate the password use <a href=\"/migasfree/auth/password/\">change password form</a>."
+    """
+    info = 'For change password use <a href="%s">change password form</a>.' \
+        % reverse('admin:password_change')
+    """
 
     version = models.ForeignKey(
         Version,
@@ -2213,7 +2272,7 @@ class UserProfile(UserSystem):
     def save(self, *args, **kwargs):
         if not self.password.startswith("sha1$"):
             super(UserProfile, self).set_password(self.password)
-        super(UserProfile, self).save(*args, **kwargs) # Call the "real" save() method
+        super(UserProfile, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = unicode(_("User Profile"))
