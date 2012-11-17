@@ -9,12 +9,15 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect
 from django import forms
 from django.db import models
+from django.core.urlresolvers import reverse
 
 from migasfree.server.functions import trans
-from migasfree.server.functions import writefile
-
-
 from migasfree.server.models import *
+from migasfree.settings import STATIC_URL
+
+#AJAX_SELECT
+from ajax_select import make_ajax_form
+from ajax_select.admin import AjaxSelectAdmin
 
 admin.site.register(DeviceType)
 admin.site.register(DeviceManufacturer)
@@ -22,9 +25,6 @@ admin.site.register(DeviceConnection)
 admin.site.register(UserProfile)
 admin.site.register(AutoCheckError)
 
-#AJAX_SELECT
-from ajax_select import make_ajax_form
-from ajax_select.admin import AjaxSelectAdmin
 
 def user_version(user):
     """
@@ -38,6 +38,7 @@ def user_version(user):
 
     return version
 
+
 class WideTextarea(forms.Textarea):
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs', {})
@@ -45,15 +46,16 @@ class WideTextarea(forms.Textarea):
         attrs.setdefault('rows', 5)
         super(WideTextarea, self).__init__(*args, **kwargs)
 
+
 class VersionAdmin(admin.ModelAdmin):
-    list_display = ('name',  'platform', 'pms', 'computerbase', 'autoregister')
+    list_display = ('name', 'platform', 'pms', 'computerbase', 'autoregister')
     actions = None
 
 admin.site.register(Version, VersionAdmin)
 
 
 class UpdateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'computer_link', 'date','version')
+    list_display = ('id', 'computer_link', 'date', 'version')
     list_filter = ('date', )
     search_fields = ('computer__name', 'date',)
     actions = None
@@ -77,6 +79,7 @@ admin.site.register(DeviceFile, DeviceFileAdmin)
 
 class ComputerInline(admin.TabularInline):
     model = Computer.devices.through
+
 
 class DeviceAdmin(admin.ModelAdmin):
     list_display = (
@@ -104,9 +107,10 @@ class DeviceAdmin(admin.ModelAdmin):
         'information'
     )
     formfield_overrides = {models.TextField: {'widget': WideTextarea}}
-    inlines = [ ComputerInline, ]
+    inlines = [ComputerInline, ]
 
 admin.site.register(Device, DeviceAdmin)
+
 
 class DeviceModelAdmin(admin.ModelAdmin):
     list_display = ('name', 'manufacturer', 'devicetype')
@@ -119,10 +123,12 @@ class DeviceModelAdmin(admin.ModelAdmin):
 
 admin.site.register(DeviceModel, DeviceModelAdmin)
 
+
 class PmsAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
 admin.site.register(Pms, PmsAdmin)
+
 
 class StoreAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -130,20 +136,21 @@ class StoreAdmin(admin.ModelAdmin):
     actions = ['information', 'download']
 
     def download(self, request, queryset):
-        _url = '/repo/%s/STORES/%s/'
+        _url = STATIC_URL + '%s/STORES/%s/'
 
         return redirect(_url % (queryset[0].version.name, queryset[0].name))
 
     download.short_description = trans("Download")
 
     def information(self, request, queryset):
-        _url = '/migasfree/info/STORES/%s/'
+        _url = reverse('package_info') + '/STORES/%s/'
 
         return redirect(_url % queryset[0].name)
 
     information.short_description = trans("Information of Package")
 
 admin.site.register(Store, StoreAdmin)
+
 
 class PropertyAdmin(admin.ModelAdmin):
     list_display = ('prefix', 'name', 'active', 'kind', 'auto',)
@@ -153,6 +160,7 @@ class PropertyAdmin(admin.ModelAdmin):
 
 admin.site.register(Property, PropertyAdmin)
 
+
 class AttributeAdmin(admin.ModelAdmin):
     list_display = ('value', 'description', 'property_link',)
     list_filter = ('property_att',)
@@ -161,8 +169,9 @@ class AttributeAdmin(admin.ModelAdmin):
 
 admin.site.register(Attribute, AttributeAdmin)
 
+
 class LoginAdmin(admin.ModelAdmin):
-    form = make_ajax_form(Login,{'attributes':'attribute',})
+    form = make_ajax_form(Login, {'attributes': 'attribute'})
 
     list_display = ('id', 'user_link', 'computer_link', 'date',)
     list_filter = ('date',)
@@ -175,10 +184,9 @@ class LoginAdmin(admin.ModelAdmin):
         }),
         ('Atributtes', {
             'classes': ('collapse',),
-            'fields': ( 'attributes',)
+            'fields': ('attributes',)
         }),
-        )
-
+    )
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "attributes":
@@ -186,9 +194,14 @@ class LoginAdmin(admin.ModelAdmin):
 #            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
             return db_field.formfield(**kwargs)
 
-        return super(LoginAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+        return super(LoginAdmin, self).formfield_for_manytomany(
+            db_field,
+            request,
+            **kwargs
+        )
 
 admin.site.register(Login, LoginAdmin)
+
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('name', 'fullname',)
@@ -197,10 +210,17 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 
-class ErrorAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'computer_link', 'version', 'checked', 'date', 'error',)
-    list_filter = ('checked', 'date', "version" )
+class ErrorAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'computer_link',
+        'version',
+        'checked',
+        'date',
+        'error',
+    )
+    list_filter = ('checked', 'date', "version")
     ordering = ('date', 'computer',)
     search_fields = ('date', 'computer__name', 'error',)
 
@@ -211,11 +231,13 @@ class ErrorAdmin(admin.ModelAdmin):
             error.checked = True
             error.save()
 
-        return redirect("/migasfree/admin/server/error/?checked__exact=0")
+        return redirect("%s?checked__exact=0"
+            % reverse('admin:server_error_changelist'))
 
     checked_ok.short_description = trans("Checking is O.K.")
 
 admin.site.register(Error, ErrorAdmin)
+
 
 class FaultAdmin(admin.ModelAdmin):
     list_display = (
@@ -227,7 +249,7 @@ class FaultAdmin(admin.ModelAdmin):
         'text',
         'faultdef',
     )
-    list_filter = ('checked', 'date', 'version','faultdef',)
+    list_filter = ('checked', 'date', 'version', 'faultdef',)
     ordering = ('date', 'computer',)
     search_fields = ('date', 'computer__name', 'fault',)
 
@@ -238,14 +260,16 @@ class FaultAdmin(admin.ModelAdmin):
             fault.checked = True
             fault.save()
 
-        return redirect("/migasfree/admin/server/fault/?checked__exact=0")
+        return redirect("%s?checked__exact=0"
+            % reverse('admin:server_fault_changelist'))
 
     checked_ok.short_description = trans("Checking is O.K.")
 
 admin.site.register(Fault, FaultAdmin)
 
+
 class FaultDefAdmin(admin.ModelAdmin):
-    form = make_ajax_form(FaultDef,{'attributes':'attribute',})
+    form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
     list_display = ('name', 'active', 'list_attributes',)
     list_filter = ('active',)
     ordering = ('name',)
@@ -254,15 +278,16 @@ class FaultDefAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'active','language','code')
+            'fields': ('name', 'description', 'active', 'language', 'code')
         }),
         ('Atributtes', {
             'classes': ('collapse',),
-            'fields': ( 'attributes',)
+            'fields': ('attributes',)
         }),
-        )
+    )
 
 admin.site.register(FaultDef, FaultDefAdmin)
+
 
 class ComputerAdmin(admin.ModelAdmin):
     list_display = (
@@ -280,12 +305,19 @@ class ComputerAdmin(admin.ModelAdmin):
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "devices":
-            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
+            kwargs['widget'] = FilteredSelectMultiple(
+                db_field.verbose_name, (db_field.name in self.filter_vertical)
+            )
             return db_field.formfield(**kwargs)
 
-        return super(ComputerAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+        return super(ComputerAdmin, self).formfield_for_manytomany(
+            db_field,
+            request,
+            **kwargs
+        )
 
 admin.site.register(Computer, ComputerAdmin)
+
 
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('id', 'computer_link', 'date', 'text',)
@@ -295,8 +327,13 @@ class MessageAdmin(admin.ModelAdmin):
 
 admin.site.register(Message, MessageAdmin)
 
+
 class RepositoryAdmin(AjaxSelectAdmin):
-    form = make_ajax_form(Repository,{'attributes':'attribute','packages':'package','excludes':'attribute'})
+    form = make_ajax_form(Repository, {
+        'attributes': 'attribute',
+        'packages': 'package',
+        'excludes': 'attribute'
+    })
 
     list_display = ('name', 'active', 'date', 'schedule', 'timeline',)
     list_filter = ('active',)
@@ -307,35 +344,36 @@ class RepositoryAdmin(AjaxSelectAdmin):
 
     fieldsets = (
         ('General', {
-            'fields': ('name', 'version',  'active', 'comment', )
+            'fields': ('name', 'version', 'active', 'comment', )
         }),
         ('Schedule', {
-            'fields': ( 'date', 'schedule',)
+            'fields': ('date', 'schedule',)
         }),
         ('Packages', {
             'classes': ('collapse',),
-            'fields': ( 'packages', 'toinstall', 'toremove',)
+            'fields': ('packages', 'toinstall', 'toremove',)
         }),
         ('Atributtes', {
             'classes': ('collapse',),
-            'fields': ( 'attributes','excludes')
+            'fields': ('attributes', 'excludes')
         }),
-        )
-
-
-
+    )
 
     # QuerySet filter by user version.
     def queryset(self, request):
         if request.user.is_superuser:
             return self.model._default_manager.get_query_set()
         else:
-            return self.model._default_manager.get_query_set().filter(version=user_version(request.user))
+            return self.model._default_manager.get_query_set().filter(
+                version=user_version(request.user)
+            )
 
     # Packages filter by user version
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "packages":
-            kwargs["queryset"] = Package.objects.filter(version=user_version(request.user))
+            kwargs["queryset"] = Package.objects.filter(
+                version=user_version(request.user)
+            )
 #            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
 
             return db_field.formfield(**kwargs)
@@ -345,23 +383,29 @@ class RepositoryAdmin(AjaxSelectAdmin):
 #            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
             return db_field.formfield(**kwargs)
 
-        return super(RepositoryAdmin, self).formfield_for_manytomany(db_field, request, **kwargs)
+        return super(RepositoryAdmin, self).formfield_for_manytomany(
+            db_field,
+            request,
+            **kwargs
+        )
 
 admin.site.register(Repository, RepositoryAdmin)
 
 
 class ScheduleDelayline(admin.TabularInline):
     model = ScheduleDelay
-    form = make_ajax_form(ScheduleDelay,{'attributes':'attribute',})
-    extra=0
+    form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute'})
+    extra = 0
     ordering = ('delay',)
+
 
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = ('name', 'description',)
-    inlines = [ ScheduleDelayline, ]
-    extra=0
+    inlines = [ScheduleDelayline, ]
+    extra = 0
 
 admin.site.register(Schedule, ScheduleAdmin)
+
 
 class PackageAdmin(admin.ModelAdmin):
     list_display = ('name', 'store',)
@@ -372,19 +416,24 @@ class PackageAdmin(admin.ModelAdmin):
     actions = ['information', 'download']
 
     def information(self, request, queryset):
-        _url = '/migasfree/info/STORES/%s/%s/'
+        _url = reverse('package_info') + '/STORES/%s/%s/'
 
         return redirect(_url % (queryset[0].store.name, queryset[0].name))
 
     information.short_description = trans("Information of Package")
 
     def download(self, request, queryset):
-        _url = '/repo/%s/STORES/%s/%s'
+        _url = STATIC_URL + '%s/STORES/%s/%s'
 
-        return redirect(_url % (queryset[0].version.name, queryset[0].store.name, queryset[0].name))
+        return redirect(_url % (
+            queryset[0].version.name,
+            queryset[0].store.name,
+            queryset[0].name
+        ))
     download.short_description = trans("Download")
 
 admin.site.register(Package, PackageAdmin)
+
 
 class QueryAdmin(admin.ModelAdmin):
     list_display = ('name', 'description',)
@@ -392,7 +441,8 @@ class QueryAdmin(admin.ModelAdmin):
 
     def run_query(self, request, queryset):
         for query in queryset:
-            return redirect('/migasfree/query/?id=%s' % str(query.id))
+            return redirect(reverse('query', args=(query.id, )))
+
     run_query.short_description = trans("Run Query")
 
 admin.site.register(Query, QueryAdmin)
