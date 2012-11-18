@@ -18,6 +18,9 @@ from migasfree.server.errmfs import *
 from migasfree.server.functions import *
 from migasfree.server.security import *
 
+from migasfree.server.hardware import load_hw
+
+
 def upload_computer_hardware(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:

@@ -35,6 +35,7 @@ from migasfree.server.models import *
 from migasfree.server.logic import *
 from migasfree.server.forms import ParametersForm
 from migasfree.server.api import *
+from migasfree.server.load_devices import load_devices
 
 __all__ = (
     # from api
