@@ -10,8 +10,9 @@ from django.db.models import Q
 from django.http import HttpResponse
 
 from migasfree.settings import MIGASFREE_REPO_DIR
-from migasfree.server.models import *
-from migasfree.server.functions import *
+from server.models import *
+from server.functions import *
+
 
 def new_attribute(o_login, o_property, par):
     """
@@ -27,9 +28,11 @@ def new_attribute(o_login, o_property, par):
     #Add the atribute
     if value_att != "":
         try:
-            o_attribute = Attribute.objects.get(value=value_att, property_att__id=o_property.id)
-        except: # if not exist the attribute, we add it
-            if o_property.auto == True:
+            o_attribute = Attribute.objects.get(
+                value=value_att, property_att__id=o_property.id
+            )
+        except:  # if not exist the attribute, we add it
+            if o_property.auto is True:
                 o_attribute = Attribute()
                 o_attribute.property_att = o_property
                 o_attribute.value = value_att
@@ -41,10 +44,12 @@ def new_attribute(o_login, o_property, par):
 
     return o_attribute.id
 
+
 def process_attributes(request, my_file):
     """
     DEPRECATED!!!
-    process the file attributes.xml and return a script bash for be execute in the client
+    process the file attributes.xml and return a script bash to be execute
+    in the client
     """
 
     t = time.strftime("%Y-%m-%d")
@@ -54,8 +59,8 @@ def process_attributes(request, my_file):
 
     doc = xml.dom.minidom.parse(my_file)
 
-    dic_computer = {} # Dictionary of computer
-    lst_attributes = [] # List of attributes of computer
+    dic_computer = {}  # Dictionary of computer
+    lst_attributes = []  # List of attributes of computer
 
     ret = ""
 
@@ -89,13 +94,12 @@ def process_attributes(request, my_file):
                     o_computer.ip = dic_computer["IP"]
                     o_computer.version = Version.objects.get(name=dic_computer["VERSION"])
                     o_computer.save()
-                except: # if not exists the computer, we add it
+                except:  # if not exists the computer, we add it
                     o_computer = Computer(name=dic_computer["HOSTNAME"])
                     o_computer.dateinput = t
                     o_computer.ip = dic_computer["IP"]
                     o_computer.version = Version.objects.get(name=dic_computer["VERSION"])
                     o_computer.save()
-
 
                 # if not exists the user, we add it
                 try:
@@ -109,10 +113,13 @@ def process_attributes(request, my_file):
                         o_user.fullname = ""
                     o_user.save()
 
-
                 # Save Login
                 save_login(dic_computer["HOSTNAME"], dic_computer["USER"])
-                o_login = Login.objects.get(computer=Computer.objects.get(name=dic_computer["HOSTNAME"]), user=User.objects.get(name=dic_computer["USER"]))
+                o_login = Login.objects.get(
+                    computer=Computer.objects.get(
+                        name=dic_computer["HOSTNAME"]
+                    ), user=User.objects.get(name=dic_computer["USER"])
+                )
                 o_login.attributes.clear()
 
                 # Get version
@@ -139,7 +146,6 @@ def process_attributes(request, my_file):
                             if o_property.kind == "N":
                                 lst_attributes.append(new_attribute(o_login, o_property, data))
 
-
                             # LIST
                             if o_property.kind == "-":
                                 mylist = data.split(",")
@@ -153,8 +159,7 @@ def process_attributes(request, my_file):
                                 l = 0
                                 for x in lista:
                                     lst_attributes.append(new_attribute(o_login, o_property, c[l:]))
-                                    l = l+len(x)+1
-
+                                    l += len(x) + 1
 
                             # ADDS LEFT
                             if o_property.kind == "L":
@@ -162,8 +167,8 @@ def process_attributes(request, my_file):
                                 c = data
                                 l = 0
                                 for x in lista:
-                                    l = l+len(x)+1
-                                    lst_attributes.append(new_attribute(o_login, o_property, c[0:l-1]))
+                                    l += len(x) + 1
+                                    lst_attributes.append(new_attribute(o_login, o_property, c[0:l - 1]))
 
                             # we execute the after_insert function
                             if o_property.after_insert != "":
@@ -191,13 +196,17 @@ def process_attributes(request, my_file):
 
     dic_repos = {}
 
-    repositories = Repository.objects.filter(Q(attributes__id__in=lst_attributes), Q(version__id=o_version.id))
+    repositories = Repository.objects.filter(
+        Q(attributes__id__in=lst_attributes), Q(version__id=o_version.id)
+    )
     repositories = repositories.filter(Q(version__id=o_version.id), Q(active=True))
 
     for r in repositories:
         dic_repos[r.name] = r.id
 
-    repositories = Repository.objects.filter(Q(schedule__scheduledelay__attributes__id__in=lst_attributes), Q(active=True))
+    repositories = Repository.objects.filter(
+        Q(schedule__scheduledelay__attributes__id__in=lst_attributes), Q(active=True)
+    )
     repositories = repositories.filter(Q(version__id=o_version.id), Q(active=True))
     repositories = repositories.extra(select={'delay': "server_scheduledelay.delay"})
 
@@ -210,145 +219,147 @@ def process_attributes(request, my_file):
     #SCRIPT FOR THE COMPUTER
     ret = "#!/bin/bash\n\n"
 
-    ret = ret+". /usr/share/migasfree/init\n\n"
-    ret = ret+"_FILE_LOG=\"$_DIR_TMP/history_sw.log\"\n"
-    ret = ret+"_FILE_ERR=\"$_DIR_TMP/migasfree.err\"\n"
-    ret = ret+"_FILE_INV_HW=\"$_DIR_TMP/hardware.json\"\n"
+    ret += ". /usr/share/migasfree/init\n\n"
+    ret += "_FILE_LOG=\"$_DIR_TMP/history_sw.log\"\n"
+    ret += "_FILE_ERR=\"$_DIR_TMP/migasfree.err\"\n"
+    ret += "_FILE_INV_HW=\"$_DIR_TMP/hardware.json\"\n"
 
-    ret = ret+"\n\n# 1.- PRESERVE INITIAL DATE\n"
-    ret = ret+"_INI=`date +'%d-%m-%Y %k:%M:%S'`\n"
+    ret += "\n\n# 1.- PRESERVE INITIAL DATE\n"
+    ret += "_INI=`date +'%d-%m-%Y %k:%M:%S'`\n"
 
-    ret = ret+"\n\n# 2.- IF HAVE BEEN INSTALED PACKAGES MANUALITY THE INFORMATION IS UPLOAD TO migasfree server\n"
-    ret = ret+"tooltip_status \""+ _("Upload changes of software") +"\"\n"
-    ret = ret+"soft_history $_FILE_LOG.1 $_FILE_LOG.0 $_FILE_LOG \"\"\n"
+    ret += "\n\n# 2.- IF HAVE BEEN INSTALED PACKAGES MANUALITY THE INFORMATION IS UPLOAD TO migasfree server\n"
+    ret += "tooltip_status \"" + _("Upload changes of software") + "\"\n"
+    ret += "soft_history $_FILE_LOG.1 $_FILE_LOG.0 $_FILE_LOG \"\"\n"
 
-    ret = ret+"\n\n# 3.- If WE HAVE OLD ERRORS, WE UPLOAD ITS TO migasfree SERVER\n"
-    ret = ret+"tooltip_status \""+ _("Upload errors") +"\"\n"
-    ret = ret+"directupload $_FILE_ERR 2>>$_FILE_ERR\n"
+    ret += "\n\n# 3.- If WE HAVE OLD ERRORS, WE UPLOAD ITS TO migasfree SERVER\n"
+    ret += "tooltip_status \"" + _("Upload errors") + "\"\n"
+    ret += "directupload $_FILE_ERR 2>>$_FILE_ERR\n"
 
-    ret = ret+"\n\n# 4.- SAVE REPOSITORIES\n"
-    s = _("Creating Repositories File")
-    ret = ret+"tooltip_status \""+ s +"\"\n"
-    ret = ret+save_repositories(repositories, o_version, o_pms)
-    ret = ret+"cat $PMS_SOURCES_FILES\n"
+    ret += "\n\n# 4.- SAVE REPOSITORIES\n"
+    ret += "tooltip_status \"" + _("Creating Repositories File") + "\"\n"
+    ret += save_repositories(repositories, o_version, o_pms)
+    ret += "cat $PMS_SOURCES_FILES\n"
 
-    ret = ret+"\n\n# 5.- CLEAN CACHE OF PACKAGE MANAGEMENT SYSTEM\n"
-    ret = ret+"tooltip_status \""+ _("Getting data") +"\"\n"
-    ret = ret+"pms_cleanall 2>>$_FILE_ERR\n"
+    ret += "\n\n# 5.- CLEAN CACHE OF PACKAGE MANAGEMENT SYSTEM\n"
+    ret += "tooltip_status \"" + _("Getting data") + "\"\n"
+    ret += "pms_cleanall 2>>$_FILE_ERR\n"
 
-    ret = ret+"\n\n# 6.- REMOVE PACKAGES\n"
-    ret = ret+"tooltip_status \""+ _("Checking packages to remove") +"\"\n"
+    ret += "\n\n# 6.- REMOVE PACKAGES\n"
+    ret += "tooltip_status \"" + _("Checking packages to remove") + "\"\n"
     c_packages = ""
     for d in repositories:
         if not d.toremove == "":
-            c_packages = c_packages+" "+d.toremove
+            c_packages += " " + d.toremove
     if not c_packages == "":
-        ret = ret+"tooltip_status \""+ _("Removing packages") +"\"\n"
-        ret = ret+"pms_remove_silent \""+c_packages.replace("\n"," ")+"\" 2>> $_FILE_ERR\n"
+        ret += "tooltip_status \"" + _("Removing packages") + "\"\n"
+        ret += "pms_remove_silent \"" + c_packages.replace("\n"," ") + "\" 2>> $_FILE_ERR\n"
 
-    ret = ret+"\n\n# 7.- INSTALL PACKAGES\n"
-    ret = ret+"tooltip_status \""+ _("Checking packages to install") +"\"\n"
+    ret += "\n\n# 7.- INSTALL PACKAGES\n"
+    ret += "tooltip_status \"" + _("Checking packages to install") + "\"\n"
     c_packages = ""
     for d in repositories:
         if not d.toinstall == "":
-            c_packages = c_packages+" "+d.toinstall
+            c_packages += " " + d.toinstall
     if not c_packages == "":
-        ret = ret+"tooltip_status \""+ _("Installing packages") +"\"\n"
-        ret = ret+"pms_install_silent \""+c_packages.replace("\n"," ")+"\" 2>> $_FILE_ERR\n"
+        ret += "tooltip_status \"" + _("Installing packages") + "\"\n"
+        ret += "pms_install_silent \"" + c_packages.replace("\n"," ") + "\" 2>> $_FILE_ERR\n"
 
-    ret = ret+"\n\n# 8.- UPDATE PACKAGES\n"
-    ret = ret+"tooltip_status \""+ _("Updating packages") +"\"\n"
-    ret = ret+"pms_update_silent 2>> $_FILE_ERR\n"
+    ret += "\n\n# 8.- UPDATE PACKAGES\n"
+    ret += "tooltip_status \"" + _("Updating packages") + "\"\n"
+    ret += "pms_update_silent 2>> $_FILE_ERR\n"
 
+    ret += "\n\n# 9.- UPLOAD THE SOFTWARE HISTORY\n"
+    ret += "tooltip_status \"" + _("Upload changes of software") + "\"\n"
+    ret += "soft_history $_FILE_LOG.0 $_FILE_LOG.1 $_FILE_LOG \"$_INI\"\n"
 
-    ret = ret+"\n\n# 9.- UPLOAD THE SOFTWARE HISTORY\n"
-    ret = ret+"tooltip_status \""+ _("Upload changes of software") +"\"\n"
-    ret = ret+"soft_history $_FILE_LOG.0 $_FILE_LOG.1 $_FILE_LOG \"$_INI\"\n"
-
-    ret = ret+"\n\n# 10.- UPLOAD THE SOFTWARE INVENTORY\n"
-    ret = ret+"tooltip_status \""+ _("Upload inventory software") +"\"\n"
+    ret += "\n\n# 10.- UPLOAD THE SOFTWARE INVENTORY\n"
+    ret += "tooltip_status \"" + _("Upload inventory software") + "\"\n"
     # If is the Computer with de Software Base we upload the list of packages
     if o_version.computerbase == o_computer.name:
-        ret = ret+"pms_queryall | sort> $_DIR_TMP/base.log\n"
-        ret = ret+"directupload $_DIR_TMP/base.log 2>> $_FILE_ERR\n"
+        ret += "pms_queryall | sort> $_DIR_TMP/base.log\n"
+        ret += "directupload $_DIR_TMP/base.log 2>> $_FILE_ERR\n"
     #Get the software base of the version and upload the diff
-    ret = ret+"download_file \"softwarebase/?VERSION=$MIGASFREE_VERSION\" \"$_DIR_TMP/softwarebase.log\" 2>/dev/null\n"
-    ret = ret+"soft_inventory $_DIR_TMP/softwarebase.log $_FILE_LOG.1 $_DIR_TMP/software.log\n"
+    ret += "download_file \"softwarebase/?VERSION=$MIGASFREE_VERSION\" \"$_DIR_TMP/softwarebase.log\" 2>/dev/null\n"
+    ret += "soft_inventory $_DIR_TMP/softwarebase.log $_FILE_LOG.1 $_DIR_TMP/software.log\n"
 
+    ret += "\n\n# 11.- UPDATE THE HARDWARE INVENTORY\n"
+    ret += "tooltip_status \"" + _("Upload inventory hardware") + "\"\n"
 
-    ret = ret+"\n\n# 11.- UPDATE THE HARDWARE INVENTORY\n"
-    ret = ret+"tooltip_status \""+ _("Upload inventory hardware") +"\"\n"
-
-    ret = ret+"_LSHW=`which lshw`\n"
-    ret = ret+"if ! [ -z $_LSHW ] ; then\n"
+    ret += "_LSHW=`which lshw`\n"
+    ret += "if ! [ -z $_LSHW ] ; then\n"
 
     # BUG in lshw<=2.14 : if exists partitions in ext4 in the computer. We do not get class volume (-c volume)
 #    ret = ret+"  $_LSHW -c system -c bus -c memory -c processor -c bridge -c communication -c multimedia -c network -c display -c storage -c disk -c generic -c power > $_FILE_INV_HW\n"
 
-    ret = ret+"  $_LSHW -json > $_FILE_INV_HW\n"
-    ret = ret+"  if [ $? = 0 ]; then\n"
-    ret = ret+"    directupload $_FILE_INV_HW 2>> $_FILE_ERR\n"
-    ret = ret+"  else\n"
-    ret = ret+"    echo 'error in lshw version:' >> $_FILE_ERR\n"
-    ret = ret+"    $_LSHW -version >> $_FILE_ERR\n"
-    ret = ret+"    echo 'migasfree need: lshw >= B.02.15' >> $_FILE_ERR\n"
-    ret = ret+"  fi\n"
-    ret = ret+"  directupload $_FILE_INV_HW 2>> $_FILE_ERR\n"
-    ret = ret+"fi\n"
+    ret += "  $_LSHW -json > $_FILE_INV_HW\n"
+    ret += "  if [ $? = 0 ]; then\n"
+    ret += "    directupload $_FILE_INV_HW 2>> $_FILE_ERR\n"
+    ret += "  else\n"
+    ret += "    echo 'error in lshw version:' >> $_FILE_ERR\n"
+    ret += "    $_LSHW -version >> $_FILE_ERR\n"
+    ret += "    echo 'migasfree need: lshw >= B.02.15' >> $_FILE_ERR\n"
+    ret += "  fi\n"
+    ret += "  directupload $_FILE_INV_HW 2>> $_FILE_ERR\n"
+    ret += "fi\n"
 
-
-
-    ret = ret+"\n\n\n# 12.- UPLOAD ERRORS OF 'migasfree -u' TO migasfree\n"
-    ret = ret+"tooltip_status \""+ _("Upload errors") +"\"\n"
-    ret = ret+"directupload $_FILE_ERR 2>> $_FILE_ERR\n"
+    ret += "\n\n\n# 12.- UPLOAD ERRORS OF 'migasfree -u' TO migasfree\n"
+    ret += "tooltip_status \"" + _("Upload errors") + "\"\n"
+    ret += "directupload $_FILE_ERR 2>> $_FILE_ERR\n"
 
     chk_devices = Mmcheck(o_computer.devices, o_computer.devices_copy)
-    if chk_devices.changed() == True or o_computer.devices_modified == True:
-
-        ret = ret+"\n\n\n# 13.- UPDATING DEVICES\n"
-        ret = ret+"tooltip_status \""+ _("Updating devices") +"\"\n"
+    if chk_devices.changed() is True or o_computer.devices_modified is True:
+        ret += "\n\n\n# 13.- UPDATING DEVICES\n"
+        ret += "tooltip_status \"" + _("Updating devices") + "\"\n"
 
         #remove the devices
         lst_diff = list_difference(s2l(o_computer.devices_copy), s2l(chk_devices.mms()))
         for d in lst_diff:
             try:
                 device = Device.objects.get(id=d)
-                ret = ret+"_NAME='"+name_printer(device.model.manufacturer.name, device.model.name, device.name)+"'\n"
-                ret = ret+device.values+"\n"
-                ret = ret+device.render_remove()+"\n"
+                ret += "_NAME='"+name_printer(device.model.manufacturer.name, device.model.name, device.name)+"'\n"
+                ret += device.values + "\n"
+                ret += device.render_remove() + "\n"
             except:
                 pass
 
         #install all devices
-        ret = ret+"download_file_and_run \"device/?CMD=install&HOST=$HOSTNAME&NUMBER=ALL\" \"$_DIR_TMP/install_device\"\n"
+        ret += "download_file_and_run \"device/?CMD=install&HOST=$HOSTNAME&NUMBER=ALL\" \"$_DIR_TMP/install_device\"\n"
 
         o_computer.devices_copy = chk_devices.mms()
         o_computer.devices_modified = False
         o_computer.save()
 
-    ret = ret+"tooltip_status \""+ _("System is updated") +"\"\n"
-    ret = ret+"icon_status /usr/share/icons/hicolor/48x48/actions/migasfree-ok.png\n"
-    ret = ret+"sleep 5\n"
+    ret += "tooltip_status \"" + _("System is updated") + "\"\n"
+    ret += "icon_status /usr/share/icons/hicolor/48x48/actions/migasfree-ok.png\n"
+    ret += "sleep 5\n"
 
-    ret = ret+"tooltip_status \"\"\n"
+    ret += "tooltip_status \"\"\n"
 
     return ret
+
 
 def save_login(pc, user):
     m = time.strftime("%Y-%m-%d %H:%M:%S")
     try:
-        o_login = Login.objects.get(computer=Computer.objects.get(name=pc), user=User.objects.get(name=user))
+        o_login = Login.objects.get(
+            computer=Computer.objects.get(name=pc),
+            user=User.objects.get(name=user)
+        )
         o_login.date = m
         o_login.save()
-    except: # if Login not exist, we save it
-        o_login = Login(computer=Computer.objects.get(name=pc), user=User.objects.get(name=user))
+    except:  # if Login not exist, we save it
+        o_login = Login(
+            computer=Computer.objects.get(name=pc),
+            user=User.objects.get(name=user)
+        )
         o_login.date = m
         o_login.save()
 
-    return # ???
+    return  # ???
 
-# Return the content of file of list of repositories
+
 def save_repositories(lista, o_version, o_pms):
+    # Return the content of file of list of repositories
     ret = "cat > $PMS_SOURCES_FILES << EOF\n"
 
     # Repositories
@@ -359,6 +370,7 @@ def save_repositories(lista, o_version, o_pms):
     ret += "EOF\n"
 
     return ret
+
 
 def create_repositories_package(packagename, versionname):
     o_version = Version.objects.get(name=versionname)
@@ -373,23 +385,24 @@ def create_repositories_package(packagename, versionname):
     except:
         pass
 
+
 def create_repositories(version_id):
     """
-    Create the repositories for the version_id, checking the packages field changed.
+    Create the repositories for the version_id, checking the packages field
+    changed.
     """
     m = time.strftime("%Y-%m-%d %H:%M:%S")
-    msg=MessageServer()
-    msg.text= _("Creating Repositories of %s ...") % Version.objects.get(id=version_id).name
+    msg = MessageServer()
+    msg.text = _("Creating Repositories of %s ...") \
+        % Version.objects.get(id=version_id).name
     msg.date = m
     msg.save()
-
-    
 
     def history(d):
         txt = ""
         pkgs = d.packages.all()
         for o in pkgs:
-            txt = txt+"        "+o.store.name.ljust(10)+" - "+o.name+"\n"
+            txt += "        " + o.store.name.ljust(10) + " - " + o.name + "\n"
 
         return txt
 
@@ -399,7 +412,8 @@ def create_repositories(version_id):
     o_pms = Pms.objects.get(version=o_version)
     bash = ""
 
-    #Set to True the modified field in the repositories that have been change yours packages from last time.
+    # Set to True the modified field in the repositories that have been change
+    # yours packages from last time.
     dset = Repository.objects.filter(version=o_version)
     for d in dset:
         if compare_values(d.packages.values("id"), d.createpackages.values("id")):
@@ -445,36 +459,52 @@ def create_repositories(version_id):
         )
         bash += "rm -rf %s\n" % _path
 
-    txt = "Analyzing the repositories to create files for version: "+o_version.name +"\n"
+    txt = "Analyzing the repositories to create files for version: %s\n" % o_version.name
 
     for d in dset:
-        path_stores = MIGASFREE_REPO_DIR+"/"+d.version.name+"/STORES/"
-        path_tmp = MIGASFREE_REPO_DIR+"/"+d.version.name+"/TMP/"+o_pms.slug+"/"
-        bash = bash+"/bin/mkdir -p "+path_tmp+d.name+"/PKGS\n"
-        txt = txt+"\n    REPOSITORY: "+d.name+"\n"
+        path_stores = os.path.join(
+            MIGASFREE_REPO_DIR,
+            d.version.name,
+            'STORES'
+        )
+        path_tmp = os.path.join(
+            MIGASFREE_REPO_DIR,
+            d.version.name,
+            'TMP',
+            o.pms.slug
+        )
+        bash += "/bin/mkdir -p %s\n" % os.path.join(path_tmp, d.name, 'PKGS')
+        txt += "\n    REPOSITORY: %s\n" % d.name
         for p in d.packages.all():
-            bash = bash+"ln -s "+path_stores+p.store.name+"/"+p.name+" "+path_tmp+d.name+"/PKGS\n"
+            bash += 'ln -s %s %s\n' % (
+                os.path.join(path_stores, p.store.name, p.name),
+                os.path.join(path_tmp, d.name, 'PKGS')
+            )
 
         # We create the metadata of repository
         cad = o_pms.createrepo
 
-        bash = bash+cad.replace("%REPONAME%", d.name).replace("%PATH%", path_tmp[:-1])+"\n"
-        txt = txt+history(d)
+        bash += cad.replace("%REPONAME%", d.name).replace("%PATH%", path_tmp[:-1]) + "\n"
+        txt += history(d)
 
-    path_tmp = os.path.join(MIGASFREE_REPO_DIR, o_version.name , "TMP")
-    bash = bash+"cp -rf "+path_tmp+"/* "+MIGASFREE_REPO_DIR+"/"+o_version.name+"\n"
-    bash = bash+"rm -rf "+path_tmp+"\n"
+    path_tmp = os.path.join(MIGASFREE_REPO_DIR, o_version.name, "TMP")
+    bash += 'cp -rf %s %s\n' % (
+        os.path.join(path_tmp, '*'),
+        os.path.join(MIGASFREE_REPO_DIR, o_version.name)
+    )
+    bash += "rm -rf %s\n" % path_tmp
 
-    # DEBUG os.system('echo -e "%s" >> /var/tmp/tmp.txt' % bash)
+    # os.system('echo -e "%s" >> /var/tmp/tmp.txt' % bash)  # DEBUG
 
     txt_err = run_in_server(bash)["err"]
 
     msg.delete()
 
     if not txt_err == "":
-        txt = txt+"\n\n****ERROR*****\n"+txt_err
+        txt += "\n\n****ERROR*****\n" + txt_err
 
     return txt
+
 
 def name_printer(manufacturer, model, number):
     return '%s-%s_[%s]' % (manufacturer, model, number)
