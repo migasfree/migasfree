@@ -1,0 +1,615 @@
+[
+    {
+        "model": "server.pms",
+        "pk": 1,
+        "fields": {
+            "name": "yum",
+            "createrepo": "_DIRECTORY=%PATH%/%REPONAME%\nrm -rf $_DIRECTORY/repodata\nrm -rf $_DIRECTORY/checksum\ncreaterepo -c checksum $_DIRECTORY",
+            "repository": "[%REPO%]\nname=%REPO%\nbaseurl=http://$MIGASFREE_SERVER/repo/%VERSION%/REPOSITORIES/%REPO%\ngpgcheck=0\nenabled=1\nhttp_caching=none\nmetadata_expire=1",
+            "info": "echo ****INFO****\nrpm -qp --info $PACKAGE\necho\necho\necho ****REQUIRES****\nrpm -qp --requires $PACKAGE\necho\necho\necho ****PROVIDES****\nrpm -qp --provides $PACKAGE\necho\necho\necho ****OBSOLETES****\nrpm -qp --obsoletes $PACKAGE\necho\necho\necho ****SCRIPTS****\nrpm -qp --scripts $PACKAGE\necho\necho\necho ****CHANGELOG****\nrpm -qp --changelog $PACKAGE\necho\necho\necho ****FILES****\nrpm -qp --list $PACKAGE"
+        }
+    },
+    {
+        "model": "server.pms",
+        "pk": 2,
+        "fields": {
+            "name": "zypper",
+            "createrepo": "_DIRECTORY=%PATH%/%REPONAME%\nrm -rf $_DIRECTORY/repodata\nrm -rf $_DIRECTORY/checksum\ncreaterepo -c checksum $_DIRECTORY",
+            "repository": "[%REPO%]\nname=%REPO%\nbaseurl=http://$MIGASFREE_SERVER/repo/%VERSION%/REPOSITORIES/%REPO%\ngpgcheck=0\nenabled=1\nhttp_caching=none\nmetadata_expire=1",
+            "info": "echo ****INFO****\nrpm -qp --info $PACKAGE\necho\necho\necho ****REQUIRES****\nrpm -qp --requires $PACKAGE\necho\necho\necho ****PROVIDES****\nrpm -qp --provides $PACKAGE\necho\necho\necho ****OBSOLETES****\nrpm -qp --obsoletes $PACKAGE\necho\necho\necho ****SCRIPTS****\nrpm -qp --scripts $PACKAGE\necho\necho\necho ****CHANGELOG****\nrpm -qp --changelog $PACKAGE\necho\necho\necho ****FILES****\nrpm -qp --list $PACKAGE"
+        }
+    },
+    {
+        "model": "server.pms",
+        "pk": 3,
+        "fields": {
+            "name": "apt",
+            "slug": "REPOSITORIES/dists",
+            "createrepo": "cd %PATH%\nmkdir -p %REPONAME%/PKGS/binary-i386/\nmkdir -p %REPONAME%/PKGS/sources/\ncd ..\ndpkg-scanpackages dists/%REPONAME%/PKGS /dev/null | gzip -9c > dists/%REPONAME%/PKGS/binary-i386/Packages.gz\ndpkg-scansources dists/%REPONAME%/PKGS /dev/null | gzip -9c > dists/%REPONAME%/PKGS/sources/Sources.gz",
+            "repository": "deb http://$MIGASFREE_SERVER/repo/%VERSION%/REPOSITORIES %REPO% PKGS",
+            "info": "echo ****INFO****\ndpkg -I $PACKAGE\necho\necho\necho ****REQUIRES****\ndpkg-deb --showformat='${Depends}\\n' --show $PACKAGE\necho\necho\necho ****PROVIDES****\ndpkg-deb --showformat='${Provides}\\n' --show $PACKAGE\necho\necho\necho ****OBSOLETES****\ndpkg-deb --showformat='${Replaces}\\n' --show $PACKAGE\necho\necho\necho ****SCRIPT PREINST****\n#dpkg-deb --showformat='${Source}' --show $PACKAGE\ndpkg-deb -I $PACKAGE preinst\necho\necho\necho ****SCRIPT POSTINST****\ndpkg-deb -I $PACKAGE postinst\necho\necho\necho ****SCRIPT PRERM****\ndpkg-deb -I $PACKAGE prerm\necho\necho\necho ****SCRIPT POSTRM****\ndpkg-deb -I $PACKAGE postrm\necho\necho\necho ****CHANGELOG****\n_DIR='/tmp/changelog'\n_NAME=`dpkg-deb --showformat='${Package}' --show $PACKAGE`\ndpkg -X $PACKAGE $_DIR > /dev/null\ngzip -d $_DIR/usr/share/doc/$_NAME/changelog.Debian.gz\ncat $_DIR/usr/share/doc/$_NAME/changelog.Debian\nrm -r $_DIR\necho\necho\necho ****FILES****\ndpkg-deb -c $PACKAGE | awk '{print $6}'"
+        }
+    },
+    {
+        "model": "server.checking",
+        "pk": 1,
+        "fields": {
+            "name": "Errors to check",
+            "description": "Errors not marked as checked. You must mark error as checked when error is solved.",
+            "code": "from django.core.urlresolvers import reverse\nfrom migasfree.server.models import Error\nresult = Error.objects.filter(checked__exact=0).count()\nurl = reverse('admin:server_error_changelist') + '?checked__exact=0'\nicon = 'error.png'\nmsg = 'Errors to check'"
+        }
+    },
+    {
+        "model": "server.checking",
+        "pk": 2,
+        "fields": {
+            "name": "Faults to check",
+            "description": "Faults not marked as checked. You must mark fault as checked when a fault is solved.",
+            "code": "from django.core.urlresolvers import reverse\nfrom migasfree.server.models import Fault\nresult = Fault.objects.filter(checked__exact=0).count()\nurl = reverse('admin:server_fault_changelist') + '?checked__exact=0'\nicon = 'fault.png'\nmsg = 'Faults to check'"
+        }
+    },
+    {
+        "model": "server.checking",
+        "pk": 3,
+        "fields": {
+            "name": "Package/Set orphan",
+            "description": "Packages that not have been assigned to a repository.",
+            "code": "from django.core.urlresolvers import reverse\nfrom migasfree.server.models import Package\nresult = Package.objects.version(0).filter(Q(repository__id__exact=None)).count()\nurl = reverse('query', args=(5,))\nicon = 'information.png'\nmsg = 'Package/Set orphan'"
+        }
+    },
+    {
+        "model": "server.checking",
+        "pk": 4,
+        "fields": {
+            "name": "Repositories files creation",
+            "description": "Check if the current user version has to create the files of repositories (only will be created when you change the packackes of a repository).",
+            "code": "from django.core.urlresolvers import reverse\nfrom migasfree.server.models import Repository\nfrom migasfree.server.functions import compare_values\nresult = 0\nds = Repository.objects.all()\nfor d in ds:\n    if not compare_values(d.packages.values('id'), d.createpackages.values('id')):\n            result += 1\n            url = reverse('create_repos')\n            icon = 'repository.png'\n            msg = 'Repositories files creation'"
+        }
+    },
+    {
+        "model": "server.checking",
+        "pk": 5,
+        "fields": {
+            "name": "Computer updating now",
+            "description": "Check how many computers are being updated at this time",
+            "code": "from django.core.urlresolvers import reverse\nfrom migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT\nfrom datetime import datetime\nfrom datetime import timedelta\nurl = reverse('computer_messages')\nmsg = 'Computer updating now'\nt = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = Message.objects.all().count() - Message.objects.filter(date__lt=t).count()\nicon = 'computer.png'"
+        }
+    },
+    {
+        "model": "server.checking",
+        "pk": 6,
+        "fields": {
+            "name": "Computer delayed",
+            "description": "Check how many computers have delayed connections",
+            "code": "from django.core.urlresolvers import reverse\nfrom migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT\nfrom datetime import datetime\nfrom datetime import timedelta\nurl = reverse('computer_messages')\nmsg = 'Computer delayed'\nt = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = Message.objects.filter(date__lt=t).count()\nicon = 'computer_alert.png'"
+        }
+    },
+    {
+        "model": "server.checking",
+        "pk": 7,
+        "fields": {
+            "name": "Server Messages",
+            "description": "Server Messages",
+            "code": "from django.core.urlresolvers import reverse\noMessages = MessageServer.objects.all()\nresult = oMessages.count()\nurl = reverse('server_messages')\nmsg = 'process run in server'\nicon = 'spinner.gif'"
+        }
+    },
+    {
+        "model": "server.property",
+        "pk": 1,
+        "fields": {
+            "name": "ALL SYSTEMS",
+            "language": 0,
+            "prefix": "ALL",
+            "code": "echo 'ALL SYSTEMS'",
+            "active": true
+        }
+    },
+    {
+        "model": "server.property",
+        "pk": 2,
+        "fields": {
+            "name": "IP ADDRESS",
+            "language": 1,
+            "prefix": "IP",
+            "code": "import migasfree_client.network\nprint migasfree_client.network.get_network_info()['ip']",
+            "active": true
+        }
+    },
+    {
+        "model": "server.property",
+        "pk": 3,
+        "fields": {
+            "name": "NET",
+            "language": 1,
+            "prefix": "NET",
+            "code": "import migasfree_client.network\nprint migasfree_client.network.get_network_info()['net']",
+            "before_insert": "#Convert the IP address in the network address",
+            "active": true
+        }
+    },
+    {
+        "model": "server.property",
+        "pk": 4,
+        "fields": {
+            "name": "LDAP GROUP",
+            "language": 0,
+            "prefix": "GRP",
+            "code": "echo 'GRP-AU,GRP-Administradores,GRP-Impresoras'",
+            "kind": "-",
+            "active": true
+        }
+    },
+    {
+        "model": "server.property",
+        "pk": 5,
+        "fields": {
+            "name": "MACHINE NAME",
+            "language": 0,
+            "prefix": "HST",
+            "code": "echo $HOSTNAME",
+            "active": true
+        }
+    },
+    {
+        "model": "server.property",
+        "pk": 6,
+        "fields": {
+            "name": "DEVICE PCI",
+            "language": 0,
+            "prefix": "PCI",
+            "code": "r=''\nif [ `lspci -n | sed -n 1p | awk '{print $2}'` = 'Class' ]\nthen\n    dev=`lspci -n |awk '{print $4}'`\nelse\n    dev=`lspci -n |awk '{print $3}'`\nfi\nfor l in $dev\ndo\n    n=`lspci -d $l | awk '{for (i = 2; i <=NF;++i) print $i}' | tr \"\\n\" \" \" | sed 's/,//g'`\n    r=\"$r$l~$n,\"\ndone\necho $r",
+            "kind": "-",
+            "active": true
+        }
+    },
+    {
+        "model": "server.property",
+        "pk": 7,
+        "fields": {
+            "name": "USER",
+            "language": 1,
+            "prefix": "USR",
+            "code": "import migasfree_client.utils\nprint migasfree_client.utils.get_current_user()",
+            "active": false
+        }
+    },
+    {
+        "model": "server.property",
+        "pk": 8,
+        "fields": {
+            "name": "VERSION",
+            "language": 1,
+            "prefix": "VRS",
+            "code": "import migasfree_client.utils\nprint migasfree_client.utils.get_mfc_version()",
+            "active": false
+        }
+    },
+    {
+        "model": "server.faultdef",
+        "pk": 1,
+        "fields": {
+            "name": "LOW SYSTEM PARTITION SPACE",
+            "description": "add a fault when free space in system partition is low",
+            "code": "limite=15 #PORCENTAJE DE USO EN PARTICION /\nDEVICE=`mount |grep \" on / \"|awk '{print $1}'`\nusado=`df -Pl | grep $DEVICE | awk '{print $5}' | awk 'BEGIN {FS=\"%\";} {print $1}'`\nif [ $usado -gt $limite ]\nthen\n  echo \"El espacio usado en la particion de sistema $DEVICE es de un $usado%, superando el limite establecido en $limite% \"\n  echo \"*** ACCIONES A REALIZAR ***\"\n  echo \"Comprobar y Borrar archivos\"\n  echo \"Ampliacion de la particion o cambio del Disco Duro\"\nfi"
+        }
+    },
+    {
+        "model": "server.attribute",
+        "pk": 1,
+        "fields": {
+            "property_att": 1,
+            "value": "ALL"
+        }
+    },
+    {
+        "model": "server.schedule",
+        "pk": 1,
+        "fields": {
+            "name": "STANDARD",
+            "description": "Default schedule. By context."
+        }
+    },
+    {
+        "model": "server.schedule",
+        "pk": 2,
+        "fields": {
+            "name": "SLOW",
+            "description": "By context, slowly."
+        }
+    },
+    {
+        "model": "server.scheduledelay",
+        "pk": 1,
+        "fields": {
+            "schedule": 1,
+            "attributes": [1],
+            "delay": 12
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 1,
+        "fields": {
+            "name": "QUERIES",
+            "description": "LIST OF QUERIES",
+            "code": "if parameters['id'] == '':\n    query = Query.objects.all()\nelse:\n    query = Query.objects.filter(id=parameters['id'])\n    fields = ('id', 'name', 'description', 'code', 'parameters')",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        id = forms.CharField()\n    return myForm"
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 2,
+        "fields": {
+            "name": "PACKAGES/SETS",
+            "description": "LIST OF PACKAGES/SETS",
+            "code": "query = Package.objects.filter(name__contains=parameters['name'])\nfields = ('id', 'link()', 'store.name')\ntitles = ('id', 'name', 'store')",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        name = forms.CharField()\n    return myForm"
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 3,
+        "fields": {
+            "name": "COMPUTERS BY ATTRIBUTES",
+            "description": "LIST THE COMPUTERS THAT HAVE A DETERMINATE ATTRIBUTE",
+            "code": "query = Login.objects.all()\nif parameters['value'] != '':\n    query = query.filter(attributes__property_att__id = parameters['property_att'], attributes__value__contains = parameters['value'])\n    fields = ('computer.link()', 'user.link()', 'date')\n    titles = ('computer', 'user', 'date of login')",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        property_att = forms.ModelChoiceField(Property.objects.all())\n        value = forms.CharField()\n    return myForm"
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 4,
+        "fields": {
+            "name": "COMPUTERS WITH THE PACKAGE...",
+            "description": "LIST THE COMPUTERS WITH THE PACKAGE ESPECIFIQUED",
+            "code": "query = Computer.objects.filter(software__contains=parameters['package'])\nfields = ('link()', 'software')\ntitles = ('link()', 'diff with master')",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm"
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 5,
+        "fields": {
+            "name": "PACKAGE/SET ORPHAN",
+            "description": "PACKAGES/SET THAT NOT HAVE BEEN ASSIGNED TO A REPOSITORY",
+            "code": "query = Package.objects.version(0).filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link()')\ntitles = ('version', 'store', 'package/set')",
+            "parameters": ""
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 6,
+        "fields": {
+            "name": "REPOSITORIES WITH A PACKAGE/SET",
+            "description": "LIST THE REPOSITORIES THAT HAVE ASSIGNED A DETERMINATE PACKAGE/SET",
+            "code": "from migasfree.server.models import Repository\nquery = Repository.objects.filter(version=version).filter(Q(packages__name__contains=parameters['package']))\nquery = query.distinct()\nfields = ('id', 'link()', 'packages_link()')\ntitles = ('id', 'Repository', 'Packages')",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm"
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 7,
+        "fields": {
+            "name": "LAST LOGIN",
+            "description": "LIST OF LAST LOGIN FROM COMPUTERS",
+            "code": "query = Login.objects.all()\nfields = ('computer.link()', 'computer.login_link()', 'computer.last_login().user.link()')\ntitles = ('computer', 'last login', 'user')",
+            "parameters": ""
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 8,
+        "fields": {
+            "name": "COMPUTER DEVICES",
+            "description": "",
+            "code": "query = Computer.objects.all()\nif parameters['model'] != '':\n    query = query.filter(devices__model__id=parameters['model'])\n    query = query.filter(name__contains=parameters['computer'])\n    query = query.order_by('name')\n    fields = ('link()', 'devices_link()', 'login_link()')\n    titles = ('computer', 'devices', 'last login')",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        model = forms.ModelChoiceField(DeviceModel.objects.all())\n        computer = forms.CharField()\n    return myForm"
+        }
+    },
+    {
+        "model": "server.query",
+        "pk": 9,
+        "fields": {
+            "name": "DEVICE COMPUTERS",
+            "description": "",
+            "code": "query = Device.objects.all()\nif parameters['model'] != '':\n    query = query.filter(Q(model__id=parameters['model']))\n    query = query.filter(Q(computer__name__contains=parameters['computer']))\n    query = query.order_by('name').distinct()\n    fields = ('link()', 'model.link()', 'computers_link()')\n    titles = ('device', 'model', 'computers')",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        model = forms.ModelChoiceField(DeviceModel.objects.all())\n        computer = forms.CharField()\n    return myForm"
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 1,
+        "fields": {
+            "name": "Read",
+            "permissions": [
+                54,
+                38,
+                34,
+                82,
+                78,
+                66,
+                62,
+                74,
+                58,
+                94,
+                106,
+                102,
+                98,
+                86,
+                134,
+                42,
+                46,
+                30,
+                138,
+                122,
+                126,
+                130,
+                90,
+                26,
+                50
+            ]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 2,
+        "fields": {
+            "name": "Change Software Configuration",
+            "permissions": [
+                137,
+                140,
+                138,
+                139,
+                121,
+                124,
+                122,
+                123,
+                125,
+                128,
+                126,
+                127
+            ]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 3,
+        "fields": {
+            "name": "Packager",
+            "permissions": [
+                133,
+                136,
+                134,
+                135,
+                129,
+                132,
+                130,
+                131
+            ]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 4,
+        "fields": {
+            "name": "Check",
+            "permissions": [
+                37,
+                40,
+                38,
+                39,
+                93,
+                96,
+                94,
+                95,
+                105,
+                108,
+                106,
+                107,
+                85,
+                88,
+                86,
+                87,
+                89,
+                92,
+                90,
+                91
+            ]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 5,
+        "fields": {
+            "name": "Devices",
+            "permissions": [
+                65,
+                68,
+                66,
+                67,
+                69,
+                72,
+                70,
+                71,
+                61,
+                64,
+                62,
+                63,
+                73,
+                76,
+                74,
+                75,
+                57,
+                60,
+                58,
+                59
+            ]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 6,
+        "fields": {
+            "name": "Queries",
+            "permissions": [29, 30, 31, 32]
+        }
+    },
+    {
+        "model": "auth.group",
+        "pk": 7,
+        "fields": {
+            "name": "System",
+            "permissions": [
+                33,
+                36,
+                34,
+                35,
+                101,
+                104,
+                102,
+                103,
+                85,
+                88,
+                86,
+                87,
+                41,
+                44,
+                42,
+                43,
+                45,
+                48,
+                46,
+                47,
+                89,
+                92,
+                90,
+                91,
+                49,
+                52,
+                50,
+                51
+            ]
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": true,
+            "is_staff": true,
+            "groups": [],
+            "user_permissions": [],
+            "password": "sha1$11912$21efe355c147ab534e85933fa5d139f0d2c0ef1a",
+            "email": "admin@localhost.com"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 2,
+        "fields": {
+            "username": "system",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "groups": [1, 7],
+            "user_permissions": [],
+            "password": "sha1$97ff9$688838a8ccb7c87db66d00471f6570971570ab19"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 3,
+        "fields": {
+            "username": "device",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "groups": [1, 5],
+            "user_permissions": [],
+            "password": "sha1$13bea$51cefe092f65a5a14c9244be920156e38815bd39"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 4,
+        "fields": {
+            "username": "query",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "groups": [1, 6],
+            "user_permissions": [],
+            "password": "sha1$7b33e$6aded64cc29b089923b26c1a92ecb9741fa73b20"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 5,
+        "fields": {
+            "username": "packager",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "groups": [1, 3],
+            "user_permissions": [],
+            "password": "sha1$d84fc$28c659a5508dedba4a4ffda45ed928dbf935d8df"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 6,
+        "fields": {
+            "username": "repo",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "groups": [1, 2],
+            "user_permissions": [],
+            "password": "sha1$ef06a$1cab32f0665769fdbedee39346f6f2299bc7cc86"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 7,
+        "fields": {
+            "username": "check",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "groups": [1, 4],
+            "user_permissions": [],
+            "password": "sha1$bbae3$ca89ba2f05d0b478295fd0e75c0adba6db867c4a"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 8,
+        "fields": {
+            "username": "read",
+            "first_name": "",
+            "last_name": "",
+            "is_active": true,
+            "is_superuser": false,
+            "is_staff": true,
+            "groups": [1],
+            "user_permissions": [],
+            "password": "sha1$76b35$1f996b5fa3fd2f013955f83d920552b64ff2d95e"
+        }
+    }
+]
