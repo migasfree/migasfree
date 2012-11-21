@@ -53,7 +53,11 @@ urlpatterns = patterns(
     url(r'^migasfree/query_selection/$', query_selection, name='query_menu'),
     url(r'^migasfree/query/(?P<query_id>\d+)/$', query, name='query'),
     url(r'^migasfree/queryMessage/$', query_message, name='computer_messages'),
-    (r'^migasfree/queryMessageServer/(.*)', query_message_server),
+    url(
+        r'^migasfree/queryMessageServer/$',
+        query_message_server,
+        name="server_messages"
+    ),
     url(r'^migasfree/info/(.*)', info, name='package_info'),
     url(
         r'^migasfree/version/$',
@@ -116,7 +120,11 @@ urlpatterns = patterns(
     (r'^migasfree/uploadPackage/(.*)', upload_package),
     (r'^migasfree/uploadSet/(.*)', upload_set),
     (r'^migasfree/createrepositoriesofpackage/(.*)', createrepositoriesofpackage),
-    (r'^migasfree/createrepositories/(.*)', createrepositories),
+    url(
+        r'^migasfree/createrepositories/$',
+        createrepositories,
+        name="create_repos"
+    ),
     (r'^migasfree/directupload/(.*)', directupload),
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
