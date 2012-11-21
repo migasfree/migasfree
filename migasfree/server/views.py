@@ -39,7 +39,7 @@ from migasfree.server.load_devices import load_devices
 
 __all__ = (
     # from api
-    'api', 'createrepositories', 'createrepositoriesofpackage',
+    'api', 'createrepositoriesofpackage', 'softwarebase',
     'directupload', 'message', 'update', 'upload_package', 'upload_set',
 
     # from chart
@@ -56,9 +56,9 @@ __all__ = (
     'query',
 
     # from main
-    'change_version', 'documentation', 'info', 'login', 'main',
-    'query_selection', 'query_message', 'query_message_server',
-    'softwarebase', 'system',
+    'change_version', 'createrepositories', 'documentation', 'info', 'login',
+    'main', 'query_selection', 'query_message', 'query_message_server',
+    'system',
 )
 
 
@@ -89,17 +89,24 @@ def info(request, package):  # package info
     else:
         version = Version.objects.get(name=ver)
 
+    if version is None:
+        return HttpResponse(
+            'No version to find info.',
+            mimetype="text/plain"
+        )  # FIXME
+
     ruta = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
 
     if os.path.isfile(ruta):
         # GET INFORMATION OF PACKAGE
-        cad = "echo \"VERSION: " + version.name + "\"\n"
-        cad += "echo \"PACKAGE: " + package[:-1] + "\"\n"
-        cad += "echo \n"
-        cad += "echo \n"
-        cad += "PACKAGE=" + ruta[:-1] + "\n"
-        cad += version.pms.info
-        ret = run_in_server(cad)["out"]
+        cmd = 'echo "Version: %s"\n' % version.name
+        cmd += 'echo "Package: %s"\n' % package[:-1]
+        cmd += "echo\n"
+        cmd += "echo\n"
+        cmd += 'PACKAGE=%s\n' % ruta[:-1]
+        cmd += version.pms.info
+
+        ret = run_in_server(cmd)["out"]
 
         return render(
             request,
@@ -125,7 +132,7 @@ def info(request, package):  # package info
             try:
                 # TODO: asegurarse de que esto sirve para identificar
                 # si es un archivo o un directorio
-                if (os.stat(ruta + e).st_mode < 32000):
+                if (os.stat(os.path.join(ruta, e)).st_mode < 32000):
                     vl_fields.append(["folder.png", e + "/"])
                 else:
                     vl_fields.append(["package.png", e + "/"])
@@ -136,8 +143,8 @@ def info(request, package):  # package info
             request,
             'info_folder.html',
             {
-                "title": "Information of Package.",
-                "description": "VERSION: %s" % version.name,
+                "title": _("Information of Package"),
+                "description": _("VERSION: %s") % version.name,
                 "filters": filters,
                 "query": vl_fields,
             }
@@ -147,6 +154,7 @@ def info(request, package):  # package info
         'No package info exists.',
         mimetype="text/plain"
     )  # FIXME
+
 
 @login_required
 def query_message(request):
@@ -193,7 +201,7 @@ def query_message(request):
 
 
 @login_required
-def query_message_server(request, param):
+def query_message_server(request):
     vl_fields = []
 
     q = MessageServer.objects.all().order_by("-date")
@@ -214,7 +222,7 @@ def query_message_server(request, param):
         request,
         'messageserver.html',
         {
-            "title": _("Messages Server"),
+            "title": _("Server Messages"),
             "query": vl_fields,
         }
     )
@@ -252,7 +260,7 @@ def main(request):
     for obj in Checking.objects.filter(active=True):
         msg = ""
         try:
-            exec(obj.code.replace("/r", ""))
+            exec(obj.code.replace("\r", ""))
             result = vars().get('result', 0)
             if result != 0:
                 msg = _(vars().get('msg', obj.name))
@@ -854,11 +862,17 @@ def directupload(request, param):
 
 
 @login_required
-def createrepositories(request, param):
+def createrepositories(request):
     """
     Create the files of Repositories in the server
     """
     version = user_version(request.user)
+    if version is None:
+        return HttpResponse(
+            'No version to find info.',
+            mimetype="text/plain"
+        )  # FIXME
+
     html = create_repositories(version.id)
     return render(
         request,
@@ -1479,10 +1493,17 @@ def query(request, query_id):
                 )
 
     # show parameters form
+    version = user_version(request.user)
+    if version is None:
+        return HttpResponse(
+            'No version to find info.',
+            mimetype="text/plain"
+        )  # FIXME
+
     o_query = Query.objects.get(id=query_id)
     dic_initial = {
         'id_query': query_id,
-        'user_version': user_version(request.user).id
+        'user_version': version.id
     }
     if o_query.parameters == "":
         return query2(request, dic_initial, {})
@@ -1504,7 +1525,8 @@ def query(request, query_id):
             )
         except:
             return HttpResponse(
-                "Error in field 'parameters' of query:\n" + str(sys.exc_info()[1]),
+                "Error in field 'parameters' of query:\n"
+                    + str(sys.exc_info()[1]),
                 mimetype="text/plain"
             )
 
