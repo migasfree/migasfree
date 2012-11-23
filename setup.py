@@ -150,12 +150,16 @@ setup(
         'migasfree.middleware',
         'migasfree.server',
         'migasfree.server.templatetags',
+        'migasfree.server.models',
+        'migasfree.server.fixtures',
     ],
     package_dir  = {
         'migasfree': 'migasfree',
         'migasfree.middleware': 'migasfree/middleware',
         'migasfree.server': 'migasfree/server',
         'migasfree.server.templatetags': 'migasfree/server/templatetags',
+        'migasfree.server.models': 'migasfree/server/models',
+        'migasfree.server.fixtures': 'migasfree/server/fixtures',
     },
     cmdclass     = {
         'install_data': InstallData,
