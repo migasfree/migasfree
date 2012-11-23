@@ -2,6 +2,7 @@
 
 include AUTHORS INSTALL COPYING README MANIFEST.in
 include bin/*
+include server/fixtures/*
 recursive-include apache *
 recursive-include ssl *
 recursive-include migasfree *.py
