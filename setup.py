@@ -151,7 +151,6 @@ setup(
         'migasfree.server',
         'migasfree.server.templatetags',
         'migasfree.server.models',
-        'migasfree.server.fixtures',
     ],
     package_dir  = {
         'migasfree': 'migasfree',
@@ -159,7 +158,6 @@ setup(
         'migasfree.server': 'migasfree/server',
         'migasfree.server.templatetags': 'migasfree/server/templatetags',
         'migasfree.server.models': 'migasfree/server/models',
-        'migasfree.server.fixtures': 'migasfree/server/fixtures',
     },
     cmdclass     = {
         'install_data': InstallData,
@@ -170,6 +168,7 @@ setup(
             'templates/*/*.html',
             'locale/*/LC_MESSAGES/*.mo',
             'dev-tools/*',
+            'server/fixtures/*',
         ],
     },
     data_files   = [
