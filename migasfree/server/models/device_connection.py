@@ -3,8 +3,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from common import link
-from server.models.device_type import DeviceType
+from migasfree.server.models.common import link
+from migasfree.server.models import DeviceType
 
 
 class DeviceConnection(models.Model):

@@ -9,14 +9,9 @@ from django.utils.translation import ugettext_lazy as _
 from migasfree.server.functions import horizon
 from migasfree.settings import MIGASFREE_REPO_DIR
 
-from common import link
-from server.models.version import Version
-from server.models.package import Package
-from server.models.attribute import Attribute
-from server.models.schedule import Schedule
-from server.models.version_manager import VersionManager
-
-from server.models.schedule_delay import ScheduleDelay
+from migasfree.server.models.common import link
+from migasfree.server.models import Version, Package, Attribute, Schedule, \
+    VersionManager, ScheduleDelay
 
 
 class Repository(models.Model):

@@ -3,11 +3,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from common import link
-from server.models.computer_login_update_hwnode import Computer
-from server.models.version import Version
-
-from server.models.autocheck_error import AutoCheckError
+from migasfree.server.models.common import link
+from migasfree.server.models import Computer, Version, AutoCheckError
 
 
 class Error(models.Model):
