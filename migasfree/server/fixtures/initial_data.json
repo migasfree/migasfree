@@ -611,5 +611,129 @@
             "user_permissions": [],
             "password": "sha1$76b35$1f996b5fa3fd2f013955f83d920552b64ff2d95e"
         }
+    },
+    {
+        "model": "server.devicemanufacturer",
+        "pk": 1,
+        "fields": {
+            "name": "EPSON"
+        }
+    },
+    {
+        "model": "server.devicemanufacturer",
+        "pk": 2,
+        "fields": {
+            "name": "FUJITSU"
+        }
+    },
+    {
+        "model": "server.devicemanufacturer",
+        "pk": 3,
+        "fields": {
+            "name": "HP"
+        }
+    },
+    {
+        "model": "server.devicemanufacturer",
+        "pk": 4,
+        "fields": {
+            "name": "CANON"
+        }
+    },
+    {
+        "model": "server.devicemanufacturer",
+        "pk": 5,
+        "fields": {
+            "name": "OTHERS"
+        }
+    },
+    {
+        "model": "server.devicetype",
+        "pk": 1,
+        "fields": {
+            "name": "SCANNER"
+        }
+    },
+    {
+        "model": "server.devicetype",
+        "pk": 2,
+        "fields": {
+            "name": "PRINTER"
+        }
+    },
+    {
+        "model": "server.deviceconnection",
+        "pk": 1,
+        "fields": {
+            "name": "USB",
+            "fields": "",
+            "devicetype": 1,
+            "uri": "",
+            "install": "echo HERE-INSTALL-CODE-SCANNER-USB",
+            "remove": "echo HERE-REMOVE-CODE-SCANNER-USB"
+        }
+    },
+    {
+        "model": "server.deviceconnection",
+        "pk": 2,
+        "fields": {
+            "name": "TCP",
+            "fields": "IP",
+            "devicetype": 1,
+            "uri": "",
+            "install": "echo HERE-INSTALL-CODE-SCANNER-TCP",
+            "remove": "echo HERE-REMOVE-CODE-SCANNER-TCP"
+        }
+    },
+    {
+        "model": "server.deviceconnection",
+        "pk": 3,
+        "fields": {
+            "name": "USB",
+            "fields": "",
+            "devicetype": 2,
+            "uri": "parallel:/dev/usb/lp0",
+            "install": "/usr/sbin/lpadmin -p $_NAME -P $_FILE -v parallel:/dev/usb/lp0 -E",
+            "remove": "/usr/sbin/lpadmin -x $_NAME"
+        }
+    },
+    {
+        "model": "server.deviceconnection",
+        "pk": 4,
+        "fields": {
+            "name": "LPT",
+            "fields": "",
+            "devicetype": 2,
+            "uri": "parallel:/dev/lp0",
+            "install": "/usr/sbin/lpadmin -p $_NAME -P $_FILE -v parallel:/dev/lp0 -E",
+            "remove": "/usr/sbin/lpadmin -x $_NAME"
+        }
+    },
+    {
+        "model": "server.deviceconnection",
+        "pk": 5,
+        "fields": {
+            "name": "TCP",
+            "fields": "IP LOCATION",
+            "devicetype": 2,
+            "uri": "socket://{IP}:9100",
+            "install": "/usr/sbin/lpadmin -p $_NAME -P $_FILE -v socket://$_IP:9100 -E -L \"$_LOCATION\"",
+            "remove": "/usr/sbin/lpadmin -x $_NAME"
+        }
+    },
+    {
+        "model": "server.devicemodel",
+        "pk": 1,
+        "fields": {
+            "name": "EPL-N2550",
+            "manufacturer": 1,
+            "devicetype": 2,
+            "devicefile": null,
+            "preinstall": "# HERE-PREINSTALL-MODEL",
+            "postinstall": "# HERE-POSTINSTALL-MODEL",
+            "preremove": "# HERE-PREREMOVE-MODEL",
+            "postremove": "# HERE-POSTREMOVE-MODEL",
+            "connections": [3, 5]
+        }
     }
 ]
