@@ -7,9 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.settings import MIGASFREE_REPO_DIR
 
-from common import link
-from server.models.version import Version
-from server.models.version_manager import VersionManager
+from migasfree.server.models.common import link
+from migasfree.server.models import Version, VersionManager
 
 
 class Store(models.Model):

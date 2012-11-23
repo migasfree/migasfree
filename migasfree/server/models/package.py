@@ -8,9 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.settings import STATIC_URL, MIGASFREE_REPO_DIR
 
-from server.models.version import Version
-from server.models.version_manager import VersionManager
-from server.models.store import Store
+from migasfree.server.models import Version, VersionManager, Store
 
 
 class Package(models.Model):

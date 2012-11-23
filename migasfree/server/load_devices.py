@@ -4,8 +4,8 @@ import json
 
 from datetime import time
 
-from server.models import Device, DeviceType, DeviceModel, DeviceConnection, \
-    Computer, Version
+from migasfree.server.models import Device, DeviceType, DeviceModel, \
+    DeviceConnection, Computer, Version
 
 
 def load_devices(jsonfile):
@@ -46,7 +46,10 @@ def load_devices(jsonfile):
             o_device.name = device["name"]
             o_device.model = o_devicemodel
             o_device.connection = o_deviceconnection
-            o_device.values = "_IP='"+device["IP"]+"'\n_LOCATION='"+device["location"]+"'\n"
+            o_device.values = "_IP='%s'\n_LOCATION='%s'\n" % (
+                device["IP"],
+                device["location"]
+            )
             o_device.save()
 
         #Save Computers

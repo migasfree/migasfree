@@ -3,11 +3,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from common import link
-from server.models.device_type import DeviceType
-from server.models.device_manufacturer import DeviceManufacturer
-from server.models.device_connection import DeviceConnection
-from server.models.device_file import DeviceFile
+from migasfree.server.models.common import link
+from migasfree.server.models import DeviceType, DeviceManufacturer, \
+    DeviceConnection, DeviceFile
 
 
 class DeviceModel(models.Model):

@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from server.models.computer_login_update_hwnode import HwNode
+from migasfree.server.models import HwNode
 
 
 class HwCapability(models.Model):

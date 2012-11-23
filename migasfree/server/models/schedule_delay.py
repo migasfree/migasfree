@@ -3,9 +3,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from common import link
-from server.models.schedule import Schedule
-from server.models.attribute import Attribute
+from migasfree.server.models.common import link
+from migasfree.server.models import Schedule, Attribute
 
 
 class ScheduleDelay(models.Model):

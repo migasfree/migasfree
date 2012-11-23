@@ -10,8 +10,8 @@ from django.db.models import Q
 from django.http import HttpResponse
 
 from migasfree.settings import MIGASFREE_REPO_DIR
-from server.models import *
-from server.functions import *
+from migasfree.server.models import *
+from migasfree.server.functions import *
 
 
 def new_attribute(o_login, o_property, par):

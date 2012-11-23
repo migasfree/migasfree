@@ -7,8 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.middleware import threadlocals
 
-from common import link
-from server.models.version import Version
+from migasfree.server.models.common import link
+from migasfree.server.models import Version
 
 
 def user_version():

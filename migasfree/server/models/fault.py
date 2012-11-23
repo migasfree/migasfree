@@ -3,10 +3,8 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from common import link
-from server.models.computer_login_update_hwnode import Computer
-from server.models.fault_def import FaultDef
-from server.models.version import Version
+from migasfree.server.models.common import link
+from migasfree.server.models import Computer, FaultDef, Version
 
 
 class Fault(models.Model):

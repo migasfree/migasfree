@@ -5,8 +5,8 @@ import os
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from server.models.pms import Pms
-from common import link, PLATFORM_CHOICES
+from migasfree.server.models import Pms
+from migasfree.server.models.common import link, PLATFORM_CHOICES
 from migasfree.settings import MIGASFREE_REPO_DIR
 
 

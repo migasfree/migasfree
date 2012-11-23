@@ -2,7 +2,8 @@
 
 import json
 
-from server.models import HwNode, HwCapability, HwConfiguration, HwLogicalName
+from migasfree.server.models import HwNode, HwCapability, HwConfiguration, \
+    HwLogicalName
 
 
 def load_hw(computer, node, parent, level):

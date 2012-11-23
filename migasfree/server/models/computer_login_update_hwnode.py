@@ -7,11 +7,8 @@ from django.core.urlresolvers import reverse
 
 from migasfree.settings import STATIC_URL
 
-from common import link
-from server.models.version import Version
-from server.models.device import Device
-from server.models.user import User
-from server.models.attribute import Attribute
+from migasfree.server.models.common import link
+from migasfree.server.models import Version, Device, User, Attribute
 
 
 class Computer(models.Model):

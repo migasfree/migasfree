@@ -7,9 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.settings import MIGASFREE_TMP_DIR
 
-from common import link
-from server.models.device_connection import DeviceConnection
-from server.models.device_model import DeviceModel
+from migasfree.server.models.common import link
+from migasfree.server.models import DeviceConnection, DeviceModel
 
 
 class Device(models.Model):
