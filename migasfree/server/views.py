@@ -53,12 +53,11 @@ __all__ = (
     'hardware', 'hardware_resume',
 
     # from query
-    'query',
+    'query', 'query_selection', 'query_message', 'query_message_server',
 
     # from main
     'change_version', 'createrepositories', 'documentation', 'info', 'login',
-    'main', 'query_selection', 'query_message', 'query_message_server',
-    'system',
+    'main', 'system',
 )
 
 
@@ -217,18 +216,24 @@ def login(request):
             'admin/login.html',
         )
 
-    username = request.POST['username']
-    password = request.POST['password']
+    user = auth.authenticate(
+        username=request.POST.get('username'),
+        password=request.POST.get('password')
+    )
+    if user is None or not user.is_active:
+        return render(
+            request,
+            'admin/login.html',
+            {'error_message': _('Credentials not valid')}
+        )
 
-    user = auth.authenticate(username=username, password=password)
-    if user is not None and user.is_active:
-        # Correct password, and the user is marked "active"
-        auth.login(request, user)
-        # Redirect to a success page.
-        return HttpResponseRedirect(reverse('bootstrap'))
+    # Correct password, and the user is marked "active"
+    auth.login(request, user)
 
-    # Show the login page
-    return HttpResponseRedirect(reverse('login'))
+    # Redirect to a success page
+    return HttpResponseRedirect(
+        request.GET.get('next', reverse('bootstrap'))
+    )
 
 
 @login_required
