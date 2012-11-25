@@ -8,7 +8,9 @@ import os
 import settings
 
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic.simple import redirect_to
+from django.views.generic.simple import redirect_to, direct_to_template
+from django.contrib.auth.decorators import login_required
+from django.utils.translation import ugettext as _
 
 from django.contrib import admin
 admin.autodiscover()
@@ -49,7 +51,6 @@ urlpatterns = patterns(
     ),
 
     url(r'^migasfree/main/$', main, name='dashboard'),
-    url(r'^migasfree/system/$', system, name='system_menu'),
     url(r'^migasfree/query_selection/$', query_selection, name='query_menu'),
     url(r'^migasfree/query/(?P<query_id>\d+)/$', query, name='query'),
     url(r'^migasfree/queryMessage/$', query_message, name='computer_messages'),
@@ -58,14 +59,33 @@ urlpatterns = patterns(
         query_message_server,
         name="server_messages"
     ),
-    url(r'^migasfree/info/(.*)', info, name='package_info'),
+    url(r'^migasfree/info/(?P<package>.*)/$', info, name='package_info'),
     url(
         r'^migasfree/version/$',
         change_version,
         name='change_version'
     ),  # TODO ajax popup
     (r'^migasfree/message/(.*)', message),
-    url(r'^migasfree/documentation/$', documentation, name='documentation'),
+
+    url(
+        r'^migasfree/system/$',
+        login_required(direct_to_template),
+        {
+            'template': 'system.html',
+            'extra_content': {'title': _("System Menu")}
+        },
+        name='system_menu'
+    ),
+
+    url(
+        r'^migasfree/documentation/$',
+        login_required(direct_to_template),
+        {
+            'template': 'documentation.html',
+            'extra_content': {'title', _("Documentation")}
+        },
+        name='documentation'
+    ),
 
     url(r'^accounts/login/$', login, name='login'),
 
@@ -115,7 +135,7 @@ urlpatterns = patterns(
 
     (r'^migasfree/api/(.*)', api),
 
-    (r'^migasfree/softwarebase/(.*)', softwarebase),
+    (r'^migasfree/softwarebase/$', softwarebase),
     (r'^migasfree/update/(.*)', update),
     (r'^migasfree/uploadPackage/(.*)', upload_package),
     (r'^migasfree/uploadSet/(.*)', upload_set),
