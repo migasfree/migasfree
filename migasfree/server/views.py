@@ -62,48 +62,31 @@ __all__ = (
 )
 
 
-def user_version(user):
-    try:
-        userprofile = UserProfile.objects.get(id=user.id)
-        return Version.objects.get(id=userprofile.version_id)
-    except:
-        return None
-
-
-def option_description(field, value):
-    try:
-        return field.split(
-            '<option value="' + value + '">'
-        )[1].split("</option>")[0]
-    except:
-        return value
-
 # ---- main.py ----
 
 
 @login_required
 def info(request, package):  # package info
-    ver = request.GET.get('version')
-    if not ver:
-        version = user_version(request.user)
-    else:
-        version = Version.objects.get(name=ver)
-
-    if version is None:
+    try:
+        if request.GET.get('version'):
+            version = Version.objects.get(name=request.GET.get('version'))
+        else:
+            version = UserProfile.objects.get(id=request.user.id).version
+    except:
         return HttpResponse(
             'No version to find info.',
             mimetype="text/plain"
         )  # FIXME
 
-    ruta = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
+    path = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
 
-    if os.path.isfile(ruta):
+    if os.path.isfile(path):
         # GET INFORMATION OF PACKAGE
         cmd = 'echo "Version: %s"\n' % version.name
         cmd += 'echo "Package: %s"\n' % package[:-1]
         cmd += "echo\n"
         cmd += "echo\n"
-        cmd += 'PACKAGE=%s\n' % ruta[:-1]
+        cmd += 'PACKAGE=%s\n' % path[:-1]
         cmd += version.pms.info
 
         ret = run_in_server(cmd)["out"]
@@ -117,10 +100,7 @@ def info(request, package):  # package info
             }
         )
 
-    if os.path.isdir(ruta):
-        elements = os.listdir(ruta)
-        elements.sort()
-
+    if os.path.isdir(path):
         # NAVIGATION FOR FOLDERS
         vl_fields = []
         filters = []
@@ -128,11 +108,13 @@ def info(request, package):  # package info
         if package > "/":
             vl_fields.append(["folder.png", ".."])
 
+        elements = os.listdir(path)
+        elements.sort()
         for e in elements:
             try:
                 # TODO: asegurarse de que esto sirve para identificar
                 # si es un archivo o un directorio
-                if (os.stat(os.path.join(ruta, e)).st_mode < 32000):
+                if (os.stat(os.path.join(path, e)).st_mode < 32000):
                     vl_fields.append(["folder.png", e + "/"])
                 else:
                     vl_fields.append(["package.png", e + "/"])
@@ -356,9 +338,8 @@ def change_version(request):
 
         return HttpResponseRedirect(reverse('bootstrap'))
     else:
-
         try:
-            oversion = user_version(request.user).id
+            oversion = UserProfile.objects.get(id=request.user.id).version.id
         except:
             oversion = None
 
@@ -866,8 +847,9 @@ def createrepositories(request):
     """
     Create the files of Repositories in the server
     """
-    version = user_version(request.user)
-    if version is None:
+    try:
+        version = UserProfile.objects.get(id=request.user.id).version
+    except:
         return HttpResponse(
             'No version to find info.',
             mimetype="text/plain"
@@ -1406,6 +1388,15 @@ def hardware_resume(request, param):
 # ---- query.py ----
 
 
+def option_description(field, value):
+    try:
+        return field.split(
+            '<option value="' + value + '">'
+        )[1].split("</option>")[0]
+    except:
+        return value
+
+
 def query2(request, parameters, form_param):
     o_query = Query.objects.get(id=parameters["id_query"])
 
@@ -1435,7 +1426,7 @@ def query2(request, parameters, form_param):
             if not (x.name == "id_query" or x.name == "user_version"):
                 filters.append('%s: %s' % (
                     str(x.label),
-                    parameters[x.name + "_display"]
+                    parameters["%s_display" % x.name]
                 ))
 
         return render(
@@ -1467,7 +1458,9 @@ def query(request, query_id):
         o_query = Query.objects.get(id=request.POST.get('id_query', ''))
         dic_initial = {
             'id_query': request.POST.get('id_query', ''),
-            'user_version': user_version(request.user).id
+            'user_version': UserProfile.objects.get(
+                id=request.user.id
+            ).version.id
         }
         if o_query.parameters == "":
             return query2(request, dic_initial, {})
@@ -1493,8 +1486,9 @@ def query(request, query_id):
                 )
 
     # show parameters form
-    version = user_version(request.user)
-    if version is None:
+    try:
+        version = UserProfile.objects.get(id=request.user.id).version
+    except:
         return HttpResponse(
             'No version to find info.',
             mimetype="text/plain"
