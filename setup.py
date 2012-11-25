@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011 Jose Antonio Chavarría
+# Copyright (c) 2011-2012 Jose Antonio Chavarría
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 
 __author__  = 'Jose Antonio Chavarría'
 __file__    = 'setup.py'
-__date__    = '2011-10-21'
+__date__    = '2012-11-25'
 __license__ = 'GPLv3'
 
 # http://guide.python-distribute.org/
@@ -44,7 +44,7 @@ README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 
 #import migasfree
 #VERSION = migasfree.__version__
-VERSION = '2.1' # migasfree no-trans ;)
+VERSION = '3.0'  # migasfree chocolate edition ;)
 
 import platform
 _dist = platform.linux_distribution()
@@ -73,6 +73,7 @@ from distutils.core import setup
 from distutils.command.install_data import install_data
 from distutils.log import warn, info, error, fatal
 from distutils.dep_util import newer
+
 
 class InstallData(install_data):
     def run(self):
@@ -128,41 +129,48 @@ class InstallData(install_data):
             tmp_dir = root.replace('doc/', '', 1)
 
             data_files.append(
-                ('/usr/share/doc/%s' % os.path.join('migasfree-server', tmp_dir),
-                final_files)
+                (
+                    '/usr/share/doc/%s' % os.path.join(
+                    'migasfree-server',
+                    tmp_dir
+                    ),
+                    final_files
+                )
             )
 
         return data_files
 
 setup(
-    name         = 'migasfree-server',
-    version      = VERSION,
-    description  = 'migasfree-server is a Django app to manage systems management',
-    long_description = README,
-    license      = 'GPLv3',
-    author       = 'Alberto Gacías',
-    author_email = 'agacias@ono.com',
-    url          = 'http://www.migasfree.org/',
-    #download_url = 'http://migasfree.org/releases/2.0/migasfree-server-2.0.tar.gz',
-    platforms    = ['Linux'],
-    packages     = [
+    name='migasfree-server',
+    version=VERSION,
+    description='migasfree-server is a Django app to manage systems management',
+    long_description=README,
+    license='GPLv3',
+    author='Alberto Gacías',
+    author_email='agacias@ono.com',
+    url='http://www.migasfree.org/',
+    #download_url='http://migasfree.org/releases/3.0/migasfree-server-3.0.tar.gz',
+    platforms=['Linux'],
+    packages=[
         'migasfree',
         'migasfree.middleware',
         'migasfree.server',
         'migasfree.server.templatetags',
         'migasfree.server.models',
+        'migasfree.server.views',
     ],
-    package_dir  = {
+    package_dir={
         'migasfree': 'migasfree',
         'migasfree.middleware': 'migasfree/middleware',
         'migasfree.server': 'migasfree/server',
         'migasfree.server.templatetags': 'migasfree/server/templatetags',
         'migasfree.server.models': 'migasfree/server/models',
+        'migasfree.server.views': 'migasfree/server/views',
     },
-    cmdclass     = {
+    cmdclass={
         'install_data': InstallData,
     },
-    package_data = {
+    package_data={
         'migasfree': [
             'templates/*.html',
             'templates/*/*.html',
@@ -171,7 +179,7 @@ setup(
             'server/fixtures/*',
         ],
     },
-    data_files   = [
+    data_files=[
         ('/usr/share/migasfree-server', ['apache/django.wsgi']),
         ('/usr/share/doc/migasfree-server', [
             'AUTHORS',
@@ -181,13 +189,12 @@ setup(
             'README',
         ]),
     ],
-    scripts = [
+    scripts=[
         'bin/migasfree-server-from-scratch',
-        'bin/migasfree-server-load-initial-data.py',
         'bin/migasfree-server-import-from-wfe',
     ],
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
-    classifiers  = [
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -199,5 +206,5 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    requires = _requires,
+    requires=_requires,
 )
