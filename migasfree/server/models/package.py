@@ -51,8 +51,8 @@ class Package(models.Model):
         permissions = (("can_save_package", "Can save Package"),)
 
     def link(self):
-        info = "%s/STORES/%s/%s/?version=%s" % (
-            reverse('package_info'),
+        info = "%sSTORES/%s/%s/?version=%s" % (
+            reverse('package_info', args=('', )),
             self.store.name,
             self.name,
             self.version.name
