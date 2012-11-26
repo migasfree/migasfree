@@ -6,7 +6,7 @@ from migasfree.server.views.stats import chart, chart_selection, \
 from migasfree.server.views.queries import query, query_selection, \
     query_message, query_message_server
 from migasfree.server.views.hardware import hardware, hardware_resume
-from migasfree.server.views.devices import device
+from migasfree.server.views.devices import device, load_devices
 from migasfree.server.views.client_api import api, message, \
     createrepositoriesofpackage, softwarebase, directupload, update, \
     upload_package, upload_set, createrepositories
