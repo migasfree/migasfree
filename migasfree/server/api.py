@@ -11,14 +11,12 @@ from django.contrib import auth
 
 from migasfree.settings import MIGASFREE_REPO_DIR
 
-
 from migasfree.server.models import *
 from migasfree.server.logic import *
 from migasfree.server.errmfs import *
 from migasfree.server.functions import *
 from migasfree.server.security import *
-
-from migasfree.server.hardware import load_hw
+from migasfree.server.views import load_hw
 
 
 def upload_computer_hardware(request, computer, data):
@@ -33,7 +31,8 @@ def upload_computer_hardware(request, computer, data):
 
     return ret
 
-def upload_computer_software_base_diff(request, computer, data): #pylint: disable-msg=C0103
+
+def upload_computer_software_base_diff(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         o_computer = Computer.objects.get(name=computer)
@@ -44,6 +43,7 @@ def upload_computer_software_base_diff(request, computer, data): #pylint: disabl
         ret = return_message(cmd, error(GENERIC))
 
     return ret
+
 
 def upload_computer_software_base(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -57,17 +57,19 @@ def upload_computer_software_base(request, computer, data):
 
     return ret
 
-def upload_computer_software_history(request, computer, data): #pylint: disable-msg=C0103
+
+def upload_computer_software_history(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         o_computer = Computer.objects.get(name=computer)
-        o_computer.history_sw = str(o_computer.history_sw)+"\n\n"+data[cmd]
+        o_computer.history_sw = str(o_computer.history_sw) + "\n\n" + data[cmd]
         o_computer.save()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
 
     return ret
+
 
 def get_computer_software(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -78,6 +80,7 @@ def get_computer_software(request, computer, data):
         ret = return_message(cmd, error(GENERIC))
 
     return ret
+
 
 def upload_computer_errors(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -97,6 +100,7 @@ def upload_computer_errors(request, computer, data):
 
     return ret
 
+
 def upload_computer_message(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     m = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -115,7 +119,11 @@ def upload_computer_message(request, computer, data):
 
     try:
         if data[cmd] == "":
-            Update(computer=o_computer, date=m, version=Version.objects.get(name=o_computer.version)).save()
+            Update(
+                computer=o_computer,
+                date=m,
+                version=Version.objects.get(name=o_computer.version)
+            ).save()
         else:
             o_message.text = data[cmd]
             o_message.date = m
@@ -129,6 +137,7 @@ def upload_computer_message(request, computer, data):
 
 def return_message(cmd, data):
     return {'%s.return' % cmd: data}
+
 
 def get_properties(request, computer, data):
     """
@@ -154,12 +163,13 @@ def get_properties(request, computer, data):
                 "code": e.code
             })
 
-        ret = return_message(cmd, {"properties":properties})
+        ret = return_message(cmd, {"properties": properties})
 
     except:
         ret = return_message(cmd, error(GENERIC))
 
     return ret
+
 
 # process the file request.json and return a string json with the faultsdef, repositories, packages and devices
 def upload_computer_info(request, computer, data):
@@ -189,7 +199,7 @@ def upload_computer_info(request, computer, data):
     t = time.strftime("%Y-%m-%d")
     m = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    lst_attributes = [] # List of attributes of computer
+    lst_attributes = []  # List of attributes of computer
 
     ret = ""
 
@@ -235,7 +245,10 @@ def upload_computer_info(request, computer, data):
 
         # Save Login
         save_login(dic_computer["hostname"], dic_computer["user"])
-        o_login = Login.objects.get(computer=Computer.objects.get(name=dic_computer["hostname"]), user=User.objects.get(name=dic_computer["user"]))
+        o_login = Login.objects.get(
+            computer=Computer.objects.get(name=dic_computer["hostname"]),
+            user=User.objects.get(name=dic_computer["user"])
+        )
         o_login.attributes.clear()
 
         # Get version
@@ -253,7 +266,7 @@ def upload_computer_info(request, computer, data):
             try:
                 # we execute the before_insert function
                 if o_property.before_insert != "":
-                    exec(o_property.before_insert.replace("\r",""))
+                    exec(o_property.before_insert.replace("\r", ""))
 
                 # NORMAL
                 if o_property.kind == "N":
@@ -272,8 +285,7 @@ def upload_computer_info(request, computer, data):
                     l = 0
                     for x in lista:
                         lst_attributes.append(new_attribute(o_login, o_property, c[l:]))
-                        l = l+len(x)+1
-
+                        l += len(x) + 1
 
                 # ADDS LEFT
                 if o_property.kind == "L":
@@ -281,12 +293,12 @@ def upload_computer_info(request, computer, data):
                     c = value
                     l = 0
                     for x in lista:
-                        l = l+len(x)+1
+                        l += len(x) + 1
                         lst_attributes.append(new_attribute(o_login, o_property, c[0:l-1]))
 
                 # we execute the after_insert function
                 if o_property.after_insert != "":
-                    exec(o_property.after_insert.replace("\r",""))
+                    exec(o_property.after_insert.replace("\r", ""))
 
             except:
                 pass
@@ -296,7 +308,11 @@ def upload_computer_info(request, computer, data):
         faultsdef = FaultDef.objects.filter(Q(attributes__id__in=lst_attributes))
         faultsdef = faultsdef.filter(Q(active=True))
         for d in faultsdef:
-            lst_faultsdef.append({"language":LANGUAGES_CHOICES[d.language][1], "name":d.name, "code":d.code})
+            lst_faultsdef.append({
+                "language": LANGUAGES_CHOICES[d.language][1],
+                "name": d.name,
+                "code": d.code
+            })
 
         dic_repos = {}
 
@@ -326,10 +342,10 @@ def upload_computer_info(request, computer, data):
 
         for r in repositories:
             lst_repos.append({"name": r.name})
-            for p in r.toremove.replace("\n"," ").split(" "):
+            for p in r.toremove.replace("\n", " ").split(" "):
                 if p != "":
                     lst_pkg_remove.append(p)
-            for p in r.toinstall.replace("\n"," ").split(" "):
+            for p in r.toinstall.replace("\n", " ").split(" "):
                 if p != "":
                     lst_pkg_install.append(p)
 
@@ -337,7 +353,7 @@ def upload_computer_info(request, computer, data):
         lst_dev_remove = []
         lst_dev_install = []
         chk_devices = Mmcheck(o_computer.devices, o_computer.devices_copy)
-        if chk_devices.changed() == True or o_computer.devices_modified == True:
+        if chk_devices.changed() is True or o_computer.devices_modified is True:
 
             #remove the devices
             lst_diff = list_difference(s2l(o_computer.devices_copy), s2l(chk_devices.mms()))
@@ -355,7 +371,6 @@ def upload_computer_info(request, computer, data):
             o_computer.devices_modified = False
             o_computer.save()
 
-
         retdata = {}
         retdata["faultsdef"] = lst_faultsdef
         retdata["repositories"] = lst_repos
@@ -363,12 +378,12 @@ def upload_computer_info(request, computer, data):
         retdata["devices"] = {"remove":lst_dev_remove, "install":lst_dev_install}
         retdata["base"] = (o_version.computerbase == o_computer.name)
 
-
         ret = return_message(cmd, retdata)
     except:
         ret = return_message(cmd, error(GENERIC))
 
     return ret
+
 
 def upload_computer_faults(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -383,7 +398,7 @@ def upload_computer_faults(request, computer, data):
             o_faultdef = FaultDef.objects.get(name=e)
             try:
                 msg = faults.get(e)
-                if msg <> "":
+                if msg != "":
                     # we add the fault
                     o_fault = Fault()
                     o_fault.computer = o_computer
@@ -405,9 +420,7 @@ def upload_computer_faults(request, computer, data):
     return ret
 
 
-
 #DEVICES
-
 def get_device(request, computer, data):
     """
     return DeviceModel data for lpadmin
@@ -454,6 +467,7 @@ def get_assist_devices(request, computer, data):
 
     return ret
 
+
 def remove_device(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     d = data[cmd]
@@ -465,11 +479,15 @@ def remove_device(request, computer, data):
             list_computers = []
             for c in o_device.computer_set.all():
                 list_computers.append(c.name)
-            return return_message(cmd, {"NUMBER":o_device.name, "COMPUTERS":list_computers})
+            return return_message(cmd, {
+                "NUMBER": o_device.name,
+                "COMPUTERS": list_computers
+            })
         except:
             return return_message(cmd, error(GENERIC))
-    except: #if not exist device
+    except:  #if not exist device
         return return_message(cmd, error(DEVICENOTFOUND))
+
 
 def install_device(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -477,7 +495,7 @@ def install_device(request, computer, data):
 
     try:
         o_device = Device.objects.get(name=d["NUMBER"])
-    except: #if not exist device
+    except:  #if not exist device
         try:
             o_device = Device()
             o_device.name = d["NUMBER"]
@@ -505,7 +523,8 @@ def install_device(request, computer, data):
     for c in o_device.computer_set.all():
         list_computers.append(c.name)
 
-    return return_message(cmd, {"NUMBER":o_device.name, "COMPUTERS":list_computers})
+    return return_message(cmd, {"NUMBER": o_device.name, "COMPUTERS": list_computers})
+
 
 def register_computer(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -516,7 +535,10 @@ def register_computer(request, computer, data):
         o_version = Version.objects.get(name=data['version'])
         # if not autoregister, check that the user can save computer
         if not o_version.autoregister:
-            user = auth.authenticate(username=data['username'], password=data['password'])
+            user = auth.authenticate(
+                username=data['username'],
+                password=data['password']
+            )
             if not user or not user.has_perm("server.can_save_computer"):
                 return return_message(cmd, error(CANNOTREGISTER))
 
@@ -537,6 +559,7 @@ def register_computer(request, computer, data):
 
     return ret
 
+
 def get_key_packager(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     user = auth.authenticate(
@@ -549,6 +572,7 @@ def get_key_packager(request, computer, data):
         ret = return_message(cmd, get_keys_to_packager())
 
     return ret
+
 
 def upload_server_package(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -590,6 +614,7 @@ def upload_server_package(request, computer, data):
         return return_message(cmd, error(GENERIC))
 
     return return_message(cmd, ok())
+
 
 def upload_server_set(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -634,8 +659,8 @@ def upload_server_set(request, computer, data):
         save_request_file(f, filename)
 
         #if exists path move it
-        if ("path" in data) and (data["path"] <> "") :
-            dst=os.path.join(
+        if ("path" in data) and (data["path"] != ""):
+            dst = os.path.join(
                 MIGASFREE_REPO_DIR,
                 data['version'],
                 "STORES",
@@ -649,13 +674,13 @@ def upload_server_set(request, computer, data):
                 pass
             os.rename(filename, dst)
 
-
     except:
         return return_message(cmd, error(GENERIC))
 
     return return_message(cmd, ok())
 
-def create_repositories_of_packageset(request, computer, data): #pylint: disable-msg=C0103
+
+def create_repositories_of_packageset(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     try:
@@ -665,6 +690,7 @@ def create_repositories_of_packageset(request, computer, data): #pylint: disable
         ret = return_message(cmd, error(GENERIC))
 
     return ret
+
 
 def save_request_file(requestfile, filename):
     """
