@@ -59,7 +59,10 @@ urlpatterns = patterns(
         query_message_server,
         name="server_messages"
     ),
-    url(r'^migasfree/info/(?P<package>.*)/$', info, name='package_info'),
+
+    #url(r'^migasfree/info/(?P<package>.*)/$', info, name='package_info'),
+    url(r'^migasfree/info/(.*)', info, name='package_info'),
+
     url(
         r'^migasfree/version/$',
         change_version,
