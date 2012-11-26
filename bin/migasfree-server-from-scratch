@@ -237,21 +237,14 @@ fi
 
 set_permissions
 
-# load initial data in database
-python $_PWD/migasfree-server-load-initial-data.py
+test_app
 if [ $? -ne 0 ]
 then
     exit 7
 fi
 
-test_app
-if [ $? -ne 0 ]
-then
-    exit 8
-fi
-
 echo
-echo "migasfree server operative. Test it at http://localhost/migasfree/main/"
+echo "migasfree server operative. Test it at http://localhost/"
 echo
 
 exit 0
