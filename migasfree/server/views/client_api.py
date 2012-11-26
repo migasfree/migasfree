@@ -20,7 +20,7 @@ from migasfree.server.models import *
 
 from migasfree.server.logic import *
 from migasfree.server.api import *
-from migasfree.server.load_devices import load_devices
+from migasfree.server.views import load_devices
 
 
 def softwarebase(request):
