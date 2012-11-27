@@ -85,7 +85,7 @@ urlpatterns = patterns(
         login_required(direct_to_template),
         {
             'template': 'documentation.html',
-            'extra_content': {'title', _("Documentation")}
+            'extra_content': {'title': _("Documentation")}
         },
         name='documentation'
     ),
