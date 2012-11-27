@@ -68,7 +68,6 @@ urlpatterns = patterns(
         change_version,
         name='change_version'
     ),  # TODO ajax popup
-    (r'^migasfree/message/(.*)', message),
 
     url(
         r'^migasfree/system/$',
@@ -137,18 +136,6 @@ urlpatterns = patterns(
     # (r'^migasfree/get_device/(.*)', get_device),
 
     (r'^migasfree/api/(.*)', api),
-
-    (r'^migasfree/softwarebase/$', softwarebase),
-    (r'^migasfree/update/(.*)', update),
-    (r'^migasfree/uploadPackage/(.*)', upload_package),
-    (r'^migasfree/uploadSet/(.*)', upload_set),
-    (r'^migasfree/createrepositoriesofpackage/(.*)', createrepositoriesofpackage),
-    url(
-        r'^migasfree/createrepositories/$',
-        createrepositories,
-        name="create_repos"
-    ),
-    (r'^migasfree/directupload/(.*)', directupload),
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': os.path.join(os.path.dirname(__file__), 'media')
