@@ -12,3 +12,4 @@ from migasfree.server.views.client_api import api
 from migasfree.server.views.packages import change_version, info
 from migasfree.server.views.dashboard import main
 from migasfree.server.views.login import login
+from migasfree.server.views.repository import createrepositories

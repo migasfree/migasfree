@@ -91,6 +91,11 @@ urlpatterns = patterns(
 
     url(r'^accounts/login/$', login, name='login'),
 
+    url(r'^migasfree/createrepositories',
+        createrepositories,
+        name='createrepositories'
+    ),
+
     (r'^migasfree/device/(.*)', device),
 
     url(r'^migasfree/chart_selection/$', chart_selection, name='chart_menu'),
