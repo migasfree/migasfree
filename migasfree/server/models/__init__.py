@@ -2,6 +2,8 @@
 
 # import order is very important!!!
 
+from migasfree.server.models.common import LANGUAGES_CHOICES, PLATFORM_CHOICES
+
 from migasfree.server.models.user import User
 from migasfree.server.models.query import Query
 from migasfree.server.models.checking import Checking

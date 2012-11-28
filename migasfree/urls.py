@@ -135,7 +135,7 @@ urlpatterns = patterns(
     # migasfree.api.urls
     # (r'^migasfree/get_device/(.*)', get_device),
 
-    (r'^migasfree/api/(.*)', api),
+    (r'^migasfree/api/$', api),
 
     (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
         'document_root': os.path.join(os.path.dirname(__file__), 'media')
