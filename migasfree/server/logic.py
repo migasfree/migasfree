@@ -471,7 +471,7 @@ def create_repositories(version_id):
             MIGASFREE_REPO_DIR,
             d.version.name,
             'TMP',
-            o.pms.slug
+            o_pms.slug
         )
         bash += "/bin/mkdir -p %s\n" % os.path.join(path_tmp, d.name, 'PKGS')
         txt += "\n    REPOSITORY: %s\n" % d.name
