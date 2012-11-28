@@ -29,7 +29,7 @@ def api(request):
         return HttpResponse(
             return_message(
                 command,
-                str(errmfs.error(errmfs.METHODGETNOTALLOW))
+                errmfs.error(errmfs.METHODGETNOTALLOW)
             ),
             mimetype='text/plain'
         )
@@ -93,7 +93,7 @@ def api(request):
                     oerr.date = datetime.now()
                     oerr.save()
             else:
-                ret = command(request, computer, data)
+                ret = eval(command)(request, computer, data)
 
             os.remove(filename)
         else:  # Computer not exists
@@ -119,7 +119,7 @@ def api(request):
             data = json.load(f)[command]
 
         try:
-            ret = command(request, computer, data)
+            ret = eval(command)(request, computer, data)
         except:
             ret = return_message(command, errmfs.error(errmfs.GENERIC))
 
@@ -136,7 +136,7 @@ def api(request):
         if 'errmfs' in data:
             ret = data
         else:
-            ret = command(request, computer, data[command])
+            ret = eval(command)(request, computer, data[command])
 
         os.remove(filename)
 
