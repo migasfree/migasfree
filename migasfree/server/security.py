@@ -10,109 +10,115 @@ import migasfree.server.errmfs as errmfs
 
 from migasfree.settings import MIGASFREE_APP_DIR
 
-_PATH_KEYS = os.path.join(MIGASFREE_APP_DIR, 'keys')
+KEYS_PATH = os.path.join(MIGASFREE_APP_DIR, 'keys')  # TODO to settings.py
+
 
 def sign(filename):
     os.system("openssl dgst -sha1 -sign %s -out %s %s" % (
-        os.path.join(_PATH_KEYS, 'migasfree-server.pri'),
+        os.path.join(KEYS_PATH, 'migasfree-server.pri'),
         "%s.sign" % filename,
         filename
     ))
 
+
 def verify(filename, key):
-    if os.system("openssl dgst -sha1 -verify %s -signature %s %s 1>/dev/null" % (
-        os.path.join(_PATH_KEYS, '%s.pub' % key),
-        "%s.sign" % filename,
-        filename
-    )):
+    if os.system("openssl dgst -sha1 -verify %s -signature %s %s 1>/dev/null" %
+        (
+            os.path.join(KEYS_PATH, '%s.pub' % key),
+            "%s.sign" % filename,
+            filename
+        )
+    ):
         return False
     else:
         return True
+
 
 def gen_keys(version):
     """
     Generate a pair of keys RSA
     """
     # Private Key
-    os.system("openssl genrsa -out %s 2048" % os.path.join(_PATH_KEYS, "%s.pri" % version))
+    os.system("openssl genrsa -out %s 2048"
+        % os.path.join(KEYS_PATH, "%s.pri" % version))
 
     # Public Key
     os.system("openssl rsa -in %s -pubout > %s" % (
-        os.path.join(_PATH_KEYS, "%s.pri" % version),
-        os.path.join(_PATH_KEYS, "%s.pub" % version)
+        os.path.join(KEYS_PATH, "%s.pri" % version),
+        os.path.join(KEYS_PATH, "%s.pub" % version)
     ))
 
     # read only keys
-    os.system("chmod 400 %s" % os.path.join(_PATH_KEYS, "%s.*" % version))
+    os.chmod(os.path.join(KEYS_PATH, "%s.*" % version), 0400)
+
 
 def get_keys_to_client(version):
     """
     Get the keys for register computer
     """
-    if not os.path.exists(os.path.join(_PATH_KEYS, "%s.pri" % version)):
+    if not os.path.exists(os.path.join(KEYS_PATH, "%s.pri" % version)):
         gen_keys(version)
 
-    server = readfile(os.path.join(_PATH_KEYS, "migasfree-server.pub"))
-    client = readfile(os.path.join(_PATH_KEYS, "%s.pri" % version))
+    server = readfile(os.path.join(KEYS_PATH, "migasfree-server.pub"))
+    client = readfile(os.path.join(KEYS_PATH, "%s.pri" % version))
 
     return {
         "migasfree-server.pub": server,
         "migasfree-client.pri": client
     }
 
-# Get the keys for register packager
+
 def get_keys_to_packager():
-    server = readfile(os.path.join(_PATH_KEYS, "migasfree-server.pub"))
-    packager = readfile(os.path.join(_PATH_KEYS, "migasfree-packager.pri"))
+    # Get the keys for register packager
+    server = readfile(os.path.join(KEYS_PATH, "migasfree-server.pub"))
+    packager = readfile(os.path.join(KEYS_PATH, "migasfree-packager.pri"))
 
     return {
         "migasfree-server.pub": server,
         "migasfree-packager.pri": packager
     }
 
+
 def create_keys_server():
-    if not os.path.lexists(_PATH_KEYS):
-        os.mkdir(_PATH_KEYS)
+    if not os.path.lexists(KEYS_PATH):
+        os.mkdir(KEYS_PATH)
         gen_keys("migasfree-server")
         gen_keys("migasfree-packager")
 
+
 def wrap(filename, data):
     """
-    Dado el data crea el fichero envoltorio con firma
+    Creates a signed wrapper file around data
     """
-    fp = open(filename, 'wb')
-    json.dump(data, fp)
-    fp.close()
+    with open(filename, 'wb') as fp:
+        json.dump(data, fp)
 
     sign(filename)
 
-    fp = open(filename, 'ab')
-    fpsign = open("%s.sign" % filename,"rb")
-    fp.write(fpsign.read())
-    fpsign.close()
-    fp.close()
+    with open(filename, 'ab') as fp:
+        with open("%s.sign" % filename, "rb") as fpsign:
+            fp.write(fpsign.read())
 
     os.remove("%s.sign" % filename)
+
 
 def unwrap(filename, key):
     """
     Dado el fichero envoltorio con firma devuelve el data
     """
-    fp = open(filename, 'rb')
-    content = fp.read()
-    fp.close()
+    with open(filename, 'rb') as fp:
+        content = fp.read()
 
     n = len(content)
 
-    writefile("%s.sign" % filename, content[n-256:n])
-    writefile(filename, content[0:n-256])
+    writefile("%s.sign" % filename, content[n - 256:n])
+    writefile(filename, content[0:n - 256])
 
     if verify(filename, key):
         with open(filename, "rb") as f:
             data = json.load(f)
-        f.close()
     else:
-        data = errmfs.error(errmfs.SIGNNOTOK) # Sign not OK
+        data = errmfs.error(errmfs.SIGNNOTOK)  # Sign not OK
 
     os.remove("%s.sign" % filename)
 
