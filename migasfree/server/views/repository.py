@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.decorators import login_required
-from migasfree.server.models import UserProfile
-from migasfree.server.logic import create_repositories
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
+from django.http import HttpResponse
+
+from migasfree.server.models import UserProfile
+from migasfree.server.logic import create_repositories
+
 
 @login_required
 def createrepositories(request):
