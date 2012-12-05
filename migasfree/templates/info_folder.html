@@ -1,5 +1,9 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
+
+{% block menu %}
+    {% include 'includes/software_menu.html' %}
+{% endblock menu %}
 
 {% block content %}
     {% if filters %}
