@@ -1,23 +1,29 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
 {# TODO Ajax to messages #}
 {% block extrahead %}<meta http-equiv="refresh" content="5" />{% endblock %}
 
+{% block menu %}
+    {% include 'includes/mining_menu.html' %}
+{% endblock menu %}
+
 {% block content %}
     {% if query %}
         <table id="query">
-            <tr>
-                <th>{% trans 'Date' %}</th>
-                <th>{% trans 'Computer' %}</th>
-                <th>{% trans 'Version' %}</th>
-                <th>{% trans 'IP' %}</th>
-                <th>{% trans 'Login' %}</th>
-                <th>{% trans 'Message' %}</th>
-            </tr>
-
+            <thead>
+                <tr>
+                    <th>{% trans 'Date' %}</th>
+                    <th>{% trans 'Computer' %}</th>
+                    <th>{% trans 'Version' %}</th>
+                    <th>{% trans 'IP' %}</th>
+                    <th>{% trans 'Login' %}</th>
+                    <th>{% trans 'Message' %}</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for item in query %}
-                <tr class="{% cycle '' 'alt' %}">
+                <tr class="{% cycle '' 'even' %}">
                     <td>{{ item.8 }}</td>
 
                     <td><img src="{{ STATIC_URL }}icons/{{ item.0 }}" width="36" /> <a href="{% url admin:server_computer_change item.2 %}">{{ item.3 }}</a></td>
@@ -29,10 +35,11 @@
                     <td><a href="{% url admin:server_login_change item.4 %}">{{ item.5 }}</a></td>
 
                     <td>{{ item.9 }}</td>
-            </tr>
+                </tr>
             {% endfor %}
+            </tbody>
         </table>
     {% else %}
         <p class="info">{% trans 'No messages to show' %}</p>
     {% endif %}
-{% endblock %}
+{% endblock content %}
