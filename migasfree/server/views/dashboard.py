@@ -5,7 +5,6 @@ import sys
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Q
 
@@ -19,7 +18,6 @@ def main(request):
     """
 
     status = []
-
     for obj in Checking.objects.filter(active=True):
         msg = ""
         try:
@@ -38,19 +36,21 @@ def main(request):
                     }
                 )
         except:
-            return HttpResponse(
-                "Error in field 'code' of Checking: %s\n%s" % (
-                    msg, str(sys.exc_info())
-                ),
-                mimetype="text/plain"
+            return render(
+                request,
+                'error.html',
+                {
+                    'description': "Error in field 'code' of Checking:",
+                    'contentpage': "%s\n%s" % (msg, str(sys.exc_info()))
+                }
             )
 
     if len(status) == 0:
         status.append(
             {
-                'icon': "checking.png",
-                'url': "#",
-                'result': _("All O.K.")
+                'icon': 'checking.png',
+                'url': '#',
+                'result': _('All O.K.')
             }
         )
 
@@ -58,7 +58,7 @@ def main(request):
         request,
         'main.html',
         {
-            "title": _("Dashboard"),
-            "status": status,
+            'title': _('Status'),
+            'status': status,
         }
     )
