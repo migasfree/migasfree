@@ -51,7 +51,6 @@ urlpatterns = patterns(
     ),
 
     url(r'^migasfree/main/$', main, name='dashboard'),
-    url(r'^migasfree/query_selection/$', query_selection, name='query_menu'),
     url(r'^migasfree/query/(?P<query_id>\d+)/$', query, name='query'),
     url(r'^migasfree/queryMessage/$', query_message, name='computer_messages'),
     url(
@@ -60,23 +59,12 @@ urlpatterns = patterns(
         name="server_messages"
     ),
 
-    #url(r'^migasfree/info/(?P<package>.*)/$', info, name='package_info'),
     url(r'^migasfree/info/(.*)', info, name='package_info'),
 
     url(
         r'^migasfree/version/$',
         change_version,
         name='change_version'
-    ),  # TODO ajax popup
-
-    url(
-        r'^migasfree/system/$',
-        login_required(direct_to_template),
-        {
-            'template': 'system.html',
-            'extra_content': {'title': _("System Menu")}
-        },
-        name='system_menu'
     ),
 
     url(
@@ -91,14 +79,13 @@ urlpatterns = patterns(
 
     url(r'^accounts/login/$', login, name='login'),
 
-    url(r'^migasfree/createrepositories',
+    url(r'^migasfree/createrepositories/$',
         createrepositories,
         name='createrepositories'
     ),
 
     (r'^migasfree/device/(.*)', device),
 
-    url(r'^migasfree/chart_selection/$', chart_selection, name='chart_menu'),
     url(r'^migasfree/chart/(?P<chart_type>.*)/$', chart, name='chart_type'),
     url(
         r'^migasfree/hourly_updated/$',
