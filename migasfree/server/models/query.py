@@ -49,3 +49,11 @@ class Query(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
+
+def get_query_names():
+    result = []
+    for item in Query.objects.all().order_by("-id"):
+        result.append([item.id, item.name])
+
+    return result
