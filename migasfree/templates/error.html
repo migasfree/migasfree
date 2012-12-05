@@ -1,13 +1,17 @@
-{% extends "admin/base.html" %}
+{% extends "base_full.html" %}
 {% load i18n %}
-
-{% block nav-global %}{% endblock %}
 
 {% block content %}
     <h2>{{ description }}</h2>
 
     {% for row in traceback %}
-        <strong>File:{{ row.filename }}<br />Name:{{ row.name }}<br /> Line:{{ row.line }}</strong>
+        <p>
+            <strong>
+                {% trans 'File' %}: {{ row.filename }}
+                <br />{% trans 'Name' %}: {{ row.name }}
+                <br /> {% trans 'Line' %}: {{ row.line }}
+            </strong>
+        </p>
         {% for variable in row.locals %}
             <pre>{{ variable.key }}={{ variable.value }}</pre>
         {% endfor %}
@@ -16,4 +20,4 @@
     <pre>
     {{ contentpage }}
     </pre>
-{% endblock %}
+{% endblock content %}
