@@ -5,14 +5,11 @@ import os
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django import forms
 
 from migasfree.settings import MIGASFREE_REPO_DIR
 from migasfree.server.models import *
-from migasfree.server.forms import ParametersForm
 
 
 @login_required
@@ -23,10 +20,14 @@ def info(request, package):  # package info
         else:
             version = UserProfile.objects.get(id=request.user.id).version
     except:
-        return HttpResponse(
-            'No version to find info.',
-            mimetype="text/plain"
-        )  # FIXME
+        return render(
+            request,
+            'error.html',
+            {
+                'description': _('Error'),
+                'contentpage': _('No version to find info')
+            }
+        )
 
     path = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
 
@@ -53,8 +54,6 @@ def info(request, package):  # package info
     if os.path.isdir(path):
         # NAVIGATION FOR FOLDERS
         vl_fields = []
-        filters = []
-        filters.append(package)
         if package > "/":
             vl_fields.append(["folder.png", ".."])
 
@@ -77,56 +76,30 @@ def info(request, package):  # package info
             {
                 "title": _("Information of Package"),
                 "description": _("VERSION: %s") % version.name,
-                "filters": filters,
+                "filters": (package, ),
                 "query": vl_fields,
             }
         )
 
-    return HttpResponse(
-        'No package info exists.',
-        mimetype="text/plain"
-    )  # FIXME
+    return render(
+        request,
+        'error.html',
+        {
+            'description': _('Error'),
+            'contentpage': _('No package info exists')
+        }
+    )
 
 
 @login_required()
 def change_version(request):
-    def form_params_version():
-        class MyForm(ParametersForm):
-            version = forms.ModelChoiceField(Version.objects.all())
-
-        return MyForm
+    redirect_to = request.META.get('HTTP_REFERER', reverse('bootstrap'))
 
     if request.method == 'POST':
-        parameters = {}
-        for p in request.POST:
-            parameters[p] = request.POST.get(p)
+        new_version = request.POST.get('version')
 
-        o_userprofile = UserProfile.objects.get(id=request.user.id)
-        o_userprofile.version = Version.objects.get(id=parameters["version"])
-        o_userprofile.save()
+        user_profile = UserProfile.objects.get(id=request.user.id)
+        user_profile.version = Version.objects.get(id=new_version)
+        user_profile.save()
 
-        return HttpResponseRedirect(reverse('bootstrap'))
-    else:
-        try:
-            oversion = UserProfile.objects.get(id=request.user.id).version.id
-        except:
-            oversion = None
-
-        dic_initial = {
-            'user_version': oversion,
-            'version': oversion
-        }
-
-        g_form_param = form_params_version()(initial=dic_initial)
-        request.session['LastUrl'] = request.META.get(
-            'HTTP_REFERER', reverse('bootstrap')
-        )
-
-        return render(
-            request,
-            'parameters.html',
-            {
-                'form': g_form_param,
-                'title': _("Change version for %s") % request.user.username,
-            }
-        )
+    return HttpResponseRedirect(redirect_to)
