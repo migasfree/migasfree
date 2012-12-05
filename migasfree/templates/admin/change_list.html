@@ -1,11 +1,12 @@
-{% extends "admin/base_site.html" %}
+{% extends "base.html" %}
 {% load adminmedia admin_list i18n %}
+{% load server_tags %}
 
 {% block extrastyle %}
   {{ block.super }}
-  <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
+  <!--link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" /-->
   {% if cl.formset %}
-    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+    <!--link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" /-->
   {% endif %}
   {% if cl.formset or action_form %}
     {% url admin:jsi18n as jsi18nurl %}
@@ -36,61 +37,88 @@
 {% block bodyclass %}change-list{% endblock %}
 
 {% block documentation %}
-<a href="/migasfree/doc/models/{{ cl.opts.app_label }}.{{ cl.opts.object_name.lower }}"><img src="{{ STATIC_URL }}icons/documentation-model.png" height="24px" /></a>
-{% endblock %}
+    <p><a href="{% url django-admindocs-models-index %}{{ cl.opts.app_label }}.{{ cl.opts.object_name.lower }}">{% trans 'Data Model Documentation' %}</a></p>
+{% endblock documentation %}
 
 {% block coltype %}flex{% endblock %}
 
+{% block menu %}
+    {% if cl.opts.module_name = 'computer' or cl.opts.module_name = 'user' or cl.opts.module_name = 'login' or cl.opts.module_name = 'error' or cl.opts.module_name = 'fault' or cl.opts.module_name = 'device' or cl.opts.module_name = 'attribute' %}
+        {% include 'includes/mining_menu.html' %}
+    {% endif %}
+
+    {% if cl.opts.module_name = 'property' or cl.opts.module_name = 'version' or cl.opts.module_name = 'pms' or cl.opts.module_name = 'schedule' or cl.opts.module_name = 'query' or cl.opts.module_name = 'userprofile' or cl.opts.module_name = 'group' or cl.opts.module_name = 'checking' or cl.opts.module_name = 'faultdef' or cl.opts.module_name = 'autocheckerror' or cl.opts.module_name = 'devicefile' or cl.opts.module_name = 'devicemodel' or cl.opts.module_name = 'devicemanufacturer' or cl.opts.module_name = 'deviceconnection' or cl.opts.module_name = 'devicetype' %}
+        {% include 'includes/config_menu.html' %}
+    {% endif %}
+
+    {% if cl.opts.module_name = 'repository' or cl.opts.module_name = 'package' or cl.opts.module_name = 'store' %}
+        {% include 'includes/software_menu.html' %}
+    {% endif %}
+{% endblock menu %}
+
 {% block content_title %}
     {% if title %}
-        <h1><img src="{{ STATIC_URL }}icons/{{ cl.opts.module_name }}.png" width="32" /> {% trans 'List of' %}  {{ cl.opts.verbose_name_plural|capfirst }}</h1>
+        <h2>
+            <img src="{{ STATIC_URL }}icons/{{ cl.opts.module_name }}.png" width="32" /> {% trans 'List of' %}  {{ cl.opts.verbose_name_plural|capfirst }}
+            {% if cl.opts.module_name = 'repository' or cl.opts.module_name = 'package' or cl.opts.module_name = 'store' %}
+                [{{ current_version }}]
+            {% endif %}
+        </h2>
     {% endif %}
 {% endblock %}
 
 {% block content %}
-  <div id="content-main">
     {% block object-tools %}
-      {% if has_add_permission %}
-        <ul class="object-tools">
-          <li>
-            <a href="add/{% if is_popup %}?_popup=1{% endif %}" class="addlink">
-              {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
-            </a>
-          </li>
-        </ul>
-      {% endif %}
-    {% endblock %}
+        {% if has_add_permission %}
+            <ul class="object-tools">
+                <li>
+                    <a href="add/{% if is_popup %}?_popup=1{% endif %}" class="addlink">
+                        {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+    {% endblock object-tools %}
+
     {% if cl.formset.errors %}
         <p class="errornote">
-        {% blocktrans count cl.formset.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+            {% blocktrans count cl.formset.errors|length as counter %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
         </p>
         {{ cl.formset.non_form_errors }}
     {% endif %}
+
     <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
-      {% block search %}{% search_form cl %}{% endblock %}
-      {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
+        {% block search %}{% search_form cl %}{% endblock %}
+        {% block date_hierarchy %}{% date_hierarchy cl %}{% endblock %}
 
-      {% block filters %}
-        {% if cl.has_filters %}
-          <div id="changelist-filter">
-            <h2>{% trans 'Filter' %}</h2>
-            {% for spec in cl.filter_specs %}{% admin_list_filter cl spec %}{% endfor %}
-          </div>
-        {% endif %}
-      {% endblock %}
+        {% block filters %}
+            {% if cl.has_filters %}
+                <div id="changelist-filter">
+                    <h2>{% trans 'Filter' %}</h2>
+                    {% for spec in cl.filter_specs %}
+                        {% admin_list_filter cl spec %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endblock %}
 
-      <form id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>{% csrf_token %}
-      {% if cl.formset %}
-        {{ cl.formset.management_form }}
-      {% endif %}
+        <form id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %}>
+            {% csrf_token %}
+            {% if cl.formset %}
+                {{ cl.formset.management_form }}
+            {% endif %}
 
-      {% block result_list %}
-          {% if action_form and actions_on_top and cl.full_result_count %}{% admin_actions %}{% endif %}
-          {% result_list cl %}
-          {% if action_form and actions_on_bottom and cl.full_result_count %}{% admin_actions %}{% endif %}
-      {% endblock %}
-      {% block pagination %}{% pagination cl %}{% endblock %}
-      </form>
+            {% block result_list %}
+                {% if action_form and actions_on_top and cl.full_result_count %}
+                    {% admin_actions %}
+                {% endif %}
+                {% result_list cl %}
+                {% if action_form and actions_on_bottom and cl.full_result_count %}
+                    {% admin_actions %}
+                {% endif %}
+            {% endblock result_list %}
+
+            {% block pagination %}{% pagination cl %}{% endblock pagination %}
+        </form>
     </div>
-  </div>
-{% endblock %}
+{% endblock content %}
