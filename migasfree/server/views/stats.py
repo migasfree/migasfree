@@ -19,26 +19,14 @@ from migasfree.server.models import *
 
 
 @login_required
-def chart_selection(request):
-    """
-    Charts Menu of migasfree
-    """
-
-    return render(
-        request,
-        'chart_selection.html',
-        {
-            "title": _("Charts Menu"),
-        }
-    )
-
-
-@login_required
 def chart(request, chart_type):
     return render(
         request,
         'chart.html',
-        {'ofc': reverse('chart_%s' % chart_type)}
+        {
+            'title': chart_type,  # FIXME improve title
+            'ofc': reverse('chart_%s' % chart_type)
+        }
     )
 
 
@@ -201,15 +189,13 @@ def delay_schedule(request):
     o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
 
     o_chart.elements = []
-    o_schedules = Schedule.objects.all()
-    # lines = []
     colours = [
         "#fa6900", "#417690", "#C4D318",
         "#FF00FF", "#00FFFF", "#50284A", "#7D7B6A",
     ]
     c = 0
     m = 0
-    for sched in o_schedules:
+    for sched in Schedule.objects.all():
         lst_attributes = []
         line = Chart()
         line.type = "line"
@@ -238,7 +224,6 @@ def delay_schedule(request):
             value = Login.objects.filter(
                 Q(attributes__id__in=lst_attributes)
             ).values('computer_id').annotate(lastdate=Max('date')).count()
-            print lst_attributes  # DEBUG
             d = delay.delay
         line.values.append(value)
         line.text = sched.name
@@ -264,7 +249,6 @@ def version_computer(request):
     o_chart.title.text = _("Computers / Version")
     o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
 
-    qry = Computer.objects.values("version__name").annotate(count=Count("id"))
     element1 = Chart()
     element1.type = "pie"
     element1.alpha = 0.6
@@ -276,7 +260,7 @@ def version_computer(request):
     element1.gradient_fill = True
     element1.radius = 100
     element1.values = []
-    for e in qry:
+    for e in Computer.objects.values("version__name").annotate(count=Count("id")):
         """
         element1.values = [
             2000, 3000, 4000, {
