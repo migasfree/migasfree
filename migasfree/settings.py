@@ -5,6 +5,12 @@ Django settings for migasfree project
 """
 
 import os
+import django.conf.global_settings as DEFAULT_SETTINGS
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    "server.context_processors.query_names",
+    "server.context_processors.version_names",
+)
 
 MIGASFREE_DB_DIR = '/var/tmp'
 MIGASFREE_DB_NAME = 'migasfree'
@@ -73,6 +79,8 @@ STATIC_ROOT = MIGASFREE_REPO_DIR
 STATIC_URL = '/repo/'
 
 FILE_UPLOAD_TEMP_DIR = MIGASFREE_TMP_DIR
+
+LOGIN_REDIRECT_URL = '/'
 
 #LOCALE_PATHS = (
 #    '/usr/share/locale'
