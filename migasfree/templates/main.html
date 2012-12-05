@@ -1,56 +1,33 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
-{% load server_tags %}
 
-{# TODO Ajax to issues-dashboard #}
-{% block extrahead %}<meta http-equiv="refresh" content="10" />{% endblock %}
+{% block extrahead %}
+    {# TODO Ajax to issues-dashboard #}
+    <meta http-equiv="refresh" content="10" />
+    <script type="text/javascript">
+$(document).ready(function() {
+    $("section nav").accordion({collapsible: true, active: 0, heightStyle: "content"});
+});
+    </script>
+{% endblock extrahead %}
+
+{% block menu %}
+    {% include 'includes/mining_menu.html' %}
+{% endblock menu %}
 
 {% block content %}
-    <div id="client-data">
-        <h3>{% trans 'Clients Data' %}</h3>
-
-        <ul>
-            <li><a href="{% url admin:server_computer_changelist %}"><img src="{{ STATIC_URL }}icons/computer.png" width="24" /> {% trans 'Computers' %}</a></li>
-
-            <li><a href="{% url admin:server_device_changelist %}"><img src="{{ STATIC_URL }}icons/device.png" width="24" /> {% trans 'Devices' %}</a></li>
-
-            <li><a href="{% url admin:server_user_changelist %}"><img src="{{ STATIC_URL }}icons/user.png" width="24" /> {% trans 'Users' %}</a></li>
-
-            <li><a href="{% url admin:server_login_changelist %}"><img src="{{ STATIC_URL }}icons/login.png" width="24" /> {% trans 'Logins' %}</a></li>
-
-            <li><a href="{% url admin:server_attribute_changelist %}"><img src="{{ STATIC_URL }}icons/attribute.png" width="24" /> {% trans 'Attributes' %}</a></li>
-
-            <li><a href="{% url admin:server_error_changelist %}"><img src="{{ STATIC_URL }}icons/error.png" width="24" /> {% trans 'Errors' %}</a></li>
-
-            <li><a href="{% url admin:server_fault_changelist %}"><img src="{{ STATIC_URL }}icons/fault.png" width="24" /> {% trans 'Faults' %}</a></li>
-        </ul>
-    </div>
-
-    <div id="issues-dashboard">
-        <h3>{% trans 'Status' %}</h3>
-
-        <ul>
+    {% if status %}
+        <ul class="status">
         {% for item in status %}
-            <li class="{% cycle 'odd' 'even' %}"><a href='{{ item.url }}'><img src="{{ STATIC_URL }}icons/{{ item.icon }}" /> {{ item.result }}</a></li>
+            <li class="{% cycle 'odd' 'even' %}">
+                <a href='{{ item.url }}'>
+                    <img src="{{ STATIC_URL }}icons/{{ item.icon }}" />
+                    {{ item.result }}
+                </a>
+            </li>
         {% endfor %}
         </ul>
-    </div>
-
-    <div id="version-dashboard">
-        <h3>{% trans 'Packing' %} [{% version %}]</h3>
-
-        <ul>
-            <li><a href="{% url admin:server_store_changelist %}"><img src="{{ STATIC_URL }}icons/store.png" /> {% trans 'Stores' %}</a></li>
-
-            <li><a href="{% url admin:server_package_changelist %}"><img src="{{ STATIC_URL }}icons/package.png" /> {% trans 'Packages/Sets' %}</a></li>
-
-            <li><a href='/migasfree/info/'><img src="{{ STATIC_URL }}icons/package-info.png" /> {% trans 'Packages information' %}</a></li>
-        </ul>
-
-        <h3>{% trans 'Liberation' %} [{% version %}]</h3>
-
-        <ul>
-            <li><a href="{% url admin:server_repository_changelist %}?active__exact=1"><img src="{{ STATIC_URL }}icons/repository.png" /> {% trans 'Repositories' %}</a></li>
-        </ul>
-    </div>
+    {% else %}
+        <p class="info">{% trans 'Everything is OK' %}</p>
+    {% endif %}
 {% endblock content %}
