@@ -5,13 +5,13 @@
 from migasfree.server.models.common import LANGUAGES_CHOICES, PLATFORM_CHOICES
 
 from migasfree.server.models.user import User
-from migasfree.server.models.query import Query
+from migasfree.server.models.query import Query, get_query_names
 from migasfree.server.models.checking import Checking
 from migasfree.server.models.autocheck_error import AutoCheckError
 
 from migasfree.server.models.pms import Pms
 from migasfree.server.models.property import Property
-from migasfree.server.models.version import Version
+from migasfree.server.models.version import Version, get_version_names
 from migasfree.server.models.attribute import Attribute
 
 from migasfree.server.models.device_type import DeviceType
@@ -24,6 +24,10 @@ from migasfree.server.models.device import Device
 from migasfree.server.models.message_server import MessageServer
 from migasfree.server.models.computer_login_update_hwnode import Computer, \
     Login, Update, HwNode
+#from migasfree.server.models.computer import Computer
+#from migasfree.server.models.login import Login
+#from migasfree.server.models.update import Update
+#from migasfree.server.models.hw_node import HwNode
 from migasfree.server.models.message import Message
 from migasfree.server.models.error import Error
 from migasfree.server.models.fault_def import FaultDef
