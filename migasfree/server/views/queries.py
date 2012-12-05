@@ -8,7 +8,6 @@ from datetime import datetime
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.db.models import Q
 from django import forms
 
@@ -25,31 +24,9 @@ def option_description(field, value):
         return value
 
 
-@login_required
-def query_selection(request):
-    """
-    Queries Menu of migasfree
-    """
-
-    qry = Query.objects.all().order_by("-id")
-    vl_fields = []
-    for e in qry:
-        vl_fields.append([e.id, e.name])
-
-    return render(
-        request,
-        'query_selection.html',
-        {
-            "title": _("Queries Menu"),
-            "query": vl_fields,
-        }
-    )
-
-
-def query2(request, parameters, form_param):
+def execute_query(request, parameters, form_param):
     o_query = Query.objects.get(id=parameters["id_query"])
 
-    # execute query
     try:
         exec(o_query.code.replace("\r", ""))
 
@@ -88,12 +65,17 @@ def query2(request, parameters, form_param):
                 "query": vl_fields,
                 "filters": filters,
                 "row_count": query.count(),
+                'form': form_param
             }
         )
     except:
-        return HttpResponse(
-            "Error in field 'code' of query:\n" + str(sys.exc_info()),
-            mimetype="text/plain"
+        return render(
+            request,
+            'error.html',
+            {
+                'description': "Error in field 'code' of query:",
+                'contentpage': str(sys.exc_info())
+            }
         )
 
 
@@ -112,7 +94,7 @@ def query(request, query_id):
             ).version.id
         }
         if o_query.parameters == "":
-            return query2(request, dic_initial, {})
+            return execute_query(request, dic_initial, {})
         else:
             try:
                 def form_params():
@@ -126,22 +108,29 @@ def query(request, query_id):
                         str(x), parameters[x.name]
                     )
 
-                return query2(request, parameters, g_form_param)
+                return execute_query(request, parameters, g_form_param)
             except:
-                return HttpResponse(
-                    "Error in field 'parameters' of query:\n"
-                        + str(sys.exc_info()[1]),
-                    mimetype="text/plain"
+                return render(
+                    request,
+                    'error.html',
+                    {
+                        'description': "Error in field 'parameters' of query:",
+                        'contentpage': str(sys.exc_info()[1])
+                    }
                 )
 
     # show parameters form
     try:
         version = UserProfile.objects.get(id=request.user.id).version
     except:
-        return HttpResponse(
-            'No version to find info.',
-            mimetype="text/plain"
-        )  # FIXME
+        return render(
+            request,
+            'error.html',
+            {
+                'description': _('Error'),
+                'contentpage': _('No version to find info')
+            }
+        )
 
     o_query = Query.objects.get(id=query_id)
     dic_initial = {
@@ -149,62 +138,63 @@ def query(request, query_id):
         'user_version': version.id
     }
     if o_query.parameters == "":
-        return query2(request, dic_initial, {})
+        return execute_query(request, dic_initial, {})
     else:
         try:
+            # What's that, Alberto???
             def form_params():
                 pass
 
             exec(o_query.parameters.replace("\r", ""))
-            g_form_param = form_params()(initial=dic_initial)
 
             return render(
                 request,
-                'parameters.html',
+                'query.html',
                 {
-                    'form': g_form_param,
+                    'form': form_params()(initial=dic_initial),
                     'title': _("Parameters for Query: %s") % o_query.name,
                 }
             )
         except:
-            return HttpResponse(
-                "Error in field 'parameters' of query:\n"
-                    + str(sys.exc_info()[1]),
-                mimetype="text/plain"
+            return render(
+                request,
+                'error.html',
+                {
+                    'description': "Error in field 'parameters' of query",
+                    'contentpage': str(sys.exc_info()[1])
+                }
             )
 
 
 @login_required
 def query_message(request):
-    vl_fields = []
-
-    q = Message.objects.all().order_by("-date")
     t = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)
 
-    for e in q:
-        if e.date < t:
+    result = []
+    for item in Message.objects.all().order_by("-date"):
+        if item.date < t:
             icon = 'computer_alert.png'
         else:
             icon = 'computer.png'
 
         try:
-            last = e.computer.last_login()
+            last = item.computer.last_login()
             user = '%s-%s' % (last.user.name, last.user.fullname)
         except:
             user = "None"
 
-        vl_fields.append(
+        result.append(
             [
                 icon,
                 "-",
-                e.computer.id,
-                e.computer.name,
+                item.computer.id,
+                item.computer.name,
                 last.id,
                 user,
-                e.computer.version.name,
-                e.computer.ip,
-                e.date,
-                e.text
+                item.computer.version.name,
+                item.computer.ip,
+                item.date,
+                item.text
             ]
         )
 
@@ -213,26 +203,21 @@ def query_message(request):
         'message.html',
         {
             "title": _("Computer Messages"),
-            "query": vl_fields,
+            "query": result,
         }
     )
 
 
 @login_required
 def query_message_server(request):
-    vl_fields = []
-
-    q = MessageServer.objects.all().order_by("-date")
-
-    for e in q:
-        icon = 'spinner.gif'
-
-        vl_fields.append(
+    result = []
+    for item in MessageServer.objects.all().order_by("-date"):
+        result.append(
             [
-                icon,
+                'spinner.gif',
                 "-",
-                e.date,
-                e.text
+                item.date,
+                item.text
             ]
         )
 
@@ -241,6 +226,6 @@ def query_message_server(request):
         'messageserver.html',
         {
             "title": _("Server Messages"),
-            "query": vl_fields,
+            "query": result,
         }
     )
