@@ -1,6 +1,9 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
-{% load server_tags %}
+
+{% block menu %}
+    {% include 'includes/mining_menu.html' %}
+{% endblock menu %}
 
 {% block content %}
     <div style="text-align: center;">
