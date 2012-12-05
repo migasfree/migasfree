@@ -1,0 +1,107 @@
+<!doctype html>
+{% load i18n %}
+{% load server_tags %}
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+    <head>
+        <meta charset="utf-8" />
+
+        <title>{% block title %}{{ title }}{% endblock title %} | migasfree with chocolate edition</title>
+
+        <meta name="generator" content="migasfree with chocolate edition" />
+
+        <link rel="shortcut icon" href="{{ STATIC_URL }}icons/favicon.png" />
+
+        {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
+
+        <!--link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/base.css{% endblock %}" /-->
+
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/migasfree_chocolate.css" />
+
+        {% block extrastyle %}{% endblock extrastyle %}
+
+        {% if LANGUAGE_BIDI %}
+            <link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% admin_media_prefix %}css/rtl.css{% endblock %}" />
+        {% endif %}
+
+        <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+        {% block extrahead %}{% endblock extrahead %}
+    </head>
+
+    <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
+        <div id="wrapper">
+        {% if not is_popup %}
+            <header>
+                {% block branding %}
+                    <h1><a href="{% url bootstrap %}">[{% organization %}]</a></h1>
+                {% endblock branding %}
+
+                <nav id="primary">
+                    {# active or selected class #}
+                    <ul>
+                        <li><a href="{% url admin:server_computer_changelist %}">{% trans 'Mining' %}</a></li>
+                        <li><a href="{% url admin:server_property_changelist %}">{% trans 'Configuration' %}</a></li>
+                        <li><a href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Software' %}</a></li>
+                    </ul>
+                </nav>
+
+                <nav id="secondary">
+                    <form action="{% url admin:server_computer_changelist %}" method="get">
+                        <fieldset>
+                            <label for="search-computer">{% trans 'Computer' %}:</label>
+                            <input type="text" id="search-computer" name="q" size="8" placeholder="PC12345" />
+                            <input type="submit" value="{% trans 'Search' %}" />
+                        </fieldset>
+                    </form>
+
+                    <div id="shortcuts">
+                        <p id="status">{% trans 'Status' %}: <a href="{% url dashboard %}">{% trans 'All O.K.' %}</a></p>
+
+                        {% if user.is_active and user.is_staff %}
+                            <p id="user"><a href="{% url admin:password_change %}" title="{% trans 'Password change' %}">{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</a> [<a href="{% url admin:logout %}">{% trans 'Logout' %}</a>]</p>
+                        {% endif %}
+                    </div>
+                </nav>
+            </header>
+        {% endif %}{# is_popup #}
+
+            <section>
+                {% block menu %}{% endblock menu %}
+
+                <article>
+                    {% if messages %}
+                        <ul class="messagelist">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% block breadcrumbs %}{% endblock breadcrumbs %}
+
+                    {% block content_title %}
+                        {% if title %}<h2>{{ title }}</h2>{% endif %}
+                    {% endblock content_title %}
+
+                    {% block content %}
+                        {% block object-tools %}{% endblock object-tools %}
+                        {{ content }}
+                    {% endblock content %}
+                </article>
+            </section>
+        </div>{# #wrapper #}
+
+        {% block footer %}
+            <footer>
+                <p>Copyright &copy; 2010-2012 <a href="http://www.migasfree.org">migasfree Team</a></p>
+                <p><a href="https://github.com/agacias/migasfree">Code project @ GitHub</a> under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3 license</a></p>
+                {% block documentation %}
+                    <p><a href="{% url django-admindocs-models-index %}">{% trans 'Data Model Documentation' %}</a></p>
+                {% endblock documentation %}
+            </footer>
+        {% endblock footer %}
+    </body>
+</html>
