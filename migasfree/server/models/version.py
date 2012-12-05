@@ -87,3 +87,11 @@ class Version(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
+
+def get_version_names():
+    result = []
+    for item in Version.objects.all().order_by("name"):
+        result.append([item.id, item.name])
+
+    return result
