@@ -1,7 +1,13 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
+{% block menu %}
+    {% include 'includes/mining_menu.html' %}
+{% endblock menu %}
+
 {% block content %}
+    {% include 'includes/parameters.html' %}
+
     {% for column in filters %}
         <pre>   {{ column }}</pre>
     {% endfor %}
@@ -10,21 +16,25 @@
         <p class="info">{{ row_count }} {% trans 'results' %}</p>
 
         <table id="query">
-            <tr>
-            {% for column in titles %}
-                <th>{{ column }}</th>
-            {% endfor %}
-            </tr>
+            <thead>
+                <tr>
+                {% for column in titles %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
 
+            <tbody>
             {% autoescape off %}
                 {% for row in query %}
-                    <tr class="{% cycle '' 'alt' %}">
+                    <tr class="{% cycle '' 'even' %}">
                     {% for field in row %}
-                        <td><pre>{{ field|linebreaks }}</pre></td>
+                        <td>{{ field }}</td>
                     {% endfor %}
                     </tr>
                 {% endfor %}
             {% endautoescape %}
+            </tbody>
         </table>
     {% else %}
         <p class="info">{% trans 'No results for query' %}</p>
