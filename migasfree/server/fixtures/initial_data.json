@@ -63,7 +63,7 @@
         "fields": {
             "name": "Repositories files creation",
             "description": "Check if the current user version has to create the files of repositories (only will be created when you change the packackes of a repository).",
-            "code": "from django.core.urlresolvers import reverse\nfrom migasfree.server.models import Repository\nfrom migasfree.server.functions import compare_values\nresult = 0\nds = Repository.objects.all()\nfor d in ds:\n    if not compare_values(d.packages.values('id'), d.createpackages.values('id')):\n            result += 1\n            url = reverse('create_repos')\n            icon = 'repository.png'\n            msg = 'Repositories files creation'"
+            "code": "from django.core.urlresolvers import reverse\nfrom migasfree.server.models import Repository\nfrom migasfree.server.functions import compare_values\nresult = 0\nfor repo in Repository.objects.all():\n    if not compare_values(repo.packages.values('id'), repo.createpackages.values('id')):\n            result += 1\n            url = reverse('create_repos')\n            icon = 'repository.png'\n            msg = 'Repositories files creation'"
         }
     },
     {
