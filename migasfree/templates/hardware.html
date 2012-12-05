@@ -1,13 +1,15 @@
-{% extends "admin/base.html" %}
+{% extends "base.html" %}
 {% load i18n %}
 
 {% block content_title %}
     <p><a href="{% url hardware_resume computer.id %}">&lt; {% trans 'Back to main tree information' %}</a></p>
 
     <h2><img src="{{ STATIC_URL }}icons/computer.png" width="32" /><a href="{% url admin:server_computer_change computer.id %}"> {{ title }}</a></h2>
-{% endblock %}
+{% endblock content_title %}
 
-{% block nav-global %}{% endblock %}
+{% block menu %}
+    {% include 'includes/mining_menu.html' %}
+{% endblock menu %}
 
 {% block content %}
 <table>
