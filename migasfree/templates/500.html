@@ -1,16 +1,126 @@
-{% extends "admin/base_site.html" %}
+<!doctype html>
 {% load i18n %}
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="utf-8" />
 
-{% block breadcrumbs %}
-<div class="breadcrumbs">
-    <a href="/migasfree/main">{% trans "Home" %}</a> &rsaquo;
-    {% trans "Server error" %}
-</div>
-{% endblock %}
+        <title>{% trans 'Server error (500)' %}</title>
 
-{% block title %}{% trans 'Server error (500)' %}{% endblock %}
+        <style type="text/css" rel="stylesheet">
+@font-face {
+    font-family: 'Average Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Average Sans'), local('AverageSans-Regular'), url('/repo/webfonts/AverageSans-Regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'Strait';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Strait'), local('Strait-Regular'), url('/repo/webfonts/Strait-Regular.ttf') format('truetype');
+}
+html, * {
+    margin: 0;
+    padding: 0;
+}
+section * {
+    font-family: 'Average Sans', sans-serif;
+}
+header *, footer * {
+    font-family: 'Strait', sans-serif;
+}
+header {
+    background: #292929;
+    color: #fff;
+    height: 54px;
+}
+header a {
+    color: #F2660A;
+    background: #292929;
+    font-weight: bold;
+    text-decoration: none;
+}
+h1 {
+    padding: 1em;
+    font-size: 100%;
+    float: left;
+}
+h1 a {
+    background: url('/repo/icons/favicon.png'), url('/repo/icons/migasfree_16.png');
+    background-repeat: no-repeat;
+    background-position: left center, 24px center;
+    padding-left: 75px;
+    line-height: 24px;
+}
+section {
+    clear: both;
+    background: #fefefe;
+    margin-bottom: 2em;
+}
+section h1, section h2, section h3, section thead * {
+    font-family: 'Strait', sans-serif;
+}
+section p {
+    margin: 1em;
+}
+section article {
+    padding: 1em;
+}
+section a {
+    color: #F2660A;
+    background: transparent;
+    font-weight: bold;
+    text-decoration: none;
+}
+footer {
+    clear: both;
+    background: url(/repo/img/migasfree.png) 30% center no-repeat #F0F0F0;
+    border-top: 2px solid #E1E1E1;
+    font-size: 110%;
+}
+footer p {
+    margin: 1em 2em 0;
+    text-align: center;
+}
+footer a {
+    color: #F2660A;
+    font-weight: bold;
+    text-decoration: none;
+}
 
-{% block content %}
-<h1>{% trans 'Server Error <em>(500)</em>' %}</h1>
-<p>{% trans "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience." %}</p>
-{% endblock %}
+#change-version {
+    margin: 0 1em 1em;
+    padding: 5px;
+    border: none;
+}
+
+/* Sticky footer: http://www.mindfly.com/blog/2012/08/09/the-css-sticky-footer-fix/ */
+html {height:100%;}
+body {height:100%;}
+#wrapper {min-height:100%;}
+section {padding-bottom: 120px;}
+footer {margin-top: -120px; height: 120px;}
+        </style>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <header>
+                <h1><a href="/"> </a></h1>
+            </header>
+
+            <section>
+                <article>
+                    <h2>{% trans 'Server error (500)' %}</h2>
+
+                    <p>{% trans "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience." %}</p>
+                </article>
+            </section>
+        </div>
+
+        <footer>
+            <p>Copyright &copy; 2010-2012 <a href="http://www.migasfree.org">migasfree Team</a></p>
+            <p><a href="https://github.com/agacias/migasfree">Code project @ GitHub</a> under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3 license</a></p>
+        </footer>
+    </body>
+</html>
