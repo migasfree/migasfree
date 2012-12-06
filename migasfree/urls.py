@@ -8,9 +8,7 @@ import os
 import settings
 
 from django.conf.urls.defaults import patterns, include, url
-from django.views.generic.simple import redirect_to, direct_to_template
-from django.contrib.auth.decorators import login_required
-from django.utils.translation import ugettext as _
+from django.views.generic.simple import redirect_to
 
 from django.contrib import admin
 admin.autodiscover()
