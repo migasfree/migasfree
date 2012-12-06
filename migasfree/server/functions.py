@@ -10,8 +10,10 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.settings import DATABASES, MIGASFREE_APP_DIR, MIGASFREE_REPO_DIR
 
+
 def is_db_sqlite():
     return DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
+
 
 def config_apache():
     _apache_path = ''
@@ -44,6 +46,7 @@ WSGIScriptAlias / %(migasfree_app_dir)s/django.wsgi
 
     _filename = os.path.join(_apache_path, 'migasfree.conf')
     _write_web_config(_filename, _config)
+
 
 def config_cherokee():
     _cherokee_conf = '/etc/cherokee/cherokee.conf'
@@ -100,9 +103,9 @@ server!timeout = 300
     _line = 'include = %s\n' % _filename
     _cherokee_lines = open(_cherokee_conf, 'rb').readlines()
     if _line not in _cherokee_lines:
-        _f = open(_cherokee_conf, 'a')
-        _f.write(_line)
-        _f.close()
+        with open(_cherokee_conf, 'a') as _f:
+            _f.write(_line)
+
 
 def _write_web_config(filename, config):
     _content = config % {
@@ -115,8 +118,10 @@ def _write_web_config(filename, config):
         print 'Problem found creating Apache configuration file.'
         sys.exit(errno.EINPROGRESS)
 
+
 def trans(string):
-    return unicode(_(string)) #pylint: disable-msg=E1102
+    return unicode(_(string))  # pylint: disable-msg=E1102
+
 
 def writefile(filename, content):
     '''
@@ -138,12 +143,13 @@ def writefile(filename, content):
         if _file is not None:
             _file.close()
 
+
 def readfile(filename):
-    fp = open(filename, 'rb')
-    ret = fp.read()
-    fp.close()
+    with open(filename, 'rb') as fp:
+        ret = fp.read()
 
     return ret
+
 
 def s2l(cad):
     """
@@ -158,15 +164,17 @@ def s2l(cad):
     except:
         return lst
 
+
 def vl2s(field):
     """
     value_list("id") to string
     """
     return str(field.values_list("id")).replace("(", "").replace(",)", "")
 
+
 class Mmcheck():
-    field = None #is a ManyToManyField
-    field_copy = None #is a Text Field
+    field = None  # is a ManyToManyField
+    field_copy = None  # is a Text Field
 
     def __init__(self, field, field_copy):
         self.field = field
@@ -178,6 +186,7 @@ class Mmcheck():
     def changed(self):
         return not self.mms() == str(self.field_copy)
 
+
 def horizon(mydate, delay):
     """
     No weekends
@@ -186,6 +195,7 @@ def horizon(mydate, delay):
     idelta = delay + (((delay + iday - 1) / 5) * 2)
 
     return mydate + timedelta(days=idelta)
+
 
 def compare_values(val1, val2):
     if len(val1) != len(val2):
@@ -197,6 +207,7 @@ def compare_values(val1, val2):
 
     return True
 
+
 def list_difference(list1, list2):
     """uses list1 as the reference, returns list of items not in list2"""
     diff_list = []
@@ -205,6 +216,7 @@ def list_difference(list1, list2):
             diff_list.append(item)
 
     return diff_list
+
 
 def run_in_server(code_bash):
     my_file = os.tmpnam()
@@ -215,8 +227,8 @@ def run_in_server(code_bash):
     out = readfile('%s.out' % my_file)
     err = readfile('%s.err' % my_file)
 
-    os.system("rm %s" % my_file)
-    os.system("rm %s.out" % my_file)
-    os.system("rm %s.err" % my_file)
+    os.remove(my_file)
+    os.remove('%s.out' % my_file)
+    os.remove('%s.err' % my_file)
 
     return {"out": out, "err": err}
