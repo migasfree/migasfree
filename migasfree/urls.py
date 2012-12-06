@@ -67,16 +67,6 @@ urlpatterns = patterns(
         name='change_version'
     ),
 
-    url(
-        r'^migasfree/documentation/$',
-        login_required(direct_to_template),
-        {
-            'template': 'documentation.html',
-            'extra_content': {'title': _("Documentation")}
-        },
-        name='documentation'
-    ),
-
     url(r'^accounts/login/$', login, name='login'),
 
     url(r'^migasfree/createrepositories/$',
@@ -128,12 +118,17 @@ urlpatterns = patterns(
     # (r'^migasfree/get_device/(.*)', get_device),
 
     (r'^migasfree/api/$', api),
-
-    (r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': os.path.join(os.path.dirname(__file__), 'media')
-    }),
-
-    (r'^repo/(?P<path>.*)$', 'django.views.static.serve', {
-        'document_root': settings.STATIC_ROOT
-    }),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('django.views.static',
+        (r'^repo/(?P<path>.*)$', 'serve', {
+            'document_root': settings.STATIC_ROOT,
+            'show_indexes': True
+        }),
+
+        (r'^media/(?P<path>.*)$', 'serve', {
+            'document_root': os.path.join(os.path.dirname(__file__), 'media'),
+            'show_indexes': True
+        }),
+    )
