@@ -25,10 +25,21 @@
 
         <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+        <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
+        <script src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
 
-        {% block extrahead %}{% endblock extrahead %}
+        {% block extrahead %}
+        <script type="text/javascript">
+            function refresh_status()
+            {
+                $('#status').load("{% url ajax_status %}");
+            }
+            $(document).ready(function() {
+                refresh_status();
+                setInterval(refresh_status, 10000);
+            });
+        </script>
+        {% endblock extrahead %}
     </head>
 
     <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
