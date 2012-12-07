@@ -10,9 +10,12 @@
 
 {% block content %}
     {% if query %}
+        <p class="info">{{ query|length }} {% trans 'results' %}</p>
+
         <table id="query">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>{% trans 'Date' %}</th>
                     <th>{% trans 'Computer' %}</th>
                     <th>{% trans 'Version' %}</th>
@@ -24,6 +27,8 @@
             <tbody>
             {% for item in query %}
                 <tr class="{% cycle '' 'even' %}">
+                    <td class="ordinal">{{ forloop.counter }}.</td>
+
                     <td>{{ item.8 }}</td>
 
                     <td><img src="{{ STATIC_URL }}icons/{{ item.0 }}" width="36" /> <a href="{% url admin:server_computer_change item.2 %}">{{ item.3 }}</a></td>
