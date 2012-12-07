@@ -158,7 +158,7 @@ footer a {
     font-weight: bold;
     padding: 0.5em 1em;
 }
-.messagelist li {
+.messagelist li, p.info {
     list-style-type: none;
     padding: 0.5em 1em;
     background: #B0D4EF;
@@ -291,6 +291,9 @@ table thead th {
     color: #fff;
     border-right: 1px solid #444;
     border-left: 1px solid #111;
+}
+table .ordinal {
+    text-align: right;
 }
 #changelist table .action-checkbox-column, .action-checkbox {
     text-align: center;
