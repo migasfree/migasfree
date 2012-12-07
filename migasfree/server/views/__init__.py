@@ -10,6 +10,6 @@ from migasfree.server.views.hardware import hardware, hardware_resume, \
 from migasfree.server.views.devices import device, load_devices
 from migasfree.server.views.client_api import api
 from migasfree.server.views.packages import change_version, info
-from migasfree.server.views.dashboard import main
+from migasfree.server.views.dashboard import main, ajax_status, ajax_status_list
 from migasfree.server.views.login import login
 from migasfree.server.views.repository import createrepositories
