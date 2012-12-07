@@ -12,12 +12,13 @@
         <pre>   {{ column }}</pre>
     {% endfor %}
 
-    {% if row_count %}
-        <p class="info">{{ row_count }} {% trans 'results' %}</p>
+    {% if query %}
+        <p class="info">{{ query|length }} {% trans 'results' %}</p>
 
         <table id="query">
             <thead>
                 <tr>
+                    <th>#</th>
                 {% for column in titles %}
                     <th>{{ column }}</th>
                 {% endfor %}
@@ -28,6 +29,7 @@
             {% autoescape off %}
                 {% for row in query %}
                     <tr class="{% cycle '' 'even' %}">
+                        <td class="ordinal">{{ forloop.counter }}.</td>
                     {% for field in row %}
                         <td>{{ field }}</td>
                     {% endfor %}
