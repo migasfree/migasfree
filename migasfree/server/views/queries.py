@@ -64,7 +64,6 @@ def execute_query(request, parameters, form_param):
                 "titles": titles,
                 "query": vl_fields,
                 "filters": filters,
-                "row_count": query.count(),
                 'form': form_param
             }
         )
