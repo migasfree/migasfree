@@ -2,11 +2,13 @@
 {% load i18n %}
 
 {% block extrahead %}
-    {# TODO Ajax to issues-dashboard #}
-    <meta http-equiv="refresh" content="10" />
+    {{ block.super }}
     <script type="text/javascript">
 $(document).ready(function() {
-    $("section nav").accordion({collapsible: true, active: 0, heightStyle: "content"});
+    //$("section nav").accordion({collapsible: true, active: 0, heightStyle: "content"});
+    setInterval(function() {
+        $('article .status').load("{% url ajax_status_list %}");
+    }, 10000);
 });
     </script>
 {% endblock extrahead %}
