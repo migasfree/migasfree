@@ -1,6 +1,8 @@
 {% extends "base_full.html" %}
 {% load i18n %}
 
+{% block title %}{{ description }}{% endblock title %}
+
 {% block content %}
     <h2>{{ description }}</h2>
 
@@ -17,7 +19,5 @@
         {% endfor %}
     {% endfor %}
 
-    <pre>
-    {{ contentpage }}
-    </pre>
+    <pre>{{ contentpage }}</pre>
 {% endblock content %}
