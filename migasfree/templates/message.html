@@ -1,50 +1,23 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{# TODO Ajax to messages #}
-{% block extrahead %}<meta http-equiv="refresh" content="5" />{% endblock %}
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript">
+$(document).ready(function() {
+    setInterval(function() {
+        $('article #results').load("{% url computer_messages %}");
+    }, 10000);
+});
+    </script>
+{% endblock extrahead %}
 
 {% block menu %}
     {% include 'includes/mining_menu.html' %}
 {% endblock menu %}
 
 {% block content %}
-    {% if query %}
-        <p class="info">{{ query|length }} {% trans 'results' %}</p>
-
-        <table id="query">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>{% trans 'Date' %}</th>
-                    <th>{% trans 'Computer' %}</th>
-                    <th>{% trans 'Version' %}</th>
-                    <th>{% trans 'IP' %}</th>
-                    <th>{% trans 'Login' %}</th>
-                    <th>{% trans 'Message' %}</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for item in query %}
-                <tr class="{% cycle '' 'even' %}">
-                    <td class="ordinal">{{ forloop.counter }}.</td>
-
-                    <td>{{ item.8 }}</td>
-
-                    <td><img src="{{ STATIC_URL }}icons/{{ item.0 }}" width="36" /> <a href="{% url admin:server_computer_change item.2 %}">{{ item.3 }}</a></td>
-
-                    <td>{{ item.6 }}</td>
-
-                    <td>{{ item.7 }}</td>
-
-                    <td><a href="{% url admin:server_login_change item.4 %}">{{ item.5 }}</a></td>
-
-                    <td>{{ item.9 }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p class="info">{% trans 'No messages to show' %}</p>
-    {% endif %}
+    <div id="results">
+        {% include 'includes/computer_messages_result.html' %}
+    </div>
 {% endblock content %}
