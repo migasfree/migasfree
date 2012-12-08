@@ -7,7 +7,7 @@
 $(document).ready(function() {
     //$("section nav").accordion({collapsible: true, active: 0, heightStyle: "content"});
     setInterval(function() {
-        $('article .status').load("{% url ajax_status_list %}");
+        $('article #results').load("{% url dashboard %}");
     }, 10000);
 });
     </script>
@@ -18,18 +18,7 @@ $(document).ready(function() {
 {% endblock menu %}
 
 {% block content %}
-    {% if status %}
-        <ul class="status">
-        {% for item in status %}
-            <li class="{% cycle 'odd' 'even' %}">
-                <a href='{{ item.url }}'>
-                    <img src="{{ STATIC_URL }}icons/{{ item.icon }}" />
-                    {{ item.result }}
-                </a>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p class="info">{% trans 'Everything is OK' %}</p>
-    {% endif %}
+    <div id="results">
+        {% include 'includes/status.html' %}
+    </div>
 {% endblock content %}
