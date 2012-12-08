@@ -51,10 +51,14 @@ urlpatterns = patterns(
     url(r'^ajax_status/$', ajax_status, name='ajax_status'),
     url(r'^migasfree/main/$', main, name='dashboard'),
     url(r'^migasfree/query/(?P<query_id>\d+)/$', query, name='query'),
-    url(r'^migasfree/queryMessage/$', query_message, name='computer_messages'),
+    url(
+        r'^migasfree/queryMessage/$',
+        computer_messages,
+        name='computer_messages'
+    ),
     url(
         r'^migasfree/queryMessageServer/$',
-        query_message_server,
+        server_messages,
         name="server_messages"
     ),
 

@@ -166,7 +166,11 @@ def query(request, query_id):
 
 
 @login_required
-def query_message(request):
+def computer_messages(request):
+    template = 'message.html'
+    if request.is_ajax():
+        template = 'includes/computer_messages_result.html'
+
     t = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)
 
     result = []
@@ -199,7 +203,7 @@ def query_message(request):
 
     return render(
         request,
-        'message.html',
+        template,
         {
             "title": _("Computer Messages"),
             "query": result,
@@ -208,7 +212,11 @@ def query_message(request):
 
 
 @login_required
-def query_message_server(request):
+def server_messages(request):
+    template = 'messageserver.html'
+    if request.is_ajax():
+        template = 'includes/server_messages_result.html'
+
     result = []
     for item in MessageServer.objects.all().order_by("-date"):
         result.append(
@@ -222,7 +230,7 @@ def query_message_server(request):
 
     return render(
         request,
-        'messageserver.html',
+        template,
         {
             "title": _("Server Messages"),
             "query": result,
