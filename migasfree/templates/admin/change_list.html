@@ -59,7 +59,7 @@
 {% block content_title %}
     {% if title %}
         <h2>
-            <img src="{{ STATIC_URL }}icons/{{ cl.opts.module_name }}.png" width="32" /> {% trans 'List of' %}  {{ cl.opts.verbose_name_plural|capfirst }}
+            <img src="{{ STATIC_URL }}icons/{{ cl.opts.module_name }}.png" width="32" /> {% trans 'List of' %} {% trans cl.opts.verbose_name_plural|capfirst %}
             {% if cl.opts.module_name = 'repository' or cl.opts.module_name = 'package' or cl.opts.module_name = 'store' %}
                 [{{ current_version }}]
             {% endif %}
