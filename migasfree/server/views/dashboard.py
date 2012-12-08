@@ -10,7 +10,6 @@ from django.db.models import Q
 from django.http import HttpResponse
 
 from migasfree.server.models import *
-from migasfree.settings import STATIC_URL
 
 
 def execute_active_checkings():
@@ -46,6 +45,10 @@ def main(request):
     """
     Status of checkings
     """
+    template = 'main.html'
+    if request.is_ajax():
+        template = 'includes/status.html'
+
     status = execute_active_checkings()
     if type(status) is dict and status.get('error').get('description'):
         return render(
@@ -57,16 +60,9 @@ def main(request):
             }
         )
 
-    if len(status) == 0:
-        status.append({
-            'icon': 'checking.png',
-            'url': '#',
-            'result': _('All O.K.')
-        })
-
     return render(
         request,
-        'main.html',
+        template,
         {
             'title': _('Status'),
             'status': status,
@@ -84,41 +80,5 @@ def ajax_status(request):
         ret += '<strong>%s</strong>' % _('All O.K.')
     else:
         ret += '<a href="%s">%s</a>' % (reverse('dashboard'), _('Warning'))
-
-    return HttpResponse(ret, content_type='text/plain')
-
-
-def ajax_status_list(request):
-    ret = ''
-    status = execute_active_checkings()
-    if type(status) is dict and status.get('error').get('description'):
-        return render(
-            request,
-            'error.html',
-            {
-                'description': status.get('error').get('description'),
-                'contentpage': status.get('error').get('contentpage')
-            }
-        )
-
-    if len(status) == 0:
-        ret += '<li><img src="%sicons/checking.png" />%s</li>' % (
-            STATIC_URL,
-            _('All O.K.')
-        )
-    else:
-        css_class = 'odd'
-        for item in status:
-            ret += '<li class="%s"><a href="%s"><img src="%sicons/%s" /> %s</a></li>' % (
-                css_class,
-                item['url'],
-                STATIC_URL,
-                item['icon'],
-                item['result']
-            )
-            if css_class == 'odd':
-                css_class = 'even'
-            else:
-                css_class = 'odd'
 
     return HttpResponse(ret, content_type='text/plain')
