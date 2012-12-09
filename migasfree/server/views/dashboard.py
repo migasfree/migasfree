@@ -40,6 +40,18 @@ def execute_active_checkings():
     return status
 
 
+def get_current_status():
+    status = execute_active_checkings()
+    if type(status) is dict:
+        ret = _('Error')
+    elif len(status) == 0:
+        ret = _('All O.K.')
+    else:
+        ret = _('Warning')
+
+    return ret
+
+
 @login_required
 def main(request):
     """
@@ -71,14 +83,4 @@ def main(request):
 
 
 def ajax_status(request):
-    ret = '%s: ' % _('Status')
-
-    status = execute_active_checkings()
-    if type(status) is dict:
-        ret += '<a href="%s">%s</a>' % (reverse('dashboard'), _('Error'))
-    elif len(status) == 0:
-        ret += '<strong>%s</strong>' % _('All O.K.')
-    else:
-        ret += '<a href="%s">%s</a>' % (reverse('dashboard'), _('Warning'))
-
-    return HttpResponse(ret, content_type='text/plain')
+    return HttpResponse(get_current_status(), content_type='text/plain')
