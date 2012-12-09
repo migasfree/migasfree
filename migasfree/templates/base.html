@@ -1,6 +1,7 @@
 <!doctype html>
 {% load i18n %}
 {% load server_tags %}
+{% load adminmedia %}
 <html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
     <head>
         <meta charset="utf-8" />
@@ -11,17 +12,15 @@
 
         <link rel="shortcut icon" href="{{ STATIC_URL }}icons/favicon.png" />
 
-        {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock %}
-
-        <!--link rel="stylesheet" type="text/css" href="{% block stylesheet %}{% load adminmedia %}{% admin_media_prefix %}css/base.css{% endblock %}" /-->
+        {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock blockbots %}
 
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/migasfree_chocolate.css" />
-
-        {% block extrastyle %}{% endblock extrastyle %}
 
         {% if LANGUAGE_BIDI %}
             <link rel="stylesheet" type="text/css" href="{% block stylesheet_rtl %}{% admin_media_prefix %}css/rtl.css{% endblock %}" />
         {% endif %}
+
+        {% block extrastyle %}{% endblock extrastyle %}
 
         <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
 
@@ -30,19 +29,16 @@
 
         {% block extrahead %}
         <script type="text/javascript">
-            function refresh_status()
-            {
-                $('#status').load("{% url ajax_status %}");
-            }
             $(document).ready(function() {
-                refresh_status();
-                setInterval(refresh_status, 10000);
+                setInterval(function() {
+                    $('#status a').load("{% url ajax_status %}");
+                }, 10000);
             });
         </script>
         {% endblock extrahead %}
     </head>
 
-    <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}">
+    <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock bodyclass %}">
         <div id="wrapper">
         {% if not is_popup %}
             <header>
@@ -53,7 +49,7 @@
                 <nav id="primary">
                     {# active or selected class #}
                     <ul>
-                        <li><a href="{% url admin:server_computer_changelist %}">{% trans 'Mining' %}</a></li>
+                        <li><a href="{% url dashboard %}">{% trans 'Mining' %}</a></li>
                         <li><a href="{% url admin:server_property_changelist %}">{% trans 'Configuration' %}</a></li>
                         <li><a href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Software' %}</a></li>
                     </ul>
@@ -69,7 +65,7 @@
                     </form>
 
                     <div id="shortcuts">
-                        <p id="status">{% trans 'Status' %}: <a href="{% url dashboard %}">{% trans 'All O.K.' %}</a></p>
+                        <p id="status">{% trans 'Status' %}: <a href="{% url dashboard %}">{{ current_status }}</a></p>
 
                         {% if user.is_active and user.is_staff %}
                             <p id="user"><a href="{% url admin:password_change %}" title="{% trans 'Password change' %}">{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</a> [<a href="{% url admin:logout %}">{% trans 'Logout' %}</a>]</p>
