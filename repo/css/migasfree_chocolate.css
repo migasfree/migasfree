@@ -342,10 +342,10 @@ body.popup footer {
 }
 
 /*******/
-table.model {
+table.model, table#query {
     width: 100%;
 }
-table.model tr {
+table.model tr, table#query tbody tr {
     border: 1px solid #ccc;
 }
 table.model p {
