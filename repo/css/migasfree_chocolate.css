@@ -35,13 +35,11 @@ h1 {
     padding: 1em;
     font-size: 100%;
     float: left;
+    line-height: 26px;
 }
-h1 a {
-    background: url('../icons/favicon.png'), url('../icons/migasfree_16.png');
-    background-repeat: no-repeat;
-    background-position: left center, 24px center;
-    padding-left: 75px;
-    line-height: 24px;
+h1 a:first-child {
+    background: url('../icons/favicon.png') left center no-repeat;
+    padding-left: 26px;
 }
 nav#primary {
     float: left;
@@ -90,6 +88,10 @@ header fieldset {
     color: #fff;
     margin: .5em 0;
     text-align: right;
+    line-height: 42px;
+}
+#secondary label {
+    display: none;
 }
 section {
     clear: both;
@@ -158,11 +160,31 @@ footer a {
     font-weight: bold;
     padding: 0.5em 1em;
 }
+.errornote-animated {
+    background: transparent;
+    color: #000;
+    font-weight: bold;
+    padding: 0.5em 1em;
+}
 .messagelist li, p.info {
     list-style-type: none;
     padding: 0.5em 1em;
     background: #B0D4EF;
     color: #000;
+    font-weight: bold;
+}
+fieldset.module div.errors {
+    margin: 5px;
+    border: 1px solid #93060F;
+}
+fieldset.module ul.errorlist {
+    margin-left: 0;
+    padding-left: 0;
+}
+.errorlist li {
+    list-style-type: none;
+    background: transparent;
+    color: #93060F;
     font-weight: bold;
 }
 
