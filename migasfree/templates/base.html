@@ -32,7 +32,7 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 setInterval(function() {
-                    $('#status a').load("{% url ajax_status %}");
+                    $('#status').load("{% url ajax_status %}");
                 }, 10000);
             });
         </script>
@@ -44,15 +44,18 @@
         {% if not is_popup %}
             <header>
                 {% block branding %}
-                    <h1><a href="{% url bootstrap %}">[{% organization %}]</a></h1>
+                    <h1>
+                        <a href="{% url bootstrap %}">{% organization %}</a>
+                        [<a id="status" href="{% url dashboard %}">{{ current_status }}</a>]
+                    </h1>
                 {% endblock branding %}
 
                 <nav id="primary">
                     {# active or selected class #}
                     <ul>
-                        <li><a href="{% url dashboard %}">{% trans 'Mining' %}</a></li>
-                        <li><a href="{% url admin:server_property_changelist %}">{% trans 'Configuration' %}</a></li>
-                        <li><a href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Software' %}</a></li>
+                        <li><a href="{% url admin:server_property_changelist %}">{% trans 'Settings' %}</a></li>
+                        <li><a href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Liberation' %}</a></li>
+                        <li><a href="{% url dashboard %}">{% trans 'Audit' %}</a></li>
                     </ul>
                 </nav>
 
@@ -60,14 +63,12 @@
                     <form action="{% url admin:server_computer_changelist %}" method="get">
                         <fieldset>
                             <label for="search-computer">{% trans 'Computer' %}:</label>
-                            <input type="text" id="search-computer" name="q" size="8" placeholder="PC12345" />
+                            <input type="text" id="search-computer" name="q" size="8" placeholder="{% trans 'Computer' %}" />
                             <input type="submit" value="{% trans 'Search' %}" />
                         </fieldset>
                     </form>
 
                     <div id="shortcuts">
-                        <p id="status">{% trans 'Status' %}: <a href="{% url dashboard %}">{{ current_status }}</a></p>
-
                         {% if user.is_active and user.is_staff %}
                             <p id="user"><a href="{% url admin:password_change %}" title="{% trans 'Password change' %}">{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</a> [<a href="{% url admin:logout %}">{% trans 'Logout' %}</a>]</p>
                         {% endif %}
