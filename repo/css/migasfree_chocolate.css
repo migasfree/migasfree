@@ -440,3 +440,9 @@ ul.hardware li {
     background: #FFFFCC;
     color: #FF9900;
 }
+
+/******/
+.ui-widget {
+    font-family: 'Average Sans', sans-serif !important;
+    font-size: 80% !important;
+}
