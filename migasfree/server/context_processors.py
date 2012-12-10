@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from django.utils.translation import ugettext as _
-
 from migasfree.server.models import get_version_names, get_query_names, \
     UserProfile
 from migasfree.server.views import get_current_status
