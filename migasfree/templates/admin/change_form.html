@@ -24,7 +24,7 @@
 
 {% block content_title %}
     {% if title %}
-        <h2><img src="{{ STATIC_URL }}icons/{{ opts.module_name }}.png" width="32" /> {{ opts.verbose_name }}: {% autoescape off %}{% link opts %}{% endautoescape %}</h2>
+        <h2><img src="{{ STATIC_URL }}icons/{{ opts.module_name }}.png" width="32" /> {% trans opts.verbose_name %}: {% autoescape off %}{% link opts %}{% endautoescape %}</h2>
     {% endif %}
 {% endblock content_title %}
 
