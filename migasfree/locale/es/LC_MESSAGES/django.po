@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree with chocolate edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-08 21:02+0100\n"
-"PO-Revision-Date: 2012-12-08 22:01+0100\n"
+"POT-Creation-Date: 2012-12-10 20:37+0100\n"
+"PO-Revision-Date: 2012-12-10 20:42+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <migasfree@migasfree.org>\n"
 "Language: \n"
@@ -288,6 +288,7 @@ msgstr "Dispositivos"
 #: server/models/message.py:36
 #: server/models/update.py:34
 #: templates/base.html:65
+#: templates/base.html.py:66
 #: templates/includes/computer_messages_result.html:11
 msgid "Computer"
 msgstr "Ordenador"
@@ -621,7 +622,7 @@ msgid "checked"
 msgstr "comprobado"
 
 #: server/models/error.py:67
-#: server/views/dashboard.py:78
+#: server/views/dashboard.py:46
 #: server/views/packages.py:27
 #: server/views/packages.py:88
 #: server/views/queries.py:129
@@ -975,23 +976,20 @@ msgstr "Perfil de usuario"
 msgid "Users Profile"
 msgstr "Perfil de usuarios"
 
-#: server/views/dashboard.py:67
-#: server/views/dashboard.py:74
-#: templates/base.html:72
-#: templates/includes/config_menu.html:20
-#: templates/includes/mining_menu.html:6
-msgid "Status"
-msgstr "Estado"
-
-#: server/views/dashboard.py:80
-#: templates/base.html:72
+#: server/views/dashboard.py:48
 #: templates/includes/status.html:17
 msgid "All O.K."
 msgstr "Todo bien"
 
-#: server/views/dashboard.py:82
+#: server/views/dashboard.py:50
 msgid "Warning"
 msgstr "Alerta"
+
+#: server/views/dashboard.py:79
+#: templates/includes/config_menu.html:20
+#: templates/includes/mining_menu.html:6
+msgid "Status"
+msgstr "Estado"
 
 #: server/views/hardware.py:25
 #: server/views/hardware.py:43
@@ -1098,7 +1096,7 @@ msgstr "Página no encontrada"
 
 #: templates/404.html:9
 msgid "We're sorry, but the requested page could not be found."
-msgstr ""
+msgstr "Lo sentimos, pero la página solicitada no pudo ser encontrada."
 
 #: templates/500.html:7
 #: templates/500.html.py:114
@@ -1110,34 +1108,34 @@ msgid "There's been an error. It's been reported to the site administrators via 
 msgstr ""
 
 #: templates/base.html:56
-msgid "Mining"
-msgstr "Gestión"
-
-#: templates/base.html:57
-msgid "Configuration"
+msgid "Settings"
 msgstr "Configuración"
 
+#: templates/base.html:57
+msgid "Liberation"
+msgstr "Liberación"
+
 #: templates/base.html:58
-msgid "Software"
-msgstr "Software"
+msgid "Audit"
+msgstr "Auditoría"
 
 #: templates/base.html:67
 msgid "Search"
 msgstr "Buscar"
 
-#: templates/base.html:75
+#: templates/base.html:73
 #: templates/registration/password_change_form.html:11
 #: templates/registration/password_change_form.html:14
 msgid "Password change"
 msgstr "Cambio de contraseña"
 
-#: templates/base.html:75
+#: templates/base.html:73
 msgid "Logout"
 msgstr "Salir"
 
-#: templates/base.html:113
-#: templates/admin/change_form.html:22
-#: templates/admin/change_list.html:40
+#: templates/base.html:111
+#: templates/admin/change_form.html:27
+#: templates/admin/change_list.html:45
 msgid "Data Model Documentation"
 msgstr "Documentación del modelo de datos"
 
@@ -1167,34 +1165,78 @@ msgstr "resultados"
 msgid "No results for query"
 msgstr "No hay resultados para la consulta"
 
-#: templates/admin/change_form.html:50
+#: templates/admin/change_form.html:55
 msgid "History"
 msgstr "Historial"
 
-#: templates/admin/change_form.html:52
+#: templates/admin/change_form.html:57
 msgid "View on site"
 msgstr ""
 
-#: templates/admin/change_form.html:67
-#: templates/admin/change_list.html:85
+#: templates/admin/change_form.html:72
+#: templates/admin/change_list.html:90
 #: templates/registration/password_change_form.html:23
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
 msgstr[0] "Por favor, corrija el error abajo indicado."
 msgstr[1] "Por favor, corrija los errores abajo indicados."
 
-#: templates/admin/change_list.html:62
+#: templates/admin/change_list.html:67
 msgid "List of"
 msgstr "Lista de"
 
-#: templates/admin/change_list.html:76
+#: templates/admin/change_list.html:81
 #, python-format
 msgid "Add %(name)s"
 msgstr "Añadir %(name)s"
 
-#: templates/admin/change_list.html:97
+#: templates/admin/change_list.html:102
 msgid "Filter"
 msgstr "Filtro"
+
+#: templates/admin/delete_confirmation.html:8
+msgid "Delete"
+msgstr "Borrar"
+
+#: templates/admin/delete_confirmation.html:15
+#, python-format
+msgid "Deleting the %(object_name)s '%(escaped_object)s' would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
+msgstr ""
+
+#: templates/admin/delete_confirmation.html:23
+#, python-format
+msgid "Deleting the %(object_name)s '%(escaped_object)s' would require deleting the following protected related objects:"
+msgstr ""
+
+#: templates/admin/delete_confirmation.html:31
+#, python-format
+msgid "Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? All of the following related items will be deleted:"
+msgstr ""
+
+#: templates/admin/delete_confirmation.html:36
+#: templates/admin/delete_selected_confirmation.html:43
+msgid "Yes, I'm sure"
+msgstr "Sí, estoy seguro"
+
+#: templates/admin/delete_selected_confirmation.html:7
+#: templates/admin/delete_selected_confirmation.html:11
+msgid "Delete multiple objects"
+msgstr "Borrar múltiples objetos"
+
+#: templates/admin/delete_selected_confirmation.html:16
+#, python-format
+msgid "Deleting the selected %(objects_name)s would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
+msgstr ""
+
+#: templates/admin/delete_selected_confirmation.html:24
+#, python-format
+msgid "Deleting the selected %(objects_name)s would require deleting the following protected related objects:"
+msgstr ""
+
+#: templates/admin/delete_selected_confirmation.html:32
+#, python-format
+msgid "Are you sure you want to delete the selected %(objects_name)s? All of the following objects and their related items will be deleted:"
+msgstr ""
 
 #: templates/admin/login.html:4
 #: templates/admin/login.html.py:11
@@ -1236,7 +1278,7 @@ msgstr "Descripción"
 
 #: templates/admin_doc/model_detail.html:40
 msgid "Back to Data Model Documentation"
-msgstr ""
+msgstr "Volver a la documentación del modelo de datos"
 
 #: templates/includes/computer_messages_result.html:10
 #: templates/includes/server_messages_result.html:11
@@ -1310,11 +1352,11 @@ msgstr "Información de aplicaciones"
 
 #: templates/registration/logged_out.html:5
 msgid "Thanks for spending some quality time with the Web site today."
-msgstr ""
+msgstr "Gracias por pasar parte de su tiempo visitando este sitio web."
 
 #: templates/registration/logged_out.html:7
 msgid "Log in again"
-msgstr ""
+msgstr "Loguearse de nuevo"
 
 #: templates/registration/password_change_done.html:4
 #: templates/registration/password_change_done.html:7
@@ -1327,7 +1369,7 @@ msgstr "La contraseña ha sido cambiada."
 
 #: templates/registration/password_change_form.html:16
 msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
-msgstr ""
+msgstr "Por favor, introduzca su contraseña actual por razones de seguridad, y después introduzca la nueva contraseña dos veces para que se pueda verificar que está bien escrita."
 
 #: templates/registration/password_change_form.html:30
 msgid "Old password"
@@ -1345,3 +1387,11 @@ msgstr "Nueva contraseña (confirmación)"
 msgid "Change my password"
 msgstr "Cambiar mi contraseña"
 
+#~ msgid "Mining"
+#~ msgstr "Gestión"
+
+#~ msgid "Configuration"
+#~ msgstr "Configuración"
+
+#~ msgid "Software"
+#~ msgstr "Software"
