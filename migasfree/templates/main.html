@@ -5,7 +5,6 @@
     {{ block.super }}
     <script type="text/javascript">
 $(document).ready(function() {
-    //$("section nav").accordion({collapsible: true, active: 0, heightStyle: "content"});
     setInterval(function() {
         $('article #results').load("{% url dashboard %}");
     }, 10000);
