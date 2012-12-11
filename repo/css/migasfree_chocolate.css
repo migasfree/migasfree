@@ -37,7 +37,7 @@ h1 {
     float: left;
     line-height: 26px;
 }
-h1 a:first-child {
+h1 a#organization {
     background: url('../icons/favicon.png') left center no-repeat;
     padding-left: 26px;
 }
@@ -120,6 +120,9 @@ section nav li {
     list-style-type: none;
     margin-right: 2em;
     text-transform: lowercase;
+}
+section nav #change-version label {
+    display: none;
 }
 section article {
     padding: 1em 0;
@@ -221,6 +224,9 @@ section {padding-bottom: 120px;}
 footer {margin-top: -120px; height: 120px;}
 
 /******/
+.change-list-title {
+    float: left;
+}
 .addlink, .historylink {
     border: 1px solid #959595;
     padding: 2px 5px;
@@ -232,19 +238,19 @@ footer {margin-top: -120px; height: 120px;}
 }
 .object-tools {
     font-weight: bold;
-    margin: 1em 0 1.5em;
+    margin: 0.5em 0 1.5em;
     height: 1em;
 }
 .object-tools li {
     display: block;
     float: left;
-    margin-left: 2px;
+    margin-left: 2em;
     padding: 0 0 0 8px;
 }
 #changelist {
     width: 100%;
     position: relative;
-    top: 2em;
+    top: 0.8em;
     background: #f0f0f0;
     color: #000;
 }
@@ -350,6 +356,13 @@ table .ordinal {
     margin-right: 6px;
 }
 
+.aligned label {
+    text-align: right;
+}
+form .aligned p.help {
+    font-size: 90%;
+}
+
 /*******/
 body.full section article, body.popup section article {
     margin: 0;
@@ -381,11 +394,15 @@ body.login {
     height: 15em;
     margin: 5em auto;
 }
-.login header nav {
+.login .status-placeholder, .login header nav {
     display: none;
+}
+.login h1 {
+    padding-bottom: 0;
 }
 .login footer {
     background-image: none;
+    height: 90px;
 }
 .login section {
     background: #fefefe;
@@ -407,6 +424,7 @@ body.login {
     padding: 4px 0;
     float: left;
     width: 100%;
+    border: none;
 }
 .login .form-row label {
     float: left;
