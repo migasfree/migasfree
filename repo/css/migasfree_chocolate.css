@@ -260,6 +260,9 @@ footer {margin-top: -120px; height: 120px;}
     background: #fefefe;
     color: #000;
 }
+#changelist .actions .clear {
+    display: none;
+}
 #changelist #toolbar {
     background: #f0f0f0;
     border-top: 1px solid #ddd;
@@ -459,6 +462,17 @@ body.login {
 }
 fieldset.module {
     border: 1px solid #ccc;
+    clear: right;
+}
+fieldset.module .vCheckboxLabel {
+    width: 8em;
+    text-align: right;
+    display: block !important;
+}
+fieldset.module input[type="checkbox"] {
+    position: relative;
+    left: 9em;
+    top: 1.5em;
 }
 .submit-row {
     /*border: 1px solid #CCCCCC;*/
