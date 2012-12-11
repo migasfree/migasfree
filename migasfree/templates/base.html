@@ -34,6 +34,7 @@
                 setInterval(function() {
                     $('#status').load("{% url ajax_status %}");
                 }, 10000);
+                $('.messagelist').fadeOut(5000);
             });
         </script>
         {% endblock extrahead %}
@@ -45,8 +46,10 @@
             <header>
                 {% block branding %}
                     <h1>
-                        <a href="{% url bootstrap %}">{% organization %}</a>
-                        [<a id="status" href="{% url dashboard %}">{{ current_status }}</a>]
+                        <a id="organization" href="{% url bootstrap %}">{% organization %}</a>
+                        <span class="status-placeholder">
+                            [<a id="status" href="{% url dashboard %}">{{ current_status }}</a>]
+                        </span>
                     </h1>
                 {% endblock branding %}
 
