@@ -3,36 +3,40 @@
 {% load server_tags %}
 
 {% block extrastyle %}
-  {{ block.super }}
-  <!--link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" /-->
-  {% if cl.formset %}
-    <!--link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" /-->
-  {% endif %}
-  {% if cl.formset or action_form %}
-    {% url admin:jsi18n as jsi18nurl %}
-    <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
-  {% endif %}
-  {{ media.css }}
-  {% if not actions_on_top and not actions_on_bottom %}
-    <style>
-      #changelist table thead th:first-child {width: inherit}
-    </style>
-  {% endif %}
-{% endblock %}
+    {{ block.super }}
+    {{ media.css }}
+    {% if not actions_on_top and not actions_on_bottom %}
+        <style type="text/css">
+#changelist table thead th:first-child {width: inherit}
+        </style>
+    {% endif %}
+{% endblock extrastyle %}
 
 {% block extrahead %}
-{{ block.super }}
-{{ media.js }}
-{% if action_form %}{% if actions_on_top or actions_on_bottom %}
-<script type="text/javascript">
+    {{ block.super }}
+    {{ media.js }}
+    {% if cl.formset or action_form %}
+        {% url admin:jsi18n as jsi18nurl %}
+        <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
+    {% endif %}
+    {% if action_form %}
+        {% if actions_on_top or actions_on_bottom %}
+            <script type="text/javascript">
 (function($) {
     $(document).ready(function($) {
         $("tr input.action-select").actions();
     });
 })(django.jQuery);
-</script>
-{% endif %}{% endif %}
-{% endblock %}
+            </script>
+        {% endif %}
+    {% endif %}
+{% endblock extrahead %}
+{# $(document).ready(function() {
+    $('#action-toggle').click(function() {
+        var $checkboxes = $('#result_list tbody').find('input[type=checkbox]');
+        $checkboxes.prop('checked', $(this).is(':checked') ? true : false);
+    });
+}); #}
 
 {% block bodyclass %}change-list{% endblock %}
 
@@ -58,14 +62,14 @@
 
 {% block content_title %}
     {% if title %}
-        <h2>
+        <h2 class="change-list-title">
             <img src="{{ STATIC_URL }}icons/{{ cl.opts.module_name }}.png" width="32" /> {% trans 'List of' %} {% trans cl.opts.verbose_name_plural|capfirst %}
             {% if cl.opts.module_name = 'repository' or cl.opts.module_name = 'package' or cl.opts.module_name = 'store' %}
                 [{{ current_version }}]
             {% endif %}
         </h2>
     {% endif %}
-{% endblock %}
+{% endblock content_title %}
 
 {% block content %}
     {% block object-tools %}
