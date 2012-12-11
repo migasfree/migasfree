@@ -35,6 +35,7 @@
                     $('#status').load("{% url ajax_status %}");
                 }, 10000);
                 $('.messagelist').fadeOut(5000);
+                $("section nav").accordion({collapsible: true, active: 0, heightStyle: "content"});
             });
         </script>
         {% endblock extrahead %}
