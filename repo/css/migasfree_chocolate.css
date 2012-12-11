@@ -110,16 +110,25 @@ section nav {
     margin-top: 1em;
 }
 section nav h3 {
-    padding-left: 1em;
+    background: url('../img/accordion-open.png') no-repeat 95% center #C4C4C4;
+    color: #000;
+    margin: 0 1em 0 .5em;
+    padding: .5em 1em .5em .5em;
 }
 section nav ul {
-    margin-bottom: 1em;
-    margin-left: 2em;
+    margin: 0 1.15em 1em .6em;
 }
 section nav li {
     list-style-type: none;
-    margin-right: 2em;
     text-transform: lowercase;
+    background: #f0f0f0;
+    color: #000;
+    padding: 0.3em 0.5em;
+    border-bottom: 1px solid #fefefe;
+}
+section nav li a {
+    display: block;
+    padding-left: .5em;
 }
 section nav #change-version label {
     display: none;
@@ -137,7 +146,7 @@ section a {
 }
 footer {
     clear: both;
-    background: url(../img/migasfree.png) 30% center no-repeat #F0F0F0;
+    background: url(../img/migasfree.png) 25% center no-repeat #F0F0F0;
     border-top: 2px solid #E1E1E1;
     font-size: 110%;
 }
@@ -151,8 +160,11 @@ footer a {
     text-decoration: none;
 }
 
+section nav form {
+    margin: 0 1.15em 0 .6em;
+}
 #change-version {
-    margin: 0 1em 1em;
+    margin: 1em;
     padding: 5px;
     border: none;
 }
@@ -498,7 +510,7 @@ ul.hardware li {
 }
 
 /******/
-.ui-widget {
+ul.ui-autocomplete {
     font-family: 'Average Sans', sans-serif !important;
     font-size: 80% !important;
 }
