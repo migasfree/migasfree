@@ -481,6 +481,9 @@ fieldset.module .vCheckboxLabel {
     text-align: right;
     display: block !important;
 }
+fieldset.module .vCheckboxLabel:after {
+    content: ':';
+}
 fieldset.module input[type="checkbox"] {
     position: relative;
     left: 9em;
