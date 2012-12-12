@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: migasfree with chocolate edition\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-12-10 20:37+0100\n"
-"PO-Revision-Date: 2012-12-10 20:42+0100\n"
+"PO-Revision-Date: 2012-12-12 12:07+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <migasfree@migasfree.org>\n"
 "Language: \n"
@@ -415,7 +415,7 @@ msgstr ""
 #: server/models/computer_login_update_hwnode.py:304
 #: server/models/hw_node.py:64
 msgid "vendor"
-msgstr ""
+msgstr "vendedor"
 
 #: server/models/computer_login_update_hwnode.py:310
 #: server/models/hw_node.py:70
@@ -430,17 +430,17 @@ msgstr "número de serie"
 #: server/models/computer_login_update_hwnode.py:328
 #: server/models/hw_node.py:88
 msgid "businfo"
-msgstr ""
+msgstr "información del bus"
 
 #: server/models/computer_login_update_hwnode.py:334
 #: server/models/hw_node.py:94
 msgid "physid"
-msgstr ""
+msgstr "identificador físico"
 
 #: server/models/computer_login_update_hwnode.py:340
 #: server/models/hw_node.py:100
 msgid "slot"
-msgstr ""
+msgstr "bahía"
 
 #: server/models/computer_login_update_hwnode.py:346
 #: server/models/hw_node.py:106
@@ -460,7 +460,7 @@ msgstr "reloj"
 #: server/models/computer_login_update_hwnode.py:361
 #: server/models/hw_node.py:121
 msgid "dev"
-msgstr ""
+msgstr "dispositivo"
 
 #: server/models/computer_login_update_hwnode.py:367
 #: server/models/hw_node.py:127
@@ -470,12 +470,12 @@ msgstr "icono"
 #: server/models/computer_login_update_hwnode.py:377
 #: server/models/hw_node.py:137
 msgid "Hardware Node"
-msgstr ""
+msgstr "Nodo hardware"
 
 #: server/models/computer_login_update_hwnode.py:378
 #: server/models/hw_node.py:138
 msgid "Hardware Nodes"
-msgstr ""
+msgstr "Nodos hardware"
 
 #: server/models/device.py:19
 msgid "Port"
@@ -489,7 +489,7 @@ msgstr "Tipo"
 #: server/models/device.py:29
 #: templates/includes/config_menu.html:31
 msgid "Manufacturer"
-msgstr ""
+msgstr "Fabricante"
 
 #: server/models/device.py:32
 msgid "Identification number"
@@ -558,15 +558,15 @@ msgstr "Ficheros de dispositivo"
 
 #: server/models/device_manufacturer.py:23
 msgid "Device (Manufacturer)"
-msgstr ""
+msgstr "Dispositivo (fabricante)"
 
 #: server/models/device_manufacturer.py:24
 msgid "Device (Manufacturers)"
-msgstr ""
+msgstr "Dispositivo (fabricantes)"
 
 #: server/models/device_model.py:21
 msgid "manufacturer"
-msgstr ""
+msgstr "fabricante"
 
 #: server/models/device_model.py:26
 msgid "type"
@@ -598,19 +598,19 @@ msgstr "postdesinstalación"
 
 #: server/models/device_model.py:84
 msgid "Device (Model)"
-msgstr ""
+msgstr "Dispositivo (modelo)"
 
 #: server/models/device_model.py:85
 msgid "Device (Models)"
-msgstr ""
+msgstr "Dispositivo (modelos)"
 
 #: server/models/device_type.py:23
 msgid "Device (Type)"
-msgstr ""
+msgstr "Dispositivo (tipo)"
 
 #: server/models/device_type.py:24
 msgid "Device (Types)"
-msgstr ""
+msgstr "Dispositivo (tipos)"
 
 #: server/models/error.py:22
 msgid "error"
@@ -676,17 +676,17 @@ msgstr "Definiciones de fallas"
 #: server/models/hw_configuration.py:12
 #: server/models/hw_logical_name.py:12
 msgid "hardware node"
-msgstr ""
+msgstr "nodo hardware"
 
 #: server/models/hw_capability.py:32
 #: server/models/hw_configuration.py:32
 msgid "Hardware Capability"
-msgstr ""
+msgstr "Prestación hardware"
 
 #: server/models/hw_capability.py:33
 #: server/models/hw_configuration.py:33
 msgid "Hardware Capabilities"
-msgstr ""
+msgstr "Prestaciones hardware"
 
 #: server/models/hw_logical_name.py:26
 msgid "Hardware Logical Name"
@@ -720,12 +720,12 @@ msgstr "almacén"
 
 #: server/models/package.py:48
 msgid "Package/Set"
-msgstr ""
+msgstr "Aplicación/conjunto de"
 
 #: server/models/package.py:49
 #: templates/includes/software_menu.html:25
 msgid "Packages/Sets"
-msgstr ""
+msgstr "Aplicaciones/conjuntos de"
 
 #: server/models/pms.py:30
 msgid "slug"
@@ -737,7 +737,7 @@ msgstr "crear repositorio"
 
 #: server/models/pms.py:41
 msgid "Code bash. Define how create the metadata of repositories in the migasfree server."
-msgstr ""
+msgstr "Código en bash. Define cómo crear los metadatos de los repositorios en el servidor migasfree."
 
 #: server/models/pms.py:46
 msgid "repository definition"
@@ -745,7 +745,7 @@ msgstr "definición de repositorio"
 
 #: server/models/pms.py:49
 msgid "Define the content of source list file of repositories for the client."
-msgstr ""
+msgstr "Define el contenido del fichero con la lista de orígenes de repositorios para el cliente."
 
 #: server/models/pms.py:53
 msgid "package information"
@@ -753,31 +753,31 @@ msgstr "información de la aplicación"
 
 #: server/models/pms.py:56
 msgid "Code bash. Define how get info of packages in the server"
-msgstr ""
+msgstr "Código en bash. Define cómo obtener información de las aplicaciones en el servidor"
 
 #: server/models/pms.py:70
 msgid "Package Management System"
-msgstr ""
+msgstr "Sistema de gestión de aplicaciones"
 
 #: server/models/pms.py:71
 msgid "Package Management Systems"
-msgstr ""
+msgstr "Sistemas de gestión de aplicaciones"
 
 #: server/models/property.py:10
 msgid "NORMAL"
-msgstr ""
+msgstr "NORMAL"
 
 #: server/models/property.py:11
 msgid "LIST"
-msgstr ""
+msgstr "LISTA"
 
 #: server/models/property.py:12
 msgid "ADDS LEFT"
-msgstr ""
+msgstr "AGREGA POR LA IZQUIERDA"
 
 #: server/models/property.py:13
 msgid "ADDS RIGHT"
-msgstr ""
+msgstr "AGREGA POR LA DERECHA"
 
 #: server/models/property.py:17
 msgid "prefix"
@@ -789,19 +789,19 @@ msgstr ""
 
 #: server/models/property.py:41
 msgid "before insert"
-msgstr ""
+msgstr "antes de insertar"
 
 #: server/models/property.py:44
 msgid "Code django. This code will execute before insert the attribute in the server. You can modify the value of attribute here, using the variable 'data'."
-msgstr ""
+msgstr "Código en django. Este código será ejecutado antes de insertar el atributo en el servidor. Puede modificar el valor del atributo aquí usando la variable 'data'."
 
 #: server/models/property.py:48
 msgid "after insert"
-msgstr ""
+msgstr "después de insertar"
 
 #: server/models/property.py:51
 msgid "Code django. This code will execute after insert the attribute in the server."
-msgstr ""
+msgstr "Código en django. Este código será ejecutado después de insertar el atributo en el servidor."
 
 #: server/models/property.py:61
 msgid "kind"
@@ -832,7 +832,7 @@ msgstr "Consultas"
 
 #: server/models/repository.py:32
 msgid "Packages/Set"
-msgstr ""
+msgstr "Aplicaciones/conjunto de"
 
 #: server/models/repository.py:49
 msgid "excludes"
@@ -849,7 +849,7 @@ msgstr ""
 
 #: server/models/repository.py:72
 msgid "if you uncheck this field, the repository is hidden for all computers."
-msgstr ""
+msgstr "Si desmarca este campo, el repositorio está oculto para todos los ordenadores."
 
 #: server/models/repository.py:77
 msgid "Date initial for distribute."
@@ -931,7 +931,7 @@ msgstr "Usuarios"
 
 #: server/models/version.py:27
 msgid "package management system"
-msgstr ""
+msgstr "sistema de gestión de aplicaciones"
 
 #: server/models/version.py:31
 msgid "Actual line computer"
@@ -1070,7 +1070,7 @@ msgstr "Mes"
 #: server/views/stats.py:188
 #: templates/includes/mining_menu.html:32
 msgid "Provided Computers / Delay"
-msgstr ""
+msgstr "Ordenadores previstos/demora"
 
 #: server/views/stats.py:230
 msgid "days"
@@ -1105,7 +1105,7 @@ msgstr "Error del servidor (500)"
 
 #: templates/500.html:116
 msgid "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience."
-msgstr ""
+msgstr "Ha ocurrido un error. Ha sido enviado a los administradores del sitio por correo electrónico y será subsanado en breve. Gracias por su paciencia."
 
 #: templates/base.html:56
 msgid "Settings"
@@ -1153,7 +1153,7 @@ msgstr "Línea"
 
 #: templates/hardware.html:5
 msgid "Back to main tree information"
-msgstr ""
+msgstr "Volver al árbol principal de información"
 
 #: templates/query.html:16
 #: templates/includes/computer_messages_result.html:4
@@ -1171,7 +1171,7 @@ msgstr "Historial"
 
 #: templates/admin/change_form.html:57
 msgid "View on site"
-msgstr ""
+msgstr "Ver en el sitio"
 
 #: templates/admin/change_form.html:72
 #: templates/admin/change_list.html:90
@@ -1242,7 +1242,7 @@ msgstr ""
 #: templates/admin/login.html.py:11
 #: templates/admin/login.html:32
 msgid "Log in"
-msgstr ""
+msgstr "Iniciar sesión"
 
 #: templates/admin/login.html:21
 msgid "Username:"
