@@ -39,6 +39,8 @@
             </tbody>
         </table>
     {% else %}
-        <p class="info">{% trans 'No results for query' %}</p>
+        {% if filters %}
+            <p class="info">{% trans 'No results for query' %}</p>
+        {% endif %}
     {% endif %}
 {% endblock content %}
