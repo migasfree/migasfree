@@ -11,6 +11,7 @@ LANGUAGES_CHOICES = (
     (2, 'perl'),
     (3, 'php'),
     (4, 'ruby'),
+    (5, 'cmd'),
 )
 
 PLATFORM_CHOICES = (
