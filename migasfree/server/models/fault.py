@@ -10,41 +10,40 @@ from migasfree.server.models import Computer, FaultDef, Version
 class Fault(models.Model):
     computer = models.ForeignKey(
         Computer,
-        verbose_name=unicode(_("computer"))
+        verbose_name=_("computer")
     )
 
     faultdef = models.ForeignKey(
         FaultDef,
-        verbose_name=unicode(_("fault definition"))
+        verbose_name=_("fault definition")
     )
 
     date = models.DateTimeField(
-        unicode(_("date")),
+        _("date"),
         default=0
     )
 
     text = models.TextField(
-        unicode(_("text")),
+        _("text"),
         null=True,
         blank=True
     )
 
     checked = models.BooleanField(
-        unicode(_("checked")),
+        _("checked"),
         default=False,
-        help_text=""
     )
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version"))
+        verbose_name=_("version")
     )
 
     def computer_link(self):
         return self.computer.link()
 
     computer_link.allow_tags = True
-    computer_link.short_description = unicode(_("Computer"))
+    computer_link.short_description = _("Computer")
 
     def __unicode__(self):
         return u'%s - %s - %s' % (
@@ -55,8 +54,8 @@ class Fault(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Fault"))
-        verbose_name_plural = unicode(_("Faults"))
+        verbose_name = _("Fault")
+        verbose_name_plural = _("Faults")
         permissions = (("can_save_fault", "Can save Fault"),)
 
     def link(self):

@@ -13,18 +13,18 @@ from migasfree.server.models import Version, VersionManager, Store
 
 class Package(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=100
     )
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version"))
+        verbose_name=_("version")
     )
 
     store = models.ForeignKey(
         Store,
-        verbose_name=unicode(_("store"))
+        verbose_name=_("store")
     )
 
     objects = VersionManager()  # manager by user version
@@ -45,8 +45,8 @@ class Package(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Package/Set"))
-        verbose_name_plural = unicode(_("Packages/Sets"))
+        verbose_name = _("Package/Set")
+        verbose_name_plural = _("Packages/Sets")
         unique_together = (("name", "version"),)
         permissions = (("can_save_package", "Can save Package"),)
 
@@ -58,9 +58,10 @@ class Package(models.Model):
             self.version.name
         )
 
-        return '<a href="%s"><img src="%sicons/package-info.png" height="16px" alt="information" /></a> <a href="%s">%s</a>' % (
+        return '<a href="%s"><img src="%sicons/package-info.png" height="16px" alt="%s" /></a> <a href="%s">%s</a>' % (
             info,
             STATIC_URL,
+            _("information"),
             reverse('admin:server_package_change', args=(self.id, )),
             self.__unicode__()
         )

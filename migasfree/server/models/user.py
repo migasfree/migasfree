@@ -7,13 +7,13 @@ from common import link
 
 class User(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         unique=True
     )
 
     fullname = models.CharField(
-        unicode(_("fullname")),
+        _("fullname"),
         max_length=100
     )
 
@@ -22,8 +22,8 @@ class User(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("User"))
-        verbose_name_plural = unicode(_("Users"))
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
         permissions = (("can_save_user", "Can save User"),)
 
     def link(self):

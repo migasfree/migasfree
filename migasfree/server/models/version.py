@@ -18,38 +18,38 @@ class Version(models.Model):
     Distribution for personalize.
     """
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         unique=True
     )
 
     pms = models.ForeignKey(
         Pms,
-        verbose_name=unicode(_("package management system"))
+        verbose_name=_("package management system")
     )
 
     computerbase = models.CharField(
-        unicode(_("Actual line computer")),
+        _("Actual line computer"),
         max_length=50,
-        help_text=unicode(_("Computer with the actual line software")),
+        help_text=_("Computer with the actual line software"),
         default="---"
     )
 
     base = models.TextField(
-        unicode(_("Actual line packages")),
+        _("Actual line packages"),
         null=False,
         blank=True,
-        help_text=unicode(_("List ordered of packages of actual line computer"))
+        help_text=_("List ordered of packages of actual line computer")
     )
 
     autoregister = models.BooleanField(
-        unicode(_("autoregister")),
+        _("autoregister"),
         default=False,
-        help_text="Is not neccesary a user for register the computer in database and get the keys."
+        help_text=_("Is not neccesary a user for register the computer in database and get the keys.")
     )
 
     platform = models.IntegerField(
-        unicode(_("platform")),
+        _("platform"),
         default=0,
         choices=PLATFORM_CHOICES
     )
@@ -79,8 +79,8 @@ class Version(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Version"))
-        verbose_name_plural = unicode(_("Versions"))
+        verbose_name = _("Version")
+        verbose_name_plural = _("Versions")
         permissions = (("can_save_version", "Can save Version"),)
 
     def link(self):

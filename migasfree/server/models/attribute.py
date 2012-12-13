@@ -10,16 +10,16 @@ from migasfree.server.models import Property
 class Attribute(models.Model):
     property_att = models.ForeignKey(
         Property,
-        verbose_name=unicode(_("Property of attribute"))
+        verbose_name=_("Property of attribute")
     )
 
     value = models.CharField(
-        unicode(_("value")),
+        _("value"),
         max_length=250
     )
 
     description = models.TextField(
-        unicode(_("description")),
+        _("description"),
         null=True,
         blank=True
     )
@@ -27,8 +27,8 @@ class Attribute(models.Model):
     def property_link(self):
         return self.property_att.link()
 
+    property_link.short_description = _("Property")
     property_link.allow_tags = True
-    property_link.short_description = unicode(_("Property"))
 
     def __unicode__(self):
         return u'%s-%s %s' % (
@@ -39,8 +39,8 @@ class Attribute(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Attribute"))
-        verbose_name_plural = unicode(_("Attributes"))
+        verbose_name = _("Attribute")
+        verbose_name_plural = _("Attributes")
         unique_together = (("property_att", "value"),)
         permissions = (("can_save_attribute", "Can save Attribute"),)
 

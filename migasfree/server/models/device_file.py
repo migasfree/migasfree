@@ -14,8 +14,8 @@ class DeviceFile(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Device (File)"))
-        verbose_name_plural = unicode(_("Device (Files)"))
+        verbose_name = _("Device (File)")
+        verbose_name_plural = _("Device (Files)")
         permissions = (("can_save_devicefile", "Can save Device File"),)
 
     def link(self):

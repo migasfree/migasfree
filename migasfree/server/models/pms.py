@@ -21,13 +21,13 @@ class Pms(models.Model):
     """
 
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         unique=True
     )
 
     slug = models.CharField(
-        unicode(_("slug")),
+        _("slug"),
         max_length=50,
         null=True,
         blank=True,
@@ -35,25 +35,25 @@ class Pms(models.Model):
     )
 
     createrepo = models.TextField(
-        unicode(_("create repository")),
+        _("create repository"),
         null=True,
         blank=True,
-        help_text=unicode(_("Code bash. Define how create the metadata of repositories in the migasfree server."))
+        help_text=_("Code bash. Define how create the metadata of repositories in the migasfree server.")
     )
 
     #TODO REMOVE THIS FIELD repository (TO CLIENT)
     repository = models.TextField(
-        unicode(_("repository definition")),
+        _("repository definition"),
         null=True,
         blank=True,
-        help_text=unicode(_("Define the content of source list file of repositories for the client."))
+        help_text=_("Define the content of source list file of repositories for the client.")
     )
 
     info = models.TextField(
-        unicode(_("package information")),
+        _("package information"),
         null=True,
         blank=True,
-        help_text=unicode(_("Code bash. Define how get info of packages in the server"))
+        help_text=_("Code bash. Define how get info of packages in the server")
     )
 
     def __unicode__(self):
@@ -67,8 +67,8 @@ class Pms(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Package Management System"))
-        verbose_name_plural = unicode(_("Package Management Systems"))
+        verbose_name = _("Package Management System")
+        verbose_name_plural = _("Package Management Systems")
         permissions = (("can_save_pms", "Can save Package Management System"),)
 
     def link(self):

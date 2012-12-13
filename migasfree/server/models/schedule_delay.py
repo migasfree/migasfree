@@ -8,18 +8,18 @@ from migasfree.server.models import Schedule, Attribute
 
 
 class ScheduleDelay(models.Model):
-    delay = models.IntegerField(unicode(_("delay")))
+    delay = models.IntegerField(_("delay"))
 
     schedule = models.ForeignKey(
         Schedule,
-        verbose_name=unicode(_("schedule"))
+        verbose_name=_("schedule")
     )
 
     attributes = models.ManyToManyField(
         Attribute,
         null=True,
         blank=True,
-        verbose_name=unicode(_("attributes"))
+        verbose_name=_("attributes")
     )
 
     def __unicode__(self):
@@ -33,12 +33,12 @@ class ScheduleDelay(models.Model):
 
         return cattributes[0:len(cattributes) - 1]
 
-    list_attributes.short_description = unicode(_("attributes"))
+    list_attributes.short_description = _("attributes")
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Schedule Delay"))
-        verbose_name_plural = unicode(_("Schedule Delays"))
+        verbose_name = _("Schedule Delay")
+        verbose_name_plural = _("Schedule Delays")
         unique_together = (("schedule", "delay"),)
         permissions = (("can_save_scheduledelay", "Can save Schedule Delay"),)
 

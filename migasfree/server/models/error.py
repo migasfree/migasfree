@@ -10,29 +10,28 @@ from migasfree.server.models import Computer, Version, AutoCheckError
 class Error(models.Model):
     computer = models.ForeignKey(
         Computer,
-        verbose_name=unicode(_("computer"))
+        verbose_name=_("computer")
     )
 
     date = models.DateTimeField(
-        unicode(_("date")),
+        _("date"),
         default=0
     )
 
     error = models.TextField(
-        unicode(_("error")),
+        _("error"),
         null=True,
         blank=True
     )
 
     checked = models.BooleanField(
-        unicode(_("checked")),
+        _("checked"),
         default=False,
-        help_text=""
     )
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version"))
+        verbose_name=_("version")
     )
 
     def auto_check(self):
@@ -48,7 +47,7 @@ class Error(models.Model):
         return self.computer.link()
 
     computer_link.allow_tags = True
-    computer_link.short_description = unicode(_("Computer"))
+    computer_link.short_description = _("Computer")
 
     def save(self, *args, **kwargs):
         self.error = self.error.replace("\r\n", "\n")
@@ -64,8 +63,8 @@ class Error(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Error"))
-        verbose_name_plural = unicode(_("Errors"))
+        verbose_name = _("Error")
+        verbose_name_plural = _("Errors")
         permissions = (("can_save_error", "Can save Error"),)
 
     def link(self):

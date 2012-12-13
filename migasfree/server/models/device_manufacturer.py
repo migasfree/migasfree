@@ -8,7 +8,7 @@ from common import link
 
 class DeviceManufacturer(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         null=True,
         blank=True,
@@ -16,12 +16,12 @@ class DeviceManufacturer(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return self.name
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Device (Manufacturer)"))
-        verbose_name_plural = unicode(_("Device (Manufacturers)"))
+        verbose_name = _("Device (Manufacturer)")
+        verbose_name_plural = _("Device (Manufacturers)")
         permissions = (("can_save_devicemanufacturer", "Can save Device Manufacturer"),)
 
     def link(self):

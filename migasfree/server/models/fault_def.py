@@ -9,30 +9,30 @@ from migasfree.server.models import Attribute
 
 class FaultDef(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         unique=True
     )
 
     description = models.TextField(
-        unicode(_("description")),
+        _("description"),
         null=True,
         blank=True
     )
 
     active = models.BooleanField(
-        unicode(_("active")),
+        _("active"),
         default=True
     )
 
     language = models.IntegerField(
-        unicode(_("programming language")),
+        _("programming language"),
         default=0,
         choices=LANGUAGES_CHOICES
     )
 
     code = models.TextField(
-        unicode(_("Code")),
+        _("Code"),
         null=False,
         blank=True
     )
@@ -41,7 +41,7 @@ class FaultDef(models.Model):
         Attribute,
         null=True,
         blank=True,
-        verbose_name=unicode(_("attributes"))
+        verbose_name=_("attributes")
     )
 
     def list_attributes(self):
@@ -51,7 +51,7 @@ class FaultDef(models.Model):
 
         return cattributes[0:len(cattributes) - 1]
 
-    list_attributes.short_description = unicode(_("attributes"))
+    list_attributes.short_description = _("attributes")
 
     def save(self, *args, **kwargs):
         self.code = self.code.replace("\r\n", "\n")
@@ -66,8 +66,8 @@ class FaultDef(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Fault Definition"))
-        verbose_name_plural = unicode(_("Faults Definition"))
+        verbose_name = _("Fault Definition")
+        verbose_name_plural = _("Faults Definition")
         permissions = (("can_save_faultdef", "Can save Fault Definition"),)
 
     def link(self):

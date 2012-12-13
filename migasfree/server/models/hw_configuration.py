@@ -9,26 +9,26 @@ from migasfree.server.models import HwNode
 class HwConfiguration(models.Model):
     node = models.ForeignKey(
         HwNode,
-        verbose_name=unicode(_("hardware node"))
+        verbose_name=_("hardware node")
     )
 
     name = models.TextField(
-        unicode(_("name")),
+        _("name"),
         null=False,
         blank=True
     )  # This is the field "config" in lshw
 
     value = models.TextField(
-        unicode(_("value")),
+        _("value"),
         null=True,
         blank=True
     )
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return self.name
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Hardware Capability"))
-        verbose_name_plural = unicode(_("Hardware Capabilities"))
+        verbose_name = _("Hardware Capability")
+        verbose_name_plural = _("Hardware Capabilities")
         unique_together = (("name", "node"),)

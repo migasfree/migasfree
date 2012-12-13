@@ -13,10 +13,10 @@ class AutoCheckError(models.Model):
     The origen of this problem is that the package is bad packed.
     """
     message = models.TextField(
-        unicode(_("message")),
+        _("message"),
         null=True,
         blank=True,
-        help_text=unicode(_("Text of error that is only a warning. You can copy/paste from the field 'error' of a Error."))
+        help_text=_("Text of error that is only a warning. You can copy/paste from the field 'error' of a Error.")
     )
 
     def save(self, *args, **kwargs):
@@ -24,12 +24,12 @@ class AutoCheckError(models.Model):
         super(AutoCheckError, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s' % self.message
+        return self.message
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Auto Check Error"))
-        verbose_name_plural = unicode(_("Auto Check Errors"))
+        verbose_name = _("Auto Check Error")
+        verbose_name_plural = _("Auto Check Errors")
         permissions = (("can_save_autocheckerror", "Can save Auto Check Error"),)
 
     def link(self):

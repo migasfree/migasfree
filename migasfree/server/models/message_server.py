@@ -8,24 +8,24 @@ from common import link
 
 class MessageServer(models.Model):
     text = models.CharField(
-        unicode(_("text")),
+        _("text"),
         max_length=100,
         null=True,
         blank=True
     )
 
     date = models.DateTimeField(
-        unicode(_("date")),
+        _("date"),
         default=0
     )
 
     def __unicode__(self):
-        return u'%s' % (self.text)
+        return self.text
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Message Server"))
-        verbose_name_plural = unicode(_("Messages Server"))
+        verbose_name = _("Message Server")
+        verbose_name_plural = _("Messages Server")
         permissions = (("can_save_messageserver", "Can save Message Server"),)
 
     def link(self):

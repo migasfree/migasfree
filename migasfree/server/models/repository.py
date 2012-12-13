@@ -2,6 +2,7 @@
 
 import os
 import datetime
+import shutil
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -16,29 +17,29 @@ from migasfree.server.models import Version, Package, Attribute, Schedule, \
 
 class Repository(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50
     )
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version"))
+        verbose_name=_("version")
     )
 
     packages = models.ManyToManyField(
         Package,
         null=True,
         blank=True,
-        verbose_name=unicode(_("Packages/Set")),
-        help_text="Assigned Packages"
+        verbose_name=_("Packages/Set"),
+        help_text=_("Assigned Packages")
     )
 
     attributes = models.ManyToManyField(
         Attribute,
         null=True,
         blank=True,
-        verbose_name=unicode(_("attributes")),
-        help_text="Assigned Attributes"
+        verbose_name=_("attributes"),
+        help_text=_("Assigned Attributes")
     )
 
     excludes = models.ManyToManyField(
@@ -46,57 +47,57 @@ class Repository(models.Model):
         related_name="ExcludeAttribute",
         null=True,
         blank=True,
-        verbose_name=unicode(_("excludes")),
-        help_text="Excluded Attributes"
+        verbose_name=_("excludes"),
+        help_text=_("Excluded Attributes")
     )
 
     schedule = models.ForeignKey(
         Schedule,
         null=True,
         blank=True,
-        verbose_name=unicode(_("schedule"))
+        verbose_name=_("schedule")
     )
 
     createpackages = models.ManyToManyField(
         Package,
         null=True,
         blank=True,
-        verbose_name=unicode(_("createpackages")),
+        verbose_name=_("create packages"),
         related_name="createpackages",
         editable=False
     )  # used to know when "createrepositories"
 
     active = models.BooleanField(
-        unicode(_("active")),
+        _("active"),
         default=True,
-        help_text=unicode(_("if you uncheck this field, the repository is hidden for all computers."))
+        help_text=_("if you uncheck this field, the repository is hidden for all computers.")
     )
 
     date = models.DateField(
-        unicode(_("date")),
-        help_text=unicode(_("Date initial for distribute."))
+        _("date"),
+        help_text=_("Date initial for distribute.")
     )
 
     comment = models.TextField(
-        unicode(_("comment")),
+        _("comment"),
         null=True,
         blank=True
     )
 
     toinstall = models.TextField(
-        unicode(_("packages to install")),
+        _("packages to install"),
         null=True,
         blank=True
     )
 
     toremove = models.TextField(
-        unicode(_("packages to remove")),
+        _("packages to remove"),
         null=True,
         blank=True
     )
 
     modified = models.BooleanField(
-        unicode(_("modified")),
+        _("modified"),
         default=False,
         editable=False
     )  # used to "createrepositories"
@@ -111,10 +112,10 @@ class Repository(models.Model):
         return ret
 
     packages_link.allow_tags = True
-    packages_link.short_description = unicode(_("Packages"))
+    packages_link.short_description = _("Packages")
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return self.name
 
     def save(self, *args, **kwargs):
         self.name = self.name.replace(" ", "_")
@@ -124,13 +125,13 @@ class Repository(models.Model):
 
     def delete(self, *args, **kwargs):
         # remove the directory of repository
-        _path = os.path.join(
+        path = os.path.join(
             MIGASFREE_REPO_DIR,
             self.version.name,
             self.version.pms.slug,
             self.name
         )
-        os.system("rm -rf %s" % _path)
+        shutil.rmtree(path)
         super(Repository, self).delete(*args, **kwargs)
 
     def timeline(self):
@@ -160,12 +161,12 @@ class Repository(models.Model):
         return ret + "</table>"
 
     timeline.allow_tags = True
-    timeline.short_description = unicode(_('timeline'))
+    timeline.short_description = _('timeline')
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Repository"))
-        verbose_name_plural = unicode(_("Repositories"))
+        verbose_name = _("Repository")
+        verbose_name_plural = _("Repositories")
         unique_together = (("name", "version"),)
         permissions = (("can_save_repository", "Can save Repository"),)
 

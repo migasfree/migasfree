@@ -8,7 +8,7 @@ from common import link
 
 class Schedule(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         null=True,
         blank=True,
@@ -16,7 +16,7 @@ class Schedule(models.Model):
     )
 
     description = models.TextField(
-        unicode(_("description")),
+        _("description"),
         null=True,
         blank=True
     )
@@ -26,8 +26,8 @@ class Schedule(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Schedule"))
-        verbose_name_plural = unicode(_("Schedules"))
+        verbose_name = _("Schedule")
+        verbose_name_plural = _("Schedules")
         permissions = (("can_save_schedule", "Can save Schedule"),)
 
     def link(self):

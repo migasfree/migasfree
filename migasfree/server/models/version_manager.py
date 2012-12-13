@@ -52,7 +52,7 @@ class UserProfile(UserSystem):
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version")),
+        verbose_name=_("version"),
         null=True
     )
 
@@ -66,8 +66,8 @@ class UserProfile(UserSystem):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("User Profile"))
-        verbose_name_plural = unicode(_("Users Profile"))
+        verbose_name = _("User Profile")
+        verbose_name_plural = _("User Profiles")
         permissions = (("can_save_userprofile", "Can save User Profile"),)
 
     def link(self):

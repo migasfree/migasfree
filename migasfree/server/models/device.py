@@ -14,22 +14,22 @@ from migasfree.server.models import DeviceConnection, DeviceModel
 class Device(models.Model):
 
     def device_connection_name(self):
-        return u"%s" % (self.connection.name)
+        return self.connection.name
 
-    device_connection_name.short_description = unicode(_('Port'))
+    device_connection_name.short_description = _('Port')
 
     def device_connection_type(self):
-        return u"%s" % (self.connection.devicetype.name)
+        return self.connection.devicetype.name
 
-    device_connection_type.short_description = unicode(_('Type'))
+    device_connection_type.short_description = _('Type')
 
     def device_manufacturer_name(self):
-        return u"%s" % (self.model.manufacturer.name)
+        return self.model.manufacturer.name
 
-    device_manufacturer_name.short_description = unicode(_('Manufacturer'))
+    device_manufacturer_name.short_description = _('Manufacturer')
 
     name = models.CharField(
-        unicode(_("Identification number")),
+        _("Identification number"),
         max_length=50,
         null=True,
         blank=True,
@@ -37,7 +37,7 @@ class Device(models.Model):
     )
 
     alias = models.CharField(
-        unicode(_("Alias")),
+        _("Alias"),
         max_length=50,
         null=True,
         blank=True
@@ -45,16 +45,16 @@ class Device(models.Model):
 
     model = models.ForeignKey(
         DeviceModel,
-        verbose_name=unicode(_("model"))
+        verbose_name=_("model")
     )
 
     connection = models.ForeignKey(
         DeviceConnection,
-        verbose_name=unicode(_("connection"))
+        verbose_name=_("connection")
     )
 
     uri = models.CharField(
-        unicode(_("uri")),
+        _("uri"),
         max_length=50,
         null=True,
         blank=True,
@@ -62,7 +62,7 @@ class Device(models.Model):
     )
 
     location = models.CharField(
-        unicode(_("location")),
+        _("location"),
         max_length=50,
         null=True,
         blank=True,
@@ -70,7 +70,7 @@ class Device(models.Model):
     )
 
     information = models.CharField(
-        unicode(_("information")),
+        _("information"),
         max_length=50,
         null=True,
         blank=True,
@@ -84,7 +84,7 @@ class Device(models.Model):
         return ret
 
     computers_link.allow_tags = True
-    computers_link.short_description = unicode(_("Computers"))
+    computers_link.short_description = _("Computers")
 
     def fullname(self):
         if self.alias == "":
@@ -178,8 +178,8 @@ class Device(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Device"))
-        verbose_name_plural = unicode(_("Devices"))
+        verbose_name = _("Device")
+        verbose_name_plural = _("Devices")
         unique_together = (("connection", "name"),)
         permissions = (("can_save_device", "Can save Device"),)
 

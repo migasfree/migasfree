@@ -10,7 +10,7 @@ from migasfree.server.models import DeviceType, DeviceManufacturer, \
 
 class DeviceModel(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         null=True,
         blank=True
@@ -18,54 +18,50 @@ class DeviceModel(models.Model):
 
     manufacturer = models.ForeignKey(
         DeviceManufacturer,
-        verbose_name=unicode(_("manufacturer"))
+        verbose_name=_("manufacturer")
     )
 
     devicetype = models.ForeignKey(
         DeviceType,
-        verbose_name=unicode(_("type"))
+        verbose_name=_("type")
     )
 
     devicefile = models.ForeignKey(
         DeviceFile,
         null=True,
         blank=True,
-        verbose_name=unicode(_("file"))
+        verbose_name=_("file")
     )
 
     connections = models.ManyToManyField(
         DeviceConnection,
         null=True,
         blank=True,
-        verbose_name=unicode(_("connections"))
+        verbose_name=_("connections")
     )
 
     preinstall = models.TextField(
-        unicode(_("pre-install")),
+        _("pre-install"),
         null=True,
         blank=True,
-        help_text="pre-install"
     )
 
     postinstall = models.TextField(
-        unicode(_("post-install")),
+        _("post-install"),
         null=True,
         blank=True,
-        help_text="post-install"
     )
 
     preremove = models.TextField(
-        unicode(_("pre-remove")),
+        _("pre-remove"),
         null=True,
         blank=True,
-        help_text="pre-remove"
     )
 
     postremove = models.TextField(
-        unicode(_("post-remove")),
+        _("post-remove"),
         null=True,
         blank=True,
-        help_text="post-remove"
     )
 
     def __unicode__(self):
@@ -81,8 +77,8 @@ class DeviceModel(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Device (Model)"))
-        verbose_name_plural = unicode(_("Device (Models)"))
+        verbose_name = _("Device (Model)")
+        verbose_name_plural = _("Device (Models)")
         unique_together = (("devicetype", "manufacturer", "name"),)
         permissions = (("can_save_devicemodel", "Can save Device Model"),)
 

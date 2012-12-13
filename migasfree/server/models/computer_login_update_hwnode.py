@@ -13,7 +13,7 @@ from migasfree.server.models import Version, Device, User, Attribute
 
 class Computer(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         null=True,
         blank=True,
@@ -22,30 +22,30 @@ class Computer(models.Model):
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version"))
+        verbose_name=_("version")
     )
 
     dateinput = models.DateField(
-        unicode(_("date input")),
-        help_text=unicode(_("Date of input of Computer in migasfree system"))
+        _("date input"),
+        help_text=_("Date of input of Computer in migasfree system")
     )
 
     ip = models.CharField(
-        unicode(_("ip")),
+        _("ip"),
         max_length=50,
         null=True,
         blank=True
     )
 
     software = models.TextField(
-        unicode(_("software inventory")),
+        _("software inventory"),
         null=True,
         blank=True,
-        help_text=unicode(_("differences of packages respect the software base of the version"))
+        help_text=_("differences of packages respect the software base of the version")
     )
 
     history_sw = models.TextField(
-        unicode(_("software history")),
+        _("software history"),
         default="",
         null=True,
         blank=True
@@ -55,26 +55,25 @@ class Computer(models.Model):
         Device,
         null=True,
         blank=True,
-        verbose_name=unicode(_("devices"))
+        verbose_name=_("devices")
     )
 
     devices_copy = models.TextField(
-        unicode(_("devices_copy")),
+        _("devices copy"),
         null=True,
         blank=False,
         editable=False
     )
 
     devices_modified = models.BooleanField(
-        unicode(_("devices modified")),
+        _("devices modified"),
         default=False,
         editable=False
     )  # used to "createrepositories"
 
     datelastupdate = models.DateTimeField(
-        unicode(_("last update")),
+        _("last update"),
         null=True,
-        help_text=unicode(_("last update date"))
     )
 
     def last_login(self):
@@ -95,13 +94,13 @@ class Computer(models.Model):
         return self.last_login().link()
 
     login_link.allow_tags = True
-    login_link.short_description = unicode(_("Last login"))
+    login_link.short_description = _("Last login")
 
     def update_link(self):
         return self.last_update().link()
 
     update_link.allow_tags = True
-    update_link.short_description = unicode(_("Last update"))
+    update_link.short_description = _("Last update")
 
     def hw_link(self):
         node = HwNode.objects.get(computer=self.id, parent=None)
@@ -111,7 +110,7 @@ class Computer(models.Model):
         )
 
     hw_link.allow_tags = True
-    hw_link.short_description = unicode(_("Hardware"))
+    hw_link.short_description = _("Hardware")
 
     def devices_link(self):
         ret = ""
@@ -121,15 +120,15 @@ class Computer(models.Model):
         return ret
 
     devices_link.allow_tags = True
-    devices_link.short_description = unicode(_("Devices"))
+    devices_link.short_description = _("Devices")
 
     def __unicode__(self):
         return self.name
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Computer"))
-        verbose_name_plural = unicode(_("Computers"))
+        verbose_name = _("Computer")
+        verbose_name_plural = _("Computers")
         permissions = (("can_save_computer", "Can save Computer"),)
 
     def link(self):  # for be used with firessh
@@ -146,25 +145,25 @@ class Computer(models.Model):
 
 class Login(models.Model):
     date = models.DateTimeField(
-        unicode(_("date")),
+        _("date"),
         default=0
     )
 
     computer = models.ForeignKey(
         Computer,
-        verbose_name=unicode(_("computer"))
+        verbose_name=_("computer")
     )
 
     user = models.ForeignKey(
         User,
-        verbose_name=unicode(_("user"))
+        verbose_name=_("user")
     )
 
     attributes = models.ManyToManyField(
         Attribute,
         null=True,
         blank=True,
-        verbose_name=unicode(_("attributes")),
+        verbose_name=_("attributes"),
         help_text=_("Sent attributes")
     )
 
@@ -172,13 +171,13 @@ class Login(models.Model):
         return self.computer.link()
 
     computer_link.allow_tags = True
-    computer_link.short_description = unicode(_("Computer"))
+    computer_link.short_description = _("Computer")
 
     def user_link(self):
         return self.user.link()
 
     user_link.allow_tags = True
-    user_link.short_description = unicode(_("User"))
+    user_link.short_description = _("User")
 
     def __unicode__(self):
         return u'%s@%s' % (
@@ -188,8 +187,8 @@ class Login(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Login"))
-        verbose_name_plural = unicode(_("Logins"))
+        verbose_name = _("Login")
+        verbose_name_plural = _("Logins")
         unique_together = (("computer", "user"),)
         permissions = (("can_save_login", "Can save Login"),)
 
@@ -203,17 +202,17 @@ class Login(models.Model):
 class Update(models.Model):
     computer = models.ForeignKey(
         Computer,
-        verbose_name=unicode(_("computer"))
+        verbose_name=_("computer")
     )
 
     version = models.ForeignKey(
         Version,
-        verbose_name=unicode(_("version")),
+        verbose_name=_("version"),
         null=True
     )
 
     date = models.DateTimeField(
-        unicode(_("date")),
+        _("date"),
         default=0
     )
 
@@ -224,12 +223,12 @@ class Update(models.Model):
         return self.computer.link()
 
     computer_link.allow_tags = True
-    computer_link.short_description = unicode(_("Computer"))
+    computer_link.short_description = _("Computer")
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Update"))
-        verbose_name_plural = unicode(_("Updates"))
+        verbose_name = _("Update")
+        verbose_name_plural = _("Updates")
         permissions = (("can_save_update", "Can save Update"),)
 
     def save(self, *args, **kwargs):
@@ -251,128 +250,126 @@ class HwNode(models.Model):
         'self',
         blank=True,
         null=True,
-        verbose_name=unicode(_("parent")),
+        verbose_name=_("parent"),
         related_name="child"
     )
 
     level = width = models.IntegerField(
-        unicode(_("width")),
+        _("width"),
         null=False
     )
 
     width = models.IntegerField(
-        unicode(_("width")),
+        _("width"),
         null=True
     )
 
     computer = models.ForeignKey(
         Computer,
-        verbose_name=unicode(_("computer"))
+        verbose_name=_("computer")
     )
 
     name = models.TextField(
-        unicode(_("id")),
+        _("id"),
         null=False,
         blank=True
     )  # This is the field "id" in lshw
 
     classname = models.TextField(
-        unicode(_("class")),
+        _("class"),
         null=False,
         blank=True
     )  # This is the field "class" in lshw
 
     enabled = models.BooleanField(
-        unicode(_("enabled")),
+        _("enabled"),
         default=False,
-        help_text=""
     )
 
     claimed = models.BooleanField(
-        unicode(_("claimed")),
+        _("claimed"),
         default=False,
-        help_text=""
     )
 
     description = models.TextField(
-        unicode(_("description")),
+        _("description"),
         null=True,
         blank=True
     )
 
     vendor = models.TextField(
-        unicode(_("vendor")),
+        _("vendor"),
         null=True,
         blank=True
     )
 
     product = models.TextField(
-        unicode(_("product")),
+        _("product"),
         null=True,
         blank=True
     )
 
     version = models.TextField(
-        unicode(_("version")),
+        _("version"),
         null=True,
         blank=True
     )
 
     serial = models.TextField(
-        unicode(_("serial")),
+        _("serial"),
         null=True,
         blank=True
     )
 
     businfo = models.TextField(
-        unicode(_("businfo")),
+        _("businfo"),
         null=True,
         blank=True
     )
 
     physid = models.TextField(
-        unicode(_("physid")),
+        _("physid"),
         null=True,
         blank=True
     )
 
     slot = models.TextField(
-        unicode(_("slot")),
+        _("slot"),
         null=True,
         blank=True
     )
 
     size = models.BigIntegerField(
-        unicode(_("size")),
+        _("size"),
         null=True
     )
 
     capacity = models.BigIntegerField(
-        unicode(_("capacity")),
+        _("capacity"),
         null=True
     )
 
     clock = models.IntegerField(
-        unicode(_("clock")),
+        _("clock"),
         null=True
     )
 
     dev = models.TextField(
-        unicode(_("dev")),
+        _("dev"),
         null=True,
         blank=True
     )
 
     icon = models.TextField(
-        unicode(_("icon")),
+        _("icon"),
         null=True,
         blank=True
     )
 
     def __unicode__(self):
-        return u'%s' % (self.name)
+        return self.name
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Hardware Node"))
-        verbose_name_plural = unicode(_("Hardware Nodes"))
+        verbose_name = _("Hardware Node")
+        verbose_name_plural = _("Hardware Nodes")

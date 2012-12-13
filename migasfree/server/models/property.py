@@ -7,67 +7,66 @@ from common import link, LANGUAGES_CHOICES
 
 class Property(models.Model):
     KIND_CHOICES = (
-        ('N', unicode(_('NORMAL'))),
-        ('-', unicode(_('LIST'))),
-        ('L', unicode(_('ADDS LEFT'))),
-        ('R', unicode(_('ADDS RIGHT'))),
+        ('N', _('NORMAL')),
+        ('-', _('LIST')),
+        ('L', _('ADDS LEFT')),
+        ('R', _('ADDS RIGHT')),
     )
 
     prefix = models.CharField(
-        unicode(_("prefix")),
+        _("prefix"),
         max_length=3,
         unique=True
     )
 
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50
     )
 
     language = models.IntegerField(
-        unicode(_("programming language")),
+        _("programming language"),
         default=0,
         choices=LANGUAGES_CHOICES
     )
 
     code = models.TextField(
-        unicode(_("Code")),
+        _("Code"),
         null=False,
         blank=True,
-        help_text=unicode(_("This code will execute in the client computer, and it must put in the standard output the value of the attribute correspondent to this property.<br>The format of this value is 'name~description', where 'description' is optional.<br><b>Example of code:</b><br>#Create a attribute with the name of computer from bash<br> echo $HOSTNAME"))
+        help_text=_("This code will execute in the client computer, and it must put in the standard output the value of the attribute correspondent to this property.<br>The format of this value is 'name~description', where 'description' is optional.<br><b>Example of code:</b><br>#Create a attribute with the name of computer from bash<br> echo $HOSTNAME")
     )
 
     before_insert = models.TextField(
-        unicode(_("before insert")),
+        _("before insert"),
         null=False,
         blank=True,
-        help_text=unicode(_("Code django. This code will execute before insert the attribute in the server. You can modify the value of attribute here, using the variable 'data'."))
+        help_text=_("Code django. This code will execute before insert the attribute in the server. You can modify the value of attribute here, using the variable 'data'.")
     )
 
     after_insert = models.TextField(
-        unicode(_("after insert")),
+        _("after insert"),
         null=False,
         blank=True,
-        help_text=unicode(_("Code django. This code will execute after insert the attribute in the server."))
+        help_text=_("Code django. This code will execute after insert the attribute in the server.")
     )
 
     active = models.BooleanField(
-        unicode(_("active")),
+        _("active"),
         default=True,
-        help_text=""
     )
 
     kind = models.CharField(
-        unicode(_("kind")),
+        _("kind"),
         max_length=1,
         default="N",
         choices=KIND_CHOICES
     )
 
     auto = models.BooleanField(
-        unicode(_("auto")),
+        _("auto"),
         default=True,
-        help_text="automatically add the attribute to database"
+        help_text=_("automatically add the attribute to database")
     )
 
     def namefunction(self):
@@ -84,8 +83,8 @@ class Property(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Property"))
-        verbose_name_plural = unicode(_("Properties"))
+        verbose_name = _("Property")
+        verbose_name_plural = _("Properties")
         permissions = (("can_save_property", "Can save Property"),)
 
     def link(self):

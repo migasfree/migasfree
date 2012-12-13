@@ -9,43 +9,41 @@ from migasfree.server.models import DeviceType
 
 class DeviceConnection(models.Model):
     name = models.CharField(
-        unicode(_("name")),
+        _("name"),
         max_length=50,
         null=True,
         blank=True
     )
 
     fields = models.CharField(
-        unicode(_("fields")),
+        _("fields"),
         max_length=50,
         null=True,
         blank=True
     )  # DEPRECATED
 
     uri = models.CharField(
-        unicode(_("uri")),
+        _("uri"),
         max_length=50,
         null=True,
         blank=True
     )
 
     install = models.TextField(
-        unicode(_("install")),
+        _("install"),
         null=True,
         blank=True,
-        help_text="install"
     )  # DEPRECATED
 
     remove = models.TextField(
-        unicode(_("remove")),
+        _("remove"),
         null=True,
         blank=True,
-        help_text="remove"
     )  # DEPRECATED
 
     devicetype = models.ForeignKey(
         DeviceType,
-        verbose_name=unicode(_("device type"))
+        verbose_name=_("device type")
     )
 
     def __unicode__(self):
@@ -58,8 +56,8 @@ class DeviceConnection(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Device (Connection)"))
-        verbose_name_plural = unicode(_("Device (Connections)"))
+        verbose_name = _("Device (Connection)")
+        verbose_name_plural = _("Device (Connections)")
         unique_together = (("devicetype", "name"),)
         permissions = (("can_save_deviceconnection", "Can save Device Connection"),)
 

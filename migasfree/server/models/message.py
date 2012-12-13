@@ -10,19 +10,19 @@ from migasfree.server.models import Computer
 class Message(models.Model):
     computer = models.ForeignKey(
         Computer,
-        verbose_name=unicode(_("computer")),
+        verbose_name=_("computer"),
         unique=True
     )
 
     text = models.CharField(
-        unicode(_("text")),
+        _("text"),
         max_length=100,
         null=True,
         blank=True
     )
 
     date = models.DateTimeField(
-        unicode(_("date")),
+        _("date"),
         default=0
     )
 
@@ -33,12 +33,12 @@ class Message(models.Model):
         return self.computer.link()
 
     computer_link.allow_tags = True
-    computer_link.short_description = unicode(_("Computer"))
+    computer_link.short_description = _("Computer")
 
     class Meta:
         app_label = 'server'
-        verbose_name = unicode(_("Message"))
-        verbose_name_plural = unicode(_("Messages"))
+        verbose_name = _("Message")
+        verbose_name_plural = _("Messages")
         permissions = (("can_save_message", "Can save Message"),)
 
     def link(self):
