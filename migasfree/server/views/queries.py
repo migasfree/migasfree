@@ -7,7 +7,7 @@ from datetime import datetime
 
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django import forms
 
@@ -119,19 +119,9 @@ def query(request, query_id):
                 )
 
     # show parameters form
-    try:
-        version = UserProfile.objects.get(id=request.user.id).version
-    except:
-        return render(
-            request,
-            'error.html',
-            {
-                'description': _('Error'),
-                'contentpage': _('No version to find info')
-            }
-        )
+    version = get_object_or_404(UserProfile, id=request.user.id).version
 
-    o_query = Query.objects.get(id=query_id)
+    o_query = get_object_or_404(Query, id=query_id)
     dic_initial = {
         'id_query': query_id,
         'user_version': version.id
