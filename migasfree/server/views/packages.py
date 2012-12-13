@@ -4,7 +4,7 @@ import os
 
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
@@ -14,20 +14,10 @@ from migasfree.server.models import *
 
 @login_required
 def info(request, package):  # package info
-    try:
-        if request.GET.get('version'):
-            version = Version.objects.get(name=request.GET.get('version'))
-        else:
-            version = UserProfile.objects.get(id=request.user.id).version
-    except:
-        return render(
-            request,
-            'error.html',
-            {
-                'description': _('Error'),
-                'contentpage': _('No version to find info')
-            }
-        )
+    if request.GET.get('version'):
+        version = get_object_or_404(Version, name=request.GET.get('version'))
+    else:
+        version = get_object_or_404(UserProfile, id=request.user.id).version
 
     path = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
 
