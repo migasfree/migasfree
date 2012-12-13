@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import shutil
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -73,7 +74,7 @@ class Version(models.Model):
 
     def delete(self, *args, **kwargs):
         # remove the directory of this version
-        os.system("rm -rf %s" % os.path.join(MIGASFREE_REPO_DIR, self.name))
+        shutil.rmtree(os.path.join(MIGASFREE_REPO_DIR, self.name))
         super(Version, self).delete(*args, **kwargs)
 
     class Meta:
