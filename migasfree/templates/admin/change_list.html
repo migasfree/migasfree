@@ -62,7 +62,7 @@
 
 {% block content_title %}
     {% if title %}
-        <h2 class="change-list-title">
+        <h2 {% if has_add_permission %}class="change-list-title"{% endif %}>
             <img src="{{ STATIC_URL }}icons/{{ cl.opts.module_name }}.png" width="32" /> {% trans 'List of' %} {% trans cl.opts.verbose_name_plural|capfirst %}
             {% if cl.opts.module_name = 'repository' or cl.opts.module_name = 'package' or cl.opts.module_name = 'store' %}
                 [{{ current_version }}]
