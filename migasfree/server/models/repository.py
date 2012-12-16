@@ -135,30 +135,26 @@ class Repository(models.Model):
         super(Repository, self).delete(*args, **kwargs)
 
     def timeline(self):
-        ret = '<table class="">'
+        if self.schedule.id is None:
+            return ''
+
         delays = ScheduleDelay.objects.filter(
             schedule__id=self.schedule.id
         ).order_by('delay')
 
-        for d in delays:
-            hori = horizon(self.date, d.delay)
-            if hori <= datetime.now().date():
-                ret += '<tr class=""><td><b>'
-                l = d.attributes.values_list("value")
-                ret += "<b>" + hori.strftime("%a-%b-%d") + "</b></td><td><b>"
-                for e in l:
-                    ret += e[0] + " "
-                ret += "</b></td></tr>"
-            else:
-                ret += '<tr class=""><td>'
-                l = d.attributes.values_list("value")
-                ret += hori.strftime("%a-%b-%d") + "</td><td>"
-                for e in l:
-                    ret += e[0] + " "
+        ret = '<table>'
+        for item in delays:
+            ret += '<tr'
+            hori = horizon(self.date, item.delay)
+            if hori <= datetime.datetime.now().date():
+                ret += ' class="date-passed"'
+            ret += '><td>' + hori.strftime("%a-%b-%d") + '</td><td>'
+            for e in item.attributes.values_list("value"):
+                ret += e[0] + " "
 
-                ret += "</td></tr>"
+            ret += '</td></tr>'
 
-        return ret + "</table>"
+        return ret + '</table>'
 
     timeline.allow_tags = True
     timeline.short_description = _('timeline')
