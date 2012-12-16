@@ -403,6 +403,9 @@ table.model tr, table#query tbody tr {
 table.model p {
     margin: 0;
 }
+.date-passed td {
+    font-weight: bold;
+}
 
 /*******/
 body.login {
