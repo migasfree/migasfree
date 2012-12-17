@@ -142,19 +142,19 @@ class Repository(models.Model):
             schedule__id=self.schedule.id
         ).order_by('delay')
 
-        ret = '<table>'
+        ret = '<dl class="timeline">'
         for item in delays:
-            ret += '<tr'
+            ret += '<dt'
             hori = horizon(self.date, item.delay)
             if hori <= datetime.datetime.now().date():
                 ret += ' class="date-passed"'
-            ret += '><td>' + hori.strftime("%a-%b-%d") + '</td><td>'
+            ret += '>' + hori.strftime("%a-%b-%d") + '</dt><dd>'
             for e in item.attributes.values_list("value"):
                 ret += e[0] + " "
 
-            ret += '</td></tr>'
+            ret += '</dd>'
 
-        return ret + '</table>'
+        return ret + '</dl>'
 
     timeline.allow_tags = True
     timeline.short_description = _('timeline')

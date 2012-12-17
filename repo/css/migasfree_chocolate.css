@@ -403,8 +403,20 @@ table.model tr, table#query tbody tr {
 table.model p {
     margin: 0;
 }
-.date-passed td {
+
+/*******/
+dl.timeline * {
+    font-size: 90%;
+}
+.date-passed, .date-passed + dd {
     font-weight: bold;
+}
+dl.timeline dd {
+    border-bottom: 1px dashed #888;
+    padding-left: 1em;
+}
+dl.timeline dd:last-child {
+    border-bottom: none;
 }
 
 /*******/
