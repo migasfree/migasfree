@@ -132,7 +132,7 @@ def daily_updated(request):
     return HttpResponse(o_chart.create(), mimetype="text/plain")
 
 
-def monthly_updated(request):
+def monthly_updated(request, param):
     o_chart = Chart()
     timeformat = "%b"
     o_chart.title.text = _("Updated Computers / Month")
@@ -140,47 +140,82 @@ def monthly_updated(request):
 
     element1 = Chart()
     element1.values = []
+
+    element2 = Chart()
+    element2.values = []
+
+    element3 = Chart()
+    element3.values = []
+
     labels = []
 
-    year = int(date.today().strftime("%Y"))
-    years = [year - 2, year - 1, year]
+    year= int(date.today().strftime("%Y"))
+    years = [year-2, year-1, year]
     months = []
     for i in range(1, 13):
         months.append(date(year, i, 1).strftime(timeformat))
 
     for y in years:
         for m in range(1, 13):
-            value = Update.objects.filter(
-                date__month=m,
-                date__year=y
-            ).values('computer').distinct().count()
-            element1.values.append(value)
-            element1.tip = "#x_label#    #val# " + _("Computers")
-            labels.append(str(months[m - 1]) + " " + str(y))
 
-    element1.type = "bar"
+            value2 = Update.objects.filter(version__platform=1).filter(date__month = m, date__year = y).values('computer').distinct().count()
+            element2.values.append(value2)
+            element2.tip = "#x_label#    #val# "+_("Windows Computers")
+
+            value3 = Update.objects.filter(version__platform=2).filter(date__month = m, date__year = y).values('computer').distinct().count()
+            element3.values.append(value3)
+            element3.tip = "#x_label#    #val# "+_("Linux Computers")
+
+
+            element1.values.append(value2+value3)
+            element1.tip = "#x_label#    #val# "+_("Total Computers")
+
+
+
+            labels.append(str(months[m-1]) +" " +str(y))
+
+
+
+    element1.type = "line"
     element1.dot_style.type = "dot"
-    element1.width = 2
-    element1.colour = "#417690"
-    element1.text = ""  # Label
+    element1.width = 1
+    element1.colour = "#888888"
+    element1.text = "" #Label
     element1.font_size = 10
 
-    o_chart.x_axis.labels.rotate = 270
+
+    element2.type = "line"
+    element2.dot_style.type = "dot"
+    element2.width = 3
+    element2.colour = "#FF0040" #rojo
+    element2.text = "" #Label
+    element2.font_size = 10
+
+    element3.type = "line"
+    element3.dot_style.type = "dot"
+    element3.width = 3
+    element3.colour = "#04B404" #verde
+    element3.text = "" #Label
+    element3.font_size = 10
+
+
+    o_chart.x_axis.labels.rotate =  270
     o_chart.x_axis.labels.labels = labels
 
     # y_axis
     o_chart.y_axis.max = max(element1.values)
-    o_chart.y_axis.steps = 10 ** (len(str(o_chart.y_axis.max * 4)) - 2)
-    o_chart.y_axis.max += o_chart.y_axis.steps / 2
+    o_chart.y_axis.steps = 10**( len(str(o_chart.y_axis.max*4))-2)
+    o_chart.y_axis.max = o_chart.y_axis.max + ( 10**( len(str(o_chart.y_axis.max*4))-2)/2)
 
-    o_chart.elements = [element1, ]
+    o_chart.elements = [element1,element2,element3]
 
     o_chart.y_legend.text = _("Computers")
-    o_chart.y_legend.style = "{font-size: 12px; color: #778877}"  # FIXME remove
+    o_chart.y_legend.style = "{font-size: 12px; color: #778877}"
     o_chart.x_legend.text = _("Month")
-    o_chart.x_legend.style = "{font-size: 12px; color: #778877}"  # FIXME remove
+    o_chart.x_legend.style = "{font-size: 12px; color: #778877}"
 
     return HttpResponse(o_chart.create(), mimetype="text/plain")
+
 
 
 def delay_schedule(request):
