@@ -132,7 +132,7 @@ def daily_updated(request):
     return HttpResponse(o_chart.create(), mimetype="text/plain")
 
 
-def monthly_updated(request, param):
+def monthly_updated(request):
     o_chart = Chart()
     timeformat = "%b"
     o_chart.title.text = _("Updated Computers / Month")
