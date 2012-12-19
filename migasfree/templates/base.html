@@ -55,11 +55,10 @@
                 {% endblock branding %}
 
                 <nav id="primary">
-                    {# active or selected class #}
                     <ul>
-                        <li><a href="{% url admin:server_property_changelist %}">{% trans 'Settings' %}</a></li>
-                        <li><a href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Liberation' %}</a></li>
-                        <li><a href="{% url dashboard %}">{% trans 'Audit' %}</a></li>
+                        <li id="settings"><a href="{% url admin:server_property_changelist %}">{% trans 'Settings' %}</a></li>
+                        <li id="liberation"><a href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Liberation' %}</a></li>
+                        <li id="audit"><a href="{% url dashboard %}">{% trans 'Audit' %}</a></li>
                     </ul>
                 </nav>
 

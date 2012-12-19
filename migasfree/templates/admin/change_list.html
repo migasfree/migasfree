@@ -38,7 +38,7 @@
     });
 }); #}
 
-{% block bodyclass %}change-list{% endblock %}
+{% block bodyclass %}change-list {{ cl.opts.module_name }}{% endblock %}
 
 {% block documentation %}
     <p><a href="{% url django-admindocs-models-index %}{{ cl.opts.app_label }}.{{ cl.opts.object_name.lower }}">{% trans 'Data Model Documentation' %}</a></p>

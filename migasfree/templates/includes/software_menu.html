@@ -2,6 +2,14 @@
 {% load server_tags %}
 
 <nav>
+    <h3>{% trans 'Packaging' %}</h3>
+    <ul>
+        <li><a class="repository" href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Repositories' %}</a></li>
+        <li><a class="store" href="{% url admin:server_store_changelist %}">{% trans 'Stores' %}</a></li>
+        <li><a class="package" href="{% url admin:server_package_changelist %}">{% trans 'Packages/Sets' %}</a></li>
+        <li><a class="package-info" href="{% url package_info '' %}">{% trans 'Packages information' %}</a></li>
+    </ul>
+
     {% if version_names %}
         <h3>{% trans 'Select version' %}</h3>
         <form action="{% url change_version %}" method="post">
@@ -17,12 +25,4 @@
             </fieldset>
         </form>
     {% endif %}
-
-    <h3>{% trans 'Packaging' %}</h3>
-    <ul>
-        <li><a href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Repositories' %}</a></li>
-        <li><a href="{% url admin:server_store_changelist %}">{% trans 'Stores' %}</a></li>
-        <li><a href="{% url admin:server_package_changelist %}">{% trans 'Packages/Sets' %}</a></li>
-        <li><a href="{% url package_info '' %}">{% trans 'Packages information' %}</a></li>
-    </ul>
 </nav>

@@ -3,7 +3,7 @@
 <nav>
     <h3>{% trans 'Datum' %}</h3>
     <ul id="data">
-        <li><a href="{% url dashboard %}">{% trans 'Status' %}</a></li>
+        <li><a class="status" href="{% url dashboard %}">{% trans 'Status' %}</a></li>
         <li><a class="computer" href="{% url admin:server_computer_changelist %}">{% trans 'Computers' %}</a></li>
         <li><a class="user" href="{% url admin:server_user_changelist %}">{% trans 'Users' %}</a></li>
         <li><a class="login" href="{% url admin:server_login_changelist %}">{% trans 'Logins' %}</a></li>
