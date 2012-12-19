@@ -2,17 +2,18 @@
     font-family: 'Average Sans';
     font-style: normal;
     font-weight: 400;
-    src: local('Average Sans'), local('AverageSans-Regular'), url('../webfonts/AverageSans-Regular.ttf') format('truetype');
+    src: local('Average Sans'), local('AverageSans-Regular'), url('../webfonts/AverageSans-Regular.ttf') format('truetype'), url('../webfonts/average-sans.woff') format('woff');
 }
 @font-face {
     font-family: 'Strait';
     font-style: normal;
     font-weight: 400;
-    src: local('Strait'), local('Strait-Regular'), url('../webfonts/Strait-Regular.ttf') format('truetype');
+    src: local('Strait'), local('Strait-Regular'), url('../webfonts/Strait-Regular.ttf') format('truetype'), url('../webfonts/strait.woff') format('woff');
 }
 html, * {
     margin: 0;
     padding: 0;
+    word-wrap: break-word;
 }
 section * {
     font-family: 'Average Sans', sans-serif;
