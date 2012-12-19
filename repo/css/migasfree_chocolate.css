@@ -272,7 +272,7 @@ footer {margin-top: -120px; height: 120px;}
     background: #fefefe;
     color: #000;
 }
-#changelist .actions .clear {
+#changelist .actions .clear, #changelist .actions .all {
     display: none;
 }
 #changelist #toolbar {
@@ -420,45 +420,45 @@ dl.timeline dd:last-child {
 }
 
 /*******/
-body.login {
+body.login-page {
     background: #888;
     width: 28em;
     height: 15em;
     margin: 5em auto;
 }
-.login .status-placeholder, .login header nav {
+.login-page .status-placeholder, .login-page header nav {
     display: none;
 }
-.login h1 {
+.login-page h1 {
     padding-bottom: 0;
 }
-.login footer {
+.login-page footer {
     background-image: none;
     height: 90px;
 }
-.login section {
+.login-page section {
     background: #fefefe;
 }
-.login section article {
+.login-page section article {
     min-width: 300px;
     margin-left: auto;
     margin-right: auto;
     /*margin-top: 100px;*/
     width: 100%;
 }
-.login article h2 {
+.login-page article h2 {
     margin: 1em;
 }
-.login form {
+.login-page form {
     margin-top: 1em;
 }
-.login .form-row {
+.login-page .form-row {
     padding: 4px 0;
     float: left;
     width: 100%;
     border: none;
 }
-.login .form-row label {
+.login-page .form-row label {
     float: left;
     width: 9em;
     padding-right: 0.5em;
@@ -467,14 +467,14 @@ body.login {
     font-size: 1em;
     color: #333;
 }
-.login .form-row #id_username, .login .form-row #id_password {
+.login-page .form-row #id_username, .login-page .form-row #id_password {
     width: 14em;
 }
-.login span.help {
+.login-page span.help {
     font-size: 10px;
     display: block;
 }
-.login .submit-row {
+.login-page .submit-row {
     clear: both;
     padding: 1em 0 0 9.4em;
 }
@@ -531,4 +531,76 @@ ul.hardware li {
 ul.ui-autocomplete {
     font-family: 'Average Sans', sans-serif !important;
     font-size: 80% !important;
+}
+
+/*****/
+body.status #audit a,
+body.computer #audit a,
+body.user #audit a,
+body.login #audit a,
+body.error #audit a,
+body.device #audit a,
+body.fault #audit a,
+body.attribute #audit a,
+body.query-result #audit a,
+body.stats #audit a,
+body.property #settings a,
+body.version #settings a,
+body.pms #settings a,
+body.schedule #settings a,
+body.query #settings a,
+body.userprofile #settings a,
+body.group #settings a,
+body.checking #settings a,
+body.faultdef #settings a,
+body.autocheckerror #settings a,
+body.devicefile #settings a,
+body.devicemodel #settings a,
+body.devicemanufacturer #settings a,
+body.deviceconnection #settings a,
+body.devicetype #settings a,
+body.repository #liberation a,
+body.store #liberation a,
+body.package #liberation a,
+body.package-info #liberation a {
+    background: #fefefe;
+    color: #292929;
+}
+
+body.status a.status,
+body.computer a.computer,
+body.user a.user,
+body.login a.login,
+body.error a.error,
+body.device a.device,
+body.fault a.fault,
+body.attribute a.attribute,
+body.property a.property,
+body.version a.version,
+body.pms a.pms,
+body.schedule a.schedule,
+body.query a.query,
+body.userprofile a.userprofile,
+body.group a.group,
+body.checking a.checking,
+body.faultdef a.faultdef,
+body.autocheckerror a.autocheckerror,
+body.devicefile a.devicefile,
+body.devicemodel a.devicemodel,
+body.devicemanufacturer a.devicemanufacturer,
+body.deviceconnection a.deviceconnection,
+body.devicetype a.devicetype,
+body.repository a.repository,
+body.store a.store,
+body.package a.package,
+body.package-info a.package-info {
+    border-left: .4em solid #c4c4c4;
+    border-right: .4em solid #c4c4c4;
+    padding-left: .1em;
+    color: #292929;
+}
+
+/*****/
+body.stats div#result {
+    text-align: center;
 }
