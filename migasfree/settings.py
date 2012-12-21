@@ -8,9 +8,9 @@ import os
 import django.conf.global_settings as DEFAULT_SETTINGS
 
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
-    "server.context_processors.query_names",
-    "server.context_processors.version_names",
-    "server.context_processors.current_status",
+    "migasfree.server.context_processors.query_names",
+    "migasfree.server.context_processors.version_names",
+    "migasfree.server.context_processors.current_status",
 )
 
 MIGASFREE_DB_DIR = '/var/tmp'
