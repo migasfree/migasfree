@@ -8,6 +8,7 @@ import os
 import django.conf.global_settings as DEFAULT_SETTINGS
 
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.request',
     "migasfree.server.context_processors.query_names",
     "migasfree.server.context_processors.version_names",
     "migasfree.server.context_processors.current_status",
