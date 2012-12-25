@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load adminmedia admin_list i18n %}
 {% load server_tags %}
+{% load url from future %}
 
 {% block extrastyle %}
     {{ block.super }}
@@ -16,7 +17,7 @@
     {{ block.super }}
     {{ media.js }}
     {% if cl.formset or action_form %}
-        {% url admin:jsi18n as jsi18nurl %}
+        {% url 'admin:jsi18n' as jsi18nurl %}
         <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
     {% endif %}
     {% if action_form %}
@@ -41,7 +42,7 @@
 {% block bodyclass %}change-list {{ cl.opts.module_name }}{% endblock %}
 
 {% block documentation %}
-    <p><a href="{% url django-admindocs-models-index %}{{ cl.opts.app_label }}.{{ cl.opts.object_name.lower }}">{% trans 'Data Model Documentation' %}</a></p>
+    <p><a href="{% url 'django-admindocs-models-index' %}{{ cl.opts.app_label }}.{{ cl.opts.object_name.lower }}">{% trans 'Data Model Documentation' %}</a></p>
 {% endblock documentation %}
 
 {% block coltype %}flex{% endblock %}

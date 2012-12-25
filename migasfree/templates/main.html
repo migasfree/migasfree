@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block extrahead %}
     {{ block.super }}
     <script type="text/javascript">
 $(document).ready(function() {
     setInterval(function() {
-        $('article #results').load("{% url dashboard %}");
+        $('article #results').load("{% url 'dashboard' %}");
     }, 10000);
 });
     </script>

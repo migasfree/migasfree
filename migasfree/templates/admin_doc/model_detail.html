@@ -1,10 +1,11 @@
 {% extends "base_full.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
-    <a href="{% url django-admindocs-docroot %}">{% trans 'Documentation' %}</a> &rsaquo;
-    <a href="{% url django-admindocs-models-index %}">{% trans 'Models' %}</a> &rsaquo;
+    <a href="{% url 'django-admindocs-docroot' %}">{% trans 'Documentation' %}</a> &rsaquo;
+    <a href="{% url 'django-admindocs-models-index' %}">{% trans 'Models' %}</a> &rsaquo;
     {{ name }}
 </div>
 {% endblock breadcrumbs %}

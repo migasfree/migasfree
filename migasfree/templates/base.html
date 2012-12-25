@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load server_tags %}
 {% load adminmedia %}
+{% load url from future %}
 <html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
     <head>
         <meta charset="utf-8" />
@@ -32,7 +33,7 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 setInterval(function() {
-                    $('#status').load("{% url ajax_status %}");
+                    $('#status').load("{% url 'ajax_status' %}");
                 }, 10000);
                 $('.messagelist').fadeOut(5000);
                 $("section nav").accordion({collapsible: true, active: 0, heightStyle: "content"});
@@ -47,23 +48,23 @@
             <header>
                 {% block branding %}
                     <h1>
-                        <a id="organization" href="{% url bootstrap %}">{% organization %}</a>
+                        <a id="organization" href="{% url 'bootstrap' %}">{% organization %}</a>
                         <span class="status-placeholder">
-                            [<a id="status" href="{% url dashboard %}">{{ current_status }}</a>]
+                            [<a id="status" href="{% url 'dashboard' %}">{{ current_status }}</a>]
                         </span>
                     </h1>
                 {% endblock branding %}
 
                 <nav id="primary">
                     <ul>
-                        <li id="settings"><a href="{% url admin:server_property_changelist %}">{% trans 'Settings' %}</a></li>
-                        <li id="liberation"><a href="{% url admin:server_repository_changelist %}?active__exact=1">{% trans 'Liberation' %}</a></li>
-                        <li id="audit"><a href="{% url dashboard %}">{% trans 'Audit' %}</a></li>
+                        <li id="settings"><a href="{% url 'admin:server_property_changelist' %}">{% trans 'Settings' %}</a></li>
+                        <li id="liberation"><a href="{% url 'admin:server_repository_changelist' %}?active__exact=1">{% trans 'Liberation' %}</a></li>
+                        <li id="audit"><a href="{% url 'dashboard' %}">{% trans 'Audit' %}</a></li>
                     </ul>
                 </nav>
 
                 <nav id="secondary">
-                    <form action="{% url admin:server_computer_changelist %}" method="get">
+                    <form action="{% url 'admin:server_computer_changelist' %}" method="get">
                         <fieldset>
                             <label for="search-computer">{% trans 'Computer' %}:</label>
                             <input type="text" id="search-computer" name="q" size="8" placeholder="{% trans 'Computer' %}" />
@@ -73,7 +74,7 @@
 
                     <div id="shortcuts">
                         {% if user.is_active and user.is_staff %}
-                            <p id="user"><a href="{% url admin:password_change %}" title="{% trans 'Password change' %}">{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</a> [<a href="{% url admin:logout %}">{% trans 'Logout' %}</a>]</p>
+                            <p id="user"><a href="{% url 'admin:password_change' %}" title="{% trans 'Password change' %}">{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}</a> [<a href="{% url 'admin:logout' %}">{% trans 'Logout' %}</a>]</p>
                         {% endif %}
                     </div>
                 </nav>
@@ -111,7 +112,7 @@
                 <p>Copyright &copy; 2010-2012 <a href="http://www.migasfree.org">migasfree Team</a></p>
                 <p><a href="https://github.com/agacias/migasfree">Code project @ GitHub</a> under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3 license</a></p>
                 {% block documentation %}
-                    <p><a href="{% url django-admindocs-models-index %}">{% trans 'Data Model Documentation' %}</a></p>
+                    <p><a href="{% url 'django-admindocs-models-index' %}">{% trans 'Data Model Documentation' %}</a></p>
                 {% endblock documentation %}
             </footer>
         {% endblock footer %}

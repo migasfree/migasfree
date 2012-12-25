@@ -1,11 +1,12 @@
 {% extends "base_full.html" %}
 {% load i18n %}
+{% load url from future %}
 
 {% block coltype %}colSM{% endblock %}
 
 {% block breadcrumbs %}
     <div class="breadcrumbs">
-        <a href="{% url django-admindocs-docroot %}">Documentation</a> &rsaquo; Tags
+        <a href="{% url 'django-admindocs-docroot' %}">Documentation</a> &rsaquo; Tags
     </div>
 {% endblock breadcrumbs %}
 

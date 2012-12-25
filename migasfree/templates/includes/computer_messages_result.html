@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load url from future %}
 
 {% if query %}
     <p class="info">{{ query|length }} {% trans 'results' %}</p>
@@ -22,13 +23,13 @@
 
                 <td>{{ item.8 }}</td>
 
-                <td><img src="{{ STATIC_URL }}icons/{{ item.0 }}" width="36" /> <a href="{% url admin:server_computer_change item.2 %}">{{ item.3 }}</a></td>
+                <td><img src="{{ STATIC_URL }}icons/{{ item.0 }}" width="36" /> <a href="{% url 'admin:server_computer_change' item.2 %}">{{ item.3 }}</a></td>
 
                 <td>{{ item.6 }}</td>
 
                 <td>{{ item.7 }}</td>
 
-                <td><a href="{% url admin:server_login_change item.4 %}">{{ item.5 }}</a></td>
+                <td><a href="{% url 'admin:server_login_change' item.4 %}">{{ item.5 }}</a></td>
 
                 <td>{{ item.9 }}</td>
             </tr>
