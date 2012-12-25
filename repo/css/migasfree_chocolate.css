@@ -594,7 +594,8 @@ body.devicetype a.devicetype,
 body.repository a.repository,
 body.store a.store,
 body.package a.package,
-body.package-info a.package-info {
+body.package-info a.package-info,
+a.current {
     border-left: .4em solid #c4c4c4;
     border-right: .4em solid #c4c4c4;
     padding-left: .1em;
