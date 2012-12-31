@@ -34,7 +34,7 @@ def info(request, package):  # package info
 
         return render(
             request,
-            'info_package.html',
+            'server/package_info.html',
             {
                 "title": _("Information of Package"),
                 "contentpage": ret,
@@ -62,7 +62,7 @@ def info(request, package):  # package info
 
         return render(
             request,
-            'info_folder.html',
+            'server/package_folder_info.html',
             {
                 "title": _("Information of Package"),
                 "description": _("VERSION: %s") % version.name,

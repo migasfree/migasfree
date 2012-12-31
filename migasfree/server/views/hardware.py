@@ -18,7 +18,7 @@ def hardware(request, param):
 
     return render(
         request,
-        'hardware.html',
+        'server/computer_hardware_extract.html',
         {
             "title": computer.name,
             "computer": computer,
@@ -36,7 +36,7 @@ def hardware_resume(request, param):
 
     return render(
         request,
-        'hardware_resume.html',
+        'server/computer_hardware_resume.html',
         {
             "title": computer.name,
             "computer": computer,

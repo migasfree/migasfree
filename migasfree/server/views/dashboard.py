@@ -53,13 +53,13 @@ def get_current_status():
 
 
 @login_required
-def main(request):
+def status(request):
     """
     Status of checkings
     """
-    template = 'main.html'
+    template = 'server/status.html'
     if request.is_ajax():
-        template = 'includes/status.html'
+        template = 'server/includes/status.html'
 
     status = execute_active_checkings()
     if type(status) is dict and status.get('error').get('description'):
