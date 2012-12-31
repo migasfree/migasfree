@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script type="text/javascript">
+$(document).ready(function() {
+    setInterval(function() {
+        $('article #results').load("{% url 'computer_messages' %}");
+    }, 10000);
+});
+    </script>
+{% endblock extrahead %}
+
+{% block menu %}
+    {% include 'server/includes/mining_menu.html' %}
+{% endblock menu %}
+
+{% block content %}
+    <div id="results">
+        {% include 'server/includes/computer_messages_result.html' %}
+    </div>
+{% endblock content %}
