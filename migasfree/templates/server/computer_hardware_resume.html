@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block content_title %}
+    <h2><img src="{{ STATIC_URL }}icons/computer.png" width="32" /><a href="{% url 'admin:server_computer_change' computer.id %}"> {{title}}</a></h2>
+{% endblock content_title %}
+
+{% block menu %}
+    {% include 'server/includes/mining_menu.html' %}
+{% endblock menu %}
+
+{% block content %}
+    <ul class="hardware">
+    {% for row in query %}
+        {% if row.claimed = 1 %}
+            <li class="node" style="margin-left: {{ row.level }}em;">
+        {% else %}
+            <li class="node-unclaimed" style="margin-left: {{ row.level }}em;">
+        {% endif %}
+
+        {% if row.name %}
+            {% if row.icon %}
+                <img src="{{ STATIC_URL }}icons/hw/{{ row.icon }}" alt="{{ row.icon }}" width="32" />
+            {% endif %}
+
+            <a href="{% url 'hardware' row.id %}">{{ row.name }}</a>
+        {% endif %}
+        </li>
+    {% endfor %}
+{% endblock content %}
