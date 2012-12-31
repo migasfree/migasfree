@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block menu %}
+    {% include 'server/includes/mining_menu.html' %}
+{% endblock menu %}
+
+{% block bodyclass %}query-result{% endblock %}
+
+{% block content %}
+    {% include 'server/includes/parameters.html' %}
+
+    {% for column in filters %}
+        <pre>   {{ column }}</pre>
+    {% endfor %}
+
+    {% if query %}
+        <p class="info">{{ query|length }} {% trans 'results' %}</p>
+
+        <table id="query">
+            <thead>
+                <tr>
+                    <th>#</th>
+                {% for column in titles %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
+
+            <tbody>
+            {% autoescape off %}
+                {% for row in query %}
+                    <tr class="{% cycle '' 'even' %}">
+                        <td class="ordinal">{{ forloop.counter }}.</td>
+                    {% for field in row %}
+                        <td>{{ field }}</td>
+                    {% endfor %}
+                    </tr>
+                {% endfor %}
+            {% endautoescape %}
+            </tbody>
+        </table>
+    {% else %}
+        {% if filters %}
+            <p class="info">{% trans 'No results for query' %}</p>
+        {% endif %}
+    {% endif %}
+{% endblock content %}
