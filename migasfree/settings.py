@@ -92,7 +92,7 @@ LOGIN_REDIRECT_URL = '/'
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
-ADMIN_SITE_ROOT_URL = '/migasfree/admin/'
+ADMIN_SITE_ROOT_URL = '/admin/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'p*2#s)b48j^&rm-kr&=f0a2#9^*p3gpd(21!$6o@yn4wd21-(u'
