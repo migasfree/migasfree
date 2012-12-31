@@ -49,15 +49,15 @@
 
 {% block menu %}
     {% if cl.opts.module_name = 'computer' or cl.opts.module_name = 'user' or cl.opts.module_name = 'login' or cl.opts.module_name = 'error' or cl.opts.module_name = 'fault' or cl.opts.module_name = 'device' or cl.opts.module_name = 'attribute' %}
-        {% include 'includes/mining_menu.html' %}
+        {% include 'server/includes/mining_menu.html' %}
     {% endif %}
 
     {% if cl.opts.module_name = 'property' or cl.opts.module_name = 'version' or cl.opts.module_name = 'pms' or cl.opts.module_name = 'schedule' or cl.opts.module_name = 'query' or cl.opts.module_name = 'userprofile' or cl.opts.module_name = 'group' or cl.opts.module_name = 'checking' or cl.opts.module_name = 'faultdef' or cl.opts.module_name = 'autocheckerror' or cl.opts.module_name = 'devicefile' or cl.opts.module_name = 'devicemodel' or cl.opts.module_name = 'devicemanufacturer' or cl.opts.module_name = 'deviceconnection' or cl.opts.module_name = 'devicetype' %}
-        {% include 'includes/config_menu.html' %}
+        {% include 'server/includes/config_menu.html' %}
     {% endif %}
 
     {% if cl.opts.module_name = 'repository' or cl.opts.module_name = 'package' or cl.opts.module_name = 'store' %}
-        {% include 'includes/software_menu.html' %}
+        {% include 'server/includes/software_menu.html' %}
     {% endif %}
 {% endblock menu %}
 
