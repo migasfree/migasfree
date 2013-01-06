@@ -135,9 +135,9 @@ section nav #change-version label {
     display: none;
 }
 section article {
-    padding: 1em 0;
+    padding: 1em 0 1em 1em;
     margin-left: 20%;
-    width: 79%;
+    width: 78%;
 }
 section a {
     color: #F2660A;
@@ -384,7 +384,7 @@ form .aligned p.help {
 /*******/
 body.full section article, body.popup section article {
     margin: 0;
-    padding-left: 2%;
+    padding-left: 3%;
     width: 96%;
 }
 body.popup section {
@@ -605,4 +605,27 @@ a.current {
 /*****/
 body.stats div#result {
     text-align: center;
+}
+
+/*****/
+.hide {
+    display: none;
+}
+
+#sliding-panel {
+    position: absolute;
+    height: 0;
+    width: 0;
+}
+
+#sliding-panel a {
+    transform: rotate(-90deg);
+    position: relative;
+    top: 100px;
+    left: -51px;
+    width: 120px;
+    text-align: center;
+    border: 1px solid #888;
+    border-radius: 3px;
+    padding: 3px;
 }
