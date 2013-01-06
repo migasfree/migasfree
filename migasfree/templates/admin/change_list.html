@@ -14,7 +14,6 @@
 {% endblock extrastyle %}
 
 {% block extrahead %}
-    {{ block.super }}
     {{ media.js }}
     {% if cl.formset or action_form %}
         {% url 'admin:jsi18n' as jsi18nurl %}
@@ -31,7 +30,26 @@
             </script>
         {% endif %}
     {% endif %}
+
+    {% if cl.opts.module_name = 'userprofile' or cl.opts.module_name = 'group' %}
+        <script type="text/javascript">
+            var active_accordion = 1;
+        </script>
+    {% endif %}
+
+    {% if cl.opts.module_name = 'checking' or cl.opts.module_name = 'faultdef' or cl.opts.module_name = 'autocheckerror' %}
+        <script type="text/javascript">
+            var active_accordion = 2;
+        </script>
+    {% endif %}
+
+    {% if cl.opts.module_name = 'devicefile' or cl.opts.module_name = 'devicemodel' or cl.opts.module_name = 'devicemanufacturer' or cl.opts.module_name = 'deviceconnection' or cl.opts.module_name = 'devicetype' %}
+        <script type="text/javascript">
+            var active_accordion = 3;
+        </script>
+    {% endif %}
 {% endblock extrahead %}
+
 {# $(document).ready(function() {
     $('#action-toggle').click(function() {
         var $checkboxes = $('#result_list tbody').find('input[type=checkbox]');

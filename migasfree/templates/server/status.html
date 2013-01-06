@@ -3,13 +3,13 @@
 {% load url from future %}
 
 {% block extrahead %}
-    {{ block.super }}
     <script type="text/javascript">
-$(document).ready(function() {
-    setInterval(function() {
-        $('article #results').load("{% url 'dashboard' %}");
-    }, 10000);
-});
+        var active_accordion = 0;
+        $(document).ready(function() {
+            setInterval(function() {
+                $('article #results').load("{% url 'dashboard' %}");
+            }, 10000);
+        });
     </script>
 {% endblock extrahead %}
 

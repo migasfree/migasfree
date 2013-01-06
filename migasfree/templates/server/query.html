@@ -1,6 +1,12 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block extrahead %}
+    <script type="text/javascript">
+        var active_accordion = 1;
+    </script>
+{% endblock extrahead %}
+
 {% block menu %}
     {% include 'server/includes/mining_menu.html' %}
 {% endblock menu %}

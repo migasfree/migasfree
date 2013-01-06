@@ -4,7 +4,6 @@
 {% load url from future %}
 
 {% block extrahead %}
-    {{ block.super }}
     {% url 'admin:jsi18n' as jsi18nurl %}
     <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
     {{ media }}
@@ -13,6 +12,24 @@ $(document).ready(function() {
     $('p.errornote').switchClass( "errornote", "errornote-animated", 5000);
 });
     </script>
+
+    {% if opts.module_name = 'userprofile' or opts.module_name = 'group' %}
+        <script type="text/javascript">
+            var active_accordion = 1;
+        </script>
+    {% endif %}
+
+    {% if opts.module_name = 'checking' or opts.module_name = 'faultdef' or opts.module_name = 'autocheckerror' %}
+        <script type="text/javascript">
+            var active_accordion = 2;
+        </script>
+    {% endif %}
+
+    {% if opts.module_name = 'devicefile' or opts.module_name = 'devicemodel' or opts.module_name = 'devicemanufacturer' or opts.module_name = 'deviceconnection' or opts.module_name = 'devicetype' %}
+        <script type="text/javascript">
+            var active_accordion = 3;
+        </script>
+    {% endif %}
 {% endblock extrahead %}
 
 {% block extrastyle %}
