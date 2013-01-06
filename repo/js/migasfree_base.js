@@ -4,10 +4,6 @@ if (typeof active_accordion == 'undefined')
 }
 
 $(document).ready(function() {
-    setInterval(function() {
-        $('#status').load("{% url 'ajax_status' %}");
-    }, 10000);
-
     $('.messagelist').fadeOut(5000);
 
     $("section nav").accordion({
