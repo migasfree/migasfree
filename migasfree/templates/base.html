@@ -26,20 +26,12 @@
 
         <script type="text/javascript">window.__admin_media_prefix__ = "{% filter escapejs %}{% admin_media_prefix %}{% endfilter %}";</script>
 
-        <script src="{{ STATIC_URL }}js/jquery.min.js"></script>
-        <script src="{{ STATIC_URL }}js/jquery-ui.min.js"></script>
+        <script src="{{ STATIC_URL }}js/jquery.min.js" type="text/javascript"></script>
+        <script src="{{ STATIC_URL }}js/jquery-ui.min.js" type="text/javascript"></script>
 
-        {% block extrahead %}
-        <script type="text/javascript">
-            $(document).ready(function() {
-                setInterval(function() {
-                    $('#status').load("{% url 'ajax_status' %}");
-                }, 10000);
-                $('.messagelist').fadeOut(5000);
-                $("section nav").accordion({collapsible: true, active: 0, heightStyle: "content"});
-            });
-        </script>
-        {% endblock extrahead %}
+        {% block extrahead %}{% endblock extrahead %}
+
+        <script src="{{ STATIC_URL }}js/migasfree_base.js" type="text/javascript"></script>
     </head>
 
     <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock bodyclass %}">
@@ -83,6 +75,10 @@
 
             <section>
                 {% block menu %}{% endblock menu %}
+                <div class="hide" id="sliding-panel">
+                    <a href="#" class="panel_button" id="show_button">{% trans 'Show menu' %}</a>
+                    <a href="#" class="panel_button hide" id="hide_button">{% trans 'Hide menu' %}</a>
+                </div>
 
                 <article>
                     {% if messages %}
@@ -109,7 +105,7 @@
 
         {% block footer %}
             <footer>
-                <p>Copyright &copy; 2010-2012 <a href="http://www.migasfree.org">migasfree Team</a></p>
+                <p>Copyright &copy; 2010-2013 <a href="http://www.migasfree.org">migasfree Team</a></p>
                 <p><a href="https://github.com/agacias/migasfree">Code project @ GitHub</a> under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3 license</a></p>
                 {% block documentation %}
                     <p><a href="{% url 'django-admindocs-models-index' %}">{% trans 'Data Model Documentation' %}</a></p>
