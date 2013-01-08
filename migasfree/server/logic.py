@@ -29,7 +29,8 @@ def new_attribute(o_login, o_property, par):
     if value_att != "":
         try:
             o_attribute = Attribute.objects.get(
-                value=value_att, property_att__id=o_property.id
+                value=value_att,
+                property_att__id=o_property.id
             )
         except:  # if not exist the attribute, we add it
             if o_property.auto is True:
@@ -435,13 +436,12 @@ def create_repositories(version_id):
         version=o_version
     )
     for d in dset:
-        _path = os.path.join(
+        bash += "rm -rf %s\n" % os.path.join(
             MIGASFREE_REPO_DIR,
             d.version.name,
             o_pms.slug,
             d.name
         )
-        bash += "rm -rf %s\n" % _path
 
     #Loop the Repositories modified and active for this version
     dset = Repository.objects.filter(
@@ -451,15 +451,15 @@ def create_repositories(version_id):
     )
     for d in dset:
         # we remove it
-        _path = os.path.join(
+        bash += "rm -rf %s\n" % os.path.join(
             MIGASFREE_REPO_DIR,
             d.version.name,
             o_pms.slug,
             d.name
         )
-        bash += "rm -rf %s\n" % _path
 
-    txt = "Analyzing the repositories to create files for version: %s\n" % o_version.name
+    txt = "Analyzing the repositories to create files for version: %s\n" \
+        % o_version.name
 
     for d in dset:
         path_stores = os.path.join(
@@ -473,6 +473,10 @@ def create_repositories(version_id):
             'TMP',
             o_pms.slug
         )
+        if path_tmp.endswith('/'):
+            # remove trailing slash for replacing in template
+            path_tmp = path_tmp[:-1]
+
         bash += "/bin/mkdir -p %s\n" % os.path.join(path_tmp, d.name, 'PKGS')
         txt += "\n    REPOSITORY: %s\n" % d.name
         for p in d.packages.all():
@@ -484,7 +488,7 @@ def create_repositories(version_id):
         # We create the metadata of repository
         cad = o_pms.createrepo
 
-        bash += cad.replace("%REPONAME%", d.name).replace("%PATH%", path_tmp[:-1]) + "\n"
+        bash += cad.replace("%REPONAME%", d.name).replace("%PATH%", path_tmp) + "\n"
         txt += history(d)
 
     path_tmp = os.path.join(MIGASFREE_REPO_DIR, o_version.name, "TMP")
@@ -506,5 +510,5 @@ def create_repositories(version_id):
     return txt
 
 
-def name_printer(manufacturer, model, number):
+def name_printer(manufacturer, model, number):  # TODO to devices.py
     return '%s-%s_[%s]' % (manufacturer, model, number)
