@@ -7,28 +7,25 @@ Django settings for migasfree project
 import os
 import django.conf.global_settings as DEFAULT_SETTINGS
 
-TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
-    'django.core.context_processors.request',
-    "migasfree.server.context_processors.query_names",
-    "migasfree.server.context_processors.version_names",
-    "migasfree.server.context_processors.current_status",
-)
-
-MIGASFREE_DB_DIR = '/var/tmp'
-MIGASFREE_DB_NAME = 'migasfree'
-
-MIGASFREE_PROJECT_DIR = os.path.dirname(os.getcwd())
-MIGASFREE_APP_DIR = os.path.dirname(__file__)
-MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
-
-MIGASFREE_TMP_DIR = '/tmp/migasfree-server'
-MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
-MIGASFREE_ORGANIZATION = "My Organization"
-
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-FIRST_DAY_OF_WEEK = 1
+MIGASFREE_TMP_DIR = '/tmp/migasfree-server'
+MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
+MIGASFREE_ORGANIZATION = 'My Organization'
+MIGASFREE_DB_NAME = 'migasfree.db'
+MIGASFREE_APP_DIR = os.path.dirname(__file__)
+
+if DEBUG:  # development environment
+    MIGASFREE_DB_DIR = '../..'
+    MIGASFREE_PROJECT_DIR = os.path.dirname(os.getcwd())
+    MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
+    MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
+else:  # production environment
+    MIGASFREE_DB_DIR = '/var/tmp'
+    MIGASFREE_PROJECT_DIR = '/usr/share/migasfree-server'
+    MIGASFREE_REPO_DIR = '/var/migasfree'
+    MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'keys')
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
@@ -61,6 +58,10 @@ DATABASES = {
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/Madrid'
+
+FIRST_DAY_OF_WEEK = 1
+DATE_FORMAT = 'Y-m-d'
+DATETIME_FORMAT = 'Y-m-d H:i:s'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -113,8 +114,16 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'migasfree.urls'
 
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.request',
+    "migasfree.server.context_processors.query_names",
+    "migasfree.server.context_processors.version_names",
+    "migasfree.server.context_processors.current_status",
+)
+
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    # Put strings here, like "/home/html/django_templates"
+    # or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(MIGASFREE_APP_DIR, 'templates'),
@@ -137,7 +146,8 @@ INSTALLED_APPS = (
 # DEFINE THE SEARCH CHANNELS:
 
 AJAX_LOOKUP_CHANNELS = {
-    # simplest way, automatically construct a search channel by passing a dictionary
+    # simplest way, automatically construct a search channel
+    # by passing a dictionary
     'label': {'model': 'server.label', 'search_field': 'name'},
 
     # Custom channels are specified with a tuple
@@ -160,8 +170,10 @@ AJAX_SELECT_INLINES = 'inline'
 #   this gets you up and running easily
 #   but on large admin pages or with higher traffic it will be a bit wasteful.
 # 'staticfiles':
-#   @import the css/js from {{STATIC_URL}}/ajax_selects using django's staticfiles app
-#   requires staticfiles to be installed and to run its management command to collect files
+#   @import the css/js from {{STATIC_URL}}/ajax_selects
+#     using django's staticfiles app
+#   requires staticfiles to be installed and to run its management command
+#     to collect files
 #   this still includes the css/js multiple times and is thus inefficient
 #   but otherwise harmless
 # False/None: [default]
@@ -169,7 +181,8 @@ AJAX_SELECT_INLINES = 'inline'
 #   or include them in the head of the admin/base_site.html template
 #   this is the most efficient but takes the longest to configure
 
-# when using staticfiles you may implement your own ajax_select.css and customize to taste
+# when using staticfiles you may implement your own ajax_select.css
+# and customize to taste
 
 
 ###########################################################################
