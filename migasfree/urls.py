@@ -24,8 +24,7 @@ urlpatterns = patterns('',
 
     url(r'^admin/lookups/', include(ajax_select_urls)),
 
-    # migasfree.server.urls
-    url(r'', include('server.urls')),
+    url(r'', include('migasfree.server.urls')),
 )
 
 if settings.DEBUG:

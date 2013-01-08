@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls.defaults import patterns, url
 from django.views.generic.simple import redirect_to
 
-from server.views import *
+from migasfree.server.views import *
 
 urlpatterns = patterns('',
     url(r'^accounts/login/$', login, name='login'),
@@ -37,7 +37,7 @@ urlpatterns = patterns('',
         name='change_version'
     ),
 
-    url(r'^createrepositories/$',
+    url(r'^create_repos/$',
         createrepositories,
         name='createrepositories'
     ),
