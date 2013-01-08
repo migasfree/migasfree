@@ -39,7 +39,9 @@
             });
         </script>
 
-        <script src="{{ STATIC_URL }}js/migasfree_base.js" type="text/javascript"></script>
+        {% if not is_popup %}
+            <script src="{{ STATIC_URL }}js/migasfree_base.js" type="text/javascript"></script>
+        {% endif %}
     </head>
 
     <body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock bodyclass %}">
@@ -82,11 +84,16 @@
         {% endif %}{# is_popup #}
 
             <section>
-                {% block menu %}{% endblock menu %}
-                <div class="hide" id="sliding-panel">
-                    <a href="#" class="panel_button" id="show_button">{% trans 'Show menu' %}</a>
-                    <a href="#" class="panel_button hide" id="hide_button">{% trans 'Hide menu' %}</a>
-                </div>
+                {% if not is_popup %}
+                    {% block menu %}{% endblock menu %}
+
+                    {% block sliding_panel %}
+                        <div class="hide" id="sliding-panel">
+                            <a href="#" class="panel_button" id="show_button">{% trans 'Show menu' %}</a>
+                            <a href="#" class="panel_button hide" id="hide_button">{% trans 'Hide menu' %}</a>
+                        </div>
+                    {% endblock sliding_panel %}
+                {% endif %}
 
                 <article>
                     {% if messages %}
