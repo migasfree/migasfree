@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011-2012 Jose Antonio Chavarría
+# Copyright (c) 2011-2013 Jose Antonio Chavarría
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -174,6 +174,7 @@ setup(
         'migasfree': [
             'templates/*.html',
             'templates/*/*.html',
+            'templates/*/*/*.html',
             'locale/*/LC_MESSAGES/*.mo',
             'dev-tools/*',
             'server/fixtures/*',
