@@ -7,13 +7,12 @@ Django settings for migasfree project
 import os
 import django.conf.global_settings as DEFAULT_SETTINGS
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 MIGASFREE_TMP_DIR = '/tmp/migasfree-server'
 MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
 MIGASFREE_ORGANIZATION = 'My Organization'
-MIGASFREE_DB_NAME = 'migasfree.db'
 MIGASFREE_APP_DIR = os.path.dirname(__file__)
 
 if DEBUG:  # development environment
@@ -28,7 +27,7 @@ else:  # production environment
     MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'keys')
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    ('Alberto Gacías', 'alberto@migasfree.org'),
 )
 
 MANAGERS = ADMINS
@@ -36,14 +35,14 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(MIGASFREE_DB_DIR, MIGASFREE_DB_NAME),
+        'NAME': os.path.join(MIGASFREE_DB_DIR, 'migasfree.db'),
     }
 }
 """
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': MIGASFREE_DB_NAME,
+        'NAME': 'migasfree',
         'USER': 'migasfree',
         'PASSWORD': 'migasfree',
         'HOST': '',
