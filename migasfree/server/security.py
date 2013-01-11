@@ -32,11 +32,12 @@ def verify(filename, key):
 
 def gen_keys(version):
     """
-    Generate a pair of keys RSA
+    Generates a pair of RSA keys
     """
     # Private Key
     os.system("openssl genrsa -out %s 2048"
-        % os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version))
+        % os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version)
+    )
 
     # Public Key
     os.system("openssl rsa -in %s -pubout > %s" % (
@@ -45,12 +46,13 @@ def gen_keys(version):
     ))
 
     # read only keys
-    os.chmod(os.path.join(MIGASFREE_KEYS_DIR, "%s.*" % version), 0o400)
+    os.chmod(os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version), 0o400)
+    os.chmod(os.path.join(MIGASFREE_KEYS_DIR, "%s.pub" % version), 0o400)
 
 
 def get_keys_to_client(version):
     """
-    Get the keys for register computer
+    Returns the keys for register computer
     """
     if not os.path.exists(
         os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version)
@@ -67,7 +69,9 @@ def get_keys_to_client(version):
 
 
 def get_keys_to_packager():
-    # Get the keys for register packager
+    """
+    Returns the keys for register packager
+    """
     server = readfile(os.path.join(MIGASFREE_KEYS_DIR, "migasfree-server.pub"))
     packager = readfile(
         os.path.join(MIGASFREE_KEYS_DIR, "migasfree-packager.pri")
@@ -82,8 +86,9 @@ def get_keys_to_packager():
 def create_keys_server():
     if not os.path.lexists(MIGASFREE_KEYS_DIR):
         os.mkdir(MIGASFREE_KEYS_DIR)
-        gen_keys("migasfree-server")
-        gen_keys("migasfree-packager")
+
+    gen_keys("migasfree-server")
+    gen_keys("migasfree-packager")
 
 
 def wrap(filename, data):
@@ -104,7 +109,7 @@ def wrap(filename, data):
 
 def unwrap(filename, key):
     """
-    Dado el fichero envoltorio con firma devuelve el data
+    Returns data inside signed wrapper file
     """
     with open(filename, 'rb') as fp:
         content = fp.read()
