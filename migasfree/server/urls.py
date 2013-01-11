@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls.defaults import patterns, url
-from django.views.generic.simple import redirect_to
+from django.views.generic import RedirectView
 
 from migasfree.server.views import *
 
@@ -10,8 +10,7 @@ urlpatterns = patterns('',
 
     url(
         r'^$',
-        redirect_to,
-        {'url': '/status/'},
+        RedirectView.as_view(url='/status/'),
         name='bootstrap'
     ),
 
@@ -38,8 +37,8 @@ urlpatterns = patterns('',
     ),
 
     url(r'^create_repos/$',
-        createrepositories,
-        name='createrepositories'
+        create_repos,
+        name='create_repos'
     ),
 
     url(r'^chart/(?P<chart_type>.*)/$', chart, name='chart_type'),
@@ -88,12 +87,10 @@ urlpatterns = patterns('',
     # backwards compatibility
     url(
         r'^migasfree/$',
-        redirect_to,
-        {'url': '/status/'},
+        RedirectView.as_view(url='/status/'),
     ),
     url(
         r'^migasfree/main/$',
-        redirect_to,
-        {'url': '/status/'},
+        RedirectView.as_view(url='/status/'),
     ),
 )
