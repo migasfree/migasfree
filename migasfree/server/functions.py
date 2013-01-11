@@ -8,7 +8,8 @@ from datetime import timedelta
 import django
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.settings import DATABASES, MIGASFREE_APP_DIR, MIGASFREE_REPO_DIR
+from migasfree.settings import DATABASES, MIGASFREE_PROJECT_DIR, \
+    MIGASFREE_REPO_DIR
 
 
 def is_db_sqlite():
@@ -25,7 +26,7 @@ def config_apache():
         _apache_path = '/etc/httpd/conf.d'
 
     if not _apache_path:
-        print 'Apache path not found.'
+        print('Apache path not found.')
         sys.exit(errno.ENOTDIR)
 
     # FIXME VirtualHost
@@ -41,7 +42,7 @@ Alias /repo %(migasfree_repo_dir)s
     IndexOptions FancyIndexing
 </Directory>
 
-WSGIScriptAlias / %(migasfree_app_dir)s/django.wsgi
+WSGIScriptAlias / %(migasfree_project_dir)s/django.wsgi
 """
 
     _filename = os.path.join(_apache_path, 'migasfree.conf')
@@ -51,7 +52,7 @@ WSGIScriptAlias / %(migasfree_app_dir)s/django.wsgi
 def config_cherokee():
     _cherokee_conf = '/etc/cherokee/cherokee.conf'
     if not os.path.exists(_cherokee_conf):
-        print 'Cherokee config not found.'
+        print('Cherokee config not found.')
         sys.exit(errno.ENOTDIR)
 
     _config = \
@@ -91,7 +92,7 @@ vserver!20!rule!10!handler!iocache = 0
 vserver!20!rule!10!match = default
 source!1!env_inherited = 1
 source!1!host = 127.0.0.1:32942
-source!1!interpreter = /usr/sbin/uwsgi -s 127.0.0.1:32942 -M -p 2 -z 15 -L -l 128 %(migasfree_app_dir)s/django.wsgi
+source!1!interpreter = /usr/sbin/uwsgi -s 127.0.0.1:32942 -M -p 2 -z 15 -L -l 128 %(migasfree_project_dir)s/django.wsgi
 source!1!nick = uWSGI 1
 source!1!type = interpreter
 server!timeout = 300
@@ -111,11 +112,11 @@ def _write_web_config(filename, config):
     _content = config % {
         'django_dir': os.path.dirname(os.path.abspath(django.__file__)),
         'migasfree_repo_dir': MIGASFREE_REPO_DIR,
-        'migasfree_app_dir': MIGASFREE_APP_DIR
+        'migasfree_project_dir': MIGASFREE_PROJECT_DIR
     }
 
     if not writefile(filename, _content):
-        print 'Problem found creating Apache configuration file.'
+        print('Problem found creating Apache configuration file.')
         sys.exit(errno.EINPROGRESS)
 
 
