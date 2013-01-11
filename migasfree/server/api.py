@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import jsontemplate
 import time
 import inspect
 from datetime import datetime
@@ -9,14 +8,70 @@ from datetime import datetime
 from django.db.models import Q
 from django.contrib import auth
 
+from . import jsontemplate
+
 from migasfree.settings import MIGASFREE_REPO_DIR
 
 from migasfree.server.models import *
-from migasfree.server.logic import *
 from migasfree.server.errmfs import *
 from migasfree.server.functions import *
 from migasfree.server.security import *
-from migasfree.server.views import load_hw
+from migasfree.server.views import load_hw, create_repositories
+
+
+def new_attribute(o_login, o_property, par):
+    """
+    Adds an attribute to the system
+        par is a "value~name" string or only "value"
+
+    Returns id of new attribute
+    """
+    reg = par.split("~")
+    value_att = reg[0].strip()
+    if len(reg) > 1:
+        description_att = reg[1]
+    else:
+        description_att = ""
+
+    # Add the attribute
+    if value_att != "":
+        try:
+            o_attribute = Attribute.objects.get(
+                value=value_att,
+                property_att__id=o_property.id
+            )
+        except:  # if not exist the attribute, we add it
+            if o_property.auto is True:
+                o_attribute = Attribute()
+                o_attribute.property_att = o_property
+                o_attribute.value = value_att
+                o_attribute.description = description_att
+                o_attribute.save()
+
+    # Add the attribute to Login
+    o_login.attributes.add(o_attribute)
+
+    return o_attribute.id
+
+
+def save_login(pc, user):
+    login_date = time.strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        o_login = Login.objects.get(
+            computer=Computer.objects.get(name=pc),
+            user=User.objects.get(name=user)
+        )
+        o_login.date = login_date
+        o_login.save()
+    except:  # if Login not exists, we save it
+        o_login = Login(
+            computer=Computer.objects.get(name=pc),
+            user=User.objects.get(name=user)
+        )
+        o_login.date = login_date
+        o_login.save()
+
+    return  # ???
 
 
 def upload_computer_hardware(request, computer, data):
@@ -48,7 +103,9 @@ def upload_computer_software_base_diff(request, computer, data):
 def upload_computer_software_base(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_version = Version.objects.get(name=Computer.objects.get(name=computer).version)
+        o_version = Version.objects.get(
+            name=Computer.objects.get(name=computer).version
+        )
         o_version.base = data[cmd]
         o_version.save()
         ret = return_message(cmd, ok())
@@ -75,7 +132,10 @@ def get_computer_software(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         o_computer = Computer.objects.get(name=computer)
-        ret = return_message(cmd, Version.objects.get(name=o_computer.version).base)
+        ret = return_message(
+            cmd,
+            Version.objects.get(name=o_computer.version).base
+        )
     except:
         ret = return_message(cmd, error(GENERIC))
 
@@ -84,13 +144,12 @@ def get_computer_software(request, computer, data):
 
 def upload_computer_errors(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    m = time.strftime("%Y-%m-%d %H:%M:%S")
     try:
         o_computer = Computer.objects.get(name=computer)
         o_version = Version.objects.get(id=o_computer.version_id)
         o_error = Error()
         o_error.computer = o_computer
-        o_error.date = m
+        o_error.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_error.error = data[cmd]
         o_error.version = o_version
         o_error.save()
@@ -103,7 +162,7 @@ def upload_computer_errors(request, computer, data):
 
 def upload_computer_message(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    m = time.strftime("%Y-%m-%d %H:%M:%S")
+    date_now = time.strftime("%Y-%m-%d %H:%M:%S")
 
     try:
         o_computer = Computer.objects.get(name=computer)
@@ -121,12 +180,12 @@ def upload_computer_message(request, computer, data):
         if data[cmd] == "":
             Update(
                 computer=o_computer,
-                date=m,
+                date=date_now,
                 version=Version.objects.get(name=o_computer.version)
             ).save()
         else:
             o_message.text = data[cmd]
-            o_message.date = m
+            o_message.date = date_now
             o_message.save()
         ret = return_message(cmd, ok())
     except:
@@ -141,15 +200,26 @@ def return_message(cmd, data):
 
 def get_properties(request, computer, data):
     """
-        First call of client requesting to server what he must do. The server responds with a string json with structure :
+    First call of client requesting to server what he must do.
+    The server responds with a string json with structure:
 
         OUTPUT:
         ======
-            { "properties": [ {"prefix":"PREFIX", "function":"CODE" , "language": "LANGUAGE"} ,...] ,
-               }
+            {
+                "properties":
+                    [
+                        {
+                            "prefix": "PREFIX",
+                            "function": "CODE" ,
+                            "language": "LANGUAGE"
+                        },
+                        ...
+                    ],
+            }
 
-        The client will eval the "functions" in  PROPERTIES and FAULTS and will upload it to server in a file called request.json
-        calling to "post_request" view
+    The client will eval the "functions" in PROPERTIES and FAULTS and
+    will upload it to server in a file called request.json
+    calling to "post_request" view
     """
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     properties = []
@@ -171,28 +241,52 @@ def get_properties(request, computer, data):
     return ret
 
 
-# process the file request.json and return a string json with the faultsdef, repositories, packages and devices
 def upload_computer_info(request, computer, data):
     """
+    Process the file request.json and return a string json with the faultsdef,
+    repositories, packages and devices
         INPUT:
         =====
-        A file "request.json" with the result of evaluate the request obtained by "get_regest"
+        A file "request.json" with the result of evaluate the request obtained
+        by "get_regest"
 
             {
-              "computer":{"hostname":HOSTNAME,"ip":IP,"version":VERSION,"user":USER,"user_fullname":USER_FULLNAME},
+              "computer":
+                  {
+                      "hostname": HOSTNAME,
+                      "ip": IP,
+                      "version": VERSION,
+                      "user": USER,
+                      "user_fullname": USER_FULLNAME
+                  },
               "attributes":[{"name":VALUE},...]
-            {
+            }
 
         OUTPUT:
         ======
-        After of process this file the server respond to client with a string json with:
+        After of process this file the server respond to client with
+        a string json with:
 
-            { "faultsdef": [{"name":"NAME", "function":"CODE" , "language": "LANGUAGE"} ,...] ,
-              "repositories" : [ {"name": "REPONAME" }, ...] ,
-              "packages": {"install": ["pck1","pck2","pck3",...], "remove": ["pck1","pck2","pck3",...]} ,
-              "base": true/false ,
-              "devices": {"install": bashcode , "remove": bashcode} #TODO move code to client
-
+            {
+                "faultsdef": [
+                    {
+                        "name":"NAME",
+                        "function":"CODE",
+                        "language": "LANGUAGE"
+                    },
+                    ...] ,
+                "repositories" : [ {"name": "REPONAME" }, ...] ,
+                "packages":
+                    {
+                        "install": ["pck1","pck2","pck3",...],
+                        "remove": ["pck1","pck2","pck3",...]
+                    } ,
+                "base": true|false,
+                "devices":
+                    {
+                        "install": bashcode ,
+                        "remove": bashcode
+                    } #TODO move code to client
     """
 
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -209,7 +303,9 @@ def upload_computer_info(request, computer, data):
 
         # 1.- PROCESS COMPUTER
         if dic_computer["hostname"] == "desktop":
-            str_error = trans('desktop is not valid name for this computer: IP=%(ip)s') % {'ip': dic_computer["ip"]}
+            str_error = trans(
+                'desktop is not valid name for this computer: IP=%(ip)s'
+            ) % {'ip': dic_computer["ip"]}
             o_error = Error()
             o_error.computer = Computer.objects.get(name="desktop")
             o_error.date = m
@@ -222,13 +318,17 @@ def upload_computer_info(request, computer, data):
         try:
             o_computer = Computer.objects.get(name=dic_computer["hostname"])
             o_computer.ip = dic_computer["ip"]
-            o_computer.version = Version.objects.get(name=dic_computer["version"])
+            o_computer.version = Version.objects.get(
+                name=dic_computer["version"]
+            )
             o_computer.save()
-        except: # if not exists the computer, we add it
+        except:  # if not exists the computer, we add it
             o_computer = Computer(name=dic_computer["hostname"])
             o_computer.dateinput = t
             o_computer.ip = dic_computer["ip"]
-            o_computer.version = Version.objects.get(name=dic_computer["version"])
+            o_computer.version = Version.objects.get(
+                name=dic_computer["version"]
+            )
             o_computer.save()
 
         # if not exists the user, we add it
@@ -257,7 +357,7 @@ def upload_computer_info(request, computer, data):
         o_version = Version.objects.get(name=version)
 
         # Get the Package Management System
-#        o_pms = Pms.objects.get(id=o_version.pms.id)
+        #o_pms = Pms.objects.get(id=o_version.pms.id)
 
         # 2.- PROCESS PROPERTIES
         for e in properties:
@@ -270,13 +370,17 @@ def upload_computer_info(request, computer, data):
 
                 # NORMAL
                 if o_property.kind == "N":
-                    lst_attributes.append(new_attribute(o_login, o_property, value))
+                    lst_attributes.append(
+                        new_attribute(o_login, o_property, value)
+                    )
 
                 # LIST
                 if o_property.kind == "-":
                     mylist = value.split(",")
                     for element in mylist:
-                        lst_attributes.append(new_attribute(o_login, o_property, element))
+                        lst_attributes.append(
+                            new_attribute(o_login, o_property, element)
+                        )
 
                 # ADDS RIGHT
                 if o_property.kind == "R":
@@ -284,7 +388,9 @@ def upload_computer_info(request, computer, data):
                     c = value
                     l = 0
                     for x in lista:
-                        lst_attributes.append(new_attribute(o_login, o_property, c[l:]))
+                        lst_attributes.append(
+                            new_attribute(o_login, o_property, c[l:])
+                        )
                         l += len(x) + 1
 
                 # ADDS LEFT
@@ -294,7 +400,9 @@ def upload_computer_info(request, computer, data):
                     l = 0
                     for x in lista:
                         l += len(x) + 1
-                        lst_attributes.append(new_attribute(o_login, o_property, c[0:l-1]))
+                        lst_attributes.append(
+                            new_attribute(o_login, o_property, c[0:l - 1])
+                        )
 
                 # we execute the after_insert function
                 if o_property.after_insert != "":
@@ -305,7 +413,9 @@ def upload_computer_info(request, computer, data):
 
         # 3 FaultsDef
         lst_faultsdef = []
-        faultsdef = FaultDef.objects.filter(Q(attributes__id__in=lst_attributes))
+        faultsdef = FaultDef.objects.filter(
+            Q(attributes__id__in=lst_attributes)
+        )
         faultsdef = faultsdef.filter(Q(active=True))
         for d in faultsdef:
             lst_faultsdef.append({
@@ -316,21 +426,37 @@ def upload_computer_info(request, computer, data):
 
         dic_repos = {}
 
-        repositories = Repository.objects.filter(Q(attributes__id__in=lst_attributes), Q(version__id=o_version.id))
-        repositories = repositories.filter(Q(version__id=o_version.id), Q(active=True))
+        repositories = Repository.objects.filter(
+            Q(attributes__id__in=lst_attributes),
+            Q(version__id=o_version.id)
+        )
+        repositories = repositories.filter(
+            Q(version__id=o_version.id),
+            Q(active=True)
+        )
 
         for r in repositories:
             dic_repos[r.name] = r.id
 
-        repositories = Repository.objects.filter(Q(schedule__scheduledelay__attributes__id__in=lst_attributes), Q(active=True))
-        repositories = repositories.filter(Q(version__id=o_version.id), Q(active=True))
-        repositories = repositories.extra(select={'delay': "server_scheduledelay.delay",})
+        repositories = Repository.objects.filter(
+            Q(schedule__scheduledelay__attributes__id__in=lst_attributes),
+            Q(active=True)
+        )
+        repositories = repositories.filter(
+            Q(version__id=o_version.id),
+            Q(active=True)
+        )
+        repositories = repositories.extra(
+            select={'delay': "server_scheduledelay.delay"}
+        )
 
         for r in repositories:
             if horizon(r.date, r.delay) <= datetime.now().date():
                 dic_repos[r.name] = r.id
 
-        repositories = Repository.objects.filter(Q(id__in=dic_repos.values()) )
+        repositories = Repository.objects.filter(
+            Q(id__in=dic_repos.values())
+        )
 
         #FILTER EXCLUDED ATTRIBUTES
         repositories = repositories.filter(~Q(excludes__id__in=lst_attributes))
@@ -353,10 +479,13 @@ def upload_computer_info(request, computer, data):
         lst_dev_remove = []
         lst_dev_install = []
         chk_devices = Mmcheck(o_computer.devices, o_computer.devices_copy)
-        if chk_devices.changed() is True or o_computer.devices_modified is True:
-
+        if chk_devices.changed() is True \
+        or o_computer.devices_modified is True:
             #remove the devices
-            lst_diff = list_difference(s2l(o_computer.devices_copy), s2l(chk_devices.mms()))
+            lst_diff = list_difference(
+                s2l(o_computer.devices_copy),
+                s2l(chk_devices.mms())
+            )
             for d in lst_diff:
                 try:
                     device = Device.objects.get(id=d)
@@ -374,8 +503,14 @@ def upload_computer_info(request, computer, data):
         retdata = {}
         retdata["faultsdef"] = lst_faultsdef
         retdata["repositories"] = lst_repos
-        retdata["packages"] = {"remove": lst_pkg_remove , "install": lst_pkg_install}
-        retdata["devices"] = {"remove":lst_dev_remove, "install":lst_dev_install}
+        retdata["packages"] = {
+            "remove": lst_pkg_remove,
+            "install": lst_pkg_install
+        }
+        retdata["devices"] = {
+            "remove": lst_dev_remove,
+            "install": lst_dev_install
+        }
         retdata["base"] = (o_version.computerbase == o_computer.name)
 
         ret = return_message(cmd, retdata)
@@ -390,7 +525,6 @@ def upload_computer_faults(request, computer, data):
     faults = data.get(cmd).get("faults")
     o_computer = Computer.objects.get(name=computer)
     o_version = Version.objects.get(id=o_computer.version_id)
-    m = time.strftime("%Y-%m-%d %H:%M:%S")
 
     try:
         # PROCESS FAULTS
@@ -402,7 +536,7 @@ def upload_computer_faults(request, computer, data):
                     # we add the fault
                     o_fault = Fault()
                     o_fault.computer = o_computer
-                    o_fault.date = m
+                    o_fault.date = time.strftime("%Y-%m-%d %H:%M:%S")
                     o_fault.text = msg
                     o_fault.faultdef = o_faultdef
                     o_fault.version = o_version
@@ -410,10 +544,7 @@ def upload_computer_faults(request, computer, data):
             except:
                 pass
 
-        retdata = {}
-
-        ret = return_message(cmd, retdata)
-
+        ret = return_message(cmd, {})
     except:
         ret = return_message(cmd, error(GENERIC))
 
@@ -423,7 +554,7 @@ def upload_computer_faults(request, computer, data):
 #DEVICES
 def get_device(request, computer, data):
     """
-    return DeviceModel data for lpadmin
+    Returns DeviceModel data for lpadmin
     """
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     d = data[cmd]
@@ -440,28 +571,56 @@ def get_assist_devices(request, computer, data):
         types = {}
         for dev_type in DeviceType.objects.all():
             manufacters = {}
-            for dev_model_man in DeviceModel.objects.filter(devicetype__id=dev_type.id).distinct():
+            for dev_model_man in DeviceModel.objects.filter(
+                devicetype__id=dev_type.id
+            ).distinct():
                 models = {}
 
-                for dev_model in DeviceModel.objects.filter(manufacturer__id=dev_model_man.manufacturer.id):
+                for dev_model in DeviceModel.objects.filter(
+                    manufacturer__id=dev_model_man.manufacturer.id
+                ):
                     ports = {}
 
                     for dev_port in dev_model.connections.all():
                         parameters = {}
 
-                        for token_type, token in jsontemplate._Tokenize(dev_port.uri, '{','}'):
+                        for token_type, token in jsontemplate._Tokenize(
+                            dev_port.uri,
+                            '{',
+                            '}'
+                        ):
                             if token_type == 1:
-                                parameters[token] = {"default":""}
+                                parameters[token] = {"default": ""}
 
-                        parameters["LOCATION"] = {"default":""}
-                        parameters["INFORMATION"] = {"default":""}
-                        parameters["ALIAS"] = {"default":""}
+                        parameters["LOCATION"] = {"default": ""}
+                        parameters["INFORMATION"] = {"default": ""}
+                        parameters["ALIAS"] = {"default": ""}
 
-                        ports[dev_port.name] = {"type":"inputbox", "name":"PARAMETER", "value":parameters}
-                    models[dev_model.name] = {"type":"menu", "name":"PORT", "value":ports}
-                manufacters[dev_model_man.manufacturer.name] = {"type":"menu", "name":"MODEL", "value":models}
-            types[dev_type.name] = {"type":"menu", "name":"MANUFACTURER", "value":manufacters}
-        ret = return_message(cmd, {"type":"menu", "name":"TYPE", "value":types})
+                        ports[dev_port.name] = {
+                            "type": "inputbox",
+                            "name": "PARAMETER",
+                            "value": parameters
+                        }
+                    models[dev_model.name] = {
+                        "type": "menu",
+                        "name": "PORT",
+                        "value": ports
+                    }
+                manufacters[dev_model_man.manufacturer.name] = {
+                    "type": "menu",
+                    "name": "MODEL",
+                    "value": models
+                }
+            types[dev_type.name] = {
+                "type": "menu",
+                "name": "MANUFACTURER",
+                "value": manufacters
+            }
+        ret = return_message(cmd, {
+            "type": "menu",
+            "name": "TYPE",
+            "value": types
+        })
     except:
         ret = return_message(cmd, error(GENERIC))
 
@@ -485,7 +644,7 @@ def remove_device(request, computer, data):
             })
         except:
             return return_message(cmd, error(GENERIC))
-    except:  #if not exist device
+    except:  # if not exists device
         return return_message(cmd, error(DEVICENOTFOUND))
 
 
@@ -495,7 +654,7 @@ def install_device(request, computer, data):
 
     try:
         o_device = Device.objects.get(name=d["NUMBER"])
-    except:  #if not exist device
+    except:  # if not exists device
         try:
             o_device = Device()
             o_device.name = d["NUMBER"]
@@ -504,7 +663,10 @@ def install_device(request, computer, data):
             o_device.model = o_devicemodel
 
             o_devicetype = DeviceType.objects.get(name=d["TYPE"])
-            o_deviceconnection = DeviceConnection.objects.get(name=d["PORT"], devicetype=o_devicetype)
+            o_deviceconnection = DeviceConnection.objects.get(
+                name=d["PORT"],
+                devicetype=o_devicetype
+            )
             o_device.connection = o_deviceconnection
 
             #evaluate uri
@@ -523,7 +685,10 @@ def install_device(request, computer, data):
     for c in o_device.computer_set.all():
         list_computers.append(c.name)
 
-    return return_message(cmd, {"NUMBER": o_device.name, "COMPUTERS": list_computers})
+    return return_message(cmd, {
+        "NUMBER": o_device.name,
+        "COMPUTERS": list_computers
+    })
 
 
 def register_computer(request, computer, data):
@@ -553,11 +718,9 @@ def register_computer(request, computer, data):
         o_computer.save()
 
         # 2.- returns keys to client
-        ret = return_message(cmd, get_keys_to_client(data['version']))
-    else:
-        ret = return_message(cmd, error(VERSIONNOTFOUND))
+        return return_message(cmd, get_keys_to_client(data['version']))
 
-    return ret
+    return return_message(cmd, error(VERSIONNOTFOUND))
 
 
 def get_key_packager(request, computer, data):
@@ -567,11 +730,9 @@ def get_key_packager(request, computer, data):
         password=data['password']
     )
     if not user.has_perm("server.can_save_package"):
-        ret = return_message(cmd, error(CANNOTREGISTER))
-    else:
-        ret = return_message(cmd, get_keys_to_packager())
+        return return_message(cmd, error(CANNOTREGISTER))
 
-    return ret
+    return return_message(cmd, get_keys_to_packager())
 
 
 def upload_server_package(request, computer, data):
@@ -658,7 +819,7 @@ def upload_server_set(request, computer, data):
 
         save_request_file(f, filename)
 
-        #if exists path move it
+        # if exists path move it
         if ("path" in data) and (data["path"] != ""):
             dst = os.path.join(
                 MIGASFREE_REPO_DIR,
@@ -678,6 +839,20 @@ def upload_server_set(request, computer, data):
         return return_message(cmd, error(GENERIC))
 
     return return_message(cmd, ok())
+
+
+def create_repositories_package(packagename, versionname):
+    o_version = Version.objects.get(name=versionname)
+    try:
+        package = Package.objects.get(name=packagename, version=o_version)
+        qset = Repository.objects.filter(packages__id=package.id)
+        for r in qset:
+            for p in r.createpackages.all():
+                r.createpackages.remove(p.id)
+            r.save()
+        create_repositories(package.version.id)
+    except:
+        pass
 
 
 def create_repositories_of_packageset(request, computer, data):
@@ -703,7 +878,8 @@ def save_request_file(requestfile, filename):
 
     try:
         # https://docs.djangoproject.com/en/dev/topics/http/file-uploads/
-        # Files with: Size > FILE_UPLOAD_MAX_MEMORY_SIZE  -> generate a file called something like /tmp/tmpzfp6I6.upload.
+        # Files with: Size > FILE_UPLOAD_MAX_MEMORY_SIZE  -> generate a file
+        # called something like /tmp/tmpzfp6I6.upload.
         # We remove it
         os.remove(requestfile.temporary_file_path)
     except:
