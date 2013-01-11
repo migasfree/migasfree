@@ -18,9 +18,9 @@
 #
 # Author: Jose Antonio Chavarría <jachavar@gmail.com>
 
-__author__  = 'Jose Antonio Chavarría'
-__file__    = 'setup.py'
-__date__    = '2012-11-25'
+__author__ = 'Jose Antonio Chavarría'
+__file__ = 'setup.py'
+__date__ = '2013-01-11'
 __license__ = 'GPLv3'
 
 # http://guide.python-distribute.org/
@@ -67,12 +67,12 @@ elif _dist[0] == 'Ubuntu':
     _requires.append('pycurl (>=7.19)')
 '''
 
-import glob
-import subprocess
+#import glob
+#import subprocess
 from distutils.core import setup
 from distutils.command.install_data import install_data
-from distutils.log import warn, info, error, fatal
-from distutils.dep_util import newer
+#from distutils.log import warn, info, error, fatal
+#from distutils.dep_util import newer
 
 
 class InstallData(install_data):
