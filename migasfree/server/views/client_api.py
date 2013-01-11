@@ -35,7 +35,7 @@ def api(request):
         )
 
     try:
-        os.makedirs(MIGASFREE_TMP_DIR, 0700)
+        os.makedirs(MIGASFREE_TMP_DIR, 0o700)
     except:
         pass
 
