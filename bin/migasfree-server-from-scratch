@@ -111,13 +111,13 @@ function remove_old_data
     then
         rm -f $_DB_PATH/$_DB_NAME
     else
-        su - postgres -c "dropdb migasfree"
-        su - postgres -c "createdb -E utf8 -O migasfree migasfree"
+        su - postgres -c "dropdb $_DB_NAME"
+        su - postgres -c "createdb -E utf8 -O migasfree $_DB_NAME"
     fi
 
-    rm -rf $_DIR_REPO/FEDORA || :
-    rm -rf $_DIR_REPO/OPENSUSE || :
-    rm -rf $_DIR_REPO/UBUNTU || :
+    rm -rf $_REPO_PATH/FEDORA || :
+    rm -rf $_REPO_PATH/OPENSUSE || :
+    rm -rf $_REPO_PATH/UBUNTU || :
 }
 
 function set_permissions
@@ -131,17 +131,17 @@ function set_permissions
     fi
 
     # owner for repositories
-    own_web_server $_DIR_REPO
+    own_web_server $_REPO_PATH
 
     # owner for keys
-    own_web_server $_PATH_APP/keys
-    chmod 700 $_PATH_APP/keys
+    own_web_server $_KEYS_PATH
+    chmod 700 $_KEYS_PATH
 }
 
 function test_app
 {
     # save fixture for test
-    python $_DIR_MIGASFREE/manage.py dumpdata > $_DB_PATH/test.json
+    python $_MIGASFREE_PATH/manage.py dumpdata > $_DB_PATH/test.json
     if [ $? -ne 0 ]
     then
         echo "Problem found dumping data."
@@ -149,7 +149,7 @@ function test_app
     fi
 
     # run test of migasfree
-    python $_DIR_MIGASFREE/manage.py test --verbosity=2
+    python $_MIGASFREE_PATH/manage.py test --verbosity=2
     if [ $? -ne 0 ]
     then
         echo "Problem found running database tests."
@@ -186,11 +186,11 @@ then
     exit 2
 fi
 
-_DIR_MIGASFREE=$(python -c "import os; import migasfree; print os.path.dirname(os.path.abspath(migasfree.__file__))")
-_DIR_REPO=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_REPO_DIR")
+_MIGASFREE_PATH=$(python -c "import os; import migasfree; print os.path.dirname(os.path.abspath(migasfree.__file__))")
+_REPO_PATH=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_REPO_DIR")
 _DB_PATH=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_DB_DIR")
-_DB_NAME=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_DB_NAME")
-_PATH_APP=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_APP_DIR")
+_DB_NAME=$(python -c "import migasfree.settings; print mugasfree.settings.DATABASES['default']['NAME']")
+_KEYS_PATH=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_KEYS_DIR")
 
 _PWD=$(dirname $(readlink -f $0))
 
@@ -205,7 +205,7 @@ then
     exit 3
 fi
 
-cd $_DIR_MIGASFREE
+cd $_MIGASFREE_PATH
 
 web_service stop
 
@@ -218,7 +218,7 @@ fi
 remove_old_data
 
 # create DataBase
-echo no | python $_DIR_MIGASFREE/manage.py syncdb
+echo no | python $_MIGASFREE_PATH/manage.py syncdb
 if [ $? -ne 0 ]
 then
     echo "Problem found creating database."
