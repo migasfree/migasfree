@@ -16,18 +16,18 @@ MIGASFREE_ORGANIZATION = 'My Organization'
 MIGASFREE_APP_DIR = os.path.dirname(__file__)
 
 if DEBUG:  # development environment
-    MIGASFREE_DB_DIR = '../..'
     MIGASFREE_PROJECT_DIR = os.path.dirname(os.getcwd())
+    MIGASFREE_DB_DIR = '../..'
     MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
     MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
 else:  # production environment
-    MIGASFREE_DB_DIR = '/var/tmp'
     MIGASFREE_PROJECT_DIR = '/usr/share/migasfree-server'
-    MIGASFREE_REPO_DIR = '/var/migasfree'
+    MIGASFREE_DB_DIR = MIGASFREE_PROJECT_DIR
+    MIGASFREE_REPO_DIR = '/var/migasfree/repo'
     MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'keys')
 
 ADMINS = (
-    ('Alberto Gacías', 'alberto@migasfree.org'),
+    ('Your name', 'your_name@example.com'),
 )
 
 MANAGERS = ADMINS
@@ -84,13 +84,10 @@ FILE_UPLOAD_TEMP_DIR = MIGASFREE_TMP_DIR
 
 LOGIN_REDIRECT_URL = '/'
 
-#LOCALE_PATHS = (
-#    '/usr/share/locale'
-#)
+LOCALE_PATHS = (
+    os.path.join(MIGASFREE_APP_DIR, 'locale'),
+)
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
 ADMIN_SITE_ROOT_URL = '/admin/'
 
@@ -108,6 +105,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'migasfree.middleware.threadlocals.ThreadLocals',
 )
 
@@ -115,6 +113,7 @@ ROOT_URLCONF = 'migasfree.urls'
 
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
     "migasfree.server.context_processors.query_names",
     "migasfree.server.context_processors.version_names",
     "migasfree.server.context_processors.current_status",
@@ -138,6 +137,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.admindocs',
+    'django.contrib.messages',
     'migasfree.server',
     'ajax_select',
 )
