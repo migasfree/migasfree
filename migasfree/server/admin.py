@@ -28,11 +28,10 @@ admin.site.register(AutoCheckError)
 
 def user_version(user):
     """
-    return the user's current version
+    Returns the user's current version
     """
-    user_id = user.id
     try:
-        version = UserProfile.objects.get(id=user_id).version.id
+        version = UserProfile.objects.get(id=user.id).version.id
     except:
         version = None
 
@@ -136,16 +135,19 @@ class StoreAdmin(admin.ModelAdmin):
     actions = ['information', 'download']
 
     def download(self, request, queryset):
-        _url = STATIC_URL + '%s/STORES/%s/'
-
-        return redirect(_url % (queryset[0].version.name, queryset[0].name))
+        return redirect(
+            STATIC_URL + '%s/STORES/%s/' % (
+                queryset[0].version.name,
+                queryset[0].name
+            )
+        )
 
     download.short_description = trans("Download")
 
     def information(self, request, queryset):
-        _url = reverse('package_info') + '/STORES/%s/'
-
-        return redirect(_url % queryset[0].name)
+        return redirect(
+            reverse('package_info') + '/STORES/%s/' % queryset[0].name
+        )
 
     information.short_description = trans("Information of Package")
 
@@ -190,8 +192,13 @@ class LoginAdmin(admin.ModelAdmin):
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "attributes":
-            kwargs["queryset"] = Attribute.objects.filter(property_att__active=True)
-#            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
+            kwargs["queryset"] = Attribute.objects.filter(
+                property_att__active=True
+            )
+            #kwargs['widget'] = FilteredSelectMultiple(
+            #    db_field.verbose_name,
+            #    (db_field.name in self.filter_vertical)
+            #)
             return db_field.formfield(**kwargs)
 
         return super(LoginAdmin, self).formfield_for_manytomany(
@@ -306,7 +313,8 @@ class ComputerAdmin(admin.ModelAdmin):
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "devices":
             kwargs['widget'] = FilteredSelectMultiple(
-                db_field.verbose_name, (db_field.name in self.filter_vertical)
+                db_field.verbose_name,
+                (db_field.name in self.filter_vertical)
             )
             return db_field.formfield(**kwargs)
 
@@ -337,9 +345,9 @@ class RepositoryAdmin(AjaxSelectAdmin):
 
     list_display = ('name', 'active', 'date', 'schedule', 'timeline',)
     list_filter = ('active',)
-    ordering = ('name', 'packages__name',)
+    ordering = ('name',)
     search_fields = ('name', 'packages__name',)
-#    filter_horizontal = ('attributes', 'packages',)
+    #filter_horizontal = ('attributes', 'packages',)
     actions = None
 
     fieldsets = (
@@ -374,13 +382,22 @@ class RepositoryAdmin(AjaxSelectAdmin):
             kwargs["queryset"] = Package.objects.filter(
                 version=user_version(request.user)
             )
-#            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
+            #kwargs['widget'] = FilteredSelectMultiple(
+            #    db_field.verbose_name,
+            #    (db_field.name in self.filter_vertical)
+            #)
 
             return db_field.formfield(**kwargs)
 
         if db_field.name == "attributes":
-            kwargs["queryset"] = Attribute.objects.filter(property_att__active=True)
-#            kwargs['widget'] = FilteredSelectMultiple(db_field.verbose_name, (db_field.name in self.filter_vertical))
+            kwargs["queryset"] = Attribute.objects.filter(
+                property_att__active=True
+            )
+            #kwargs['widget'] = FilteredSelectMultiple(
+            #    db_field.verbose_name,
+            #    (db_field.name in self.filter_vertical)
+            #)
+
             return db_field.formfield(**kwargs)
 
         return super(RepositoryAdmin, self).formfield_for_manytomany(
@@ -423,13 +440,12 @@ class PackageAdmin(admin.ModelAdmin):
     information.short_description = trans("Information of Package")
 
     def download(self, request, queryset):
-        _url = STATIC_URL + '%s/STORES/%s/%s'
-
-        return redirect(_url % (
+        return redirect(STATIC_URL + '%s/STORES/%s/%s' % (
             queryset[0].version.name,
             queryset[0].store.name,
             queryset[0].name
         ))
+
     download.short_description = trans("Download")
 
 admin.site.register(Package, PackageAdmin)
