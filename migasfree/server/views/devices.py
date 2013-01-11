@@ -9,6 +9,10 @@ from django.http import HttpResponse
 from migasfree.server.models import *
 
 
+def name_printer(manufacturer, model, number):
+    return '%s-%s_[%s]' % (manufacturer, model, number)
+
+
 def load_devices(jsonfile):
     with open(jsonfile, "r") as f:
         data = json.load(f)
@@ -39,7 +43,10 @@ def load_devices(jsonfile):
             )
 
             try:
-                # o_device=Device.objects.get(name=device["name"],connection=o_deviceconnection)
+                #o_device=Device.objects.get(
+                #    name=device["name"],
+                #    connection=o_deviceconnection
+                #)
                 o_device = Device.objects.get(name=device["name"])
             except:
                 o_device = Device()
@@ -77,7 +84,10 @@ def load_devices(jsonfile):
         )
 
         try:
-            # o_device=Device.objects.get(name=e["name"],connection=o_deviceconnection)
+            #o_device=Device.objects.get(
+            #    name=e["name"],
+            #    connection=o_deviceconnection
+            #)
             o_device = Device.objects.get(name=e["name"])
         except:
             o_device = Device()
@@ -115,7 +125,11 @@ def device(request, param):
         ret = ". /usr/share/migasfree/init\n"
 
         #PARAMS
-        ret += "_NAME=" + name_printer(o_device.model.manufacturer.name, o_device.model.name, o_device.name) + "\n"
+        ret += "_NAME=" + name_printer(
+            o_device.model.manufacturer.name,
+            o_device.model.name,
+            o_device.name
+        ) + "\n"
 
         # ret += "_NAME=" + o_device.name + "_" + device.model.name + "\n"
         ret += o_device.values + "\n"
@@ -365,7 +379,9 @@ def device(request, param):
 
         if len(cursor) > 0:  # Si se ha configurado alguna vez el dispositivo
             model = cursor[0].model.name
-            deviceconnection = DeviceConnection.objects.filter(devicemodel__name=model)
+            deviceconnection = DeviceConnection.objects.filter(
+                devicemodel__name=model
+            )
             if len(deviceconnection) == 1:  # SI el modelo tiene 1 conexion
                 ret = downfiledevice(host, number, deviceconnection[0].name)
                 return HttpResponse(ret, mimetype="text/plain")
@@ -394,7 +410,7 @@ def device(request, param):
                         )
                         return HttpResponse(ret, mimetype="text/plain")
 
-        else: #si no está el Device lo añadimos
+        else:  # si no está el Device lo añadimos
             # Pedimos el device type
             if devicetype == "":
                 ret = whatdevicetype(number)
@@ -417,6 +433,11 @@ def device(request, param):
 
             # Devolvemos el script para la instalacion
             else:
-                ret = processmodel(number, devicetype, manufacturer, model, port)
-
+                ret = processmodel(
+                    number,
+                    devicetype,
+                    manufacturer,
+                    model,
+                    port
+                )
                 return HttpResponse(ret, mimetype="text/plain")
