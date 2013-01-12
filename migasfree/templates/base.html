@@ -89,8 +89,8 @@
 
                     {% block sliding_panel %}
                         <div class="hide" id="sliding-panel">
-                            <a href="#" class="panel_button" id="show_button">{% trans 'Show menu' %}</a>
-                            <a href="#" class="panel_button hide" id="hide_button">{% trans 'Hide menu' %}</a>
+                            <a href="#" class="panel_button" id="show_button" title="{% trans 'Expand menu' %}">&raquo;</a>
+                            <a href="#" class="panel_button hide" id="hide_button" title="{% trans 'Collapse menu' %}">&laquo;</a>
                         </div>
                     {% endblock sliding_panel %}
                 {% endif %}
