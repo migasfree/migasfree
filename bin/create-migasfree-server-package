@@ -1,0 +1,119 @@
+#!/bin/bash
+
+# Syntax: create-migasfree-server-package [<BRANCH>]
+# Only for Debian and CentOS distros (dependencies)
+
+# uses global $_PMS
+# void check_pkgs(array packages)
+function check_pkgs
+{
+    _OLD_IFS=$IFS
+    IFS=" "
+    _PACKAGES=$1
+
+    if [ $_PMS == "dpkg" ]
+    then
+        _CMD="dpkg -l"
+    else
+        _CMD="rpm -q"
+    fi
+    for _PKG in $_PACKAGES
+    do
+        $_CMD $_PKG
+        if [ $? -gt 0 ]
+        then
+            echo "$_PKG is not installed"
+            echo "packages needed: $_PACKAGES"
+            IFS=$_OLD_IFS
+            exit 1
+        fi
+    done
+    IFS=$_OLD_IFS
+}
+
+# void create_package(string pms, string project, string branch)
+# only debian and centos distros prepared (by now)
+function create_package
+{
+    local _PMS=$1
+    local _PROJECT=$2
+    local _BRANCH=$3
+
+    git clone https://github.com/agacias/$_PROJECT.git
+    cd $_PROJECT
+    git checkout $_BRANCH
+
+    if [ $_PMS == "dpkg" ]
+    then
+        ln -s stdeb.cfg.debian stdeb.cfg
+        python setup.py --command-packages=stdeb.command bdist_deb
+        cp deb_dist/*.deb ..
+    else
+        ln -s setup.cfg.centos setup.cfg
+        python setup.py bdist_rpm
+        cp dist/*.rpm ..
+    fi
+    cd ..
+    rm -rf $_PROJECT
+}
+
+# void install_packages(string pms)
+function install_packages
+{
+    if [ $1 == "dpkg" ]
+    then
+        dpkg -i *.deb
+        apt-get install -f
+    else
+        rpm -ivh *.rpm
+    fi
+}
+
+# string get_pms(void)
+function get_pms
+{
+    which dpkg > /dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "dpkg"
+        return
+    fi
+
+    which rpm > /dev/null
+    if [ $? -eq 0 ]
+    then
+        echo "rpm"
+        return
+    fi
+
+    echo ""
+}
+
+##############
+# main process
+##############
+
+_BRANCH="${1:-master}"
+_PMS=$(get_pms)
+if [ -z "$_PMS" ]
+then
+    echo "Expected dpkg or rpm PMS. No one found. Aborting package creation."
+    exit 1
+fi
+
+# check required packages for setup.py
+# ====================================
+check_pkgs "git python python-setuptools"
+if [ $_PMS == "dpkg" ]
+then
+    check_pkgs "python-stdeb"
+fi
+
+# create packages
+# ===============
+create_package $_PMS "migasfree" "$_BRANCH"
+create_package $_PMS "django-ajax-selects" "master"
+
+# INSTALL PACKAGES
+# ================
+install_packages $_PMS
