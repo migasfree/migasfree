@@ -109,10 +109,11 @@ function remove_old_data
 
     if [ "$_IS_DB_SQLITE" == 'True' ]
     then
-        rm -f $_DB_PATH/$_DB_NAME
+        rm -f $_DB_NAME
     else
-        su - postgres -c "dropdb $_DB_NAME"
-        su - postgres -c "createdb -E utf8 -O migasfree $_DB_NAME"
+        _NAME=$(basename $_DB_NAME) # $_DB_NAME contains path and filename
+        su - postgres -c "dropdb $_NAME"
+        su - postgres -c "createdb -E utf8 -O migasfree $_NAME"
     fi
 
     rm -rf $_REPO_PATH/FEDORA || :
@@ -126,8 +127,8 @@ function set_permissions
     then
         # owner and permissions for database
         own_web_server $_DB_PATH
-        own_web_server $_DB_PATH/$_DB_NAME
-        chmod 600 $_DB_PATH/$_DB_NAME
+        own_web_server $_DB_NAME
+        chmod 600 $_DB_NAME
     fi
 
     # owner for repositories
