@@ -109,6 +109,7 @@ section nav {
     float: left;
     width: 20%;
     margin-top: 1em;
+    padding-left: 1em;
 }
 section nav h3 {
     background: url('../img/accordion-open.png') no-repeat 95% center #C4C4C4;
@@ -130,6 +131,7 @@ section nav li {
 section nav li a {
     display: block;
     padding-left: .5em;
+    font-size: 90%;
 }
 section nav #change-version label {
     display: none;
@@ -619,13 +621,13 @@ body.stats div#result {
 }
 
 #sliding-panel a {
-    transform: rotate(-90deg);
-    position: relative;
-    top: 100px;
-    left: -51px;
-    width: 120px;
+    position: fixed;
+    top: 60px;
+    left: -2px;
     text-align: center;
     border: 1px solid #888;
     border-radius: 3px;
-    padding: 3px;
+    padding: 3px 5px;
+    font-size: 140%;
+    background: #f0f0f0;
 }
