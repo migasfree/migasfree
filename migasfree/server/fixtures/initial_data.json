@@ -135,7 +135,6 @@
             "language": 1,
             "prefix": "NET",
             "code": "import migasfree_client.network\nprint migasfree_client.network.get_network_info()['net']",
-            "before_insert": "#Convert the IP address in the network address",
             "active": true
         }
     },

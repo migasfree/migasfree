@@ -364,9 +364,6 @@ def upload_computer_info(request, computer, data):
             o_property = Property.objects.get(prefix=e)
             value = properties.get(e)
             try:
-                # we execute the before_insert function
-                if o_property.before_insert != "":
-                    exec(o_property.before_insert.replace("\r", ""))
 
                 # NORMAL
                 if o_property.kind == "N":
@@ -403,10 +400,6 @@ def upload_computer_info(request, computer, data):
                         lst_attributes.append(
                             new_attribute(o_login, o_property, c[0:l - 1])
                         )
-
-                # we execute the after_insert function
-                if o_property.after_insert != "":
-                    exec(o_property.after_insert.replace("\r", ""))
 
             except:
                 pass

@@ -37,20 +37,6 @@ class Property(models.Model):
         help_text=_("This code will execute in the client computer, and it must put in the standard output the value of the attribute correspondent to this property.<br>The format of this value is 'name~description', where 'description' is optional.<br><b>Example of code:</b><br>#Create a attribute with the name of computer from bash<br> echo $HOSTNAME")
     )
 
-    before_insert = models.TextField(
-        _("before insert"),
-        null=False,
-        blank=True,
-        help_text=_("Code django. This code will execute before insert the attribute in the server. You can modify the value of attribute here, using the variable 'data'.")
-    )
-
-    after_insert = models.TextField(
-        _("after insert"),
-        null=False,
-        blank=True,
-        help_text=_("Code django. This code will execute after insert the attribute in the server.")
-    )
-
     active = models.BooleanField(
         _("active"),
         default=True,
@@ -77,8 +63,6 @@ class Property(models.Model):
 
     def save(self, *args, **kwargs):
         self.code = self.code.replace("\r\n", "\n")
-        self.before_insert = self.before_insert.replace("\r\n", "\n")
-        self.after_insert = self.after_insert.replace("\r\n", "\n")
         super(Property, self).save(*args, **kwargs)
 
     class Meta:
