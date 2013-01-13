@@ -153,7 +153,7 @@ function test_app
     fi
 
     # run test of migasfree
-    python $_MIGASFREE_PATH/manage.py test --verbosity=3
+    python $_MIGASFREE_PATH/manage.py test --verbosity=2
     if [ $? -ne 0 ]
     then
         echo "Problem found running database tests."
