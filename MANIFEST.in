@@ -3,11 +3,9 @@
 include AUTHORS INSTALL COPYING README MANIFEST.in
 include bin/*
 include migasfree/server/fixtures/*
-recursive-include apache *
+recursive-include apache *.wsgi
 recursive-include migasfree *.py
-include keys/*
 recursive-include migasfree/locale *.mo
-recursive-include doc *
 recursive-include repo *
 recursive-include migasfree/templates *
 
