@@ -131,7 +131,8 @@ class Repository(models.Model):
             self.version.pms.slug,
             self.name
         )
-        shutil.rmtree(path)
+        if os.path.exists(path):
+            shutil.rmtree(path)
         super(Repository, self).delete(*args, **kwargs)
 
     def timeline(self):
