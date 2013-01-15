@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^status/$', status, name='dashboard'),
     url(r'^query/(?P<query_id>\d+)/$', query, name='query'),
     url(
-        r'^/computer_messages/$',
+        r'^computer_messages/$',
         computer_messages,
         name='computer_messages'
     ),
