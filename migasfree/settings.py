@@ -5,10 +5,20 @@ Django settings for migasfree project
 """
 
 import os
+import django
 import django.conf.global_settings as DEFAULT_SETTINGS
 
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
+if django.get_version() >= '1.4':
+    STATICFILES_DIRS = (
+        ("admin", os.path.join(
+            os.path.dirname(os.path.abspath(django.__file__)),
+            'contrib/admin/static/admin'
+        )),
+    )
+else:
+    ADMIN_MEDIA_PREFIX = '/media/'
+
+TEMPLATE_DEBUG = DEBUG = False
 
 MIGASFREE_TMP_DIR = '/tmp/migasfree-server'
 MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
@@ -88,7 +98,6 @@ LOCALE_PATHS = (
     os.path.join(MIGASFREE_APP_DIR, 'locale'),
 )
 
-ADMIN_MEDIA_PREFIX = '/media/'
 ADMIN_SITE_ROOT_URL = '/admin/'
 
 # Make this unique, and don't share it with anybody.
