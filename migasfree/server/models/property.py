@@ -26,7 +26,7 @@ class Property(models.Model):
 
     language = models.IntegerField(
         _("programming language"),
-        default=0,
+        default=1,
         choices=LANGUAGES_CHOICES
     )
 
