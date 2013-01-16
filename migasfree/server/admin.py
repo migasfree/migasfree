@@ -24,7 +24,7 @@ admin.site.register(DeviceManufacturer)
 admin.site.register(DeviceConnection)
 admin.site.register(UserProfile)
 admin.site.register(AutoCheckError)
-
+admin.site.register(Platform)
 
 def user_version(user):
     """

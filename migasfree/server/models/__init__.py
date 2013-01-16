@@ -2,15 +2,18 @@
 
 # import order is very important!!!
 
-from migasfree.server.models.common import LANGUAGES_CHOICES, PLATFORM_CHOICES
+from migasfree.server.models.common import LANGUAGES_CHOICES
 
 from migasfree.server.models.user import User
 from migasfree.server.models.query import Query, get_query_names
 from migasfree.server.models.checking import Checking
 from migasfree.server.models.autocheck_error import AutoCheckError
 
+
 from migasfree.server.models.pms import Pms
 from migasfree.server.models.property import Property
+
+from migasfree.server.models.platform import Platform
 from migasfree.server.models.version import Version, get_version_names
 from migasfree.server.models.attribute import Attribute
 

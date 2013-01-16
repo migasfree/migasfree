@@ -7,7 +7,8 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models import Pms
-from migasfree.server.models.common import link, PLATFORM_CHOICES
+from migasfree.server.models import Platform
+from migasfree.server.models.common import link
 from migasfree.settings import MIGASFREE_REPO_DIR
 
 
@@ -45,13 +46,13 @@ class Version(models.Model):
     autoregister = models.BooleanField(
         _("autoregister"),
         default=False,
-        help_text=_("Is not neccesary a user for register the computer in database and get the keys.")
+        help_text=_("Is not neccesary a user for register the computer in \
+                     database and get the keys.")
     )
 
-    platform = models.IntegerField(
-        _("platform"),
-        default=0,
-        choices=PLATFORM_CHOICES
+    platform = models.ForeignKey(
+        Platform,
+        verbose_name=_("platform")
     )
 
     def __unicode__(self):

@@ -14,12 +14,6 @@ LANGUAGES_CHOICES = (
     (5, 'cmd'),
 )
 
-PLATFORM_CHOICES = (
-    (0, '---'),
-    (1, 'Windows'),
-    (2, 'GNU/Linux'),
-)
-
 
 def link(obj, description):
     if obj.id is None or obj.id == "":

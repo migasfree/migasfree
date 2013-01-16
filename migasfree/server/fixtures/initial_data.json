@@ -31,18 +31,6 @@
         }
     },
     {
-        "model": "server.version",
-        "pk": 1,
-        "fields": {
-            "name": "UBUNTU",
-            "pms": 3,
-            "platform": 2,
-            "computerbase": "---",
-            "base": "",
-            "autoregister": false
-        }
-    },
-    {
         "model": "server.checking",
         "pk": 1,
         "fields": {
