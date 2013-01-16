@@ -72,14 +72,16 @@ function install_packages
 # string get_pms(void)
 function get_pms
 {
-    which dpkg > /dev/null
+    _TMP=$(cat /etc/*{release,version} 2> /dev/null)
+
+    echo $_TMP | grep -i -q debian
     if [ $? -eq 0 ]
     then
         echo "dpkg"
         return
     fi
 
-    which rpm > /dev/null
+    echo $_TMP | grep -i -q centos
     if [ $? -eq 0 ]
     then
         echo "rpm"
@@ -106,7 +108,10 @@ fi
 check_pkgs "git python python-setuptools"
 if [ $_PMS == "dpkg" ]
 then
-    check_pkgs "python-stdeb"
+    check_pkgs "python-stdeb python-django"
+elif [ $_PMS == "rpm" ]
+then
+    check_pkgs "rpm-build Django"
 fi
 
 # create packages
