@@ -1,18 +1,32 @@
 Thanks for downloading migasfree server.
 
-This process will create and install the packages: 
-    - django-ajax-select
-    - migasfree-server
+This process will create and install the packages:
+
+    * django-ajax-select
+    * migasfree-server
 
 
-1.- Download install-migasfree-server.sh file:
-    # wget --no-check-certificate https://github.com/downloads/agacias/migasfree/install-migasfree-server.sh
+1.- Download create-migasfree-server-package file:
+
+    # wget --no-check-certificate https://github.com/agacias/migasfree/raw/new_ui/bin/create-migasfree-server-package
 
 
-2.- Run for your distro:
-    for debian or ubuntu:
-        # bash install-migasfree-server.sh debian devel
+2.- Choose code branch (master by default):
 
-    for centos:
-        # bash install-migasfree-server.sh centos devel
+    # bash create-migasfree-server-package new_ui
 
+
+3.- Check migasfree/settings.py (p.e. /usr/shared/pyshared/migasfree/settings.py):
+
+    * Database parameters
+    * Secret key
+    * Organization name
+    * Time zone
+    * ...
+
+4.- Execute this script to create initial data (default superuser is admin:admin):
+
+    # migasfree-server-from-scratch
+
+
+And enjoy migasfree experience!!!
