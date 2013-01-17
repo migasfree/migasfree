@@ -11,6 +11,7 @@ from django.contrib import auth
 from . import jsontemplate
 
 from migasfree.settings import MIGASFREE_REPO_DIR
+from migasfree.settings import MIGASFREE_AUTOREGISTER
 
 from migasfree.server.models import *
 from migasfree.server.errmfs import *
@@ -255,6 +256,7 @@ def upload_computer_info(request, computer, data):
                   {
                       "hostname": HOSTNAME,
                       "ip": IP,
+                      "platform": PLATFORM,
                       "version": VERSION,
                       "user": USER,
                       "user_fullname": USER_FULLNAME
@@ -687,16 +689,53 @@ def install_device(request, computer, data):
 def register_computer(request, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
+    user = auth.authenticate(
+        username=data.get('username'),
+        password=data.get('password')
+    )
+
+    platform = data.get('platform', 'unkown')
+    version = data.get('version', 'unkown')
+
+    # Autoregister Platform
+    if not Platform.objects.filter(name=platform):
+        if not MIGASFREE_AUTOREGISTER:
+            if not user or not user.has_perm("server.can_save_platform"):
+                return return_message(cmd, error(CANNOTREGISTER))
+        # if all ok we add the platform
+        o_platform = Platform()
+        o_platform.name = platform
+        o_platform.save()
+
+        o_messageserver = MessageServer()
+        o_messageserver.text = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (platform, computer)
+        o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_messageserver.save()
+
+    # Autoregister Version
+    if not Version.objects.filter(name=version):
+        if not MIGASFREE_AUTOREGISTER:
+            if not user or not user.has_perm("server.can_save_version"):
+                return return_message(cmd, error(CANNOTREGISTER))
+        # if all ok we add the version
+        o_version = Version()
+        o_version.name = version
+        o_version.pms = Pms.objects.get(id=1)  # default
+        o_version.platform = Platform.objects.get(name=platform)
+        o_version.autoregister = MIGASFREE_AUTOREGISTER
+        o_version.save()
+
+        o_messageserver = MessageServer()
+        o_messageserver.text = "VERSION [%s] REGISTERED BY COMPUTER[%s]. Please check the PMS." % (version, computer)
+        o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_messageserver.save()
+
     # REGISTER COMPUTER
     # Check Version
     if Version.objects.filter(name=data['version']):
         o_version = Version.objects.get(name=data['version'])
         # if not autoregister, check that the user can save computer
         if not o_version.autoregister:
-            user = auth.authenticate(
-                username=data['username'],
-                password=data['password']
-            )
             if not user or not user.has_perm("server.can_save_computer"):
                 return return_message(cmd, error(CANNOTREGISTER))
 
@@ -713,7 +752,7 @@ def register_computer(request, computer, data):
         # 2.- returns keys to client
         return return_message(cmd, get_keys_to_client(data['version']))
 
-    return return_message(cmd, error(VERSIONNOTFOUND))
+    return return_message(cmd, error(USERHAVENOTPERMISSION))
 
 
 def get_key_packager(request, computer, data):
