@@ -31,6 +31,25 @@
         }
     },
     {
+        "model": "server.platform",
+        "pk": 1,
+        "fields": {
+            "name": "Linux"
+        }
+    },
+    {
+        "model": "server.version",
+        "pk": 1,
+        "fields": {
+            "name": "UBUNTU",
+            "pms": 3,
+            "platform": 1,
+            "computerbase": "---",
+            "base": "",
+            "autoregister": false
+        }
+    },
+    {
         "model": "server.checking",
         "pk": 1,
         "fields": {
