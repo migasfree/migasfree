@@ -335,6 +335,13 @@ class MessageAdmin(admin.ModelAdmin):
 
 admin.site.register(Message, MessageAdmin)
 
+class MessageServerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'date', 'text',)
+    ordering = ('date',)
+    list_filter = ('date',)
+    search_fields = ('text', 'date',)
+
+admin.site.register(MessageServer, MessageServerAdmin)
 
 class RepositoryAdmin(AjaxSelectAdmin):
     form = make_ajax_form(Repository, {
