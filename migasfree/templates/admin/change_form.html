@@ -39,7 +39,7 @@ $(document).ready(function() {
 
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
 
-{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+{% block bodyclass %}{{ opts.object_name.lower }} change-form{% endblock %}
 
 {% block documentation %}
     <p><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}">{% trans 'Data Model Documentation' %}</a></p>
