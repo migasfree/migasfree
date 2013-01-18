@@ -13,13 +13,12 @@ $(document).ready(function() {
     });
 
     // progressive enhancement!!!
-    $("body").addClass("full");
-    $("section nav").toggle();
     $("#sliding-panel").toggle();
-    $("a#show_button").css("display", "block");
+    $("a#hide_button").css("display", "block");
 
-    $("a.panel_button").click(function(){
-        $("section nav").toggle();
+    function expand_sidebar()
+    {
+        $("section nav").show();
         $("section nav").animate({
             width: "25%"
         })
@@ -27,23 +26,62 @@ $(document).ready(function() {
             width: "20%"
         }, "fast");
 
-        $("a.panel_button").toggle();
+        $("a#show_button").css("display", "none");
         $("a#hide_button").css("display", "block");
+
         $("#sliding-panel").css("left", "18.5%");
         $("body").removeClass("full");
 
-        return false;
-    });
+        document.cookie = 'sidebar=expanded;path=/';
 
-    $("a#hide_button").click(function(){
+        return false;
+    }
+
+    function collapse_sidebar()
+    {
+        $("section nav").hide();
         $("section nav").animate({
             width: "0"
         }, "fast");
 
         $("body").addClass("full");
         $("#sliding-panel").css("left", "0");
-        $(this).css("display", "none");
+
+        $("a#hide_button").css("display", "none");
+        $("a#show_button").css("display", "block");
+
+        document.cookie = 'sidebar=collapsed;path=/';
 
         return false;
-    });
+    }
+
+    function sidebar_is_collapsed()
+    {
+        return $("section nav").is(':not(:visible)');
+    }
+
+    function set_position_from_cookie()
+    {
+        if (!document.cookie)
+            return;
+
+        var items = document.cookie.split(';');
+        for (var k = 0; k < items.length; k++)
+        {
+            var key_val = items[k].split('=');
+            var key = $.trim(key_val[0]);
+            if (key == 'sidebar')
+            {
+                var value = $.trim(key_val[1]);
+                if ((value == 'collapsed') && (!sidebar_is_collapsed()))
+                    collapse_sidebar();
+                else if ((value == 'expanded') && (sidebar_is_collapsed()))
+                    expand_sidebar();
+            }
+        }
+    }
+
+    $("a.panel_button").click(expand_sidebar);
+    $("a#hide_button").click(collapse_sidebar);
+    set_position_from_cookie();
 });
