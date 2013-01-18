@@ -694,8 +694,8 @@ def register_computer(request, computer, data):
         password=data.get('password')
     )
 
-    platform = data.get('platform', 'unkown')
-    version = data.get('version', 'unkown')
+    platform = data.get('platform', 'unknown')
+    version = data.get('version', 'unknown')
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
