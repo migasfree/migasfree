@@ -4,6 +4,8 @@ import os
 import time
 import inspect
 from datetime import datetime
+from datetime import timedelta
+
 
 from django.db.models import Q
 from django.contrib import auth
@@ -12,6 +14,7 @@ from . import jsontemplate
 
 from migasfree.settings import MIGASFREE_REPO_DIR
 from migasfree.settings import MIGASFREE_AUTOREGISTER
+from migasfree.settings import MIGASFREE_HW_PERIOD
 
 from migasfree.server.models import *
 from migasfree.server.errmfs import *
@@ -81,6 +84,8 @@ def upload_computer_hardware(request, computer, data):
         o_computer = Computer.objects.get(name=computer)
         HwNode.objects.filter(computer=o_computer).delete()
         load_hw(o_computer, data[cmd], None, 1)
+        o_computer.datehardware = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_computer.save()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -284,6 +289,7 @@ def upload_computer_info(request, computer, data):
                         "remove": ["pck1","pck2","pck3",...]
                     } ,
                 "base": true|false,
+                "hardware": true|false,
                 "devices":
                     {
                         "install": bashcode ,
@@ -542,6 +548,13 @@ def upload_computer_info(request, computer, data):
             "install": lst_dev_install
         }
         retdata["base"] = (o_version.computerbase == o_computer.name)
+
+        #HARDWARE CAPTURE
+        if o_computer.datehardware:
+            hwcapture = ( datetime.now() > (o_computer.datehardware + timedelta(days=MIGASFREE_HW_PERIOD)) )
+        else:
+            hwcapture = True
+        retdata["hardwarecapture"] = hwcapture
 
         ret = return_message(cmd, retdata)
     except:

@@ -76,6 +76,11 @@ class Computer(models.Model):
         null=True,
     )
 
+    datehardware = models.DateTimeField(
+        _("last hardware capture"),
+        null=True,
+    )
+
     def last_login(self):
         qry = Login.objects.filter(Q(computer__id=self.id)).order_by('-date')
         if qry.count() == 0:
