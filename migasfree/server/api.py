@@ -295,6 +295,41 @@ def upload_computer_info(request, computer, data):
     t = time.strftime("%Y-%m-%d")
     m = time.strftime("%Y-%m-%d %H:%M:%S")
 
+    platform = data.get("upload_computer_info").get("computer").get('platform', 'unknown')
+    version = data.get("upload_computer_info").get("computer").get('version', 'unknown')
+
+    # Autoregister Platform
+    if not Platform.objects.filter(name=platform):
+        if not MIGASFREE_AUTOREGISTER:
+                return return_message(cmd, error(CANNOTREGISTER))
+        # if all ok we add the platform
+        o_platform = Platform()
+        o_platform.name = platform
+        o_platform.save()
+
+        o_messageserver = MessageServer()
+        o_messageserver.text = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (platform, computer)
+        o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_messageserver.save()
+
+    # Autoregister Version
+    if not Version.objects.filter(name=version):
+        if not MIGASFREE_AUTOREGISTER:
+                return return_message(cmd, error(CANNOTREGISTER))
+        # if all ok we add the version
+        o_version = Version()
+        o_version.name = version
+        o_version.pms = Pms.objects.get(id=1)  # default
+        o_version.platform = Platform.objects.get(name=platform)
+        o_version.autoregister = MIGASFREE_AUTOREGISTER
+        o_version.save()
+
+        o_messageserver = MessageServer()
+        o_messageserver.text = "VERSION [%s] REGISTERED BY COMPUTER[%s]. Please check the PMS." % (version, computer)
+        o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_messageserver.save()
+
+
     lst_attributes = []  # List of attributes of computer
 
     ret = ""
@@ -694,8 +729,8 @@ def register_computer(request, computer, data):
         password=data.get('password')
     )
 
-    platform = data.get('platform', 'unkown')
-    version = data.get('version', 'unkown')
+    platform = data.get('platform', 'unknown')
+    version = data.get('version', 'unknown')
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
