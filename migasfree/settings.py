@@ -38,9 +38,14 @@ else:  # production environment
     MIGASFREE_REPO_DIR = '/var/migasfree/repo'
     MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'keys')
 
+
+# PERIOD HARDWARE CAPTURE (DAYS)
+MIGASFREE_HW_PERIOD = 30
+
 ADMINS = (
     ('Your name', 'your_name@example.com'),
 )
+
 
 MANAGERS = ADMINS
 
