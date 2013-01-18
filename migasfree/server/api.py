@@ -289,7 +289,7 @@ def upload_computer_info(request, computer, data):
                         "remove": ["pck1","pck2","pck3",...]
                     } ,
                 "base": true|false,
-                "hardware": true|false,
+                "hardwarecapture": true|false,
                 "devices":
                     {
                         "install": bashcode ,
