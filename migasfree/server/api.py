@@ -6,7 +6,6 @@ import inspect
 from datetime import datetime
 from datetime import timedelta
 
-
 from django.db.models import Q
 from django.contrib import auth
 
@@ -289,7 +288,7 @@ def upload_computer_info(request, computer, data):
                         "remove": ["pck1","pck2","pck3",...]
                     } ,
                 "base": true|false,
-                "hardwarecapture": true|false,
+                "hardware_capture": true|false,
                 "devices":
                     {
                         "install": bashcode ,
@@ -298,11 +297,16 @@ def upload_computer_info(request, computer, data):
     """
 
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    t = time.strftime("%Y-%m-%d")
     m = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    platform = data.get("upload_computer_info").get("computer").get('platform', 'unknown')
-    version = data.get("upload_computer_info").get("computer").get('version', 'unknown')
+    platform = data.get("upload_computer_info").get("computer").get(
+        'platform',
+        'unknown'
+    )
+    version = data.get("upload_computer_info").get("computer").get(
+        'version',
+        'unknown'
+    )
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
@@ -314,7 +318,10 @@ def upload_computer_info(request, computer, data):
         o_platform.save()
 
         o_messageserver = MessageServer()
-        o_messageserver.text = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (platform, computer)
+        o_messageserver.text = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
+            platform,
+            computer
+        )
         o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_messageserver.save()
 
@@ -331,7 +338,9 @@ def upload_computer_info(request, computer, data):
         o_version.save()
 
         o_messageserver = MessageServer()
-        o_messageserver.text = "VERSION [%s] REGISTERED BY COMPUTER[%s]. Please check the PMS." % (version, computer)
+        o_messageserver.text = \
+            "VERSION [%s] REGISTERED BY COMPUTER [%s]. Please check the PMS." \
+            % (version, computer)
         o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_messageserver.save()
 
@@ -357,7 +366,11 @@ def upload_computer_info(request, computer, data):
             return return_message(cmd, error(COMPUTERNOTFOUND))
 
         #registration of ip, version an Migration of computer
-        check_computer(dic_computer["hostname"], dic_computer["version"], dic_computer["ip"])
+        check_computer(
+            dic_computer["hostname"],
+            dic_computer["version"],
+            dic_computer["ip"]
+        )
 
         # if not exists the user, we add it
         try:
@@ -537,10 +550,12 @@ def upload_computer_info(request, computer, data):
 
         #HARDWARE CAPTURE
         if o_computer.datehardware:
-            hwcapture = ( datetime.now() > (o_computer.datehardware + timedelta(days=MIGASFREE_HW_PERIOD)) )
+            hwcapture = (datetime.now() > (
+                o_computer.datehardware + timedelta(days=MIGASFREE_HW_PERIOD))
+            )
         else:
             hwcapture = True
-        retdata["hardwarecapture"] = hwcapture
+        retdata["hardware_capture"] = hwcapture
 
         ret = return_message(cmd, retdata)
     except:
@@ -742,7 +757,10 @@ def register_computer(request, computer, data):
         o_platform.save()
 
         o_messageserver = MessageServer()
-        o_messageserver.text = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (platform, computer)
+        o_messageserver.text = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
+            platform,
+            computer
+        )
         o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_messageserver.save()
 
@@ -760,7 +778,9 @@ def register_computer(request, computer, data):
         o_version.save()
 
         o_messageserver = MessageServer()
-        o_messageserver.text = "VERSION [%s] REGISTERED BY COMPUTER[%s]. Please check the PMS." % (version, computer)
+        o_messageserver.text = \
+            "VERSION [%s] REGISTERED BY COMPUTER [%s]. Please check the PMS." \
+            % (version, computer)
         o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_messageserver.save()
 
