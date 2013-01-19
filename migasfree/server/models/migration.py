@@ -36,7 +36,6 @@ class Migration(models.Model):
     version_link.allow_tags = True
     version_link.short_description = _("Version")
 
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Migration")
