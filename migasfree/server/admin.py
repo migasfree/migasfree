@@ -26,6 +26,7 @@ admin.site.register(UserProfile)
 admin.site.register(AutoCheckError)
 admin.site.register(Platform)
 
+
 def user_version(user):
     """
     Returns the user's current version
@@ -55,11 +56,12 @@ admin.site.register(Version, VersionAdmin)
 
 class MigrationAdmin(admin.ModelAdmin):
     list_display = ('id', 'computer_link', 'version_link', 'date')
-    list_filter = ('date', 'version__platform' )
+    list_filter = ('date', 'version__platform', )
     search_fields = ('computer__name', 'date',)
     actions = None
 
 admin.site.register(Migration, MigrationAdmin)
+
 
 class UpdateAdmin(admin.ModelAdmin):
     list_display = ('id', 'computer_link', 'date', 'version')
@@ -343,6 +345,7 @@ class MessageAdmin(admin.ModelAdmin):
 
 admin.site.register(Message, MessageAdmin)
 
+
 class MessageServerAdmin(admin.ModelAdmin):
     list_display = ('id', 'date', 'text',)
     ordering = ('date',)
@@ -350,6 +353,7 @@ class MessageServerAdmin(admin.ModelAdmin):
     search_fields = ('text', 'date',)
 
 admin.site.register(MessageServer, MessageServerAdmin)
+
 
 class RepositoryAdmin(AjaxSelectAdmin):
     form = make_ajax_form(Repository, {
