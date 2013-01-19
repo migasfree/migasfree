@@ -921,6 +921,14 @@ def upload_server_set(request, computer, data):
     return return_message(cmd, ok())
 
 
+def add_migration(o_computer, o_version):
+    o_migration = Migration()
+    o_migration.computer = o_computer
+    o_migration.version = o_version
+    o_migration.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    o_migration.save()
+
+
 def check_computer(hostname, version, ip):
     #registration of ip, version an Migration of computer
     o_version = Version.objects.get(name=version)
@@ -932,14 +940,11 @@ def check_computer(hostname, version, ip):
         o_computer.dateinput = time.strftime("%Y-%m-%d")
         o_computer.version = o_version
         o_computer.save()
+        add_migration(o_computer, o_version)
 
     # Check Migration
     if o_computer.version != o_version:
-        o_migration = Migration()
-        o_migration.computer = o_computer
-        o_migration.version = o_version
-        o_migration.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_migration.save()
+        add_migration(o_computer, o_version)
 
     o_computer.version = o_version
     o_computer.ip = ip
