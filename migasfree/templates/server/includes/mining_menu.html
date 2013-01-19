@@ -13,6 +13,7 @@
         <li><a class="fault" href="{% url 'admin:server_fault_changelist' %}">{% trans 'Faults' %}</a></li>
         <li><a class="device" href="{% url 'admin:server_device_changelist' %}">{% trans 'Devices' %}</a></li>
         <li><a class="attribute" href="{% url 'admin:server_attribute_changelist' %}">{% trans 'Attributes' %}</a></li>
+        <li><a class="migration" href="{% url 'admin:server_migration_changelist' %}">{% trans 'Migrations' %}</a></li>
     </ul>
 
     {% if query_names %}
