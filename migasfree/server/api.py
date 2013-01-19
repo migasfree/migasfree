@@ -335,7 +335,6 @@ def upload_computer_info(request, computer, data):
         o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_messageserver.save()
 
-
     lst_attributes = []  # List of attributes of computer
 
     ret = ""
@@ -357,22 +356,8 @@ def upload_computer_info(request, computer, data):
 
             return return_message(cmd, error(COMPUTERNOTFOUND))
 
-        #registration of ip and version of computer
-        try:
-            o_computer = Computer.objects.get(name=dic_computer["hostname"])
-            o_computer.ip = dic_computer["ip"]
-            o_computer.version = Version.objects.get(
-                name=dic_computer["version"]
-            )
-            o_computer.save()
-        except:  # if not exists the computer, we add it
-            o_computer = Computer(name=dic_computer["hostname"])
-            o_computer.dateinput = t
-            o_computer.ip = dic_computer["ip"]
-            o_computer.version = Version.objects.get(
-                name=dic_computer["version"]
-            )
-            o_computer.save()
+        #registration of ip, version an Migration of computer
+        check_computer(dic_computer["hostname"], dic_computer["version"], dic_computer["ip"])
 
         # if not exists the user, we add it
         try:
@@ -512,6 +497,7 @@ def upload_computer_info(request, computer, data):
                     lst_pkg_install.append(p)
 
         #DEVICES
+        o_computer = Computer.objects.get(name=dic_computer["hostname"])
         lst_dev_remove = []
         lst_dev_install = []
         chk_devices = Mmcheck(o_computer.devices, o_computer.devices_copy)
@@ -789,13 +775,7 @@ def register_computer(request, computer, data):
 
         # ALL IS OK
         # 1.- Add Computer
-        try:
-            o_computer = Computer.objects.get(name=computer)
-        except:
-            o_computer = Computer(name=computer)
-            o_computer.dateinput = time.strftime("%Y-%m-%d")
-        o_computer.version = o_version
-        o_computer.save()
+        check_computer(computer, data['version'], "")
 
         # 2.- returns keys to client
         return return_message(cmd, get_keys_to_client(data['version']))
@@ -919,6 +899,31 @@ def upload_server_set(request, computer, data):
         return return_message(cmd, error(GENERIC))
 
     return return_message(cmd, ok())
+
+
+def check_computer(hostname, version, ip):
+    #registration of ip, version an Migration of computer
+    o_version = Version.objects.get(name=version)
+    if Computer.objects.filter(name=hostname):
+        o_computer = Computer.objects.get(name=hostname)
+    else:  # if not exists the computer, we add it
+        o_computer = Computer()
+        o_computer.name = hostname
+        o_computer.dateinput = time.strftime("%Y-%m-%d")
+        o_computer.version = o_version
+        o_computer.save()
+
+    # Check Migration
+    if o_computer.version != o_version:
+        o_migration = Migration()
+        o_migration.computer = o_computer
+        o_migration.version = o_version
+        o_migration.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_migration.save()
+
+    o_computer.version = o_version
+    o_computer.ip = ip
+    o_computer.save()
 
 
 def create_repositories_package(packagename, versionname):

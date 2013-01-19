@@ -35,6 +35,7 @@ from migasfree.server.models.message import Message
 from migasfree.server.models.error import Error
 from migasfree.server.models.fault_def import FaultDef
 from migasfree.server.models.fault import Fault
+from migasfree.server.models.migration import Migration
 
 from migasfree.server.models.hw_capability import HwCapability
 from migasfree.server.models.hw_configuration import HwConfiguration

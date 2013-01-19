@@ -53,6 +53,14 @@ class VersionAdmin(admin.ModelAdmin):
 admin.site.register(Version, VersionAdmin)
 
 
+class MigrationAdmin(admin.ModelAdmin):
+    list_display = ('id', 'computer_link', 'version_link', 'date')
+    list_filter = ('date', 'version__platform' )
+    search_fields = ('computer__name', 'date',)
+    actions = None
+
+admin.site.register(Migration, MigrationAdmin)
+
 class UpdateAdmin(admin.ModelAdmin):
     list_display = ('id', 'computer_link', 'date', 'version')
     list_filter = ('date', )
