@@ -317,13 +317,13 @@ def upload_computer_info(request, computer, data):
         o_platform.name = platform
         o_platform.save()
 
-        o_messageserver = MessageServer()
-        o_messageserver.text = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
+        o_notification = Notification()
+        o_notification.notification = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
             platform,
             computer
         )
-        o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_messageserver.save()
+        o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_notification.save()
 
     # Autoregister Version
     if not Version.objects.filter(name=version):
@@ -337,12 +337,12 @@ def upload_computer_info(request, computer, data):
         o_version.autoregister = MIGASFREE_AUTOREGISTER
         o_version.save()
 
-        o_messageserver = MessageServer()
-        o_messageserver.text = \
+        o_notification = Notification()
+        o_notification.notification = \
             "VERSION [%s] REGISTERED BY COMPUTER [%s]. Please check the PMS." \
             % (version, computer)
-        o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_messageserver.save()
+        o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_notification.save()
 
     lst_attributes = []  # List of attributes of computer
 
@@ -756,13 +756,13 @@ def register_computer(request, computer, data):
         o_platform.name = platform
         o_platform.save()
 
-        o_messageserver = MessageServer()
-        o_messageserver.text = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
+        o_notification = Notification()
+        o_notification.notification = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
             platform,
             computer
         )
-        o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_messageserver.save()
+        o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_notification.save()
 
     # Autoregister Version
     if not Version.objects.filter(name=version):
@@ -777,12 +777,12 @@ def register_computer(request, computer, data):
         o_version.autoregister = MIGASFREE_AUTOREGISTER
         o_version.save()
 
-        o_messageserver = MessageServer()
-        o_messageserver.text = \
+        o_notification = Notification()
+        o_notification.notification = \
             "VERSION [%s] REGISTERED BY COMPUTER [%s]. Please check the PMS." \
             % (version, computer)
-        o_messageserver.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_messageserver.save()
+        o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        o_notification.save()
 
     # REGISTER COMPUTER
     # Check Version

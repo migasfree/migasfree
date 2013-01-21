@@ -228,6 +228,32 @@ class UserAdmin(admin.ModelAdmin):
 admin.site.register(User, UserAdmin)
 
 
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'checked',
+        'date',
+        'notification',
+    )
+    list_filter = ('checked', 'date')
+    ordering = ('date',)
+    search_fields = ('date', 'notification',)
+
+    actions = ['checked_ok']
+
+    def checked_ok(self, request, queryset):
+        for noti in queryset:
+            noti.checked = True
+            noti.save()
+
+        return redirect("%s?checked__exact=0"
+            % reverse('admin:server_notification_changelist'))
+
+    checked_ok.short_description = trans("Checking is O.K.")
+
+admin.site.register(Notification, NotificationAdmin)
+
+
 class ErrorAdmin(admin.ModelAdmin):
     list_display = (
         'id',

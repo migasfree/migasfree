@@ -31,6 +31,7 @@ from migasfree.server.models.computer_login_update_hwnode import Computer, \
 #from migasfree.server.models.login import Login
 #from migasfree.server.models.update import Update
 #from migasfree.server.models.hw_node import HwNode
+from migasfree.server.models.notification import Notification
 from migasfree.server.models.message import Message
 from migasfree.server.models.error import Error
 from migasfree.server.models.fault_def import FaultDef
