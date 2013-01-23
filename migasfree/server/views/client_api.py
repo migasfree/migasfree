@@ -13,7 +13,7 @@ from migasfree.server.models import Computer, Version, Error
 from migasfree.server.api import *
 from migasfree.server.errmfs import *
 from migasfree.server.security import *
-
+form migasfree.server.functions import get_client_ip
 
 def api(request):
     # Other data on the request.FILES dictionary:
@@ -86,7 +86,8 @@ def api(request):
                     oerr = Error()
                     oerr.computer = Computer.objects.get(name=computer)
                     oerr.version = Version.objects.get(name=version)
-                    oerr.error = "%s - %s" % (
+                    oerr.error = "%s - %s - %s" % (
+                        get_client_ip(request),
                         command,
                         errmfs.message(errmfs.SIGNNOTOK)
                     )

@@ -398,7 +398,7 @@ body.popup footer {
 
 /*******/
 table.model, table#query {
-    width: 100%;
+    width: 99%;
 }
 table.model tr, table#query tbody tr {
     border: 1px solid #ccc;
