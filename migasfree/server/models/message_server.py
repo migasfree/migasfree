@@ -7,9 +7,8 @@ from common import link
 
 
 class MessageServer(models.Model):
-    text = models.CharField(
+    text = models.TextField(
         _("text"),
-        max_length=100,
         null=True,
         blank=True
     )

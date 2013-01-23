@@ -14,9 +14,8 @@ class Message(models.Model):
         unique=True
     )
 
-    text = models.CharField(
+    text = models.TextField(
         _("text"),
-        max_length=100,
         null=True,
         blank=True
     )
