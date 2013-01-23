@@ -13,7 +13,7 @@ from migasfree.server.models import Computer, Version, Error
 from migasfree.server.api import *
 from migasfree.server.errmfs import *
 from migasfree.server.security import *
-form migasfree.server.functions import get_client_ip
+from migasfree.server.functions import get_client_ip
 
 def api(request):
     # Other data on the request.FILES dictionary:
