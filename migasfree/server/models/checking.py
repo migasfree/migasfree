@@ -37,6 +37,11 @@ class Checking(models.Model):
         default=True,
     )
 
+    alert = models.BooleanField(
+        _("alert"),
+        default=True,
+    )
+
     def save(self, *args, **kwargs):
         self.code = self.code.replace("\r\n", "\n")
         super(Checking, self).save(*args, **kwargs)

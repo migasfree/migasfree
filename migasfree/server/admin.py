@@ -73,7 +73,7 @@ admin.site.register(Update, UpdateAdmin)
 
 
 class CheckingAdmin(admin.ModelAdmin):
-    list_display = ('name', 'active')
+    list_display = ('name', 'active', 'alert')
     list_filter = ('active', )
 
 admin.site.register(Checking, CheckingAdmin)
