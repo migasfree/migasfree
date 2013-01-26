@@ -5,7 +5,7 @@ set up our URLs
 """
 
 import os
-import settings
+import django
 
 from django.conf.urls.defaults import patterns, include, url
 
@@ -13,6 +13,8 @@ from django.contrib import admin
 admin.autodiscover()
 
 from ajax_select import urls as ajax_select_urls
+
+from . import settings
 
 urlpatterns = patterns('',
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
@@ -35,7 +37,11 @@ if settings.DEBUG:
         }),
 
         (r'^media/(?P<path>.*)$', 'serve', {
-            'document_root': os.path.join(os.path.dirname(__file__), 'media'),
+            #'document_root': os.path.join(os.path.dirname(__file__), 'media'),
+            'document_root': os.path.join(
+                os.path.dirname(os.path.abspath(django.__file__)),
+                'contrib/admin/media'  # TODO other path in django 1.4
+            ),
             'show_indexes': True
         }),
     )
