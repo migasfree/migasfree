@@ -16,12 +16,15 @@ LANGUAGES_CHOICES = (
 
 
 def link(obj, description):
-    if obj.id is None or obj.id == "":
+    if obj is None or obj.id is None or obj.id == "":
         return ''
     else:
-        return '<a href="%s">%s</a>' % (os.path.join(
-            ADMIN_SITE_ROOT_URL,
-            'server',
-            description.lower(),
-            str(obj.id)
-        ), obj.__unicode__())
+        return '<a href="%s">%s</a>' % (
+            os.path.join(
+                ADMIN_SITE_ROOT_URL,
+                'server',
+                description.lower(),
+                str(obj.id)
+            ),
+            obj.__unicode__()
+        )
