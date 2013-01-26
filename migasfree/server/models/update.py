@@ -1,0 +1,53 @@
+# -*- coding: utf-8 -*-
+
+from django.db import models
+from django.utils.translation import ugettext_lazy as _
+
+from migasfree.server.models.common import link
+from migasfree.server.models import Computer, Version
+
+
+class Update(models.Model):
+    computer = models.ForeignKey(
+        Computer,
+        verbose_name=_("computer")
+    )
+
+    version = models.ForeignKey(
+        Version,
+        verbose_name=_("version"),
+        null=True
+    )
+
+    date = models.DateTimeField(
+        _("date"),
+        default=0
+    )
+
+    def __unicode__(self):
+        return u'%s-%s' % (self.computer.name, self.date)
+
+    def computer_link(self):
+        return self.computer.link()
+
+    computer_link.allow_tags = True
+    computer_link.short_description = _("Computer")
+
+    class Meta:
+        app_label = 'server'
+        verbose_name = _("Update")
+        verbose_name_plural = _("Updates")
+        permissions = (("can_save_update", "Can save Update"),)
+
+    def save(self, *args, **kwargs):
+        super(Update, self).save(*args, **kwargs)
+
+        #update last update in computer
+        self.computer.datelastupdate = self.date
+        self.computer.save()
+
+    def link(self):
+        return link(self, self._meta.object_name)
+
+    link.short_description = Meta.verbose_name
+    link.allow_tags = True
