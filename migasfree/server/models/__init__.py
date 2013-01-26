@@ -25,12 +25,12 @@ from migasfree.server.models.device_model import DeviceModel
 from migasfree.server.models.device import Device
 
 from migasfree.server.models.message_server import MessageServer
-from migasfree.server.models.computer_login_update_hwnode import Computer, \
-    Login, Update, HwNode
-#from migasfree.server.models.computer import Computer
-#from migasfree.server.models.login import Login
-#from migasfree.server.models.update import Update
-#from migasfree.server.models.hw_node import HwNode
+
+from migasfree.server.models.computer import Computer
+from migasfree.server.models.login import Login
+from migasfree.server.models.update import Update
+from migasfree.server.models.hw_node import HwNode
+
 from migasfree.server.models.notification import Notification
 from migasfree.server.models.message import Message
 from migasfree.server.models.error import Error
