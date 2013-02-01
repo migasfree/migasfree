@@ -60,7 +60,8 @@ class UserProfile(UserSystem):
     objects = UserManager()
 
     def save(self, *args, **kwargs):
-        if not self.password.startswith("sha1$"):
+        if not (self.password.startswith("sha1$") or
+                self.password.startswith("pbkdf2")):
             super(UserProfile, self).set_password(self.password)
         super(UserProfile, self).save(*args, **kwargs)
 
