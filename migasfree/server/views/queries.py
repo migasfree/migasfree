@@ -173,8 +173,10 @@ def computer_messages(request):
         try:
             last = item.computer.last_login()
             user = '%s-%s' % (last.user.name, last.user.fullname)
+            lastloginid = last.id
         except:
             user = "None"
+            lastloginid = 0
 
         result.append(
             [
@@ -182,7 +184,7 @@ def computer_messages(request):
                 "-",
                 item.computer.id,
                 item.computer.name,
-                last.id,
+                lastloginid,
                 user,
                 item.computer.version.name,
                 item.computer.ip,
