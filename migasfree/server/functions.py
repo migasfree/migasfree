@@ -32,7 +32,7 @@ def config_apache():
     # FIXME VirtualHost
     _config = \
 """
-Alias /media/ %(django_dir)s/contrib/admin/media/
+Alias /media/ %(django_dir)s/contrib/admin/static/admin/
 
 Alias /repo %(migasfree_repo_dir)s
 <Directory %(migasfree_repo_dir)s>
@@ -61,7 +61,7 @@ vserver!20!document_root = %(migasfree_repo_dir)s
 vserver!20!match = wildcard
 vserver!20!match!domain!1 = *
 vserver!20!nick = www.migasfree.com
-vserver!20!rule!220!document_root = %(django_dir)s/contrib/admin/media
+vserver!20!rule!220!document_root = %(django_dir)s/contrib/admin/static/admin
 vserver!20!rule!220!handler = common
 vserver!20!rule!220!handler!backup = 0
 vserver!20!rule!220!handler!date = 1
@@ -234,10 +234,12 @@ def run_in_server(code_bash):
 
     return {"out": out, "err": err}
 
+
 def get_client_ip(request):
+    ip = request.META.get('REMOTE_ADDR')
+
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
+
     return ip
