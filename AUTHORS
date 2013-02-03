@@ -1,33 +1,38 @@
+=======
 AUTHORS
+=======
 
-Origin:
-=================
-A first prototype of migasfree was originally created in 2009 by Alberto Gacías, based on an original idea.
+Origin
+======
+
+A first prototype of Migasfree was originally created in 2009 by Alberto Gacías, based on an original idea.
 
 This prototype was tested by the 'Grupo Software Libre', belonging to the 'Servicio de Redes y Sistemas' of 'Ayuntamiento de Zaragoza' in the project of migration to open source software for desktops. The prototype was improved with new ideas given by this group and finally put into production in this city council.
 
 After one year of use, and given the interest shown by other governments, Alberto Gacías has decided to rewrite the code for publishing it under license GPLv3 and seeks help from his teammates.
 
 
-The PRIMARY AUTHORS are (and/or have been):
-===========================================
-    * Source 
-        o Alberto Gacías
-        o Jose Antonio Chavarría
-        o Eduardo Romero
+The PRIMARY AUTHORS are (and/or have been)
+==========================================
 
-    * Documentation
-    
+    * Source:
+        + Alberto Gacías (@albertogacias)
+        + Jose Antonio Chavarría (@jact_abcweb)
+        + Eduardo Romero (@eduromo)
+        + Juanje Ojeda (@juanjeojeda)
+
+    * Documentation:
+        + Any help will be appreciated ;)
 
 
-MUCH-APPRECIATED CONTRIBUTORS:
-==============================
+MUCH-APPRECIATED CONTRIBUTORS
+=============================
+
 This is a list of people who have made migasfree that much better.
+
     * Alfonso Gómez
     * Raúl Huerta
     * Sergio Lara
-    * Jesús Pueyo 
+    * Jesús Pueyo
     * Jose Manuel Varo
     * Tracy Hall
-
-
