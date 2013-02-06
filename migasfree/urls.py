@@ -40,7 +40,7 @@ if settings.DEBUG:
             #'document_root': os.path.join(os.path.dirname(__file__), 'media'),
             'document_root': os.path.join(
                 os.path.dirname(os.path.abspath(django.__file__)),
-                'contrib/admin/media'  # TODO other path in django 1.4
+                'contrib/admin/static/admin'
             ),
             'show_indexes': True
         }),

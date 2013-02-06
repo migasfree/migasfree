@@ -8,17 +8,18 @@ import os
 import django
 import django.conf.global_settings as DEFAULT_SETTINGS
 
-if django.get_version() >= '1.4':
-    STATICFILES_DIRS = (
-        ("admin", os.path.join(
-            os.path.dirname(os.path.abspath(django.__file__)),
-            'contrib/admin/static/admin'
-        )),
-    )
-else:
-    ADMIN_MEDIA_PREFIX = '/media/'
+if django.get_version() < '1.4':
+    print('Migasfree requires Django 1.4. Please, update it.')
+    exit(1)
 
-TEMPLATE_DEBUG = DEBUG = False
+STATICFILES_DIRS = (
+    ("admin", os.path.join(
+        os.path.dirname(os.path.abspath(django.__file__)),
+        'contrib/admin/static/admin'
+    )),
+)
+
+TEMPLATE_DEBUG = DEBUG = True
 
 MIGASFREE_AUTOREGISTER = True
 
