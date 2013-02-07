@@ -1,0 +1,46 @@
+[
+    {
+        "pk": 2,
+        "model": "server.pms",
+        "fields": {
+            "info": "echo ****INFO****\nrpm -qp --info $PACKAGE\necho\necho\necho ****REQUIRES****\nrpm -qp --requires $PACKAGE\necho\necho\necho ****PROVIDES****\nrpm -qp --provides $PACKAGE\necho\necho\necho ****OBSOLETES****\nrpm -qp --obsoletes $PACKAGE\necho\necho\necho ****SCRIPTS****\nrpm -qp --scripts $PACKAGE\necho\necho\necho ****CHANGELOG****\nrpm -qp --changelog $PACKAGE\necho\necho\necho ****FILES****\nrpm -qp --list $PACKAGE\necho\n",
+            "createrepo": "_DIRECTORY=%PATH%/%REPONAME%\nrm -rf $_DIRECTORY/repodata\nrm -rf $_DIRECTORY/checksum\ncreaterepo -c checksum $_DIRECTORY\n",
+            "name": "zypper",
+            "repository": "[%REPO%]\nname=%REPO%\nbaseurl=http://$MIGASFREE_SERVER/repo/%VERSION%/REPOSITORIES/%REPO%\ngpgcheck=0\nenabled=1\nhttp_caching=none\nmetadata_expire=1\n",
+            "slug": "REPOSITORIES"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "server.pms",
+        "fields": {
+            "info": "echo ****INFO****\nrpm -qp --info $PACKAGE\necho\necho\necho ****REQUIRES****\nrpm -qp --requires $PACKAGE\necho\necho\necho ****PROVIDES****\nrpm -qp --provides $PACKAGE\necho\necho\necho ****OBSOLETES****\nrpm -qp --obsoletes $PACKAGE\necho\necho\necho ****SCRIPTS****\nrpm -qp --scripts $PACKAGE\necho\necho\necho ****CHANGELOG****\nrpm -qp --changelog $PACKAGE\necho\necho\necho ****FILES****\nrpm -qp --list $PACKAGE\necho\n",
+            "createrepo": "_DIRECTORY=%PATH%/%REPONAME%\nrm -rf $_DIRECTORY/repodata\nrm -rf $_DIRECTORY/checksum\ncreaterepo -s sha -c checksum $_DIRECTORY\n",
+            "name": "yum",
+            "repository": "[%REPO%]\nname=%REPO%\nbaseurl=http://$MIGASFREE_SERVER/repo/%VERSION%/REPOSITORIES/%REPO%\ngpgcheck=0\nenabled=1\nhttp_caching=none\nmetadata_expire=1\n",
+            "slug": "REPOSITORIES"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "server.pms",
+        "fields": {
+            "info": "echo \"****INFO****\"\ndpkg -I $PACKAGE\necho\necho\necho ****REQUIRES****\ndpkg-deb --showformat='${Depends}' --show $PACKAGE\necho\necho\necho ****PROVIDES****\ndpkg-deb --showformat='${Provides}' --show $PACKAGE\necho\necho\necho ****OBSOLETES****\ndpkg-deb --showformat='${Replaces}' --show $PACKAGE\necho\necho\necho \"****SCRIPT PREINST****\"\n#dpkg-deb --showformat='${Source}' --show $PACKAGE\ndpkg-deb -I $PACKAGE preinst\necho\necho\n\necho \"****SCRIPT POSTINST****\"\ndpkg-deb -I $PACKAGE postinst\necho\necho\n\necho \"****SCRIPT PRERM****\"\ndpkg-deb -I $PACKAGE prerm\necho\necho\n\necho \"****SCRIPT POSTRM****\"\ndpkg-deb -I $PACKAGE postrm\necho\necho\n\n\necho ****CHANGELOG****\n_DIR=\"/tmp/changelog\"\n_NAME=`dpkg-deb --showformat='${Package}' --show $PACKAGE`\ndpkg -X $PACKAGE $_DIR > /dev/null\ngzip -d $_DIR/usr/share/doc/$_NAME/changelog.Debian.gz\ncat $_DIR/usr/share/doc/$_NAME/changelog.Debian \nrm -r $_DIR\necho\necho\necho ****FILES****\ndpkg-deb -c $PACKAGE | awk '{print $6}'\n",
+            "createrepo": "cd %PATH%\nmkdir -p %REPONAME%/PKGS/binary-i386/\nmkdir -p %REPONAME%/PKGS/sources/\ncd ..\ndpkg-scanpackages -m dists/%REPONAME%/PKGS /dev/null | gzip -9c > dists/%REPONAME%/PKGS/binary-i386/Packages.gz\ndpkg-scansources dists/%REPONAME%/PKGS /dev/null | gzip -9c > dists/%REPONAME%/PKGS/sources/Sources.gz\n",
+            "name": "apt",
+            "repository": "deb http://$MIGASFREE_SERVER/repo/%VERSION%/REPOSITORIES %REPO% PKGS\n",
+            "slug": "REPOSITORIES/dists"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "server.pms",
+        "fields": {
+            "info": "",
+            "createrepo": "_DIRECTORY=%PATH%/%REPONAME%\ncd  $_DIRECTORY/PKGS/\nrm -rf metadata\nls *.zip > ../metadata",
+            "name": "msi",
+            "repository": "",
+            "slug": "REPOSITORIES"
+        }
+    }
+]

@@ -1,0 +1,158 @@
+[
+    {
+        "pk": 10,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "from migasfree_client.utils import get_mfc_version\nprint get_mfc_version() \n",
+            "name": "VERSION",
+            "language": 1,
+            "auto": true,
+            "prefix": "VER",
+            "active": true
+        }
+    },
+    {
+        "pk": 11,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "import subprocess\nimport sys\nimport platform\n\nif sys.platform == 'linux2' : # PC con Linux\n\n    cmd_linux=\"\"\"\n    if [ -e /usr/local/bin/azlinux-version ]; then\n      RELEASE=$(/usr/local/bin/azlinux-version)\n    else\n      RELEASE=$(/usr/bin/azlinux-version)\n    fi\n    echo ${RELEASE}\"\"\"\n\n    (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n    _RELEASE = out.replace('\"','').strip()\n\nelif sys.platform == 'win32' : # PC con XP\n\n    _OS = platform.win32_ver()\n    _RELEASE = 'Windows ' + _OS[0] + ' ' + _OS[2] + ' (' + _OS[1] + ')'\n\nelse:\n    pass\n\n\nif _RELEASE:\n    print _RELEASE,\nelse:\n    print \"none\",",
+            "name": "RELEASE",
+            "language": 1,
+            "auto": true,
+            "prefix": "REL",
+            "active": true
+        }
+    },
+    {
+        "pk": 1,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "print \"ALL SYSTEMS\"\n",
+            "name": "ALL SYSTEMS",
+            "language": 1,
+            "auto": true,
+            "prefix": "ALL",
+            "active": true
+        }
+    },
+    {
+        "pk": 2,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "import migasfree_client.network\nprint migasfree_client.network.get_network_info()['ip']",
+            "name": "IP DIRECTION",
+            "language": 1,
+            "auto": true,
+            "prefix": "IP",
+            "active": true
+        }
+    },
+    {
+        "pk": 6,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "import subprocess\nimport sys\n\nif sys.platform ==\"linux2\" : # Esto es un PC con Linux\n    proc=subprocess.Popen(\"hostname\",stdout=subprocess.PIPE,shell=True)\n    (out,err) =proc.communicate()\n    print out,    \n\nelif sys.platform == \"win32\" : # Esto es un PC con Windows\n    proc=subprocess.Popen(\"echo %COMPUTERNAME%\",stdout=subprocess.PIPE,shell=True)\n    (out,err) =proc.communicate()\n    print out, \n\nelse:\n    pass\n\n",
+            "name": "MACHINE NAME",
+            "language": 1,
+            "auto": true,
+            "prefix": "HST",
+            "active": true
+        }
+    },
+    {
+        "pk": 3,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "import migasfree_client.network\nprint migasfree_client.network.get_network_info()['net']",
+            "name": "NET",
+            "language": 1,
+            "auto": true,
+            "prefix": "NET",
+            "active": true
+        }
+    },
+    {
+        "pk": 8,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "#import migasfree_client.utils\n#print migasfree_client.utils.get_current_user()\n\nimport platform\nimport migasfree_client.utils\n\n_platform = platform.system()\n\nif _platform == \"Linux\":\n    print migasfree_client.utils.get_current_user(),\n\nelif _platform == \"Windows\":\n    print migasfree_client.utils.get_current_user(),\n\nelse:\n    print none,\n",
+            "name": "USER",
+            "language": 1,
+            "auto": true,
+            "prefix": "USR",
+            "active": true
+        }
+    },
+    {
+        "pk": 7,
+        "model": "server.property",
+        "fields": {
+            "kind": "-",
+            "code": "import subprocess\nimport platform\n\n_platform = platform.system()\nif _platform == 'Linux' :\n    cmd_linux=\"\"\"r=''\n      if [ `lspci -n |sed -n 1p|awk '{print $2}'` = 'Class' ]; then\n        dev=`lspci -n |awk '{print $4}'`\n      else\n        dev=`lspci -n |awk '{print $3}'`\n      fi\n      for l in $dev\n      do\n        n=`lspci -d $l|awk '{for (i = 2; i <=NF;++i) print $i}'|tr \"\\n\" \" \"|sed 's/,//g'`\n        r=\"$r$l~$n,\"\n      done\n      echo $r\"\"\"\n    (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n    print out,\n\nelif _platform == 'Windows' :\n    print \"none\",\n\nelse:\n    print \"none\",",
+            "name": "DEVICE PCI",
+            "language": 1,
+            "auto": true,
+            "prefix": "PCI",
+            "active": true
+        }
+    },
+    {
+        "pk": 4,
+        "model": "server.property",
+        "fields": {
+            "kind": "-",
+            "code": "import subprocess\nimport sys\n\nimport migasfree_client.utils\n\n_GROUPS = \"\"\nif sys.platform == 'linux2' : # PC con Linux\n    _USER = migasfree_client.utils.get_current_user().split('~')[0]\n    cmd_linux=\"/usr/bin/azl-ldap-info -u %s -g\" % _USER\n    (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n    _GROUPS = out.strip()\n\nelif sys.platform == 'win32' : # PC con XP\n    pass\n\nelse:\n    pass\n\nif _GROUPS==\"\":\n    print \"none\",\nelse:\n    print _GROUPS,",
+            "name": "LDAP GROUP",
+            "language": 1,
+            "auto": true,
+            "prefix": "GRP",
+            "active": true
+        }
+    },
+    {
+        "pk": 14,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "import sys\nimport ldap\nimport migasfree_client.utils\nLDAP_SERVER = 'ldapnds.red.zaragoza.es'\nLDAP_BASE = ''\nLDAP_SCOPE = ldap.SCOPE_SUBTREE\n\ndef get_ldap_property(filter_str, property_str, base = LDAP_BASE, scope = LDAP_SCOPE):\n    global global_ldap_object\n\n    try:\n        #print filter_str # DEBUG\n        #print base # DEBUG\n        _result = global_ldap_object.search_s(base, scope, filter_str, [property_str])\n    except ldap.LDAPError, e:\n        print e\n        sys.exit(errno.ENOMSG) # no result\n\n    #print 'DEBUG:', _result # DEBUG\n    if _result == None or not _result:\n        print 'No result in LDAP search'\n        sys.exit(errno.ENOMSG) # no result\n\n    if property_str == 'dn': # special case: dn is getted in other field\n        return _result[0][0]\n\n    try:\n        _ret = _result[0][1][property_str]\n        if len(_ret) == 1: # only one result?\n            return _ret[0]\n    except KeyError:\n        return '' # empty value\n\n    return _ret\n\ndef get_dn(user):\n    # cn=oXXXXx,ou=XXXX,o=XXXXXX\n    return get_ldap_property('(cn=%s)' % user, 'dn')\n\ndef get_context(user):\n    result = get_dn(user).split(',')\n\n    ret = ''\n    for item in result[:]:\n        tmp = item.split('=')\n        if tmp[0] == 'ou' or tmp[0] == 'o':\n            ret = '%s%s.' % (ret, tmp[1])\n\n    return ret[:-1] # remove trailing '.'\n\ndef get_groups(user):\n    # TODO only groups of organization or all of them?\n    _result = get_ldap_property('(cn=%s)' % user, 'groupMembership')\n    if not _result:\n        return '' # no groups found\n\n    # only one result?\n    if type(_result) is str:\n        _result = [_result]\n\n    _ret = ''\n    for _item in _result:\n        _t = _item.split(',')\n        if '=' in _t[0]:\n            _ret = '%s%s, ' % (_ret, _t[0].split('=')[1])\n\n    return _ret[:-2] # remove trailing ',\n\ndef run():\n    global global_ldap_object\n    global_ldap_object = ldap.initialize('ldap://%s:389' % LDAP_SERVER)\n\n    user=migasfree_client.utils.get_current_user().split(\"~\")[0]\n    print \"%s-%s\" % (\"NOUSAR\",  get_context(user))\n    \nif __name__ == '__main__':\n    run()",
+            "name": "NO USAR",
+            "language": 1,
+            "auto": true,
+            "prefix": "TST",
+            "active": false
+        }
+    },
+    {
+        "pk": 13,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "import platform\nprint platform.system()",
+            "name": "PLATFORM",
+            "language": 1,
+            "auto": true,
+            "prefix": "PLT",
+            "active": true
+        }
+    },
+    {
+        "pk": 5,
+        "model": "server.property",
+        "fields": {
+            "kind": "R",
+            "code": "import subprocess\nimport sys\nimport migasfree_client.utils\n\n_CTX=\"\"\nif sys.platform == 'linux2' : # PC con Linux\n    _USER = migasfree_client.utils.get_current_user().split('~')[0]\n    cmd_linux=\"/usr/bin/azl-ldap-info -u %s -c\" % _USER\n    (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n    _CTX=out.strip()\n\nelif sys.platform == 'win32' : # PC con XP\n    pass\n\nelse:\n    pass\n\n\nif _CTX==\"\":\n    print \"none\",\nelse:\n    print _CTX,",
+            "name": "LDAP CONTEXT",
+            "language": 1,
+            "auto": true,
+            "prefix": "CTX",
+            "active": true
+        }
+    }
+]

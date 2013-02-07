@@ -6,6 +6,6 @@ Package: migasfree-server
 Maintainer: Alberto Gacías <alberto@migasfree.org>
 
 #DEBIAN DEPENDS
-Depends: python-django, apache2, libapache2-mod-wsgi, curl, python-ipy, rpm, dpkg-dev, createrepo, django-ajax-select, python-docutils, python-bcrypt
+Depends: python-django, apache2, libapache2-mod-wsgi, curl, python-ipy, rpm, dpkg-dev, createrepo, django-ajax-select, python-docutils, python-bcrypt, python-django-south
 
 

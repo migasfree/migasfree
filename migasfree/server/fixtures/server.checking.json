@@ -1,0 +1,101 @@
+[
+    {
+        "pk": 8,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT\nfrom datetime import datetime\nfrom datetime import timedelta\nurl = '/server_messages/'\nmsg = 'Message Server Delayed' \nt = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = MessageServer.objects.filter(date__lt=t).count()\nicon = 'messageserveralert.png'\ntarget = 'server'",
+            "name": "Server Messages Delayed",
+            "alert": true,
+            "description": ""
+        }
+    },
+    {
+        "pk": 7,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT\nfrom datetime import datetime\nfrom datetime import timedelta\nurl = '/server_messages/'\nmsg = 'Server Messages'\nt = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult=MessageServer.objects.all().count()-MessageServer.objects.filter(date__lt=t).count()\nicon = 'messageserver.png'\ntarget = 'server'",
+            "name": "Server Messages",
+            "alert": false,
+            "description": "Server Messages."
+        }
+    },
+    {
+        "pk": 6,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT\nfrom datetime import datetime\nfrom datetime import timedelta\nurl = '/computer_messages/'\nmsg = 'Computer delayed' \nt = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = Message.objects.filter(date__lt=t).count()\nicon = 'messagealert.png'\ntarget = 'computer'\n\n",
+            "name": "Computer delayed",
+            "alert": true,
+            "description": "Check how many computers are delayed"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.server.models import Repository\nfrom migasfree.server.functions import compare_values\nresult = 0\nds = Repository.objects.all()\nfor d in ds:\n    if not compare_values(d.packages.values('id'), d.createpackages.values('id')):\n            result = result+1\nurl = '/create_repos/'\nicon = 'repository.png'\nmsg = 'Repositories files creation'\ntarget = 'server'",
+            "name": "Repositories files creation",
+            "alert": true,
+            "description": "Check if the current user version have to create the files of repositories (only will be created when in a Repository you change the packackes)"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.server.models import Package\nresult = Package.objects.version(0).filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nicon = 'information.png'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
+            "name": "Package/Set orphan",
+            "alert": true,
+            "description": "Packages that not have been asigned to a Repository."
+        }
+    },
+    {
+        "pk": 9,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.server.models import Notification\nresult = Notification.objects.filter(checked__exact=0).count()\nurl = '/admin/server/notification/?checked__exact=0'\nicon = 'notification.png'\nmsg = 'Notifications to check'\ntarget = 'server'",
+            "name": "Notifications to check ",
+            "alert": true,
+            "description": "Server Notifications that must be checked"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT\nfrom datetime import datetime\nfrom datetime import timedelta\nurl = '/computer_messages/'\nmsg = 'Computer updating now'\nt = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult=Message.objects.all().count()-Message.objects.filter(date__lt=t).count()\nicon = 'message.png'\ntarget = 'computer'\n",
+            "name": "Computer updating now",
+            "alert": false,
+            "description": "Check how many computers are being updated at this time"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.server.models import Fault\nresult = Fault.objects.filter(checked__exact=0).count()\nurl = '/admin/server/fault/?checked__exact=0'\nicon = 'fault.png'\nmsg = 'Faults to check'\ntarget = 'computer'\n",
+            "name": "Faults to check",
+            "alert": true,
+            "description": "Faults not marked as checked. You must mark the fault as checked when the fault is solutioned"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "server.checking",
+        "fields": {
+            "active": true,
+            "code": "from migasfree.server.models import Error\nresult = Error.objects.filter(checked__exact=0).count()\nurl = '/admin/server/error/?checked__exact=0'\nicon = 'error.png'\nmsg = 'Errors to check'\ntarget = 'computer'\n",
+            "name": "Errors to check",
+            "alert": true,
+            "description": "Errors not marked as checked. You must mark the error as checked when the error is solutioned."
+        }
+    }
+]

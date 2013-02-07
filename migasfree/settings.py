@@ -49,7 +49,7 @@ ADMINS = (
 
 
 MANAGERS = ADMINS
-
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -67,7 +67,7 @@ DATABASES = {
         'PORT': '',
     }
 }
-"""
+
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -157,6 +157,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'migasfree.server',
     'ajax_select',
+    'south',
 )
 
 # DEFINE THE SEARCH CHANNELS:
