@@ -81,6 +81,12 @@ urlpatterns = patterns('',
 
     (r'^migasfree/api/$', api),
 
+        url(
+        r'^get_versions/$',
+        get_versions,
+        name='get_versions'
+    ),
+
     (r'^device/(.*)', device),
     # (r'^get_device/(.*)', get_device),
 
