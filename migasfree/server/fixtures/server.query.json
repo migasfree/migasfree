@@ -70,16 +70,6 @@
         }
     },
     {
-        "pk": 4,
-        "model": "server.query",
-        "fields": {
-            "code": "query = Computer.objects.filter(software__contains=parameters['package']).order_by(\"datelastupdate\")\r\nfields = ('link()','ip','datelastupdate','last_login().link()')\r\ntitles = ('Computer','ip','last update','last login')",
-            "name": "COMPUTERS WITH THE PACKAGE...",
-            "parameters": "def form_params():\r\n    from migasfree.server.forms import ParametersForm\r\n    class myForm(ParametersForm):\r\n        package = forms.CharField()\r\n    return myForm\r\n",
-            "description": "LIST THE COMPUTERS WITH THE PACKAGE ESPECIFIQUED\r\n\r\n\r\nquery = Computer.objects.filter(software__contains=parameters['package'])\r\n#fields = ('link()', 'software')\r\n#titles = ('link()', 'diff with master')\r\nfields = ('link()',)\r\ntitles = ('link()',)"
-        }
-    },
-    {
         "pk": 7,
         "model": "server.query",
         "fields": {
@@ -97,6 +87,16 @@
             "name": "REPOSITORIES WITH A PACKAGE/SET",
             "parameters": "def form_params():\r\n    from migasfree.server.forms import ParametersForm\r\n    class myForm(ParametersForm):\r\n        package = forms.CharField()\r\n    return myForm\r\n",
             "description": "LIST THE REPOSITORIES THAT HAVE ASIGNNED A DETERMINATE PACKAGE/SET"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "server.query",
+        "fields": {
+            "code": "query = Computer.objects.filter(software__contains=parameters['package']).order_by(\"datelastupdate\")\r\nfields = ('link()','ip','datelastupdate','last_login().link()')\r\ntitles = ('Computer','ip','last update','last login')",
+            "name": "COMPUTERS WITH THE PACKAGE...",
+            "parameters": "def form_params():\r\n    from migasfree.server.forms import ParametersForm\r\n    class myForm(ParametersForm):\r\n        package = forms.CharField()\r\n    return myForm\r\n",
+            "description": "LIST THE COMPUTERS WITH THE PACKAGE ESPECIFIQUED"
         }
     }
 ]

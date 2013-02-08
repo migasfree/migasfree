@@ -1,0 +1,30 @@
+[
+    {
+        "pk": 2,
+        "model": "server.faultdef",
+        "fields": {
+            "code": "let limit=1 # % USED SPACE LIMIT\nDEVICE=`mount |grep \" on /home \"|awk '{print $1}'`\nlet used=`df -hl| grep $DEVICE| awk '{print $5}'|awk 'BEGIN {FS=\"%\";} {print $1}'`\nif [ $used -gt $limit ] ; then\n  echo \"The used space in /home [$DEVICE] is $used%.\"\n  echo \"ACTION: You must delete files\"\nfi",
+            "name": "LOW_HOME_PARTITION_SPACE",
+            "language": 0,
+            "active": true,
+            "attributes": [
+                1
+            ],
+            "description": "add a fault when the space in home partition is low "
+        }
+    },
+    {
+        "pk": 1,
+        "model": "server.faultdef",
+        "fields": {
+            "code": "let limit=1 #% USED SPACE LIMIT\nDEVICE=`mount |grep \" on / \"|awk '{print $1}'`\nlet used=`df -hl| grep $DEVICE| awk '{print $5}'|awk 'BEGIN {FS=\"%\";} {print $1}'`\nif [ $used -gt $limit ] ; then\n  echo \"The used space in / [$DEVICE] is $used%.\"\n  echo \"ACTION: You must delete files\"\nfi",
+            "name": "LOW_SYSTEM_PARTITION_SPACE",
+            "language": 0,
+            "active": true,
+            "attributes": [
+                1
+            ],
+            "description": "add a fault when the space in system partition is low"
+        }
+    }
+]
