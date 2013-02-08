@@ -3,14 +3,12 @@
 import os
 import subprocess
 import django.core.management
+from StringIO import StringIO
 import migasfree
 from migasfree import settings
 django.core.management.setup_environ(settings)
-
-from django.contrib.auth.models import User as UserSystem
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
-
 from migasfree.server.models import UserProfile
 
 
@@ -194,6 +192,18 @@ def create_registers():
             os.path.join(_path_fixtures, fixture))
 
 
+def sequence_reset():
+    commands = StringIO()
+    cfile = "/tmp/migasfree.sequencereset.sql"
+    django.core.management.call_command('sqlsequencereset', 'server', stdout=commands)
+    with open(cfile, "w") as ofile:
+        ofile.write(commands.getvalue())
+        ofile.flush()
+        cmd_linux = "su postgres -c 'psql migasfree -f " + cfile + "' -"
+        (out, err) = run(cmd_linux)
+    os.remove(cfile)
+
+
 def main():
     # Check user is root
     (out, err) = run("whoami")
@@ -204,7 +214,8 @@ def main():
     create_db()
     create_tables()
     create_registers()
-
+    sequence_reset()
 
 if  __name__ == '__main__':
+    os.environ['DJANGO_COLORS'] = 'nocolor'
     main()
