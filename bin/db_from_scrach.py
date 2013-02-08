@@ -185,6 +185,7 @@ def create_registers():
                'server.pms.json',
                'server.query.json',
                'server.property.json',
+               'server.attribute.json',
                'server.faultdef.json',
                ]
     for fixture in fixtures:
