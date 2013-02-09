@@ -17,6 +17,15 @@ class Computer(models.Model):
         unique=True
     )
 
+    uuid = models.CharField(
+        _("uuid"),
+        max_length=36,
+        null=True,
+        blank=True,
+        unique=True,
+        default=""
+    )  # south 0003 & 0004
+
     version = models.ForeignKey(
         Version,
         verbose_name=_("version")
