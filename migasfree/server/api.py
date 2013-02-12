@@ -22,6 +22,17 @@ from migasfree.server.security import *
 from migasfree.server.views import load_hw, create_repositories
 
 
+def get_computer(name, uuid):
+    if Computer.objects.filter(uuid=uuid):
+        o_computer = Computer.objects.get(uuid=uuid)
+    else:
+        if Computer.objects.filter(uuid=name):
+            o_computer = Computer.objects.get(uuid=name)
+        else:
+            o_computer = None
+    return o_computer
+
+
 def new_attribute(o_login, o_property, par):
     """
     Adds an attribute to the system
@@ -57,30 +68,29 @@ def new_attribute(o_login, o_property, par):
     return o_attribute.id
 
 
-def save_login(pc, user):
+def save_login(o_computer, o_user):
     login_date = time.strftime("%Y-%m-%d %H:%M:%S")
     try:
         o_login = Login.objects.get(
-            computer=Computer.objects.get(name=pc),
-            user=User.objects.get(name=user)
+            computer=o_computer,
+            user=o_user
         )
         o_login.date = login_date
         o_login.save()
     except:  # if Login not exists, we save it
         o_login = Login(
-            computer=Computer.objects.get(name=pc),
-            user=User.objects.get(name=user)
+            computer=o_computer,
+            user=o_user
         )
         o_login.date = login_date
         o_login.save()
 
-    return  # ???
+    return  o_login
 
 
-def upload_computer_hardware(request, computer, data):
+def upload_computer_hardware(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_computer = Computer.objects.get(name=computer)
         HwNode.objects.filter(computer=o_computer).delete()
         load_hw(o_computer, data[cmd], None, 1)
         o_computer.datehardware = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -92,10 +102,9 @@ def upload_computer_hardware(request, computer, data):
     return ret
 
 
-def upload_computer_software_base_diff(request, computer, data):
+def upload_computer_software_base_diff(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_computer = Computer.objects.get(name=computer)
         o_computer.software = data[cmd]
         o_computer.save()
         ret = return_message(cmd, ok())
@@ -105,12 +114,10 @@ def upload_computer_software_base_diff(request, computer, data):
     return ret
 
 
-def upload_computer_software_base(request, computer, data):
+def upload_computer_software_base(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_version = Version.objects.get(
-            name=Computer.objects.get(name=computer).version
-        )
+        o_version = o_computer.version
         o_version.base = data[cmd]
         o_version.save()
         ret = return_message(cmd, ok())
@@ -120,10 +127,9 @@ def upload_computer_software_base(request, computer, data):
     return ret
 
 
-def upload_computer_software_history(request, computer, data):
+def upload_computer_software_history(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_computer = Computer.objects.get(name=computer)
         o_computer.history_sw = str(o_computer.history_sw) + "\n\n" + data[cmd]
         o_computer.save()
         ret = return_message(cmd, ok())
@@ -133,13 +139,12 @@ def upload_computer_software_history(request, computer, data):
     return ret
 
 
-def get_computer_software(request, computer, data):
+def get_computer_software(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_computer = Computer.objects.get(name=computer)
         ret = return_message(
             cmd,
-            Version.objects.get(name=o_computer.version).base
+            o_computer.version.base
         )
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -147,11 +152,10 @@ def get_computer_software(request, computer, data):
     return ret
 
 
-def upload_computer_errors(request, computer, data):
+def upload_computer_errors(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_computer = Computer.objects.get(name=computer)
-        o_version = Version.objects.get(id=o_computer.version_id)
+        o_version = o_computer.version
         o_error = Error()
         o_error.computer = o_computer
         o_error.date = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -165,13 +169,11 @@ def upload_computer_errors(request, computer, data):
     return ret
 
 
-def upload_computer_message(request, computer, data):
+def upload_computer_message(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     date_now = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    try:
-        o_computer = Computer.objects.get(name=computer)
-    except:
+    if not o_computer:
         return return_message(cmd, error(COMPUTERNOTFOUND))
 
     try:
@@ -186,7 +188,7 @@ def upload_computer_message(request, computer, data):
             Update(
                 computer=o_computer,
                 date=date_now,
-                version=Version.objects.get(name=o_computer.version)
+                version=o_computer.version
             ).save()
         else:
             o_message.text = data[cmd]
@@ -203,7 +205,7 @@ def return_message(cmd, data):
     return {'%s.return' % cmd: data}
 
 
-def get_properties(request, computer, data):
+def get_properties(request, name, uuid, o_computer, data):
     """
     First call of client requesting to server what he must do.
     The server responds with a string json with structure:
@@ -246,7 +248,7 @@ def get_properties(request, computer, data):
     return ret
 
 
-def upload_computer_info(request, computer, data):
+def upload_computer_info(request, name, uuid, o_computer, data):
     """
     Process the file request.json and return a string json with the faultsdef,
     repositories, packages and devices
@@ -320,7 +322,7 @@ def upload_computer_info(request, computer, data):
         o_notification = Notification()
         o_notification.notification = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
             platform,
-            computer
+            name
         )
         o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_notification.save()
@@ -340,7 +342,7 @@ def upload_computer_info(request, computer, data):
         o_notification = Notification()
         o_notification.notification = \
             "VERSION [%s] REGISTERED BY COMPUTER [%s]. Please check the PMS." \
-            % (version, computer)
+            % (version, name)
         o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_notification.save()
 
@@ -366,10 +368,12 @@ def upload_computer_info(request, computer, data):
             return return_message(cmd, error(COMPUTERNOTFOUND))
 
         #registration of ip, version an Migration of computer
-        check_computer(
-            dic_computer["hostname"],
-            dic_computer["version"],
-            dic_computer["ip"]
+        o_computer = check_computer(
+            o_computer,
+            name,
+            dic_computer.get("version"),
+            dic_computer.get("ip",""),
+            uuid,
         )
 
         # if not exists the user, we add it
@@ -385,11 +389,10 @@ def upload_computer_info(request, computer, data):
             o_user.save()
 
         # Save Login
-        save_login(dic_computer["hostname"], dic_computer["user"])
-        o_login = Login.objects.get(
-            computer=Computer.objects.get(name=dic_computer["hostname"]),
-            user=User.objects.get(name=dic_computer["user"])
-        )
+        o_login = save_login(
+            o_computer,
+            User.objects.get(name=dic_computer["user"])
+            )
         o_login.attributes.clear()
 
         # Get version
@@ -510,7 +513,6 @@ def upload_computer_info(request, computer, data):
                     lst_pkg_install.append(p)
 
         #DEVICES
-        o_computer = Computer.objects.get(name=dic_computer["hostname"])
         lst_dev_remove = []
         lst_dev_install = []
         chk_devices = Mmcheck(o_computer.devices, o_computer.devices_copy)
@@ -564,10 +566,9 @@ def upload_computer_info(request, computer, data):
     return ret
 
 
-def upload_computer_faults(request, computer, data):
+def upload_computer_faults(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     faults = data.get(cmd).get("faults")
-    o_computer = Computer.objects.get(name=computer)
     o_version = Version.objects.get(id=o_computer.version_id)
 
     try:
@@ -596,7 +597,7 @@ def upload_computer_faults(request, computer, data):
 
 
 #DEVICES
-def get_device(request, computer, data):
+def get_device(request, name, uuid, o_computer, data):
     """
     Returns DeviceModel data for lpadmin
     """
@@ -609,7 +610,7 @@ def get_device(request, computer, data):
         return return_message(cmd, error(DEVICENOTFOUND))
 
 
-def get_assist_devices(request, computer, data):
+def get_assist_devices(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         types = {}
@@ -671,13 +672,13 @@ def get_assist_devices(request, computer, data):
     return ret
 
 
-def remove_device(request, computer, data):
+def remove_device(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     d = data[cmd]
     try:
         o_device = Device.objects.get(name=d["NUMBER"])
         try:
-            o_device.computer_set.remove(Computer.objects.get(name=computer))
+            o_device.computer_set.remove(o_computer)
             o_device.save()
             list_computers = []
             for c in o_device.computer_set.all():
@@ -692,7 +693,7 @@ def remove_device(request, computer, data):
         return return_message(cmd, error(DEVICENOTFOUND))
 
 
-def install_device(request, computer, data):
+def install_device(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     d = data[cmd]
 
@@ -723,7 +724,7 @@ def install_device(request, computer, data):
         except:
             return return_message(cmd, error(GENERIC))
 
-    o_device.computer_set.add(Computer.objects.get(name=computer))
+    o_device.computer_set.add(o_computer)
     o_device.save()
     list_computers = []
     for c in o_device.computer_set.all():
@@ -735,7 +736,7 @@ def install_device(request, computer, data):
     })
 
 
-def register_computer(request, computer, data):
+def register_computer(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     user = auth.authenticate(
@@ -745,6 +746,7 @@ def register_computer(request, computer, data):
 
     platform = data.get('platform', 'unknown')
     version = data.get('version', 'unknown')
+
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
@@ -759,7 +761,7 @@ def register_computer(request, computer, data):
         o_notification = Notification()
         o_notification.notification = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
             platform,
-            computer
+            name
         )
         o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_notification.save()
@@ -780,7 +782,7 @@ def register_computer(request, computer, data):
         o_notification = Notification()
         o_notification.notification = \
             "VERSION [%s] REGISTERED BY COMPUTER [%s]. Please check the PMS." \
-            % (version, computer)
+            % (version, name)
         o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_notification.save()
 
@@ -795,7 +797,13 @@ def register_computer(request, computer, data):
 
         # ALL IS OK
         # 1.- Add Computer
-        check_computer(computer, data['version'], "")
+        o_computer = check_computer(
+            o_computer,
+            name,
+            data.get('version'),
+            data.get('ip', ''),
+            uuid
+            )
 
         # 2.- returns keys to client
         return return_message(cmd, get_keys_to_client(data['version']))
@@ -803,7 +811,7 @@ def register_computer(request, computer, data):
     return return_message(cmd, error(USERHAVENOTPERMISSION))
 
 
-def get_key_packager(request, computer, data):
+def get_key_packager(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     user = auth.authenticate(
         username=data['username'],
@@ -815,7 +823,7 @@ def get_key_packager(request, computer, data):
     return return_message(cmd, get_keys_to_packager())
 
 
-def upload_server_package(request, computer, data):
+def upload_server_package(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     f = request.FILES["package"]
@@ -857,7 +865,7 @@ def upload_server_package(request, computer, data):
     return return_message(cmd, ok())
 
 
-def upload_server_set(request, computer, data):
+def upload_server_set(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     f = request.FILES["package"]
@@ -929,16 +937,16 @@ def add_migration(o_computer, o_version):
     o_migration.save()
 
 
-def check_computer(hostname, version, ip):
-    #registration of ip, version an Migration of computer
+def check_computer(o_computer, name, version, ip , uuid):
+    #registration of ip, version, uuid and Migration of computer
     o_version = Version.objects.get(name=version)
-    if Computer.objects.filter(name=hostname):
-        o_computer = Computer.objects.get(name=hostname)
-    else:  # if not exists the computer, we add it
+
+    if not o_computer:
         o_computer = Computer()
-        o_computer.name = hostname
+        o_computer.name = name
         o_computer.dateinput = time.strftime("%Y-%m-%d")
         o_computer.version = o_version
+        o_computer.uuid = uuid
         o_computer.save()
         add_migration(o_computer, o_version)
 
@@ -946,9 +954,12 @@ def check_computer(hostname, version, ip):
     if o_computer.version != o_version:
         add_migration(o_computer, o_version)
 
+    o_computer.name = name
     o_computer.version = o_version
     o_computer.ip = ip
+    o_computer.uuid = uuid
     o_computer.save()
+    return o_computer
 
 
 def create_repositories_package(packagename, versionname):
@@ -965,7 +976,7 @@ def create_repositories_package(packagename, versionname):
         pass
 
 
-def create_repositories_of_packageset(request, computer, data):
+def create_repositories_of_packageset(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     try:

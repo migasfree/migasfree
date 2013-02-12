@@ -9,11 +9,12 @@ from django.http import HttpResponse
 
 from migasfree.settings import MIGASFREE_TMP_DIR
 
-from migasfree.server.models import Computer, Version, Error
+from migasfree.server.models import Error
 from migasfree.server.api import *
 from migasfree.server.errmfs import *
 from migasfree.server.security import *
 from migasfree.server.functions import get_client_ip
+
 
 def api(request):
     # Other data on the request.FILES dictionary:
@@ -23,7 +24,17 @@ def api(request):
     msg = request.FILES.get('message')
     filename = os.path.join(MIGASFREE_TMP_DIR, msg.name)
     filename_return = "%s.return" % filename
-    computer, command = msg.name.split('.')
+
+    lst_msg = msg.name.split('.')
+    if len(lst_msg) == 2:  # COMPATIBILITY WITHOUT UUID
+        name, command = lst_msg
+        uuid = name
+    else:  # WITH UUID
+        name = ".".join(lst_msg[:-2])
+        uuid = lst_msg[-2]
+        command = lst_msg[-1]
+
+    o_computer = get_computer(name, uuid)
 
     if request.method != 'POST':
         return HttpResponse(
@@ -72,8 +83,8 @@ def api(request):
 
     # COMPUTERS
     if command in cmd_version:  # IF COMMAND IS BY VERSION
-        if Computer.objects.filter(name=computer):
-            version = Computer.objects.get(name=computer).version.name
+        if o_computer:
+            version = o_computer.version.name
             save_request_file(msg, filename)
 
             # UNWRAP AND EXECUTE COMMAND
@@ -84,8 +95,8 @@ def api(request):
                 if data["errmfs"]["code"] == errmfs.SIGNNOTOK:
                     # add an error
                     oerr = Error()
-                    oerr.computer = Computer.objects.get(name=computer)
-                    oerr.version = Version.objects.get(name=version)
+                    oerr.computer = o_computer
+                    oerr.version = o_computer.version
                     oerr.error = "%s - %s - %s" % (
                         get_client_ip(request),
                         command,
@@ -94,7 +105,7 @@ def api(request):
                     oerr.date = datetime.now()
                     oerr.save()
             else:
-                ret = eval(command)(request, computer, data)
+                ret = eval(command)(request, name, uuid, o_computer, data)
 
             os.remove(filename)
         else:  # Computer not exists
@@ -120,7 +131,7 @@ def api(request):
             data = json.load(f)[command]
 
         try:
-            ret = eval(command)(request, computer, data)
+            ret = eval(command)(request,  name, uuid, o_computer, data)
         except:
             ret = return_message(command, errmfs.error(errmfs.GENERIC))
 
@@ -137,7 +148,7 @@ def api(request):
         if 'errmfs' in data:
             ret = data
         else:
-            ret = eval(command)(request, computer, data[command])
+            ret = eval(command)(request, name, uuid, o_computer, data[command])
 
         os.remove(filename)
 
