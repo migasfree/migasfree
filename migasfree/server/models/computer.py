@@ -14,8 +14,8 @@ class Computer(models.Model):
         max_length=50,
         null=True,
         blank=True,
-        unique=True
-    )
+        unique=False
+    )  # south 0004
 
     uuid = models.CharField(
         _("uuid"),
@@ -85,6 +85,7 @@ class Computer(models.Model):
     datehardware = models.DateTimeField(
         _("last hardware capture"),
         null=True,
+        blank=True,
     )
 
     def last_login(self):

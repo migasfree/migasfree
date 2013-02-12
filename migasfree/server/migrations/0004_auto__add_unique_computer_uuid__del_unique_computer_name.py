@@ -8,6 +8,9 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Removing unique constraint on 'Computer', fields ['name']
+        db.delete_unique('server_computer', ['name'])
+
         # Adding unique constraint on 'Computer', fields ['uuid']
         db.create_unique('server_computer', ['uuid'])
 
@@ -15,6 +18,9 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
         # Removing unique constraint on 'Computer', fields ['uuid']
         db.delete_unique('server_computer', ['uuid'])
+
+        # Adding unique constraint on 'Computer', fields ['name']
+        db.create_unique('server_computer', ['name'])
 
 
     models = {
@@ -77,7 +83,7 @@ class Migration(SchemaMigration):
         },
         'server.computer': {
             'Meta': {'object_name': 'Computer'},
-            'datehardware': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
+            'datehardware': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'dateinput': ('django.db.models.fields.DateField', [], {}),
             'datelastupdate': ('django.db.models.fields.DateTimeField', [], {'null': 'True'}),
             'devices': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': "orm['server.Device']", 'null': 'True', 'blank': 'True'}),
@@ -86,7 +92,7 @@ class Migration(SchemaMigration):
             'history_sw': ('django.db.models.fields.TextField', [], {'default': "''", 'null': 'True', 'blank': 'True'}),
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ip': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '50', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '50', 'null': 'True', 'blank': 'True'}),
             'software': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'uuid': ('django.db.models.fields.CharField', [], {'default': "''", 'max_length': '36', 'unique': 'True', 'null': 'True', 'blank': 'True'}),
             'version': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['server.Version']"})
