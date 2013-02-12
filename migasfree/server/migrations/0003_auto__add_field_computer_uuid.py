@@ -15,7 +15,7 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.CharField')(default='', max_length=36, null=True, blank=True),
                       keep_default=False)
 
-        Computer.objects.all().update(uuid=F('id'))
+        Computer.objects.all().update(uuid=F('name'))
 
     def backwards(self, orm):
         # Deleting field 'Computer.uuid'
