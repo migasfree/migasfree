@@ -134,7 +134,7 @@ def create_repositories(version_id):
     msg.delete()
 
     if not txt_err == "":
-        txt += "\n\n****ERROR*****\n" + txt_err
+        txt += "\n\n****ERROR*****\n" + txt_err.decode("utf-8")
 
     return txt
 
