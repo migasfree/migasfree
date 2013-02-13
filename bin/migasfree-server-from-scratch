@@ -222,12 +222,7 @@ fi
 remove_old_data
 
 # create DataBase
-echo no | python $_MIGASFREE_PATH/manage.py syncdb
-if [ $? -ne 0 ]
-then
-    echo "Problem found creating database."
-    exit 5
-fi
+migasfree-server-create-database
 
 export DJANGO_SETTINGS_MODULE="migasfree.settings"
 
