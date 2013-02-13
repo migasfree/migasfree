@@ -72,17 +72,15 @@ function install_packages
 # string get_pms(void)
 function get_pms
 {
-    _TMP=$(cat /etc/*{release,version} 2> /dev/null)
+    _TMP=$(python -c "import platform;print platform.linux_distribution()[0],")
 
-    echo $_TMP | grep -i -q debian
-    if [ $? -eq 0 ]
+    if [ "$_TMP" = "debian" ] ||  [ "$_TMP" = "Ubuntu" ]
     then
         echo "dpkg"
         return
     fi
 
-    echo $_TMP | grep -i -q centos
-    if [ $? -eq 0 ]
+    if [ "$_TMP" = "CentOS" ]
     then
         echo "rpm"
         return
