@@ -3,6 +3,8 @@
 import os
 import sys
 import errno
+import tempfile
+
 from datetime import timedelta
 
 import django
@@ -220,17 +222,19 @@ def list_difference(list1, list2):
 
 
 def run_in_server(code_bash):
-    my_file = os.tmpnam()
-    writefile(my_file, code_bash)
+    _, tmp_file = tempfile.mkstemp()
+    writefile(tmp_file, code_bash)
 
-    os.system("bash %s 1> %s.out 2> %s.err" % (my_file, my_file, my_file))
+    os.system("bash %(file)s 1> %(file)s.out 2> %(file)s.err" % {
+        'file': tmp_file
+    })
 
-    out = readfile('%s.out' % my_file)
-    err = readfile('%s.err' % my_file)
+    out = readfile('%s.out' % tmp_file)
+    err = readfile('%s.err' % tmp_file)
 
-    os.remove(my_file)
-    os.remove('%s.out' % my_file)
-    os.remove('%s.err' % my_file)
+    os.remove(tmp_file)
+    os.remove('%s.out' % tmp_file)
+    os.remove('%s.err' % tmp_file)
 
     return {"out": out, "err": err}
 
