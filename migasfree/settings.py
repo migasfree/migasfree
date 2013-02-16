@@ -19,8 +19,6 @@ STATICFILES_DIRS = (
     )),
 )
 
-TEMPLATE_DEBUG = DEBUG = True
-
 MIGASFREE_AUTOREGISTER = True
 
 MIGASFREE_TMP_DIR = '/tmp/migasfree-server'
@@ -28,17 +26,44 @@ MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
 MIGASFREE_ORGANIZATION = 'My Organization'
 MIGASFREE_APP_DIR = os.path.dirname(__file__)
 
-if DEBUG:  # development environment
-    MIGASFREE_PROJECT_DIR = os.path.dirname(os.getcwd())
-    MIGASFREE_DB_DIR = '../..'
-    MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
-    MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
-else:  # production environment
+# development environment
+TEMPLATE_DEBUG = DEBUG = True
+
+MIGASFREE_PROJECT_DIR = os.path.dirname(os.getcwd())
+MIGASFREE_DB_DIR = '../..'
+MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
+MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(MIGASFREE_DB_DIR, 'migasfree.db'),
+    }
+}
+
+DEVELOPMENT = True
+
+if not os.path.exists(os.path.join(MIGASFREE_PROJECT_DIR, 'repo')):
+    # production environment
+    TEMPLATE_DEBUG = DEBUG = False
+
     MIGASFREE_PROJECT_DIR = '/usr/share/migasfree-server'
     MIGASFREE_DB_DIR = MIGASFREE_PROJECT_DIR
     MIGASFREE_REPO_DIR = '/var/migasfree/repo'
     MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'keys')
 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'migasfree',
+            'USER': 'migasfree',
+            'PASSWORD': 'migasfree',
+            'HOST': '',
+            'PORT': '',
+        }
+    }
+
+    DEVELOPMENT = False
 
 # PERIOD HARDWARE CAPTURE (DAYS)
 MIGASFREE_HW_PERIOD = 30
@@ -47,27 +72,7 @@ ADMINS = (
     ('Your name', 'your_name@example.com'),
 )
 
-
 MANAGERS = ADMINS
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(MIGASFREE_DB_DIR, 'migasfree.db'),
-    }
-}
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'migasfree',
-        'USER': 'migasfree',
-        'PASSWORD': 'migasfree',
-        'HOST': '',
-        'PORT': '',
-    }
-}
-
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -82,7 +87,6 @@ DATETIME_FORMAT = 'Y-m-d H:i:s'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-#LANGUAGE_CODE = 'es-ES'
 LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
@@ -205,3 +209,16 @@ AJAX_SELECT_INLINES = 'inline'
 ###########################################################################
 
 #  STANDARD CONFIG SETTINGS ###############################################
+
+# import local settings if exists
+# http://stackoverflow.com/a/1527240
+def _load_settings(path):
+    if os.path.exists(path):
+        print "Loading configuration from %s" % (path)
+        settings = {}
+        # execfile can't modify globals directly, so we will load them manually
+        execfile(path, globals(), settings)
+        for setting in settings:
+            globals()[setting] = settings[setting]
+
+_load_settings("/etc/migasfree-server/settings.py")
