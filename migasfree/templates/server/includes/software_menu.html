@@ -6,6 +6,7 @@
     <h3>{% trans 'Packaging' %}</h3>
     <ul>
         <li><a class="repository" href="{% url 'admin:server_repository_changelist' %}?active__exact=1">{% trans 'Repositories' %}</a></li>
+        <li><a class="schedule" href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a></li>
         <li><a class="store" href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a></li>
         <li><a class="package" href="{% url 'admin:server_package_changelist' %}">{% trans 'Packages/Sets' %}</a></li>
         <li><a class="package-info" href="{% url 'package_info' '' %}">{% trans 'Packages information' %}</a></li>
