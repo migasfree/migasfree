@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     url(r'', include('migasfree.server.urls')),
 )
 
-if settings.DEBUG:
+if settings.DEVELOPMENT:
     urlpatterns += patterns('django.views.static',
         (r'^repo/(?P<path>.*)$', 'serve', {
             'document_root': settings.STATIC_ROOT,
@@ -37,7 +37,6 @@ if settings.DEBUG:
         }),
 
         (r'^media/(?P<path>.*)$', 'serve', {
-            #'document_root': os.path.join(os.path.dirname(__file__), 'media'),
             'document_root': os.path.join(
                 os.path.dirname(os.path.abspath(django.__file__)),
                 'contrib/admin/static/admin'
