@@ -93,23 +93,22 @@ function get_pms
 # main process
 ##############
 
+# check required packages for setup.py
+# ====================================
+if [ $_PMS == "dpkg" ]
+then
+    check_pkgs "git python python-setuptools python-stdeb python-django"
+elif [ $_PMS == "rpm" ]
+then
+    check_pkgs "git python python-setuptools rpm-build Django"
+fi
+
 _BRANCH="${1:-master}"
 _PMS=$(get_pms)
 if [ -z "$_PMS" ]
 then
     echo "Expected dpkg or rpm PMS. No one found. Aborting package creation."
     exit 1
-fi
-
-# check required packages for setup.py
-# ====================================
-check_pkgs "git python python-setuptools"
-if [ $_PMS == "dpkg" ]
-then
-    check_pkgs "python-stdeb python-django"
-elif [ $_PMS == "rpm" ]
-then
-    check_pkgs "rpm-build Django"
 fi
 
 # create packages
