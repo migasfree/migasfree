@@ -158,6 +158,7 @@ setup(
         'migasfree.server.templatetags',
         'migasfree.server.models',
         'migasfree.server.views',
+        'migasfree.server.migrations',
     ],
     package_dir={
         'migasfree': 'migasfree',
@@ -166,6 +167,7 @@ setup(
         'migasfree.server.templatetags': 'migasfree/server/templatetags',
         'migasfree.server.models': 'migasfree/server/models',
         'migasfree.server.views': 'migasfree/server/views',
+        'migasfree.server.migrations': 'migasfree/server/migrations',
     },
     cmdclass={
         'install_data': InstallData,
