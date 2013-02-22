@@ -214,7 +214,7 @@ AJAX_SELECT_INLINES = 'inline'
 # http://stackoverflow.com/a/1527240
 def _load_settings(path):
     if os.path.exists(path):
-        print "Loading configuration from %s" % (path)
+        # Loading configuration from path
         settings = {}
         # execfile can't modify globals directly, so we will load them manually
         execfile(path, globals(), settings)
