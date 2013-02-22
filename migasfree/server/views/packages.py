@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse
 
 from migasfree.settings import MIGASFREE_REPO_DIR
 from migasfree.server.models import *
+from migasfree.server.functions import run_in_server
 
 
 @login_required
@@ -19,8 +20,10 @@ def info(request, package):  # package info
     else:
         version = get_object_or_404(UserProfile, id=request.user.id).version
 
-    path = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
+    if package.endswith('/'):
+        package = package[:-1]  # remove trailing slash
 
+    path = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
     if os.path.isfile(path):
         # GET INFORMATION OF PACKAGE
         cmd = 'echo "Version: %s"\n' % version.name
