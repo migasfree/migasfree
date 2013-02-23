@@ -27,10 +27,10 @@ def info(request, package):  # package info
     if os.path.isfile(path):
         # GET INFORMATION OF PACKAGE
         cmd = 'echo "Version: %s"\n' % version.name
-        cmd += 'echo "Package: %s"\n' % package[:-1]
+        cmd += 'echo "Package: %s"\n' % package
         cmd += "echo\n"
         cmd += "echo\n"
-        cmd += 'PACKAGE=%s\n' % path[:-1]
+        cmd += 'PACKAGE=%s\n' % path
         cmd += version.pms.info
 
         ret = run_in_server(cmd)["out"]
