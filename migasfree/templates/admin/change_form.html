@@ -47,7 +47,7 @@ $(document).ready(function() {
 
 {% block content_title %}
     {% if title %}
-        <h2 class="change-list-title">
+        <h2 {% if change %}class="change-list-title"{% endif %}>
             <img src="{{ STATIC_URL }}icons/{{ opts.module_name }}.png" width="32" />
             {% trans opts.verbose_name %}: {% autoescape off %}{% link opts %}{% endautoescape %}
         </h2>
@@ -55,7 +55,7 @@ $(document).ready(function() {
 {% endblock content_title %}
 
 {% block menu %}
-    {% if opts.module_name = 'computer' or opts.module_name = 'user' or opts.module_name = 'login' or opts.module_name = 'error' or opts.module_name = 'fault' or opts.module_name = 'device' or opts.module_name = 'attribute' or opts.module_name = 'migration' %}
+    {% if opts.module_name = 'computer' or opts.module_name = 'user' or opts.module_name = 'login' or opts.module_name = 'error' or opts.module_name = 'fault' or opts.module_name = 'device' or opts.module_name = 'attribute' or opts.module_name = 'migration' or opts.module_name = 'notification' %}
         {% include 'server/includes/mining_menu.html' %}
     {% endif %}
 
