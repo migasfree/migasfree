@@ -66,7 +66,7 @@
 {% block coltype %}flex{% endblock %}
 
 {% block menu %}
-    {% if cl.opts.module_name = 'computer' or cl.opts.module_name = 'user' or cl.opts.module_name = 'login' or cl.opts.module_name = 'error' or cl.opts.module_name = 'fault' or cl.opts.module_name = 'device' or cl.opts.module_name = 'attribute' or cl.opts.module_name = 'migration' %}
+    {% if cl.opts.module_name = 'computer' or cl.opts.module_name = 'user' or cl.opts.module_name = 'login' or cl.opts.module_name = 'error' or cl.opts.module_name = 'fault' or cl.opts.module_name = 'device' or cl.opts.module_name = 'attribute' or cl.opts.module_name = 'migration' or cl.opts.module_name = 'notification' %}
         {% include 'server/includes/mining_menu.html' %}
     {% endif %}
 
