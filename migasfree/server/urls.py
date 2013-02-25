@@ -79,9 +79,9 @@ urlpatterns = patterns('',
         name='hardware_resume'
     ),
 
-    (r'^migasfree/api/$', api),
+    url(r'^api/$', api, name='api'),
 
-        url(
+    url(
         r'^get_versions/$',
         get_versions,
         name='get_versions'
@@ -98,5 +98,9 @@ urlpatterns = patterns('',
     url(
         r'^migasfree/main/$',
         RedirectView.as_view(url='/status/'),
+    ),
+    url(
+        r'^migasfree/api/$',
+        RedirectView.as_view(url='/api/'),
     ),
 )
