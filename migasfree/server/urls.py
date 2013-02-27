@@ -99,8 +99,5 @@ urlpatterns = patterns('',
         r'^migasfree/main/$',
         RedirectView.as_view(url='/status/'),
     ),
-    url(
-        r'^migasfree/api/$',
-        RedirectView.as_view(url='/api/'),
-    ),
+    url(r'^migasfree/api/$', api),  # for 2.x clients
 )
