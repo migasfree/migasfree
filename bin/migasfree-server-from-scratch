@@ -141,17 +141,6 @@ function set_permissions
 
 function test_app
 {
-    # Bugfix in test: IntegrityError Could not load contenttypes.ContentType
-    echo "yes" | python $_MIGASFREE_PATH/manage.py reset contenttypes
-
-    # save fixture for test
-    python $_MIGASFREE_PATH/manage.py dumpdata > $_DB_PATH/test.json
-    if [ $? -ne 0 ]
-    then
-        echo "Problem found dumping data."
-        return 1
-    fi
-
     # run test of migasfree
     python $_MIGASFREE_PATH/manage.py test --verbosity=2
     if [ $? -ne 0 ]
@@ -159,9 +148,6 @@ function test_app
         echo "Problem found running database tests."
         return 1
     fi
-
-    # remove fixture for test
-    rm -f $_DB_PATH/test.json
 }
 
 function create_server_keys
