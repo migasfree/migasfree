@@ -1,7 +1,8 @@
 {% extends "base.html" %}
-{% load adminmedia admin_list i18n %}
+{% load i18n admin_static admin_modify %}
 {% load server_tags %}
 {% load url from future %}
+{% load admin_urls %}
 
 {% block extrastyle %}
     {{ block.super }}
@@ -14,6 +15,7 @@
 {% endblock extrastyle %}
 
 {% block extrahead %}
+    {{ block.super }}
     {{ media.js }}
     {% if cl.formset or action_form %}
         {% url 'admin:jsi18n' as jsi18nurl %}
