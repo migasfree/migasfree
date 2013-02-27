@@ -131,7 +131,7 @@ def api(request):
             data = json.load(f)[command]
 
         try:
-            ret = eval(command)(request,  name, uuid, o_computer, data)
+            ret = eval(command)(request, name, uuid, o_computer, data)
         except:
             ret = return_message(command, errmfs.error(errmfs.GENERIC))
 
