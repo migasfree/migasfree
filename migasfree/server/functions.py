@@ -35,7 +35,7 @@ def config_apache():
     _config = \
 """
 Alias /media/ %(django_dir)s/contrib/admin/static/admin/
-
+Alias /repo/admin %(django_dir)s/contrib/admin/static/admin/
 Alias /repo %(migasfree_repo_dir)s
 <Directory %(migasfree_repo_dir)s>
     Order allow,deny
@@ -75,6 +75,18 @@ vserver!20!rule!220!handler!symlinks = 1
 vserver!20!rule!220!handler!user = 0
 vserver!20!rule!220!match = directory
 vserver!20!rule!220!match!directory = /media
+vserver!20!rule!100!document_root = %(django_dir)s/contrib/admin/static/admin
+vserver!20!rule!100!handler = common
+vserver!20!rule!100!handler!backup = 0
+vserver!20!rule!100!handler!date = 1
+vserver!20!rule!100!handler!group = 0
+vserver!20!rule!100!handler!hidden = 0
+vserver!20!rule!100!handler!redir_symlinks = 0
+vserver!20!rule!100!handler!size = 1
+vserver!20!rule!100!handler!symlinks = 1
+vserver!20!rule!100!handler!user = 0
+vserver!20!rule!100!match = directory
+vserver!20!rule!100!match!directory = /repo/admin
 vserver!20!rule!120!document_root = %(migasfree_repo_dir)s
 vserver!20!rule!120!handler = common
 vserver!20!rule!120!match = directory
