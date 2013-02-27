@@ -2,141 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-import subprocess
 import django.core.management
-from StringIO import StringIO
 import migasfree
 from migasfree import settings
 django.core.management.setup_environ(settings)
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import Permission
-from migasfree.server.models import UserProfile
-
-
-def run(cmd_linux):
-    (out, err) = subprocess.Popen(cmd_linux,
-        stdout=subprocess.PIPE, shell=True).communicate()
-    return (out, err)
-
-
-def create_user(name, groups=[]):
-    oUser = UserProfile()
-    oUser.username = name
-    oUser.is_staff = True
-    oUser.is_active = True
-    oUser.is_superuser = (name == "admin")
-    oUser.save()
-    oUser.password = name
-    print("Create user [%s] in groups " % name),
-    for group in groups:
-        oUser.groups.add(group.id)
-        print("[%s] " % group.name),
-    print('')
-    oUser.save()
-
-
-def add_read_perms(group, tables=[]):
-    for table in tables:
-        group.permissions.add(
-            Permission.objects.get(codename="change_%s" % table,
-            content_type__app_label="server").id)
-
-
-def add_all_perms(group, tables=[]):
-    for table in tables:
-        group.permissions.add(
-            Permission.objects.get(codename="add_%s" % table,
-            content_type__app_label="server").id)
-        group.permissions.add(
-            Permission.objects.get(codename="change_%s" % table,
-            content_type__app_label="server").id)
-        group.permissions.add(
-            Permission.objects.get(codename="delete_%s" % table,
-            content_type__app_label="server").id)
-        group.permissions.add(
-            Permission.objects.get(codename="can_save_%s" % table,
-            content_type__app_label="server").id)
-
-
-def create_users():
-    """
-    Create default Groups and Users
-    """
-
-    # GROUP READER
-    oGroupRead = Group()
-    oGroupRead.name = "Reader"
-    oGroupRead.save()
-    tables = ["computer", "device", "user", "login", "attribute", "error",
-            "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
-            "devicetype", "schedule", "scheduledelay", "autocheckerror",
-            "faultdef", "property", "checking", "version", "pms", "query",
-            "package", "repository", "store", "message", "update",
-            "platform", "messageserver", "migration", "notification"]
-    add_read_perms(oGroupRead, tables)
-    oGroupRead.save()
-
-    # GROUP LIBERATOR
-    oGroupRepo = Group()
-    oGroupRepo.name = "Liberator"
-    oGroupRepo.save()
-    tables = ["repository", "schedule", "scheduledelay"]
-    add_all_perms(oGroupRepo, tables)
-    oGroupRepo.save()
-
-    # GROUP PACKAGER
-    oGroupPackager = Group()
-    oGroupPackager.name = "Packager"
-    oGroupPackager.save()
-    tables = ["package", "store"]
-    add_all_perms(oGroupPackager, tables)
-    oGroupPackager.save()
-
-    # GROUP COMPUTER CHECKER
-    oGroupCheck = Group()
-    oGroupCheck.name = "Computer Checker"
-    oGroupCheck.save()
-    tables = ["autocheckerror", "error", "fault", "message", "update"]
-    add_all_perms(oGroupCheck, tables)
-    oGroupCheck.save()
-
-    # GROUP DEVICE INSTALLER
-    oGroupDev = Group()
-    oGroupDev.name = "Device installer"
-    oGroupDev.save()
-    tables = ["deviceconnection", "devicemanufacturer", "devicemodel",
-            "devicetype"]
-    add_all_perms(oGroupDev, tables)
-    oGroupDev.save()
-
-    # GROUP QUERY
-    oGroupQuery = Group()
-    oGroupQuery.name = "Query"
-    oGroupQuery.save()
-    tables = ["query"]
-    add_all_perms(oGroupQuery, tables)
-    oGroupQuery.save()
-
-    # GROUP CONFIGURATOR
-    oGroupSys = Group()
-    oGroupSys.name = "Configurator"
-    oGroupSys.save()
-    tables = ["checking", "faultdef", "property", "pms", "version",
-            "message", "update", "platform", "messageserver", "migration",
-            "notification"]
-    add_all_perms(oGroupSys, tables)
-    oGroupSys.save()
-
-    # CREATE DEFAULT USERS
-    create_user("admin")
-    create_user("packager", [oGroupRead, oGroupPackager])
-    create_user("configurator", [oGroupRead, oGroupSys])
-    create_user("installer", [oGroupRead, oGroupDev])
-    create_user("query", [oGroupRead, oGroupQuery])
-    create_user("liberator", [oGroupRead, oGroupRepo])
-    create_user("checker", [oGroupRead, oGroupCheck])
-    create_user("reader", [oGroupRead])
-
+from migasfree.server.fixtures import create_registers
+from migasfree.server.fixtures import sequence_reset
+from migasfree.server.fixtures import run
 
 def create_db():
     DB = settings.DATABASES.get('default')
@@ -170,40 +42,8 @@ def create_db():
 
 
 def create_tables():
-    django.core.management.call_command('syncdb', interactive=False)
-    django.core.management.call_command('migrate', 'server')
-
-
-def create_registers():
-    # CREATE GROUPS AND USERS
-    create_users()
-
-    # Load Fixtures
-    _path_fixtures = os.path.join(migasfree.__path__[0], "server", "fixtures")
-    fixtures = ['server.checking.json',
-               'server.pms.json',
-               'server.query.json',
-               'server.property.json',
-               'server.attribute.json',
-               'server.faultdef.json',
-               ]
-    for fixture in fixtures:
-        print("    Loading fixture %s: " % fixture),
-        django.core.management.call_command('loaddata',
-            os.path.join(_path_fixtures, fixture))
-
-
-def sequence_reset():
-    commands = StringIO()
-    cfile = "/tmp/migasfree.sequencereset.sql"
-    django.core.management.call_command('sqlsequencereset', 'server', stdout=commands)
-    with open(cfile, "w") as ofile:
-        ofile.write(commands.getvalue())
-        ofile.flush()
-        cmd_linux = "su postgres -c 'psql migasfree -f " + cfile + "' -"
-        (out, err) = run(cmd_linux)
-    os.remove(cfile)
-
+    django.core.management.call_command('syncdb', interactive=False,verbosity=0)
+    django.core.management.call_command('migrate', 'server',verbosity=0)
 
 def main():
     # Check user is root
@@ -211,11 +51,12 @@ def main():
     if out != "root\n":
         print "You must be root!"
         exit(1)
-
+    print "Creating Database..."
     create_db()
     create_tables()
     create_registers()
     sequence_reset()
+    print "Created Database: %s" % settings.DATABASES.get('default').get("NAME")
 
 if  __name__ == '__main__':
     os.environ['DJANGO_COLORS'] = 'nocolor'
