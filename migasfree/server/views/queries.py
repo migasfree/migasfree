@@ -166,9 +166,9 @@ def computer_messages(request):
     result = []
     for item in Message.objects.all().order_by("-date"):
         if item.date < t:
-            icon = 'computer_alert.png'
+            icon = 'messagealert.png'
         else:
-            icon = 'computer.png'
+            icon = 'message.png'
 
         try:
             last = item.computer.last_login()
