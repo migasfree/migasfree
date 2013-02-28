@@ -16,7 +16,7 @@ class Migration(SchemaMigration):
         db.create_table('server_messageserver', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('text', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(default=0)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
         ))
         db.send_create_signal('server', ['MessageServer'])
 
@@ -25,7 +25,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('computer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Computer'])),
             ('version', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Version'])),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(default=0)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
         ))
         db.send_create_signal('server', ['Migration'])
 
@@ -61,7 +61,7 @@ class Migration(SchemaMigration):
         # Adding model 'Notification'
         db.create_table('server_notification', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(default=0)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
             ('notification', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('checked', self.gf('django.db.models.fields.BooleanField')(default=False)),
         ))

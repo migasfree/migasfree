@@ -198,7 +198,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('computer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Computer'], unique=True)),
             ('text', self.gf('django.db.models.fields.CharField')(max_length=50, null=True, blank=True)),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(default=0)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
         ))
         db.send_create_signal('server', ['Message'])
 
@@ -207,7 +207,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('computer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Computer'])),
             ('version', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Version'])),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(default=0)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
         ))
         db.send_create_signal('server', ['Update'])
 
@@ -215,7 +215,7 @@ class Migration(SchemaMigration):
         db.create_table('server_error', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('computer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Computer'])),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(default=0)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
             ('error', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('checked', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('version', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Version'])),
@@ -225,7 +225,7 @@ class Migration(SchemaMigration):
         # Adding model 'Login'
         db.create_table('server_login', (
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(default=0)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
             ('computer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Computer'])),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.User'])),
         ))
@@ -266,7 +266,7 @@ class Migration(SchemaMigration):
             ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('computer', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Computer'])),
             ('faultdef', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.FaultDef'])),
-            ('date', self.gf('django.db.models.fields.DateTimeField')(default=0)),
+            ('date', self.gf('django.db.models.fields.DateTimeField')(blank=True)),
             ('text', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('checked', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('version', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Version'])),
