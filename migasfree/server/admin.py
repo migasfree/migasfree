@@ -64,9 +64,9 @@ admin.site.register(Migration, MigrationAdmin)
 
 
 class UpdateAdmin(admin.ModelAdmin):
-    list_display = ('id', 'computer_link', 'date', 'version')
+    list_display = ('id', 'computer_link', 'user', 'date', 'version')
     list_filter = ('date', )
-    search_fields = ('computer__name', 'date',)
+    search_fields = ('computer__name', 'date', 'user__name')
     actions = None
 
 admin.site.register(Update, UpdateAdmin)

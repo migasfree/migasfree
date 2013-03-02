@@ -187,6 +187,7 @@ def upload_computer_message(request, name, uuid, o_computer, data):
         if data[cmd] == "":
             Update(
                 computer=o_computer,
+                user_id=o_computer.last_login().user_id,
                 date=date_now,
                 version=o_computer.version
             ).save()
@@ -320,7 +321,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         o_platform.save()
 
         o_notification = Notification()
-        o_notification.notification = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
+        o_notification.notification = \
+            "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
             platform,
             name
         )
@@ -372,7 +374,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             o_computer,
             name,
             dic_computer.get("version"),
-            dic_computer.get("ip",""),
+            dic_computer.get("ip", ""),
             uuid,
         )
 
@@ -747,7 +749,6 @@ def register_computer(request, name, uuid, o_computer, data):
     platform = data.get('platform', 'unknown')
     version = data.get('version', 'unknown')
 
-
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
         if not MIGASFREE_AUTOREGISTER:
@@ -759,10 +760,11 @@ def register_computer(request, name, uuid, o_computer, data):
         o_platform.save()
 
         o_notification = Notification()
-        o_notification.notification = "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
+        o_notification.notification = \
+            "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
             platform,
             name
-        )
+            )
         o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
         o_notification.save()
 
@@ -937,7 +939,7 @@ def add_migration(o_computer, o_version):
     o_migration.save()
 
 
-def check_computer(o_computer, name, version, ip , uuid):
+def check_computer(o_computer, name, version, ip, uuid):
     #registration of ip, version, uuid and Migration of computer
     o_version = Version.objects.get(name=version)
 

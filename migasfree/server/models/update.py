@@ -4,13 +4,18 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models.common import link
-from migasfree.server.models import Computer, Version
+from migasfree.server.models import Computer, Version, User
 
 
 class Update(models.Model):
     computer = models.ForeignKey(
         Computer,
         verbose_name=_("computer")
+    )
+
+    user = models.ForeignKey(
+        User,
+        verbose_name=_("user")
     )
 
     version = models.ForeignKey(
