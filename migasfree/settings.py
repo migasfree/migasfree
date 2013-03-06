@@ -24,13 +24,13 @@ MIGASFREE_AUTOREGISTER = True
 MIGASFREE_TMP_DIR = '/tmp/migasfree-server'
 MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
 MIGASFREE_ORGANIZATION = 'My Organization'
-MIGASFREE_APP_DIR = os.path.dirname(__file__)
+MIGASFREE_APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # development environment
 TEMPLATE_DEBUG = DEBUG = True
 
-MIGASFREE_PROJECT_DIR = os.path.dirname(os.getcwd())
-MIGASFREE_DB_DIR = '../..'
+MIGASFREE_PROJECT_DIR = os.path.dirname(MIGASFREE_APP_DIR)
+MIGASFREE_DB_DIR = os.path.dirname(MIGASFREE_PROJECT_DIR)
 MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
 
