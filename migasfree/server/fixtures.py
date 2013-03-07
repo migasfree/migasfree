@@ -1,22 +1,24 @@
 # -*- coding: UTF-8 -*-
+
 import os
 import subprocess
 import django.core.management
+
+from django.contrib.auth.models import Group
+from django.contrib.auth.models import Permission
 from StringIO import StringIO
-import migasfree
+
 from migasfree import settings
 django.core.management.setup_environ(settings)
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import Permission
+
 from migasfree.server.models import UserProfile
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import Permission
-from migasfree.server.models import UserProfile
+
 
 def run(cmd_linux):
     (out, err) = subprocess.Popen(cmd_linux,
         stdout=subprocess.PIPE, shell=True).communicate()
     return (out, err)
+
 
 def create_user(name, groups=[]):
     oUser = UserProfile()
@@ -133,16 +135,28 @@ def create_users():
     create_user("checker", [oGroupRead, oGroupCheck])
     create_user("reader", [oGroupRead])
 
+
 def sequence_reset():
     commands = StringIO()
-    cfile = "/tmp/migasfree.sequencereset.sql"
-    django.core.management.call_command('sqlsequencereset', 'server', stdout=commands)
-    with open(cfile, "w") as ofile:
-        ofile.write(commands.getvalue())
-        ofile.flush()
-        cmd_linux = "su postgres -c 'psql migasfree -f " + cfile + "' -"
-        (out, err) = run(cmd_linux)
-    os.remove(cfile)
+
+    os.environ['DJANGO_COLORS'] = 'nocolor'
+    django.core.management.call_command(
+        'sqlsequencereset',
+        'server',
+        stdout=commands
+    )
+
+    if settings.DATABASES.get('default').get('ENGINE') == \
+    'django.db.backends.postgresql_psycopg2':
+        cfile = "/tmp/migasfree.sequencereset.sql"  # FIXME tmpfile
+        with open(cfile, "w") as ofile:
+            ofile.write(commands.getvalue())
+            ofile.flush()
+            cmd_linux = "su postgres -c 'psql migasfree -f " + cfile + "' -"
+            (out, err) = run(cmd_linux)
+
+        os.remove(cfile)
+
 
 def create_registers():
     """
@@ -151,17 +165,22 @@ def create_registers():
     create_users()
 
     # Load Fixtures
-    _path_fixtures = os.path.join(migasfree.__path__[0], "server", "fixtures")
-    fixtures = ['server.checking.json',
-               'server.pms.json',
-               'server.query.json',
-               'server.property.json',
-               'server.attribute.json',
-               'server.faultdef.json',
-               ]
+    fixtures = [
+        'server.checking.json',
+        'server.pms.json',
+        'server.query.json',
+        'server.property.json',
+        'server.attribute.json',
+        'server.faultdef.json',
+    ]
     for fixture in fixtures:
-        django.core.management.call_command('loaddata',
-            os.path.join(_path_fixtures, fixture),verbosity=0)
-
-
-
+        django.core.management.call_command(
+            'loaddata',
+            os.path.join(
+                settings.MIGASFREE_APP_DIR,
+                "server",
+                "fixtures",
+                fixture
+            ),
+            verbosity=1
+        )
