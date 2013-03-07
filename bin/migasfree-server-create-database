@@ -50,7 +50,7 @@ def create_db():
             DB.get('NAME')
         )
         (out, err) = run(cmd_linux)
-    elif DB.get('ENGINE') == 'django.db.backends.sqlite3':
+    elif DB.get('ENGINE') == 'django.db.backends.sqlite3' and os.path.isfile(DB.get('NAME')):
         os.remove(DB.get('NAME'))
     else:
         exit(1, "Sorry. No supported this backend: %s" % DB.get("ENGINE"))
