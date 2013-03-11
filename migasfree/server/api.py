@@ -234,7 +234,7 @@ def get_properties(request, name, uuid, o_computer, data):
 
     try:
         # All active properties
-        for e in Property.objects.filter(active=True):
+        for e in Property.objects.filter(active=True).filter(tag=False):
             properties.append({
                 "language": LANGUAGES_CHOICES[e.language][1],
                 "name": e.prefix,
@@ -449,6 +449,10 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
             except:
                 pass
+
+        # Tags
+        for tag in o_computer.tags.all().filter(property_att__active=True):
+            new_attribute(o_login, tag.property_att, tag.value)
 
         # 3 FaultsDef
         lst_faultsdef = []

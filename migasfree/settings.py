@@ -175,6 +175,7 @@ AJAX_LOOKUP_CHANNELS = {
     # channel: ( module.where_lookup_is, ClassNameOfLookup )
     'attribute': ('migasfree.server.lookups', 'AttributeLookup'),
     'package': ('migasfree.server.lookups', 'PackageLookup'),
+    'tag': ('migasfree.server.lookups', 'TagLookup'),
 }
 
 AJAX_SELECT_BOOTSTRAP = True

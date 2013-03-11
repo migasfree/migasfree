@@ -333,6 +333,11 @@ admin.site.register(FaultDef, FaultDefAdmin)
 
 
 class ComputerAdmin(admin.ModelAdmin):
+
+    form = make_ajax_form(Computer, {
+        'tags': 'tag',
+    })
+
     list_display = (
         'link',
         'version',
@@ -344,9 +349,10 @@ class ComputerAdmin(admin.ModelAdmin):
     )
     ordering = ('name',)
     list_filter = ('version',)
-    search_fields = ('name',)
+    search_fields = ('name', 'login__attributes__value')
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
+
         if db_field.name == "devices":
             kwargs['widget'] = FilteredSelectMultiple(
                 db_field.verbose_name,

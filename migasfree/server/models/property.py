@@ -55,6 +55,12 @@ class Property(models.Model):
         help_text=_("automatically add the attribute to database")
     )
 
+    tag = models.BooleanField(
+        _("tag"),
+        default=False,
+        help_text=_("tag")
+    )
+
     def namefunction(self):
         return "PROPERTY_%s" % self.prefix
 

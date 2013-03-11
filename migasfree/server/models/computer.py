@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
-from migasfree.server.models import Version, Device
+from migasfree.server.models import Version, Device, Attribute
 
 
 class Computer(models.Model):
@@ -86,6 +86,13 @@ class Computer(models.Model):
         _("last hardware capture"),
         null=True,
         blank=True,
+    )
+
+    tags = models.ManyToManyField(
+        Attribute,
+        null=True,
+        blank=True,
+        verbose_name=_("tags")
     )
 
     def last_login(self):
