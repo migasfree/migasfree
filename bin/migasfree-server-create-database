@@ -53,16 +53,25 @@ def create_db():
     elif DB.get('ENGINE') == 'django.db.backends.sqlite3' and os.path.isfile(DB.get('NAME')):
         os.remove(DB.get('NAME'))
     else:
-        exit(1, "Sorry. No supported this backend: %s" % DB.get("ENGINE"))
+        exit(1, "Sorry. This backend is not supported: %s" % DB.get("ENGINE"))
 
 
 def create_tables():
+    """
+    # why does not work in all systems?
     django.core.management.call_command(
         'syncdb',
         all=True,
         interactive=False,
         verbosity=1
     )
+    """
+    # workaround (hopefully temporary)
+    (out, err) = run(
+        'cd %s; echo no | python manage.py syncdb --all' \
+            % settings.MIGASFREE_APP_DIR
+    )
+
     django.core.management.call_command(
         'migrate',
         'server',
@@ -73,10 +82,7 @@ def create_tables():
 def is_user_root():
     # Check user is root
     info = pwd.getpwnam(os.environ.get('USER'))
-    if info[3] == 0:  # 3 - gid
-        return True
-
-    return False
+    return (info[3] == 0)  # 3 - gid
 
 
 def main():
@@ -85,7 +91,7 @@ def main():
     create_tables()
     create_registers()
     sequence_reset()
-    print "Created Database: %s" % settings.DATABASES.get('default').get("NAME")
+    print "Database created: %s" % settings.DATABASES.get('default').get("NAME")
 
 if  __name__ == '__main__':
     main()
