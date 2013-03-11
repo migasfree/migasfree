@@ -452,7 +452,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # Tags
         for tag in o_computer.tags.all().filter(property_att__active=True):
-            new_attribute(o_login, tag.property_att, tag.value)
+            lst_attributes.append(
+                new_attribute(o_login, tag.property_att, tag.value)
+                )
 
         # 3 FaultsDef
         lst_faultsdef = []
