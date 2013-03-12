@@ -156,7 +156,10 @@ class StoreAdmin(admin.ModelAdmin):
 
     def information(self, request, queryset):
         return redirect(
-            reverse('package_info') + '/STORES/%s/' % queryset[0].name
+            reverse(
+                'package_info',
+                args=('STORES/%s/' % queryset[0].name,)
+            )
         )
 
     information.short_description = trans("Information of Package")
@@ -349,7 +352,7 @@ class ComputerAdmin(admin.ModelAdmin):
     )
     ordering = ('name',)
     list_filter = ('version',)
-    search_fields = ('name', 'login__attributes__value')
+    search_fields = ('name',)  # TODO, 'login__attributes__value')
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
 
@@ -484,9 +487,15 @@ class PackageAdmin(admin.ModelAdmin):
     actions = ['information', 'download']
 
     def information(self, request, queryset):
-        _url = reverse('package_info') + '/STORES/%s/%s/'
-
-        return redirect(_url % (queryset[0].store.name, queryset[0].name))
+        return redirect(
+            reverse(
+                'package_info',
+                args=('STORES/%s/%s' % (
+                    queryset[0].store.name,
+                    queryset[0].name
+                ),)
+            )
+        )
 
     information.short_description = trans("Information of Package")
 
