@@ -12,5 +12,6 @@ Requires = wget
            python-IPy
            py-bcrypt
            Django-south >= 0.7.3
+           postgresql-server
            postgresql
            python-psycopg2
