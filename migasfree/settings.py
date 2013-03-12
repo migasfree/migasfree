@@ -164,6 +164,38 @@ INSTALLED_APPS = (
     'south',
 )
 
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s',
+        },
+        'simple': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'ERROR',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': os.path.join(MIGASFREE_TMP_DIR, 'migasfree.log'),
+        },
+    },
+    'loggers': {
+        'migasfree': {
+            'handlers': ['console', 'file'],
+            'level': 'ERROR',
+        },
+    },
+}
+
+
 # DEFINE THE SEARCH CHANNELS:
 
 AJAX_LOOKUP_CHANNELS = {
