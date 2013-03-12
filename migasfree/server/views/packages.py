@@ -9,12 +9,16 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from migasfree.settings import MIGASFREE_REPO_DIR
-from migasfree.server.models import *
+from migasfree.server.models import Version, UserProfile
 from migasfree.server.functions import run_in_server
+
+import logging
+logger = logging.getLogger('migasfree')
 
 
 @login_required
 def info(request, package):  # package info
+    #logger.debug('request:' + str(request))
     if request.GET.get('version'):
         version = get_object_or_404(Version, name=request.GET.get('version'))
     else:
@@ -22,6 +26,8 @@ def info(request, package):  # package info
 
     if package.endswith('/'):
         package = package[:-1]  # remove trailing slash
+
+    logger.debug('package:' + package)
 
     path = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
     if os.path.isfile(path):
@@ -44,8 +50,9 @@ def info(request, package):  # package info
             }
         )
 
+    logger.debug('path:' + path)
     if os.path.isdir(path):
-        # NAVIGATION FOR FOLDERS
+        # folders navigation
         vl_fields = []
         if package > "/":
             vl_fields.append(["folder.png", ".."])
@@ -54,14 +61,15 @@ def info(request, package):  # package info
         elements.sort()
         for e in elements:
             try:
-                # TODO: asegurarse de que esto sirve para identificar
-                # si es un archivo o un directorio
-                if (os.stat(os.path.join(path, e)).st_mode < 32000):
-                    vl_fields.append(["folder.png", e + "/"])
+                if os.path.isdir(os.path.join(path, e)):
+                    # relative navigation, folders always with trailing slash!!
+                    vl_fields.append(["folder.png", e + '/'])
                 else:
-                    vl_fields.append(["package.png", e + "/"])
+                    vl_fields.append(["package.png", e])
             except:
                 pass
+
+        logger.debug('content:' + str(vl_fields))
 
         return render(
             request,
@@ -86,13 +94,14 @@ def info(request, package):  # package info
 
 @login_required()
 def change_version(request):
-    redirect_to = request.META.get('HTTP_REFERER', reverse('bootstrap'))
-
     if request.method == 'POST':
-        new_version = request.POST.get('version')
-
         user_profile = UserProfile.objects.get(id=request.user.id)
-        user_profile.version = Version.objects.get(id=new_version)
+        user_profile.version = Version.objects.get(
+            id=request.POST.get('version')
+        )
         user_profile.save()
 
-    return HttpResponseRedirect(redirect_to)
+    return HttpResponseRedirect(request.META.get(
+        'HTTP_REFERER',
+        reverse('bootstrap')
+    ))
