@@ -24,7 +24,7 @@ def info(request, package):  # package info
     else:
         version = get_object_or_404(UserProfile, id=request.user.id).version
 
-    logger.debug('version: ' + version)
+    logger.debug('version: ' + version.name)
 
     if package.endswith('/'):
         package = package[:-1]  # remove trailing slash
