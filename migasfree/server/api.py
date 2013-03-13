@@ -21,13 +21,19 @@ from migasfree.server.functions import *
 from migasfree.server.security import *
 from migasfree.server.views import load_hw, create_repositories
 
+import logging
+logger = logging.getLogger('migasfree')
+
 
 def get_computer(name, uuid):
+    logger.debug('name: %s, uuid: %s' % (name, uuid))
     if Computer.objects.filter(uuid=uuid):
         o_computer = Computer.objects.get(uuid=uuid)
+        logger.debug('computer found by uuid')
     else:
-        if Computer.objects.filter(uuid=name):
-            o_computer = Computer.objects.get(uuid=name)
+        if Computer.objects.filter(name=name):
+            o_computer = Computer.objects.get(name=name)
+            logger.debug('computer found by name')
         else:
             o_computer = None
     return o_computer
