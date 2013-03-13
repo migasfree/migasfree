@@ -1,0 +1,18 @@
+[bdist_rpm]
+release = 1
+packager = Alberto Gacías Mateo <alberto@migasfree.org>
+requires = python >= 2.6
+           wget
+           httpd
+           mod_wsgi
+           Django >= 1.4
+           dpkg-devel
+           createrepo
+           django-ajax-selects
+           python-docutils
+           python-IPy
+           py-bcrypt
+           Django-south >= 0.7.3
+           postgresql-server
+           postgresql
+           python-psycopg2
