@@ -164,14 +164,16 @@ INSTALLED_APPS = (
     'south',
 )
 
+# http://docs.python.org/2/howto/logging-cookbook.html
+# http://docs.python.org/2/library/logging.html#logrecord-attributes
 LOGGING = {
     'version': 1,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s',
+            'format': '%(asctime)s - %(levelname)s - %(module)s - %(lineno)d - %(funcName)s - %(message)s',
         },
         'simple': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+            'format': '%(asctime)s - %(levelname)s - %(filename)s - %(message)s'
         },
     },
     'handlers': {
