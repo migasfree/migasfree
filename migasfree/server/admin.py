@@ -19,6 +19,13 @@ from migasfree.settings import STATIC_URL
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
+#WIDGETS
+from migasfree.server.widgets import MigasfreeSplitDateTime
+
+migasfree_widgets = {
+        models.DateTimeField: {'widget': MigasfreeSplitDateTime},
+    }
+
 admin.site.register(DeviceType)
 admin.site.register(DeviceManufacturer)
 admin.site.register(DeviceConnection)
@@ -48,6 +55,7 @@ class WideTextarea(forms.Textarea):
 
 
 class VersionAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name', 'platform', 'pms', 'computerbase', 'autoregister')
     actions = None
 
@@ -55,6 +63,7 @@ admin.site.register(Version, VersionAdmin)
 
 
 class MigrationAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('id', 'computer_link', 'version_link', 'date')
     list_filter = ('date', 'version__platform', )
     search_fields = ('computer__name', 'date',)
@@ -64,6 +73,7 @@ admin.site.register(Migration, MigrationAdmin)
 
 
 class UpdateAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('id', 'computer_link', 'user', 'date', 'version')
     list_filter = ('date', )
     search_fields = ('computer__name', 'date', 'user__name')
@@ -73,6 +83,7 @@ admin.site.register(Update, UpdateAdmin)
 
 
 class CheckingAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name', 'active', 'alert')
     list_filter = ('active', )
 
@@ -91,6 +102,7 @@ class ComputerInline(admin.TabularInline):
 
 
 class DeviceAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = (
         'name',
         'alias',
@@ -122,6 +134,7 @@ admin.site.register(Device, DeviceAdmin)
 
 
 class DeviceModelAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name', 'manufacturer', 'devicetype')
     list_filter = ('devicetype', 'manufacturer')
     search_fields = (
@@ -134,12 +147,14 @@ admin.site.register(DeviceModel, DeviceModelAdmin)
 
 
 class PmsAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name',)
 
 admin.site.register(Pms, PmsAdmin)
 
 
 class StoreAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name',)
     search_fields = ('name',)
     actions = ['information', 'download']
@@ -168,6 +183,7 @@ admin.site.register(Store, StoreAdmin)
 
 
 class PropertyAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('prefix', 'name', 'active', 'kind', 'auto',)
     list_filter = ('active',)
     ordering = ('name',)
@@ -177,6 +193,7 @@ admin.site.register(Property, PropertyAdmin)
 
 
 class AttributeAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('value', 'description', 'property_link',)
     list_filter = ('property_att',)
     ordering = ('property_att', 'value',)
@@ -186,6 +203,7 @@ admin.site.register(Attribute, AttributeAdmin)
 
 
 class LoginAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     form = make_ajax_form(Login, {'attributes': 'attribute'})
 
     list_display = ('id', 'user_link', 'computer_link', 'date',)
@@ -224,6 +242,7 @@ admin.site.register(Login, LoginAdmin)
 
 
 class UserAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name', 'fullname',)
     ordering = ('name',)
     search_fields = ('name', 'fullname')
@@ -232,6 +251,7 @@ admin.site.register(User, UserAdmin)
 
 
 class NotificationAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = (
         'id',
         'checked',
@@ -258,6 +278,7 @@ admin.site.register(Notification, NotificationAdmin)
 
 
 class ErrorAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = (
         'id',
         'computer_link',
@@ -286,6 +307,7 @@ admin.site.register(Error, ErrorAdmin)
 
 
 class FaultAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = (
         'id',
         'computer_link',
@@ -315,6 +337,7 @@ admin.site.register(Fault, FaultAdmin)
 
 
 class FaultDefAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
     list_display = ('name', 'active', 'list_attributes',)
     list_filter = ('active',)
@@ -336,7 +359,7 @@ admin.site.register(FaultDef, FaultDefAdmin)
 
 
 class ComputerAdmin(admin.ModelAdmin):
-
+    formfield_overrides = migasfree_widgets
     form = make_ajax_form(Computer, {
         'tags': 'tag',
     })
@@ -373,6 +396,8 @@ admin.site.register(Computer, ComputerAdmin)
 
 
 class MessageAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
+    formfield_overrides = migasfree_widgets
     list_display = ('id', 'computer_link', 'date', 'text',)
     ordering = ('date',)
     list_filter = ('date',)
@@ -391,6 +416,7 @@ admin.site.register(MessageServer, MessageServerAdmin)
 
 
 class RepositoryAdmin(AjaxSelectAdmin):
+    formfield_overrides = migasfree_widgets
     form = make_ajax_form(Repository, {
         'attributes': 'attribute',
         'packages': 'package',
@@ -464,6 +490,7 @@ admin.site.register(Repository, RepositoryAdmin)
 
 
 class ScheduleDelayline(admin.TabularInline):
+    formfield_overrides = migasfree_widgets
     model = ScheduleDelay
     form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute'})
     extra = 0
@@ -471,6 +498,7 @@ class ScheduleDelayline(admin.TabularInline):
 
 
 class ScheduleAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name', 'description',)
     inlines = [ScheduleDelayline, ]
     extra = 0
@@ -479,6 +507,7 @@ admin.site.register(Schedule, ScheduleAdmin)
 
 
 class PackageAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name', 'store',)
     list_filter = ('store',)
     search_fields = ('name', 'store__name',)
@@ -512,6 +541,7 @@ admin.site.register(Package, PackageAdmin)
 
 
 class QueryAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
     list_display = ('name', 'description',)
     actions = ['run_query']
 
