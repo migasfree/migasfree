@@ -19,8 +19,6 @@
 # Author: Jose Antonio Chavarría <jachavar@gmail.com>
 
 __author__ = 'Jose Antonio Chavarría'
-__file__ = 'setup.py'
-__date__ = '2013-01-11'
 __license__ = 'GPLv3'
 
 # http://guide.python-distribute.org/
@@ -28,11 +26,11 @@ __license__ = 'GPLv3'
 # python setup.py build
 # python setup.py sdist
 # python setup.py bdist --format=rpm
+# python setup.py --command-packages=stdeb.command bdist_deb (python-stdeb)
 
 # http://zetcode.com/articles/packageinpython/
 # TODO https://wiki.ubuntu.com/PackagingGuide/Python
 # TODO https://help.ubuntu.com/community/PythonRecipes/DebianPackage
-# TODO https://github.com/astraw/stdeb
 
 import sys
 
@@ -45,27 +43,6 @@ README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 #import migasfree
 #VERSION = migasfree.__version__
 VERSION = '3.0'  # migasfree chocolate edition ;)
-
-import platform
-_dist = platform.linux_distribution()
-_requires = [
-    'python (>=2.6)',
-    #'python-ipy', # FIXME
-    'curl',
-    'createrepo',
-    'apache2',
-    #'libapache2-mod-wsgi', # FIXME
-    #'python-doc-utils', # FIXME
-    #'dpkg-dev', # FIXME
-]
-'''
-if _dist[0] == 'Fedora':
-    _requires.append('pycurl (>=7.19)') # python-pycurl
-elif _dist[0] == 'openSUSE':
-    _requires.append('curl (>=7.19)') # python-curl
-elif _dist[0] == 'Ubuntu':
-    _requires.append('pycurl (>=7.19)')
-'''
 
 #import glob
 #import subprocess
@@ -147,9 +124,8 @@ setup(
     long_description=README,
     license='GPLv3',
     author='Alberto Gacías',
-    author_email='agacias@ono.com',
+    author_email='alberto@migasfree.org',
     url='http://www.migasfree.org/',
-    #download_url='http://migasfree.org/releases/3.0/migasfree-server-3.0.tar.gz',
     platforms=['Linux'],
     packages=[
         'migasfree',
@@ -209,5 +185,4 @@ setup(
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
-    requires=_requires,
 )
