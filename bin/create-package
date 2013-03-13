@@ -1,0 +1,45 @@
+#!/bin/bash
+
+function create_package
+{
+    if [ -f stdeb.cfg ]
+    then
+        python setup.py --command-packages=stdeb.command bdist_deb
+    else
+        python setup.py bdist_rpm
+    fi
+}
+
+function get_distro
+{
+    local _DISTRO=$(python -c "import platform; print platform.linux_distribution()[0].strip()")
+
+    if [ -f "setup.cfg.d/$_DISTRO" ]
+    then
+        ln -sf "setup.cfg.d/$_DISTRO" setup.cfg
+        echo "$_DISTRO"
+        return
+    fi
+
+    if [ -f "stdeb.cfg.d/$_DISTRO" ]
+    then
+        ln -sf "stdeb.cfg.d/$_DISTRO" stdeb.cfg
+        echo "$_DISTRO"
+        return
+    fi
+
+    echo ""
+}
+
+##############
+# main process
+##############
+
+cd ..
+if [ -z "$(get_distro)" ]
+then
+    echo "Computer distro is not available. Aborting package creation."
+    exit 1
+fi
+
+create_package
