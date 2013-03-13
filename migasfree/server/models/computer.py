@@ -155,7 +155,7 @@ class Computer(models.Model):
         return '''<a href="%s" class="ssh" title="%s">&nbsp;</a>
         <a href="%s">%s</a>''' % (
             "ssh://root@%s" % str(self.ip),
-            _("Opens a SSH connection"),
+            str(self.ip),  # _("Opens a SSH connection"),
             reverse('admin:server_computer_change', args=(self.id, )),
             self.name
         )
