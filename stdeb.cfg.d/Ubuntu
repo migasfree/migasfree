@@ -1,0 +1,14 @@
+# Config file used by stdeb when building a Debian source package.
+
+# http://pypi.python.org/pypi/stdeb/0.5.0#stdeb-cfg-configuration-file
+
+[migasfree-server]
+Source: migasfree-server
+Package: migasfree-server
+Maintainer: Alberto Gacías <alberto@migasfree.org>
+Debian-Version = 1
+Build-Depends = python (>=2.6)
+Depends = python-django (>=1.4), apache2, libapache2-mod-wsgi, curl, python-ipy, rpm, dpkg-dev, createrepo, django-ajax-select, python-docutils, python-bcrypt, python-django-south (>=0.7.3)
+Suggests = postgresql, python-psycopg2
+
+
