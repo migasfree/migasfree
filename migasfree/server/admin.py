@@ -397,7 +397,6 @@ admin.site.register(Computer, ComputerAdmin)
 
 class MessageAdmin(admin.ModelAdmin):
     formfield_overrides = migasfree_widgets
-    formfield_overrides = migasfree_widgets
     list_display = ('id', 'computer_link', 'date', 'text',)
     ordering = ('date',)
     list_filter = ('date',)
