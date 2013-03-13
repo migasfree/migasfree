@@ -45,10 +45,11 @@ def api(request):
             mimetype='text/plain'
         )
 
-    try:
-        os.makedirs(MIGASFREE_TMP_DIR, 0o700)
-    except:
-        pass
+    if not os.path.exists(MIGASFREE_TMP_DIR):
+        try:
+            os.makedirs(MIGASFREE_TMP_DIR, 0o700)
+        except:
+            pass  # FIXME
 
     # USING USERNAME AND PASSWORD ONLY (WITHOUT KEYS PAIR)
     cmd_register = (
