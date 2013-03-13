@@ -19,7 +19,8 @@ from migasfree.settings import STATIC_URL
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
-#WIDGETS
+# CUSTOMIZED WIDGETS
+# https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.formfield_overrides
 from migasfree.server.widgets import MigasfreeSplitDateTime
 
 migasfree_widgets = {
