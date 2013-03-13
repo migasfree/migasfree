@@ -45,11 +45,11 @@ function create_package
 
     if [ $_PMS == "dpkg" ]
     then
-        ln -s stdeb.cfg.debian stdeb.cfg
+        ln -s stdeb.cfg.d/debian stdeb.cfg
         python setup.py --command-packages=stdeb.command bdist_deb
         cp deb_dist/*.deb ..
     else
-        ln -s setup.cfg.centos setup.cfg
+        ln -s setup.cfg.d/CentOS setup.cfg
         python setup.py bdist_rpm
         cp dist/*.rpm ..
     fi
