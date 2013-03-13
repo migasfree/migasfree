@@ -21,7 +21,7 @@ STATICFILES_DIRS = (
 
 MIGASFREE_AUTOREGISTER = True
 
-MIGASFREE_TMP_DIR = '/tmp/migasfree-server'
+MIGASFREE_TMP_DIR = '/tmp'
 MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
 MIGASFREE_ORGANIZATION = 'My Organization'
 MIGASFREE_APP_DIR = os.path.dirname(os.path.abspath(__file__))
