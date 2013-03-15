@@ -22,4 +22,5 @@ def version_names(request):
 
 
 def current_status(request):
-    return {'current_status': get_current_status()}
+    #return {'current_status': get_current_status()}
+    return {'current_status': ''}
