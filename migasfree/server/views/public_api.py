@@ -3,6 +3,11 @@
 import json
 
 from django.http import HttpResponse
+from django.shortcuts import render
+from migasfree.settings import (
+    MIGASFREE_HELP_DESK,
+    MIGASFREE_COMPUTER_SEARCH_FIELDS
+)
 
 from migasfree.server.models import (
     Platform,
@@ -12,11 +17,12 @@ from migasfree.server.models import (
     Attribute
 )
 
+
 def get_versions(request):
-    result=[]
+    result = []
     _platforms = Platform.objects.all()
     for _platform in _platforms:
-        element={}
+        element = {}
         element["platform"] = _platform.name
         element["versions"] = []
         _versions = Version.objects.filter(platform=_platform)
@@ -37,6 +43,8 @@ def get_computer_info(request):
         result["id"] = computer.id
         result["uuid"] = computer.uuid
         result["name"] = computer.name
+        result["helpdesk"] = MIGASFREE_HELP_DESK
+        result["search"] = result[MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
 
         element = []
         for tag in computer.tags.all():
@@ -51,3 +59,26 @@ def get_computer_info(request):
                     (prp.prefix, tag.value))
 
     return HttpResponse(json.dumps(result), mimetype="text/plain")
+
+
+def computer_label(request):
+    """
+    To Print a Computer Label
+    """
+    result = {}
+    uuid = request.GET.get('uuid', '')
+
+    if Computer.objects.filter(uuid=uuid):
+        computer = Computer.objects.get(uuid=uuid)
+        result["id"] = computer.id
+        result["uuid"] = computer.uuid
+        result["name"] = computer.name
+        result["helpdesk"] = MIGASFREE_HELP_DESK
+        result["search"] = result[MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
+        return render(
+            request,
+            'server/computer_label.html',
+            result
+        )
+    else:
+        return HttpResponse("", mimetype="text/plain")

@@ -91,6 +91,12 @@ urlpatterns = patterns('',
         get_computer_info,
         name='get_computer_info'
     ),
+    url(
+        r'^computer_label/$',
+        computer_label,
+        name='computer_label'
+    ),
+
 
     (r'^device/(.*)', device),
     # (r'^get_device/(.*)', get_device),

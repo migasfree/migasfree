@@ -27,6 +27,7 @@ MIGASFREE_COMPUTER_SEARCH_FIELDS = ('id', 'name', )
 MIGASFREE_TMP_DIR = '/tmp'
 MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
 MIGASFREE_ORGANIZATION = 'My Organization'
+MIGASFREE_HELP_DESK = "Put here how you want to be found"
 MIGASFREE_APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # development environment

@@ -1,0 +1,15 @@
+{% block content %}
+
+<table style="border:1px solid black;padding: 10px">
+    <tr>
+    <td align="center" ><img src="{{ STATIC_URL }}img/migasfree.png" width="48" /></td><td align="right" ><font size="30">{{search}}</td>
+    </tr>
+    <tr>
+    <td align="center" colspan="2">{{uuid}}</td>
+    </tr>
+    <tr>
+    <td align="center" colspan="2" style="border-top:1px solid black;" >{{helpdesk}}</td>
+    </tr>
+</table>
+
+{% endblock content %}
