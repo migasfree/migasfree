@@ -13,7 +13,10 @@ from django.core.urlresolvers import reverse
 
 from migasfree.server.functions import trans
 from migasfree.server.models import *
-from migasfree.settings import STATIC_URL
+from migasfree.settings import (
+    STATIC_URL,
+    MIGASFREE_COMPUTER_SEARCH_FIELDS
+)
 
 #AJAX_SELECT
 from ajax_select import make_ajax_form
@@ -23,8 +26,8 @@ from ajax_select.admin import AjaxSelectAdmin
 from migasfree.server.widgets import MigasfreeSplitDateTime
 
 migasfree_widgets = {
-        models.DateTimeField: {'widget': MigasfreeSplitDateTime},
-    }
+    models.DateTimeField: {'widget': MigasfreeSplitDateTime},
+}
 
 admin.site.register(DeviceType)
 admin.site.register(DeviceManufacturer)
@@ -365,6 +368,7 @@ class ComputerAdmin(admin.ModelAdmin):
     })
 
     list_display = (
+        'id',
         'link',
         'version',
         'ip',
@@ -375,7 +379,7 @@ class ComputerAdmin(admin.ModelAdmin):
     )
     ordering = ('name',)
     list_filter = ('version',)
-    search_fields = ('name',)  # TODO, 'login__attributes__value')
+    search_fields = MIGASFREE_COMPUTER_SEARCH_FIELDS
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
 
