@@ -21,6 +21,9 @@ STATICFILES_DIRS = (
 
 MIGASFREE_AUTOREGISTER = True
 
+# TODO add 'login__attributes__value' (performance issues...)
+MIGASFREE_COMPUTER_SEARCH_FIELDS = ('id', 'name', )
+
 MIGASFREE_TMP_DIR = '/tmp'
 MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
 MIGASFREE_ORGANIZATION = 'My Organization'
