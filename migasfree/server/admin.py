@@ -319,7 +319,7 @@ class FaultAdmin(admin.ModelAdmin):
     )
     list_filter = ('checked', 'date', 'version', 'faultdef',)
     ordering = ('date', 'computer',)
-    search_fields = ('date', 'computer__name', 'fault',)
+    search_fields = ('date', 'computer__name', 'faultdef__name')
 
     actions = ['checked_ok']
 
