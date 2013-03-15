@@ -86,6 +86,11 @@ urlpatterns = patterns('',
         get_versions,
         name='get_versions'
     ),
+    url(
+        r'^get_computer_info/$',
+        get_computer_info,
+        name='get_computer_info'
+    ),
 
     (r'^device/(.*)', device),
     # (r'^get_device/(.*)', get_device),
