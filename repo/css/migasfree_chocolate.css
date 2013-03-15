@@ -199,6 +199,10 @@ fieldset.module ul.errorlist {
     margin-left: 0;
     padding-left: 0;
 }
+fieldset.module h2 {
+    font-size: 100%;
+    padding-left: 1em;
+}
 .errorlist li {
     list-style-type: none;
     background: transparent;
@@ -642,4 +646,10 @@ body.stats div#result {
     padding: 3px 5px;
     font-size: 140%;
     background: #f0f0f0;
+}
+
+
+/*****/
+.results_on_deck {
+    font-size: 90%;
 }
