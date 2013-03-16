@@ -65,16 +65,6 @@ def computer_label(request):
     """
     To Print a Computer Label
     """
-    computer = get_object_or_404(Computer, uuid=request.GET.get('uuid', ''))
-
-    result = {
-        'id': computer.id,
-        'uuid': computer.uuid,
-        'name': computer.name,
-        'helpdesk': MIGASFREE_HELP_DESK,
-    }
-    result["search"] = result[MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
-
     return render(
         request,
         'server/computer_label.html',
