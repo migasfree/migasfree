@@ -36,9 +36,7 @@ def get_versions(request):
 
 
 def get_computer_info(request):
-    uuid = request.GET.get('uuid', '')
-
-    computer = get_object_or_404(Computer, uuid=uuid)
+    computer = get_object_or_404(Computer, uuid=request.GET.get('uuid', ''))
 
     result = {
         'id': computer.id,
@@ -67,9 +65,7 @@ def computer_label(request):
     """
     To Print a Computer Label
     """
-    uuid = request.GET.get('uuid', '')
-
-    computer = get_object_or_404(Computer, uuid=uuid)
+    computer = get_object_or_404(Computer, uuid=request.GET.get('uuid', ''))
 
     result = {
         'id': computer.id,
@@ -82,5 +78,5 @@ def computer_label(request):
     return render(
         request,
         'server/computer_label.html',
-        result
+        json.loads(get_computer_info(request).content)
     )
