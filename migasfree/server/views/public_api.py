@@ -65,20 +65,8 @@ def computer_label(request):
     """
     To Print a Computer Label
     """
-    result = {}
-    uuid = request.GET.get('uuid', '')
-
-    if Computer.objects.filter(uuid=uuid):
-        computer = Computer.objects.get(uuid=uuid)
-        result["id"] = computer.id
-        result["uuid"] = computer.uuid
-        result["name"] = computer.name
-        result["helpdesk"] = MIGASFREE_HELP_DESK
-        result["search"] = result[MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
-        return render(
+    return render(
             request,
             'server/computer_label.html',
-            result
+            json.loads(get_computer_info(request).content)
         )
-    else:
-        return HttpResponse("", mimetype="text/plain")
