@@ -1,15 +1,31 @@
-{% block content %}
-
-<table style="border:1px solid black;padding: 10px">
-    <tr>
-    <td align="center" ><img src="{{ STATIC_URL }}img/migasfree.png" width="48" /></td><td align="right" ><font size="30">{{search}}</td>
-    </tr>
-    <tr>
-    <td align="center" colspan="2">{{uuid}}</td>
-    </tr>
-    <tr>
-    <td align="center" colspan="2" style="border-top:1px solid black;" >{{helpdesk}}</td>
-    </tr>
-</table>
-
-{% endblock content %}
+<!doctype>
+<html>
+    <head>
+        <title>{{ search }}</title>
+        <style type="text/css">
+        body {
+            width: 25em;
+            border: 1px solid #000;
+            padding: .5em 1em;
+        }
+        h1 {
+            margin: 0 .5em;
+            text-align: right;
+            background: url('{{ STATIC_URL }}icons/favicon.png') left center no-repeat;
+        }
+        h2 {
+            font-size: 100%;
+            text-align: center;
+        }
+        p {
+            border-top: 1px solid #000;
+            text-align: center;
+        }
+        </style>
+    </head>
+    <body>
+        <h1>{{ search }}</h1>
+        <h2>{{ uuid }}</h2>
+        <p>{{ helpdesk }}</p>
+    </body>
+</html>
