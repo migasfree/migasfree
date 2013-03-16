@@ -1,0 +1,31 @@
+span.status-placeholder,
+nav#primary,
+nav#secondary,
+nav.ui-widget,
+div#sliding-panel,
+ul.object-tools,
+div#toolbar,
+footer > p + p {
+    display: none !important;
+}
+
+section article {
+    margin-left: 0;
+}
+
+div#changelist {
+    clear: both;
+}
+
+#wrapper {
+    min-height: 99% !important;
+}
+
+header h1 {
+    padding: 0;
+    font-size: 140%;
+}
+
+h1 a#organization {
+    padding: 0;
+}
