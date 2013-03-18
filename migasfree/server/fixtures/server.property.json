@@ -1,5 +1,18 @@
 [
     {
+        "pk": 14,
+        "model": "server.property",
+        "fields": {
+            "kind": "N",
+            "code": "",
+            "name": "COMPUTER ID",
+            "language": 1,
+            "auto": true,
+            "prefix": "CID",
+            "active": true
+        }
+    },
+    {
         "pk": 10,
         "model": "server.property",
         "fields": {
