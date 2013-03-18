@@ -183,7 +183,7 @@ def computer_messages(request):
                 icon,
                 "-",
                 item.computer.id,
-                item.computer.name,
+                item.computer.__unicode__(),
                 lastloginid,
                 user,
                 item.computer.version.name,

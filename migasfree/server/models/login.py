@@ -47,7 +47,7 @@ class Login(models.Model):
     def __unicode__(self):
         return u'%s@%s' % (
             self.user.name,
-            self.computer.name
+            self.computer.__unicode__()
         )
 
     class Meta:

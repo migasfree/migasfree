@@ -20,7 +20,7 @@ def hardware(request, param):
         request,
         'server/computer_hardware_extract.html',
         {
-            "title": computer.name,
+            "title": computer.__unicode__(),
             "computer": computer,
             "description": _("Hardware Information"),
             "query": qry,
@@ -38,7 +38,7 @@ def hardware_resume(request, param):
         request,
         'server/computer_hardware_resume.html',
         {
-            "title": computer.name,
+            "title": computer.__unicode__(),
             "computer": computer,
             "description": _("Hardware Information"),
             "query": qry,

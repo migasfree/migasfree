@@ -572,7 +572,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             "remove": lst_dev_remove,
             "install": lst_dev_install
         }
-        retdata["base"] = (o_version.computerbase == o_computer.name)
+        retdata["base"] = (o_version.computerbase == o_computer.__unicode__())
 
         #HARDWARE CAPTURE
         if o_computer.datehardware:

@@ -144,7 +144,8 @@ class Computer(models.Model):
     devices_link.short_description = _("Devices")
 
     def __unicode__(self):
-        return self.name
+        return str(self.__getattribute__(MIGASFREE_COMPUTER_SEARCH_FIELDS[0]))
+
 
     class Meta:
         app_label = 'server'
@@ -158,7 +159,7 @@ class Computer(models.Model):
             "ssh://root@%s" % str(self.ip),
             str(self.ip),  # _("Opens a SSH connection"),
             reverse('admin:server_computer_change', args=(self.id, )),
-            self.__getattribute__(MIGASFREE_COMPUTER_SEARCH_FIELDS[0])
+            self.__unicode__()
         )
 
     link.allow_tags = True

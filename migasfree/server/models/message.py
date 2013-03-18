@@ -26,7 +26,7 @@ class Message(models.Model):
     )
 
     def __unicode__(self):
-        return u'%s - %s' % (self.computer.name, self.text)
+        return u'%s - %s' % (self.computer.__unicode__(), self.text)
 
     def computer_link(self):
         return self.computer.link()

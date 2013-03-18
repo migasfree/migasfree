@@ -57,7 +57,7 @@ class Error(models.Model):
     def __unicode__(self):
         return u'%s - %s - %s' % (
             str(self.id),
-            self.computer.name,
+            self.computer.__unicode__(),
             str(self.date)
         )
 
