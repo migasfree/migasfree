@@ -11,9 +11,11 @@ from django.contrib import auth
 
 from . import jsontemplate
 
-from migasfree.settings import MIGASFREE_REPO_DIR
-from migasfree.settings import MIGASFREE_AUTOREGISTER
-from migasfree.settings import MIGASFREE_HW_PERIOD
+from migasfree.settings import (
+    MIGASFREE_REPO_DIR,
+    MIGASFREE_AUTOREGISTER,
+    MIGASFREE_HW_PERIOD,
+)
 
 from migasfree.server.models import *
 from migasfree.server.errmfs import *
@@ -240,7 +242,9 @@ def get_properties(request, name, uuid, o_computer, data):
 
     try:
         # All active properties
-        for e in Property.objects.filter(active=True).filter(tag=False):
+        for e in Property.objects.filter(active=True).filter(
+            tag=False
+        ).exclude(prefix="CID"):  # FIXME improve exclusion method
             properties.append({
                 "language": LANGUAGES_CHOICES[e.language][1],
                 "name": e.prefix,
@@ -248,7 +252,6 @@ def get_properties(request, name, uuid, o_computer, data):
             })
 
         ret = return_message(cmd, {"properties": properties})
-
     except:
         ret = return_message(cmd, error(GENERIC))
 
@@ -320,7 +323,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
         if not MIGASFREE_AUTOREGISTER:
-                return return_message(cmd, error(CANNOTREGISTER))
+            return return_message(cmd, error(CANNOTREGISTER))
         # if all ok we add the platform
         o_platform = Platform()
         o_platform.name = platform
@@ -338,7 +341,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     # Autoregister Version
     if not Version.objects.filter(name=version):
         if not MIGASFREE_AUTOREGISTER:
-                return return_message(cmd, error(CANNOTREGISTER))
+            return return_message(cmd, error(CANNOTREGISTER))
         # if all ok we add the version
         o_version = Version()
         o_version.name = version
@@ -456,11 +459,18 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             except:
                 pass
 
-        # Tags
+        # add Tags (not running on clients!!!)
         for tag in o_computer.tags.all().filter(property_att__active=True):
             lst_attributes.append(
                 new_attribute(o_login, tag.property_att, tag.value)
-                )
+            )
+
+        # ADD ATTRIBUTE CID (not running on clients!!!)
+        prp_cid = Property.objects.get(prefix="CID", active=True)
+        if prp_cid:
+            lst_attributes.append(
+                new_attribute(o_login, prp_cid, str(o_computer.id))
+            )
 
         # 3 FaultsDef
         lst_faultsdef = []
