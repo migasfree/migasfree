@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 
 from migasfree.server.models import Version, Device, Attribute
+from migasfree.settings import MIGASFREE_COMPUTER_SEARCH_FIELDS
 
 
 class Computer(models.Model):
@@ -157,7 +158,7 @@ class Computer(models.Model):
             "ssh://root@%s" % str(self.ip),
             str(self.ip),  # _("Opens a SSH connection"),
             reverse('admin:server_computer_change', args=(self.id, )),
-            self.name
+            self.__getattribute__(MIGASFREE_COMPUTER_SEARCH_FIELDS[0])
         )
 
     link.allow_tags = True
