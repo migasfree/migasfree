@@ -372,7 +372,6 @@ class ComputerAdmin(admin.ModelAdmin):
     })
 
     list_display = (
-        'id',
         'link',
         'version',
         'ip',
