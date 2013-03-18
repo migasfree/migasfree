@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.utils.html import escape
 
-from migasfree.server.models import Attribute, Package
+from migasfree.server.models import Attribute, Package, Property
 from ajax_select import LookupChannel
 
 
@@ -9,10 +9,16 @@ class AttributeLookup(LookupChannel):
     model = Attribute
 
     def get_query(self, q, request):
-        return Attribute.objects.filter(
-            Q(value__icontains=q) | Q(description__icontains=q)
-            | Q(property_att__prefix__icontains=q)
-        ).order_by('value')
+        prps = Property.objects.all().values_list("prefix")
+        if (q[0:3],) in prps and len(q) > 4:
+            return Attribute.objects.filter(
+                Q(property_att__prefix=q[0:3])
+            ).filter(Q(value__icontains=q[4:])).order_by('value')
+        else:
+            return Attribute.objects.filter(
+                Q(value__icontains=q) | Q(description__icontains=q)
+                | Q(property_att__prefix__icontains=q)
+            ).order_by('value')
 
     def get_result(self, obj):
         return unicode(obj)
