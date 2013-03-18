@@ -212,7 +212,11 @@ class LoginAdmin(admin.ModelAdmin):
     list_display = ('id', 'user_link', 'computer_link', 'date',)
     list_filter = ('date',)
     ordering = ('user', 'computer',)
-    search_fields = ('user__name', 'user__fullname', 'computer__name')
+    search_fields = ['user__name', 'user__fullname']
+    for field in MIGASFREE_COMPUTER_SEARCH_FIELDS:
+        search_fields.append("computer__%s" % field)
+
+    search_fields = tuple(search_fields)
 
     fieldsets = (
         (None, {
