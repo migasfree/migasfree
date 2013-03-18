@@ -71,6 +71,11 @@ class Property(models.Model):
         self.code = self.code.replace("\r\n", "\n")
         super(Property, self).save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        # Not allowed delete CID and ALL Property
+        if self.prefix != "CID" and self.prefix != "ALL":
+            super(Property, self).delete(*args, **kwargs)
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Property")
