@@ -321,7 +321,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     )
     pms = data.get("upload_computer_info").get("computer").get(
         'pms',
-        'apt'
+        'apt-get'
     )
 
     # Autoregister Platform
@@ -774,7 +774,7 @@ def register_computer(request, name, uuid, o_computer, data):
 
     platform = data.get('platform', 'unknown')
     version = data.get('version', 'unknown')
-    pms = data.get('pms', 'apt')
+    pms = data.get('pms', 'apt-get')
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
