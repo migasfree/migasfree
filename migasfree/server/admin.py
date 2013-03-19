@@ -37,6 +37,13 @@ admin.site.register(AutoCheckError)
 admin.site.register(Platform)
 
 
+def add_computer_search_fields(fields_list):
+    for field in MIGASFREE_COMPUTER_SEARCH_FIELDS:
+        fields_list.append("computer__%s" % field)
+
+    return tuple(fields_list)
+
+
 def user_version(user):
     """
     Returns the user's current version
@@ -69,7 +76,7 @@ class MigrationAdmin(admin.ModelAdmin):
     formfield_overrides = migasfree_widgets
     list_display = ('id', 'computer_link', 'version_link', 'date')
     list_filter = ('date', 'version__platform', )
-    search_fields = ('computer__name', 'date',)
+    search_fields = add_computer_search_fields(['date'])
     actions = None
 
 admin.site.register(Migration, MigrationAdmin)
@@ -79,7 +86,7 @@ class UpdateAdmin(admin.ModelAdmin):
     formfield_overrides = migasfree_widgets
     list_display = ('id', 'computer_link', 'user', 'date', 'version')
     list_filter = ('date', )
-    search_fields = ('computer__name', 'date', 'user__name')
+    search_fields = add_computer_search_fields(['date', 'user__name'])
     actions = None
 
 admin.site.register(Update, UpdateAdmin)
@@ -190,7 +197,7 @@ class PropertyAdmin(admin.ModelAdmin):
     list_display = ('prefix', 'name', 'active', 'kind', 'auto',)
     list_filter = ('active',)
     ordering = ('name',)
-    search_fields = ('user__name', 'user__fullname', 'computer__name')
+    search_fields = ('name', 'prefix',)
 
 admin.site.register(Property, PropertyAdmin)
 
@@ -212,11 +219,9 @@ class LoginAdmin(admin.ModelAdmin):
     list_display = ('id', 'user_link', 'computer_link', 'date',)
     list_filter = ('date',)
     ordering = ('user', 'computer',)
-    search_fields = ['user__name', 'user__fullname']
-    for field in MIGASFREE_COMPUTER_SEARCH_FIELDS:
-        search_fields.append("computer__%s" % field)
-
-    search_fields = tuple(search_fields)
+    search_fields = add_computer_search_fields(
+        ['user__name', 'user__fullname']
+    )
 
     fieldsets = (
         (None, {
@@ -296,7 +301,7 @@ class ErrorAdmin(admin.ModelAdmin):
     )
     list_filter = ('checked', 'date', "version")
     ordering = ('date', 'computer',)
-    search_fields = ('date', 'computer__name', 'error',)
+    search_fields = add_computer_search_fields(['date', 'error'])
 
     actions = ['checked_ok']
 
@@ -326,7 +331,7 @@ class FaultAdmin(admin.ModelAdmin):
     )
     list_filter = ('checked', 'date', 'version', 'faultdef',)
     ordering = ('date', 'computer',)
-    search_fields = ('date', 'computer__name', 'faultdef__name')
+    search_fields = add_computer_search_fields(['date', 'faultdef__name'])
 
     actions = ['checked_ok']
 
