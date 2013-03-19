@@ -319,6 +319,10 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         'version',
         'unknown'
     )
+    pms = data.get("upload_computer_info").get("computer").get(
+        'pms',
+        'apt'
+    )
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
@@ -345,7 +349,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         # if all ok we add the version
         o_version = Version()
         o_version.name = version
-        o_version.pms = Pms.objects.get(id=1)  # default
+        o_version.pms = Pms.objects.get(name=pms)
         o_version.platform = Platform.objects.get(name=platform)
         o_version.autoregister = MIGASFREE_AUTOREGISTER
         o_version.save()
@@ -770,6 +774,7 @@ def register_computer(request, name, uuid, o_computer, data):
 
     platform = data.get('platform', 'unknown')
     version = data.get('version', 'unknown')
+    pms = data.get('pms', 'apt')
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
@@ -798,7 +803,7 @@ def register_computer(request, name, uuid, o_computer, data):
         # if all ok we add the version
         o_version = Version()
         o_version.name = version
-        o_version.pms = Pms.objects.get(id=1)  # default
+        o_version.pms = Pms.objects.get(name=pms)
         o_version.platform = Platform.objects.get(name=platform)
         o_version.autoregister = MIGASFREE_AUTOREGISTER
         o_version.save()
