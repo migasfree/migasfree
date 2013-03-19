@@ -198,6 +198,7 @@ class PropertyAdmin(admin.ModelAdmin):
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'prefix',)
+    actions = None
 
 admin.site.register(Property, PropertyAdmin)
 
