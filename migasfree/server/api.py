@@ -26,6 +26,24 @@ from migasfree.server.views import load_hw, create_repositories
 import logging
 logger = logging.getLogger('migasfree')
 
+def add_notification_platform(platform, o_computer):
+    o_notification = Notification()
+    o_notification.notification = \
+        "Platform [%s] registered by computer [%s]." % (
+        platform,
+        o_computer.__unicode__()
+    )
+    o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    o_notification.save()
+
+def add_notification_version(version, pms, o_computer):
+    o_notification = Notification()
+    o_notification.notification = \
+        "Version [%s] with P.M.S. [%s] registered by computer [%s]." \
+        % (version, pms , o_computer.__unicode__())
+    o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    o_notification.save()
+
 
 def get_computer(name, uuid):
     logger.debug('name: %s, uuid: %s' % (name, uuid))
@@ -324,6 +342,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         'apt-get'
     )
 
+    notify_platform = False
+    notify_version = False
+
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
         if not MIGASFREE_AUTOREGISTER:
@@ -333,14 +354,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         o_platform.name = platform
         o_platform.save()
 
-        o_notification = Notification()
-        o_notification.notification = \
-            "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
-            platform,
-            name
-        )
-        o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_notification.save()
+        notify_platform = True
 
     # Autoregister Version
     if not Version.objects.filter(name=version):
@@ -354,12 +368,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         o_version.autoregister = MIGASFREE_AUTOREGISTER
         o_version.save()
 
-        o_notification = Notification()
-        o_notification.notification = \
-            "VERSION [%s] REGISTERED BY COMPUTER [%s]. Please check the PMS." \
-            % (version, name)
-        o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_notification.save()
+        notify_version =True
 
     lst_attributes = []  # List of attributes of computer
 
@@ -390,6 +399,13 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             dic_computer.get("ip", ""),
             uuid,
         )
+
+        if notify_platform:
+            add_notification_platform(platform, o_computer)
+
+        if notify_version:
+            add_notification_version(version, pms, o_computer)
+
 
         # if not exists the user, we add it
         try:
@@ -776,6 +792,9 @@ def register_computer(request, name, uuid, o_computer, data):
     version = data.get('version', 'unknown')
     pms = data.get('pms', 'apt-get')
 
+    notify_platform = False
+    notify_version = False
+
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
         if not MIGASFREE_AUTOREGISTER:
@@ -786,14 +805,7 @@ def register_computer(request, name, uuid, o_computer, data):
         o_platform.name = platform
         o_platform.save()
 
-        o_notification = Notification()
-        o_notification.notification = \
-            "PLATFORM [%s] REGISTERED BY COMPUTER [%s]." % (
-            platform,
-            name
-            )
-        o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_notification.save()
+        notify_platform = True
 
     # Autoregister Version
     if not Version.objects.filter(name=version):
@@ -808,12 +820,7 @@ def register_computer(request, name, uuid, o_computer, data):
         o_version.autoregister = MIGASFREE_AUTOREGISTER
         o_version.save()
 
-        o_notification = Notification()
-        o_notification.notification = \
-            "VERSION [%s] REGISTERED BY COMPUTER [%s]. Please check the PMS." \
-            % (version, name)
-        o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_notification.save()
+        notify_version = True
 
     # REGISTER COMPUTER
     # Check Version
@@ -833,6 +840,12 @@ def register_computer(request, name, uuid, o_computer, data):
             data.get('ip', ''),
             uuid
             )
+
+        if notify_platform:
+            add_notification_platform(platform, o_computer)
+
+        if notify_version:
+            add_notification_version(version, pms, o_computer)
 
         # 2.- returns keys to client
         return return_message(cmd, get_keys_to_client(data['version']))
