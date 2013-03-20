@@ -58,15 +58,6 @@ class Repository(models.Model):
         verbose_name=_("schedule")
     )
 
-    createpackages = models.ManyToManyField(
-        Package,
-        null=True,
-        blank=True,
-        verbose_name=_("create packages"),
-        related_name="createpackages",
-        editable=False
-    )  # used to know when "createrepositories"
-
     active = models.BooleanField(
         _("active"),
         default=True,
@@ -95,12 +86,6 @@ class Repository(models.Model):
         null=True,
         blank=True
     )
-
-    modified = models.BooleanField(
-        _("modified"),
-        default=False,
-        editable=False
-    )  # used to "createrepositories"
 
     objects = VersionManager()  # manager by user version
 

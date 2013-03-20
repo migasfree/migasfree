@@ -13,6 +13,8 @@ from django.core.urlresolvers import reverse
 
 from migasfree.server.functions import trans
 from migasfree.server.models import *
+
+from migasfree.server.views.repository import create_physical_repository
 from migasfree.settings import (
     STATIC_URL,
     MIGASFREE_COMPUTER_SEARCH_FIELDS
@@ -498,6 +500,14 @@ class RepositoryAdmin(AjaxSelectAdmin):
             request,
             **kwargs
         )
+
+    def save_model(self, request, obj, form, change):
+        super(RepositoryAdmin, self).save_model(request, obj, form, change)
+
+        # create physical repository  when packages is change
+        if "packages" in form.changed_data:
+            create_physical_repository(obj, form.cleaned_data['packages'])
+
 
 admin.site.register(Repository, RepositoryAdmin)
 

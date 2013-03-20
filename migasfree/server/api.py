@@ -21,10 +21,11 @@ from migasfree.server.models import *
 from migasfree.server.errmfs import *
 from migasfree.server.functions import *
 from migasfree.server.security import *
-from migasfree.server.views import load_hw, create_repositories
+from migasfree.server.views import load_hw, create_physical_repository
 
 import logging
 logger = logging.getLogger('migasfree')
+
 
 def add_notification_platform(platform, o_computer):
     o_notification = Notification()
@@ -36,11 +37,12 @@ def add_notification_platform(platform, o_computer):
     o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
     o_notification.save()
 
+
 def add_notification_version(version, pms, o_computer):
     o_notification = Notification()
     o_notification.notification = \
         "Version [%s] with P.M.S. [%s] registered by computer [%s]." \
-        % (version, pms , o_computer.__unicode__())
+        % (version, pms, o_computer.__unicode__())
     o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
     o_notification.save()
 
@@ -368,7 +370,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         o_version.autoregister = MIGASFREE_AUTOREGISTER
         o_version.save()
 
-        notify_version =True
+        notify_version = True
 
     lst_attributes = []  # List of attributes of computer
 
@@ -405,7 +407,6 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         if notify_version:
             add_notification_version(version, pms, o_computer)
-
 
         # if not exists the user, we add it
         try:
@@ -903,7 +904,6 @@ def upload_server_package(request, name, uuid, o_computer, data):
             o_package.save()
     except:
         return return_message(cmd, error(GENERIC))
-
     return return_message(cmd, ok())
 
 
@@ -1009,11 +1009,8 @@ def create_repositories_package(packagename, versionname):
     try:
         package = Package.objects.get(name=packagename, version=o_version)
         qset = Repository.objects.filter(packages__id=package.id)
-        for r in qset:
-            for p in r.createpackages.all():
-                r.createpackages.remove(p.id)
-            r.save()
-        create_repositories(package.version.id)
+        for repo in qset:
+            create_physical_repository(repo)
     except:
         pass
 

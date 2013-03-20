@@ -36,11 +36,6 @@ urlpatterns = patterns('',
         name='change_version'
     ),
 
-    url(r'^create_repos/$',
-        create_repos,
-        name='create_repos'
-    ),
-
     url(r'^chart/(?P<chart_type>.*)/$', chart, name='chart_type'),
     url(
         r'^hourly_updated/$',
