@@ -33,17 +33,6 @@
         }
     },
     {
-        "pk": 4,
-        "model": "server.checking",
-        "fields": {
-            "active": true,
-            "code": "from migasfree.server.models import Repository\nfrom migasfree.server.functions import compare_values\nresult = 0\nds = Repository.objects.all()\nfor d in ds:\n    if not compare_values(d.packages.values('id'), d.createpackages.values('id')):\n            result = result+1\nurl = '/create_repos/'\nicon = 'repository.png'\nmsg = 'Repositories files creation'\ntarget = 'server'",
-            "name": "Repositories files creation",
-            "alert": true,
-            "description": "Check if the current user version have to create the files of repositories (only will be created when in a Repository you change the packackes)"
-        }
-    },
-    {
         "pk": 3,
         "model": "server.checking",
         "fields": {
