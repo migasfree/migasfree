@@ -22,7 +22,7 @@ class RepositoryTestCase(TransactionTestCase):
 
         version = Version()
         version.name = "UBUNTU"
-        version.pms =  Pms.objects.get(name="apt")
+        version.pms =  Pms.objects.get(name="apt-get")
         version.platform = Platform.objects.get(name="Linux")
         version.save()
 
