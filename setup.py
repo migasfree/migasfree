@@ -63,6 +63,8 @@ class InstallData(install_data):
         data_files = []
 
         for root, dirs, files in os.walk('repo'):
+            if 'source' in root:
+                continue  # exclude SVG files
             final_files = []
             for archive in files:
                 final_files.append(os.path.join(root, archive))
@@ -108,8 +110,8 @@ class InstallData(install_data):
             data_files.append(
                 (
                     '/usr/share/doc/%s' % os.path.join(
-                    'migasfree-server',
-                    tmp_dir
+                        'migasfree-server',
+                        tmp_dir
                     ),
                     final_files
                 )
