@@ -487,11 +487,14 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             )
 
         # ADD ATTRIBUTE CID (not running on clients!!!)
-        prp_cid = Property.objects.get(prefix="CID", active=True)
-        if prp_cid:
-            lst_attributes.append(
-                new_attribute(o_login, prp_cid, str(o_computer.id))
-            )
+        try:
+            prp_cid = Property.objects.get(prefix="CID", active=True)
+            if prp_cid:
+                lst_attributes.append(
+                    new_attribute(o_login, prp_cid, str(o_computer.id))
+                )
+        except:
+            pass
 
         # 3 FaultsDef
         lst_faultsdef = []
