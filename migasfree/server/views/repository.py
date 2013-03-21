@@ -22,11 +22,16 @@ def create_physical_repository(repo, packages_list=None):
     msg.date = time.strftime("%Y-%m-%d %H:%M:%S")
     msg.save()
 
-    def history(repository):
-        txt = ""
-        pkgs = repository.packages.all()
-        for pkg in pkgs:
-            txt += " " * 8 + pkg.store.name.ljust(10) + " - " + pkg.name + "\n"
+    def history(repository, packages_list):
+        txt = _('Added packages:') + '<br />'
+        if packages_list is not None:
+            for id in packages_list:
+                pkg = Package.objects.get(id=id)
+                txt += _('%s in store %s') % (pkg.name, pkg.store.name) + '<br />'
+        else:
+            pkgs = repository.packages.all()
+            for pkg in pkgs:
+                txt += _('%s in store %s') % (pkg.name, pkg.store.name) + '<br />'
 
         return txt
 
@@ -34,16 +39,13 @@ def create_physical_repository(repo, packages_list=None):
     o_pms = repo.version.pms
     bash = ""
 
-    txt = _("Analyzing the repositories to create files for version: %s") \
-        % repo.version.name + '\n'
-
     # we remove it
     bash += "rm -rf %s\n" % os.path.join(
         MIGASFREE_REPO_DIR,
         repo.version.name,
         o_pms.slug,
         repo.name
-    )
+    )  # FIXME python command
 
     path_stores = os.path.join(
         MIGASFREE_REPO_DIR,
@@ -64,10 +66,9 @@ def create_physical_repository(repo, packages_list=None):
         path_tmp,
         repo.name,
         'PKGS'
-    )
-    txt += "\n    REPOSITORY: %s\n" % repo.name
+    )  # FIXME python command
 
-    if not packages_list is None:
+    if packages_list is not None:
         for id in packages_list:
             package = Package.objects.get(id=id)
             bash += 'ln -sf %s %s\n' % (
@@ -86,22 +87,20 @@ def create_physical_repository(repo, packages_list=None):
     bash += cad.replace(
         "%REPONAME%", repo.name
     ).replace("%PATH%", path_tmp) + "\n"
-    txt += history(repo)
 
     path_tmp = os.path.join(MIGASFREE_REPO_DIR, repo.version.name, "TMP")
     bash += 'cp -rf %s %s\n' % (
         os.path.join(path_tmp, '*'),
         os.path.join(MIGASFREE_REPO_DIR, repo.version.name)
     )
-    bash += "rm -rf %s\n" % path_tmp
-
-    # os.system('echo -e "%s" >> /var/tmp/tmp.txt' % bash)  # DEBUG
+    bash += "rm -rf %s\n" % path_tmp  # FIXME python command
 
     txt_err = run_in_server(bash)["err"]
 
     msg.delete()
 
-    if not txt_err == "":
-        txt += "\n\n*************\n" + txt_err.decode("utf-8")
+    txt = history(repo, packages_list)
+    if txt_err != '':
+        txt += "<br /><br />*************" + txt_err.decode("utf-8")
 
     return txt

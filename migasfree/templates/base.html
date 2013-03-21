@@ -100,7 +100,7 @@
                     {% if messages %}
                         <ul class="messagelist">
                         {% for message in messages %}
-                            <li>{{ message }}</li>
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
                         {% endfor %}
                         </ul>
                     {% endif %}

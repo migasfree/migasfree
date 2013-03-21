@@ -4,7 +4,7 @@ if (typeof active_accordion == 'undefined')
 }
 
 $(document).ready(function() {
-    $('.messagelist').fadeOut(5000);
+    //$('.messagelist').fadeOut(5000);
 
     $("section nav").accordion({
         collapsible: true,

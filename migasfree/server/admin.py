@@ -4,7 +4,7 @@
 Admin Models
 """
 
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect
 from django import forms
@@ -506,7 +506,7 @@ class RepositoryAdmin(AjaxSelectAdmin):
 
         # create physical repository  when packages is change
         if "packages" in form.changed_data:
-            create_physical_repository(obj, form.cleaned_data['packages'])
+            messages.add_message(request, messages.INFO, create_physical_repository(obj, form.cleaned_data['packages']))
 
 
 admin.site.register(Repository, RepositoryAdmin)
