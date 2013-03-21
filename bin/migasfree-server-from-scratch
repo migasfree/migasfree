@@ -148,6 +148,7 @@ function test_app
         echo "Problem found running database tests."
         return 1
     fi
+    rm /etc/migasfree.log
 }
 
 function create_server_keys
