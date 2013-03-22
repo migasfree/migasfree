@@ -137,6 +137,10 @@ function set_permissions
     # owner for keys
     own_web_server $_KEYS_PATH
     chmod 700 $_KEYS_PATH
+
+    # owner for /tmp/migasfree.log     # FIXME
+    own_web_server /tmp/migasfree.log
+
 }
 
 function test_app
@@ -148,7 +152,6 @@ function test_app
         echo "Problem found running database tests."
         return 1
     fi
-    rm /etc/migasfree.log
 }
 
 function create_server_keys
