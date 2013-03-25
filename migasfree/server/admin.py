@@ -504,8 +504,8 @@ class RepositoryAdmin(AjaxSelectAdmin):
     def save_model(self, request, obj, form, change):
         super(RepositoryAdmin, self).save_model(request, obj, form, change)
 
-        # create physical repository  when packages is change
-        if "packages" in form.changed_data:
+        # create physical repository  when packages is change or not have packages
+        if "packages" in form.changed_data or len(form.cleaned_data['packages']) == 0:
             messages.add_message(request, messages.INFO, create_physical_repository(obj, form.cleaned_data['packages']))
 
 
