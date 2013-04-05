@@ -974,6 +974,27 @@ def upload_server_set(request, name, uuid, o_computer, data):
     return return_message(cmd, ok())
 
 
+def set_computer_tags(request, name, uuid, o_computer, data):
+    cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
+    tags = data["set_computer_tags"]["tags"]
+
+    try:
+        list_tags = []
+        for tag in tags:
+            ltag = tag.split("-", 1)
+            list_tags.append(
+                Attribute.objects.get(
+                    property_att__prefix=ltag[0],
+                    value=ltag[1]
+                    )
+                )
+        o_computer.tags = list_tags
+    except:
+        return return_message(cmd, error(GENERIC))
+
+    return return_message(cmd, ok())
+
+
 def add_migration(o_computer, o_version):
     o_migration = Migration()
     o_migration.computer = o_computer

@@ -79,7 +79,8 @@ def api(request):
         "get_device",
         "get_assist_devices",
         "install_device",
-        "remove_device"
+        "remove_device",
+        "set_computer_tags"
     )
 
     # COMPUTERS
