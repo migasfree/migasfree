@@ -509,42 +509,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 "code": d.code
             })
 
-        dic_repos = {}
-
-        repositories = Repository.objects.filter(
-            Q(attributes__id__in=lst_attributes),
-            Q(version__id=o_version.id)
-        )
-        repositories = repositories.filter(
-            Q(version__id=o_version.id),
-            Q(active=True)
-        )
-
-        for r in repositories:
-            dic_repos[r.name] = r.id
-
-        repositories = Repository.objects.filter(
-            Q(schedule__scheduledelay__attributes__id__in=lst_attributes),
-            Q(active=True)
-        )
-        repositories = repositories.filter(
-            Q(version__id=o_version.id),
-            Q(active=True)
-        )
-        repositories = repositories.extra(
-            select={'delay': "server_scheduledelay.delay"}
-        )
-
-        for r in repositories:
-            if horizon(r.date, r.delay) <= datetime.now().date():
-                dic_repos[r.name] = r.id
-
-        repositories = Repository.objects.filter(
-            Q(id__in=dic_repos.values())
-        )
-
-        #FILTER EXCLUDED ATTRIBUTES
-        repositories = repositories.filter(~Q(excludes__id__in=lst_attributes))
+        repositories = select_repositories(o_version, lst_attributes)
 
         #4.- CREATE JSON
         lst_repos = []
@@ -1068,3 +1033,49 @@ def save_request_file(requestfile, filename):
         os.remove(requestfile.temporary_file_path)
     except:
         pass
+
+
+def select_repositories(o_version, lst_attributes):
+    """
+    Return the repositories availables for a version and attributes list
+    """
+    dic_repos = {}
+
+    # 1.- Add to "dic_repos" all repositories by attribute
+    repositories = Repository.objects.filter(
+        Q(attributes__id__in=lst_attributes),
+        Q(version__id=o_version.id)
+    )
+    repositories = repositories.filter(
+        Q(version__id=o_version.id),
+        Q(active=True)
+    )
+
+    for r in repositories:
+        dic_repos[r.name] = r.id
+
+    # 2.- Add to "dic_repos" all repositories by schedule
+    repositories = Repository.objects.filter(
+        Q(schedule__scheduledelay__attributes__id__in=lst_attributes),
+        Q(active=True)
+    )
+    repositories = repositories.filter(
+        Q(version__id=o_version.id),
+        Q(active=True)
+    )
+    repositories = repositories.extra(
+        select={'delay': "server_scheduledelay.delay"}
+    )
+
+    for r in repositories:
+        if horizon(r.date, r.delay) <= datetime.now().date():
+            dic_repos[r.name] = r.id
+
+    # 3.- Attributtes Excluded
+    repositories = Repository.objects.filter(
+        Q(id__in=dic_repos.values())
+    )
+
+    repositories = repositories.filter(~Q(excludes__id__in=lst_attributes))
+
+    return repositories
