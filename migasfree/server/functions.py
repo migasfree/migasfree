@@ -232,6 +232,16 @@ def list_difference(list1, list2):
 
     return diff_list
 
+def list_common(list1, list2):
+    """uses list1 as the reference, returns list of items in list2"""
+    diff_list = []
+    for item in list1:
+        if item in list2:
+            diff_list.append(item)
+
+    return diff_list
+
+
 def old_new_elements(list1, list2):
     """Given two list return the a list with the old elements and other list with the new elements"""
     return (list_difference(list1,list2), list_difference(list2,list1))
