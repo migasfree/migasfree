@@ -942,22 +942,107 @@ def upload_server_set(request, name, uuid, o_computer, data):
 def set_computer_tags(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     tags = data["set_computer_tags"]["tags"]
+    select = data["set_computer_tags"]["select"]
+    if select:
+        retdata = ok()
+        retdata["select"] = {}
+        element = []
+        for tag in o_computer.tags.all():
+            element.append("%s-%s" % (tag.property_att.prefix, tag.value))
+        retdata["select"]["tags"] = element
 
+        retdata["select"]["availables"] = {}
+        for prp in Property.objects.filter(tag=True).filter(active=True):
+            retdata["select"]["availables"][prp.name] = []
+            for tag in Attribute.objects.filter(property_att=prp):
+                retdata["select"]["availables"][prp.name].append("%s-%s" %
+                    (prp.prefix, tag.value))
+
+        return return_message(cmd, retdata)
+
+
+    all_id = Attribute.objects.get(
+        property_att__prefix="ALL",
+        value="ALL SYSTEMS"
+        ).id
     try:
-        list_tags = []
+        lst_tags_obj = []
+        lst_tags_id = []
         for tag in tags:
             ltag = tag.split("-", 1)
-            list_tags.append(
-                Attribute.objects.get(
+            o_attribute = Attribute.objects.get(
                     property_att__prefix=ltag[0],
                     value=ltag[1]
                     )
-                )
-        o_computer.tags = list_tags
-    except:
-        return return_message(cmd, error(GENERIC))
+            lst_tags_obj.append(o_attribute)
+            lst_tags_id.append(o_attribute.id)
+        lst_tags_id.append(all_id)
 
-    return return_message(cmd, ok())
+        lst_computer_id = []
+        for tag in o_computer.tags.all():
+            lst_computer_id.append(tag.id)
+        lst_computer_id.append(all_id)
+
+        retdata = ok()
+        (old_tags_id, new_tags_id) = old_new_elements(
+            lst_computer_id,
+            lst_tags_id
+            )
+        com_tags_id = list_common(lst_computer_id, lst_tags_id)
+
+        lst_pkg_remove = []
+        lst_pkg_install = []
+
+        # Repositories old
+        repositories = select_repositories(o_computer.version, old_tags_id)
+        for r in repositories:
+            # INVERSE !!!!
+            pkgs = "%s %s" % (
+                r.toinstall,
+                r.defaultinclude
+                )
+            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+                if p != "":
+                    lst_pkg_remove.append(p)
+            pkgs = "%s %s" % (
+                r.toremove,
+                r.defaultexclude
+                )
+            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+                if p != "":
+                    lst_pkg_install.append(p)
+
+        # Repositories new
+        repositories = select_repositories(o_computer.version, new_tags_id + com_tags_id)
+        for r in repositories:
+            pkgs = "%s %s" % (
+                r.toremove,
+                r.defaultexclude
+                )
+            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+                if p != "":
+                    lst_pkg_remove.append(p)
+            pkgs = "%s %s" % (
+                r.toinstall,
+                r.defaultinclude
+                )
+            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+                if p != "":
+                    lst_pkg_install.append(p)
+
+        retdata["packages"] = {
+            "install": lst_pkg_install,
+            "remove": lst_pkg_remove,
+            }
+
+        # Modify computer tags
+        o_computer.tags = lst_tags_obj
+
+        ret = return_message(cmd, retdata)
+    except:
+        ret = return_message(cmd, error(GENERIC))
+
+    return ret
 
 
 def add_migration(o_computer, o_version):
