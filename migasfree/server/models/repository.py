@@ -87,6 +87,18 @@ class Repository(models.Model):
         blank=True
     )
 
+    defaultinclude = models.TextField(
+        _("default include packages"),
+        null=True,
+        blank=True
+    )
+
+    defaultexclude = models.TextField(
+        _("default exclude packages"),
+        null=True,
+        blank=True
+    )
+
     objects = VersionManager()  # manager by user version
 
     def packages_link(self):
