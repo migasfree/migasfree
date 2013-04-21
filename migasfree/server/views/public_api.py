@@ -52,7 +52,7 @@ def get_computer_info(request):
     result["tags"] = element
 
     result["available_tags"] = {}
-    for prp in Property.objects.filter(tag=True):
+    for prp in Property.objects.filter(tag=True).filter(active=True):
         result["available_tags"][prp.name] = []
         for tag in Attribute.objects.filter(property_att=prp):
             result["available_tags"][prp.name].append("%s-%s" %
