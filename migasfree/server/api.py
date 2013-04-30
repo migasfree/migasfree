@@ -158,7 +158,7 @@ def upload_computer_software_base(request, name, uuid, o_computer, data):
 def upload_computer_software_history(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_computer.history_sw = str(o_computer.history_sw) + "\n\n" + data[cmd]
+        o_computer.history_sw = "%s\n\n%s" % (o_computer.history_sw, data[cmd])
         o_computer.save()
         ret = return_message(cmd, ok())
     except:
