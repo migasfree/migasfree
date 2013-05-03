@@ -4,9 +4,11 @@ from django.db import models
 from django.db.models import Q
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
+from django.template import Context, Template
 
 from migasfree.server.models import Version, Device, Attribute
 from migasfree.settings import MIGASFREE_COMPUTER_SEARCH_FIELDS
+from migasfree.settings import MIGASFREE_REMOTE_ADMIN_LINK
 
 
 class Computer(models.Model):
@@ -146,7 +148,6 @@ class Computer(models.Model):
     def __unicode__(self):
         return str(self.__getattribute__(MIGASFREE_COMPUTER_SEARCH_FIELDS[0]))
 
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Computer")
@@ -154,13 +155,33 @@ class Computer(models.Model):
         permissions = (("can_save_computer", "Can save Computer"),)
 
     def link(self):  # to be used with FireSSH
-        return '''<a href="%s" class="ssh" title="%s">&nbsp;</a>
-        <a href="%s">%s</a>''' % (
-            "ssh://root@%s" % str(self.ip),
-            str(self.ip),  # _("Opens a SSH connection"),
-            reverse('admin:server_computer_change', args=(self.id, )),
-            self.__unicode__()
-        )
+
+        if MIGASFREE_REMOTE_ADMIN_LINK:
+            _template = Template(MIGASFREE_REMOTE_ADMIN_LINK)
+            _context = {"computer": self}
+            for n in _template.nodelist:
+                try:
+                    _token = n.filter_expression.token
+                    if not _token.startswith("computer"):
+                        _context[_token] = self.last_login().attributes.get(
+                            property_att__prefix=_token).value
+                except:
+                    pass
+            _remote_admin = _template.render(Context(_context))
+
+            return '''<a href="%s" class="ssh" title="%s">&nbsp;</a>
+            <a href="%s">%s</a>''' % (
+                _remote_admin,
+                str(self.ip),  # _("Opens a SSH connection"),
+                reverse('admin:server_computer_change', args=(self.id, )),
+                self.__unicode__()
+            )
+        else:
+
+            return '''<a href="%s">%s</a>''' % (
+                reverse('admin:server_computer_change', args=(self.id, )),
+                self.__unicode__()
+            )
 
     link.allow_tags = True
     link.short_description = Meta.verbose_name

@@ -30,6 +30,12 @@ MIGASFREE_ORGANIZATION = 'My Organization'
 MIGASFREE_HELP_DESK = "Put here how you want to be found"
 MIGASFREE_APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# MIGASFREE_REMOTE_ADMIN_LINK
+# Variables can be: {{computer.<FIELD>}} and {{<<PROPERTYPREFIX>>}}
+# SAMPLE:
+#     MIGASFREE_REMOTE_ADMIN_LINK = "https://myserver/?computer={{computer.name}}&port={{PRT}}"
+MIGASFREE_REMOTE_ADMIN_LINK = ""
+
 # development environment
 TEMPLATE_DEBUG = DEBUG = True
 
