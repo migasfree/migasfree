@@ -120,6 +120,12 @@ def query(request, query_id):
 
     # show parameters form
     version = get_object_or_404(UserProfile, id=request.user.id).version
+    if not version:
+        # The user not have a version. We assign to user the first version found.
+        version = Version.objects.all().order_by("id")[0]
+        user = UserProfile.objects.get(id=request.user.id)
+        user.version = version
+        user.save()
 
     o_query = get_object_or_404(Query, id=query_id)
     dic_initial = {
