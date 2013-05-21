@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: migasfree with chocolate edition\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-03-01 17:33+0100\n"
-"PO-Revision-Date: 2013-03-01 17:38+0100\n"
-"Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
+"PO-Revision-Date: 2013-05-20 08:58+0100\n"
+"Last-Translator: Alberto Gacias <alberto@migasfree.org>\n"
 "Language-Team: migasfree Team <migasfree@migasfree.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
@@ -157,15 +157,15 @@ msgstr "IP"
 
 #: server/models/computer.py:47
 msgid "software inventory"
-msgstr "inventario de aplicaciones"
+msgstr "inventario de software"
 
 #: server/models/computer.py:50
 msgid "gap between software base packages and computer ones"
-msgstr "diferencia entre el conjunto de aplicaciones base y el del ordenador"
+msgstr "diferencia entre el conjunto de paquetes base y el del ordenador"
 
 #: server/models/computer.py:54
 msgid "software history"
-msgstr "historial de aplicaciones"
+msgstr "historial de software"
 
 #: server/models/computer.py:64
 msgid "devices"
@@ -639,12 +639,12 @@ msgstr "almacén"
 
 #: server/models/package.py:48
 msgid "Package/Set"
-msgstr "Aplicación/conjunto de"
+msgstr "Paquete/Conjunto"
 
 #: server/models/package.py:49
 #: templates/server/includes/software_menu.html:11
 msgid "Packages/Sets"
-msgstr "Aplicaciones/conjuntos de"
+msgstr "Paquetes/Conjuntos"
 
 #: server/models/platform.py:26
 msgid "Platform"
@@ -677,19 +677,19 @@ msgstr "Define el contenido del fichero con la lista de orígenes de repositorio
 
 #: server/models/pms.py:53
 msgid "package information"
-msgstr "información de la aplicación"
+msgstr "información del paquete"
 
 #: server/models/pms.py:56
 msgid "Code bash. Define how get info of packages in the server"
-msgstr "Código en bash. Define cómo obtener información de las aplicaciones en el servidor"
+msgstr "Código en bash. Define cómo obtener información de los paquetes en el servidor"
 
 #: server/models/pms.py:70
 msgid "Package Management System"
-msgstr "Sistema de gestión de aplicaciones"
+msgstr "Sistema de gestión de paquetes"
 
 #: server/models/pms.py:71
 msgid "Package Management Systems"
-msgstr "Sistemas de gestión de aplicaciones"
+msgstr "Sistemas de gestión de paquetes"
 
 #: server/models/property.py:10
 msgid "NORMAL"
@@ -752,11 +752,11 @@ msgstr "Consultas"
 
 #: server/models/repository.py:33
 msgid "Packages/Set"
-msgstr "Aplicaciones/conjunto de"
+msgstr "Paquetes/Conjuntos"
 
 #: server/models/repository.py:34
 msgid "Assigned Packages"
-msgstr "Aplicaciones asignadas"
+msgstr "Paquetes asignados"
 
 #: server/models/repository.py:42
 msgid "Assigned Attributes"
@@ -777,7 +777,7 @@ msgstr "calendario"
 
 #: server/models/repository.py:65
 msgid "create packages"
-msgstr "crear aplicaciones"
+msgstr "crear paquetes"
 
 #: server/models/repository.py:73
 msgid "if you uncheck this field, the repository is hidden for all computers."
@@ -793,11 +793,11 @@ msgstr "comentario"
 
 #: server/models/repository.py:88
 msgid "packages to install"
-msgstr "aplicaciones a instalar"
+msgstr "paquetes a instalar"
 
 #: server/models/repository.py:94
 msgid "packages to remove"
-msgstr "aplicaciones a desinstalar"
+msgstr "paquetes a desinstalar"
 
 #: server/models/repository.py:100
 msgid "modified"
@@ -805,7 +805,7 @@ msgstr "modificado"
 
 #: server/models/repository.py:115
 msgid "Packages"
-msgstr "Aplicaciones"
+msgstr "Paquetes"
 
 #: server/models/repository.py:161
 msgid "timeline"
@@ -871,7 +871,7 @@ msgstr "Usuarios"
 
 #: server/models/version.py:29
 msgid "package management system"
-msgstr "sistema de gestión de aplicaciones"
+msgstr "sistema de gestión de paquetes"
 
 #: server/models/version.py:33
 msgid "Actual line computer"
@@ -941,7 +941,7 @@ msgstr "Los credenciales no son válidos"
 #: server/views/packages.py:42
 #: server/views/packages.py:70
 msgid "Information of Package"
-msgstr "Información de la aplicación"
+msgstr "Información del paquete"
 
 #: server/views/packages.py:71
 #, python-format
@@ -950,7 +950,7 @@ msgstr "Versión: %s"
 
 #: server/views/packages.py:82
 msgid "No package info exists"
-msgstr "No existe información sobre la aplicación"
+msgstr "No existe información sobre el paquete"
 
 #: server/views/queries.py:144
 #, python-format
@@ -1336,7 +1336,7 @@ msgstr "Empaquetado"
 
 #: templates/server/includes/software_menu.html:12
 msgid "Packages information"
-msgstr "Información de aplicaciones"
+msgstr "Información de paquetes"
 
 #: templates/server/includes/software_menu.html:16
 msgid "Select version"
