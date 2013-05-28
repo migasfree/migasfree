@@ -87,6 +87,12 @@ class Repository(models.Model):
         blank=True
     )
 
+    defaultpreinclude = models.TextField(
+        _("default preinclude packages"),
+        null=True,
+        blank=True
+    )
+
     defaultinclude = models.TextField(
         _("default include packages"),
         null=True,

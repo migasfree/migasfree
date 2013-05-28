@@ -992,14 +992,16 @@ def set_computer_tags(request, name, uuid, o_computer, data):
 
         lst_pkg_remove = []
         lst_pkg_install = []
+        lst_pkg_preinstall = []
 
         # Repositories old
         repositories = select_repositories(o_computer.version, old_tags_id)
         for r in repositories:
             # INVERSE !!!!
-            pkgs = "%s %s" % (
+            pkgs = "%s %s %s" % (
                 r.toinstall,
-                r.defaultinclude
+                r.defaultinclude,
+                r.defaultpreinclude
                 )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
                 if p != "":
@@ -1029,8 +1031,15 @@ def set_computer_tags(request, name, uuid, o_computer, data):
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
                 if p != "":
                     lst_pkg_install.append(p)
+            pkgs = "%s" % (
+                r.defaultpreinclude,
+                )
+            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+                if p != "":
+                    lst_pkg_preinstall.append(p)
 
         retdata["packages"] = {
+            "preinstall": lst_pkg_preinstall,
             "install": lst_pkg_install,
             "remove": lst_pkg_remove,
             }

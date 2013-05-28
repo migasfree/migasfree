@@ -454,8 +454,14 @@ class RepositoryAdmin(AjaxSelectAdmin):
         }),
         ('Packages', {
             'classes': ('collapse',),
-            'fields': ('packages',
-                'toinstall', 'toremove', 'defaultinclude', 'defaultexclude')
+            'fields': ('packages', 'toinstall', 'toremove', )
+        }),
+        ('Default', {
+            'classes': ('collapse',),
+            'fields': ('defaultpreinclude',
+                'defaultinclude',
+                'defaultexclude',
+                )
         }),
         ('Atributtes', {
             'classes': ('collapse',),
