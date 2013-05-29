@@ -24,7 +24,7 @@ case "$1" in
         cd /
         cd $(python -c "import migasfree;print migasfree.__path__[0]")
         python manage.py schemamigration server --auto || :
-        python manage.py migrate server
+        python manage.py migrate server || :
 
         # restart apache graceful
         $(which apachectl) graceful || :
