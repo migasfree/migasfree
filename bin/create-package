@@ -6,7 +6,7 @@ function create_package
     then
         python setup.py --command-packages=stdeb.command bdist_deb
     else
-        python setup.py bdist_rpm
+        python setup.py bdist_rpm --post-install=rpm/postinstall
     fi
 }
 
