@@ -42,7 +42,7 @@ README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
 
 #import migasfree
 #VERSION = migasfree.__version__
-VERSION = '3.0'  # migasfree chocolate edition ;)
+VERSION = '3.1'  # migasfree chocolate edition ;)
 
 #import glob
 #import subprocess
