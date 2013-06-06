@@ -1004,14 +1004,14 @@ def set_computer_tags(request, name, uuid, o_computer, data):
                 r.defaultpreinclude
                 )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
-                if p != "":
+                if p != "" and p != 'None':
                     lst_pkg_remove.append(p)
             pkgs = "%s %s" % (
                 r.toremove,
                 r.defaultexclude
                 )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
-                if p != "":
+                if p != "" and p != 'None':
                     lst_pkg_install.append(p)
 
         # Repositories new
@@ -1022,20 +1022,20 @@ def set_computer_tags(request, name, uuid, o_computer, data):
                 r.defaultexclude
                 )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
-                if p != "":
+                if p != "" and p != 'None':
                     lst_pkg_remove.append(p)
             pkgs = "%s %s" % (
                 r.toinstall,
                 r.defaultinclude
                 )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
-                if p != "":
+                if p != "" and p != 'None':
                     lst_pkg_install.append(p)
             pkgs = "%s" % (
                 r.defaultpreinclude,
                 )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
-                if p != "":
+                if p != "" and p != 'None':
                     lst_pkg_preinstall.append(p)
 
         retdata["packages"] = {
