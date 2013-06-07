@@ -48,16 +48,32 @@ def add_notification_version(version, pms, o_computer):
 
 
 def get_computer(name, uuid):
+    '''
+    Returns a computer object (or None if not found)
+    '''
     logger.debug('name: %s, uuid: %s' % (name, uuid))
+    o_computer = None
+
     if Computer.objects.filter(uuid=uuid):
         o_computer = Computer.objects.get(uuid=uuid)
         logger.debug('computer found by uuid')
-    else:
-        if Computer.objects.filter(name=name):
-            o_computer = Computer.objects.get(name=name)
-            logger.debug('computer found by name')
+    else:  # DEPRECATED This Block 'else'. Only for compatibilty with client <= 2
+        message = 'computer found by name. compatibility mode'
+        if len(uuid.split("-")) == 5:  # search for uuid (client >= 3)
+            if Computer.objects.filter(uuid=name):
+                o_computer = Computer.objects.get(uuid=name)
+                logger.debug(message)
         else:
-            o_computer = None
+            if Computer.objects.filter(name=name, uuid=name):  # search for name (client <= 2)
+                o_computer = Computer.objects.get(name=name, uuid=name)
+                logger.debug(message)
+            elif Computer.objects.filter(name=name).count() == 1:
+                o_computer = Computer.objects.get(name=name)
+                logger.debug(message)
+                
+    if o_computer is None:
+        logger.debug('computer not found!!!')
+
     return o_computer
 
 
