@@ -70,7 +70,7 @@ def get_computer(name, uuid):
             elif Computer.objects.filter(name=name).count() == 1:
                 o_computer = Computer.objects.get(name=name)
                 logger.debug(message)
-                
+
     if o_computer is None:
         logger.debug('computer not found!!!')
 
@@ -954,29 +954,26 @@ def upload_server_set(request, name, uuid, o_computer, data):
 
     return return_message(cmd, ok())
 
+def get_computer_tags(request, name, uuid, o_computer, data):
+    cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
+    retdata = ok()
+    element = []
+    for tag in o_computer.tags.all():
+        element.append("%s-%s" % (tag.property_att.prefix, tag.value))
+    retdata["selected"] = element
+
+    retdata["available"] = {}
+    for prp in Property.objects.filter(tag=True).filter(active=True):
+        retdata["available"][prp.name] = []
+        for tag in Attribute.objects.filter(property_att=prp):
+            retdata["available"][prp.name].append("%s-%s" %
+                (prp.prefix, tag.value))
+
+    return return_message(cmd, retdata)
 
 def set_computer_tags(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     tags = data["set_computer_tags"]["tags"]
-    select = data["set_computer_tags"]["select"]
-    if select:
-        retdata = ok()
-        retdata["select"] = {}
-        element = []
-        for tag in o_computer.tags.all():
-            element.append("%s-%s" % (tag.property_att.prefix, tag.value))
-        retdata["select"]["tags"] = element
-
-        retdata["select"]["availables"] = {}
-        for prp in Property.objects.filter(tag=True).filter(active=True):
-            retdata["select"]["availables"][prp.name] = []
-            for tag in Attribute.objects.filter(property_att=prp):
-                retdata["select"]["availables"][prp.name].append("%s-%s" %
-                    (prp.prefix, tag.value))
-
-        return return_message(cmd, retdata)
-
-
     all_id = Attribute.objects.get(
         property_att__prefix="ALL",
         value="ALL SYSTEMS"
@@ -987,9 +984,9 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         for tag in tags:
             ltag = tag.split("-", 1)
             o_attribute = Attribute.objects.get(
-                    property_att__prefix=ltag[0],
-                    value=ltag[1]
-                    )
+                property_att__prefix=ltag[0],
+                value=ltag[1]
+            )
             lst_tags_obj.append(o_attribute)
             lst_tags_id.append(o_attribute.id)
         lst_tags_id.append(all_id)

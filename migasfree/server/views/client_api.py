@@ -80,7 +80,8 @@ def api(request):
         "get_assist_devices",
         "install_device",
         "remove_device",
-        "set_computer_tags"
+        "set_computer_tags",
+        "get_computer_tags"
     )
 
     # COMPUTERS
