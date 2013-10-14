@@ -127,10 +127,13 @@ class Computer(models.Model):
     update_link.short_description = _("Last update")
 
     def hw_link(self):
-        return '<a href="%s">%s</a>' % (
-            reverse('hardware_resume', args=(self.id, )),
-            self.hwnode_set.get(computer=self.id, parent=None).product
-        )
+        try:
+            return '<a href="%s">%s</a>' % (
+                reverse('hardware_resume', args=(self.id, )),
+                self.hwnode_set.get(computer=self.id, parent=None).product
+            )
+        except:
+            return None
 
     hw_link.allow_tags = True
     hw_link.short_description = _("Hardware")
