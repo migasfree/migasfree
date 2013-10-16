@@ -272,3 +272,11 @@ def get_client_ip(request):
         ip = x_forwarded_for.split(',')[0]
 
     return ip
+
+def uuid_validate(uuid):
+    if len(uuid)==32:
+        return "%s-%s-%s-%s-%s" %(uuid[0:8],uuid[8:12],uuid[12:16],uuid[16:20],uuid[20:32])
+    else:
+        return uuid
+
+

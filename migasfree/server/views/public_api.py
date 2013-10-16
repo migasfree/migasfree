@@ -18,6 +18,7 @@ from migasfree.server.models import (
     Attribute
 )
 
+from migasfree.server.functions import uuid_validate
 
 def get_versions(request):
     result = []
@@ -36,7 +37,7 @@ def get_versions(request):
 
 
 def get_computer_info(request):
-    computer = get_object_or_404(Computer, uuid=request.GET.get('uuid', ''))
+    computer = get_object_or_404(Computer, uuid=uuid_validate(request.GET.get('uuid', '')))
 
     result = {
         'id': computer.id,

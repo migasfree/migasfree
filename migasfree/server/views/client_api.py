@@ -13,7 +13,10 @@ from migasfree.server.models import Error
 from migasfree.server.api import *
 from migasfree.server.errmfs import *
 from migasfree.server.security import *
-from migasfree.server.functions import get_client_ip
+from migasfree.server.functions import (
+    get_client_ip, 
+    uuid_validate
+    )
 
 
 def api(request):
@@ -31,7 +34,7 @@ def api(request):
         uuid = name
     else:  # WITH UUID
         name = ".".join(lst_msg[:-2])
-        uuid = lst_msg[-2]
+        uuid = uuid_validate(lst_msg[-2])
         command = lst_msg[-1]
 
     o_computer = get_computer(name, uuid)
