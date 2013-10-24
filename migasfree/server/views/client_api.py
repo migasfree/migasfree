@@ -35,6 +35,8 @@ def api(request):
     else:  # WITH UUID
         name = ".".join(lst_msg[:-2])
         uuid = uuid_validate(lst_msg[-2])
+        if uuid == "":
+            uuid = name
         command = lst_msg[-1]
 
     o_computer = get_computer(name, uuid)

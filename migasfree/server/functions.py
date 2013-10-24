@@ -11,7 +11,7 @@ import django
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.settings import DATABASES, MIGASFREE_PROJECT_DIR, \
-    MIGASFREE_REPO_DIR
+    MIGASFREE_REPO_DIR, MIGASFREE_INVALID_UUID
 
 
 def is_db_sqlite():
@@ -274,8 +274,12 @@ def get_client_ip(request):
     return ip
 
 def uuid_validate(uuid):
+
     if len(uuid)==32:
-        return "%s-%s-%s-%s-%s" %(uuid[0:8],uuid[8:12],uuid[12:16],uuid[16:20],uuid[20:32])
+        uuid = "%s-%s-%s-%s-%s" %(uuid[0:8],uuid[8:12],uuid[12:16],uuid[16:20],uuid[20:32])
+
+    if uuid in MIGASFREE_INVALID_UUID:
+        return ""
     else:
         return uuid
 
