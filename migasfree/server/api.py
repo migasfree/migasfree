@@ -15,6 +15,10 @@ from migasfree.settings import (
     MIGASFREE_REPO_DIR,
     MIGASFREE_AUTOREGISTER,
     MIGASFREE_HW_PERIOD,
+    MIGASFREE_NOTIFY_NEW_COMPUTER,
+    MIGASFREE_NOTIFY_CHANGE_UUID,
+    MIGASFREE_NOTIFY_CHANGE_NAME,
+    MIGASFREE_NOTIFY_CHANGE_IP
 )
 
 from migasfree.server.models import *
@@ -1088,9 +1092,14 @@ def check_computer(o_computer, name, version, ip, uuid):
         o_computer.save()
         add_migration(o_computer, o_version)
 
+        if MIGASFREE_NOTIFY_NEW_COMPUTER:
+            create_notification( "New Computer added id=[%s]: NAME=[%s] UUID=[%s]" % (o_computer.id, o_computer.__unicode__(), o_computer.uuid ))
+
     # Check Migration
     if o_computer.version != o_version:
         add_migration(o_computer, o_version)
+
+    notify_change_data_computer(o_computer,name,o_version,ip,uuid)
 
     o_computer.name = name
     o_computer.version = o_version
@@ -1098,6 +1107,23 @@ def check_computer(o_computer, name, version, ip, uuid):
     o_computer.uuid = uuid
     o_computer.save()
     return o_computer
+
+
+def notify_change_data_computer(o_computer,name,o_version,ip,uuid):
+    if MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name <> name):
+        create_notification( "Computer id=[%s]: NAME [%s] changed by [%s]" % (o_computer.id, o_computer.__unicode__(), name))
+
+    if MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip <> ip):
+        create_notification( "Computer id=[%s]: IP [%s] changed by [%s]" % (o_computer.id, o_computer.ip, ip))
+
+    if MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid <> uuid):
+        create_notification( "Computer id=[%s]: UUID [%s] changed by [%s]" % (o_computer.id, o_computer.uuid, uuid))
+
+def create_notification(text):
+    o_notification = Notification()
+    o_notification.notification = text
+    o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    o_notification.save()
 
 
 def create_repositories_package(packagename, versionname):
