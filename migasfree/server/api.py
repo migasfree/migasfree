@@ -1114,7 +1114,8 @@ def notify_change_data_computer(o_computer,name,o_version,ip,uuid):
         create_notification( "Computer id=[%s]: NAME [%s] changed by [%s]" % (o_computer.id, o_computer.__unicode__(), name))
 
     if MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip <> ip):
-        create_notification( "Computer id=[%s]: IP [%s] changed by [%s]" % (o_computer.id, o_computer.ip, ip))
+        if (o_computer.ip and ip):
+            create_notification( "Computer id=[%s]: IP [%s] changed by [%s]" % (o_computer.id, o_computer.ip, ip))
 
     if MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid <> uuid):
         create_notification( "Computer id=[%s]: UUID [%s] changed by [%s]" % (o_computer.id, o_computer.uuid, uuid))
