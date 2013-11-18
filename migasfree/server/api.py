@@ -1142,7 +1142,7 @@ def create_repositories_of_packageset(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     try:
-        create_repositories_package(data['packageset'], data['version'])
+        create_repositories_package(os.path.basename(data['packageset']), data['version'])
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
