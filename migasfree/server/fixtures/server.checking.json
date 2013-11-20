@@ -70,7 +70,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Fault\nresult = Fault.objects.filter(checked__exact=0).count()\nurl = '/admin/server/fault/?checked__exact=0'\nicon = 'fault.png'\nmsg = 'Faults to check'\ntarget = 'computer'\n",
+            "code": "from migasfree.server.models import Fault\nfrom migasfree.middleware import threadlocals\nfrom django.db.models import Q\nresult = Fault.objects.filter(checked__exact=0).filter(Q(faultdef__users__id__in=[threadlocals.get_current_user().id,]) | Q(faultdef__users=None) ).count()\nurl = '/admin/server/fault/?checked__exact=0&user=me''\nicon = 'fault.png'\nmsg = 'Faults to check'\ntarget = 'computer'\n",
             "name": "Faults to check",
             "alert": true,
             "description": "Faults not marked as checked. You must mark the fault as checked when the fault is solutioned"
@@ -81,7 +81,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Error\nresult = Error.objects.filter(checked__exact=0).count()\nurl = '/admin/server/error/?checked__exact=0'\nicon = 'error.png'\nmsg = 'Errors to check'\ntarget = 'computer'\n",
+            "code": "from migasfree.server.models import Error\nresult = Error.objects.filter(checked__exact=0).count()\nurl = '/admin/server/error/?checked__exact=0&user=me'\nicon = 'error.png'\nmsg = 'Errors to check'\ntarget = 'computer'\n",
             "name": "Errors to check",
             "alert": true,
             "description": "Errors not marked as checked. You must mark the error as checked when the error is solutioned."

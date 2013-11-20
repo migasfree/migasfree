@@ -63,3 +63,6 @@ class Fault(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
+
+    def list_users(self):
+        return self.faultdef.list_users()

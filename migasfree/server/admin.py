@@ -3,13 +3,17 @@
 """
 Admin Models
 """
-
+from migasfree.middleware import threadlocals
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.admin import SimpleListFilter
 from django.shortcuts import redirect
 from django import forms
 from django.db import models
+from django.db.models import Q
 from django.core.urlresolvers import reverse
+from django.utils.translation import ugettext_lazy as _
+
 
 from migasfree.server.functions import trans
 from migasfree.server.models import *
@@ -19,6 +23,7 @@ from migasfree.settings import (
     STATIC_URL,
     MIGASFREE_COMPUTER_SEARCH_FIELDS
 )
+
 
 #AJAX_SELECT
 from ajax_select import make_ajax_form
@@ -284,8 +289,7 @@ class NotificationAdmin(admin.ModelAdmin):
             noti.checked = True
             noti.save()
 
-        return redirect("%s?checked__exact=0"
-            % reverse('admin:server_notification_changelist'))
+        return redirect(request.get_full_path())
 
     checked_ok.short_description = trans("Checking is O.K.")
 
@@ -313,13 +317,35 @@ class ErrorAdmin(admin.ModelAdmin):
             error.checked = True
             error.save()
 
-        return redirect("%s?checked__exact=0"
-            % reverse('admin:server_error_changelist'))
+        return redirect(request.get_full_path())
 
     checked_ok.short_description = trans("Checking is O.K.")
 
 admin.site.register(Error, ErrorAdmin)
 
+
+class UserFaultFilter(SimpleListFilter):
+    title = _('User')
+    parameter_name = 'user'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('me', _('To check for me')),
+            ('only_me', _('Assigned to me')),
+            ('others', _('Assigned to others')),
+            ('no_assign', _('Not assigned')),
+        )
+
+    def queryset(self, request, queryset):
+        lst = [threadlocals.get_current_user().id]
+        if self.value() == 'me':
+            return queryset.filter(Q(faultdef__users__id__in=lst) | Q(faultdef__users=None))
+        elif self.value() == 'only_me':
+            return queryset.filter(Q(faultdef__users__id__in=lst))
+        elif self.value() == 'others':
+            return queryset.exclude(faultdef__users__id__in=lst).exclude(faultdef__users=None)
+        elif self.value() == 'no_assign':
+            return queryset.filter(Q(faultdef__users=None))
 
 class FaultAdmin(admin.ModelAdmin):
     formfield_overrides = migasfree_widgets
@@ -331,8 +357,9 @@ class FaultAdmin(admin.ModelAdmin):
         'date',
         'text',
         'faultdef',
+        'list_users'
     )
-    list_filter = ('checked', 'date', 'version', 'faultdef',)
+    list_filter = (UserFaultFilter, 'checked', 'date', 'version', 'faultdef')
     ordering = ('date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'faultdef__name'])
 
@@ -343,8 +370,7 @@ class FaultAdmin(admin.ModelAdmin):
             fault.checked = True
             fault.save()
 
-        return redirect("%s?checked__exact=0"
-            % reverse('admin:server_fault_changelist'))
+        return redirect(request.get_full_path())
 
     checked_ok.short_description = trans("Checking is O.K.")
 
@@ -354,7 +380,7 @@ admin.site.register(Fault, FaultAdmin)
 class FaultDefAdmin(admin.ModelAdmin):
     formfield_overrides = migasfree_widgets
     form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
-    list_display = ('name', 'active', 'list_attributes',)
+    list_display = ('name', 'active', 'list_attributes', 'list_users')
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'function',)
@@ -368,6 +394,11 @@ class FaultDefAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
             'fields': ('attributes',)
         }),
+        ('Users', {
+            'classes': ('collapse',),
+            'fields': ('users',)
+        }),
+
     )
 
 admin.site.register(FaultDef, FaultDefAdmin)

@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models.common import link, LANGUAGES_CHOICES
 from migasfree.server.models import Attribute
+from migasfree.server.models.version_manager import UserProfile
 
 
 class FaultDef(models.Model):
@@ -44,6 +45,13 @@ class FaultDef(models.Model):
         verbose_name=_("attributes")
     )
 
+    users = models.ManyToManyField(
+        UserProfile,
+        null=True,
+        blank=True,
+        verbose_name=_("users")
+    )
+
     def list_attributes(self):
         cattributes = ""
         for i in self.attributes.all():
@@ -52,6 +60,15 @@ class FaultDef(models.Model):
         return cattributes[0:len(cattributes) - 1]
 
     list_attributes.short_description = _("attributes")
+
+    def list_users(self):
+        cusers = ""
+        for i in self.users.all():
+            cusers += i.username + ","
+
+        return cusers[0:len(cusers) - 1]
+
+    list_users.short_description = _("users")
 
     def save(self, *args, **kwargs):
         self.code = self.code.replace("\r\n", "\n")
