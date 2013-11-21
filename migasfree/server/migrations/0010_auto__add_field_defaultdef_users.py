@@ -1,26 +1,26 @@
-# -*- coding: utf-8 -*-
-from south.utils import datetime_utils as datetime
+# encoding: utf-8
+import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
-
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        
         # Adding M2M table for field users on 'FaultDef'
-        m2m_table_name = db.shorten_name('server_faultdef_users')
-        db.create_table(m2m_table_name, (
+        db.create_table('server_faultdef_users', (
             ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
             ('faultdef', models.ForeignKey(orm['server.faultdef'], null=False)),
             ('userprofile', models.ForeignKey(orm['server.userprofile'], null=False))
         ))
-        db.create_unique(m2m_table_name, ['faultdef_id', 'userprofile_id'])
+        db.create_unique('server_faultdef_users', ['faultdef_id', 'userprofile_id'])
 
 
     def backwards(self, orm):
+        
         # Removing M2M table for field users on 'FaultDef'
-        db.delete_table(db.shorten_name('server_faultdef_users'))
+        db.delete_table('server_faultdef_users')
 
 
     models = {
@@ -39,7 +39,7 @@ class Migration(SchemaMigration):
         },
         'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 11, 21, 8, 58, 48, 830934)'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Group']", 'symmetrical': 'False', 'blank': 'True'}),
@@ -47,7 +47,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2013, 11, 21, 8, 58, 48, 830805)'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
