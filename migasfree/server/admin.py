@@ -374,6 +374,8 @@ class ErrorAdmin(admin.ModelAdmin):
     list_filter = ('checked', 'date', "version")
     ordering = ('date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'error'])
+    readonly_fields = ('computer_link','version','date','error')
+    exclude = ('computer',)
 
     actions = ['checked_ok']
 
@@ -427,6 +429,8 @@ class FaultAdmin(admin.ModelAdmin):
     list_filter = (UserFaultFilter, 'checked', 'date', 'version', 'faultdef')
     ordering = ('date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'faultdef__name'])
+    readonly_fields = ('computer_link','faultdef','version','date','text')
+    exclude = ('computer',)
 
     actions = ['checked_ok']
 
