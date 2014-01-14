@@ -41,14 +41,6 @@ class Pms(models.Model):
         help_text=_("Code bash. Define how create the metadata of repositories in the migasfree server.")
     )
 
-    #TODO REMOVE THIS FIELD repository (TO CLIENT)
-    repository = models.TextField(
-        _("repository definition"),
-        null=True,
-        blank=True,
-        help_text=_("Define the content of source list file of repositories for the client.")
-    )
-
     info = models.TextField(
         _("package information"),
         null=True,
