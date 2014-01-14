@@ -20,13 +20,16 @@ from migasfree.server.models.attribute import Attribute
 from migasfree.server.models.device_type import DeviceType
 from migasfree.server.models.device_manufacturer import DeviceManufacturer
 from migasfree.server.models.device_connection import DeviceConnection
-from migasfree.server.models.device_file import DeviceFile
 from migasfree.server.models.device_model import DeviceModel
+from migasfree.server.models.device_feature import DeviceFeature
+from migasfree.server.models.device_driver import DeviceDriver
 from migasfree.server.models.device import Device
+from migasfree.server.models.device_logical import DeviceLogical
+
 
 from migasfree.server.models.message_server import MessageServer
-
 from migasfree.server.models.computer import Computer
+
 from migasfree.server.models.login import Login
 from migasfree.server.models.update import Update
 from migasfree.server.models.hw_node import HwNode

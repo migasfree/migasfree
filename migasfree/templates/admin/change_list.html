@@ -45,7 +45,7 @@
         </script>
     {% endif %}
 
-    {% if cl.opts.module_name = 'devicefile' or cl.opts.module_name = 'devicemodel' or cl.opts.module_name = 'devicemanufacturer' or cl.opts.module_name = 'deviceconnection' or cl.opts.module_name = 'devicetype' %}
+    {% if cl.opts.module_name = 'devicefeature' or cl.opts.module_name = 'devicedriver' or cl.opts.module_name = 'devicemodel' or cl.opts.module_name = 'devicemanufacturer' or cl.opts.module_name = 'deviceconnection' or cl.opts.module_name = 'devicetype' %}
         <script type="text/javascript">
             var active_accordion = 3;
         </script>
@@ -68,11 +68,11 @@
 {% block coltype %}flex{% endblock %}
 
 {% block menu %}
-    {% if cl.opts.module_name = 'computer' or cl.opts.module_name = 'user' or cl.opts.module_name = 'login' or cl.opts.module_name = 'error' or cl.opts.module_name = 'fault' or cl.opts.module_name = 'device' or cl.opts.module_name = 'attribute' or cl.opts.module_name = 'migration' or cl.opts.module_name = 'notification' %}
+    {% if cl.opts.module_name = 'computer' or cl.opts.module_name = 'user' or cl.opts.module_name = 'login' or cl.opts.module_name = 'error' or cl.opts.module_name = 'fault' or cl.opts.module_name = 'device' or cl.opts.module_name = 'devicelogical' or cl.opts.module_name = 'attribute' or cl.opts.module_name = 'migration' or cl.opts.module_name = 'notification' %}
         {% include 'server/includes/mining_menu.html' %}
     {% endif %}
 
-    {% if cl.opts.module_name = 'property' or cl.opts.module_name = 'version' or cl.opts.module_name = 'pms' or cl.opts.module_name = 'platform' or cl.opts.module_name = 'query' or cl.opts.module_name = 'userprofile' or cl.opts.module_name = 'group' or cl.opts.module_name = 'checking' or cl.opts.module_name = 'faultdef' or cl.opts.module_name = 'autocheckerror' or cl.opts.module_name = 'devicefile' or cl.opts.module_name = 'devicemodel' or cl.opts.module_name = 'devicemanufacturer' or cl.opts.module_name = 'deviceconnection' or cl.opts.module_name = 'devicetype' %}
+    {% if cl.opts.module_name = 'property' or cl.opts.module_name = 'version' or cl.opts.module_name = 'pms' or cl.opts.module_name = 'platform' or cl.opts.module_name = 'query' or cl.opts.module_name = 'userprofile' or cl.opts.module_name = 'group' or cl.opts.module_name = 'checking' or cl.opts.module_name = 'faultdef' or cl.opts.module_name = 'autocheckerror' or cl.opts.module_name = 'devicefeature' or cl.opts.module_name = 'devicedriver' or cl.opts.module_name = 'devicemodel' or cl.opts.module_name = 'devicemanufacturer' or cl.opts.module_name = 'deviceconnection' or cl.opts.module_name = 'devicetype' %}
         {% include 'server/includes/config_menu.html' %}
     {% endif %}
 

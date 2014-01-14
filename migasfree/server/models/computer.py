@@ -6,7 +6,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.template import Context, Template
 
-from migasfree.server.models import Version, Device, Attribute
+from migasfree.server.models import Version, DeviceLogical, Attribute
+
+from migasfree.server.functions import s2l, l2s
 from migasfree.settings import MIGASFREE_COMPUTER_SEARCH_FIELDS
 from migasfree.settings import MIGASFREE_REMOTE_ADMIN_LINK
 
@@ -60,23 +62,17 @@ class Computer(models.Model):
         blank=True
     )
 
-    devices = models.ManyToManyField(
-        Device,
+    devices_logical = models.ManyToManyField(
+        DeviceLogical,
         null=True,
         blank=True,
-        verbose_name=_("devices")
+        verbose_name=_("devices"),
     )
 
     devices_copy = models.TextField(
         _("devices copy"),
         null=True,
         blank=False,
-        editable=False
-    )
-
-    devices_modified = models.BooleanField(
-        _("devices modified"),
-        default=False,
         editable=False
     )
 
@@ -97,6 +93,24 @@ class Computer(models.Model):
         blank=True,
         verbose_name=_("tags")
     )
+
+    def remove_device_copy(self, devicelogical_id):
+        try:
+            lst = s2l(self.devices_copy)
+            lst.remove(devicelogical_id)
+            self.devices_copy = l2s(lst)
+            self.save()
+        except:
+            pass
+
+    def append_device_copy(self, devicelogical_id):
+        try:
+            lst = s2l(self.devices_copy)
+            lst.append(devicelogical_id)
+            self.devices_copy = l2s(lst)
+            self.save()
+        except:
+            pass
 
     def last_login(self):
         try:

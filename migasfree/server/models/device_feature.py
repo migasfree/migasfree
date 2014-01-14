@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 *-*
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from common import link
 
 
-class DeviceManufacturer(models.Model):
+class DeviceFeature(models.Model):
     name = models.CharField(
         _("name"),
         max_length=50,
@@ -20,10 +20,9 @@ class DeviceManufacturer(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Device (Manufacturer)")
-        verbose_name_plural = _("Device (Manufacturers)")
-        permissions = (("can_save_devicemanufacturer",
-            "Can save Device Manufacturer"),)
+        verbose_name = _("Device (Feature)")
+        verbose_name_plural = _("Device (Feature)")
+        permissions = (("can_save_devicefeature", "Can save Device Feature"),)
 
     def link(self):
         return link(self, self._meta.object_name)

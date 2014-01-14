@@ -548,9 +548,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         #DEVICES
         lst_dev_remove = []
         lst_dev_install = []
-        chk_devices = Mmcheck(o_computer.devices, o_computer.devices_copy)
-        if chk_devices.changed() is True \
-        or o_computer.devices_modified is True:
+        chk_devices = Mmcheck(o_computer.devices_logical, o_computer.devices_copy)
+        if chk_devices.changed() is True:
             #remove the devices
             lst_diff = list_difference(
                 s2l(o_computer.devices_copy),
@@ -558,17 +557,17 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             )
             for d in lst_diff:
                 try:
-                    device = Device.objects.get(id=d)
-                    lst_dev_remove.append(device.fullname())
+                    device = DeviceLogical.objects.get(id=d)
+                    lst_dev_remove.append(device.datadict(o_computer.version))
                 except:
                     pass
 
-            for device in o_computer.devices.all():
-                lst_dev_install.append(device.fullname())
+            for device in o_computer.devices_logical.all():
+                lst_dev_install.append(device.datadict(o_computer.version))
 
-            o_computer.devices_copy = chk_devices.mms()
-            o_computer.devices_modified = False
-            o_computer.save()
+#            o_computer.devices_copy = chk_devices.mms()
+#            o_computer.devices_modified = False
+#            o_computer.save()
 
         retdata = {}
         retdata["faultsdef"] = lst_faultsdef
@@ -629,144 +628,21 @@ def upload_computer_faults(request, name, uuid, o_computer, data):
     return ret
 
 
-#DEVICES
-def get_device(request, name, uuid, o_computer, data):
-    """
-    Returns DeviceModel data for lpadmin
-    """
-    cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    d = data[cmd]
-    try:
-        o_device = Device.objects.get(name=d["NUMBER"])
-        return return_message(cmd, o_device.data())
-    except:
-        return return_message(cmd, error(DEVICENOTFOUND))
-
-
-def get_assist_devices(request, name, uuid, o_computer, data):
+#DEVICES CHANGES
+def upload_devices_changes(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        types = {}
-        for dev_type in DeviceType.objects.all():
-            manufacters = {}
-            for dev_model_man in DeviceModel.objects.filter(
-                devicetype__id=dev_type.id
-            ).distinct():
-                models = {}
+        for devicelogical_id in data.get("installed", []):
+            o_computer.append_device_copy(devicelogical_id)
 
-                for dev_model in DeviceModel.objects.filter(
-                    manufacturer__id=dev_model_man.manufacturer.id
-                ):
-                    ports = {}
+        for devicelogical_id in data.get("removed", []):
+            o_computer.remove_device_copy(devicelogical_id)
 
-                    for dev_port in dev_model.connections.all():
-                        parameters = {}
-
-                        for token_type, token in jsontemplate._Tokenize(
-                            dev_port.uri,
-                            '{',
-                            '}'
-                        ):
-                            if token_type == 1:
-                                parameters[token] = {"default": ""}
-
-                        parameters["LOCATION"] = {"default": ""}
-                        parameters["INFORMATION"] = {"default": ""}
-                        parameters["ALIAS"] = {"default": ""}
-
-                        ports[dev_port.name] = {
-                            "type": "inputbox",
-                            "name": "PARAMETER",
-                            "value": parameters
-                        }
-                    models[dev_model.name] = {
-                        "type": "menu",
-                        "name": "PORT",
-                        "value": ports
-                    }
-                manufacters[dev_model_man.manufacturer.name] = {
-                    "type": "menu",
-                    "name": "MODEL",
-                    "value": models
-                }
-            types[dev_type.name] = {
-                "type": "menu",
-                "name": "MANUFACTURER",
-                "value": manufacters
-            }
-        ret = return_message(cmd, {
-            "type": "menu",
-            "name": "TYPE",
-            "value": types
-        })
+        ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
 
     return ret
-
-
-def remove_device(request, name, uuid, o_computer, data):
-    cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    d = data[cmd]
-    try:
-        o_device = Device.objects.get(name=d["NUMBER"])
-        try:
-            o_device.computer_set.remove(o_computer)
-            o_device.save()
-            list_computers = []
-            for c in o_device.computer_set.all():
-                list_computers.append(c.name)
-            return return_message(cmd, {
-                "NUMBER": o_device.name,
-                "COMPUTERS": list_computers
-            })
-        except:
-            return return_message(cmd, error(GENERIC))
-    except:  # if not exists device
-        return return_message(cmd, error(DEVICENOTFOUND))
-
-
-def install_device(request, name, uuid, o_computer, data):
-    cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    d = data[cmd]
-
-    try:
-        o_device = Device.objects.get(name=d["NUMBER"])
-    except:  # if not exists device
-        try:
-            o_device = Device()
-            o_device.name = d["NUMBER"]
-            o_device.alias = d["ALIAS"]
-            o_devicemodel = DeviceModel.objects.get(name=d["MODEL"])
-            o_device.model = o_devicemodel
-
-            o_devicetype = DeviceType.objects.get(name=d["TYPE"])
-            o_deviceconnection = DeviceConnection.objects.get(
-                name=d["PORT"],
-                devicetype=o_devicetype
-            )
-            o_device.connection = o_deviceconnection
-
-            #evaluate uri
-            o_device.uri = jsontemplate.expand(o_deviceconnection.uri, d)
-
-            o_device.location = d["LOCATION"]
-            o_device.information = d["INFORMATION"]
-            o_device.save()
-
-        except:
-            return return_message(cmd, error(GENERIC))
-
-    o_device.computer_set.add(o_computer)
-    o_device.save()
-    list_computers = []
-    for c in o_device.computer_set.all():
-        list_computers.append(c.name)
-
-    return return_message(cmd, {
-        "NUMBER": o_device.name,
-        "COMPUTERS": list_computers
-    })
 
 
 def register_computer(request, name, uuid, o_computer, data):
@@ -958,6 +834,7 @@ def upload_server_set(request, name, uuid, o_computer, data):
 
     return return_message(cmd, ok())
 
+
 def get_computer_tags(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     retdata = ok()
@@ -974,6 +851,7 @@ def get_computer_tags(request, name, uuid, o_computer, data):
                 (prp.prefix, tag.value))
 
     return return_message(cmd, retdata)
+
 
 def set_computer_tags(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -1099,7 +977,7 @@ def check_computer(o_computer, name, version, ip, uuid):
     if o_computer.version != o_version:
         add_migration(o_computer, o_version)
 
-    notify_change_data_computer(o_computer,name,o_version,ip,uuid)
+    notify_change_data_computer(o_computer, name, o_version, ip, uuid)
 
     o_computer.name = name
     o_computer.version = o_version
@@ -1109,16 +987,17 @@ def check_computer(o_computer, name, version, ip, uuid):
     return o_computer
 
 
-def notify_change_data_computer(o_computer,name,o_version,ip,uuid):
-    if MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name <> name):
+def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
+    if MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name != name):
         create_notification( "Computer id=[%s]: NAME [%s] changed by [%s]" % (o_computer.id, o_computer.__unicode__(), name))
 
-    if MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip <> ip):
+    if MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip != ip):
         if (o_computer.ip and ip):
             create_notification( "Computer id=[%s]: IP [%s] changed by [%s]" % (o_computer.id, o_computer.ip, ip))
 
-    if MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid <> uuid):
+    if MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid != uuid):
         create_notification( "Computer id=[%s]: UUID [%s] changed by [%s]" % (o_computer.id, o_computer.uuid, uuid))
+
 
 def create_notification(text):
     o_notification = Notification()

@@ -17,29 +17,11 @@ class DeviceConnection(models.Model):
 
     fields = models.CharField(
         _("fields"),
-        max_length=50,
+        max_length=100,
         null=True,
-        blank=True
-    )  # DEPRECATED
-
-    uri = models.CharField(
-        _("uri"),
-        max_length=50,
-        null=True,
-        blank=True
+        blank=True,
+        help_text=_("Fields separated by comma")
     )
-
-    install = models.TextField(
-        _("install"),
-        null=True,
-        blank=True,
-    )  # DEPRECATED
-
-    remove = models.TextField(
-        _("remove"),
-        null=True,
-        blank=True,
-    )  # DEPRECATED
 
     devicetype = models.ForeignKey(
         DeviceType,
@@ -49,17 +31,13 @@ class DeviceConnection(models.Model):
     def __unicode__(self):
         return u'(%s) %s' % (self.devicetype.name, self.name)
 
-    def save(self, *args, **kwargs):
-        self.install = self.install.replace("\r\n", "\n")
-        self.remove = self.remove.replace("\r\n", "\n")
-        super(DeviceConnection, self).save(*args, **kwargs)
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Device (Connection)")
         verbose_name_plural = _("Device (Connections)")
         unique_together = (("devicetype", "name"),)
-        permissions = (("can_save_deviceconnection", "Can save Device Connection"),)
+        permissions = (("can_save_deviceconnection",
+            "Can save Device Connection"),)
 
     def link(self):
         return link(self, self._meta.object_name)

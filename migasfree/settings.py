@@ -46,14 +46,14 @@ MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
 
 MIGASFREE_INVALID_UUID = [
     "03000200-0400-0500-0006-000700080008", # ASROCK
-    "00000000-0000-0000-0000-000000000000", 
+    "00000000-0000-0000-0000-000000000000",
     "00000000-0000-0000-0000-FFFFFFFFFFFF"
     ]
 
-# Notifications 
+# Notifications
 MIGASFREE_NOTIFY_NEW_COMPUTER = False
 MIGASFREE_NOTIFY_CHANGE_UUID = False
-MIGASFREE_NOTIFY_CHANGE_NAME = False 
+MIGASFREE_NOTIFY_CHANGE_NAME = False
 MIGASFREE_NOTIFY_CHANGE_IP = False
 
 DATABASES = {
@@ -239,6 +239,8 @@ AJAX_LOOKUP_CHANNELS = {
     'attribute': ('migasfree.server.lookups', 'AttributeLookup'),
     'package': ('migasfree.server.lookups', 'PackageLookup'),
     'tag': ('migasfree.server.lookups', 'TagLookup'),
+    'devicelogical': ('migasfree.server.lookups', 'DeviceLogicalLookup'),
+    'computer': ('migasfree.server.lookups', 'ComputerLookup'),
 }
 
 AJAX_SELECT_BOOTSTRAP = True

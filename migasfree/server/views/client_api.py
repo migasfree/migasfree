@@ -14,7 +14,7 @@ from migasfree.server.api import *
 from migasfree.server.errmfs import *
 from migasfree.server.security import *
 from migasfree.server.functions import (
-    get_client_ip, 
+    get_client_ip,
     uuid_validate
     )
 
@@ -81,10 +81,7 @@ def api(request):
         "upload_computer_software_history",
         "get_computer_software",
         "upload_computer_errors",
-        "get_device",
-        "get_assist_devices",
-        "install_device",
-        "remove_device",
+        "upload_devices_changes",
         "set_computer_tags",
         "get_computer_tags"
     )

@@ -165,6 +165,11 @@ def readfile(filename):
 
     return ret
 
+def l2s(lst):
+    """
+    list to string
+    """
+    return lst.__str__()
 
 def s2l(cad):
     """
@@ -284,3 +289,10 @@ def uuid_validate(uuid):
         return uuid
 
 
+def add_default_device_logical(device):
+    from migasfree.server.models import DeviceFeature, DeviceLogical
+    for feature in DeviceFeature.objects.all().filter(devicedriver__model=device.model).distinct():
+        logical = DeviceLogical()
+        logical.device = device
+        logical.feature = feature
+        logical.save()

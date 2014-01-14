@@ -653,3 +653,27 @@ body.stats div#result {
 .results_on_deck {
     font-size: 90%;
 }
+
+
+/** INLINE GROUP ***/
+.inline-group fieldset.module td.original p {
+  visibility: hidden;
+}
+
+.inline-group .tabular tr.has_original td {
+  padding-top: 0em;
+  vertical-align: top;
+}
+
+.inline-group fieldset.module input[type="checkbox"] {
+    position: relative;
+    left: 0em;
+    top: 0em;
+}
+
+.inline-group fieldset.module .add-another {
+  visibility: hidden;
+}
+
+
+

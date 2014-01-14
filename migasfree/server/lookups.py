@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.utils.html import escape
 
-from migasfree.server.models import Attribute, Package, Property
+from migasfree.server.models import Attribute, Package, Property, DeviceLogical, Computer
 from ajax_select import LookupChannel
 
 
@@ -82,3 +82,57 @@ class TagLookup(LookupChannel):
 
     def can_add(self, user, model):
         return False
+
+
+class DeviceLogicalLookup(LookupChannel):
+    model = DeviceLogical
+
+    def get_query(self, q, request):
+        return DeviceLogical.objects.filter(Q(device__name__icontains=q))
+
+    def get_result(self, obj):
+        return unicode(obj)
+
+    def format_match(self, obj):
+        return self.format_item_display(obj)
+
+    def format_item_display(self, obj):
+        return u"%s" % escape(obj.__str__())
+
+    def can_add(self, user, model):
+        return False
+
+class ComputerLookup(LookupChannel):
+    model = Computer
+
+    def get_query(self, q, request):
+        return Computer.objects.filter(Q(name__icontains=q)|Q(id=q))
+
+    def get_result(self, obj):
+        return unicode(obj)
+
+    def format_match(self, obj):
+        return self.format_item_display(obj)
+
+    def format_item_display(self, obj):
+        return u"%s" % escape(obj.__unicode__())
+
+    def can_add(self, user, model):
+        return False
+
+    def get_objects(self,ids):
+        """ Get the currently selected objects when editing an existing model """
+        # return in the same order as passed in here
+        # this will be however the related objects Manager returns them
+        # which is not guaranteed to be the same order they were in when you last edited
+        # see OrdredManyToMany.md
+        lst=[]
+        for id in ids:
+            if id.__class__.__name__ == "Computer":
+                lst.append(int(id.pk))
+            else:
+                lst.append(int(id))
+
+        things = self.model.objects.in_bulk(lst)
+
+        return [things[aid] for aid in lst if things.has_key(aid)]

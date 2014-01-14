@@ -92,9 +92,11 @@ urlpatterns = patterns('',
         name='computer_label'
     ),
 
-
-    (r'^device/(.*)', device),
-    # (r'^get_device/(.*)', get_device),
+    url(
+        r'^connections_model/$',
+        connections_model,
+        name='connections_model'
+    ),
 
     # backwards compatibility
     url(

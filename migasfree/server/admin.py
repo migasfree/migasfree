@@ -37,6 +37,7 @@ migasfree_widgets = {
 }
 
 admin.site.register(DeviceType)
+admin.site.register(DeviceFeature)
 admin.site.register(DeviceManufacturer)
 admin.site.register(DeviceConnection)
 admin.site.register(UserProfile)
@@ -63,12 +64,12 @@ def user_version(user):
     return version
 
 
-class WideTextarea(forms.Textarea):
+class ExtraThinTextarea(forms.Textarea):
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs', {})
-        attrs.setdefault('cols', 160)
-        attrs.setdefault('rows', 5)
-        super(WideTextarea, self).__init__(*args, **kwargs)
+        attrs.setdefault('cols', 20)
+        attrs.setdefault('rows', 1)
+        super(ExtraThinTextarea, self).__init__(*args, **kwargs)
 
 
 class VersionAdmin(admin.ModelAdmin):
@@ -107,47 +108,109 @@ class CheckingAdmin(admin.ModelAdmin):
 admin.site.register(Checking, CheckingAdmin)
 
 
-class DeviceFileAdmin(admin.ModelAdmin):
-#    list_display=('name', )
-    pass
+class DeviceDriverAdmin(admin.ModelAdmin):
+    formfield_overrides = migasfree_widgets
+    list_display = ('id', 'model', 'version', 'feature')
 
-admin.site.register(DeviceFile, DeviceFileAdmin)
+admin.site.register(DeviceDriver, DeviceDriverAdmin)
 
 
 class ComputerInline(admin.TabularInline):
-    model = Computer.devices.through
+    model = Computer.devices_logical.through
+    form = make_ajax_form(Computer, {'devices_logical': 'computer'})
+
+    class Media:
+        css = {"all": ("css/migasfree_chocolate.css",)}
+
+
+class DeviceLogicalForm(forms.ModelForm):
+    x = make_ajax_form(Computer, {'devices_logical': 'computer'})
+
+    computers = x.devices_logical
+    computers.label =_('Computers')
+
+    class Meta:
+        model = DeviceLogical
+
+    def __init__(self, *args, **kwargs):
+        super(DeviceLogicalForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            lst = []
+            for computer in self.instance.computer_set.all():
+                lst.append(computer.id)
+            self.fields['computers'].initial = lst
+
+    def save(self, commit=True):
+        instance=forms.ModelForm.save(self, False)
+        old_save_m2m = self.save_m2m
+        def save_m2m():
+            old_save_m2m()
+            instance.computer_set.clear()
+            for computer in self.cleaned_data['computers']:
+                instance.computer_set.add(computer)
+
+        self.save_m2m = save_m2m
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
+
+class DeviceLogicalAdmin(admin.ModelAdmin):
+    form = DeviceLogicalForm
+    fields = ("device", "feature", "computers")
+
+admin.site.register(DeviceLogical, DeviceLogicalAdmin)
+
+
+class DeviceLogicalInline(admin.TabularInline):
+    model = DeviceLogical
+
+    formfield_overrides = {models.TextField: {'widget': ExtraThinTextarea}}
+    fields = ('feature', )
+    ordering = ['feature', ]
+    extra = 0
+
+    class Media:
+        css = {"all": ("css/migasfree_chocolate.css",)}
 
 
 class DeviceAdmin(admin.ModelAdmin):
     formfield_overrides = migasfree_widgets
     list_display = (
         'name',
-        'alias',
-        'device_connection_type',
-        'device_manufacturer_name',
         'model',
-        'device_connection_name'
     )
     list_filter = ('model',)
     search_fields = (
         'name',
-        'alias',
         'model__name',
         'model__manufacturer__name'
     )
     fields = (
         'name',
-        'alias',
         'model',
         'connection',
-        'uri',
-        'location',
-        'information'
+        'data',
     )
-    formfield_overrides = {models.TextField: {'widget': WideTextarea}}
-    inlines = [ComputerInline, ]
+
+    inlines = [DeviceLogicalInline, ]
+
+    class Media:
+        js = ('js/device_admin.js',)
 
 admin.site.register(Device, DeviceAdmin)
+
+
+class DeviceDriverInline(admin.TabularInline):
+    model = DeviceDriver
+    formfield_overrides = {models.TextField: {'widget': ExtraThinTextarea}}
+    fields = ('version', 'feature', 'name', 'install')
+    ordering = ['version', 'feature']
+
+    class Media:
+        css = {"all": ("css/migasfree_chocolate.css",)}
+
+
 
 
 class DeviceModelAdmin(admin.ModelAdmin):
@@ -159,6 +222,8 @@ class DeviceModelAdmin(admin.ModelAdmin):
         'manufacturer__name',
         'connections__devicetype__name'
     )
+    inlines = [DeviceDriverInline, ]
+
 
 admin.site.register(DeviceModel, DeviceModelAdmin)
 
@@ -404,9 +469,10 @@ class FaultDefAdmin(admin.ModelAdmin):
 admin.site.register(FaultDef, FaultDefAdmin)
 
 
-class ComputerAdmin(admin.ModelAdmin):
+class ComputerAdmin(AjaxSelectAdmin):
     formfield_overrides = migasfree_widgets
     form = make_ajax_form(Computer, {
+        'devices_logical': 'devicelogical',
         'tags': 'tag',
     })
 
@@ -417,15 +483,31 @@ class ComputerAdmin(admin.ModelAdmin):
         'login_link',
         'datelastupdate',
         'hw_link',
-
     )
     ordering = ('name',)
     list_filter = ('version',)
     search_fields = MIGASFREE_COMPUTER_SEARCH_FIELDS
 
+    fieldsets = (
+        ('General', {
+            'fields': ('name', 'uuid', 'version', 'dateinput', 'datehardware', 'datelastupdate', 'ip')
+        }),
+        ('Software', {
+            'classes': ('collapse',),
+            'fields': ('software', 'history_sw',)
+        }),
+        ('Devices', {
+            'fields': ('devices_logical', )
+        }),
+        ('Tags', {
+            'fields': ('tags', )
+        }),
+
+    )
+
     def formfield_for_manytomany(self, db_field, request, **kwargs):
 
-        if db_field.name == "devices":
+        if db_field.name == "devices_logical":
             kwargs['widget'] = FilteredSelectMultiple(
                 db_field.verbose_name,
                 (db_field.name in self.filter_vertical)
@@ -442,7 +524,6 @@ admin.site.register(Computer, ComputerAdmin)
 
 
 class MessageAdmin(admin.ModelAdmin):
-    formfield_overrides = migasfree_widgets
     formfield_overrides = migasfree_widgets
     list_display = ('id', 'computer_link', 'date', 'text',)
     ordering = ('date',)
@@ -563,6 +644,9 @@ class ScheduleAdmin(admin.ModelAdmin):
     list_display = ('name', 'description',)
     inlines = [ScheduleDelayline, ]
     extra = 0
+
+    class Media:
+        css = {"all": ("css/migasfree_chocolate.css",)}
 
 admin.site.register(Schedule, ScheduleAdmin)
 
