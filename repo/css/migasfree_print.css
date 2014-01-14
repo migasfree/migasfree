@@ -5,6 +5,7 @@ nav.ui-widget,
 div#sliding-panel,
 ul.object-tools,
 div#toolbar,
+a.protocol,
 footer > p + p {
     display: none !important;
 }

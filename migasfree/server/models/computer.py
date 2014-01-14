@@ -171,8 +171,7 @@ class Computer(models.Model):
         verbose_name_plural = _("Computers")
         permissions = (("can_save_computer", "Can save Computer"),)
 
-    def link(self):  # to be used with FireSSH
-
+    def link(self):
         if MIGASFREE_REMOTE_ADMIN_LINK:
             _template = Template(MIGASFREE_REMOTE_ADMIN_LINK)
             _context = {"computer": self}
@@ -186,19 +185,24 @@ class Computer(models.Model):
                     pass
             _remote_admin = _template.render(Context(_context))
 
-            return '''<a href="%s" class="ssh" title="%s">&nbsp;</a>
-            <a href="%s">%s</a>''' % (
-                _remote_admin,
-                str(self.ip),  # _("Opens a SSH connection"),
+            ret = ""
+            for element in _remote_admin.split(" "):
+                protocol = element.split("://")[0]
+                ret += '<a href="%(href)s" class="protocol" title="%(protocol)s">%(protocol)s</a>' % {
+                    'href': element,
+                    'protocol': protocol
+                    }
+
+            ret += '<a href="%s">%s</a>' % (
                 reverse('admin:server_computer_change', args=(self.id, )),
                 self.__unicode__()
-            )
+                )
+            return ret
         else:
-
             return '''<a href="%s">%s</a>''' % (
                 reverse('admin:server_computer_change', args=(self.id, )),
                 self.__unicode__()
-            )
+                )
 
     link.allow_tags = True
     link.short_description = Meta.verbose_name
