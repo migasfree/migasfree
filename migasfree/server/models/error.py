@@ -34,6 +34,12 @@ class Error(models.Model):
         verbose_name=_("version")
     )
 
+    def truncate_error(self):
+        if len(self.error) <= 250:
+            return self.error
+        else:
+            return self.error[:250] + " ..."
+
     def auto_check(self):
         msg = self.error
         for ace in AutoCheckError.objects.all():

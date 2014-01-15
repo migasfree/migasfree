@@ -372,7 +372,7 @@ class ErrorAdmin(admin.ModelAdmin):
         'version',
         'checked',
         'date',
-        'error',
+        'truncate_error',
     )
     list_filter = ('checked', 'date', "version")
     ordering = ('date', 'computer',)
