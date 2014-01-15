@@ -85,6 +85,8 @@ class MigrationAdmin(admin.ModelAdmin):
     list_display = ('id', 'computer_link', 'version_link', 'date')
     list_filter = ('date', 'version__platform', )
     search_fields = add_computer_search_fields(['date'])
+    readonly_fields = ('computer_link', 'version', 'date')
+    exclude = ("computer",)
     actions = None
 
 admin.site.register(Migration, MigrationAdmin)
@@ -95,6 +97,8 @@ class UpdateAdmin(admin.ModelAdmin):
     list_display = ('id', 'computer_link', 'user', 'date', 'version')
     list_filter = ('date', )
     search_fields = add_computer_search_fields(['date', 'user__name'])
+    readonly_fields = ('computer_link', 'user', 'version', 'date')
+    exclude = ('computer',)
     actions = None
 
 admin.site.register(Update, UpdateAdmin)
@@ -298,13 +302,11 @@ class LoginAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {
-            'fields': ('date', 'user', 'computer',)
-        }),
-        ('Atributtes', {
-            'classes': ('collapse',),
-            'fields': ('attributes',)
+            'fields': ('date', 'user', 'computer_link', 'attributes')
         }),
     )
+    readonly_fields = ('date', 'user', 'computer_link', 'attributes')
+
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "attributes":
@@ -331,7 +333,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ('name', 'fullname',)
     ordering = ('name',)
     search_fields = ('name', 'fullname')
-
+    readonly_fields = ('name', 'fullname')
 admin.site.register(User, UserAdmin)
 
 
@@ -346,6 +348,7 @@ class NotificationAdmin(admin.ModelAdmin):
     list_filter = ('checked', 'date')
     ordering = ('date',)
     search_fields = ('date', 'notification',)
+    readonly_fields = ('date', 'notification',)
 
     actions = ['checked_ok']
 
@@ -492,9 +495,20 @@ class ComputerAdmin(AjaxSelectAdmin):
     list_filter = ('version',)
     search_fields = MIGASFREE_COMPUTER_SEARCH_FIELDS
 
+    readonly_fields = ('name',
+        'uuid',
+        'version',
+        'dateinput',
+        'datehardware',
+        'datelastupdate',
+        'ip',
+        'software',
+        'history_sw',
+        )
+
     fieldsets = (
         ('General', {
-            'fields': ('name', 'uuid', 'version', 'dateinput', 'datehardware', 'datelastupdate', 'ip')
+            'fields': ('uuid', 'version', 'dateinput', 'datehardware', 'datelastupdate', 'ip')
         }),
         ('Software', {
             'classes': ('collapse',),
@@ -533,6 +547,8 @@ class MessageAdmin(admin.ModelAdmin):
     ordering = ('date',)
     list_filter = ('date',)
     search_fields = ('computer', 'text', 'date',)
+    readonly_fields = ('computer_link', 'text', 'date')
+    exclude = ('computer',)
 
 admin.site.register(Message, MessageAdmin)
 
@@ -542,6 +558,7 @@ class MessageServerAdmin(admin.ModelAdmin):
     ordering = ('date',)
     list_filter = ('date',)
     search_fields = ('text', 'date',)
+    readonly_fields = ('text', 'date')
 
 admin.site.register(MessageServer, MessageServerAdmin)
 
