@@ -53,7 +53,6 @@ class Pms(models.Model):
 
     def save(self, *args, **kwargs):
         self.createrepo = self.createrepo.replace("\r\n", "\n")
-        self.repository = self.repository.replace("\r\n", "\n")
         self.info = self.info.replace("\r\n", "\n")
         super(Pms, self).save(*args, **kwargs)
 
