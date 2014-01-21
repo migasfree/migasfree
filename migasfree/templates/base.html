@@ -7,16 +7,16 @@
     <head>
         <meta charset="utf-8" />
 
-        <title>{% block title %}{{ title }}{% endblock title %} | migasfree with chocolate edition</title>
+        <title>{% block title %}{{ title }}{% endblock title %} | migasfree grape edition</title>
 
-        <meta name="generator" content="migasfree with chocolate edition" />
+        <meta name="generator" content="migasfree grape edition" />
 
         <link rel="shortcut icon" href="{{ STATIC_URL }}icons/favicon.png" />
 
         {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock blockbots %}
 
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/migasfree_chocolate.css" />
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/migasfree_print.css" media="print" />
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/migasfree_chocolate.css?20140124" />
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/migasfree_print.css?20140124" media="print" />
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}ajax-select/jquery-ui.css" />
 
         {% if LANGUAGE_BIDI %}
@@ -121,8 +121,8 @@
 
         {% block footer %}
             <footer>
-                <p>Copyright &copy; 2010-2013 <a href="http://www.migasfree.org">migasfree Team</a></p>
-                <p><a href="https://github.com/agacias/migasfree">Code project @ GitHub</a> under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3 license</a></p>
+                <p>Copyright &copy; 2010-{% now 'Y' %} <a href="http://www.migasfree.org">migasfree Team</a></p>
+                <p><a href="https://github.com/migasfree/migasfree">Code project @ GitHub</a> under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3 license</a></p>
                 {% block documentation %}
                     <p><a href="{% url 'django-admindocs-models-index' %}">{% trans 'Data Model Documentation' %}</a></p>
                 {% endblock documentation %}
