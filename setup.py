@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011-2013 Jose Antonio Chavarría
+# Copyright (c) 2011-2014 Jose Antonio Chavarría
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,10 +39,7 @@ if not hasattr(sys, 'version_info') or sys.version_info < (2, 6, 0, 'final'):
 
 import os
 README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
-
-#import migasfree
-#VERSION = migasfree.__version__
-VERSION = '3.1'  # migasfree chocolate edition ;)
+VERSION = open(os.path.join(PATH, 'VERSION')).read().splitlines()[0]
 
 #import glob
 #import subprocess
