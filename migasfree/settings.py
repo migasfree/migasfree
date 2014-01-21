@@ -19,6 +19,11 @@ STATICFILES_DIRS = (
     )),
 )
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+)
+
 MIGASFREE_AUTOREGISTER = True
 
 # TODO add 'login__attributes__value' (performance issues...)
@@ -48,7 +53,7 @@ MIGASFREE_INVALID_UUID = [
     "03000200-0400-0500-0006-000700080008", # ASROCK
     "00000000-0000-0000-0000-000000000000",
     "00000000-0000-0000-0000-FFFFFFFFFFFF"
-    ]
+]
 
 # Notifications
 MIGASFREE_NOTIFY_NEW_COMPUTER = False
@@ -181,6 +186,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize',
     'django.contrib.admindocs',
     'django.contrib.messages',
+    #'django.contrib.staticfiles',
     'migasfree.server',
     'ajax_select',
     'south',
@@ -225,7 +231,7 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.SHA1PasswordHasher',
     'django.contrib.auth.hashers.MD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
-    )
+)
 
 # DEFINE THE SEARCH CHANNELS:
 
