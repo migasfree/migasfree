@@ -22,13 +22,13 @@ header *, footer * {
     font-family: 'Strait', sans-serif;
 }
 header {
-    background: #292929;
+    background: #55325C; /*#292929;*/
     color: #fff;
     height: 54px;
 }
 header a {
     color: #F2660A;
-    background: #292929;
+    background: #55325C; /*#292929;*/
     font-weight: bold;
     text-decoration: none;
 }
@@ -85,7 +85,7 @@ header fieldset {
     height: 38px;
 }
 #secondary p {
-    background: #292929;
+    background: #55325C; /*#292929;*/
     color: #fff;
     margin: .5em 0;
     text-align: right;
@@ -301,7 +301,7 @@ footer {margin-top: -120px; height: 120px;}
     width: 15%;
 }
 #changelist-filter h2 {
-    background: #292929;
+    background: #55325C; /*#292929;*/
     color: #fff;
     border-bottom: 1px solid #DDDDDD;
     font-size: 100%;
@@ -345,7 +345,7 @@ table th, table td {
     padding: 2px 3px;
 }
 table thead th {
-    background: #292929;
+    background: #55325C; /*#292929;*/
     color: #fff;
     border-right: 1px solid #444;
     border-left: 1px solid #111;
@@ -580,7 +580,7 @@ body.store #liberation a,
 body.package #liberation a,
 body.package-info #liberation a {
     background: #fefefe;
-    color: #292929;
+    color: #55325C; /*#292929;*/
 }
 
 body.status a.status,
@@ -617,7 +617,7 @@ a.current {
     border-left: .4em solid #c4c4c4;
     border-right: .4em solid #c4c4c4;
     padding-left: .1em;
-    color: #292929;
+    color: #55325C; /*#292929;*/
 }
 
 /*****/
