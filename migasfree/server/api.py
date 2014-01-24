@@ -121,16 +121,16 @@ def save_login(o_computer, o_user):
     try:
         o_login = Login.objects.get(
             computer=o_computer,
-            user=o_user
         )
+        o_login.user = o_user
         o_login.date = login_date
         o_login.save()
     except:  # if Login not exists, we save it
         o_login = Login(
             computer=o_computer,
-            user=o_user
+            user=o_user,
+            date = login_date
         )
-        o_login.date = login_date
         o_login.save()
 
     return  o_login

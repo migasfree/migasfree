@@ -54,7 +54,7 @@ class Login(models.Model):
         app_label = 'server'
         verbose_name = _("Login")
         verbose_name_plural = _("Logins")
-        unique_together = (("computer", "user"),)
+        unique_together = (("computer",),)
         permissions = (("can_save_login", "Can save Login"),)
 
     def link(self):

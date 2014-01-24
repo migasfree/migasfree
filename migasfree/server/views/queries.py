@@ -177,12 +177,12 @@ def computer_messages(request):
             icon = 'message.png'
 
         try:
-            last = item.computer.last_login()
-            user = '%s-%s' % (last.user.name, last.user.fullname)
-            lastloginid = last.id
+            login = Login.objects.get(computer=item.computer)
+            user = '%s-%s' % (login.user.name, login.user.fullname)
+            loginid = login.id
         except:
             user = "None"
-            lastloginid = 0
+            loginid = 0
 
         result.append(
             [
@@ -190,7 +190,7 @@ def computer_messages(request):
                 "-",
                 item.computer.id,
                 item.computer.__unicode__(),
-                lastloginid,
+                loginid,
                 user,
                 item.computer.version.name,
                 item.computer.ip,

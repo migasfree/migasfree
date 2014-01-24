@@ -70,16 +70,6 @@
         }
     },
     {
-        "pk": 7,
-        "model": "server.query",
-        "fields": {
-            "code": "query = Login.objects.all()\r\nfields = ('computer.link()', 'computer.login_link()', 'computer.last_login().date', 'computer.last_login().user.link()')\r\ntitles = ('computer', 'last login','date', 'user')\r\n",
-            "name": "LAST LOGIN",
-            "parameters": "",
-            "description": "LIST OF LAST LOGIN FROM COMPUTERS"
-        }
-    },
-    {
         "pk": 6,
         "model": "server.query",
         "fields": {

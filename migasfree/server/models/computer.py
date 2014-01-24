@@ -112,14 +112,6 @@ class Computer(models.Model):
         except:
             pass
 
-    def last_login(self):
-        try:
-            return self.login_set.filter(
-                Q(computer__id=self.id)
-            ).order_by('-date')[0]
-        except:
-            return None
-
     def last_update(self):
         try:
             return self.update_set.filter(
