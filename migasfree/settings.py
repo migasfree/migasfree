@@ -8,12 +8,12 @@ import os
 import django
 import django.conf.global_settings as DEFAULT_SETTINGS
 
-if django.get_version() < '1.4':
-    print('Migasfree requires Django 1.4. Please, update it.')
+if django.get_version() < '1.4.5':
+    print('Migasfree requires Django 1.4.5. Please, update it.')
     exit(1)
 
 STATICFILES_DIRS = (
-    ("admin", os.path.join(
+    ('admin', os.path.join(
         os.path.dirname(os.path.abspath(django.__file__)),
         'contrib/admin/static/admin'
     )),
@@ -37,9 +37,11 @@ MIGASFREE_APP_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # MIGASFREE_REMOTE_ADMIN_LINK
 # Variables can be: {{computer.<FIELD>}} and {{<<PROPERTYPREFIX>>}}
-# SAMPLE:
-#     MIGASFREE_REMOTE_ADMIN_LINK = "https://myserver/?computer={{computer.name}}&port={{PRT}}"
+# Samples:
+#    MIGASFREE_REMOTE_ADMIN_LINK = "https://myserver/?computer={{computer.name}}&port={{PRT}}"
+#    MIGASFREE_REMOTE_ADMIN_LINK = "ssh://user@{{computer.ip}} vnc://{{computer.ip}}"
 MIGASFREE_REMOTE_ADMIN_LINK = ""
+
 
 # development environment
 TEMPLATE_DEBUG = DEBUG = True
@@ -162,9 +164,8 @@ ROOT_URLCONF = 'migasfree.urls'
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
-    "migasfree.server.context_processors.query_names",
-    "migasfree.server.context_processors.version_names",
-    "migasfree.server.context_processors.current_status",
+    'migasfree.server.context_processors.query_names',
+    'migasfree.server.context_processors.version_names',
 )
 
 TEMPLATE_DIRS = (
@@ -182,12 +183,13 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'migasfree.server',  # before admin apps to override
+    'migasfree.admin_bootstrapped',  # before django.contrib.admin to override
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.admindocs',
     'django.contrib.messages',
-    #'django.contrib.staticfiles',
-    'migasfree.server',
+    'django.contrib.staticfiles',
     'ajax_select',
     'south',
 )
@@ -249,7 +251,7 @@ AJAX_LOOKUP_CHANNELS = {
     'computer': ('migasfree.server.lookups', 'ComputerLookup'),
 }
 
-AJAX_SELECT_BOOTSTRAP = True
+AJAX_SELECT_BOOTSTRAP = False
 # True: [easiest]
 #   use the admin's jQuery if present else load from jquery's CDN
 #   use jqueryUI if present else load from jquery's CDN
@@ -257,7 +259,7 @@ AJAX_SELECT_BOOTSTRAP = True
 # False/None/Not set: [default]
 #   you should include jQuery, jqueryUI + theme in your template
 
-AJAX_SELECT_INLINES = 'inline'
+AJAX_SELECT_INLINES = False
 # 'inline': [easiest]
 #   includes the js and css inline
 #   this gets you up and running easily
