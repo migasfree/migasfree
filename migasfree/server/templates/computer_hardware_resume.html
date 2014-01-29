@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>{% trans 'Audit' %}</li>
+        <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
+        <li><a href="{% url 'admin:server_computer_change' computer.id %}">{{ computer.name }}</a></li>
+    </ol>
+{% endblock breadcrumbs %}
+
+{% block content %}
+    <ul class="hardware">
+    {% for row in query %}
+        {% if row.claimed = 1 %}
+            <li class="node" style="margin-left: {{ row.level }}em;">
+        {% else %}
+            <li class="node-unclaimed" style="margin-left: {{ row.level }}em;">
+        {% endif %}
+
+        {% if row.name %}
+            {% if row.icon %}
+                <img src="{{ STATIC_URL }}img/hw/{{ row.icon }}" alt="{{ row.icon }}" width="32" />
+            {% endif %}
+
+            <a href="{% url 'hardware' row.id %}">{{ row.name }}</a>
+        {% endif %}
+        </li>
+    {% endfor %}
+{% endblock content %}

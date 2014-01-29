@@ -1,0 +1,12 @@
+{% load i18n %}
+
+{% if form %}
+    <form action="." method="post" role="form">
+        <fieldset class="form-group input-group">
+            <legend>{% trans 'Parameters' %}</legend>
+            {{ form.as_p }}
+        </fieldset>
+
+        <p><input class="btn btn-primary" type="submit" value="{% trans 'Submit' %}" /></p>
+    </form>
+{% endif %}

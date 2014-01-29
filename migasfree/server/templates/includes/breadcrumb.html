@@ -1,0 +1,26 @@
+{% load i18n %}
+{% load url from future %}
+{% load admin_urls %}
+
+{% if opts or cl %}
+    <ul class="breadcrumb">
+        <!--li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li-->
+
+        {% if opts.object_name.lower = 'computer' or cl.opts.module_name = 'computer' or opts.object_name.lower = 'user' or cl.opts.module_name = 'user' or opts.object_name.lower = 'login' or cl.opts.module_name = 'login' or opts.object_name.lower = 'error' or cl.opts.module_name = 'error' or opts.object_name.lower = 'fault' or cl.opts.module_name = 'fault' or opts.object_name.lower = 'attribute' or cl.opts.module_name = 'attribute' or opts.object_name.lower = 'migration' or cl.opts.module_name = 'migration' or opts.object_name.lower = 'notification' or cl.opts.module_name = 'notification' %}
+            <li>{% trans 'Audit' %}</li>
+        {% endif %}
+
+        {% if opts.object_name.lower = 'property' or cl.opts.module_name = 'property' or opts.object_name.lower = 'version' or cl.opts.module_name = 'version' or opts.object_name.lower = 'pms' or cl.opts.module_name = 'pms' or opts.object_name.lower = 'platform' or cl.opts.module_name = 'platform' or opts.object_name.lower = 'query' or cl.opts.module_name = 'query' or opts.object_name.lower = 'userprofile' or cl.opts.module_name = 'userprofile' or opts.object_name.lower = 'group' or cl.opts.module_name = 'group' or opts.object_name.lower = 'checking' or cl.opts.module_name = 'checking' or opts.object_name.lower = 'faultdef' or cl.opts.module_name = 'faultdef' or opts.object_name.lower = 'autocheckerror' or cl.opts.module_name = 'autocheckerror' or opts.object_name.lower = 'device' or cl.opts.module_name = 'device' or opts.object_name.lower = 'devicelogical' or cl.opts.module_name = 'devicelogical' or opts.object_name.lower = 'devicefeature' or cl.opts.module_name = 'devicefeature' or opts.object_name.lower = 'devicedriver' or cl.opts.module_name = 'devicedriver' or opts.object_name.lower = 'devicemodel' or cl.opts.module_name = 'devicemodel' or opts.object_name.lower = 'devicemanufacturer' or cl.opts.module_name = 'devicemanufacturer' or opts.object_name.lower = 'deviceconnection' or cl.opts.module_name = 'deviceconnection' or opts.object_name.lower = 'devicetype' or cl.opts.module_name = 'devicetype' %}
+            <li>{% trans 'Settings' %}</li>
+        {% endif %}
+
+        {% if opts.object_name.lower = 'repository' or cl.opts.module_name = 'repository' or opts.object_name.lower = 'schedule' or cl.opts.module_name = 'schedule' or opts.object_name.lower = 'package' or cl.opts.module_name = 'package' or opts.object_name.lower = 'store' or cl.opts.module_name = 'store' %}
+            <li>{% trans 'Liberation' %}</li>
+        {% endif %}
+
+        {% if opts %}
+            <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
+            <li>{% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}</li>
+        {% endif %}
+    </ul>
+{% endif %}

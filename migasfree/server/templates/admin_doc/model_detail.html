@@ -1,0 +1,42 @@
+{% extends "base_full.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block breadcrumbs %}
+<ol class="breadcrumb">
+    <li><a href="{% url 'django-admindocs-docroot' %}">{% trans 'Documentation' %}</a></li>
+    <li><a href="{% url 'django-admindocs-models-index' %}">{% trans 'Models' %}</a></li>
+    <li>{{ name }}</li>
+</ol>
+{% endblock breadcrumbs %}
+
+{% block title %}{% trans 'Model:' %} {{ name }}{% endblock title %}
+
+{% block content %}
+    <h1>{{ summary }}</h1>
+
+    {% if description %}
+        <p>{% filter linebreaksbr %}{% trans description %}{% endfilter %}</p>
+    {% endif %}
+
+    <table class="table table-striped table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>{% trans 'Field' %}</th>
+                <th>{% trans 'Type' %}</th>
+                <th>{% trans 'Description' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for field in fields|dictsort:"name" %}
+            <tr>
+                <td>{{ field.name }}</td>
+                <td>{{ field.data_type }}</td>
+                <td>{{ field.verbose }}{% if field.help_text %} - {{ field.help_text|safe }}{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <p><a class="btn btn-primary" href="../"><span class="fa fa-backward"></span> {% trans 'Back to Data Model Documentation' %}</a></p>
+{% endblock content %}

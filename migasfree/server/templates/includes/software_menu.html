@@ -1,0 +1,21 @@
+{% load i18n %}
+{% load server_tags %}
+{% load url from future %}
+
+<ul class="dropdown-menu">
+    <li>
+        <a href="{% url 'admin:server_repository_changelist' %}?active__exact=1">{% trans 'Repositories' %}</a>
+    </li>
+    <li>
+        <a href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a>
+    </li>
+    <li>
+        <a href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a>
+    </li>
+    <li>
+        <a href="{% url 'admin:server_package_changelist' %}">{% trans 'Packages/Sets' %}</a>
+    </li>
+    <li>
+        <a href="{% url 'package_info' '' %}">{% trans 'Packages information' %}</a>
+    </li>
+</ul>

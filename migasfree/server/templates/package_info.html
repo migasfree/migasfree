@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Liberation' %}</li>
+    </ul>
+{% endblock %}
+
+{% block bodyclass %}package-info{% endblock %}
+
+{% block content %}
+    {% for column in filters %}
+        <pre>   {{ column }}</pre>
+    {% endfor %}
+
+    <pre>
+    {{ contentpage }}
+    </pre>
+{% endblock %}
