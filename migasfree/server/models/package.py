@@ -58,9 +58,8 @@ class Package(models.Model):
             self.version.name
         )
 
-        return '<a href="%s"><img src="%sicons/package-info.png" height="16px" alt="%s" /></a> <a href="%s">%s</a>' % (
+        return '<a href="%s" class="fa fa-archive" title="%s"></a> <a href="%s">%s</a>' % (
             info,
-            STATIC_URL,
             _("information"),
             reverse('admin:server_package_change', args=(self.id, )),
             self.__unicode__()
