@@ -45,9 +45,9 @@ def info(request, package):  # package info
 
         return render(
             request,
-            'server/package_info.html',
+            'package_info.html',
             {
-                "title": _("Information of Package"),
+                "title": _("Package Information"),
                 "contentpage": ret,
             }
         )
@@ -75,9 +75,9 @@ def info(request, package):  # package info
 
         return render(
             request,
-            'server/package_folder_info.html',
+            'package_folder_info.html',
             {
-                "title": _("Information of Package"),
+                "title": _("Package Information"),
                 "description": _("VERSION: %s") % version.name,
                 "filters": (package, ),
                 "query": vl_fields,
@@ -89,7 +89,7 @@ def info(request, package):  # package info
         'error.html',
         {
             'description': _('Error'),
-            'contentpage': _('No package info exists')
+            'contentpage': _('No package information exists')
         }
     )
 
@@ -103,7 +103,8 @@ def change_version(request):
         )
         user_profile.save()
 
-    return HttpResponseRedirect(request.META.get(
-        'HTTP_REFERER',
-        reverse('bootstrap')
-    ))
+    next_page = request.META.get('HTTP_REFERER', reverse('bootstrap'))
+    if next_page.find(reverse('admin:server_repository_changelist')) > 0:
+        next_page = reverse('admin:server_repository_changelist')
+
+    return HttpResponseRedirect(next_page)
