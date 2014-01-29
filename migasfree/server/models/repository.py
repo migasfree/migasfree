@@ -5,6 +5,7 @@ import datetime
 import shutil
 
 from django.db import models
+# from django.utils.html import format_html  # Django >= 1.5
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.functions import horizon
@@ -146,19 +147,48 @@ class Repository(models.Model):
             schedule__id=self.schedule.id
         ).order_by('delay')
 
-        ret = '<dl class="timeline">'
+        date_format = "%Y-%m-%d"
+        end_date = datetime.datetime.strptime(
+            str(horizon(self.date, delays.reverse()[0].delay)),
+            date_format
+        )
+        begin_date = datetime.datetime.strptime(
+            str(horizon(self.date, delays[0].delay)),
+            date_format
+        )
+
+        delta = end_date - begin_date
+        progress = datetime.datetime.now() - begin_date
+        number = float(progress.days) / delta.days * 100
+        if number > 100:
+            number = 100
+
+        ret = '<div class="progress" title="%(number)d%%"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%(number)d" aria-valuemin="0" aria-valuemax="100" style="width: %(number)d%%"><span class="sr-only">%(number)d%% complete</span></div></div>' % {
+            'number': number
+        }
+
+        ret += str(self.schedule) + ' <div class="btn-group btn-group-xs timeline">'
+        ret += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>'
+        ret += '<ul class="dropdown-menu">'
+
+        now = datetime.datetime.now().date()
         for item in delays:
-            ret += '<dt'
+            ret += '<li class="list-group-item">'
+            ret += '<p class="list-group-item-heading label label-'
             hori = horizon(self.date, item.delay)
-            if hori <= datetime.datetime.now().date():
-                ret += ' class="date-passed"'
-            ret += '>' + hori.strftime("%a-%b-%d") + '</dt><dd>'
+            if hori <= now:
+                ret += 'success'
+            else:
+                ret += 'default'
+            ret += '">' + hori.strftime("%a-%b-%d") + '</p>'
+            ret += '<p class="list-group-item-text">'
             for e in item.attributes.values_list("value"):
                 ret += e[0] + " "
 
-            ret += '</dd>'
+            ret += '</p></li>'
 
-        return ret + '</dl>'
+        return ret + '</ul></div>'
+        #return format_html(ret + '</ul></div>')
 
     timeline.allow_tags = True
     timeline.short_description = _('timeline')
