@@ -15,12 +15,13 @@ def hardware(request, param):
     qry = HwNode.objects.filter(Q(id=param) | Q(parent=param))
     if qry.count > 0:
         computer = qry[0].computer
+        product = qry[0].product
 
     return render(
         request,
-        'server/computer_hardware_extract.html',
+        'computer_hardware_extract.html',
         {
-            "title": computer.__unicode__(),
+            "title": product,
             "computer": computer,
             "description": _("Hardware Information"),
             "query": qry,
@@ -33,12 +34,13 @@ def hardware_resume(request, param):
     qry = HwNode.objects.filter(Q(computer__id=param)).order_by("id")
     if qry.count > 0:
         computer = qry[0].computer
+        product = qry[0].product
 
     return render(
         request,
-        'server/computer_hardware_resume.html',
+        'computer_hardware_resume.html',
         {
-            "title": computer.__unicode__(),
+            "title": product,
             "computer": computer,
             "description": _("Hardware Information"),
             "query": qry,
