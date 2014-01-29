@@ -2,6 +2,7 @@
 
 from django.conf.urls.defaults import patterns, url
 from django.views.generic import RedirectView
+from django.core.urlresolvers import reverse_lazy
 
 from migasfree.server.views import *
 
@@ -10,12 +11,13 @@ urlpatterns = patterns('',
 
     url(
         r'^$',
-        RedirectView.as_view(url='/status/'),
+        RedirectView.as_view(
+            url=reverse_lazy('admin:server_repository_changelist')
+        ),
         name='bootstrap'
     ),
 
-    url(r'^ajax_status/$', ajax_status, name='ajax_status'),
-    url(r'^status/$', status, name='dashboard'),
+    url(r'^alerts/$', alerts, name='alerts'),
     url(r'^query/(?P<query_id>\d+)/$', query, name='query'),
     url(
         r'^computer_messages/$',
@@ -101,11 +103,12 @@ urlpatterns = patterns('',
     # backwards compatibility
     url(
         r'^migasfree/$',
-        RedirectView.as_view(url='/status/'),
+        RedirectView.as_view(url=reverse_lazy('bootstrap')),
     ),
     url(
         r'^migasfree/main/$',
-        RedirectView.as_view(url='/status/'),
+        RedirectView.as_view(url=reverse_lazy('bootstrap')),
     ),
+    url(r'^status/$', RedirectView.as_view(url=reverse_lazy('bootstrap')),),
     url(r'^migasfree/api/$', api),  # for 2.x clients
 )
