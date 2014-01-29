@@ -14,8 +14,7 @@ from migasfree.server.views.repository import create_physical_repository
 from migasfree.server.views.client_api import api
 from migasfree.server.views.public_api import get_versions, get_computer_info, computer_label
 from migasfree.server.views.packages import change_version, info
-from migasfree.server.views.dashboard import status, ajax_status, \
-    get_current_status
+from migasfree.server.views.dashboard import alerts
 from migasfree.server.views.admin import connections_model
 
 from migasfree.server.views.login import login

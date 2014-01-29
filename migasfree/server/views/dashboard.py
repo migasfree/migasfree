@@ -18,7 +18,7 @@ def execute_active_checkings():
     If an error occurs, returns a dictionary with execution error information
     If no results, returns empty list
     """
-    status = []
+    alerts = []
     for check in Checking.objects.filter(active=True):
         try:
             exec(check.code.replace("\r", ""))
@@ -31,44 +31,32 @@ def execute_active_checkings():
 
         result = vars().get('result', 0)
         if result > 0:
-            status.append({
-                'icon': vars().get('icon', 'information.png'),
-                'url': vars().get('url', reverse('dashboard')),
-                'result': '%d %s' % (result, vars().get('msg', check.name))
+            alerts.append({
+                'badge': result,
+                'alert': vars().get('alert', 'info'),
+                'target': vars().get('target', 'computer'),
+                'url': vars().get('url', reverse('bootstrap')),
+                'msg': vars().get('msg', check.name),
             })
 
-    return status
-
-
-def get_current_status():
-    status = execute_active_checkings()
-    if type(status) is dict:
-        ret = _('Error')
-    elif len(status) == 0:
-        ret = _('All O.K.')
-    else:
-        ret = _('Warning')
-
-    return ret
+    return alerts
 
 
 @login_required
-def status(request):
+def alerts(request):
     """
     Status of checkings
     """
-    template = 'server/status.html'
-    if request.is_ajax():
-        template = 'server/includes/status.html'
+    template = 'includes/alerts.html'
 
-    status = execute_active_checkings()
-    if type(status) is dict and status.get('error').get('description'):
+    alerts = execute_active_checkings()
+    if type(alerts) is dict and alerts.get('error').get('description'):
         return render(
             request,
             'error.html',
             {
-                'description': status.get('error').get('description'),
-                'contentpage': status.get('error').get('contentpage')
+                'description': alerts.get('error').get('description'),
+                'contentpage': alerts.get('error').get('contentpage')
             }
         )
 
@@ -77,10 +65,7 @@ def status(request):
         template,
         {
             'title': _('Status'),
-            'status': status,
+            'alerts': alerts,
+            'badge': sum(row['badge'] for row in alerts),
         }
     )
-
-
-def ajax_status(request):
-    return HttpResponse(get_current_status(), content_type='text/plain')
