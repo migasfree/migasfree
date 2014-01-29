@@ -177,19 +177,20 @@ class Computer(models.Model):
                     pass
             _remote_admin = _template.render(Context(_context))
 
-            ret = ""
+            ret = '<ul class="dropdown-menu" role="menu">'
             for element in _remote_admin.split(" "):
                 protocol = element.split("://")[0]
-                ret += '<a href="%(href)s" class="protocol" title="%(protocol)s">%(protocol)s</a>' % {
+                ret += '<li><a href="%(href)s" class="fa fa-external-link"> %(protocol)s</a></li>' % {
                     'href': element,
                     'protocol': protocol
-                    }
+                }
+            ret += '</ul>'
 
-            ret += '<a href="%s">%s</a>' % (
+            computer = '<a href="%s" class="btn btn-default">%s</a><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>' % (
                 reverse('admin:server_computer_change', args=(self.id, )),
                 self.__unicode__()
-                )
-            return ret
+            )
+            return '<div class="btn-group btn-group-sm">' + computer + ret + '</div>'
         else:
             return '''<a href="%s">%s</a>''' % (
                 reverse('admin:server_computer_change', args=(self.id, )),
