@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="47.999992"
+   height="48"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="migasfree-logo.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/alberto/Documentos/Documentacion/proyectos/migas/logos/migas2_1280.png"
+   inkscape:export-xdpi="359.45001"
+   inkscape:export-ydpi="359.45001"
+   version="1.0">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="10.666667"
+     inkscape:cx="23.999996"
+     inkscape:cy="24"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1024"
+     inkscape:window-height="734"
+     inkscape:window-x="50"
+     inkscape:window-y="0"
+     showborder="true"
+     borderlayer="false"
+     inkscape:showpageshadow="false"
+     inkscape:window-maximized="0" />
+  <defs
+     id="defs4">
+    <inkscape:path-effect
+       effect="bend_path"
+       id="path-effect2627"
+       bendpath="m 317.018,342.352 233.842,0"
+       prop_scale="1" />
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Capa 1"
+     transform="translate(-409.93872,-324.46271)">
+    <g
+       id="g2385"
+       transform="matrix(0.1752836,0,0,0.1752836,357.87637,288.17239)">
+      <path
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="ccccc"
+         inkscape:original-d="M 360.5933,422.66649 C 377.6946,430.82417 559.99798,408.13104 550.5021,400.68522 C 550.75954,346.86518 478.03461,260.29296 478.03461,260.29296 C 380.78522,262.49077 321.91835,285.9214 321.91835,293.79306 C 315.77656,293.79306 309.83521,328.71705 360.75428,422.97185"
+         inkscape:path-effect="#path-effect2627"
+         inkscape:export-ydpi="28.218977"
+         inkscape:export-xdpi="28.218977"
+         inkscape:export-filename="/home/alberto/Documentos/Documentacion/proyectos/Proyectos/migas/logos/bueno/logo_64.png"
+         style="fill:none;stroke:#ff6600;stroke-width:40;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         d="M 359.841,422.667 C 377.01,430.824 560.034,408.131 550.5,400.685 C 550.759,346.865 477.747,260.293 477.747,260.293 C 380.113,262.491 321.013,285.922 321.013,293.793 C 314.847,293.793 308.883,328.717 360.003,422.972"
+         id="path7004" />
+      <path
+         transform="translate(239.75989,167.58713)"
+         id="path4849"
+         d="M 99,188.98618 C 99.333333,188.98618 99.666667,188.98618 99,188.98618 z"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3180"
+         d="M 422.52326,249.90699 C 416.12345,250.44205 409.52771,253.99796 404.90452,262.02437 C 400.7608,269.83453 400.06379,281.66683 401.79387,291.54529 C 403.93658,304.19999 410.15046,315.08199 417.75639,317.24433 C 424.89799,319.39288 432.29295,315.95059 438.4314,309.52533 C 443.06047,304.72697 447.4592,297.8124 448.85983,288.42705 C 450.67592,277.04175 447.31883,264.29662 441.60419,258.26597 C 436.167,252.28295 429.62087,250.16214 423.27184,249.875 C 423.02232,249.8857 422.77278,249.8963 422.52326,249.907 L 422.52326,249.90699 z"
+         style="fill:#feda00;fill-opacity:1;fill-rule:nonzero;stroke:#feda00;stroke-width:0.67614418;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:200;stroke-opacity:1" />
+      <path
+         transform="matrix(1.8413123,0,0,2.4506692,82.116143,70.135995)"
+         d="M 215,100.2803 A 9,6 0 1 1 197,100.2803 A 9,6 0 1 1 215,100.2803 z"
+         sodipodi:ry="6"
+         sodipodi:rx="9"
+         sodipodi:cy="100.2803"
+         sodipodi:cx="206"
+         id="path3190"
+         style="fill:#feda00;fill-opacity:1;fill-rule:nonzero;stroke:none"
+         sodipodi:type="arc" />
+    </g>
+  </g>
+</svg>

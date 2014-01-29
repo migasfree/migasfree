@@ -1,0 +1,18 @@
+nav.ui-widget,
+.object-tools,
+.breadcrumb,
+footer > p + p {
+    display: none !important;
+}
+
+article {
+    margin-left: 0;
+}
+
+div#changelist {
+    clear: both;
+}
+
+#wrapper {
+    min-height: 99% !important;
+}

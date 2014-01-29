@@ -1,0 +1,86 @@
+@font-face {
+    font-family: 'Average Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Average Sans'), local('AverageSans-Regular'), url('../bootstrap/fonts/AverageSans-Regular.ttf') format('truetype'), url('../bootstrap/fonts/average-sans.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'Strait';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Strait'), local('Strait-Regular'), url('../bootstrap/fonts/Strait-Regular.ttf') format('truetype'), url('../bootstrap/fonts/strait.woff') format('woff');
+}
+
+#wrapper {
+    margin-top: 5em;
+}
+
+article * {
+    font-family: 'Average Sans', sans-serif;
+}
+
+header *, footer * {
+    font-family: 'Strait', sans-serif;
+}
+
+header nav .navbar-user {
+    margin-right: 0 !important;
+}
+
+header a, footer a {
+    color: #854e91 !important;
+}
+
+footer {
+    clear: both;
+    margin: 1em auto;
+    border-top: 2px solid #E1E1E1;
+    font-size: 110%;
+}
+
+footer p {
+    margin: 0.7em 1em;
+}
+
+p#copyright {
+    background: url('../img/migasfree-logo.svg') left center no-repeat;
+    background-size: 2%;
+    padding-left: 26px;
+}
+
+form .form-group p {
+    max-height: 15em;
+    overflow: auto;
+}
+
+form.form-horizontal .alert-warning {
+    display: none;
+}
+
+.inline-related fieldset.module td.original p {
+  visibility: hidden;
+}
+
+table .ordinal {
+    text-align: right;
+}
+
+.timeline .list-group-item-text {
+    padding-left: 1em;
+    font-size: 85%;
+}
+
+/* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
+html, body {height: 92.5%;}
+#wrapper {
+    min-height: 92.5%;
+    margin-bottom: 50px;
+}
+#wrapper:after {
+    content: "";
+    display: block;
+}
+footer, #wrapper:after {
+    height: 50px;
+}
