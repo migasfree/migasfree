@@ -42,7 +42,7 @@ def get_computer_info(request):
     _name = request.GET.get('name', '')
     if _uuid == "":
         _uuid == _name
-    
+
 #    computer = get_object_or_404(Computer, uuid=_uuid)
     computer = get_computer( _name, _uuid)
 
@@ -75,6 +75,6 @@ def computer_label(request):
     """
     return render(
         request,
-        'server/computer_label.html',
+        'computer_label.html',
         json.loads(get_computer_info(request).content)
     )
