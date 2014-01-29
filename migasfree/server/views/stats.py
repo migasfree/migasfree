@@ -22,7 +22,7 @@ from migasfree.server.models import *
 def chart(request, chart_type):
     return render(
         request,
-        'server/chart.html',
+        'chart.html',
         {
             'title': chart_type,  # FIXME improve title
             'ofc': reverse('chart_%s' % chart_type)
