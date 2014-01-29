@@ -74,7 +74,7 @@ class CurrentOption(template.Node):
 
     def render(self, context):
         args, kwargs = get_args_and_kwargs(self.args, self.kwargs, context)
-        ret = ' current'
+        ret = ' active'
         matches = self.current_url_equals(context, args[0], **kwargs)
 
         return ret if matches else ''
