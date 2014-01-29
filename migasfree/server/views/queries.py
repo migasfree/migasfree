@@ -57,7 +57,7 @@ def execute_query(request, parameters, form_param):
 
         return render(
             request,
-            'server/query.html',
+            'query.html',
             {
                 "title": o_query.name,
                 "description": o_query.description,
@@ -92,6 +92,7 @@ def query(request, query_id):
                 id=request.user.id
             ).version.id
         }
+        dic_initial.update(parameters)
         if o_query.parameters == "":
             return execute_query(request, dic_initial, {})
         else:
@@ -144,10 +145,10 @@ def query(request, query_id):
 
             return render(
                 request,
-                'server/query.html',
+                'query.html',
                 {
                     'form': form_params()(initial=dic_initial),
-                    'title': _("Parameters for Query: %s") % o_query.name,
+                    'title': o_query.name,
                 }
             )
         except:
@@ -163,9 +164,9 @@ def query(request, query_id):
 
 @login_required
 def computer_messages(request):
-    template = 'server/computer_messages.html'
+    template = 'computer_messages.html'
     if request.is_ajax():
-        template = 'server/includes/computer_messages_result.html'
+        template = 'includes/computer_messages_result.html'
 
     t = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)
 
@@ -211,9 +212,9 @@ def computer_messages(request):
 
 @login_required
 def server_messages(request):
-    template = 'server/server_messages.html'
+    template = 'server_messages.html'
     if request.is_ajax():
-        template = 'server/includes/server_messages_result.html'
+        template = 'includes/server_messages_result.html'
 
     result = []
     for item in MessageServer.objects.all().order_by("-date"):
