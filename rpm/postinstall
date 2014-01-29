@@ -6,6 +6,9 @@ cd $(python -c "import migasfree;print migasfree.__path__[0]")
 python manage.py schemamigration server --auto || :
 python manage.py migrate server || :
 
+# link static files to public folder
+python manage.py collectstatic -link --noinput || :
+
 # restart apache graceful
 $(which apachectl) graceful || :
 
