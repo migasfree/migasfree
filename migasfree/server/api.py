@@ -45,8 +45,10 @@ def add_notification_platform(platform, o_computer):
 def add_notification_version(version, pms, o_computer):
     o_notification = Notification()
     o_notification.notification = \
-        "Version [%s] with P.M.S. [%s] registered by computer [%s]." \
-        % (version, pms, o_computer.__unicode__())
+        "Version [%s] with P.M.S. [%s] registered by computer [%s]." % (
+        version, pms,
+        o_computer.__unicode__()
+    )
     o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
     o_notification.save()
 
@@ -56,29 +58,46 @@ def get_computer(name, uuid):
     Returns a computer object (or None if not found)
     '''
     logger.debug('name: %s, uuid: %s' % (name, uuid))
-    o_computer = None
+    computer = None
 
-    if Computer.objects.filter(uuid=uuid):
-        o_computer = Computer.objects.get(uuid=uuid)
+    try:
+        computer = Computer.objects.get(uuid=uuid)
         logger.debug('computer found by uuid')
-    else:  # DEPRECATED This Block 'else'. Only for compatibilty with client <= 2
-        message = 'computer found by name. compatibility mode'
-        if len(uuid.split("-")) == 5:  # search for uuid (client >= 3)
-            if Computer.objects.filter(uuid=name):
-                o_computer = Computer.objects.get(uuid=name)
-                logger.debug(message)
-        else:
-            if Computer.objects.filter(name=name, uuid=name):  # search for name (client <= 2)
-                o_computer = Computer.objects.get(name=name, uuid=name)
-                logger.debug(message)
-            elif Computer.objects.filter(name=name).count() == 1:
-                o_computer = Computer.objects.get(name=name)
+
+        return computer
+    except Computer.DoesNotExist:
+        pass
+
+    # DEPRECATED This Block. Only for compatibilty with client <= 2
+    message = 'computer found by name. compatibility mode'
+    if len(uuid.split("-")) == 5: # search for uuid (client >= 3)
+        try:
+            computer = Computer.objects.get(uuid=name)
+            logger.debug(message)
+
+            return computer
+        except Computer.DoesNotExist:
+            pass
+    else:
+        try:
+            # search for name (client <= 2)
+            computer = Computer.objects.get(name=name, uuid=name)
+            logger.debug(message)
+
+            return computer
+        except Computer.DoesNotExist:
+            try:
+                computer = Computer.objects.get(name=name)
                 logger.debug(message)
 
-    if o_computer is None:
+                return computer
+            except Computer.DoesNotExist, Computer.MultipleObjectsReturned:
+                pass
+
+    if computer is None:
         logger.debug('computer not found!!!')
 
-    return o_computer
+    return computer
 
 
 def new_attribute(o_login, o_property, par):
@@ -371,6 +390,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     if not Platform.objects.filter(name=platform):
         if not MIGASFREE_AUTOREGISTER:
             return return_message(cmd, error(CANNOTREGISTER))
+
         # if all ok we add the platform
         o_platform = Platform()
         o_platform.name = platform
@@ -382,6 +402,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     if not Version.objects.filter(name=version):
         if not MIGASFREE_AUTOREGISTER:
             return return_message(cmd, error(CANNOTREGISTER))
+
         # if all ok we add the version
         o_version = Version()
         o_version.name = version
@@ -459,8 +480,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         for e in properties:
             o_property = Property.objects.get(prefix=e)
             value = properties.get(e)
-            try:
 
+            try:
                 # NORMAL
                 if o_property.kind == "N":
                     lst_attributes.append(
@@ -496,7 +517,6 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                         lst_attributes.append(
                             new_attribute(o_login, o_property, c[0:l - 1])
                         )
-
             except:
                 pass
 
@@ -548,7 +568,10 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         #DEVICES
         lst_dev_remove = []
         lst_dev_install = []
-        chk_devices = Mmcheck(o_computer.devices_logical, o_computer.devices_copy)
+        chk_devices = Mmcheck(
+            o_computer.devices_logical,
+            o_computer.devices_copy
+        )
         if chk_devices.changed() is True:
             #remove the devices
             lst_diff = list_difference(
@@ -665,6 +688,7 @@ def register_computer(request, name, uuid, o_computer, data):
         if not MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_platform"):
                 return return_message(cmd, error(CANNOTREGISTER))
+
         # if all ok we add the platform
         o_platform = Platform()
         o_platform.name = platform
@@ -677,6 +701,7 @@ def register_computer(request, name, uuid, o_computer, data):
         if not MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_version"):
                 return return_message(cmd, error(CANNOTREGISTER))
+
         # if all ok we add the version
         o_version = Version()
         o_version.name = version
@@ -689,7 +714,7 @@ def register_computer(request, name, uuid, o_computer, data):
 
     # REGISTER COMPUTER
     # Check Version
-    if Version.objects.filter(name=data['version']):
+    try:
         o_version = Version.objects.get(name=data['version'])
         # if not autoregister, check that the user can save computer
         if not o_version.autoregister:
@@ -704,7 +729,7 @@ def register_computer(request, name, uuid, o_computer, data):
             data.get('version'),
             data.get('ip', ''),
             uuid
-            )
+        )
 
         if notify_platform:
             add_notification_platform(platform, o_computer)
@@ -714,8 +739,8 @@ def register_computer(request, name, uuid, o_computer, data):
 
         # 2.- returns keys to client
         return return_message(cmd, get_keys_to_client(data['version']))
-
-    return return_message(cmd, error(USERHAVENOTPERMISSION))
+    except:
+        return return_message(cmd, error(USERHAVENOTPERMISSION))
 
 
 def get_key_packager(request, name, uuid, o_computer, data):
@@ -743,31 +768,30 @@ def upload_server_package(request, name, uuid, o_computer, data):
     )
 
     try:
-        if Version.objects.filter(name=data['version']):
-            o_version = Version.objects.get(name=data['version'])
-        else:
-            return return_message(cmd, error(VERSIONNOTFOUND))
-
-        if Store.objects.filter(name=data['store'], version=o_version):
-            o_store = Store.objects.get(name=data['store'], version=o_version)
-        else:
-            o_store = Store()
-            o_store.name = data['store']
-            o_store.version = o_version
-            o_store.save()
-
-        save_request_file(f, filename)
-
-        #we add the package
-        if not data['source']:
-            if Package.objects.filter(name=f.name, version=o_version):
-                o_package = Package.objects.get(name=f.name, version=o_version)
-            else:
-                o_package = Package(name=f.name, version=o_version)
-            o_package.store = o_store
-            o_package.save()
+        o_version = Version.objects.get(name=data['version'])
     except:
-        return return_message(cmd, error(GENERIC))
+        return return_message(cmd, error(VERSIONNOTFOUND))
+
+    try:
+        o_store = Store.objects.get(name=data['store'], version=o_version)
+    except:
+        o_store = Store()
+        o_store.name = data['store']
+        o_store.version = o_version
+        o_store.save()
+
+    save_request_file(f, filename)
+
+    # we add the package
+    if not data['source']:
+        try:
+            o_package = Package.objects.get(name=f.name, version=o_version)
+        except:
+            o_package = Package(name=f.name, version=o_version)
+
+        o_package.store = o_store
+        o_package.save()
+
     return return_message(cmd, ok())
 
 
@@ -785,52 +809,49 @@ def upload_server_set(request, name, uuid, o_computer, data):
     )
 
     try:
-        if Version.objects.filter(name=data['version']):
-            o_version = Version.objects.get(name=data['version'])
-        else:
-            return return_message(cmd, error(VERSIONNOTFOUND))
-
-        if Store.objects.filter(name=data['store'], version=o_version):
-            o_store = Store.objects.get(name=data['store'], version=o_version)
-        else:
-            o_store = Store()
-            o_store.name = data['store']
-            o_store.version = o_version
-            o_store.save()
-
-        #we add the packageset and create the directory
-        if Package.objects.filter(name=data['packageset'], version=o_version):
-            o_package = Package.objects.get(
-                name=data['packageset'],
-                version=o_version
-            )
-        else:
-            o_package = Package(name=data['packageset'], version=o_version)
-
-        o_package.store = o_store
-        o_package.save()
-        o_package.create_dir()
-
-        save_request_file(f, filename)
-
-        # if exists path move it
-        if ("path" in data) and (data["path"] != ""):
-            dst = os.path.join(
-                MIGASFREE_REPO_DIR,
-                data['version'],
-                "STORES",
-                data['store'],
-                data['packageset'],
-                data['path'],
-                f.name)
-            try:
-                os.makedirs(os.path.dirname(dst))
-            except:
-                pass
-            os.rename(filename, dst)
-
+        o_version = Version.objects.get(name=data['version'])
     except:
-        return return_message(cmd, error(GENERIC))
+        return return_message(cmd, error(VERSIONNOTFOUND))
+
+    try:
+        o_store = Store.objects.get(name=data['store'], version=o_version)
+    except:
+        o_store = Store()
+        o_store.name = data['store']
+        o_store.version = o_version
+        o_store.save()
+
+    # we add the packageset and create the directory
+    try:
+        o_package = Package.objects.get(
+            name=data['packageset'],
+            version=o_version
+        )
+    except:
+        o_package = Package(name=data['packageset'], version=o_version)
+
+    o_package.store = o_store
+    o_package.save()
+    o_package.create_dir()
+
+    save_request_file(f, filename)
+
+    # if exists path move it
+    if ("path" in data) and (data["path"] != ""):
+        dst = os.path.join(
+            MIGASFREE_REPO_DIR,
+            data['version'],
+            "STORES",
+            data['store'],
+            data['packageset'],
+            data['path'],
+            f.name
+        )
+        try:
+            os.makedirs(os.path.dirname(dst))
+        except:
+            pass
+        os.rename(filename, dst)
 
     return return_message(cmd, ok())
 
@@ -847,8 +868,9 @@ def get_computer_tags(request, name, uuid, o_computer, data):
     for prp in Property.objects.filter(tag=True).filter(active=True):
         retdata["available"][prp.name] = []
         for tag in Attribute.objects.filter(property_att=prp):
-            retdata["available"][prp.name].append("%s-%s" %
-                (prp.prefix, tag.value))
+            retdata["available"][prp.name].append(
+                "%s-%s" % (prp.prefix, tag.value)
+            )
 
     return return_message(cmd, retdata)
 
@@ -859,7 +881,8 @@ def set_computer_tags(request, name, uuid, o_computer, data):
     all_id = Attribute.objects.get(
         property_att__prefix="ALL",
         value="ALL SYSTEMS"
-        ).id
+    ).id
+
     try:
         lst_tags_obj = []
         lst_tags_id = []
@@ -882,7 +905,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         (old_tags_id, new_tags_id) = old_new_elements(
             lst_computer_id,
             lst_tags_id
-            )
+        )
         com_tags_id = list_common(lst_computer_id, lst_tags_id)
 
         lst_pkg_remove = []
@@ -897,38 +920,41 @@ def set_computer_tags(request, name, uuid, o_computer, data):
                 r.toinstall,
                 r.defaultinclude,
                 r.defaultpreinclude
-                )
+            )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
                 if p != "" and p != 'None':
                     lst_pkg_remove.append(p)
             pkgs = "%s %s" % (
                 r.toremove,
                 r.defaultexclude
-                )
+            )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
                 if p != "" and p != 'None':
                     lst_pkg_install.append(p)
 
         # Repositories new
-        repositories = select_repositories(o_computer.version, new_tags_id + com_tags_id)
+        repositories = select_repositories(
+            o_computer.version,
+            new_tags_id + com_tags_id
+        )
         for r in repositories:
             pkgs = "%s %s" % (
                 r.toremove,
                 r.defaultexclude
-                )
+            )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
                 if p != "" and p != 'None':
                     lst_pkg_remove.append(p)
             pkgs = "%s %s" % (
                 r.toinstall,
                 r.defaultinclude
-                )
+            )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
                 if p != "" and p != 'None':
                     lst_pkg_install.append(p)
             pkgs = "%s" % (
                 r.defaultpreinclude,
-                )
+            )
             for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
                 if p != "" and p != 'None':
                     lst_pkg_preinstall.append(p)
@@ -937,7 +963,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
             "preinstall": lst_pkg_preinstall,
             "install": lst_pkg_install,
             "remove": lst_pkg_remove,
-            }
+        }
 
         # Modify computer tags
         o_computer.tags = lst_tags_obj
@@ -958,7 +984,7 @@ def add_migration(o_computer, o_version):
 
 
 def check_computer(o_computer, name, version, ip, uuid):
-    #registration of ip, version, uuid and Migration of computer
+    # registration of ip, version, uuid and Migration of computer
     o_version = Version.objects.get(name=version)
 
     if not o_computer:
@@ -971,7 +997,13 @@ def check_computer(o_computer, name, version, ip, uuid):
         add_migration(o_computer, o_version)
 
         if MIGASFREE_NOTIFY_NEW_COMPUTER:
-            create_notification( "New Computer added id=[%s]: NAME=[%s] UUID=[%s]" % (o_computer.id, o_computer.__unicode__(), o_computer.uuid ))
+            create_notification(
+                "New Computer added id=[%s]: NAME=[%s] UUID=[%s]" % (
+                    o_computer.id,
+                    o_computer.__unicode__(),
+                    o_computer.uuid
+                )
+            )
 
     # Check Migration
     if o_computer.version != o_version:
@@ -984,19 +1016,38 @@ def check_computer(o_computer, name, version, ip, uuid):
     o_computer.ip = ip
     o_computer.uuid = uuid
     o_computer.save()
+
     return o_computer
 
 
 def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
     if MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name != name):
-        create_notification( "Computer id=[%s]: NAME [%s] changed by [%s]" % (o_computer.id, o_computer.__unicode__(), name))
+        create_notification(
+            "Computer id=[%s]: NAME [%s] changed by [%s]" % (
+                o_computer.id,
+                o_computer.__unicode__(),
+                name
+            )
+        )
 
     if MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip != ip):
         if (o_computer.ip and ip):
-            create_notification( "Computer id=[%s]: IP [%s] changed by [%s]" % (o_computer.id, o_computer.ip, ip))
+            create_notification(
+                "Computer id=[%s]: IP [%s] changed by [%s]" % (
+                    o_computer.id,
+                    o_computer.ip,
+                    ip
+                )
+            )
 
     if MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid != uuid):
-        create_notification( "Computer id=[%s]: UUID [%s] changed by [%s]" % (o_computer.id, o_computer.uuid, uuid))
+        create_notification(
+            "Computer id=[%s]: UUID [%s] changed by [%s]" % (
+                o_computer.id,
+                o_computer.uuid,
+                uuid
+            )
+        )
 
 
 def create_notification(text):
@@ -1021,7 +1072,10 @@ def create_repositories_of_packageset(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     try:
-        create_repositories_package(os.path.basename(data['packageset']), data['version'])
+        create_repositories_package(
+            os.path.basename(data['packageset']),
+            data['version']
+        )
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
