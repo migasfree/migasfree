@@ -4,11 +4,12 @@ import os
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.settings import STATIC_URL, MIGASFREE_REPO_DIR
 
-from migasfree.server.models import Version, VersionManager, Store
+from migasfree.server.models import Version, VersionManager, Store, user_version
 
 
 class Package(models.Model):
@@ -58,11 +59,19 @@ class Package(models.Model):
             self.version.name
         )
 
-        return '<a href="%s" class="fa fa-archive" title="%s"></a> <a href="%s">%s</a>' % (
-            info,
-            _("information"),
-            reverse('admin:server_package_change', args=(self.id, )),
-            self.__unicode__()
+        pkg_info = self.__unicode__()
+        if self.version == user_version():
+            pkg_info = '<a href="%s">%s</a>' % (
+                reverse('admin:server_package_change', args=(self.id, )),
+                self.__unicode__()
+            )
+
+        return format_html(
+            '<a href="%s" class="fa fa-archive" title="%s"></a> %s' % (
+                info,
+                _("information"),
+                pkg_info
+            )
         )
 
     link.short_description = Meta.verbose_name

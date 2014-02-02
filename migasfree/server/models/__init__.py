@@ -48,7 +48,8 @@ from migasfree.server.models.hw_logical_name import HwLogicalName
 from migasfree.server.models.schedule import Schedule
 from migasfree.server.models.schedule_delay import ScheduleDelay
 
-from migasfree.server.models.version_manager import VersionManager, UserProfile
+from migasfree.server.models.version_manager import VersionManager, \
+    UserProfile, user_version
 from migasfree.server.models.store import Store
 from migasfree.server.models.package import Package
 from migasfree.server.models.repository import Repository
