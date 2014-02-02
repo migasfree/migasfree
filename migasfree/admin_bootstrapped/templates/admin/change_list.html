@@ -46,8 +46,16 @@
 
 {% block coltype %}flex{% endblock %}
 
+{% block content_title %}
+    {% if title %}
+        <h1 {% if has_add_permission %}class="change-list-title"{% endif %}>
+            {% trans cl.opts.verbose_name_plural|capfirst %}
+        </h1>
+    {% endif %}
+{% endblock content_title %}
+
 {% block object-tools %}
-    <ul class="object-tools pull-left navbar-form list-unstyled">
+    <ul class="object-tools navbar-form list-unstyled">
         {% block object-tools-items %}
             {% if has_add_permission %}
             <li>
@@ -94,7 +102,7 @@
         {% endwith %}
 
         {% if action_form and actions_on_top and cl.full_result_count %}
-            <div class='pull-right'>{% admin_actions %}</div>
+            <div class="form-inline">{% admin_actions %}</div>
         {% endif %}
 
         <div id="content-main">
