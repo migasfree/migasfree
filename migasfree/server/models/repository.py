@@ -5,7 +5,7 @@ import datetime
 import shutil
 
 from django.db import models
-# from django.utils.html import format_html  # Django >= 1.5
+from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.functions import horizon
@@ -140,8 +140,8 @@ class Repository(models.Model):
         super(Repository, self).delete(*args, **kwargs)
 
     def timeline(self):
-        if self.schedule.id is None:
-            return ''
+        if self.schedule is None or self.schedule.id is None:
+            return _('Without schedule')
 
         delays = ScheduleDelay.objects.filter(
             schedule__id=self.schedule.id
@@ -187,8 +187,7 @@ class Repository(models.Model):
 
             ret += '</p></li>'
 
-        return ret + '</ul></div>'
-        #return format_html(ret + '</ul></div>')
+        return format_html(ret + '</ul></div>')
 
     timeline.allow_tags = True
     timeline.short_description = _('timeline')
