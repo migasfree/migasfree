@@ -66,9 +66,21 @@ table .ordinal {
     text-align: right;
 }
 
+#result_list {
+    margin-top: 2em;
+}
+
 .timeline .list-group-item-text {
     padding-left: 1em;
     font-size: 85%;
+}
+
+#changelist-form .results {
+    overflow-x: inherit !important;
+}
+
+.actions * {
+    vertical-align: sub;
 }
 
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
