@@ -6,7 +6,7 @@ requires = python >= 2.6
            wget
            httpd
            mod_wsgi
-           Django >= 1.4.5
+           Django >= 1.6.0
            dpkg-devel
            createrepo
            django-ajax-selects
