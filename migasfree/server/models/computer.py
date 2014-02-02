@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.db.models import Q
+from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.template import Context, Template
@@ -9,8 +10,8 @@ from django.template import Context, Template
 from migasfree.server.models import Version, DeviceLogical, Attribute
 
 from migasfree.server.functions import s2l, l2s
-from migasfree.settings import MIGASFREE_COMPUTER_SEARCH_FIELDS
-from migasfree.settings import MIGASFREE_REMOTE_ADMIN_LINK
+from migasfree.settings import MIGASFREE_COMPUTER_SEARCH_FIELDS, \
+    MIGASFREE_REMOTE_ADMIN_LINK
 
 
 class Computer(models.Model):
@@ -121,7 +122,10 @@ class Computer(models.Model):
             return None
 
     def login_link(self):
-        return self.last_login().link()
+        try:
+            return self.last_login().link()
+        except:
+            return ''
 
     login_link.allow_tags = True
     login_link.short_description = _("Last login")
@@ -134,12 +138,12 @@ class Computer(models.Model):
 
     def hw_link(self):
         try:
-            return '<a href="%s">%s</a>' % (
+            return format_html('<a href="%s">%s</a>' % (
                 reverse('hardware_resume', args=(self.id, )),
                 self.hwnode_set.get(computer=self.id, parent=None).product
-            )
+            ))
         except:
-            return None
+            return ''
 
     hw_link.allow_tags = True
     hw_link.short_description = _("Hardware")
@@ -180,7 +184,7 @@ class Computer(models.Model):
             ret = '<ul class="dropdown-menu" role="menu">'
             for element in _remote_admin.split(" "):
                 protocol = element.split("://")[0]
-                ret += '<li><a href="%(href)s" class="fa fa-external-link"> %(protocol)s</a></li>' % {
+                ret += '<li><a href="%(href)s" class="fa fa-external-link">%(protocol)s</a></li>' % {
                     'href': element,
                     'protocol': protocol
                 }
@@ -190,12 +194,12 @@ class Computer(models.Model):
                 reverse('admin:server_computer_change', args=(self.id, )),
                 self.__unicode__()
             )
-            return '<div class="btn-group btn-group-sm">' + computer + ret + '</div>'
+            return format_html('<div class="btn-group btn-group-sm">' + computer + ret + '</div>')
         else:
-            return '''<a href="%s">%s</a>''' % (
+            return format_html('<a href="%s">%s</a>' % (
                 reverse('admin:server_computer_change', args=(self.id, )),
                 self.__unicode__()
-                )
+            ))
 
     link.allow_tags = True
     link.short_description = Meta.verbose_name
