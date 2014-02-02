@@ -8,8 +8,8 @@ import os
 import django
 import django.conf.global_settings as DEFAULT_SETTINGS
 
-if django.get_version() < '1.4.5':
-    print('Migasfree requires Django 1.4.5. Please, update it.')
+if django.VERSION < (1, 6, 0, 'final'):
+    print('Migasfree requires Django 1.6.0. Please, update it.')
     exit(1)
 
 STATICFILES_DIRS = (
@@ -109,6 +109,9 @@ MANAGERS = ADMINS
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
 TIME_ZONE = 'Europe/Madrid'
+
+# If you set this to False, Django will not use timezone-aware datetimes.
+USE_TZ = True
 
 FIRST_DAY_OF_WEEK = 1
 DATE_FORMAT = 'Y-m-d'
