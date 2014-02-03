@@ -168,38 +168,50 @@ class Computer(models.Model):
         permissions = (("can_save_computer", "Can save Computer"),)
 
     def link(self):
-        if MIGASFREE_REMOTE_ADMIN_LINK:
-            _template = Template(MIGASFREE_REMOTE_ADMIN_LINK)
-            _context = {"computer": self}
-            for n in _template.nodelist:
-                try:
-                    _token = n.filter_expression.token
-                    if not _token.startswith("computer"):
-                        _context[_token] = self.last_login().attributes.get(
-                            property_att__prefix=_token).value
-                except:
-                    pass
-            _remote_admin = _template.render(Context(_context))
+        _computer_link = '<a href="%s" class="btn btn-xs">%s</a>' % (
+            reverse('admin:server_computer_change', args=(self.id, )),
+            self.__unicode__()
+        )
 
+        if MIGASFREE_REMOTE_ADMIN_LINK == '' \
+        or MIGASFREE_REMOTE_ADMIN_LINK is None:
+            return format_html(_computer_link.replace(' class="btn btn-xs"', ''))
+
+        _template = Template(MIGASFREE_REMOTE_ADMIN_LINK)
+        _context = {"computer": self}
+        for n in _template.nodelist:
+            try:
+                _token = n.filter_expression.token
+                if not _token.startswith("computer"):
+                    _context[_token] = self.last_login().attributes.get(
+                        property_att__prefix=_token).value
+            except:
+                pass
+        _remote_admin = _template.render(Context(_context))
+
+        if ' ' in _remote_admin:  # more than 1 element
             ret = '<ul class="dropdown-menu" role="menu">'
             for element in _remote_admin.split(" "):
                 protocol = element.split("://")[0]
-                ret += '<li><a href="%(href)s" class="fa fa-external-link">%(protocol)s</a></li>' % {
+                ret += '<li><a href="%(href)s">%(protocol)s</a></li>' % {
                     'href': element,
                     'protocol': protocol
                 }
             ret += '</ul>'
 
-            computer = '<a href="%s" class="btn btn-default">%s</a><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>' % (
-                reverse('admin:server_computer_change', args=(self.id, )),
-                self.__unicode__()
+            _computer_link += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fa fa-external-link"></span><span class="sr-only">Toggle Dropdown</span></button>'
+
+            return format_html(
+                '<div class="btn-group btn-group-xs">' + \
+                _computer_link + ret + '</div>'
             )
-            return format_html('<div class="btn-group btn-group-sm">' + computer + ret + '</div>')
-        else:
-            return format_html('<a href="%s">%s</a>' % (
-                reverse('admin:server_computer_change', args=(self.id, )),
-                self.__unicode__()
-            ))
+        else:  # only 1 element
+            return format_html(
+                _computer_link + \
+                '<a href="' + _remote_admin + \
+                '" title="' + _remote_admin.split("://")[0] + \
+                '"><span class="fa fa-external-link btn btn-xs"></span></a>'
+            )
 
     link.allow_tags = True
     link.short_description = Meta.verbose_name
