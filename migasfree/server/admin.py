@@ -474,6 +474,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'ip',
         'software',
         'history_sw',
+        'hw_link',
     )
 
     fieldsets = (
@@ -484,7 +485,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'dateinput',
                 'datehardware',
                 'datelastupdate',
-                'ip'
+                'ip',
+                'hw_link',
             )
         }),
         ('Software', {
