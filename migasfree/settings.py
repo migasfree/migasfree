@@ -185,7 +185,6 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
     'migasfree.server',  # before admin apps to override
     'migasfree.admin_bootstrapped',  # before django.contrib.admin to override
     'django.contrib.admin',
