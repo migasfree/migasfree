@@ -5,12 +5,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: migasfree with chocolate edition\n"
+"Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-01 17:33+0100\n"
-"PO-Revision-Date: 2013-05-20 08:58+0100\n"
-"Last-Translator: Alberto Gacias <alberto@migasfree.org>\n"
-"Language-Team: migasfree Team <migasfree@migasfree.org>\n"
+"POT-Creation-Date: 2014-02-03 17:34+0100\n"
+"PO-Revision-Date: 2014-02-03 17:51+0100\n"
+"Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
+"Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,9 +20,991 @@ msgstr ""
 "X-Poedit-Country: SPAIN\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
+#: admin_bootstrapped/templates/admin/404.html:4
+#: admin_bootstrapped/templates/admin/404.html:8
+#: server/templates/404.html:4
+#: server/templates/404.html.py:7
+msgid "Page not found"
+msgstr "Página no encontrada"
+
+#: admin_bootstrapped/templates/admin/404.html:10
+#: server/templates/404.html:10
+msgid "We're sorry, but the requested page could not be found."
+msgstr "Lo sentimos, pero la página solicitada no pudo ser encontrada."
+
+#: admin_bootstrapped/templates/admin/500.html:7
+#: admin_bootstrapped/templates/admin/app_index.html:8
+#: admin_bootstrapped/templates/admin/change_form.html:26
+#: admin_bootstrapped/templates/admin/change_list.html:40
+#: admin_bootstrapped/templates/admin/delete_confirmation.html:8
+#: admin_bootstrapped/templates/admin/delete_selected_confirmation.html:8
+#: admin_bootstrapped/templates/admin/index.html:12
+#: admin_bootstrapped/templates/admin/invalid_setup.html:7
+#: admin_bootstrapped/templates/admin/object_history.html:8
+#: admin_bootstrapped/templates/admin/auth/user/change_password.html:15
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:77
+#: admin_bootstrapped/templates/admin/cms/page/change_list.html:8
+#: admin_bootstrapped/templates/admin/cms/page/plugin_change_form.html:84
+#: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:5
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:7
+#: admin_bootstrapped/templates/registration/password_change_done.html:6
+#: admin_bootstrapped/templates/registration/password_change_form.html:7
+#: admin_bootstrapped/templates/registration/password_reset_complete.html:6
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:6
+#: admin_bootstrapped/templates/registration/password_reset_done.html:6
+#: admin_bootstrapped/templates/registration/password_reset_form.html:6
+#: server/templates/includes/breadcrumb.html:7
+msgid "Home"
+msgstr "Inicio"
+
+#: admin_bootstrapped/templates/admin/500.html:8
+msgid "Server error"
+msgstr "Error del servidor"
+
+#: admin_bootstrapped/templates/admin/500.html:12
+#: server/templates/500.html:9
+#: server/templates/500.html.py:26
+msgid "Server error (500)"
+msgstr "Error del servidor (500)"
+
+#: admin_bootstrapped/templates/admin/500.html:15
+msgid "Server Error <em>(500)</em>"
+msgstr "Error del servidor <em>(500)</em>"
+
+#: admin_bootstrapped/templates/admin/500.html:16
+#: server/templates/500.html:28
+msgid "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience."
+msgstr "Ha ocurrido un error. Ha sido enviado a los administradores del sitio por correo electrónico y será subsanado en breve. Gracias por su paciencia."
+
+#: admin_bootstrapped/templates/admin/actions.html:10
+#: admin_bootstrapped/templates/admin/filer/actions.html:8
+msgid "Run the selected action"
+msgstr "Ejecutar la acción seleccionada"
+
+#: admin_bootstrapped/templates/admin/actions.html:10
+#: admin_bootstrapped/templates/admin/filer/actions.html:8
+msgid "Go"
+msgstr "Ir"
+
+#: admin_bootstrapped/templates/admin/actions.html:18
+#: admin_bootstrapped/templates/admin/filer/actions.html:15
+msgid "Click here to select the objects across all pages"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/actions.html:18
+#, python-format
+msgid "Select all %(total_count)s %(module_name)s"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/actions.html:20
+#: admin_bootstrapped/templates/admin/filer/actions.html:17
+msgid "Clear selection"
+msgstr "Limpiar selección"
+
+#: admin_bootstrapped/templates/admin/app_index.html:18
+msgid "administration"
+msgstr "administración"
+
+#: admin_bootstrapped/templates/admin/base.html:72
+msgid "Welcome,"
+msgstr "Bienvenido,"
+
+#: admin_bootstrapped/templates/admin/base.html:75
+#: admin_bootstrapped/templates/admin/auth/user/change_password.html:19
+#: admin_bootstrapped/templates/admin/auth/user/change_password.html:53
+msgid "Change password"
+msgstr "Cambiar contraseña"
+
+#: admin_bootstrapped/templates/admin/base.html:77
+msgid "Log out"
+msgstr "Salir"
+
+#: admin_bootstrapped/templates/admin/base.html:86
+msgid "Recent Actions"
+msgstr "Acciones recientes"
+
+#: admin_bootstrapped/templates/admin/base.html:98
+msgid "Unknown content"
+msgstr "Contenido desconocido"
+
+#: admin_bootstrapped/templates/admin/base.html:103
+msgid "None available"
+msgstr "Ninguno disponible"
+
+#: admin_bootstrapped/templates/admin/base.html:112
+#: server/templates/admin_doc/index.html:4
+#: server/templates/admin_doc/index.html:7
+#: server/templates/admin_doc/model_detail.html:7
+#: server/templates/admin_doc/model_index.html:8
+#: server/templates/admin_doc/template_tag_index.html:9
+msgid "Documentation"
+msgstr "Documentación"
+
+#: admin_bootstrapped/templates/admin/base_site.html:4
+msgid "Django site admin"
+msgstr "Sitio de administración de Django"
+
+#: admin_bootstrapped/templates/admin/change_form.html:29
+#: admin_bootstrapped/templates/admin/index.html:65
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:80
+#: admin_bootstrapped/templates/admin/cms/page/plugin_change_form.html:87
+#: server/templates/includes/breadcrumb.html:23
+msgid "Add"
+msgstr "Añadir"
+
+#: admin_bootstrapped/templates/admin/change_form.html:48
+#: admin_bootstrapped/templates/admin/object_history.html:12
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:112
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:22
+#: admin_bootstrapped/templates/admin/filer/image/change_form.html:15
+msgid "History"
+msgstr "Historial"
+
+#: admin_bootstrapped/templates/admin/change_form.html:50
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:115
+#: admin_bootstrapped/templates/admin/edit_inline/stacked.html:22
+#: admin_bootstrapped/templates/admin/edit_inline/tabular.html:33
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:23
+#: admin_bootstrapped/templates/admin/filer/image/change_form.html:16
+msgid "View on site"
+msgstr "Ver en el sitio"
+
+#: admin_bootstrapped/templates/admin/change_form.html:69
+msgid "Fields in <strong>bold</strong> are required."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/change_form.html:74
+#: admin_bootstrapped/templates/admin/change_list.html:94
+#: admin_bootstrapped/templates/admin/login.html:46
+#: admin_bootstrapped/templates/admin/auth/user/change_password.html:29
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:147
+#: admin_bootstrapped/templates/admin/cms/page/plugin_change_form.html:101
+#: admin_bootstrapped/templates/registration/password_change_form.html:20
+#: server/templates/admin/login.html:27
+msgid "Please correct the error below."
+msgid_plural "Please correct the errors below."
+msgstr[0] "Por favor, corrija el error abajo indicado."
+msgstr[1] "Por favor, corrija los errores abajo indicados."
+
+#: admin_bootstrapped/templates/admin/change_list.html:64
+#: admin_bootstrapped/templates/admin/cms/page/change_list.html:91
+#, python-format
+msgid "Add %(name)s"
+msgstr "Añadir %(name)s"
+
+#: admin_bootstrapped/templates/admin/change_list.html:74
+#: admin_bootstrapped/templates/admin/cms/page/change_list.html:115
+msgid "Filter"
+msgstr "Filtro"
+
+#: admin_bootstrapped/templates/admin/change_list.html:134
+#: admin_bootstrapped/templates/admin/page_submit_line.html:15
+#: admin_bootstrapped/templates/admin/submit_line.html:9
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:293
+#: admin_bootstrapped/templates/admin/cms/page/plugin_change_form.html:131
+msgid "Save"
+msgstr "Grabar"
+
+#: admin_bootstrapped/templates/admin/change_list_results.html:19
+msgid "Remove from sorting"
+msgstr "Quitar de la ordenación"
+
+#: admin_bootstrapped/templates/admin/change_list_results.html:20
+#, python-format
+msgid "Sorting priority: %(priority_number)s"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/change_list_results.html:21
+msgid "Toggle sorting"
+msgstr "Alternar ordenación"
+
+#: admin_bootstrapped/templates/admin/delete_confirmation.html:12
+#: admin_bootstrapped/templates/admin/page_submit_line.html:5
+#: admin_bootstrapped/templates/admin/submit_line.html:3
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:44
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:66
+msgid "Delete"
+msgstr "Borrar"
+
+#: admin_bootstrapped/templates/admin/delete_confirmation.html:19
+#, python-format
+msgid "Deleting the %(object_name)s '%(escaped_object)s' would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/delete_confirmation.html:27
+#, python-format
+msgid "Deleting the %(object_name)s '%(escaped_object)s' would require deleting the following protected related objects:"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/delete_confirmation.html:35
+#, python-format
+msgid "Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? All of the following related items will be deleted:"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/delete_confirmation.html:40
+#: admin_bootstrapped/templates/admin/delete_selected_confirmation.html:47
+msgid "Yes, I'm sure"
+msgstr "Sí, estoy seguro"
+
+#: admin_bootstrapped/templates/admin/delete_selected_confirmation.html:11
+msgid "Delete multiple objects"
+msgstr "Borrar múltiples objetos"
+
+#: admin_bootstrapped/templates/admin/delete_selected_confirmation.html:18
+#, python-format
+msgid "Deleting the selected %(objects_name)s would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/delete_selected_confirmation.html:26
+#, python-format
+msgid "Deleting the selected %(objects_name)s would require deleting the following protected related objects:"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/delete_selected_confirmation.html:34
+#, python-format
+msgid "Are you sure you want to delete the selected %(objects_name)s? All of the following objects and their related items will be deleted:"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filter.html:2
+#, python-format
+msgid " By %(filter_title)s "
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/index.html:19
+msgid "Applications"
+msgstr "Aplicaciones"
+
+#: admin_bootstrapped/templates/admin/index.html:51
+#, python-format
+msgid "Models available in the %(name)s application."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/index.html:69
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:85
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:37
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:68
+#: server/templates/base.html:120
+#: server/templates/base.html.py:122
+msgid "Change"
+msgstr "Cambiar"
+
+#: admin_bootstrapped/templates/admin/index.html:78
+msgid "You don't have permission to edit anything."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/invalid_setup.html:13
+msgid "Something's wrong with your database installation. Make sure the appropriate database tables have been created, and make sure the database is readable by the appropriate user."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/login.html:43
+#: admin_bootstrapped/templates/admin/login.html:86
+#: admin_bootstrapped/templates/registration/password_reset_complete.html:18
+#: server/templates/admin/login.html:4
+#: server/templates/admin/login.html:23
+#: server/templates/admin/login.html:61
+msgid "Log in"
+msgstr "Iniciar sesión"
+
+#: admin_bootstrapped/templates/admin/login.html:58
+#: server/templates/admin/login.html:43
+msgid "Username:"
+msgstr "Nombre de usuario:"
+
+#: admin_bootstrapped/templates/admin/login.html:67
+#: server/templates/admin/login.html:51
+msgid "Password:"
+msgstr "Contraseña:"
+
+#: admin_bootstrapped/templates/admin/login.html:80
+msgid "Forgotten your password or username?"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/object_history.html:24
+msgid "Date/time"
+msgstr "Fecha/hora"
+
+#: admin_bootstrapped/templates/admin/object_history.html:25
+#: server/admin.py:372
+#: server/models/login.py:45
+#: server/models/user.py:25
+msgid "User"
+msgstr "Usuario"
+
+#: admin_bootstrapped/templates/admin/object_history.html:26
+msgid "Action"
+msgstr "Acción"
+
+#: admin_bootstrapped/templates/admin/object_history.html:40
+msgid "This object doesn't have a change history. It probably wasn't added via this admin site."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/page_submit_line.html:7
+#, python-format
+msgid "Delete %(language)s translation"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/page_submit_line.html:12
+#: admin_bootstrapped/templates/admin/submit_line.html:6
+msgid "Save as new"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/page_submit_line.html:13
+#: admin_bootstrapped/templates/admin/submit_line.html:7
+msgid "Save and add another"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/page_submit_line.html:14
+#: admin_bootstrapped/templates/admin/submit_line.html:8
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:292
+msgid "Save and continue editing"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/pagination.html:19
+msgid "Show all"
+msgstr "Mostrar todo"
+
+#: admin_bootstrapped/templates/admin/search_form.html:8
+#: admin_bootstrapped/templates/admin/search_form.html:13
+#: server/templates/base.html:139
+#: server/templates/base.html.py:141
+msgid "Search"
+msgstr "Buscar"
+
+#: admin_bootstrapped/templates/admin/search_form.html:19
+#, python-format
+msgid "%(counter)s result"
+msgid_plural "%(counter)s results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: admin_bootstrapped/templates/admin/search_form.html:19
+#, python-format
+msgid "%(full_result_count)s total"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/auth/user/add_form.html:6
+msgid "First, enter a username and password. Then, you'll be able to edit more user options."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/auth/user/add_form.html:8
+msgid "Enter a username and password."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/auth/user/change_password.html:33
+#, python-format
+msgid "Enter a new password for the user <strong>%(username)s</strong>."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/auth/user/change_password.html:40
+msgid "Password"
+msgstr "Contraseña"
+
+#: admin_bootstrapped/templates/admin/auth/user/change_password.html:46
+#: admin_bootstrapped/templates/registration/password_change_form.html:50
+msgid "Password (again)"
+msgstr "Nueva contraseña (confirmación)"
+
+#: admin_bootstrapped/templates/admin/auth/user/change_password.html:47
+msgid "Enter the same password as above, for verification."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:4
+msgid "Change a page"
+msgstr "Cambiar una página"
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:86
+msgid "Approve page deletion"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:92
+#, python-format
+msgid "(requires approvement at %(moderation_level)s level)"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:93
+msgid "(you can perform actions on this page directly)"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:105
+msgid "Remove delete request"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:108
+msgid "Approve delete"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:108
+msgid "Approve"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:108
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:109
+msgid "draft"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:109
+msgid "Preview"
+msgstr "Previsualización"
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:165
+msgid "All permissions"
+msgstr "Todos los permisos"
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:166
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:178
+msgid "Loading..."
+msgstr "Cargando..."
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:177
+msgid "Page states"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:202
+#, python-format
+msgid "This page must be moderated at level %(moderation_level)s, post a message for moderator."
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_form.html:204
+msgid "Request approvemet"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_list.html:3
+msgid "List of pages"
+msgstr "Lista de páginas"
+
+#: admin_bootstrapped/templates/admin/cms/page/change_list.html:87
+#, python-format
+msgid "Recover deleted %(name)s"
+msgstr "Recuperar %(name)s borrado"
+
+#: admin_bootstrapped/templates/admin/cms/page/change_list.html:101
+msgid "Pages on:"
+msgstr "Página sobre:"
+
+#: admin_bootstrapped/templates/admin/cms/page/change_list.html:140
+msgid "Successfully moved"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/change_list.html:149
+msgid "An error occured. Please reload the page"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:5
+msgid "select this page"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:5
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:6
+msgid "edit this page"
+msgstr "editar esta página"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:6
+msgid "edit"
+msgstr "editar"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:16
+msgid "insert above"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:17
+msgid "insert below"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:19
+msgid "insert inside"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:23
+msgid "softroot"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:23
+msgid "home"
+msgstr "inicio"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:26
+#, python-format
+msgid "Edit this page in %(language)s "
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:33
+msgid "Cut"
+msgstr "Cortar"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:33
+msgid "cut"
+msgstr "cortar"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:34
+msgid "Copy"
+msgstr "Copiar"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:34
+msgid "copy"
+msgstr "copiar"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:37
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:41
+msgid "Add Child"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:37
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:41
+msgid "add child"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:44
+msgid "delete"
+msgstr "borrar"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:61
+msgid "Approve directly"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:63
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:75
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:77
+msgid "view"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:68
+msgid "Unpublish"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:69
+msgid "Publish"
+msgstr "Publicar"
+
+#: admin_bootstrapped/templates/admin/cms/page/menu_item.html:75
+msgid "View on page"
+msgstr "Ver en el sitio"
+
+#: admin_bootstrapped/templates/admin/cms/page/plugin_change_form.html:130
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: admin_bootstrapped/templates/admin/cms/page/widgets/installed_plugins_inc.html:4
+msgid "Available Plugins"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/widgets/installed_plugins_inc.html:7
+msgid "Generic"
+msgstr "Genérico"
+
+#: admin_bootstrapped/templates/admin/cms/page/widgets/installed_plugins_inc.html:15
+msgid "Add Plugin"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/cms/page/widgets/installed_plugins_inc.html:18
+#, fuzzy
+msgid "From Language"
+msgstr "lenguaje de programación"
+
+#: admin_bootstrapped/templates/admin/cms/page/widgets/installed_plugins_inc.html:25
+msgid "Copy Plugins"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/edit_inline/stacked.html:94
+#: admin_bootstrapped/templates/admin/edit_inline/tabular.html:120
+#, python-format
+msgid "Add another %(verbose_name)s"
+msgstr "Añadir otro %(verbose_name)s"
+
+#: admin_bootstrapped/templates/admin/edit_inline/stacked.html:97
+#: admin_bootstrapped/templates/admin/edit_inline/tabular.html:123
+msgid "Remove"
+msgstr "Quitar"
+
+#: admin_bootstrapped/templates/admin/edit_inline/tabular.html:17
+msgid "Delete?"
+msgstr "¿Borrar?"
+
+#: admin_bootstrapped/templates/admin/filer/actions.html:15
+#, python-format
+msgid "Select all %(total_count)s files and/or folders"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:5
+msgid "Go back to admin homepage"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:6
+msgid "Go back to Filer app"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:6
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:8
+msgid "Media"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:7
+msgid "Go back to root folder"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:7
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:9
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:79
+msgid "root"
+msgstr "raíz"
+
+#: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:9
+#: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:12
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:11
+#, python-format
+msgid "Go back to '%(folder_name)s' folder"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/change_form.html:28
+msgid "duplicates"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:7
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:8
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:9
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:79
+msgid "Go back to"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:7
+msgid "admin homepage"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:8
+#, fuzzy
+msgid "Filer"
+msgstr "Fichero"
+
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:9
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:79
+#: admin_bootstrapped/templates/admin/filer/tools/clipboard/clipboard.html:28
+msgid "folder"
+msgstr "carpeta"
+
+#: admin_bootstrapped/templates/admin/filer/folder/change_form.html:35
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:80
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:90
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:31
+msgid "Folder Icon"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:64
+msgid "Adds a new Folder"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:64
+msgid "New Folder"
+msgstr "Nueva carpeta"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:65
+msgid "upload files"
+msgstr "subir ficheros"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:65
+msgid "Upload"
+msgstr "Subir"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:79
+msgid "Go back to the parent folder"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:81
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:42
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:16
+#, python-format
+msgid "1 folder"
+msgid_plural "%(counter)s folders"
+msgstr[0] "carpeta"
+msgstr[1] "carpetas"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:81
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:42
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:17
+#, python-format
+msgid "1 file"
+msgid_plural "%(counter)s files"
+msgstr[0] "fichero"
+msgstr[1] "ficheros"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:85
+msgid "Change current folder details"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:13
+#: server/templates/error.html:13
+msgid "Name"
+msgstr "Nombre"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:31
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:37
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:41
+#, python-format
+msgid "Change '%(item_label)s' folder details"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:43
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:76
+msgid "Owner"
+msgstr "Propietario"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:52
+msgid "Select this file"
+msgstr "Seleccionar este fichero"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:60
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:68
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:72
+#, python-format
+msgid "Change '%(item_label)s' details"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:66
+#, python-format
+msgid "Delete '%(item_label)s'"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:78
+msgid "Permissions"
+msgstr "Permisos"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:78
+msgid "disabled"
+msgstr "deshabilitado"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:78
+#: server/models/hw_node.py:46
+msgid "enabled"
+msgstr "habilitado"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:84
+msgid "Move to clipboard"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:92
+msgid "there are no files or subfolders"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:99
+msgid "previous"
+msgstr "anterior"
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:103
+#, python-format
+msgid ""
+"\n"
+"            Page %(number)s of %(num_pages)s.\n"
+"            "
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:109
+msgid "next"
+msgstr "siguiente"
+
+#: admin_bootstrapped/templates/admin/filer/image/change_form.html:28
+msgid "Full size preview"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:8
+msgid "Enter your search phrase here"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:11
+#, fuzzy
+msgid "Check it to"
+msgstr "Comprobación"
+
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:11
+msgid "limit the search to current folder"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:12
+msgid "search the current folder"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:16
+msgid "found"
+msgstr "encontrado"
+
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:16
+msgid "and"
+msgstr "y"
+
+#: admin_bootstrapped/templates/admin/filer/tools/search_form.html:17
+msgid "cancel search"
+msgstr "cancelar búsqueda"
+
+#: admin_bootstrapped/templates/admin/filer/tools/clipboard/clipboard.html:9
+msgid "Clipboard"
+msgstr "Portapapeles"
+
+#: admin_bootstrapped/templates/admin/filer/tools/clipboard/clipboard.html:21
+msgid "Paste all items here"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/tools/clipboard/clipboard.html:28
+msgid "Move all clipboard files to"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/tools/clipboard/clipboard.html:28
+msgid "unfiled files"
+msgstr ""
+
+#: admin_bootstrapped/templates/admin/filer/tools/clipboard/clipboard.html:28
+msgid "discard"
+msgstr "descartar"
+
+#: admin_bootstrapped/templates/admin/filer/tools/clipboard/clipboard.html:45
+msgid "the clipboard is empty"
+msgstr "el portapapeles está vacío"
+
+#: admin_bootstrapped/templates/registration/logged_out.html:9
+msgid "Thanks for spending some quality time with the Web site today."
+msgstr "Gracias por pasar parte de su tiempo visitando este sitio web."
+
+#: admin_bootstrapped/templates/registration/logged_out.html:11
+msgid "Log in again"
+msgstr "Loguearse de nuevo"
+
+#: admin_bootstrapped/templates/registration/password_change_done.html:7
+#: admin_bootstrapped/templates/registration/password_change_form.html:8
+#: admin_bootstrapped/templates/registration/password_change_form.html:12
+#: admin_bootstrapped/templates/registration/password_change_form.html:13
+#: server/templates/base.html:158
+msgid "Password change"
+msgstr "Cambio de contraseña"
+
+#: admin_bootstrapped/templates/registration/password_change_done.html:11
+#: admin_bootstrapped/templates/registration/password_change_done.html:12
+msgid "Password change successful"
+msgstr "La contraseña ha sido cambiada"
+
+#: admin_bootstrapped/templates/registration/password_change_done.html:16
+msgid "Your password was changed."
+msgstr "La contraseña ha sido cambiada."
+
+#: admin_bootstrapped/templates/registration/password_change_form.html:24
+msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
+msgstr "Por favor, introduzca su contraseña actual por razones de seguridad, y después introduzca la nueva contraseña dos veces para que se pueda verificar que está bien escrita."
+
+#: admin_bootstrapped/templates/registration/password_change_form.html:30
+msgid "Old password"
+msgstr "Contraseña actual"
+
+#: admin_bootstrapped/templates/registration/password_change_form.html:40
+msgid "New password"
+msgstr "Nueva contraseña"
+
+#: admin_bootstrapped/templates/registration/password_change_form.html:62
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:42
+msgid "Change my password"
+msgstr "Cambiar mi contraseña"
+
+#: admin_bootstrapped/templates/registration/password_reset_complete.html:7
+#: admin_bootstrapped/templates/registration/password_reset_complete.html:11
+#: admin_bootstrapped/templates/registration/password_reset_complete.html:12
+msgid "Password reset complete"
+msgstr "Cambio de contraseña completo"
+
+#: admin_bootstrapped/templates/registration/password_reset_complete.html:16
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:7
+msgid "Password reset confirmation"
+msgstr "Confirmación de cambio de contraseña"
+
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:11
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:12
+#: admin_bootstrapped/templates/registration/password_reset_done.html:7
+#: admin_bootstrapped/templates/registration/password_reset_form.html:7
+#: admin_bootstrapped/templates/registration/password_reset_form.html:11
+#: admin_bootstrapped/templates/registration/password_reset_form.html:12
+msgid "Password reset"
+msgstr "Cambiar contraseña"
+
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:18
+msgid "Enter new password"
+msgstr "Nueva contraseña"
+
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:20
+msgid "Please enter your new password twice so we can verify you typed it in correctly."
+msgstr "Por favor, introduzca su contraseña actual por razones de seguridad, y después introduzca la nueva contraseña dos veces para que se pueda verificar que está bien escrita."
+
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:25
+msgid "New password:"
+msgstr "Nueva contraseña:"
+
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:34
+msgid "Confirm password:"
+msgstr "Confirmar contraseña:"
+
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:48
+msgid "Password reset unsuccessful"
+msgstr "La contraseña no ha sido cambiada"
+
+#: admin_bootstrapped/templates/registration/password_reset_confirm.html:50
+msgid "The password reset link was invalid, possibly because it has already been used.  Please request a new password reset."
+msgstr ""
+
+#: admin_bootstrapped/templates/registration/password_reset_done.html:11
+#: admin_bootstrapped/templates/registration/password_reset_done.html:12
+msgid "Password reset successful"
+msgstr "La contraseña ha sido cambiada"
+
+#: admin_bootstrapped/templates/registration/password_reset_done.html:16
+msgid "We've emailed you instructions for setting your password to the email address you submitted. You should be receiving it shortly."
+msgstr ""
+
+#: admin_bootstrapped/templates/registration/password_reset_form.html:16
+msgid "Forgotten your password? Enter your email address below, and we'll email instructions for setting a new one."
+msgstr ""
+
+#: admin_bootstrapped/templates/registration/password_reset_form.html:21
+msgid "Email address:"
+msgstr "Dirección de correo:"
+
+#: admin_bootstrapped/templates/registration/password_reset_form.html:30
+msgid "Reset my password"
+msgstr "Cambiar mi contraseña"
+
+#: server/admin.py:125
+#: server/models/computer.py:167
+#: server/models/device_logical.py:39
+#: server/templates/computer_hardware_extract.html:8
+#: server/templates/computer_hardware_resume.html:8
+#: server/templates/includes/mining_menu.html:9
+#: server/views/stats.py:55
+#: server/views/stats.py:79
+#: server/views/stats.py:106
+#: server/views/stats.py:127
+#: server/views/stats.py:212
+#: server/views/stats.py:265
+#: server/views/stats.py:274
+msgid "Computers"
+msgstr "Ordenadores"
+
+#: server/admin.py:377
+msgid "To check for me"
+msgstr "Para comprobar por mí"
+
+#: server/admin.py:378
+msgid "Assigned to me"
+msgstr "Asignado a mí"
+
+#: server/admin.py:379
+msgid "Assigned to others"
+msgstr "Asignado a otros"
+
+#: server/admin.py:380
+msgid "Not assigned"
+msgstr "No asignado"
+
 #: server/errmfs.py:108
 msgid "Error generic in server:"
 msgstr "Error genérico en el servidor:"
+
+#: server/widgets.py:19
+msgid "Time:"
+msgstr "Hora:"
 
 #: server/models/attribute.py:13
 msgid "Property of attribute"
@@ -35,7 +1017,7 @@ msgstr "valor"
 
 #: server/models/attribute.py:22
 #: server/models/checking.py:23
-#: server/models/fault_def.py:18
+#: server/models/fault_def.py:19
 #: server/models/hw_capability.py:22
 #: server/models/hw_node.py:56
 #: server/models/query.py:18
@@ -44,7 +1026,7 @@ msgid "description"
 msgstr "descripción"
 
 #: server/models/attribute.py:30
-#: server/models/property.py:70
+#: server/models/property.py:81
 msgid "Property"
 msgstr "Propiedad"
 
@@ -53,7 +1035,7 @@ msgid "Attribute"
 msgstr "Atributo"
 
 #: server/models/attribute.py:43
-#: templates/server/includes/mining_menu.html:15
+#: server/templates/includes/mining_menu.html:14
 msgid "Attributes"
 msgstr "Atributos"
 
@@ -70,26 +1052,28 @@ msgid "Auto Check Error"
 msgstr "Error autocomprobable"
 
 #: server/models/autocheck_error.py:32
-#: templates/server/includes/config_menu.html:25
+#: server/templates/includes/config_menu.html:30
 msgid "Auto Check Errors"
 msgstr "Errores autocomprobables"
 
 #: server/models/checking.py:15
-#: server/models/computer.py:13
+#: server/models/computer.py:19
+#: server/models/device.py:16
 #: server/models/device_connection.py:12
+#: server/models/device_feature.py:11
 #: server/models/device_manufacturer.py:11
 #: server/models/device_model.py:13
 #: server/models/device_type.py:11
-#: server/models/fault_def.py:12
+#: server/models/fault_def.py:13
 #: server/models/hw_capability.py:16
 #: server/models/hw_configuration.py:16
 #: server/models/hw_logical_name.py:16
-#: server/models/package.py:16
+#: server/models/package.py:17
 #: server/models/platform.py:14
 #: server/models/pms.py:24
 #: server/models/property.py:23
 #: server/models/query.py:10
-#: server/models/repository.py:20
+#: server/models/repository.py:21
 #: server/models/schedule.py:11
 #: server/models/store.py:20
 #: server/models/user.py:10
@@ -103,13 +1087,13 @@ msgid "code"
 msgstr "código"
 
 #: server/models/checking.py:32
-msgid "Code django. <br><b>VARIABLES TO SETTINGS:</b><br><b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br><b>icon</b>: name of icon to show localizate in '/repo/icons'. Default is 'information.png'<br><b>url</b>: link. Default is '/migasfree/main'<br><b>msg</b>: The text to show. Default is the field name."
+msgid "Code django. <br><b>VARIABLES TO SETTINGS:</b><br><b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br><b>alert</b>: type of alert. Default is 'info'. Enumeration value: {'info' | 'warning' | 'danger'}<br><b>url</b>: link. Default is '/'<br><b>msg</b>: The text to show. Default is the field name.<br><b>target</b>: Enumeration value: {'computer' | 'server'}"
 msgstr ""
 
 #: server/models/checking.py:36
-#: server/models/fault_def.py:24
+#: server/models/fault_def.py:25
 #: server/models/property.py:41
-#: server/models/repository.py:71
+#: server/models/repository.py:63
 msgid "active"
 msgstr "habilitado"
 
@@ -122,62 +1106,59 @@ msgid "Checking"
 msgstr "Comprobación"
 
 #: server/models/checking.py:55
-#: templates/server/includes/config_menu.html:23
+#: server/templates/includes/config_menu.html:28
 msgid "Checkings"
 msgstr "Comprobaciones"
 
-#: server/models/computer.py:21
+#: server/models/computer.py:27
 msgid "uuid"
 msgstr "uuid"
 
-#: server/models/computer.py:31
+#: server/models/computer.py:37
+#: server/models/device_driver.py:25
 #: server/models/error.py:34
 #: server/models/fault.py:39
 #: server/models/hw_node.py:74
 #: server/models/migration.py:18
-#: server/models/package.py:22
-#: server/models/repository.py:26
+#: server/models/package.py:23
+#: server/models/repository.py:27
 #: server/models/store.py:26
-#: server/models/update.py:18
+#: server/models/update.py:23
 #: server/models/version_manager.py:55
 msgid "version"
 msgstr "versión"
 
-#: server/models/computer.py:35
+#: server/models/computer.py:41
 msgid "date input"
 msgstr "fecha de alta"
 
-#: server/models/computer.py:36
+#: server/models/computer.py:42
 msgid "Date of input of Computer in migasfree system"
 msgstr "Fecha de alta del ordenador en migasfree"
 
-#: server/models/computer.py:40
+#: server/models/computer.py:46
 msgid "ip"
 msgstr "IP"
 
-#: server/models/computer.py:47
+#: server/models/computer.py:53
 msgid "software inventory"
 msgstr "inventario de software"
 
-#: server/models/computer.py:50
+#: server/models/computer.py:56
 msgid "gap between software base packages and computer ones"
 msgstr "diferencia entre el conjunto de paquetes base y el del ordenador"
 
-#: server/models/computer.py:54
+#: server/models/computer.py:60
 msgid "software history"
 msgstr "historial de software"
 
-#: server/models/computer.py:64
+#: server/models/computer.py:70
 msgid "devices"
 msgstr "dispositivos"
 
-#: server/models/computer.py:68
+#: server/models/computer.py:74
 msgid "devices copy"
 msgstr "copia de dispositivos"
-
-#: server/models/computer.py:75
-msgid "devices modified"
-msgstr "dispositivos modificados"
 
 #: server/models/computer.py:81
 msgid "last update"
@@ -187,100 +1168,60 @@ msgstr "última actualización"
 msgid "last hardware capture"
 msgstr "fecha de la última actualización del hardware"
 
-#: server/models/computer.py:111
+#: server/models/computer.py:95
+msgid "tags"
+msgstr "etiquetas"
+
+#: server/models/computer.py:131
 msgid "Last login"
 msgstr "Último login"
 
-#: server/models/computer.py:117
+#: server/models/computer.py:137
 msgid "Last update"
 msgstr "Última actualización"
 
-#: server/models/computer.py:126
+#: server/models/computer.py:149
 msgid "Hardware"
 msgstr "Hardware"
 
-#: server/models/computer.py:136
-#: server/models/device.py:182
-#: templates/server/includes/config_menu.html:28
-#: templates/server/includes/mining_menu.html:14
+#: server/models/computer.py:159
+#: server/models/device.py:68
+#: server/templates/includes/config_menu.html:35
+#: server/templates/includes/config_menu.html:43
 msgid "Devices"
 msgstr "Dispositivos"
 
-#: server/models/computer.py:143
-#: server/models/error.py:50
+#: server/models/computer.py:166
+#: server/models/error.py:56
 #: server/models/fault.py:46
 #: server/models/login.py:39
 #: server/models/message.py:35
 #: server/models/migration.py:32
-#: server/models/update.py:34
-#: templates/base.html:71
-#: templates/base.html.py:72
-#: templates/server/includes/computer_messages_result.html:12
+#: server/models/update.py:39
+#: server/templates/base.html:135
+#: server/templates/base.html.py:136
+#: server/templates/includes/computer_messages_result.html:12
 msgid "Computer"
 msgstr "Ordenador"
 
-#: server/models/computer.py:144
-#: server/models/device.py:87
-#: server/views/stats.py:55
-#: server/views/stats.py:79
-#: server/views/stats.py:106
-#: server/views/stats.py:127
-#: server/views/stats.py:212
-#: server/views/stats.py:265
-#: server/views/stats.py:274
-#: templates/server/includes/mining_menu.html:9
-msgid "Computers"
-msgstr "Ordenadores"
+#: server/models/computer.py:205
+msgid "Toggle Dropdown"
+msgstr "Alternar desplegable"
 
-#: server/models/computer.py:151
-msgid "Opens a SSH connection"
-msgstr "Abre una conexión SSH"
-
-#: server/models/device.py:19
-msgid "Port"
-msgstr "Puerto"
-
-#: server/models/device.py:24
-#: templates/admin_doc/model_detail.html:26
-msgid "Type"
-msgstr "Tipo"
-
-#: server/models/device.py:29
-#: templates/server/includes/config_menu.html:32
-msgid "Manufacturer"
-msgstr "Fabricante"
-
-#: server/models/device.py:32
-msgid "Identification number"
-msgstr "Número de identificación"
-
-#: server/models/device.py:40
-msgid "Alias"
-msgstr "Alias"
-
-#: server/models/device.py:48
+#: server/models/device.py:25
+#: server/models/device_driver.py:20
 msgid "model"
 msgstr "modelo"
 
-#: server/models/device.py:53
+#: server/models/device.py:30
 msgid "connection"
 msgstr "conexión"
 
-#: server/models/device.py:57
-#: server/models/device_connection.py:26
-msgid "uri"
-msgstr "uri"
+#: server/models/device.py:34
+msgid "data"
+msgstr "dato"
 
-#: server/models/device.py:65
-msgid "location"
-msgstr "ubicación"
-
-#: server/models/device.py:73
-#: server/models/package.py:64
-msgid "information"
-msgstr "información"
-
-#: server/models/device.py:181
+#: server/models/device.py:67
 msgid "Device"
 msgstr "Dispositivo"
 
@@ -288,33 +1229,50 @@ msgstr "Dispositivo"
 msgid "fields"
 msgstr "campos"
 
-#: server/models/device_connection.py:33
-msgid "install"
-msgstr "instalar"
+#: server/models/device_connection.py:23
+msgid "Fields separated by comma"
+msgstr "Campos separados por coma"
 
-#: server/models/device_connection.py:39
-msgid "remove"
-msgstr "desinstalar"
-
-#: server/models/device_connection.py:46
+#: server/models/device_connection.py:28
 msgid "device type"
 msgstr "tipo de dispositivo"
 
-#: server/models/device_connection.py:59
+#: server/models/device_connection.py:36
 msgid "Device (Connection)"
 msgstr "Conexión de dispositivo"
 
-#: server/models/device_connection.py:60
+#: server/models/device_connection.py:37
 msgid "Device (Connections)"
 msgstr "Conexiones de dispositivo"
 
-#: server/models/device_file.py:17
-msgid "Device (File)"
-msgstr "Fichero de dispositivo"
+#: server/models/device_driver.py:30
+#: server/models/device_logical.py:17
+msgid "feature"
+msgstr "prestación"
 
-#: server/models/device_file.py:18
-msgid "Device (Files)"
-msgstr "Ficheros de dispositivo"
+#: server/models/device_driver.py:34
+#: server/models/repository.py:80
+msgid "packages to install"
+msgstr "paquetes a instalar"
+
+#: server/models/device_driver.py:60
+#: server/models/device_driver.py:61
+msgid "Device (Driver)"
+msgstr "Dispositivo (Controlador)"
+
+#: server/models/device_feature.py:23
+#: server/models/device_feature.py:24
+msgid "Device (Feature)"
+msgstr "Dispositivo (prestación)"
+
+#: server/models/device_logical.py:13
+msgid "device"
+msgstr "dispositivo"
+
+#: server/models/device_logical.py:54
+#: server/models/device_logical.py:55
+msgid "Device (Logical)"
+msgstr "Dispositivo (lógico)"
 
 #: server/models/device_manufacturer.py:23
 msgid "Device (Manufacturer)"
@@ -333,34 +1291,14 @@ msgid "type"
 msgstr "tipo"
 
 #: server/models/device_model.py:33
-msgid "file"
-msgstr "fichero"
-
-#: server/models/device_model.py:40
 msgid "connections"
 msgstr "conexiones"
 
-#: server/models/device_model.py:44
-msgid "pre-install"
-msgstr "preinstalación"
-
-#: server/models/device_model.py:50
-msgid "post-install"
-msgstr "postinstalación"
-
-#: server/models/device_model.py:56
-msgid "pre-remove"
-msgstr "predesinstalación"
-
-#: server/models/device_model.py:62
-msgid "post-remove"
-msgstr "postdesinstalación"
-
-#: server/models/device_model.py:80
+#: server/models/device_model.py:45
 msgid "Device (Model)"
 msgstr "Dispositivo (modelo)"
 
-#: server/models/device_model.py:81
+#: server/models/device_model.py:46
 msgid "Device (Models)"
 msgstr "Dispositivo (modelos)"
 
@@ -389,8 +1327,8 @@ msgstr "ordenador"
 #: server/models/message_server.py:17
 #: server/models/migration.py:22
 #: server/models/notification.py:12
-#: server/models/repository.py:77
-#: server/models/update.py:23
+#: server/models/repository.py:69
+#: server/models/update.py:28
 msgid "date"
 msgstr "fecha"
 
@@ -404,14 +1342,13 @@ msgstr "error"
 msgid "checked"
 msgstr "comprobado"
 
-#: server/models/error.py:66
-#: server/views/dashboard.py:46
-#: server/views/packages.py:81
+#: server/models/error.py:72
+#: server/views/packages.py:91
 msgid "Error"
 msgstr "Error"
 
-#: server/models/error.py:67
-#: templates/server/includes/mining_menu.html:12
+#: server/models/error.py:73
+#: server/templates/includes/mining_menu.html:12
 msgid "Errors"
 msgstr "Errores"
 
@@ -430,35 +1367,40 @@ msgid "Fault"
 msgstr "Falla"
 
 #: server/models/fault.py:58
-#: templates/server/includes/config_menu.html:24
-#: templates/server/includes/mining_menu.html:13
+#: server/templates/includes/config_menu.html:29
+#: server/templates/includes/mining_menu.html:13
 msgid "Faults"
 msgstr "Fallas"
 
-#: server/models/fault_def.py:29
+#: server/models/fault_def.py:30
 #: server/models/property.py:28
 msgid "programming language"
 msgstr "lenguaje de programación"
 
-#: server/models/fault_def.py:35
+#: server/models/fault_def.py:36
 #: server/models/property.py:34
 msgid "Code"
 msgstr "Código"
 
-#: server/models/fault_def.py:44
-#: server/models/fault_def.py:54
+#: server/models/fault_def.py:45
+#: server/models/fault_def.py:62
 #: server/models/login.py:31
-#: server/models/repository.py:41
+#: server/models/repository.py:42
 #: server/models/schedule_delay.py:22
 #: server/models/schedule_delay.py:36
 msgid "attributes"
 msgstr "atributos"
 
-#: server/models/fault_def.py:69
+#: server/models/fault_def.py:52
+#: server/models/fault_def.py:71
+msgid "users"
+msgstr "usuarios"
+
+#: server/models/fault_def.py:86
 msgid "Fault Definition"
 msgstr "Definición de falla"
 
-#: server/models/fault_def.py:70
+#: server/models/fault_def.py:87
 msgid "Faults Definition"
 msgstr "Definiciones de fallas"
 
@@ -503,13 +1445,9 @@ msgstr "identificador"
 msgid "class"
 msgstr "clase"
 
-#: server/models/hw_node.py:46
-msgid "enabled"
-msgstr "habilitado"
-
 #: server/models/hw_node.py:51
 msgid "claimed"
-msgstr ""
+msgstr "reclamado"
 
 #: server/models/hw_node.py:62
 msgid "vendor"
@@ -564,6 +1502,7 @@ msgid "Hardware Nodes"
 msgstr "Nodos hardware"
 
 #: server/models/login.py:24
+#: server/models/update.py:18
 msgid "user"
 msgstr "usuario"
 
@@ -571,24 +1510,19 @@ msgstr "usuario"
 msgid "Sent attributes"
 msgstr "Atributos enviados"
 
-#: server/models/login.py:45
-#: server/models/user.py:25
-msgid "User"
-msgstr "Usuario"
-
 #: server/models/login.py:55
-#: templates/server/includes/computer_messages_result.html:15
+#: server/templates/includes/computer_messages_result.html:15
 msgid "Login"
 msgstr "Login"
 
 #: server/models/login.py:56
-#: templates/server/includes/mining_menu.html:11
+#: server/templates/includes/mining_menu.html:11
 msgid "Logins"
 msgstr "Logins"
 
 #: server/models/message.py:39
-#: templates/server/includes/computer_messages_result.html:16
-#: templates/server/includes/server_messages_result.html:12
+#: server/templates/includes/computer_messages_result.html:16
+#: server/templates/includes/server_messages_result.html:12
 msgid "Message"
 msgstr "Mensaje"
 
@@ -606,8 +1540,9 @@ msgstr "Mensajes del servidor"
 
 #: server/models/migration.py:37
 #: server/models/version.py:83
-#: templates/server/includes/computer_messages_result.html:13
-#: templates/server/includes/software_menu.html:19
+#: server/templates/base.html:112
+#: server/templates/base.html.py:113
+#: server/templates/includes/computer_messages_result.html:13
 msgid "Version"
 msgstr "Versión"
 
@@ -616,7 +1551,7 @@ msgid "Migration"
 msgstr "Migración"
 
 #: server/models/migration.py:42
-#: templates/server/includes/mining_menu.html:16
+#: server/templates/includes/mining_menu.html:15
 msgid "Migrations"
 msgstr "Migraciones"
 
@@ -629,29 +1564,33 @@ msgid "Notification"
 msgstr "Notificación"
 
 #: server/models/notification.py:40
-#: templates/server/includes/mining_menu.html:17
+#: server/templates/includes/mining_menu.html:16
 msgid "Notifications"
 msgstr "Notificaciones"
 
-#: server/models/package.py:27
+#: server/models/package.py:28
 msgid "store"
 msgstr "almacén"
 
-#: server/models/package.py:48
+#: server/models/package.py:49
 msgid "Package/Set"
 msgstr "Paquete/Conjunto"
 
-#: server/models/package.py:49
-#: templates/server/includes/software_menu.html:11
+#: server/models/package.py:50
+#: server/templates/includes/software_menu.html:16
 msgid "Packages/Sets"
 msgstr "Paquetes/Conjuntos"
+
+#: server/models/package.py:72
+msgid "information"
+msgstr "información"
 
 #: server/models/platform.py:26
 msgid "Platform"
 msgstr "Plataforma"
 
 #: server/models/platform.py:27
-#: templates/server/includes/config_menu.html:10
+#: server/templates/includes/config_menu.html:11
 msgid "Platforms"
 msgstr "Plataformas"
 
@@ -667,27 +1606,19 @@ msgstr "crear repositorio"
 msgid "Code bash. Define how create the metadata of repositories in the migasfree server."
 msgstr "Código en bash. Define cómo crear los metadatos de los repositorios en el servidor migasfree."
 
-#: server/models/pms.py:46
-msgid "repository definition"
-msgstr "definición de repositorio"
-
-#: server/models/pms.py:49
-msgid "Define the content of source list file of repositories for the client."
-msgstr "Define el contenido del fichero con la lista de orígenes de repositorios para el cliente."
-
-#: server/models/pms.py:53
+#: server/models/pms.py:45
 msgid "package information"
 msgstr "información del paquete"
 
-#: server/models/pms.py:56
+#: server/models/pms.py:48
 msgid "Code bash. Define how get info of packages in the server"
 msgstr "Código en bash. Define cómo obtener información de los paquetes en el servidor"
 
-#: server/models/pms.py:70
+#: server/models/pms.py:61
 msgid "Package Management System"
 msgstr "Sistema de gestión de paquetes"
 
-#: server/models/pms.py:71
+#: server/models/pms.py:62
 msgid "Package Management Systems"
 msgstr "Sistemas de gestión de paquetes"
 
@@ -727,8 +1658,13 @@ msgstr "automático"
 msgid "automatically add the attribute to database"
 msgstr "añade automáticamente el atributo a la base de datos"
 
-#: server/models/property.py:71
-#: templates/server/includes/config_menu.html:7
+#: server/models/property.py:59
+#: server/models/property.py:61
+msgid "tag"
+msgstr "etiqueta"
+
+#: server/models/property.py:82
+#: server/templates/includes/config_menu.html:8
 msgid "Properties"
 msgstr "Propiedades"
 
@@ -745,78 +1681,86 @@ msgid "Query"
 msgstr "Consulta"
 
 #: server/models/query.py:44
-#: templates/server/includes/config_menu.html:11
-#: templates/server/includes/mining_menu.html:21
+#: server/templates/query.html:7
+#: server/templates/includes/config_menu.html:12
+#: server/templates/includes/mining_menu.html:22
 msgid "Queries"
 msgstr "Consultas"
 
-#: server/models/repository.py:33
+#: server/models/repository.py:34
 msgid "Packages/Set"
 msgstr "Paquetes/Conjuntos"
 
-#: server/models/repository.py:34
+#: server/models/repository.py:35
 msgid "Assigned Packages"
 msgstr "Paquetes asignados"
 
-#: server/models/repository.py:42
+#: server/models/repository.py:43
 msgid "Assigned Attributes"
 msgstr "Atributos asignados"
 
-#: server/models/repository.py:50
+#: server/models/repository.py:51
 msgid "excludes"
 msgstr "exclusiones"
 
-#: server/models/repository.py:51
+#: server/models/repository.py:52
 msgid "Excluded Attributes"
 msgstr "Atributos excluidos"
 
-#: server/models/repository.py:58
+#: server/models/repository.py:59
 #: server/models/schedule_delay.py:15
 msgid "schedule"
 msgstr "calendario"
 
 #: server/models/repository.py:65
-msgid "create packages"
-msgstr "crear paquetes"
-
-#: server/models/repository.py:73
 msgid "if you uncheck this field, the repository is hidden for all computers."
 msgstr "Si desmarca este campo, el repositorio está oculto para todos los ordenadores."
 
-#: server/models/repository.py:78
+#: server/models/repository.py:70
 msgid "Date initial for distribute."
 msgstr "Fecha inicial para la distribución."
 
-#: server/models/repository.py:82
+#: server/models/repository.py:74
 msgid "comment"
 msgstr "comentario"
 
-#: server/models/repository.py:88
-msgid "packages to install"
-msgstr "paquetes a instalar"
-
-#: server/models/repository.py:94
+#: server/models/repository.py:86
 msgid "packages to remove"
 msgstr "paquetes a desinstalar"
 
-#: server/models/repository.py:100
-msgid "modified"
-msgstr "modificado"
+#: server/models/repository.py:92
+#, fuzzy
+msgid "default preinclude packages"
+msgstr "Actualizando aplicaciones"
 
-#: server/models/repository.py:115
+#: server/models/repository.py:98
+#, fuzzy
+msgid "default include packages"
+msgstr "Actualizando aplicaciones"
+
+#: server/models/repository.py:104
+#, fuzzy
+msgid "default exclude packages"
+msgstr "crear paquetes"
+
+#: server/models/repository.py:119
 msgid "Packages"
 msgstr "Paquetes"
 
-#: server/models/repository.py:161
+#: server/models/repository.py:144
+msgid "Without schedule"
+msgstr "Sin calendario"
+
+#: server/models/repository.py:193
 msgid "timeline"
 msgstr "línea temporal"
 
-#: server/models/repository.py:165
+#: server/models/repository.py:197
 msgid "Repository"
 msgstr "Repositorio"
 
-#: server/models/repository.py:166
-#: templates/server/includes/software_menu.html:8
+#: server/models/repository.py:198
+#: server/templates/includes/software_menu.html:7
 msgid "Repositories"
 msgstr "Repositorios"
 
@@ -825,7 +1769,7 @@ msgid "Schedule"
 msgstr "Calendario"
 
 #: server/models/schedule.py:30
-#: templates/server/includes/software_menu.html:9
+#: server/templates/includes/software_menu.html:10
 msgid "Schedules"
 msgstr "Calendarios"
 
@@ -846,15 +1790,15 @@ msgid "Store"
 msgstr "Almacén"
 
 #: server/models/store.py:63
-#: templates/server/includes/software_menu.html:10
+#: server/templates/includes/software_menu.html:13
 msgid "Stores"
 msgstr "Almacenes"
 
-#: server/models/update.py:38
+#: server/models/update.py:43
 msgid "Update"
 msgstr "Actualización"
 
-#: server/models/update.py:39
+#: server/models/update.py:44
 msgid "Updates"
 msgstr "Actualizaciones"
 
@@ -863,9 +1807,9 @@ msgid "fullname"
 msgstr "nombre completo"
 
 #: server/models/user.py:26
-#: templates/server/includes/config_menu.html:15
-#: templates/server/includes/config_menu.html:17
-#: templates/server/includes/mining_menu.html:10
+#: server/templates/includes/config_menu.html:18
+#: server/templates/includes/config_menu.html:20
+#: server/templates/includes/mining_menu.html:10
 msgid "Users"
 msgstr "Usuarios"
 
@@ -902,7 +1846,7 @@ msgid "platform"
 msgstr "plataforma"
 
 #: server/models/version.py:84
-#: templates/server/includes/config_menu.html:8
+#: server/templates/includes/config_menu.html:9
 msgid "Versions"
 msgstr "Versiones"
 
@@ -914,23 +1858,199 @@ msgstr "Perfil de usuario"
 msgid "User Profiles"
 msgstr "Perfiles de usuario"
 
-#: server/views/dashboard.py:48
-#: templates/server/includes/status.html:17
-msgid "All O.K."
-msgstr "Todo bien"
+#: server/templates/base.html:79
+msgid "Toggle navigation"
+msgstr "Alternar navegación"
 
-#: server/views/dashboard.py:50
-msgid "Warning"
-msgstr "Alerta"
+#: server/templates/base.html:93
+#: server/templates/includes/breadcrumb.html:14
+msgid "Settings"
+msgstr "Configuración"
 
-#: server/views/dashboard.py:79
-#: templates/server/includes/config_menu.html:21
-#: templates/server/includes/mining_menu.html:8
+#: server/templates/base.html:98
+#: server/templates/package_info.html:6
+#: server/templates/includes/breadcrumb.html:18
+msgid "Liberation"
+msgstr "Liberación"
+
+#: server/templates/base.html:103
+#: server/templates/chart.html:6
+#: server/templates/computer_hardware_extract.html:7
+#: server/templates/computer_hardware_resume.html:7
+#: server/templates/query.html:6
+#: server/templates/includes/breadcrumb.html:10
+msgid "Audit"
+msgstr "Auditoría"
+
+#: server/templates/base.html:151
+#: server/templates/includes/alerts.html:3
+msgid "Alerts"
+msgstr "Alertas"
+
+#: server/templates/base.html:160
+msgid "Logout"
+msgstr "Salir"
+
+#: server/templates/base.html:209
+msgid "Data Model"
+msgstr "Modelo de datos"
+
+#: server/templates/chart.html:7
+#: server/templates/includes/mining_menu.html:34
+msgid "Stats"
+msgstr "Estadísticas"
+
+#: server/templates/computer_hardware_extract.html:118
+msgid "Back to main tree information"
+msgstr "Volver al árbol principal de información"
+
+#: server/templates/error.html:12
+msgid "File"
+msgstr "Fichero"
+
+#: server/templates/error.html:14
+msgid "Line"
+msgstr "Línea"
+
+#: server/templates/query.html:17
+#: server/templates/includes/computer_messages_result.html:5
+#: server/templates/includes/server_messages_result.html:4
+msgid "results"
+msgstr "resultados"
+
+#: server/templates/query.html:44
+msgid "No results for query"
+msgstr "No hay resultados para la consulta"
+
+#: server/templates/admin_doc/model_detail.html:8
+#: server/templates/admin_doc/model_index.html:9
+#: server/templates/admin_doc/model_index.html:13
+#: server/templates/includes/config_menu.html:39
+msgid "Models"
+msgstr "Modelos"
+
+#: server/templates/admin_doc/model_detail.html:13
+msgid "Model:"
+msgstr "Modelo:"
+
+#: server/templates/admin_doc/model_detail.html:25
+msgid "Field"
+msgstr "Campo"
+
+#: server/templates/admin_doc/model_detail.html:26
+msgid "Type"
+msgstr "Tipo"
+
+#: server/templates/admin_doc/model_detail.html:27
+msgid "Description"
+msgstr "Descripción"
+
+#: server/templates/admin_doc/model_detail.html:41
+msgid "Back to Data Model Documentation"
+msgstr "Volver a la documentación del modelo de datos"
+
+#: server/templates/includes/computer_messages_result.html:11
+#: server/templates/includes/server_messages_result.html:11
+msgid "Date"
+msgstr "Fecha"
+
+#: server/templates/includes/computer_messages_result.html:14
+msgid "IP"
+msgstr "IP"
+
+#: server/templates/includes/computer_messages_result.html:40
+#: server/templates/includes/server_messages_result.html:27
+msgid "No messages to show"
+msgstr "No hay mensajes para mostrar"
+
+#: server/templates/includes/config_menu.html:6
+msgid "General"
+msgstr "General"
+
+#: server/templates/includes/config_menu.html:10
+msgid "P.M.S."
+msgstr "P.M.S."
+
+#: server/templates/includes/config_menu.html:13
+msgid "Site administration"
+msgstr "Administración del sitio"
+
+#: server/templates/includes/config_menu.html:21
+msgid "Groups"
+msgstr "Grupos"
+
+#: server/templates/includes/config_menu.html:26
+#: server/views/dashboard.py:67
 msgid "Status"
 msgstr "Estado"
 
-#: server/views/hardware.py:25
-#: server/views/hardware.py:43
+#: server/templates/includes/config_menu.html:37
+msgid "Features"
+msgstr "Prestaciones"
+
+#: server/templates/includes/config_menu.html:38
+msgid "Drivers"
+msgstr "Controladores"
+
+#: server/templates/includes/config_menu.html:40
+msgid "Manufacturer"
+msgstr "Fabricante"
+
+#: server/templates/includes/config_menu.html:41
+msgid "Connections"
+msgstr "Conexiones"
+
+#: server/templates/includes/config_menu.html:42
+msgid "Types"
+msgstr "Tipos"
+
+#: server/templates/includes/config_menu.html:44
+msgid "Devices Logical"
+msgstr "Dispositivos lógicos"
+
+#: server/templates/includes/mining_menu.html:7
+msgid "Datum"
+msgstr "Datos"
+
+#: server/templates/includes/mining_menu.html:36
+#: server/views/stats.py:36
+msgid "Updated Computers / Hour"
+msgstr "Ordenadores actualizados/hora"
+
+#: server/templates/includes/mining_menu.html:37
+#: server/views/stats.py:90
+msgid "Updated Computers / Day"
+msgstr "Ordenadores actualizados/día"
+
+#: server/templates/includes/mining_menu.html:38
+#: server/views/stats.py:138
+msgid "Updated Computers / Month"
+msgstr "Ordenadores actualizados/mes"
+
+#: server/templates/includes/mining_menu.html:39
+#: server/views/stats.py:223
+msgid "Provided Computers / Delay"
+msgstr "Ordenadores previstos/demora"
+
+#: server/templates/includes/mining_menu.html:40
+#: server/views/stats.py:284
+msgid "Computers / Version"
+msgstr "Ordenadores/versión"
+
+#: server/templates/includes/parameters.html:6
+msgid "Parameters"
+msgstr "Parámetros"
+
+#: server/templates/includes/parameters.html:10
+msgid "Submit"
+msgstr "Enviar"
+
+#: server/templates/includes/software_menu.html:19
+msgid "Packages information"
+msgstr "Información de paquetes"
+
+#: server/views/hardware.py:26
+#: server/views/hardware.py:45
 msgid "Hardware Information"
 msgstr "Información del hardware"
 
@@ -938,69 +2058,50 @@ msgstr "Información del hardware"
 msgid "Credentials not valid"
 msgstr "Los credenciales no son válidos"
 
-#: server/views/packages.py:42
-#: server/views/packages.py:70
-msgid "Information of Package"
+#: server/views/packages.py:50
+#: server/views/packages.py:80
+msgid "Package Information"
 msgstr "Información del paquete"
 
-#: server/views/packages.py:71
+#: server/views/packages.py:81
 #, python-format
 msgid "VERSION: %s"
 msgstr "Versión: %s"
 
-#: server/views/packages.py:82
-msgid "No package info exists"
+#: server/views/packages.py:92
+msgid "No package information exists"
 msgstr "No existe información sobre el paquete"
 
-#: server/views/queries.py:144
-#, python-format
-msgid "Parameters for Query: %s"
-msgstr "Parámetros de la consulta: %s"
-
-#: server/views/queries.py:200
+#: server/views/queries.py:207
 msgid "Computer Messages"
 msgstr "Mensajes de ordenadores"
 
-#: server/views/queries.py:227
+#: server/views/queries.py:234
 msgid "Server Messages"
 msgstr "Mensajes del servidor"
 
-#: server/views/repository.py:22
+#: server/views/repository.py:20
 #, python-format
 msgid "Creating Repositories of %s..."
 msgstr "Creando repositorios de %s..."
 
-#: server/views/repository.py:72
+#: server/views/repository.py:26
+msgid "Added packages:"
+msgstr "Paquetes añadidos:"
+
+#: server/views/repository.py:30
+#: server/views/repository.py:34
 #, python-format
-msgid "Analyzing the repositories to create files for version: %s"
-msgstr "Analizando los repositorios para crear los ficheros para la versión: %s"
-
-#: server/views/repository.py:153
-msgid "Create Repositories"
-msgstr "Crear repositorios"
-
-#: server/views/stats.py:36
-#: templates/server/includes/mining_menu.html:33
-msgid "Updated Computers / Hour"
-msgstr "Ordenadores actualizados/hora"
+msgid "%s in store %s"
+msgstr "%s en el almacén %s"
 
 #: server/views/stats.py:81
 msgid "Hour"
 msgstr "Hora"
 
-#: server/views/stats.py:90
-#: templates/server/includes/mining_menu.html:34
-msgid "Updated Computers / Day"
-msgstr "Ordenadores actualizados/día"
-
 #: server/views/stats.py:129
 msgid "Day"
 msgstr "Día"
-
-#: server/views/stats.py:138
-#: templates/server/includes/mining_menu.html:35
-msgid "Updated Computers / Month"
-msgstr "Ordenadores actualizados/mes"
 
 #: server/views/stats.py:163
 msgid "Windows Computers"
@@ -1018,11 +2119,6 @@ msgstr "Ordenadores totales"
 msgid "Month"
 msgstr "Mes"
 
-#: server/views/stats.py:223
-#: templates/server/includes/mining_menu.html:36
-msgid "Provided Computers / Delay"
-msgstr "Ordenadores previstos/demora"
-
 #: server/views/stats.py:265
 msgid "days"
 msgstr "días"
@@ -1031,329 +2127,97 @@ msgstr "días"
 msgid "Delay"
 msgstr "Demora"
 
-#: server/views/stats.py:284
-#: templates/server/includes/mining_menu.html:37
-msgid "Computers / Version"
-msgstr "Ordenadores/versión"
-
 #: server/views/stats.py:292
 msgid "of"
 msgstr "de"
 
-#: templates/404.html:4
-#: templates/404.html.py:7
-msgid "Page not found"
-msgstr "Página no encontrada"
-
-#: templates/404.html:9
-msgid "We're sorry, but the requested page could not be found."
-msgstr "Lo sentimos, pero la página solicitada no pudo ser encontrada."
-
-#: templates/500.html:7
-#: templates/500.html.py:114
-msgid "Server error (500)"
-msgstr "Error del servidor (500)"
-
-#: templates/500.html:116
-msgid "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience."
-msgstr "Ha ocurrido un error. Ha sido enviado a los administradores del sitio por correo electrónico y será subsanado en breve. Gracias por su paciencia."
-
-#: templates/base.html:62
-msgid "Settings"
-msgstr "Configuración"
-
-#: templates/base.html:63
-msgid "Liberation"
-msgstr "Liberación"
-
-#: templates/base.html:64
-msgid "Audit"
-msgstr "Auditoría"
-
-#: templates/base.html:73
-msgid "Search"
-msgstr "Buscar"
-
-#: templates/base.html:79
-#: templates/registration/password_change_form.html:11
-#: templates/registration/password_change_form.html:14
-msgid "Password change"
-msgstr "Cambio de contraseña"
-
-#: templates/base.html:79
-msgid "Logout"
-msgstr "Salir"
-
-#: templates/base.html:92
-msgid "Expand menu"
-msgstr "Mostrar menú"
-
-#: templates/base.html:93
-msgid "Collapse menu"
-msgstr "Ocultar menú"
-
-#: templates/base.html:126
-#: templates/admin/change_form.html:47
-#: templates/admin/change_list.html:65
-msgid "Data Model Documentation"
-msgstr "Documentación del modelo de datos"
-
-#: templates/error.html:12
-msgid "File"
-msgstr "Fichero"
-
-#: templates/error.html:13
-msgid "Name"
-msgstr "Nombre"
-
-#: templates/error.html:14
-msgid "Line"
-msgstr "Línea"
-
-#: templates/admin/change_form.html:78
-msgid "History"
-msgstr "Historial"
-
-#: templates/admin/change_form.html:80
-msgid "View on site"
-msgstr "Ver en el sitio"
-
-#: templates/admin/change_form.html:95
-#: templates/admin/change_list.html:110
-#: templates/registration/password_change_form.html:23
-msgid "Please correct the error below."
-msgid_plural "Please correct the errors below."
-msgstr[0] "Por favor, corrija el error abajo indicado."
-msgstr[1] "Por favor, corrija los errores abajo indicados."
-
-#: templates/admin/change_list.html:87
-msgid "List of"
-msgstr "Lista de"
-
-#: templates/admin/change_list.html:101
-#, python-format
-msgid "Add %(name)s"
-msgstr "Añadir %(name)s"
-
-#: templates/admin/change_list.html:122
-msgid "Filter"
-msgstr "Filtro"
-
-#: templates/admin/delete_confirmation.html:8
-msgid "Delete"
-msgstr "Borrar"
-
-#: templates/admin/delete_confirmation.html:15
-#, python-format
-msgid "Deleting the %(object_name)s '%(escaped_object)s' would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
-msgstr ""
-
-#: templates/admin/delete_confirmation.html:23
-#, python-format
-msgid "Deleting the %(object_name)s '%(escaped_object)s' would require deleting the following protected related objects:"
-msgstr ""
-
-#: templates/admin/delete_confirmation.html:31
-#, python-format
-msgid "Are you sure you want to delete the %(object_name)s \"%(escaped_object)s\"? All of the following related items will be deleted:"
-msgstr ""
-
-#: templates/admin/delete_confirmation.html:36
-#: templates/admin/delete_selected_confirmation.html:43
-msgid "Yes, I'm sure"
-msgstr "Sí, estoy seguro"
-
-#: templates/admin/delete_selected_confirmation.html:7
-#: templates/admin/delete_selected_confirmation.html:11
-msgid "Delete multiple objects"
-msgstr "Borrar múltiples objetos"
-
-#: templates/admin/delete_selected_confirmation.html:16
-#, python-format
-msgid "Deleting the selected %(objects_name)s would result in deleting related objects, but your account doesn't have permission to delete the following types of objects:"
-msgstr ""
-
-#: templates/admin/delete_selected_confirmation.html:24
-#, python-format
-msgid "Deleting the selected %(objects_name)s would require deleting the following protected related objects:"
-msgstr ""
-
-#: templates/admin/delete_selected_confirmation.html:32
-#, python-format
-msgid "Are you sure you want to delete the selected %(objects_name)s? All of the following objects and their related items will be deleted:"
-msgstr ""
-
-#: templates/admin/login.html:4
-#: templates/admin/login.html.py:17
-#: templates/admin/login.html:38
-msgid "Log in"
-msgstr "Iniciar sesión"
-
-#: templates/admin/login.html:27
-msgid "Username:"
-msgstr "Nombre de usuario:"
-
-#: templates/admin/login.html:32
-msgid "Password:"
-msgstr "Contraseña:"
-
-#: templates/admin_doc/model_detail.html:7
-#: templates/admin_doc/model_index.html:8
-msgid "Documentation"
-msgstr "Documentación"
-
-#: templates/admin_doc/model_detail.html:8
-#: templates/admin_doc/model_index.html:8
-#: templates/admin_doc/model_index.html:12
-#: templates/server/includes/config_menu.html:31
-msgid "Models"
-msgstr "Modelos"
-
-#: templates/admin_doc/model_detail.html:13
-msgid "Model:"
-msgstr "Modelo:"
-
-#: templates/admin_doc/model_detail.html:25
-msgid "Field"
-msgstr "Campo"
-
-#: templates/admin_doc/model_detail.html:27
-msgid "Description"
-msgstr "Descripción"
-
-#: templates/admin_doc/model_detail.html:41
-msgid "Back to Data Model Documentation"
-msgstr "Volver a la documentación del modelo de datos"
-
-#: templates/registration/logged_out.html:6
-msgid "Thanks for spending some quality time with the Web site today."
-msgstr "Gracias por pasar parte de su tiempo visitando este sitio web."
-
-#: templates/registration/logged_out.html:8
-msgid "Log in again"
-msgstr "Loguearse de nuevo"
-
-#: templates/registration/password_change_done.html:4
-#: templates/registration/password_change_done.html:7
-msgid "Password change successful"
-msgstr "La contraseña ha sido cambiada"
-
-#: templates/registration/password_change_done.html:9
-msgid "Your password was changed."
-msgstr "La contraseña ha sido cambiada."
-
-#: templates/registration/password_change_form.html:16
-msgid "Please enter your old password, for security's sake, and then enter your new password twice so we can verify you typed it in correctly."
-msgstr "Por favor, introduzca su contraseña actual por razones de seguridad, y después introduzca la nueva contraseña dos veces para que se pueda verificar que está bien escrita."
-
-#: templates/registration/password_change_form.html:30
-msgid "Old password"
-msgstr "Contraseña actual"
-
-#: templates/registration/password_change_form.html:35
-msgid "New password"
-msgstr "Nueva contraseña"
-
-#: templates/registration/password_change_form.html:40
-msgid "Password (again)"
-msgstr "Nueva contraseña (confirmación)"
-
-#: templates/registration/password_change_form.html:45
-msgid "Change my password"
-msgstr "Cambiar mi contraseña"
-
-#: templates/server/computer_hardware_extract.html:6
-msgid "Back to main tree information"
-msgstr "Volver al árbol principal de información"
-
-#: templates/server/query.html:24
-#: templates/server/includes/computer_messages_result.html:5
-#: templates/server/includes/server_messages_result.html:4
-msgid "results"
-msgstr "resultados"
-
-#: templates/server/query.html:51
-msgid "No results for query"
-msgstr "No hay resultados para la consulta"
-
-#: templates/server/includes/computer_messages_result.html:11
-#: templates/server/includes/server_messages_result.html:11
-msgid "Date"
-msgstr "Fecha"
-
-#: templates/server/includes/computer_messages_result.html:14
-msgid "IP"
-msgstr "IP"
-
-#: templates/server/includes/computer_messages_result.html:40
-#: templates/server/includes/server_messages_result.html:27
-msgid "No messages to show"
-msgstr "No hay mensajes para mostrar"
-
-#: templates/server/includes/config_menu.html:5
-msgid "General"
-msgstr "General"
-
-#: templates/server/includes/config_menu.html:9
-msgid "P.M.S."
-msgstr "P.M.S."
-
-#: templates/server/includes/config_menu.html:12
-msgid "Site administration"
-msgstr "Administración del sitio"
-
-#: templates/server/includes/config_menu.html:18
-msgid "Groups"
-msgstr "Grupos"
-
-#: templates/server/includes/config_menu.html:30
-msgid "Files"
-msgstr "Ficheros"
-
-#: templates/server/includes/config_menu.html:33
-msgid "Connections"
-msgstr "Conexiones"
-
-#: templates/server/includes/config_menu.html:34
-msgid "Types"
-msgstr "Tipos"
-
-#: templates/server/includes/mining_menu.html:6
-msgid "Datum"
-msgstr "Datos"
-
-#: templates/server/includes/mining_menu.html:31
-msgid "Stats"
-msgstr "Estadísticas"
-
-#: templates/server/includes/parameters.html:8
-msgid "Submit"
-msgstr "Enviar"
-
-#: templates/server/includes/software_menu.html:6
-msgid "Packaging"
-msgstr "Empaquetado"
-
-#: templates/server/includes/software_menu.html:12
-msgid "Packages information"
-msgstr "Información de paquetes"
-
-#: templates/server/includes/software_menu.html:16
-msgid "Select version"
-msgstr "Escoger versión"
-
-#: templates/server/includes/software_menu.html:26
-msgid "Change"
-msgstr "Cambiar"
+#~ msgid "devices modified"
+#~ msgstr "dispositivos modificados"
+
+#~ msgid "Opens a SSH connection"
+#~ msgstr "Abre una conexión SSH"
+
+#~ msgid "Port"
+#~ msgstr "Puerto"
+
+#~ msgid "Identification number"
+#~ msgstr "Número de identificación"
+
+#~ msgid "Alias"
+#~ msgstr "Alias"
+
+#~ msgid "uri"
+#~ msgstr "uri"
+
+#~ msgid "install"
+#~ msgstr "instalar"
+
+#~ msgid "Device (Files)"
+#~ msgstr "Ficheros de dispositivo"
+
+#~ msgid "pre-install"
+#~ msgstr "preinstalación"
+
+#~ msgid "post-install"
+#~ msgstr "postinstalación"
+
+#~ msgid "pre-remove"
+#~ msgstr "predesinstalación"
+
+#~ msgid "post-remove"
+#~ msgstr "postdesinstalación"
+
+#~ msgid "repository definition"
+#~ msgstr "definición de repositorio"
+
+#~ msgid ""
+#~ "Define the content of source list file of repositories for the client."
+#~ msgstr ""
+#~ "Define el contenido del fichero con la lista de orígenes de repositorios "
+#~ "para el cliente."
+
+#~ msgid "modified"
+#~ msgstr "modificado"
+
+#~ msgid "All O.K."
+#~ msgstr "Todo bien"
+
+#~ msgid "Warning"
+#~ msgstr "Alerta"
+
+#~ msgid "Information of Package"
+#~ msgstr "Información del paquete"
+
+#~ msgid "Parameters for Query: %s"
+#~ msgstr "Parámetros de la consulta: %s"
+
+#~ msgid "Analyzing the repositories to create files for version: %s"
+#~ msgstr ""
+#~ "Analizando los repositorios para crear los ficheros para la versión: %s"
+
+#~ msgid "Create Repositories"
+#~ msgstr "Crear repositorios"
+
+#~ msgid "Expand menu"
+#~ msgstr "Mostrar menú"
+
+#~ msgid "Collapse menu"
+#~ msgstr "Ocultar menú"
+
+#~ msgid "Data Model Documentation"
+#~ msgstr "Documentación del modelo de datos"
+
+#~ msgid "Files"
+#~ msgstr "Ficheros"
+
+#~ msgid "Packaging"
+#~ msgstr "Empaquetado"
 
 #~ msgid "desktop is not valid name for this computer: IP=%(ip)s"
 #~ msgstr "desktop no es un nombre válido para el ordenador: IP=%(ip)s"
 
 #~ msgid "Upload changes of software"
 #~ msgstr "Subir cambios de software"
-
-#~ msgid "Upload errors"
-#~ msgstr "Subir errores"
 
 #~ msgid "Creating Repositories File"
 #~ msgstr "Crear ficheros de los repositorios"
@@ -1372,9 +2236,6 @@ msgstr "Cambiar"
 
 #~ msgid "Installing packages"
 #~ msgstr "Instalando aplicaciones"
-
-#~ msgid "Updating packages"
-#~ msgstr "Actualizando aplicaciones"
 
 #~ msgid "Upload inventory software"
 #~ msgstr "Subiendo inventario de aplicaciones"
@@ -1425,9 +2286,6 @@ msgstr "Cambiar"
 
 #~ msgid "Mining"
 #~ msgstr "Gestión"
-
-#~ msgid "Configuration"
-#~ msgstr "Configuración"
 
 #~ msgid "Software"
 #~ msgstr "Software"
