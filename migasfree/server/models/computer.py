@@ -199,18 +199,25 @@ class Computer(models.Model):
                 }
             ret += '</ul>'
 
-            _computer_link += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="fa fa-external-link"></span><span class="sr-only">Toggle Dropdown</span></button>'
+            _computer_link += '<button type="button" ' + \
+                'class="btn btn-default dropdown-toggle" data-toggle="dropdown">' + \
+                '<span class="fa fa-external-link"></span>' + \
+                '<span class="sr-only">' + _("Toggle Dropdown") + \
+                '</span></button>'
 
             return format_html(
                 '<div class="btn-group btn-group-xs">' + \
                 _computer_link + ret + '</div>'
             )
         else:  # only 1 element
+            protocol = _remote_admin.split("://")[0]
             return format_html(
                 _computer_link + \
                 '<a href="' + _remote_admin + \
-                '" title="' + _remote_admin.split("://")[0] + \
-                '"><span class="fa fa-external-link btn btn-xs"></span></a>'
+                '" title="' + protocol + \
+                '"><span class="fa fa-external-link btn btn-xs"></span>' + \
+                '<span class="sr-only">' + protocol + \
+                '</span></a>'
             )
 
     link.allow_tags = True
