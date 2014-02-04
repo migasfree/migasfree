@@ -123,12 +123,18 @@ class Computer(models.Model):
 
     def login_link(self):
         try:
-            return self.last_login().link()
+            return self.login().link()
         except:
             return ''
-
     login_link.allow_tags = True
-    login_link.short_description = _("Last login")
+    login_link.short_description = _("login")
+
+
+    def login(self):
+        try:
+            return self.login_set.filter(Q(computer__id=self.id))[0]
+        except:
+            return None
 
     def update_link(self):
         return self.last_update().link()
@@ -202,7 +208,7 @@ class Computer(models.Model):
             _computer_link += '<button type="button" ' + \
                 'class="btn btn-default dropdown-toggle" data-toggle="dropdown">' + \
                 '<span class="fa fa-external-link"></span>' + \
-                '<span class="sr-only">' + _("Toggle Dropdown") + \
+                '<span class="sr-only">' + str(_("Toggle Dropdown")) + \
                 '</span></button>'
 
             return format_html(
