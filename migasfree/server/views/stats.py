@@ -1,44 +1,24 @@
 # -*- coding: utf-8 -*-
 
-from datetime import timedelta
-from datetime import datetime
-from datetime import date
+from datetime import timedelta, datetime, date
 
+from django.utils import simplejson as json
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.urlresolvers import reverse
+from django.db.models import Max, Count, Q
 
-from django.db.models import Max
-from django.db.models import Count
-from django.db.models import Q
-
-from migasfree.server.open_flash_chart import Chart
 from migasfree.server.models import *
 
 
 @login_required
-def chart(request, chart_type):
-    return render(
-        request,
-        'chart.html',
-        {
-            'title': chart_type,  # FIXME improve title
-            'ofc': reverse('chart_%s' % chart_type)
-        }
-    )
-
-
 def hourly_updated(request):
-    o_chart = Chart()
-    timeformat = "%H h. %b %d "
-    o_chart.title.text = _("Updated Computers / Hour")
-    o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
+    timeformat = "%H h. %b %d"
 
-    element1 = Chart()
-    element1.values = []
-    labels = []
+    data = []
+    #x_axis = []
 
     y = 24 * 4  # 4 days
     delta = timedelta(hours=1)
@@ -51,48 +31,58 @@ def hourly_updated(request):
             date__lt=n + delta
         ).values('computer').distinct().count()
 
-        element1.values.append(value)
-        element1.tip = "#x_label#    #val# " + _("Computers")
-
-        labels.append(n.strftime(timeformat))
+        data.append([int(n.strftime("%s")), value])
+        #data.append([i, value])
+        #x_axis.append([i, n.strftime(timeformat)])
         n += delta
 
-    element1.type = "bar"
-    # element1.dot_style.type = "dot"
-    element1.width = 2
-    element1.colour = "#417690"
-    element1.text = ""  # Label
-    element1.font_size = 10
+    options = {
+        'series': {
+            'bars': {
+                'show': True,
+                'barWidth': 0.6,
+                'align': 'center'
+            }
+        },
+        'grid': {
+            'hoverable': True
+        },
+        'legend': {
+            'show': False,
+        },
+        'xaxis': {
+            #'tickLength': 5,
+            #'ticks': x_axis,
+            #'labelWidth': 80,
+            #'minTickSize': 4
+            'mode': 'time',
+            'timeformat': '%H h. %b %d',
+            'minTickSize': [2, 'hours'],
+            'monthNames': [
+                _("Jan"), _("Feb"), _("Mar"), _("Apr"),
+                _("May"), _("Jun"), _("Jul"), _("Aug"),
+                _("Sep"), _("Oct"), _("Nov"), _("Dec")
+            ]
+        }
+    }
 
-    o_chart.x_axis.labels.stroke = 3
-    o_chart.x_axis.labels.steps = 24
-    o_chart.x_axis.labels.rotate = 270
-
-    o_chart.x_axis.labels.labels = labels
-
-    # y_axis
-    o_chart.y_axis.max = max(element1.values)
-    o_chart.y_axis.steps = 10 ** (len(str(o_chart.y_axis.max * 4)) - 2)
-    o_chart.y_axis.max += o_chart.y_axis.steps / 2
-
-    o_chart.elements = [element1, ]
-    o_chart.y_legend.text = _("Computers")
-    o_chart.y_legend.style = "{font-size: 12px; color: #778877}"  # FIXME remove
-    o_chart.x_legend.text = _("Hour")
-    o_chart.x_legend.style = "{font-size: 12px; color: #778877}"  # FIXME remove
-
-    return HttpResponse(o_chart.create(), mimetype="text/plain")
+    return render(
+        request,
+        'lines.html',
+        {
+            "title": _("Updated Computers / Day"),
+            "options": json.dumps(options),
+            "data": json.dumps([{'data': data, 'label': _("Computers")}]),
+        }
+    )
 
 
+@login_required
 def daily_updated(request):
-    o_chart = Chart()
     timeformat = "%b %d"
-    o_chart.title.text = _("Updated Computers / Day")
-    o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
 
-    element1 = Chart()
-    element1.values = []
-    labels = []
+    data = []
+    x_axis = []
 
     days = 35
     delta = timedelta(days=1)
@@ -102,156 +92,143 @@ def daily_updated(request):
             date__gte=n,
             date__lt=n + delta
         ).values('computer').distinct().count()
-        element1.values.append(value)
-        element1.tip = "#x_label#    #val# " + _("Computers")
-        labels.append(n.strftime(timeformat))
+
+        data.append([i, value])
+        x_axis.append([i, n.strftime(timeformat)])
         n += delta
 
-    element1.type = "bar"
-    element1.dot_style.type = "dot"
-    element1.width = 2
-    element1.colour = "#417690"
-    element1.text = ""  # Label
-    element1.font_size = 10
+    options = {
+        'series': {
+            'bars': {
+                'show': True,
+                'barWidth': 0.6,
+                'align': 'center'
+            }
+        },
+        'grid': {
+            'hoverable': True
+        },
+        'legend': {
+            'show': False,
+        },
+        'xaxis': {
+            'tickLength': 5,
+            'ticks': x_axis,
+            'labelWidth': 80
+        }
+    }
 
-    o_chart.x_axis.labels.rotate = 270
-    o_chart.x_axis.labels.labels = labels
-
-    # y_axis
-    o_chart.y_axis.max = max(element1.values)
-    o_chart.y_axis.steps = 10 ** (len(str(o_chart.y_axis.max * 4)) - 2)
-    o_chart.y_axis.max += o_chart.y_axis.steps / 2
-
-    o_chart.elements = [element1, ]
-
-    o_chart.y_legend.text = _("Computers")
-    o_chart.y_legend.style = "{font-size: 12px; color: #778877}"  # FIXME remove
-    o_chart.x_legend.text = _("Day")
-    o_chart.x_legend.style = "{font-size: 12px; color: #778877}"  # FIXME remove
-
-    return HttpResponse(o_chart.create(), mimetype="text/plain")
+    return render(
+        request,
+        'lines.html',
+        {
+            "title": _("Updated Computers / Hour"),
+            "options": json.dumps(options),
+            "data": json.dumps([{'data': data, 'label': _("Computers")}]),
+        }
+    )
 
 
+def month_year_iter(start_month, start_year, end_month, end_year):
+    # http://stackoverflow.com/questions/5734438/how-to-create-a-month-iterator
+    ym_start = 12 * start_year + start_month - 1
+    ym_end = 12 * end_year + end_month - 1
+    for ym in range(ym_start, ym_end):
+        y, m = divmod(ym, 12)
+        yield y, m + 1
+
+
+@login_required
 def monthly_updated(request):
-    o_chart = Chart()
-    timeformat = "%b"
-    o_chart.title.text = _("Updated Computers / Month")
-    o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
+    platforms = Platform.objects.only("id", "name")
 
-    element1 = Chart()
-    element1.values = []
+    labels = {}
+    data = {}
+    for platform in platforms:
+        data[platform.id] = []
+        labels[platform.id] = platform.name
 
-    element2 = Chart()
-    element2.values = []
+    data['total'] = []
+    labels['total'] = _("Totals")
 
-    element3 = Chart()
-    element3.values = []
+    i = 0
+    x_axis = []
+    for monthly in month_year_iter(
+        1,
+        2012,
+        int(date.today().strftime("%m")),
+        int(date.today().strftime("%Y"))
+    ):
+        x_axis.append([i, '%d-%d' % (monthly[0], monthly[1])])
+        total_monthly = 0
+        for platform in platforms:
+            value = Update.objects.filter(
+                version__platform=platform.id
+            ).filter(
+                date__month=monthly[1],
+                date__year=monthly[0]
+            ).values('computer').distinct().count()
 
-    labels = []
+            data[platform.id].append([i, value])
+            total_monthly += value
 
-    year= int(date.today().strftime("%Y"))
-    years = [year-2, year-1, year]
-    months = []
-    for i in range(1, 13):
-        months.append(date(year, i, 1).strftime(timeformat))
+        data['total'].append([i, total_monthly])
+        i += 1
 
-    for y in years:
-        for m in range(1, 13):
+    options = {
+        'series': {
+            'lines': {
+                'show': True
+            },
+            'points': {
+                'show': True
+            }
+        },
+        'grid': {
+            'hoverable': True
+        },
+        'legend': {
+            'show': True,
+            'position': 'nw'
+        },
+        'xaxis': {
+            'tickLength': 5,
+            'ticks': x_axis,
+            'labelWidth': 80
+        }
+    }
 
-            value2 = Update.objects.filter(version__platform=1).filter(date__month = m, date__year = y).values('computer').distinct().count()
-            element2.values.append(value2)
-            element2.tip = "#x_label#    #val# "+_("Windows Computers")
+    output_data = []
+    for item in data:
+        output_data.append({'data': data[item], 'label': labels[item]})
 
-            value3 = Update.objects.filter(version__platform=2).filter(date__month = m, date__year = y).values('computer').distinct().count()
-            element3.values.append(value3)
-            element3.tip = "#x_label#    #val# "+_("Linux Computers")
-
-
-            element1.values.append(value2+value3)
-            element1.tip = "#x_label#    #val# "+_("Total Computers")
-
-
-
-            labels.append(str(months[m-1]) +" " +str(y))
-
-
-
-    element1.type = "line"
-    element1.dot_style.type = "dot"
-    element1.width = 1
-    element1.colour = "#888888"
-    element1.text = "" #Label
-    element1.font_size = 10
-
-
-    element2.type = "line"
-    element2.dot_style.type = "dot"
-    element2.width = 3
-    element2.colour = "#FF0040" #rojo
-    element2.text = "" #Label
-    element2.font_size = 10
-
-    element3.type = "line"
-    element3.dot_style.type = "dot"
-    element3.width = 3
-    element3.colour = "#04B404" #verde
-    element3.text = "" #Label
-    element3.font_size = 10
-
-
-    o_chart.x_axis.labels.rotate =  270
-    o_chart.x_axis.labels.labels = labels
-
-    # y_axis
-    o_chart.y_axis.max = max(element1.values)
-    o_chart.y_axis.steps = 10**( len(str(o_chart.y_axis.max*4))-2)
-    o_chart.y_axis.max = o_chart.y_axis.max + ( 10**( len(str(o_chart.y_axis.max*4))-2)/2)
-
-    o_chart.elements = [element1,element2,element3]
-
-    o_chart.y_legend.text = _("Computers")
-    o_chart.y_legend.style = "{font-size: 12px; color: #778877}"
-    o_chart.x_legend.text = _("Month")
-    o_chart.x_legend.style = "{font-size: 12px; color: #778877}"
-
-    return HttpResponse(o_chart.create(), mimetype="text/plain")
+    return render(
+        request,
+        'lines.html',
+        {
+            "title": _("Updated Computers / Month"),
+            "options": json.dumps(options),
+            "data": json.dumps(output_data),
+        }
+    )
 
 
-
+@login_required
 def delay_schedule(request):
-    o_chart = Chart()
-    o_chart.title.text = _("Provided Computers / Delay")
-    o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
-
-    o_chart.elements = []
-    colours = [
-        "#fa6900", "#417690", "#C4D318",
-        "#FF00FF", "#00FFFF", "#50284A", "#7D7B6A",
-    ]
-    c = 0
-    m = 0
+    data = []
+    maximum_delay = 0
     for sched in Schedule.objects.all():
         lst_attributes = []
-        line = Chart()
-        line.type = "line"
-        line.dot_style.type = "dot"
-        line.width = 2
-        line.colour = colours[c]
-        c += 1
-        if c == len(colours):
-            c = 0
-
-        line.font_size = 10
-
         d = 1
         value = 0
-        line.values = []
+        line = []
         delays = ScheduleDelay.objects.filter(
             schedule__name=sched.name
         ).order_by("delay")
         for delay in delays:
             for i in range(d, delay.delay):
-                line.values.append(value)
+                print i, value
+                line.append([i, value])
 
             for att in delay.attributes.all():
                 lst_attributes.append(att.id)
@@ -260,64 +237,105 @@ def delay_schedule(request):
                 Q(attributes__id__in=lst_attributes)
             ).values('computer_id').annotate(lastdate=Max('date')).count()
             d = delay.delay
-        line.values.append(value)
-        line.text = sched.name
-        line.tip = "#x_label# " + _("days") + " #val# " + _("Computers")
 
-        m = max(m, max(line.values))
-        o_chart.elements.append(line)
+        #line.append([i, value]) ???
 
-    o_chart.y_axis.max = m
-    o_chart.y_axis.steps = 10 ** (len(str(o_chart.y_axis.max * 4)) - 2)
-    o_chart.y_axis.max += o_chart.y_axis.steps / 2
+        maximum_delay = max(maximum_delay, d)
+        data.append({
+            'data': line,
+            'label': sched.name, #_('%d days: %d computers')
+        })
 
-    o_chart.y_legend.text = _("Computers")
-    o_chart.y_legend.style = "{font-size: 12px; color: #778877}"  # FIXME remove
-    o_chart.x_legend.text = _("Delay")
-    o_chart.x_legend.style = "{font-size: 12px; color: #778877}"  # FIXME remove
+    x_axis = []
+    for i in range(0, maximum_delay):
+        x_axis.append([i, _('%d days') % i])
 
-    return HttpResponse(o_chart.create(), mimetype="text/plain")
-
-
-def version_computer(request):
-    o_chart = Chart()
-    o_chart.title.text = _("Computers / Version")
-    o_chart.title.style = "{font-size: 18px; color: #417690; text-align: center;}" # FIXME remove
-
-    element1 = Chart()
-    element1.type = "pie"
-    element1.alpha = 0.6
-    element1.start_angle = 35
-    element1.animate = [{"type": "fade"}, {"type": "bounce", "distance": 10}]
-    element1.tip = "#val# " + _("of") + " #total#<br>#percent#"
-    element1.colours = ["#1C9E05", "#FF368D", "#417690", "#C4D318", "#50284A"]
-
-    element1.gradient_fill = True
-    element1.radius = 100
-    element1.values = []
-    for e in Computer.objects.values("version__name").annotate(count=Count("id")):
-        """
-        element1.values = [
-            2000, 3000, 4000, {
-                "value": 6000.511,
-                "label": "hello (6000.51)",
-                "on-click": "http://example.com"
+    options = {
+        'series': {
+            'lines': {
+                'show': True
+            },
+            'points': {
+                'show': True
             }
-        ]
-        """
-        element1.values.append(
+        },
+        'grid': {
+            'hoverable': True
+        },
+        'legend': {
+            'show': True,
+            'position': 'se'
+        },
+        'xaxis': {
+            'tickLength': 5,
+            'ticks': x_axis,
+            'labelWidth': 80
+        }
+    }
+
+    return render(
+        request,
+        'lines.html',
+        {
+            "title": _("Provided Computers / Delay"),
+            "options": json.dumps(options),
+            "data": json.dumps(data),
+        }
+    )
+
+
+@login_required
+def version_computer(request):
+    data = []
+    total = 0
+    for version in Computer.objects.values("version__name").annotate(
+        count=Count("id")
+    ):
+        data.append(
             {
-                "value": e.get("count"),
-                "label": e.get("version__name"),
+                "data": version.get("count"),
+                "label": version.get("version__name"),
             }
         )
+        total += version.get("count")
 
-    o_chart.num_decimals = 0
-    o_chart.is_fixed_num_decimals_forced = True
-    o_chart.is_decimal_separator_comma = False
-    o_chart.is_thousand_separator_disabled = False
+    options = {
+        'series': {
+            'pie': {
+                'show': True,
+                'radius': 4.0/5,
+                'label': {
+                    'show': True,
+                    'radius': 1,
+                    'background': {
+                        'opacity': 0.5,
+                        'color': '#000'
+                    }
+                }
+            }
+        },
+        'legend': {
+            'show': True,
+            'sorted': "ascending"
+        },
+        'grid': {
+            'hoverable': True
+        },
+        'tooltip': True,
+        'tooltipOpts': {
+            'content': "%s (%y.0 / " + str(total) + ")"
+        }
+    }
 
-    # Add data to chart object
-    o_chart.elements = [element1]
-
-    return HttpResponse(o_chart.create(), mimetype="text/plain")
+    return render(
+        request,
+        'pie.html',
+        {
+            'title': _("Computers / Version"),
+            'options': json.dumps(options),
+            'data': json.dumps(data),
+            'total': total,
+            'formatter': 'labelFormatter',
+            'labelFormatter': 'labelLegend',
+        }
+    )
