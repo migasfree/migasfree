@@ -106,28 +106,19 @@
                     </ul>
 
                     {% if version_names %}
-                        <div class="col-sm-1 col-md-1">
-                            <form action="{% url 'change_version' %}" method="post" class="navbar-form navbar-left">
-                                <div class="input-group">
-                                    <label for="version" class="sr-only">{% trans 'Version' %}:</label>
-                                    <select id="version" name="version" class="form-control input-sm" title="{% trans 'Version' %}">
-                                        {% for item in version_names %}
-                                            <option value="{{ item.0 }}" {% if item.1 = current_version %}selected="selected"{% endif %}>{{ item.1 }}</option>
-                                        {% endfor %}
-                                    </select>
-
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-default btn-sm" type="submit" title="{% trans 'Change' %}">
-                                            <span class="fa fa-check"></span>
-                                            <span class="sr-only">{% trans 'Change' %}</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="#" title="{% trans 'Change Version' %}" class="dropdown-toggle" data-toggle="dropdown">{{ current_version }} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    {% for item in version_names %}
+                                        <li>
+                                            <a href="{% url 'change_version' %}?version={{ item.0 }}">{{ item.1 }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
                     {% endif %}
-
-                    <div class="col-sm-1 col-md-1"></div>
 
                     <div class="col-sm-1 col-md-1">
                         <form action="{% url 'admin:server_computer_changelist' %}" method="get" class="navbar-form navbar-left" role="search">
