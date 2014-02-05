@@ -45,29 +45,28 @@ urlpatterns = patterns('',
         name='change_version'
     ),
 
-    url(r'^chart/(?P<chart_type>.*)/$', chart, name='chart_type'),
     url(
-        r'^hourly_updated/$',
+        r'^chart/hourly_updated/$',
         hourly_updated,
         name='chart_hourly_updated'
     ),
     url(
-        r'^daily_updated/$',
+        r'^chart/daily_updated/$',
         daily_updated,
         name='chart_daily_updated'
     ),
     url(
-        r'^monthly_updated/$',
+        r'^chart/monthly_updated/$',
         monthly_updated,
         name='chart_monthly_updated'
     ),
     url(
-        r'^delay_schedule/$',
+        r'^chart/delay_schedule/$',
         delay_schedule,
         name='chart_delay_schedule'
     ),
     url(
-        r'^version_computer/$',
+        r'^chart/version_computer/$',
         version_computer,
         name='chart_version_computer'
     ),
