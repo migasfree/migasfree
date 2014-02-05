@@ -96,10 +96,10 @@ def info(request, package):  # package info
 
 @login_required()
 def change_version(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         user_profile = UserProfile.objects.get(id=request.user.id)
         user_profile.version = Version.objects.get(
-            id=request.POST.get('version')
+            id=request.GET.get('version')
         )
         user_profile.save()
 
