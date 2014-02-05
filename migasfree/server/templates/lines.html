@@ -1,0 +1,35 @@
+{% extends "stats.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{% static 'flot/jquery.flot.time.min.js' %}"></script>
+
+    <script>
+        $(function() {
+            var data = {{ data|safe }};
+            var options = {{ options|safe }};
+
+            $.plot("#stat-holder", data, options);
+
+            $("<div id='tooltip'></div>").appendTo("body");
+
+            $("#stat-holder").bind("plothover", function (event, pos, item) {
+                var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
+                $("#hoverdata").text(str);
+
+                if (item) {
+                    var x = item.datapoint[0];
+                    var y = item.datapoint[1];
+                    var label = item.series.xaxis.options.ticks[x][1];
+
+                    $("#tooltip").html(label + ": " + y + " " + item.series.label)
+                        .css({top: item.pageY+5, left: item.pageX+5})
+                        .fadeIn(200);
+                } else {
+                    $("#tooltip").hide();
+                }
+            });
+        });
+    </script>
+{% endblock extrahead %}

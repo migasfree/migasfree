@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrastyle %}
+    <style>
+        #stat-holder {
+            width: 700px;
+            height: 500px;
+        }
+
+        .stat-label {
+            text-align: center;
+            padding: 3px;
+            color: #fff;
+            font-size: 80%;
+        }
+
+        .stat-container {
+            width: 700px;
+            padding: 20px 15px 15px 15px;
+            margin: 15px auto 30px auto;
+            /*box-sizing: border-box;
+            border: 1px solid #ddd;
+            background: linear-gradient(#f6f6f6 0, #fff 50px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);*/
+        }
+
+        #tooltip {
+            position: absolute;
+            display: none;
+            border: 1px solid #fdd;
+            padding: 2px;
+            background-color: #fee;
+            opacity: 0.80;
+        }
+
+        .flot-x-axis div.flot-tick-label {
+            transform: translateX(50%) rotate(45deg);
+            -webkit-transform: translateX(50%) rotate(45deg);
+            transform-origin: 0 0;
+            -webkit-transform-origin: 0 0;
+        }
+    </style>
+{% endblock extrastyle %}
+
+{% block extrahead %}
+    <script src="{% static 'flot/jquery.flot.min.js' %}"></script>
+
+    <script>
+        function labelLegend(label, series) {
+            return label + " (" + series.data[0][1] + ")";
+        }
+
+        function labelFormatter(label, series)
+        {
+            return "<div class='stat-label'>" + series.label + "<br/>" + Math.round(series.percent) + "%</div>";
+        }
+    </script>
+{% endblock extrahead %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Audit' %}</li>
+    </ul>
+{% endblock %}
+
+{% block bodyclass %}stats{% endblock %}
+
+{% block content %}
+    <div class="stat-container">
+        <div id="stat-holder"></div>
+    </div>
+{% endblock content %}

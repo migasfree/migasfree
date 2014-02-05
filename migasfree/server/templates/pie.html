@@ -1,0 +1,21 @@
+{% extends "stats.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{% static 'flot/jquery.flot.pie.min.js' %}"></script>
+    <script src="{% static 'flot/plugins/jquery.flot.tooltip.min.js' %}"></script>
+
+    <script>
+        $(function() {
+            var data = {{ data|safe }};
+            var total = {{ total }};
+            var options = {{ options|safe }};
+
+            options.series.pie.label.formatter = {{ formatter|safe }};
+            options.legend.labelFormatter = {{ labelFormatter|safe }};
+
+            $.plot("#stat-holder", data, options);
+        });
+    </script>
+{% endblock extrahead %}
