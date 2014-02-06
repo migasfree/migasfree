@@ -164,7 +164,7 @@ def monthly_updated(request):
     for monthly in month_year_iter(
         1,
         2012,
-        int(date.today().strftime("%m")),
+        int(date.today().strftime("%m")) + 1,
         int(date.today().strftime("%Y"))
     ):
         x_axis.append([i, '%d-%d' % (monthly[0], monthly[1])])
