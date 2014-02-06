@@ -1,0 +1,102 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static admin_modify bootstrapped_goodies_tags server_tags %}
+{% load url from future %}
+{% load admin_urls %}
+
+{% block extrahead %}
+    {{ block.super }}
+    {% url 'admin:jsi18n' as jsi18nurl %}
+    <script type="text/javascript" src="{{ jsi18nurl|default:'../../../jsi18n/' }}"></script>
+    {{ media }}
+{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'admin/css/forms.css' %}" />
+{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% block content_title %}
+    {% if title %}
+        <h1 {% if change %}class="change-list-title"{% endif %}>
+            {% trans opts.verbose_name %}: {{ original }}
+        </h1>
+    {% endif %}
+{% endblock content_title %}
+
+{% block object-tools %}
+    {% if change %}
+        {% if not is_popup %}
+            <ul class="nav navbar-nav navbar-right">
+            {% block object-tools-items %}
+                <li><a href="history/" class="btn btn-inverse historylink">{% trans "History" %}</a></li>
+                {% if has_absolute_url %}
+                    <li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="btn viewsitelink">{% trans "View on site" %}</a></li>
+                {% endif%}
+            {% endblock %}
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {% with module_name=opts.module_name|lower|slugify %}
+        {% render_with_template_if_exist "admin_model_"|add:opts.module_name|add:"_change_form.html" "" %}
+    {% endwith %}
+
+    <form class="form-horizontal" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">
+        {% csrf_token %}
+
+        {% block form_top %}{% endblock %}
+
+        <div class="alert alert-warning">
+            {% blocktrans %}Fields in <strong>bold</strong> are required.{% endblocktrans %}
+        </div>
+
+        {% if errors %}
+            <div class="alert alert-danger">
+                {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+
+                {{ adminform.form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        {% if save_on_top %}{% block submit_buttons_top %}{% submit_row %}{% endblock %}{% endif %}
+
+        <div id="content-main">
+            <div>
+                {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
+
+                {% block field_sets %}
+                    {% for fieldset in adminform %}
+                        {% include "admin/includes/fieldset.html" %}
+                    {% endfor %}
+                {% endblock %}
+
+                {% block after_field_sets %}{% endblock %}
+
+                {% block inline_field_sets %}
+                    {% for inline_admin_formset in inline_admin_formsets %}
+                        {% include inline_admin_formset.opts.template %}
+                    {% endfor %}
+                {% endblock %}
+
+                {% block after_related_objects %}{% endblock %}
+
+                {% if adminform and add %}
+                   <script type="text/javascript">document.getElementById("{{ adminform.first_field.id_for_label }}").focus();</script>
+                {% endif %}
+
+                {# JavaScript for prepopulated fields #}
+                {% prepopulated_fields_js %}
+            </div>
+        </div>
+
+        <div class="form-actions">
+            {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+        </div>
+    </form>
+{% endblock content %}
