@@ -11,16 +11,24 @@ function change_data()
                 {
                     if (connection_list[i].fields['fields'] != '')
                     {
+                        html += '<div class="row join">';
                         var fields = connection_list[i].fields['fields'].split(',');
                         var data = eval("("+ $("#id_data").val() + ")");
                         for (var j = 0; j < fields.length; j++)
                         {
-                            html += '<div class="join">';
+                            html += '<div class="control-group">';
+                            html += '<div class="col-md-12 form-group ">';
+                            html += '<div class="control-label col-sm-3">';
                             html += '<label for="join_' + fields[j] + '">' + fields[j] + '</label>';
-                            html += '<input id="join_' + fields[j] + '" type="text" class="join_field" value="' + data[fields[j]] + '" />';
+                            html += '</div>';
+                            html += '<div class="controls col-sm-9">';
+                            html += '<input id="join_' + fields[j] + '" type="text" class="form-control" value="' + data[fields[j]] + '" />';
+                            html += '</div>';
+                            html += '</div>';
                             html += '</div>';
 
                         }
+                        html += '</div>';
                     }
                 }
             }
@@ -29,7 +37,7 @@ function change_data()
             $('div.join').remove();
 
             // append new related fields
-            $('div.field-data').append(html);
+            $('div.fields').append(html);
         });
     }
 }
@@ -67,6 +75,7 @@ function change_model(default_value)
 $(function() {
     // sólo se tiene que aplicar al formulario de entrada de datos
     if ($('#device_form').length) {
+        $(".field-data label").addClass("sr-only");
         $("#id_data").closest("div").hide();
         $("#id_data").attr("hidden", "hidden");
 
