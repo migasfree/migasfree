@@ -18,9 +18,9 @@ def hourly_updated(request):
     timeformat = "%H h. %b %d"
 
     data = []
-    #x_axis = []
+    x_axis = []
 
-    y = 24 * 4  # 4 days
+    y = 24 * 2  # 4 days
     delta = timedelta(hours=1)
     n = datetime.now() - ((y - 25) * delta)
     n = datetime(n.year, n.month, n.day, 0)
@@ -31,9 +31,11 @@ def hourly_updated(request):
             date__lt=n + delta
         ).values('computer').distinct().count()
 
-        data.append([int(n.strftime("%s")), value])
-        #data.append([i, value])
-        #x_axis.append([i, n.strftime(timeformat)])
+        # http://stackoverflow.com/questions/1077393/python-unix-time-doesnt-work-in-javascript
+        #data.append([int(n.strftime("%s")) * 1000, value])
+
+        data.append([i, value])
+        x_axis.append([i, n.strftime(timeformat)])
         n += delta
 
     options = {
@@ -51,26 +53,32 @@ def hourly_updated(request):
             'show': False,
         },
         'xaxis': {
-            #'tickLength': 5,
-            #'ticks': x_axis,
-            #'labelWidth': 80,
-            #'minTickSize': 4
-            'mode': 'time',
-            'timeformat': '%H h. %b %d',
-            'minTickSize': [2, 'hours'],
-            'monthNames': [
-                _("Jan"), _("Feb"), _("Mar"), _("Apr"),
-                _("May"), _("Jun"), _("Jul"), _("Aug"),
-                _("Sep"), _("Oct"), _("Nov"), _("Dec")
-            ]
-        }
+            'tickLength': 5,
+            'ticks': x_axis,
+            'labelWidth': 80,
+            'minTickSize': 4,
+
+            #'axisLabel': _("Hours"),
+
+            #'mode': 'time',
+            #'timeformat': timeformat,
+            #'minTickSize': [5, 'hour'],
+            #'monthNames': [
+            #    _("Jan"), _("Feb"), _("Mar"), _("Apr"),
+            #    _("May"), _("Jun"), _("Jul"), _("Aug"),
+            #    _("Sep"), _("Oct"), _("Nov"), _("Dec")
+            #]
+        },
+        #'yaxis': {
+        #    'axisLabel': _("Computers"),
+        #}
     }
 
     return render(
         request,
         'lines.html',
         {
-            "title": _("Updated Computers / Day"),
+            "title": _("Updated Computers / Hour"),
             "options": json.dumps(options),
             "data": json.dumps([{'data': data, 'label': _("Computers")}]),
         }
@@ -122,7 +130,7 @@ def daily_updated(request):
         request,
         'lines.html',
         {
-            "title": _("Updated Computers / Hour"),
+            "title": _("Updated Computers / Day"),
             "options": json.dumps(options),
             "data": json.dumps([{'data': data, 'label': _("Computers")}]),
         }
@@ -227,7 +235,6 @@ def delay_schedule(request):
         ).order_by("delay")
         for delay in delays:
             for i in range(d, delay.delay):
-                print i, value
                 line.append([i, value])
 
             for att in delay.attributes.all():
@@ -238,17 +245,17 @@ def delay_schedule(request):
             ).values('computer_id').annotate(lastdate=Max('date')).count()
             d = delay.delay
 
-        #line.append([i, value]) ???
+        line.append([d, value])
 
         maximum_delay = max(maximum_delay, d)
         data.append({
             'data': line,
-            'label': sched.name, #_('%d days: %d computers')
+            'label': sched.name,
         })
 
     x_axis = []
-    for i in range(0, maximum_delay):
-        x_axis.append([i, _('%d days') % i])
+    for i in range(0, maximum_delay + 1):
+        x_axis.append([i, _('%d days') % (i)])
 
     options = {
         'series': {
@@ -269,7 +276,8 @@ def delay_schedule(request):
         'xaxis': {
             'tickLength': 5,
             'ticks': x_axis,
-            'labelWidth': 80
+            'labelWidth': 80,
+            'minTickSize': 5
         }
     }
 
