@@ -159,10 +159,9 @@ admin.site.register(DeviceLogical, DeviceLogicalAdmin)
 
 class DeviceLogicalInline(admin.TabularInline):
     model = DeviceLogical
+    form = DeviceLogicalForm
+    fields = ( "feature", "computers")
 
-    formfield_overrides = {models.TextField: {'widget': ExtraThinTextarea}}
-    fields = ('feature', )
-    ordering = ['feature', ]
     extra = 0
 
 
