@@ -10,11 +10,19 @@
 {% block bodyclass %}package-info{% endblock %}
 
 {% block content %}
-    {% for column in filters %}
-        <pre>   {{ column }}</pre>
-    {% endfor %}
+    {% if contentpage %}
+        <pre>
+        {{ contentpage }}
+        </pre>
+    {% endif %}
 
-    <pre>
-    {{ contentpage }}
-    </pre>
+    {% if query %}
+        <ul class="list-group">
+        {% for item in query %}
+            <li class="list-group-item">
+                <a href="{{ item.1 }}"><span class="fa fa-{{ item.0 }}"></span> {{ item.1 }}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}
