@@ -7,10 +7,9 @@ import tempfile
 
 from datetime import timedelta
 
-import django
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.settings import DATABASES, MIGASFREE_PROJECT_DIR, \
+from migasfree.settings import DATABASES, MIGASFREE_APP_DIR, \
     MIGASFREE_REPO_DIR, MIGASFREE_INVALID_UUID
 
 
@@ -42,7 +41,7 @@ Alias /repo %(migasfree_repo_dir)s
     IndexOptions FancyIndexing
 </Directory>
 
-WSGIScriptAlias / %(migasfree_project_dir)s/wsgi.py
+WSGIScriptAlias / %(migasfree_app_dir)s/wsgi.py
 """
 
     _filename = os.path.join(_apache_path, 'migasfree.conf')
@@ -80,7 +79,7 @@ vserver!20!rule!10!handler!iocache = 0
 vserver!20!rule!10!match = default
 source!1!env_inherited = 1
 source!1!host = 127.0.0.1:32942
-source!1!interpreter = /usr/sbin/uwsgi -s 127.0.0.1:32942 -M -p 2 -z 15 -L -l 128 %(migasfree_project_dir)s/wsgi.py
+source!1!interpreter = /usr/sbin/uwsgi -s 127.0.0.1:32942 -M -p 2 -z 15 -L -l 128 %(migasfree_app_dir)s/wsgi.py
 source!1!nick = uWSGI 1
 source!1!type = interpreter
 server!timeout = 300
@@ -98,13 +97,12 @@ server!timeout = 300
 
 def _write_web_config(filename, config):
     _content = config % {
-        'django_dir': os.path.dirname(os.path.abspath(django.__file__)),
         'migasfree_repo_dir': MIGASFREE_REPO_DIR,
-        'migasfree_project_dir': MIGASFREE_PROJECT_DIR
+        'migasfree_app_dir': MIGASFREE_APP_DIR
     }
 
     if not writefile(filename, _content):
-        print('Problem found creating Apache configuration file.')
+        print('Problem found creating web server configuration file.')
         sys.exit(errno.EINPROGRESS)
 
 
@@ -139,11 +137,13 @@ def readfile(filename):
 
     return ret
 
+
 def l2s(lst):
     """
     list to string
     """
     return lst.__str__()
+
 
 def s2l(cad):
     """
@@ -211,6 +211,7 @@ def list_difference(list1, list2):
 
     return diff_list
 
+
 def list_common(list1, list2):
     """uses list1 as the reference, returns list of items in list2"""
     diff_list = []
@@ -222,8 +223,13 @@ def list_common(list1, list2):
 
 
 def old_new_elements(list1, list2):
-    """Given two list return the a list with the old elements and other list with the new elements"""
-    return (list_difference(list1,list2), list_difference(list2,list1))
+    """Given two lists returns a list with the old elements
+    and other list with the new elements"""
+    return (
+        list_difference(list1, list2),
+        list_difference(list2, list1)
+    )
+
 
 def run_in_server(code_bash):
     _, tmp_file = tempfile.mkstemp()
@@ -252,10 +258,16 @@ def get_client_ip(request):
 
     return ip
 
-def uuid_validate(uuid):
 
-    if len(uuid)==32:
-        uuid = "%s-%s-%s-%s-%s" %(uuid[0:8],uuid[8:12],uuid[12:16],uuid[16:20],uuid[20:32])
+def uuid_validate(uuid):
+    if len(uuid) == 32:
+        uuid = "%s-%s-%s-%s-%s" % (
+            uuid[0:8],
+            uuid[8:12],
+            uuid[12:16],
+            uuid[16:20],
+            uuid[20:32]
+        )
 
     if uuid in MIGASFREE_INVALID_UUID:
         return ""
@@ -265,7 +277,10 @@ def uuid_validate(uuid):
 
 def add_default_device_logical(device):
     from migasfree.server.models import DeviceFeature, DeviceLogical
-    for feature in DeviceFeature.objects.all().filter(devicedriver__model=device.model).distinct():
+
+    for feature in DeviceFeature.objects.all().filter(
+        devicedriver__model=device.model
+    ).distinct():
         logical = DeviceLogical()
         logical.device = device
         logical.feature = feature
