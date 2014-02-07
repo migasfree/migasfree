@@ -33,12 +33,7 @@ def info(request, package):  # package info
 
     path = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
     if os.path.isfile(path):
-        # GET INFORMATION OF PACKAGE
-        cmd = 'echo "Version: %s"\n' % version.name
-        cmd += 'echo "Package: %s"\n' % package
-        cmd += "echo\n"
-        cmd += "echo\n"
-        cmd += 'PACKAGE=%s\n' % path
+        cmd = 'PACKAGE=%s\n' % path
         cmd += version.pms.info
 
         ret = run_in_server(cmd)["out"]
@@ -47,7 +42,7 @@ def info(request, package):  # package info
             request,
             'package_info.html',
             {
-                "title": _("Package Information"),
+                "title": '%s: %s' % (_("Package Information"), package),
                 "contentpage": ret,
             }
         )
@@ -57,7 +52,7 @@ def info(request, package):  # package info
         # folders navigation
         vl_fields = []
         if package > "/":
-            vl_fields.append(["folder.png", ".."])
+            vl_fields.append(["folder", ".."])
 
         elements = os.listdir(path)
         elements.sort()
@@ -65,9 +60,9 @@ def info(request, package):  # package info
             try:
                 if os.path.isdir(os.path.join(path, e)):
                     # relative navigation, folders always with trailing slash!!
-                    vl_fields.append(["folder.png", e + '/'])
+                    vl_fields.append(["folder", e + '/'])
                 else:
-                    vl_fields.append(["package.png", e])
+                    vl_fields.append(["archive", e])
             except:
                 pass
 
@@ -75,11 +70,10 @@ def info(request, package):  # package info
 
         return render(
             request,
-            'package_folder_info.html',
+            'package_info.html',
             {
-                "title": _("Package Information"),
-                "description": _("VERSION: %s") % version.name,
-                "filters": (package, ),
+                "title": '%s: %s' % (_("Package Information"), package),
+                #"description": _("VERSION: %s") % version.name,
                 "query": vl_fields,
             }
         )
