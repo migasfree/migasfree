@@ -12,6 +12,8 @@ if django.VERSION < (1, 6, 0, 'final'):
     print('Migasfree requires Django 1.6.0. Please, update it.')
     exit(1)
 
+ALLOWED_HOSTS = ['*']
+
 STATICFILES_DIRS = (
     ('admin', os.path.join(
         os.path.dirname(os.path.abspath(django.__file__)),
