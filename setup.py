@@ -138,6 +138,7 @@ setup(
         'migasfree.admin_bootstrapped',
         'migasfree.admin_bootstrapped.admin',
         'migasfree.admin_bootstrapped.forms',
+        'migasfree.admin_bootstrapped.templatetags',
         'migasfree.flot',
     ],
     package_dir={
@@ -164,7 +165,6 @@ setup(
         ],
     },
     data_files=[
-        ('/usr/share/migasfree-server', ['apache/django.wsgi']),
         ('/usr/share/doc/migasfree-server', [
             'AUTHORS',
             'COPYING',
