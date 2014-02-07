@@ -194,7 +194,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'ajax_select',
     'south',
-    'flot',
+    'migasfree.flot',
 )
 
 # http://docs.python.org/2/howto/logging-cookbook.html
