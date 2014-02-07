@@ -2,16 +2,17 @@
 
 import os
 import subprocess
+
 import django.core.management
 
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import Permission
 from StringIO import StringIO
 
-from migasfree import settings
-django.core.management.setup_environ(settings)
-
 from migasfree.server.models import UserProfile
+from migasfree import settings
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "migasfree.settings")
 
 
 def run(cmd_linux):
