@@ -1,7 +1,4 @@
 ==================================================
-AT MOMENT THIS IS ONLY A DECLARATIONS OF INTENTION
-             "WE ARE WORKING ON IT"
-
    This software is under continuous development
 ==================================================
 
@@ -37,10 +34,13 @@ Requirements
 
     * Server:
         + Apache with WSGI
-        + Django 1.4
+        + Django 1.6
         + Sqlite3 (you can use others databases Django approved, like postgresql)
         + Python libraries:
             - IPy (Debian/Ubuntu => python-ipy)
+            - python-tz
+            - python-django-south
+            - python-django-ajax-select
 
     * Clients:
         + a Linux distribution (Fedora, openSUSE, Ubuntu, ...)
@@ -48,7 +48,7 @@ Requirements
             - pycurl >= 7.19
             - python-notify (optional)
         + lshw >= B.02.15
-        + hal
+        + dmidecode
 
 
 Features
