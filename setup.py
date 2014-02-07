@@ -38,7 +38,8 @@ if not hasattr(sys, 'version_info') or sys.version_info < (2, 6, 0, 'final'):
     raise SystemExit('migasfree-client requires Python 2.6 or later.')
 
 import os
-README = open(os.path.join(os.path.dirname(__file__), 'README')).read()
+PATH = os.path.dirname(__file__)
+README = open(os.path.join(PATH, 'README')).read()
 VERSION = open(os.path.join(PATH, 'VERSION')).read().splitlines()[0]
 
 #import glob
