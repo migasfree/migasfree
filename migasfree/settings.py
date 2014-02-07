@@ -2,6 +2,9 @@
 
 """
 Django settings for migasfree project
+
+Please, don't edit this file
+Override or include settings at /etc/migasfree-server/settings.py
 """
 
 import os
@@ -12,14 +15,9 @@ if django.VERSION < (1, 6, 0, 'final'):
     print('Migasfree requires Django 1.6.0. Please, update it.')
     exit(1)
 
-ALLOWED_HOSTS = ['*']
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-STATICFILES_DIRS = (
-    ('admin', os.path.join(
-        os.path.dirname(os.path.abspath(django.__file__)),
-        'contrib/admin/static/admin'
-    )),
-)
+ALLOWED_HOSTS = ['*']
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
@@ -35,7 +33,7 @@ MIGASFREE_TMP_DIR = '/tmp'
 MIGASFREE_SECONDS_MESSAGE_ALERT = 1800
 MIGASFREE_ORGANIZATION = 'My Organization'
 MIGASFREE_HELP_DESK = "Put here how you want to be found"
-MIGASFREE_APP_DIR = os.path.dirname(os.path.abspath(__file__))
+MIGASFREE_APP_DIR = BASE_DIR
 
 # MIGASFREE_REMOTE_ADMIN_LINK
 # Variables can be: {{computer.<FIELD>}} and {{<<PROPERTYPREFIX>>}}
@@ -43,7 +41,6 @@ MIGASFREE_APP_DIR = os.path.dirname(os.path.abspath(__file__))
 #    MIGASFREE_REMOTE_ADMIN_LINK = "https://myserver/?computer={{computer.name}}&port={{PRT}}"
 #    MIGASFREE_REMOTE_ADMIN_LINK = "ssh://user@{{computer.ip}} vnc://{{computer.ip}}"
 MIGASFREE_REMOTE_ADMIN_LINK = ""
-
 
 # development environment
 TEMPLATE_DEBUG = DEBUG = True
@@ -74,7 +71,7 @@ DATABASES = {
 
 DEVELOPMENT = True
 
-if not os.path.exists(os.path.join(MIGASFREE_PROJECT_DIR, 'repo')):
+if not os.path.isfile(os.path.join(MIGASFREE_PROJECT_DIR, 'VERSION')):
     # production environment
     TEMPLATE_DEBUG = DEBUG = False
 
@@ -123,8 +120,6 @@ DATETIME_FORMAT = 'Y-m-d H:i:s'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
-SITE_ID = 1
-
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True
@@ -156,15 +151,15 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'migasfree.middleware.threadlocals.ThreadLocals',
 )
-
-ROOT_URLCONF = 'migasfree.urls'
 
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'django.core.context_processors.request',
@@ -173,15 +168,9 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'migasfree.server.context_processors.version_names',
 )
 
-TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates"
-    # or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    os.path.join(MIGASFREE_APP_DIR, 'templates'),
-)
-
 DEFAULT_CHARSET = 'utf-8'
+
+ROOT_URLCONF = 'migasfree.urls'
 
 INSTALLED_APPS = (
     'django.contrib.auth',
