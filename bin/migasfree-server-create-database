@@ -5,19 +5,17 @@ import os
 import pwd
 
 import django.core.management
-try:
-    from migasfree import settings
-except ImportError:
-    import sys
-    sys.path.insert(0, '..')
-    from migasfree import settings
-django.core.management.setup_environ(settings)
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "migasfree.settings")
 
 from migasfree.server.fixtures import (
     create_registers,
     sequence_reset,
     run
 )
+
+from migasfree import settings
+
 
 def create_db():
     DB = settings.DATABASES.get('default')
