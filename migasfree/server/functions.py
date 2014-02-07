@@ -34,8 +34,6 @@ def config_apache():
     # FIXME VirtualHost
     _config = \
 """
-Alias /media/ %(django_dir)s/contrib/admin/static/admin/
-Alias /repo/admin %(django_dir)s/contrib/admin/static/admin/
 Alias /repo %(migasfree_repo_dir)s
 <Directory %(migasfree_repo_dir)s>
     Order allow,deny
@@ -44,7 +42,7 @@ Alias /repo %(migasfree_repo_dir)s
     IndexOptions FancyIndexing
 </Directory>
 
-WSGIScriptAlias / %(migasfree_project_dir)s/django.wsgi
+WSGIScriptAlias / %(migasfree_project_dir)s/wsgi.py
 """
 
     _filename = os.path.join(_apache_path, 'migasfree.conf')
@@ -63,30 +61,6 @@ vserver!20!document_root = %(migasfree_repo_dir)s
 vserver!20!match = wildcard
 vserver!20!match!domain!1 = *
 vserver!20!nick = www.migasfree.com
-vserver!20!rule!220!document_root = %(django_dir)s/contrib/admin/static/admin
-vserver!20!rule!220!handler = common
-vserver!20!rule!220!handler!backup = 0
-vserver!20!rule!220!handler!date = 1
-vserver!20!rule!220!handler!group = 0
-vserver!20!rule!220!handler!hidden = 0
-vserver!20!rule!220!handler!redir_symlinks = 0
-vserver!20!rule!220!handler!size = 1
-vserver!20!rule!220!handler!symlinks = 1
-vserver!20!rule!220!handler!user = 0
-vserver!20!rule!220!match = directory
-vserver!20!rule!220!match!directory = /media
-vserver!20!rule!100!document_root = %(django_dir)s/contrib/admin/static/admin
-vserver!20!rule!100!handler = common
-vserver!20!rule!100!handler!backup = 0
-vserver!20!rule!100!handler!date = 1
-vserver!20!rule!100!handler!group = 0
-vserver!20!rule!100!handler!hidden = 0
-vserver!20!rule!100!handler!redir_symlinks = 0
-vserver!20!rule!100!handler!size = 1
-vserver!20!rule!100!handler!symlinks = 1
-vserver!20!rule!100!handler!user = 0
-vserver!20!rule!100!match = directory
-vserver!20!rule!100!match!directory = /repo/admin
 vserver!20!rule!120!document_root = %(migasfree_repo_dir)s
 vserver!20!rule!120!handler = common
 vserver!20!rule!120!match = directory
@@ -106,7 +80,7 @@ vserver!20!rule!10!handler!iocache = 0
 vserver!20!rule!10!match = default
 source!1!env_inherited = 1
 source!1!host = 127.0.0.1:32942
-source!1!interpreter = /usr/sbin/uwsgi -s 127.0.0.1:32942 -M -p 2 -z 15 -L -l 128 %(migasfree_project_dir)s/django.wsgi
+source!1!interpreter = /usr/sbin/uwsgi -s 127.0.0.1:32942 -M -p 2 -z 15 -L -l 128 %(migasfree_project_dir)s/wsgi.py
 source!1!nick = uWSGI 1
 source!1!type = interpreter
 server!timeout = 300
