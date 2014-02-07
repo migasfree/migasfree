@@ -22,11 +22,10 @@ function change_data()
                             html += '<label for="join_' + fields[j] + '">' + fields[j] + '</label>';
                             html += '</div>';
                             html += '<div class="controls col-sm-9">';
-                            html += '<input id="join_' + fields[j] + '" type="text" class="form-control" value="' + data[fields[j]] + '" />';
+                            html += '<input id="join_' + fields[j] + '" type="text" class="form-control join_field" value="' + data[fields[j]] + '" />';
                             html += '</div>';
                             html += '</div>';
                             html += '</div>';
-
                         }
                         html += '</div>';
                     }
