@@ -296,13 +296,20 @@ def delay_schedule(request):
 def version_computer(request):
     data = []
     total = 0
-    for version in Computer.objects.values("version__name").annotate(
+    for version in Computer.objects.values(
+        "version__name",
+        "version__id"
+    ).annotate(
         count=Count("id")
     ):
         data.append(
             {
                 "data": version.get("count"),
                 "label": version.get("version__name"),
+                'url': '%s?version__id__exact=%s' % (
+                    reverse('admin:server_computer_changelist'),
+                    version.get('version__id')
+                )
             }
         )
         total += version.get("count")
@@ -324,10 +331,11 @@ def version_computer(request):
         },
         'legend': {
             'show': True,
-            'sorted': "ascending"
+            'sorted': "ascending",
         },
         'grid': {
-            'hoverable': True
+            'hoverable': True,
+            'clickable': True,
         },
         'tooltip': True,
         'tooltipOpts': {

@@ -16,6 +16,10 @@
             options.legend.labelFormatter = {{ labelFormatter|safe }};
 
             $.plot("#stat-holder", data, options);
+
+            $("#stat-holder").bind("plotclick", function (event, pos, item) {
+                window.location.href = data[item.seriesIndex].url;
+            });
         });
     </script>
 {% endblock extrahead %}
