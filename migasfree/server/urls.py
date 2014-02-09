@@ -9,6 +9,7 @@ from django.views.generic import RedirectView
 from django.core.urlresolvers import reverse_lazy
 
 from migasfree.server.views import *
+from migasfree.settings import STATIC_URL
 
 urlpatterns = patterns('',
     url(r'^accounts/login/$', login, name='login'),
@@ -22,6 +23,13 @@ urlpatterns = patterns('',
             query_string=True
         ),
         name='bootstrap'
+    ),
+
+    url(
+        r'^favicon\.ico$',
+        RedirectView.as_view(
+            url='%simg/favicon.png' % STATIC_URL
+        ),
     ),
 
     url(r'^alerts/$', alerts, name='alerts'),
