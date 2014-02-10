@@ -343,11 +343,23 @@ def version_computer(request):
         }
     }
 
+    title = _("Computers / Version")
+
+    if len(data) == 0:
+        return render(
+            request,
+            'info.html',
+            {
+                'title': title,
+                'contentpage': _('There are no computers')
+            }
+        )
+
     return render(
         request,
         'pie.html',
         {
-            'title': _("Computers / Version"),
+            'title': title,
             'options': json.dumps(options),
             'data': json.dumps(data),
             'total': total,
