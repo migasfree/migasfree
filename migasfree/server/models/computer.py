@@ -189,7 +189,7 @@ class Computer(models.Model):
             try:
                 _token = n.filter_expression.token
                 if not _token.startswith("computer"):
-                    _context[_token] = self.last_login().attributes.get(
+                    _context[_token] = self.login().attributes.get(
                         property_att__prefix=_token).value
             except:
                 pass
