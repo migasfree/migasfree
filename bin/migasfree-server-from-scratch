@@ -13,17 +13,11 @@ function get_web_service
     then
         echo -e "httpd"
     fi
-
-    service cherokee status &>/dev/null
-    if [ $? = 0 ]
-    then
-        echo -e "cherokee"
-    fi
 }
 
 function get_user_web_service
 {
-    ps axho user,comm | grep -E "apache2|httpd|cherokee" | uniq | grep -v "root" | cut -d " " -f 1 | uniq
+    ps axho user,comm | grep -E "apache2|httpd" | uniq | grep -v "root" | cut -d " " -f 1 | uniq
 }
 
 function web_service
@@ -88,13 +82,7 @@ function verify_dependencies
 
 function configure_web_app
 {
-    if [ "$_WEB_SERVICE" == "apache2" -o "$_WEB_SERVICE" == "httpd" ]
-    then
-        _CODE="from migasfree.server.functions import config_apache; config_apache();"
-    else
-        _CODE="from migasfree.server.functions import config_cherokee; config_cherokee();"
-    fi
-
+    _CODE="from migasfree.server.functions import config_apache; config_apache();"
     python -c "$_CODE"
     if [ $? -ne 0 ]
     then
