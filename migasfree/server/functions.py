@@ -5,6 +5,8 @@ import sys
 import errno
 import tempfile
 
+import django
+
 from datetime import timedelta
 
 from django.utils.translation import ugettext_lazy as _
@@ -33,6 +35,17 @@ def config_apache():
     # FIXME VirtualHost
     _config = \
 """
+Alias /static/ajax_select %(migasfree_app_dir)s/../ajax_select/static/ajax_select
+Alias /static/admin/css/admin-inlines.css %(migasfree_app_dir)s/admin_bootstrapped/static/admin/css/admin-inlines.css
+Alias /static/admin/css/overrides.css %(migasfree_app_dir)s/admin_bootstrapped/static/admin/css/overrides.css
+Alias /static/admin/js/generic-lookup.js %(migasfree_app_dir)s/admin_bootstrapped/static/admin/js/generic-lookup.js
+Alias /static/admin/js/jquery.sortable.js %(migasfree_app_dir)s/admin_bootstrapped/static/admin/js/jquery.sortable.js
+Alias /static/js/jquery.min.js %(migasfree_app_dir)s/admin_bootstrapped/static/js/jquery.min.js
+Alias /static/js/jquery-ui.min.js %(migasfree_app_dir)s/admin_bootstrapped/static/js/jquery-ui.min.js
+Alias /static/admin %(django_dir)s/contrib/admin/static/admin
+Alias /static/bootstrap %(migasfree_app_dir)s/admin_bootstrapped/static/bootstrap
+Alias /static/flot %(migasfree_app_dir)s/flot/static/flot
+Alias /static %(migasfree_app_dir)s/server/static
 Alias /repo %(migasfree_repo_dir)s
 <Directory %(migasfree_repo_dir)s>
     Order allow,deny
@@ -48,55 +61,9 @@ WSGIScriptAlias / %(migasfree_app_dir)s/wsgi.py
     _write_web_config(_filename, _config)
 
 
-def config_cherokee():
-    _cherokee_conf = '/etc/cherokee/cherokee.conf'
-    if not os.path.exists(_cherokee_conf):
-        print('Cherokee config not found.')
-        sys.exit(errno.ENOTDIR)
-
-    _config = \
-"""
-vserver!20!document_root = %(migasfree_repo_dir)s
-vserver!20!match = wildcard
-vserver!20!match!domain!1 = *
-vserver!20!nick = www.migasfree.com
-vserver!20!rule!120!document_root = %(migasfree_repo_dir)s
-vserver!20!rule!120!handler = common
-vserver!20!rule!120!match = directory
-vserver!20!rule!120!match!directory = /repo
-vserver!20!rule!20!handler = uwsgi
-vserver!20!rule!20!handler!balancer = round_robin
-vserver!20!rule!20!handler!balancer!source!10 = 1
-vserver!20!rule!20!handler!check_file = 0
-vserver!20!rule!20!handler!error_handler = 1
-vserver!20!rule!20!handler!modifier1 = 0
-vserver!20!rule!20!handler!modifier2 = 0
-vserver!20!rule!20!handler!pass_req_headers = 1
-vserver!20!rule!20!match = directory
-vserver!20!rule!20!match!directory = /
-vserver!20!rule!10!handler = common
-vserver!20!rule!10!handler!iocache = 0
-vserver!20!rule!10!match = default
-source!1!env_inherited = 1
-source!1!host = 127.0.0.1:32942
-source!1!interpreter = /usr/sbin/uwsgi -s 127.0.0.1:32942 -M -p 2 -z 15 -L -l 128 %(migasfree_app_dir)s/wsgi.py
-source!1!nick = uWSGI 1
-source!1!type = interpreter
-server!timeout = 300
-"""
-
-    _filename = '/etc/cherokee/migasfree.conf'
-    _write_web_config(_filename, _config)
-
-    _line = 'include = %s\n' % _filename
-    _cherokee_lines = open(_cherokee_conf, 'rb').readlines()
-    if _line not in _cherokee_lines:
-        with open(_cherokee_conf, 'a') as _f:
-            _f.write(_line)
-
-
 def _write_web_config(filename, config):
     _content = config % {
+        'django_dir': os.path.dirname(os.path.abspath(django.__file__)),
         'migasfree_repo_dir': MIGASFREE_REPO_DIR,
         'migasfree_app_dir': MIGASFREE_APP_DIR
     }
