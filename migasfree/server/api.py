@@ -254,7 +254,7 @@ def upload_computer_message(request, name, uuid, o_computer, data):
         if data[cmd] == "":
             Update(
                 computer=o_computer,
-                user_id=o_computer.last_login().user_id,
+                user_id=o_computer.login().user_id,
                 date=date_now,
                 version=o_computer.version
             ).save()
