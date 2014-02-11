@@ -27,7 +27,7 @@ case "$1" in
         python manage.py migrate server || :
 
         # link static files to public folder
-        python manage.py collectstatic -link --noinput || :
+        #python manage.py collectstatic -link --noinput || :
 
         # restart apache graceful
         $(which apachectl) graceful || :
