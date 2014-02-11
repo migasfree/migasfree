@@ -110,7 +110,7 @@ MANAGERS = ADMINS
 TIME_ZONE = 'Europe/Madrid'
 
 # If you set this to False, Django will not use timezone-aware datetimes.
-USE_TZ = True
+USE_TZ = False
 
 FIRST_DAY_OF_WEEK = 1
 DATE_FORMAT = 'Y-m-d'
@@ -129,7 +129,7 @@ USE_I18N = True
 USE_L10N = False
 
 STATIC_ROOT = MIGASFREE_REPO_DIR
-STATIC_URL = '/repo/'
+STATIC_URL = '/static/'
 
 FILE_UPLOAD_TEMP_DIR = MIGASFREE_TMP_DIR
 
@@ -153,7 +153,7 @@ TEMPLATE_LOADERS = (
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',  # TODO
     'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
