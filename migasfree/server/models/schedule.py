@@ -10,8 +10,9 @@ class Schedule(models.Model):
     name = models.CharField(
         _("name"),
         max_length=50,
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
+        default='default',
         unique=True
     )
 
