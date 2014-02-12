@@ -73,7 +73,6 @@
         <header class="bs-header">
             <nav class="navbar navbar-default navbar-header navbar-fixed-top" role="navigation">
                 {% block branding %}
-                    <!-- Brand and toggle get grouped for better mobile display -->
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                           <span class="sr-only">{% trans 'Toggle navigation' %}</span>
@@ -86,7 +85,6 @@
                 {% endblock branding %}
 
                 {% if user.is_active and user.is_staff %}
-                <!-- Collect the nav links, forms, and other content for toggling -->
                 <nav class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li id="settings" class="dropdown">
@@ -105,21 +103,6 @@
                         </li>
                     </ul>
 
-                    {% if version_names %}
-                        <ul class="nav navbar-nav">
-                            <li>
-                                <a href="#" title="{% trans 'Change Version' %}" class="dropdown-toggle" data-toggle="dropdown">{{ current_version }} <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    {% for item in version_names %}
-                                        <li>
-                                            <a href="{% url 'change_version' %}?version={{ item.0 }}">{{ item.1 }}</a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                        </ul>
-                    {% endif %}
-
                     <div class="col-sm-1 col-md-1">
                         <form action="{% url 'admin:server_computer_changelist' %}" method="get" class="navbar-form navbar-left" role="search">
                             <div class="input-group">
@@ -137,10 +120,23 @@
                     </div>
 
                     <ul class="nav navbar-nav navbar-right navbar-user">
+                        {% if version_names %}
+                            <li class="dropdown version-dropdown">
+                                <a href="#" title="{% trans 'Change Version' %}" class="dropdown-toggle" data-toggle="dropdown">{{ current_version }} <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    {% for item in version_names %}
+                                        <li>
+                                            <a href="{% url 'change_version' %}?version={{ item.0 }}">{{ item.1 }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        {% endif %}
+
                         {% if user.is_staff %}
-                        <li class="dropdown alerts-dropdown" id="alerts">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> {% trans 'Alerts' %} <span class="badge">0</span></a>
-                        </li>
+                            <li class="dropdown alerts-dropdown" id="alerts">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell"></i> {% trans 'Alerts' %} <span class="badge">0</span></a>
+                            </li>
                         {% endif %}
 
                         <li class="dropdown user-dropdown">
@@ -170,21 +166,22 @@
 
                 {% block messages %}
                     {% if messages %}
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="alert alert-info">
-                                <ul class="list-unstyled">
-                                {% for message in messages %}
-                                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
-                                {% endfor %}
-                                </ul>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="alert alert-info">
+                                    <ul class="list-unstyled">
+                                    {% for message in messages %}
+                                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     {% endif %}
                 {% endblock messages %}
 
                 {% block object-tools %}{% endblock object-tools %}
+
                 {% block content %}{{ content }}{% endblock content %}
             </article>
         </div>{# #wrapper #}
