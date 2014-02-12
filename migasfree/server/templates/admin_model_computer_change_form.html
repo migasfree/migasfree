@@ -1,0 +1,25 @@
+{% load i18n %}
+{% load url from future %}
+
+<ul class="nav navbar-nav">
+    <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            {% trans 'Relations' %}
+            <span class="caret"></span>
+        </a>
+
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="{% url 'admin:server_migration_changelist' %}?computer__id__exact={{ object_id }}">{% trans 'Migrations' %}</a></li>
+
+            <li><a href="{% url 'admin:server_error_changelist' %}?computer__id__exact={{ object_id }}">{% trans 'Errors' %}</a></li>
+
+            <li><a href="{% url 'admin:server_fault_changelist' %}?computer__id__exact={{ object_id }}">{% trans 'Faults' %}</a></li>
+
+            <li><a href="{% url 'admin:server_login_changelist' %}?computer__id__exact={{ object_id }}">{% trans 'Logins' %}</a></li>
+
+            <li><a href="{% url 'admin:server_update_changelist' %}?computer__id__exact={{ object_id }}">{% trans 'Updates' %}</a></li>
+        </ul>
+    </li>
+</ul>
+
+<div class="clearfix"></div>
