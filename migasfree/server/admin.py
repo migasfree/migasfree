@@ -14,13 +14,11 @@ from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
-
-from migasfree.server.functions import trans
 from migasfree.server.models import *
 
 from migasfree.server.views.repository import create_physical_repository
 from migasfree.settings import (
-    STATIC_URL,
+    MIGASFREE_REPO_DIR,
     MIGASFREE_COMPUTER_SEARCH_FIELDS
 )
 
@@ -225,13 +223,14 @@ class StoreAdmin(MigasAdmin):
 
     def download(self, request, queryset):
         return redirect(
-            STATIC_URL + '%s/STORES/%s/' % (
+            '%s/%s/STORES/%s/' % (
+                MIGASFREE_REPO_DIR,
                 queryset[0].version.name,
                 queryset[0].name
             )
         )
 
-    download.short_description = trans("Download")
+    download.short_description = _("Download")
 
     def information(self, request, queryset):
         return redirect(
@@ -241,7 +240,7 @@ class StoreAdmin(MigasAdmin):
             )
         )
 
-    information.short_description = trans("Package Information")
+    information.short_description = _("Package Information")
 
 admin.site.register(Store, StoreAdmin)
 
@@ -333,7 +332,7 @@ class NotificationAdmin(MigasAdmin):
 
         return redirect(request.get_full_path())
 
-    checked_ok.short_description = trans("Checking is O.K.")
+    checked_ok.short_description = _("Checking is O.K.")
 
 admin.site.register(Notification, NotificationAdmin)
 
@@ -362,7 +361,7 @@ class ErrorAdmin(MigasAdmin):
 
         return redirect(request.get_full_path())
 
-    checked_ok.short_description = trans("Checking is O.K.")
+    checked_ok.short_description = _("Checking is O.K.")
 
 admin.site.register(Error, ErrorAdmin)
 
@@ -390,6 +389,7 @@ class UserFaultFilter(SimpleListFilter):
         elif self.value() == 'no_assign':
             return queryset.filter(Q(faultdef__users=None))
 
+
 class FaultAdmin(MigasAdmin):
     list_display = (
         'id',
@@ -416,7 +416,7 @@ class FaultAdmin(MigasAdmin):
 
         return redirect(request.get_full_path())
 
-    checked_ok.short_description = trans("Checking is O.K.")
+    checked_ok.short_description = _("Checking is O.K.")
 
 admin.site.register(Fault, FaultAdmin)
 
@@ -433,11 +433,11 @@ class FaultDefAdmin(MigasAdmin):
         (None, {
             'fields': ('name', 'description', 'active', 'language', 'code')
         }),
-        ('Atributtes', {
+        (_('Atributtes'), {
             'classes': ('collapse',),
             'fields': ('attributes',)
         }),
-        ('Users', {
+        (_('Users'), {
             'classes': ('collapse',),
             'fields': ('users',)
         }),
@@ -477,7 +477,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     )
 
     fieldsets = (
-        ('General', {
+        (_('General'), {
             'fields': (
                 'uuid',
                 'version',
@@ -488,14 +488,14 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'hw_link',
             )
         }),
-        ('Software', {
+        (_('Software'), {
             'classes': ('collapse',),
             'fields': ('software', 'history_sw',)
         }),
-        ('Devices', {
+        (_('Devices'), {
             'fields': ('devices_logical', )
         }),
-        ('Tags', {
+        (_('Tags'), {
             'fields': ('tags', )
         }),
     )
@@ -552,24 +552,25 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     actions = None
 
     fieldsets = (
-        ('General', {
+        (_('General'), {
             'fields': ('name', 'version', 'active', 'comment',)
         }),
-        ('Schedule', {
+        (_('Schedule'), {
             'fields': ('date', 'schedule',)
         }),
-        ('Packages', {
+        (_('Packages'), {
             'classes': ('collapse',),
-            'fields': ('packages', 'toinstall', 'toremove', )
+            'fields': ('packages', 'toinstall', 'toremove',)
         }),
-        ('Default', {
+        (_('Default'), {
             'classes': ('collapse',),
-            'fields': ('defaultpreinclude',
+            'fields': (
+                'defaultpreinclude',
                 'defaultinclude',
                 'defaultexclude',
-                )
+            )
         }),
-        ('Atributtes', {
+        (_('Atributtes'), {
             'classes': ('collapse',),
             'fields': ('attributes', 'excludes')
         }),
@@ -662,16 +663,17 @@ class PackageAdmin(MigasAdmin):
             )
         )
 
-    information.short_description = trans("Package Information")
+    information.short_description = _("Package Information")
 
     def download(self, request, queryset):
-        return redirect(STATIC_URL + '%s/STORES/%s/%s' % (
+        return redirect('%s/%s/STORES/%s/%s' % (
+            MIGASFREE_REPO_DIR,
             queryset[0].version.name,
             queryset[0].store.name,
             queryset[0].name
         ))
 
-    download.short_description = trans("Download")
+    download.short_description = _("Download")
 
 admin.site.register(Package, PackageAdmin)
 
@@ -684,6 +686,6 @@ class QueryAdmin(MigasAdmin):
         for query in queryset:
             return redirect(reverse('query', args=(query.id, )))
 
-    run_query.short_description = trans("Run Query")
+    run_query.short_description = _("Run Query")
 
 admin.site.register(Query, QueryAdmin)
