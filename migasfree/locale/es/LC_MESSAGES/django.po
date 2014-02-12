@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-12 18:31+0100\n"
-"PO-Revision-Date: 2014-02-12 18:46+0100\n"
+"POT-Creation-Date: 2014-02-12 21:12+0100\n"
+"PO-Revision-Date: 2014-02-12 21:13+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: \n"
@@ -326,7 +326,7 @@ msgid "Date/time"
 msgstr "Fecha/hora"
 
 #: admin_bootstrapped/templates/admin/object_history.html:25
-#: server/admin.py:371
+#: server/admin.py:370
 #: server/models/login.py:45
 #: server/models/user.py:25
 msgid "User"
@@ -965,7 +965,7 @@ msgstr "Dirección de correo:"
 msgid "Reset my password"
 msgstr "Cambiar mi contraseña"
 
-#: server/admin.py:125
+#: server/admin.py:123
 #: server/models/computer.py:173
 #: server/models/device_logical.py:39
 #: server/templates/computer_hardware_extract.html:8
@@ -976,21 +976,92 @@ msgstr "Cambiar mi contraseña"
 msgid "Computers"
 msgstr "Ordenadores"
 
-#: server/admin.py:376
+#: server/admin.py:233
+#: server/admin.py:676
+msgid "Download"
+msgstr "Descargar"
+
+#: server/admin.py:243
+#: server/admin.py:666
+#: server/views/packages.py:45
+#: server/views/packages.py:75
+msgid "Package Information"
+msgstr "Información del paquete"
+
+#: server/admin.py:335
+#: server/admin.py:364
+#: server/admin.py:419
+msgid "Checking is O.K."
+msgstr "La comprobación es correcta"
+
+#: server/admin.py:375
 msgid "To check for me"
 msgstr "Para comprobar por mí"
 
-#: server/admin.py:377
+#: server/admin.py:376
 msgid "Assigned to me"
 msgstr "Asignado a mí"
 
-#: server/admin.py:378
+#: server/admin.py:377
 msgid "Assigned to others"
 msgstr "Asignado a otros"
 
-#: server/admin.py:379
+#: server/admin.py:378
 msgid "Not assigned"
 msgstr "No asignado"
+
+#: server/admin.py:436
+#: server/admin.py:573
+msgid "Atributtes"
+msgstr "Atributos"
+
+#: server/admin.py:440
+#: server/models/user.py:26
+#: server/templates/includes/config_menu.html:18
+#: server/templates/includes/config_menu.html:20
+#: server/templates/includes/mining_menu.html:10
+msgid "Users"
+msgstr "Usuarios"
+
+#: server/admin.py:480
+#: server/admin.py:555
+#: server/templates/includes/config_menu.html:6
+msgid "General"
+msgstr "General"
+
+#: server/admin.py:491
+msgid "Software"
+msgstr "Software"
+
+#: server/admin.py:495
+#: server/models/computer.py:165
+#: server/models/device.py:68
+#: server/templates/includes/config_menu.html:35
+#: server/templates/includes/config_menu.html:43
+msgid "Devices"
+msgstr "Dispositivos"
+
+#: server/admin.py:498
+msgid "Tags"
+msgstr "Etiquetas"
+
+#: server/admin.py:558
+#: server/models/schedule.py:30
+msgid "Schedule"
+msgstr "Calendario"
+
+#: server/admin.py:561
+#: server/models/repository.py:119
+msgid "Packages"
+msgstr "Paquetes"
+
+#: server/admin.py:565
+msgid "Default"
+msgstr "Por defecto"
+
+#: server/admin.py:689
+msgid "Run Query"
+msgstr "Ejecutar consulta"
 
 #: server/errmfs.py:108
 msgid "Error generic in server:"
@@ -1177,13 +1248,6 @@ msgstr "Última actualización"
 #: server/models/computer.py:155
 msgid "Hardware"
 msgstr "Hardware"
-
-#: server/models/computer.py:165
-#: server/models/device.py:68
-#: server/templates/includes/config_menu.html:35
-#: server/templates/includes/config_menu.html:43
-msgid "Devices"
-msgstr "Dispositivos"
 
 #: server/models/computer.py:172
 #: server/models/error.py:56
@@ -1737,10 +1801,6 @@ msgstr "paquetes incluidos por defecto"
 msgid "default exclude packages"
 msgstr "paquetes excluidos por defecto"
 
-#: server/models/repository.py:119
-msgid "Packages"
-msgstr "Paquetes"
-
 #: server/models/repository.py:144
 msgid "Without schedule"
 msgstr "Sin calendario"
@@ -1759,10 +1819,6 @@ msgstr "Repositorio"
 #: server/templates/includes/software_menu.html:7
 msgid "Repositories"
 msgstr "Repositorios"
-
-#: server/models/schedule.py:30
-msgid "Schedule"
-msgstr "Calendario"
 
 #: server/models/schedule.py:31
 #: server/templates/includes/software_menu.html:10
@@ -1802,13 +1858,6 @@ msgstr "Actualizaciones"
 #: server/models/user.py:16
 msgid "fullname"
 msgstr "nombre completo"
-
-#: server/models/user.py:26
-#: server/templates/includes/config_menu.html:18
-#: server/templates/includes/config_menu.html:20
-#: server/templates/includes/mining_menu.html:10
-msgid "Users"
-msgstr "Usuarios"
 
 #: server/models/version.py:29
 msgid "package management system"
@@ -1965,10 +2014,6 @@ msgstr "IP"
 msgid "No messages to show"
 msgstr "No hay mensajes para mostrar"
 
-#: server/templates/includes/config_menu.html:6
-msgid "General"
-msgstr "General"
-
 #: server/templates/includes/config_menu.html:10
 msgid "P.M.S."
 msgstr "P.M.S."
@@ -2063,11 +2108,6 @@ msgstr "Información del hardware"
 #: server/views/login.py:25
 msgid "Credentials not valid"
 msgstr "Los credenciales no son válidos"
-
-#: server/views/packages.py:45
-#: server/views/packages.py:75
-msgid "Package Information"
-msgstr "Información del paquete"
 
 #: server/views/packages.py:86
 msgid "No package information exists"
@@ -2294,6 +2334,3 @@ msgstr "No hay ordenadores"
 
 #~ msgid "Mining"
 #~ msgstr "Gestión"
-
-#~ msgid "Software"
-#~ msgstr "Software"
