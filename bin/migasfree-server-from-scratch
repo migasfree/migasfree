@@ -37,24 +37,15 @@ then
     exit 3
 fi
 
+migasfree-server-config-webserver
+
 cd $_MIGASFREE_PATH
-
-web_service stop
-
-configure_web_app
-if [ $? -ne 0 ]
-then
-    exit 4
-fi
 
 remove_old_data
 
-# create DataBase
 migasfree-server-create-database
 
 export DJANGO_SETTINGS_MODULE="migasfree.settings"
-
-web_service start
 
 create_server_keys
 if [ $? -ne 0 ]
