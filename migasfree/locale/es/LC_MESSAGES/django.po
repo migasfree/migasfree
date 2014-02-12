@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-12 21:12+0100\n"
-"PO-Revision-Date: 2014-02-12 21:13+0100\n"
+"POT-Creation-Date: 2014-02-12 21:29+0100\n"
+"PO-Revision-Date: 2014-02-12 21:34+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: \n"
@@ -89,12 +89,12 @@ msgstr "Ir"
 #: admin_bootstrapped/templates/admin/actions.html:18
 #: admin_bootstrapped/templates/admin/filer/actions.html:15
 msgid "Click here to select the objects across all pages"
-msgstr ""
+msgstr "Pulse aquí para seleccionar los objetos de todas las páginas"
 
 #: admin_bootstrapped/templates/admin/actions.html:18
 #, python-format
 msgid "Select all %(total_count)s %(module_name)s"
-msgstr ""
+msgstr "Seleccionar todos %(total_count)s %(module_name)s"
 
 #: admin_bootstrapped/templates/admin/actions.html:20
 #: admin_bootstrapped/templates/admin/filer/actions.html:17
@@ -216,7 +216,7 @@ msgstr "Quitar de la ordenación"
 #: admin_bootstrapped/templates/admin/change_list_results.html:20
 #, python-format
 msgid "Sorting priority: %(priority_number)s"
-msgstr ""
+msgstr "Prioridad de la ordenación: %(priority_number)s"
 
 #: admin_bootstrapped/templates/admin/change_list_results.html:21
 msgid "Toggle sorting"
@@ -390,12 +390,12 @@ msgstr ""
 
 #: admin_bootstrapped/templates/admin/auth/user/add_form.html:8
 msgid "Enter a username and password."
-msgstr ""
+msgstr "Introduzca un nombre de usuario y una contraseña."
 
 #: admin_bootstrapped/templates/admin/auth/user/change_password.html:33
 #, python-format
 msgid "Enter a new password for the user <strong>%(username)s</strong>."
-msgstr ""
+msgstr "Introduzca una nueva contraseña para el usuario <strong>%(username)s</strong>."
 
 #: admin_bootstrapped/templates/admin/auth/user/change_password.html:40
 msgid "Password"
@@ -668,7 +668,7 @@ msgstr "Volver a"
 
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:7
 msgid "admin homepage"
-msgstr ""
+msgstr "página de inicio de administración"
 
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:8
 msgid "Filer"
@@ -1063,9 +1063,53 @@ msgstr "Por defecto"
 msgid "Run Query"
 msgstr "Ejecutar consulta"
 
-#: server/errmfs.py:108
-msgid "Error generic in server:"
-msgstr "Error genérico en el servidor:"
+#: server/errmfs.py:25
+msgid "User not authenticated"
+msgstr "Usuario no autenticado"
+
+#: server/errmfs.py:26
+msgid "User can not register computers"
+msgstr "El usuario no puede registrar ordenadores"
+
+#: server/errmfs.py:27
+msgid "Method GET not allowed"
+msgstr ""
+
+#: server/errmfs.py:28
+msgid "Command not found"
+msgstr "Comando no encontrado"
+
+#: server/errmfs.py:29
+msgid "Signature is not valid"
+msgstr "La firma no es válida"
+
+#: server/errmfs.py:30
+msgid "Computer not found"
+msgstr "Ordenador no encontrado"
+
+#: server/errmfs.py:31
+msgid "Device not found"
+msgstr "Dispositivo no encontrado"
+
+#: server/errmfs.py:32
+msgid "Version not found"
+msgstr "Versión no encontrada"
+
+#: server/errmfs.py:33
+msgid "User have not permission"
+msgstr "El usuario no tiene permisos"
+
+#: server/errmfs.py:34
+msgid "Generic error"
+msgstr "Error genérico"
+
+#: server/errmfs.py:73
+msgid "No errors"
+msgstr "Sin errores"
+
+#: server/errmfs.py:113
+msgid "Generic error in server"
+msgstr "Error genérico en el servidor"
 
 #: server/widgets.py:19
 msgid "Time:"
