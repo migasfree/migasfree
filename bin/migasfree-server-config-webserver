@@ -1,0 +1,21 @@
+#!/bin/bash
+
+./migasfree-server-functions
+
+# main process
+
+web_service stop
+
+configure_web_app
+if [ $? -ne 0 ]
+then
+    exit 1
+fi
+
+web_service start
+
+echo
+echo "Web server configured. Test it at http://localhost/"
+echo
+
+exit 0
