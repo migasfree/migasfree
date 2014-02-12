@@ -192,8 +192,10 @@ setup(
         ]),
     ],
     scripts=[
-        'bin/migasfree-server-from-scratch',
+        'bin/migasfree-server-functions',
         'bin/migasfree-server-create-database',
+        'bin/migasfree-server-from-scratch',
+        'bin/migasfree-server-config-webserver',
     ],
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
