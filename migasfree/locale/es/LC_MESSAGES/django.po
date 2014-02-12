@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-08 19:07+0100\n"
-"PO-Revision-Date: 2014-02-08 19:16+0100\n"
+"POT-Creation-Date: 2014-02-12 18:31+0100\n"
+"PO-Revision-Date: 2014-02-12 18:46+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: \n"
@@ -174,7 +174,7 @@ msgstr "Ver en el sitio"
 #: admin_bootstrapped/templates/admin/change_form.html:69
 #: server/templates/admin/change_form.html:56
 msgid "Fields in <strong>bold</strong> are required."
-msgstr ""
+msgstr "Los campos en <strong>negrita</strong> son obligatorios."
 
 #: admin_bootstrapped/templates/admin/change_form.html:74
 #: admin_bootstrapped/templates/admin/change_list.html:94
@@ -281,7 +281,7 @@ msgstr "Aplicaciones"
 #: admin_bootstrapped/templates/admin/index.html:51
 #, python-format
 msgid "Models available in the %(name)s application."
-msgstr ""
+msgstr "Los modelos están disponibles en la aplicación %(name)s."
 
 #: admin_bootstrapped/templates/admin/index.html:69
 #: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:85
@@ -292,7 +292,7 @@ msgstr "Cambiar"
 
 #: admin_bootstrapped/templates/admin/index.html:78
 msgid "You don't have permission to edit anything."
-msgstr ""
+msgstr "No tiene permisos para modificar nada."
 
 #: admin_bootstrapped/templates/admin/invalid_setup.html:13
 msgid "Something's wrong with your database installation. Make sure the appropriate database tables have been created, and make sure the database is readable by the appropriate user."
@@ -319,7 +319,7 @@ msgstr "Contraseña:"
 
 #: admin_bootstrapped/templates/admin/login.html:85
 msgid "Forgotten your password or username?"
-msgstr ""
+msgstr "¿Ha olvidado su nombre de usuario o la contraseña?"
 
 #: admin_bootstrapped/templates/admin/object_history.html:24
 msgid "Date/time"
@@ -367,8 +367,8 @@ msgstr "Mostrar todo"
 
 #: admin_bootstrapped/templates/admin/search_form.html:8
 #: admin_bootstrapped/templates/admin/search_form.html:13
-#: server/templates/base.html:130
-#: server/templates/base.html.py:132
+#: server/templates/base.html:113
+#: server/templates/base.html.py:115
 msgid "Search"
 msgstr "Buscar"
 
@@ -459,7 +459,7 @@ msgstr "Cargando..."
 
 #: admin_bootstrapped/templates/admin/cms/page/change_form.html:177
 msgid "Page states"
-msgstr ""
+msgstr "Estados de la página"
 
 #: admin_bootstrapped/templates/admin/cms/page/change_form.html:202
 #, python-format
@@ -485,11 +485,11 @@ msgstr "Página sobre:"
 
 #: admin_bootstrapped/templates/admin/cms/page/change_list.html:140
 msgid "Successfully moved"
-msgstr ""
+msgstr "Movido correctamente"
 
 #: admin_bootstrapped/templates/admin/cms/page/change_list.html:149
 msgid "An error occured. Please reload the page"
-msgstr ""
+msgstr "Ha ocurrido un error. Por favor, recargue la página"
 
 #: admin_bootstrapped/templates/admin/cms/page/menu_item.html:5
 msgid "select this page"
@@ -527,7 +527,7 @@ msgstr "inicio"
 #: admin_bootstrapped/templates/admin/cms/page/menu_item.html:26
 #, python-format
 msgid "Edit this page in %(language)s "
-msgstr ""
+msgstr "Editar esta página en %(language)s "
 
 #: admin_bootstrapped/templates/admin/cms/page/menu_item.html:33
 msgid "Cut"
@@ -548,12 +548,12 @@ msgstr "copiar"
 #: admin_bootstrapped/templates/admin/cms/page/menu_item.html:37
 #: admin_bootstrapped/templates/admin/cms/page/menu_item.html:41
 msgid "Add Child"
-msgstr ""
+msgstr "Añadir hijo"
 
 #: admin_bootstrapped/templates/admin/cms/page/menu_item.html:37
 #: admin_bootstrapped/templates/admin/cms/page/menu_item.html:41
 msgid "add child"
-msgstr ""
+msgstr "añadir hijo"
 
 #: admin_bootstrapped/templates/admin/cms/page/menu_item.html:44
 msgid "delete"
@@ -587,7 +587,7 @@ msgstr "Cancelar"
 
 #: admin_bootstrapped/templates/admin/cms/page/widgets/installed_plugins_inc.html:4
 msgid "Available Plugins"
-msgstr ""
+msgstr "Plugins disponibles"
 
 #: admin_bootstrapped/templates/admin/cms/page/widgets/installed_plugins_inc.html:7
 msgid "Generic"
@@ -627,7 +627,7 @@ msgstr ""
 
 #: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:5
 msgid "Go back to admin homepage"
-msgstr ""
+msgstr "Volver a la página de inicio de administración"
 
 #: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:6
 msgid "Go back to Filer app"
@@ -657,14 +657,14 @@ msgstr ""
 
 #: admin_bootstrapped/templates/admin/filer/change_form.html:28
 msgid "duplicates"
-msgstr ""
+msgstr "duplicados"
 
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:7
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:8
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:9
 #: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:79
 msgid "Go back to"
-msgstr ""
+msgstr "Volver a"
 
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:7
 msgid "admin homepage"
@@ -685,7 +685,7 @@ msgstr "carpeta"
 #: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:90
 #: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:31
 msgid "Folder Icon"
-msgstr ""
+msgstr "Carpeta del icono"
 
 #: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:64
 msgid "Adds a new Folder"
@@ -760,7 +760,7 @@ msgstr ""
 #: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:66
 #, python-format
 msgid "Delete '%(item_label)s'"
-msgstr ""
+msgstr "Borrar '%(item_label)s'"
 
 #: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:78
 msgid "Permissions"
@@ -805,7 +805,7 @@ msgstr ""
 
 #: admin_bootstrapped/templates/admin/filer/tools/search_form.html:8
 msgid "Enter your search phrase here"
-msgstr ""
+msgstr "Introduzca su búsqueda aquí"
 
 #: admin_bootstrapped/templates/admin/filer/tools/search_form.html:11
 msgid "Check it to"
@@ -867,7 +867,7 @@ msgstr "Loguearse de nuevo"
 #: admin_bootstrapped/templates/registration/password_change_form.html:8
 #: admin_bootstrapped/templates/registration/password_change_form.html:12
 #: admin_bootstrapped/templates/registration/password_change_form.html:13
-#: server/templates/base.html:149
+#: server/templates/base.html:145
 msgid "Password change"
 msgstr "Cambio de contraseña"
 
@@ -905,7 +905,7 @@ msgstr "Cambio de contraseña completo"
 
 #: admin_bootstrapped/templates/registration/password_reset_complete.html:16
 msgid "Your password has been set.  You may go ahead and log in now."
-msgstr ""
+msgstr "La contraseña ha sido establecida. Ahora puede entrar en la aplicación."
 
 #: admin_bootstrapped/templates/registration/password_reset_confirm.html:7
 msgid "Password reset confirmation"
@@ -955,7 +955,7 @@ msgstr ""
 
 #: admin_bootstrapped/templates/registration/password_reset_form.html:16
 msgid "Forgotten your password? Enter your email address below, and we'll email instructions for setting a new one."
-msgstr ""
+msgstr "¿Ha olvidado la contraseña? Introduzca su dirección de correo y le enviaremos instrucciones para establecer una nueva."
 
 #: admin_bootstrapped/templates/registration/password_reset_form.html:21
 msgid "Email address:"
@@ -1015,7 +1015,7 @@ msgstr "valor"
 #: server/models/hw_capability.py:22
 #: server/models/hw_node.py:56
 #: server/models/query.py:18
-#: server/models/schedule.py:19
+#: server/models/schedule.py:20
 msgid "description"
 msgstr "descripción"
 
@@ -1192,8 +1192,8 @@ msgstr "Dispositivos"
 #: server/models/message.py:35
 #: server/models/migration.py:32
 #: server/models/update.py:39
-#: server/templates/base.html:126
-#: server/templates/base.html.py:127
+#: server/templates/base.html:109
+#: server/templates/base.html.py:110
 #: server/templates/includes/computer_messages_result.html:12
 msgid "Computer"
 msgstr "Ordenador"
@@ -1342,6 +1342,7 @@ msgid "Error"
 msgstr "Error"
 
 #: server/models/error.py:73
+#: server/templates/admin_model_computer_change_form.html:14
 #: server/templates/includes/mining_menu.html:12
 msgid "Errors"
 msgstr "Errores"
@@ -1361,6 +1362,7 @@ msgid "Fault"
 msgstr "Falla"
 
 #: server/models/fault.py:58
+#: server/templates/admin_model_computer_change_form.html:16
 #: server/templates/includes/config_menu.html:29
 #: server/templates/includes/mining_menu.html:13
 msgid "Faults"
@@ -1510,6 +1512,8 @@ msgid "Login"
 msgstr "Login"
 
 #: server/models/login.py:56
+#: server/templates/admin_model_attribute_change_form.html:12
+#: server/templates/admin_model_computer_change_form.html:18
 #: server/templates/includes/mining_menu.html:11
 msgid "Logins"
 msgstr "Logins"
@@ -1543,6 +1547,7 @@ msgid "Migration"
 msgstr "Migración"
 
 #: server/models/migration.py:42
+#: server/templates/admin_model_computer_change_form.html:12
 #: server/templates/includes/mining_menu.html:15
 msgid "Migrations"
 msgstr "Migraciones"
@@ -1749,15 +1754,17 @@ msgid "Repository"
 msgstr "Repositorio"
 
 #: server/models/repository.py:198
+#: server/templates/admin_model_attribute_change_form.html:14
+#: server/templates/admin_model_package_change_form.html:12
 #: server/templates/includes/software_menu.html:7
 msgid "Repositories"
 msgstr "Repositorios"
 
-#: server/models/schedule.py:29
+#: server/models/schedule.py:30
 msgid "Schedule"
 msgstr "Calendario"
 
-#: server/models/schedule.py:30
+#: server/models/schedule.py:31
 #: server/templates/includes/software_menu.html:10
 msgid "Schedules"
 msgstr "Calendarios"
@@ -1788,6 +1795,7 @@ msgid "Update"
 msgstr "Actualización"
 
 #: server/models/update.py:44
+#: server/templates/admin_model_computer_change_form.html:20
 msgid "Updates"
 msgstr "Actualizaciones"
 
@@ -1847,22 +1855,28 @@ msgstr "Perfil de usuario"
 msgid "User Profiles"
 msgstr "Perfiles de usuario"
 
-#: server/templates/base.html:79
+#: server/templates/admin_model_attribute_change_form.html:7
+#: server/templates/admin_model_computer_change_form.html:7
+#: server/templates/admin_model_package_change_form.html:7
+msgid "Relations"
+msgstr "Relaciones"
+
+#: server/templates/base.html:78
 msgid "Toggle navigation"
 msgstr "Alternar navegación"
 
-#: server/templates/base.html:93
+#: server/templates/base.html:91
 #: server/templates/includes/breadcrumb.html:14
 msgid "Settings"
 msgstr "Configuración"
 
-#: server/templates/base.html:98
+#: server/templates/base.html:96
 #: server/templates/package_info.html:6
 #: server/templates/includes/breadcrumb.html:18
 msgid "Liberation"
 msgstr "Liberación"
 
-#: server/templates/base.html:103
+#: server/templates/base.html:101
 #: server/templates/computer_hardware_extract.html:7
 #: server/templates/computer_hardware_resume.html:7
 #: server/templates/query.html:6
@@ -1871,20 +1885,20 @@ msgstr "Liberación"
 msgid "Audit"
 msgstr "Auditoría"
 
-#: server/templates/base.html:111
+#: server/templates/base.html:125
 msgid "Change Version"
 msgstr "Cambiar versión"
 
-#: server/templates/base.html:142
+#: server/templates/base.html:138
 #: server/templates/includes/alerts.html:3
 msgid "Alerts"
 msgstr "Alertas"
 
-#: server/templates/base.html:151
+#: server/templates/base.html:147
 msgid "Logout"
 msgstr "Salir"
 
-#: server/templates/base.html:200
+#: server/templates/base.html:197
 msgid "Data Model"
 msgstr "Modelo de datos"
 
@@ -2025,7 +2039,7 @@ msgid "Provided Computers / Delay"
 msgstr "Ordenadores previstos/demora"
 
 #: server/templates/includes/mining_menu.html:40
-#: server/views/stats.py:350
+#: server/views/stats.py:346
 msgid "Computers / Version"
 msgstr "Ordenadores/versión"
 
@@ -2090,6 +2104,10 @@ msgstr "Totales"
 #, python-format
 msgid "%d days"
 msgstr "%d días"
+
+#: server/views/stats.py:354
+msgid "There are no computers"
+msgstr "No hay ordenadores"
 
 #~ msgid "Last login"
 #~ msgstr "Último login"
