@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./migasfree-server-functions
+. $(cd $(dirname $0); pwd -P)/migasfree-server-functions
 
 # main process
 

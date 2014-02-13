@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./migasfree-server-functions
+. $(cd $(dirname $0); pwd -P)/migasfree-server-functions
 
 # main process
 
@@ -26,7 +26,6 @@ _KEYS_PATH=$(python -c "import migasfree.settings; print migasfree.settings.MIGA
 
 _PWD=$(dirname $(readlink -f $0))
 
-export _WEB_SERVICE=$(get_web_service)
 export _USER_WEB_SERVICE=$(get_user_web_service)
 
 _IS_DB_SQLITE=$(python -c "from migasfree.server.functions import is_db_sqlite; print is_db_sqlite()")
