@@ -7,9 +7,10 @@ from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.settings import STATIC_URL, MIGASFREE_REPO_DIR
+from migasfree.settings import MIGASFREE_REPO_DIR
 
-from migasfree.server.models import Version, VersionManager, Store, user_version
+from migasfree.server.models import Version, VersionManager, \
+    Store, user_version
 
 
 class Package(models.Model):
