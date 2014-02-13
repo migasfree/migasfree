@@ -53,7 +53,8 @@ class UserProfile(UserSystem):
     version = models.ForeignKey(
         Version,
         verbose_name=_("version"),
-        null=True
+        null=True,
+        on_delete=models.SET_NULL
     )
 
     # Use UserManager to get the create_user method, etc.
