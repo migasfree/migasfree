@@ -12,6 +12,7 @@ class DeviceLogical(models.Model):
         Device,
         verbose_name=_("device")
     )
+
     feature = models.ForeignKey(
         DeviceFeature,
         verbose_name=_("feature")
@@ -20,14 +21,21 @@ class DeviceLogical(models.Model):
     def datadict(self, oVersion):
         dictdevice = self.device.datadict()
         try:
-            oDeviceDriver = DeviceDriver.objects.filter(version__id=oVersion.id, model__id=self.device.model.id,feature__id=self.feature.id)[0]
+            oDeviceDriver = DeviceDriver.objects.filter(
+                version__id=oVersion.id,
+                model__id=self.device.model.id,
+                feature__id=self.feature.id
+            )[0]
             if oDeviceDriver:
                 dictdriver = oDeviceDriver.datadict()
         except:
             dictdriver = {}
-        return {"devicelogical_id": self.id,
+
+        return {
+            "devicelogical_id": self.id,
             "device": dictdevice,
-            "driver": dictdriver}
+            "driver": dictdriver
+        }
 
     def computers_link(self):
         ret = ""
@@ -47,7 +55,11 @@ class DeviceLogical(models.Model):
             computer.remove_device_copy(self.id)
 
     def __unicode__(self):
-        return "%s-%s-%s" % (self.device.name, self.device.model.name,self.feature.name)
+        return "%s-%s-%s" % (
+            self.device.name,
+            self.device.model.name,
+            self.feature.name
+        )
 
     class Meta:
         app_label = 'server'
@@ -61,5 +73,3 @@ class DeviceLogical(models.Model):
 
     link.short_description = Meta.verbose_name
     link.allow_tags = True
-
-
