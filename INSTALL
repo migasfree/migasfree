@@ -1,8 +1,6 @@
 Thanks for downloading migasfree server.
 
-Execute: python setup.py install
-
-Or create migasfree-server package (recommended option):
+Create migasfree-server package:
 
 1.- Execute bin/create-package script
 
