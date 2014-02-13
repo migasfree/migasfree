@@ -5,10 +5,11 @@ import sys
 import traceback
 import tempfile
 
-from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
 from migasfree.settings import MIGASFREE_REPO_DIR
+from migasfree.server.functions import trans as _
+
 
 NOAUTHENTICATED = 1
 CANNOTREGISTER = 2
