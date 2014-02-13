@@ -464,11 +464,11 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     list_filter = ('version',)
     search_fields = MIGASFREE_COMPUTER_SEARCH_FIELDS
 
-    readonly_fields = ('name',
+    readonly_fields = (
+        'name',
         'uuid',
         'version',
         'dateinput',
-        'datehardware',
         'datelastupdate',
         'ip',
         'software',
@@ -482,9 +482,9 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'uuid',
                 'version',
                 'dateinput',
-                'datehardware',
                 'datelastupdate',
                 'ip',
+                'datehardware',
                 'hw_link',
             )
         }),
@@ -591,10 +591,6 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             kwargs["queryset"] = Package.objects.filter(
                 version=user_version(request.user)
             )
-            #kwargs['widget'] = FilteredSelectMultiple(
-            #    db_field.verbose_name,
-            #    (db_field.name in self.filter_vertical)
-            #)
 
             return db_field.formfield(**kwargs)
 
@@ -602,10 +598,6 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             kwargs["queryset"] = Attribute.objects.filter(
                 property_att__active=True
             )
-            #kwargs['widget'] = FilteredSelectMultiple(
-            #    db_field.verbose_name,
-            #    (db_field.name in self.filter_vertical)
-            #)
 
             return db_field.formfield(**kwargs)
 
