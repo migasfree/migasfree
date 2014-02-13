@@ -47,13 +47,6 @@ function verify_dependencies
         return 1
     fi
 
-    python -c "import IPy" 2> /dev/null
-    if [ $? -ne 0 ]
-    then
-        echo "Python IPy library not found, install it and try again."
-        return 1
-    fi
-
     which rpm > /dev/null
     if [ $? -ne 0 ]
     then
