@@ -35,12 +35,10 @@ Requirements
     * Server:
         + Apache with WSGI
         + Django 1.6
-        + Sqlite3 (you can use others databases Django approved, like postgresql)
+        + postgresql
         + Python libraries:
-            - IPy (Debian/Ubuntu => python-ipy)
-            - python-tz
             - python-django-south
-            - python-django-ajax-select
+            - django-ajax-selects
 
     * Clients:
         + a Linux distribution (Fedora, openSUSE, Ubuntu, ...)
