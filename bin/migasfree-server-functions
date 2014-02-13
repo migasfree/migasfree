@@ -20,7 +20,7 @@ function get_user_web_service
 
 function web_service
 {
-    service $_WEB_SERVICE "$1"
+    service $(get_web_service) "$1"
 }
 
 function own_web_server
