@@ -17,8 +17,6 @@ admin.autodiscover()
 
 from ajax_select import urls as ajax_select_urls
 
-from . import settings
-
 urlpatterns = patterns('',
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
@@ -31,19 +29,3 @@ urlpatterns = patterns('',
 
     url(r'', include('migasfree.server.urls')),
 )
-
-if settings.DEVELOPMENT:
-    urlpatterns += patterns('django.views.static',
-        (r'^repo/(?P<path>.*)$', 'serve', {
-            'document_root': settings.STATIC_ROOT,
-            'show_indexes': True
-        }),
-
-        (r'^media/(?P<path>.*)$', 'serve', {
-            'document_root': os.path.join(
-                os.path.dirname(os.path.abspath(django.__file__)),
-                'contrib/admin/static/admin'
-            ),
-            'show_indexes': True
-        }),
-    )
