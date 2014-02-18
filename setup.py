@@ -35,7 +35,7 @@ __license__ = 'GPLv3'
 import sys
 
 if not hasattr(sys, 'version_info') or sys.version_info < (2, 6, 0, 'final'):
-    raise SystemExit('migasfree-client requires Python 2.6 or later.')
+    raise SystemExit('migasfree-server requires Python 2.6 or later.')
 
 import os
 PATH = os.path.dirname(__file__)
