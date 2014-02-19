@@ -51,7 +51,8 @@ class Store(models.Model):
             "STORES",
             self.name
         )
-        shutil.rmtree(path)
+        if os.path.exists(path):
+            shutil.rmtree(path)
         super(Store, self).delete(*args, **kwargs)
 
     def __unicode__(self):

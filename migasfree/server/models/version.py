@@ -75,7 +75,9 @@ class Version(models.Model):
 
     def delete(self, *args, **kwargs):
         # remove the directory of this version
-        shutil.rmtree(os.path.join(MIGASFREE_REPO_DIR, self.name))
+        path = os.path.join(MIGASFREE_REPO_DIR, self.name)
+        if os.path.exists(path):
+            shutil.rmtree(path)
         super(Version, self).delete(*args, **kwargs)
 
     class Meta:
