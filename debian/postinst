@@ -22,7 +22,10 @@ case "$1" in
     configure)
         if which update-python-modules > /dev/null 2>&1
         then
-            update-python-modules -p || :
+            if [ -f /usr/share/python-support ]
+            then
+                update-python-modules -p migasfree-server.public || :
+            fi
         fi
 
         # migrate DB with south
