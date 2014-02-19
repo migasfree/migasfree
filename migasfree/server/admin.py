@@ -18,7 +18,7 @@ from migasfree.server.models import *
 
 from migasfree.server.views.repository import create_physical_repository
 from migasfree.settings import (
-    MIGASFREE_REPO_DIR,
+    MEDIA_URL,
     MIGASFREE_COMPUTER_SEARCH_FIELDS
 )
 
@@ -224,7 +224,7 @@ class StoreAdmin(MigasAdmin):
     def download(self, request, queryset):
         return redirect(
             '%s/%s/STORES/%s/' % (
-                MIGASFREE_REPO_DIR,
+                MEDIA_URL,
                 queryset[0].version.name,
                 queryset[0].name
             )
@@ -347,6 +347,7 @@ class ErrorAdmin(MigasAdmin):
         'truncate_error',
     )
     list_filter = ('checked', 'date', "version")
+    #list_editable = ('checked',)  # TODO
     ordering = ('date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'error'])
     readonly_fields = ('computer_link','version','date','error')
@@ -659,7 +660,7 @@ class PackageAdmin(MigasAdmin):
 
     def download(self, request, queryset):
         return redirect('%s/%s/STORES/%s/%s' % (
-            MIGASFREE_REPO_DIR,
+            MEDIA_URL,
             queryset[0].version.name,
             queryset[0].store.name,
             queryset[0].name
