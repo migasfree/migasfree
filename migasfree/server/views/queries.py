@@ -173,9 +173,9 @@ def computer_messages(request):
     result = []
     for item in Message.objects.all().order_by("-date"):
         if item.date < t:
-            icon = 'messagealert.png'
+            icon = 'warning'
         else:
-            icon = 'message.png'
+            icon = 'refresh'
 
         try:
             login = Login.objects.get(computer=item.computer)
