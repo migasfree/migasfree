@@ -649,7 +649,7 @@ class PackageAdmin(MigasAdmin):
         return redirect(
             reverse(
                 'package_info',
-                args=('STORES/%s/%s' % (
+                args=('STORES/%s/%s/' % (
                     queryset[0].store.name,
                     queryset[0].name
                 ),)
@@ -659,7 +659,7 @@ class PackageAdmin(MigasAdmin):
     information.short_description = _("Package Information")
 
     def download(self, request, queryset):
-        return redirect('%s/%s/STORES/%s/%s' % (
+        return redirect('%s/%s/STORES/%s/%s/' % (
             MEDIA_URL,
             queryset[0].version.name,
             queryset[0].store.name,
