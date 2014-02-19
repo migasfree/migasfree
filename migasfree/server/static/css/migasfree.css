@@ -83,6 +83,11 @@ table .ordinal {
     vertical-align: sub;
 }
 
+.progress {
+    background-image: linear-gradient(to bottom, #aBaBaB 0px, #d5d5d5 100%);
+    background-repeat: repeat-x;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
