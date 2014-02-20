@@ -10,9 +10,7 @@ from django.contrib.auth.models import Permission
 from StringIO import StringIO
 
 from migasfree.server.models import UserProfile
-from migasfree import settings
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "migasfree.settings")
+from migasfree.settings import DATABASES, MIGASFREE_APP_DIR
 
 
 def run(cmd_linux):
@@ -147,7 +145,7 @@ def sequence_reset():
         stdout=commands
     )
 
-    if settings.DATABASES.get('default').get('ENGINE') == \
+    if DATABASES.get('default').get('ENGINE') == \
     'django.db.backends.postgresql_psycopg2':
         cfile = "/tmp/migasfree.sequencereset.sql"  # FIXME tmpfile
         with open(cfile, "w") as ofile:
@@ -178,7 +176,7 @@ def create_registers():
         django.core.management.call_command(
             'loaddata',
             os.path.join(
-                settings.MIGASFREE_APP_DIR,
+                MIGASFREE_APP_DIR,
                 "server",
                 "fixtures",
                 fixture
