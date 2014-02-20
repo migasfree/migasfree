@@ -10,13 +10,15 @@ from datetime import datetime
 from django.test import TransactionTestCase
 from django.core.urlresolvers import reverse
 from migasfree.server.models import *
-from migasfree.server.fixtures import create_registers
+from migasfree.server.fixtures import create_registers, sequence_reset
 
 
 class RepositoryTestCase(TransactionTestCase):
     def setUp(self):  # pylint: disable-msg=C0103
         create_registers()
-        p=Platform()
+        sequence_reset()
+
+        p = Platform()
         p.name = "Linux"
         p.save()
 
