@@ -44,7 +44,7 @@ remove_old_data
 
 migasfree-server-create-database
 
-export DJANGO_SETTINGS_MODULE="migasfree.settings"
+export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
 
 create_server_keys
 if [ $? -ne 0 ]
