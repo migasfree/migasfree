@@ -115,6 +115,9 @@ INSTALLED_APPS = (
     'migasfree.flot',
 )
 
+# http://stackoverflow.com/questions/15682814/how-do-i-fake-certain-south-migration-in-django-testsin-a-custom-test-runner
+SOUTH_TESTS_MIGRATE = False
+
 # http://docs.python.org/2/howto/logging-cookbook.html
 # http://docs.python.org/2/library/logging.html#logrecord-attributes
 LOGGING = {
