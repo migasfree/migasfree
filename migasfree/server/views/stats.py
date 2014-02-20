@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from datetime import timedelta, datetime, date
 
-from django.utils import simplejson as json
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
