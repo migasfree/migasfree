@@ -220,8 +220,6 @@ def server_messages(request):
     for item in MessageServer.objects.all().order_by("-date"):
         result.append(
             [
-                'messageserver.png',
-                "-",
                 item.date,
                 item.text
             ]

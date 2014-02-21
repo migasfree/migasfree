@@ -7,7 +7,6 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th> </th>
                 <th>{% trans 'Date' %}</th>
                 <th>{% trans 'Message' %}</th>
             </tr>
@@ -16,9 +15,8 @@
         {% for item in query %}
             <tr class="{% cycle '' 'even' %}">
                 <td class="ordinal">{{ forloop.counter }}.</td>
-                <td><img src="{{ STATIC_URL }}icons/{{ item.0 }}" width="36" /></td>
-                <td>{{ item.2 }}</td>
-                <td>{{ item.3 }}</td>
+                <td>{{ item.0 }}</td>
+                <td>{{ item.1 }}</td>
             </tr>
         {% endfor %}
         </tbody>
