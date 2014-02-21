@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load i18n %}
-{% load url from future %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Settings' %}</li>
+    </ul>
+{% endblock %}
 
 {% block extrahead %}
     {{ block.super }}
@@ -13,12 +18,8 @@ $(document).ready(function() {
     </script>
 {% endblock extrahead %}
 
-{% block menu %}
-    {% include 'server/includes/mining_menu.html' %}
-{% endblock menu %}
-
 {% block content %}
     <div id="results">
-        {% include 'server/includes/server_messages_result.html' %}
+        {% include 'includes/server_messages_result.html' %}
     </div>
 {% endblock content %}
