@@ -3,7 +3,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link
 from migasfree.server.models.computer import Computer
 from migasfree.server.models import User, Attribute
 
@@ -56,9 +55,3 @@ class Login(models.Model):
         verbose_name_plural = _("Logins")
         unique_together = (("computer",),)
         permissions = (("can_save_login", "Can save Login"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
