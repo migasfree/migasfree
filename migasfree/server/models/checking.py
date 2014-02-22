@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from common import link
 
 
 class Checking(models.Model):
@@ -54,9 +53,3 @@ class Checking(models.Model):
         verbose_name = _("Checking")
         verbose_name_plural = _("Checkings")
         permissions = (("can_save_checking", "Can save Checking"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
