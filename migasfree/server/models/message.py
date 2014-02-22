@@ -3,7 +3,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link
 from migasfree.server.models import Computer
 
 
@@ -39,9 +38,3 @@ class Message(models.Model):
         verbose_name = _("Message")
         verbose_name_plural = _("Messages")
         permissions = (("can_save_message", "Can save Message"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
