@@ -3,11 +3,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link
-from migasfree.server.models import Property
+from migasfree.server.models import Property, MigasLink
 
 
-class Attribute(models.Model):
+class Attribute(models.Model, MigasLink):
     property_att = models.ForeignKey(
         Property,
         verbose_name=_("Property of attribute")
@@ -43,9 +42,3 @@ class Attribute(models.Model):
         verbose_name_plural = _("Attributes")
         unique_together = (("property_att", "value"),)
         permissions = (("can_save_attribute", "Can save Attribute"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
