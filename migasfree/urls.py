@@ -17,6 +17,9 @@ admin.autodiscover()
 
 from ajax_select import urls as ajax_select_urls
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = patterns('',
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
@@ -29,3 +32,9 @@ urlpatterns = patterns('',
 
     url(r'', include('migasfree.server.urls')),
 )
+
+if settings.DEBUG and settings.STATIC_ROOT is not None:
+    urlpatterns += static(
+        settings.STATIC_URL,
+        document_root=settings.STATIC_ROOT
+    )
