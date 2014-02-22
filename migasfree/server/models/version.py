@@ -5,11 +5,9 @@ import shutil
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
-from migasfree.server.models import Pms
-from migasfree.server.models import Platform
-from migasfree.server.models.common import link
-from migasfree.settings import MIGASFREE_REPO_DIR
+from migasfree.server.models import Pms, Platform
 
 
 class Version(models.Model):
@@ -59,11 +57,15 @@ class Version(models.Model):
         return self.name
 
     def create_dirs(self):
-        _repos = os.path.join(MIGASFREE_REPO_DIR, self.name, 'REPOSITORIES')
+        _repos = os.path.join(
+            settings.MIGASFREE_REPO_DIR,
+            self.name,
+            'REPOSITORIES'
+        )
         if not os.path.exists(_repos):
             os.makedirs(_repos)
 
-        _stores = os.path.join(MIGASFREE_REPO_DIR, self.name, 'STORES')
+        _stores = os.path.join(settings.MIGASFREE_REPO_DIR, self.name, 'STORES')
         if not os.path.exists(_stores):
             os.makedirs(_stores)
 
@@ -75,7 +77,7 @@ class Version(models.Model):
 
     def delete(self, *args, **kwargs):
         # remove the directory of this version
-        path = os.path.join(MIGASFREE_REPO_DIR, self.name)
+        path = os.path.join(settings.MIGASFREE_REPO_DIR, self.name)
         if os.path.exists(path):
             shutil.rmtree(path)
         super(Version, self).delete(*args, **kwargs)
@@ -85,12 +87,6 @@ class Version(models.Model):
         verbose_name = _("Version")
         verbose_name_plural = _("Versions")
         permissions = (("can_save_version", "Can save Version"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
 
 
 def get_version_names():
