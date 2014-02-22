@@ -7,11 +7,10 @@ import shutil
 from django.db import models
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 from migasfree.server.functions import horizon
-from migasfree.settings import MIGASFREE_REPO_DIR
 
-from migasfree.server.models.common import link
 from migasfree.server.models import Version, Package, Attribute, Schedule, \
     VersionManager, ScheduleDelay
 
@@ -130,7 +129,7 @@ class Repository(models.Model):
     def delete(self, *args, **kwargs):
         # remove the directory of repository
         path = os.path.join(
-            MIGASFREE_REPO_DIR,
+            settings.MIGASFREE_REPO_DIR,
             self.version.name,
             self.version.pms.slug,
             self.name
@@ -198,9 +197,3 @@ class Repository(models.Model):
         verbose_name_plural = _("Repositories")
         unique_together = (("name", "version"),)
         permissions = (("can_save_repository", "Can save Repository"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
