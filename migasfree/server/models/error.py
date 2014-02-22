@@ -3,7 +3,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link
 from migasfree.server.models import Computer, Version, AutoCheckError
 
 
@@ -72,9 +71,3 @@ class Error(models.Model):
         verbose_name = _("Error")
         verbose_name_plural = _("Errors")
         permissions = (("can_save_error", "Can save Error"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
