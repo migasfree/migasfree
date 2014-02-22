@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 from .migasfree import *
 from .base import *
 from .ajax_select import *
 
 # development environment
 TEMPLATE_DEBUG = DEBUG = True
+
+STATIC_ROOT = os.path.join(MIGASFREE_APP_DIR, 'static')
 
 MIGASFREE_DB_DIR = os.path.dirname(MIGASFREE_PROJECT_DIR)
 MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
