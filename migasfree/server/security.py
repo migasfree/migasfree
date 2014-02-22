@@ -85,7 +85,7 @@ def get_keys_to_packager():
 
 def create_keys_server():
     if not os.path.lexists(MIGASFREE_KEYS_DIR):
-        os.mkdir(MIGASFREE_KEYS_DIR)
+        os.makedirs(MIGASFREE_KEYS_DIR)
 
     gen_keys("migasfree-server")
     gen_keys("migasfree-packager")
