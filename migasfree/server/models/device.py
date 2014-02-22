@@ -5,9 +5,7 @@ import json
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link
 from migasfree.server.models import DeviceConnection, DeviceModel
-
 from migasfree.server.functions import add_default_device_logical
 
 class Device(models.Model):
@@ -48,7 +46,8 @@ class Device(models.Model):
             device_logical.reinstall()
 
     def datadict(self):
-        return {'device_id': self.id,
+        return {
+            'device_id': self.id,
             'device': self.name,
             'connection': {
                 'name': self.connection.name,
@@ -68,9 +67,3 @@ class Device(models.Model):
         verbose_name_plural = _("Devices")
         unique_together = (("connection", "name"),)
         permissions = (("can_save_device", "Can save Device"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
