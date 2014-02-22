@@ -3,8 +3,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from common import link
-
 
 class DeviceManufacturer(models.Model):
     name = models.CharField(
@@ -22,11 +20,6 @@ class DeviceManufacturer(models.Model):
         app_label = 'server'
         verbose_name = _("Device (Manufacturer)")
         verbose_name_plural = _("Device (Manufacturers)")
-        permissions = (("can_save_devicemanufacturer",
-            "Can save Device Manufacturer"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
+        permissions = (
+            ("can_save_devicemanufacturer", "Can save Device Manufacturer"),
+        )
