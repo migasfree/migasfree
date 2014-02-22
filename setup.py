@@ -40,7 +40,7 @@ if not hasattr(sys, 'version_info') or sys.version_info < (2, 6, 0, 'final'):
 import os
 PATH = os.path.dirname(__file__)
 README = open(os.path.join(PATH, 'README')).read()
-VERSION = open(os.path.join(PATH, 'VERSION')).read().splitlines()[0]
+VERSION = __import__('migasfree').__version__
 
 #import glob
 #import subprocess
@@ -189,7 +189,6 @@ setup(
             'INSTALL',
             'MANIFEST.in',
             'README',
-            'VERSION',
         ]),
     ],
     scripts=[
