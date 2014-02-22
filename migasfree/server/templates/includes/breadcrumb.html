@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load url from future %}
 {% load admin_urls %}
 
 {% if opts or cl %}
@@ -10,8 +9,12 @@
             <li>{% trans 'Audit' %}</li>
         {% endif %}
 
-        {% if opts.object_name.lower = 'property' or opts.object_name.lower = 'version' or opts.object_name.lower = 'pms' or opts.object_name.lower = 'platform' or opts.object_name.lower = 'query' or opts.object_name.lower = 'userprofile' or opts.object_name.lower = 'group' or opts.object_name.lower = 'checking' or opts.object_name.lower = 'faultdef' or opts.object_name.lower = 'autocheckerror' or opts.object_name.lower = 'device' or opts.object_name.lower = 'devicelogical' or opts.object_name.lower = 'devicefeature' or opts.object_name.lower = 'devicedriver' or opts.object_name.lower = 'devicemodel' or opts.object_name.lower = 'devicemanufacturer' or opts.object_name.lower = 'deviceconnection' or opts.object_name.lower = 'devicetype' %}
+        {% if opts.object_name.lower = 'property' or opts.object_name.lower = 'version' or opts.object_name.lower = 'pms' or opts.object_name.lower = 'platform' or opts.object_name.lower = 'query' or opts.object_name.lower = 'userprofile' or opts.object_name.lower = 'group' or opts.object_name.lower = 'checking' or opts.object_name.lower = 'faultdef' or opts.object_name.lower = 'autocheckerror' %}
             <li>{% trans 'Settings' %}</li>
+        {% endif %}
+
+        {% if opts.object_name.lower = 'device' or opts.object_name.lower = 'devicelogical' or opts.object_name.lower = 'devicefeature' or opts.object_name.lower = 'devicedriver' or opts.object_name.lower = 'devicemodel' or opts.object_name.lower = 'devicemanufacturer' or opts.object_name.lower = 'deviceconnection' or opts.object_name.lower = 'devicetype' %}
+            <li>{% trans 'Devices' %}</li>
         {% endif %}
 
         {% if opts.object_name.lower = 'repository' or opts.object_name.lower = 'schedule' or opts.object_name.lower = 'package' or opts.object_name.lower = 'store' %}
