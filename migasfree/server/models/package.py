@@ -6,14 +6,14 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
-from migasfree.settings import MIGASFREE_REPO_DIR
-
+from migasfree.server.functions import trans
 from migasfree.server.models import Version, VersionManager, \
-    Store, user_version
+    Store, user_version, MigasLink
 
 
-class Package(models.Model):
+class Package(models.Model, MigasLink):
     name = models.CharField(
         _("name"),
         max_length=100
@@ -31,9 +31,31 @@ class Package(models.Model):
 
     objects = VersionManager()  # manager by user version
 
+    def __init__(self, *args, **kwargs):
+        super(Package, self).__init__(*args, **kwargs)
+
+        info_link = "%sSTORES/%s/%s/?version=%s" % (
+            reverse('package_info', args=('', )),
+            self.store.name,
+            self.name,
+            self.version.name
+        )
+
+        download_link = '%s%s/STORES/%s/%s' % (
+            settings.MEDIA_URL,
+            self.version.name,
+            self.store.name,
+            self.name
+        )
+
+        self._actions = [
+            [trans('Package Information'), info_link],
+            [trans('Download'), download_link]
+        ]
+
     def create_dir(self):
         _path = os.path.join(
-            MIGASFREE_REPO_DIR,
+            settings.MIGASFREE_REPO_DIR,
             self.version.name,
             'STORES',
             self.store.name,
@@ -51,29 +73,3 @@ class Package(models.Model):
         verbose_name_plural = _("Packages/Sets")
         unique_together = (("name", "version"),)
         permissions = (("can_save_package", "Can save Package"),)
-
-    def link(self):
-        info = "%sSTORES/%s/%s/?version=%s" % (
-            reverse('package_info', args=('', )),
-            self.store.name,
-            self.name,
-            self.version.name
-        )
-
-        pkg_info = self.__unicode__()
-        if self.version == user_version():
-            pkg_info = '<a href="%s">%s</a>' % (
-                reverse('admin:server_package_change', args=(self.id, )),
-                self.__unicode__()
-            )
-
-        return format_html(
-            '<a href="%s" class="fa fa-archive" title="%s"></a> %s' % (
-                info,
-                _("information"),
-                pkg_info
-            )
-        )
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
