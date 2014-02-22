@@ -2,7 +2,7 @@
 
 # import order is very important!!!
 
-from migasfree.server.models.common import LANGUAGES_CHOICES
+from migasfree.server.models.common import LANGUAGES_CHOICES, MigasLink
 
 from migasfree.server.models.user import User
 from migasfree.server.models.query import Query, get_query_names
