@@ -6,15 +6,16 @@ from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.template import Context, Template
+from django.conf import settings
 
-from migasfree.server.models import Version, DeviceLogical, Attribute
+from migasfree.server.models import (
+    Version, DeviceLogical, Attribute, MigasLink
+)
 
-from migasfree.server.functions import s2l, l2s
-from migasfree.settings import MIGASFREE_COMPUTER_SEARCH_FIELDS, \
-    MIGASFREE_REMOTE_ADMIN_LINK
+from migasfree.server.functions import s2l, l2s, trans
 
 
-class Computer(models.Model):
+class Computer(models.Model, MigasLink):
     name = models.CharField(
         _("name"),
         max_length=50,
@@ -95,6 +96,29 @@ class Computer(models.Model):
         verbose_name=_("tags")
     )
 
+    def __init__(self, *args, **kwargs):
+        super(Computer, self).__init__(*args, **kwargs)
+        if settings.MIGASFREE_REMOTE_ADMIN_LINK == '' \
+        or settings.MIGASFREE_REMOTE_ADMIN_LINK is None:
+            self._actions = None
+
+        self._actions = []
+        _template = Template(settings.MIGASFREE_REMOTE_ADMIN_LINK)
+        _context = {"computer": self}
+        for n in _template.nodelist:
+            try:
+                _token = n.filter_expression.token
+                if not _token.startswith("computer"):
+                    _context[_token] = self.login().attributes.get(
+                        property_att__prefix=_token).value
+            except:
+                pass
+        _remote_admin = _template.render(Context(_context))
+
+        for element in _remote_admin.split(" "):
+            protocol = element.split("://")[0]
+            self._actions.append([protocol, element])
+
     def remove_device_copy(self, devicelogical_id):
         try:
             lst = s2l(self.devices_copy)
@@ -126,6 +150,7 @@ class Computer(models.Model):
             return self.login().link()
         except:
             return ''
+
     login_link.allow_tags = True
     login_link.short_description = _("login")
 
@@ -165,66 +190,12 @@ class Computer(models.Model):
     devices_link.short_description = _("Devices")
 
     def __unicode__(self):
-        return str(self.__getattribute__(MIGASFREE_COMPUTER_SEARCH_FIELDS[0]))
+        return str(self.__getattribute__(
+            settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]
+        ))
 
     class Meta:
         app_label = 'server'
         verbose_name = _("Computer")
         verbose_name_plural = _("Computers")
         permissions = (("can_save_computer", "Can save Computer"),)
-
-    def link(self):
-        _computer_link = '<a href="%s" class="btn btn-xs">%s</a>' % (
-            reverse('admin:server_computer_change', args=(self.id, )),
-            self.__unicode__()
-        )
-
-        if MIGASFREE_REMOTE_ADMIN_LINK == '' \
-        or MIGASFREE_REMOTE_ADMIN_LINK is None:
-            return format_html(_computer_link.replace(' class="btn btn-xs"', ''))
-
-        _template = Template(MIGASFREE_REMOTE_ADMIN_LINK)
-        _context = {"computer": self}
-        for n in _template.nodelist:
-            try:
-                _token = n.filter_expression.token
-                if not _token.startswith("computer"):
-                    _context[_token] = self.login().attributes.get(
-                        property_att__prefix=_token).value
-            except:
-                pass
-        _remote_admin = _template.render(Context(_context))
-
-        if ' ' in _remote_admin:  # more than 1 element
-            ret = '<ul class="dropdown-menu" role="menu">'
-            for element in _remote_admin.split(" "):
-                protocol = element.split("://")[0]
-                ret += '<li><a href="%(href)s">%(protocol)s</a></li>' % {
-                    'href': element,
-                    'protocol': protocol
-                }
-            ret += '</ul>'
-
-            _computer_link += '<button type="button" ' + \
-                'class="btn btn-default dropdown-toggle" data-toggle="dropdown">' + \
-                '<span class="fa fa-external-link"></span>' + \
-                '<span class="sr-only">' + str(_("Toggle Dropdown")) + \
-                '</span></button>'
-
-            return format_html(
-                '<div class="btn-group btn-group-xs">' + \
-                _computer_link + ret + '</div>'
-            )
-        else:  # only 1 element
-            protocol = _remote_admin.split("://")[0]
-            return format_html(
-                _computer_link + \
-                '<a href="' + _remote_admin + \
-                '" title="' + protocol + \
-                '"><span class="fa fa-external-link btn btn-xs"></span>' + \
-                '<span class="sr-only">' + protocol + \
-                '</span></a>'
-            )
-
-    link.allow_tags = True
-    link.short_description = Meta.verbose_name
