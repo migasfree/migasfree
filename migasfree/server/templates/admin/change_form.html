@@ -19,27 +19,17 @@
 
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
 
+{% block title %}{% trans opts.verbose_name %} {{ original }}{% endblock title %}
+
 {% block content_title %}
     {% if title %}
         <h1 {% if change %}class="change-list-title"{% endif %}>
-            {% trans opts.verbose_name %}: {{ original }}
+            {% trans opts.verbose_name %}: {% link opts %}
         </h1>
     {% endif %}
 {% endblock content_title %}
 
 {% block object-tools %}
-    {% if change %}
-        {% if not is_popup %}
-            <ul class="nav navbar-nav navbar-right">
-            {% block object-tools-items %}
-                <li><a href="history/" class="btn btn-inverse historylink">{% trans "History" %}</a></li>
-                {% if has_absolute_url %}
-                    <li><a href="../../../r/{{ content_type_id }}/{{ object_id }}/" class="btn viewsitelink">{% trans "View on site" %}</a></li>
-                {% endif%}
-            {% endblock %}
-            </ul>
-        {% endif %}
-    {% endif %}
 {% endblock %}
 
 {% block content %}
