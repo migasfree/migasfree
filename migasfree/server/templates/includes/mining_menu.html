@@ -1,43 +1,22 @@
 {% load i18n %}
-{% load url from future %}
-{% load current_option from navigation %}
 
 <ul class="dropdown-menu">
-    <li class="dropdown-submenu">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Datum' %}</a>
-        <ul id="data" class="dropdown-menu">
-            <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
-            <li><a href="{% url 'admin:server_user_changelist' %}">{% trans 'Users' %}</a></li>
-            <li><a href="{% url 'admin:server_login_changelist' %}">{% trans 'Logins' %}</a></li>
-            <li><a href="{% url 'admin:server_error_changelist' %}">{% trans 'Errors' %}</a></li>
-            <li><a href="{% url 'admin:server_fault_changelist' %}">{% trans 'Faults' %}</a></li>
-            <li><a href="{% url 'admin:server_attribute_changelist' %}">{% trans 'Attributes' %}</a></li>
-            <li><a href="{% url 'admin:server_migration_changelist' %}">{% trans 'Migrations' %}</a></li>
-            <li><a href="{% url 'admin:server_notification_changelist' %}">{% trans 'Notifications' %}</a></li>
-        </ul>
-    </li>
+    <li role="presentation" class="dropdown-header">{% trans 'Datum' %}</li>
+    <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
+    <li><a href="{% url 'admin:server_user_changelist' %}">{% trans 'Users' %}</a></li>
+    <li><a href="{% url 'admin:server_login_changelist' %}">{% trans 'Logins' %}</a></li>
+    <li><a href="{% url 'admin:server_error_changelist' %}">{% trans 'Errors' %}</a></li>
+    <li><a href="{% url 'admin:server_fault_changelist' %}">{% trans 'Faults' %}</a></li>
+    <li><a href="{% url 'admin:server_attribute_changelist' %}">{% trans 'Attributes' %}</a></li>
+    <li><a href="{% url 'admin:server_migration_changelist' %}">{% trans 'Migrations' %}</a></li>
+    <li><a href="{% url 'admin:server_notification_changelist' %}">{% trans 'Notifications' %}</a></li>
 
-    {% if query_names %}
-        <li class="dropdown-submenu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Queries' %}</a>
-            <ul id="queries" class="dropdown-menu">
-            {% for item in query_names %}
-                <li>
-                    <a class="{% current_option 'query' query_id=item.0 %}" href="{% url 'query' item.0 %}">{{ item.1|title }}</a>
-                </li>
-            {% endfor %}
-            </ul>
-        </li>
-    {% endif %}
+    <li role="presentation" class="divider"></li>
 
-    <li class="dropdown-submenu">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Stats' %}</a>
-        <ul id="stats" class="dropdown-menu">
-            <li><a class="hourly_updated" href="{% url 'chart_hourly_updated' %}">{% trans 'Updated Computers / Hour' %}</a></li>
-            <li><a class="daily_updated" href="{% url 'chart_daily_updated' %}">{% trans 'Updated Computers / Day' %}</a></li>
-            <li><a class="monthly_updated" href="{% url 'chart_monthly_updated' %}">{% trans 'Updated Computers / Month' %}</a></li>
-            <li><a class="delay_updated" href="{% url 'chart_delay_schedule' %}">{% trans 'Provided Computers / Delay' %}</a></li>
-            <li><a class="version_computer" href="{% url 'chart_version_computer' %}">{% trans 'Computers / Version' %}</a></li>
-        </ul>
-    </li>
+    <li role="presentation" class="dropdown-header">{% trans 'Stats' %}</li>
+    <li><a class="hourly_updated" href="{% url 'chart_hourly_updated' %}">{% trans 'Updated Computers / Hour' %}</a></li>
+    <li><a class="daily_updated" href="{% url 'chart_daily_updated' %}">{% trans 'Updated Computers / Day' %}</a></li>
+    <li><a class="monthly_updated" href="{% url 'chart_monthly_updated' %}">{% trans 'Updated Computers / Month' %}</a></li>
+    <li><a class="delay_updated" href="{% url 'chart_delay_schedule' %}">{% trans 'Provided Computers / Delay' %}</a></li>
+    <li><a class="version_computer" href="{% url 'chart_version_computer' %}">{% trans 'Computers / Version' %}</a></li>
 </ul>
