@@ -217,30 +217,8 @@ admin.site.register(Pms, PmsAdmin)
 
 
 class StoreAdmin(MigasAdmin):
-    list_display = ('name',)
+    list_display = ('link',)
     search_fields = ('name',)
-    actions = ['information', 'download']
-
-    def download(self, request, queryset):
-        return redirect(
-            '%s%s/STORES/%s/' % (
-                MEDIA_URL,
-                queryset[0].version.name,
-                queryset[0].name
-            )
-        )
-
-    download.short_description = _("Download")
-
-    def information(self, request, queryset):
-        return redirect(
-            reverse(
-                'package_info',
-                args=('STORES/%s/' % queryset[0].name,)
-            )
-        )
-
-    information.short_description = _("Package Information")
 
 admin.site.register(Store, StoreAdmin)
 
@@ -256,7 +234,7 @@ admin.site.register(Property, PropertyAdmin)
 
 
 class AttributeAdmin(MigasAdmin):
-    list_display = ('value', 'description', 'property_link',)
+    list_display = ('link', 'value', 'description', 'property_link',)
     list_filter = ('property_att',)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
@@ -638,35 +616,10 @@ admin.site.register(Schedule, ScheduleAdmin)
 
 
 class PackageAdmin(MigasAdmin):
-    list_display = ('name', 'store',)
+    list_display = ('link', 'store',)
     list_filter = ('store',)
     search_fields = ('name', 'store__name',)
     ordering = ('name',)
-
-    actions = ['information', 'download']
-
-    def information(self, request, queryset):
-        return redirect(
-            reverse(
-                'package_info',
-                args=('STORES/%s/%s/' % (
-                    queryset[0].store.name,
-                    queryset[0].name
-                ),)
-            )
-        )
-
-    information.short_description = _("Package Information")
-
-    def download(self, request, queryset):
-        return redirect('%s%s/STORES/%s/%s' % (
-            MEDIA_URL,
-            queryset[0].version.name,
-            queryset[0].store.name,
-            queryset[0].name
-        ))
-
-    download.short_description = _("Download")
 
 admin.site.register(Package, PackageAdmin)
 
