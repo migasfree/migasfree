@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from common import link
 
 
 class Pms(models.Model):
@@ -61,9 +60,3 @@ class Pms(models.Model):
         verbose_name = _("Package Management System")
         verbose_name_plural = _("Package Management Systems")
         permissions = (("can_save_pms", "Can save Package Management System"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
