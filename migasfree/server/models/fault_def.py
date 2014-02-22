@@ -3,8 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link, LANGUAGES_CHOICES
-from migasfree.server.models import Attribute
+from migasfree.server.models import Attribute, LANGUAGES_CHOICES
 from migasfree.server.models.version_manager import UserProfile
 
 
@@ -86,9 +85,3 @@ class FaultDef(models.Model):
         verbose_name = _("Fault Definition")
         verbose_name_plural = _("Faults Definition")
         permissions = (("can_save_faultdef", "Can save Fault Definition"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
