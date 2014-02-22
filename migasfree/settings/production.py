@@ -2,7 +2,7 @@
 
 from .migasfree import *
 from .base import *
-from .ajax_select import *
+from .ajax_select_config import *
 
 # production environment
 TEMPLATE_DEBUG = DEBUG = False
