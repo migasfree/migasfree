@@ -3,12 +3,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from common import link
 from migasfree.server.models import Version, DeviceModel, DeviceFeature
 
 
 class DeviceDriver(models.Model):
-
     name = models.CharField(
         max_length=100,
         null=True,
@@ -61,9 +59,3 @@ class DeviceDriver(models.Model):
         verbose_name_plural = _("Device (Driver)")
         permissions = (("can_save_devicedriver", "Can save Device Driver"),)
         unique_together = (("model", "version", "feature"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
