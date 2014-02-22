@@ -7,7 +7,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.middleware import threadlocals
 
-from migasfree.server.models.common import link
 from migasfree.server.models import Version
 
 
@@ -71,9 +70,3 @@ class UserProfile(UserSystem):
         verbose_name = _("User Profile")
         verbose_name_plural = _("User Profiles")
         permissions = (("can_save_userprofile", "Can save User Profile"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
