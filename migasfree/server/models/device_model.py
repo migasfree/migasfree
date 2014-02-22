@@ -3,9 +3,9 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link
-from migasfree.server.models import DeviceType, DeviceManufacturer, \
-    DeviceConnection
+from migasfree.server.models import (
+    DeviceType, DeviceManufacturer, DeviceConnection
+)
 
 
 class DeviceModel(models.Model):
@@ -46,9 +46,3 @@ class DeviceModel(models.Model):
         verbose_name_plural = _("Device (Models)")
         unique_together = (("devicetype", "manufacturer", "name"),)
         permissions = (("can_save_devicemodel", "Can save Device Model"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
