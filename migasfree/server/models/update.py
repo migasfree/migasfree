@@ -3,7 +3,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link
 from migasfree.server.models import Computer, Version, User
 
 
@@ -29,6 +28,13 @@ class Update(models.Model):
         default=0
     )
 
+    def save(self, *args, **kwargs):
+        super(Update, self).save(*args, **kwargs)
+
+        #update last update in computer
+        self.computer.datelastupdate = self.date
+        self.computer.save()
+
     def __unicode__(self):
         return u'%s-%s' % (self.computer.__unicode__(), self.date)
 
@@ -43,16 +49,3 @@ class Update(models.Model):
         verbose_name = _("Update")
         verbose_name_plural = _("Updates")
         permissions = (("can_save_update", "Can save Update"),)
-
-    def save(self, *args, **kwargs):
-        super(Update, self).save(*args, **kwargs)
-
-        #update last update in computer
-        self.computer.datelastupdate = self.date
-        self.computer.save()
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
