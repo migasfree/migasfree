@@ -3,7 +3,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.common import link
 from migasfree.server.models import Schedule, Attribute
 
 
@@ -41,9 +40,3 @@ class ScheduleDelay(models.Model):
         verbose_name_plural = _("Schedule Delays")
         unique_together = (("schedule", "delay"),)
         permissions = (("can_save_scheduledelay", "Can save Schedule Delay"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
