@@ -2,7 +2,8 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from common import link, LANGUAGES_CHOICES
+
+from migasfree.server.models import LANGUAGES_CHOICES
 
 
 class Property(models.Model):
@@ -81,9 +82,3 @@ class Property(models.Model):
         verbose_name = _("Property")
         verbose_name_plural = _("Properties")
         permissions = (("can_save_property", "Can save Property"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
