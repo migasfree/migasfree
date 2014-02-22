@@ -3,8 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from common import link
-from migasfree.server.models import  Device, DeviceFeature, DeviceDriver
+from migasfree.server.models import Device, DeviceFeature, DeviceDriver
 
 
 class DeviceLogical(models.Model):
@@ -67,9 +66,3 @@ class DeviceLogical(models.Model):
         verbose_name_plural = _("Device (Logical)")
         permissions = (("can_save_devicelogical", "Can save Device Logical"),)
         unique_together = (("device", "feature"),)
-
-    def link(self):
-        return link(self, self._meta.object_name)
-
-    link.short_description = Meta.verbose_name
-    link.allow_tags = True
