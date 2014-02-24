@@ -89,6 +89,10 @@ table .ordinal {
     background-color: #d5d5d5;
 }
 
+td.nowrap {
+    white-space: nowrap;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
