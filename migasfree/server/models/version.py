@@ -7,10 +7,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from migasfree.server.models import Pms, Platform
+from migasfree.server.models import Pms, Platform, MigasLink
 
 
-class Version(models.Model):
+class Version(models.Model, MigasLink):
     """
     Version of S.O. by example 'Ubuntu natty 32bit' or 'AZLinux-2'
     This is 'your distribution', a set of computers with a determinate
