@@ -3,8 +3,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from migasfree.server.models import MigasLink
 
-class User(models.Model):
+
+class User(models.Model, MigasLink):
     name = models.CharField(
         _("name"),
         max_length=50,
