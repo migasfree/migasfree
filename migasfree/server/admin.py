@@ -3,7 +3,6 @@
 """
 Admin Models
 """
-from migasfree.middleware import threadlocals
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.admin import SimpleListFilter
@@ -13,14 +12,11 @@ from django.db import models
 from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
+from migasfree.middleware import threadlocals
 from migasfree.server.models import *
-
 from migasfree.server.views.repository import create_physical_repository
-from migasfree.settings import (
-    MEDIA_URL,
-    MIGASFREE_COMPUTER_SEARCH_FIELDS
-)
 
 #AJAX_SELECT
 from ajax_select import make_ajax_form
@@ -48,7 +44,7 @@ class MigasAdmin(admin.ModelAdmin):
 
 
 def add_computer_search_fields(fields_list):
-    for field in MIGASFREE_COMPUTER_SEARCH_FIELDS:
+    for field in settings.MIGASFREE_COMPUTER_SEARCH_FIELDS:
         fields_list.append("computer__%s" % field)
 
     return tuple(fields_list)
@@ -148,6 +144,7 @@ class DeviceLogicalForm(forms.ModelForm):
             self.save_m2m()
         return instance
 
+
 class DeviceLogicalAdmin(admin.ModelAdmin):
     form = DeviceLogicalForm
     fields = ("device", "feature", "computers")
@@ -206,7 +203,6 @@ class DeviceModelAdmin(MigasAdmin):
     )
     inlines = [DeviceDriverInline, ]
 
-
 admin.site.register(DeviceModel, DeviceModelAdmin)
 
 
@@ -235,6 +231,7 @@ admin.site.register(Property, PropertyAdmin)
 
 class AttributeAdmin(MigasAdmin):
     list_display = ('link', 'value', 'description', 'property_link',)
+    list_select_related = ('property_att',)
     list_filter = ('property_att',)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
@@ -259,16 +256,11 @@ class LoginAdmin(MigasAdmin):
     )
     readonly_fields = ('date', 'user', 'computer_link', 'attributes')
 
-
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "attributes":
             kwargs["queryset"] = Attribute.objects.filter(
                 property_att__active=True
             )
-            #kwargs['widget'] = FilteredSelectMultiple(
-            #    db_field.verbose_name,
-            #    (db_field.name in self.filter_vertical)
-            #)
             return db_field.formfield(**kwargs)
 
         return super(LoginAdmin, self).formfield_for_manytomany(
@@ -360,11 +352,15 @@ class UserFaultFilter(SimpleListFilter):
     def queryset(self, request, queryset):
         lst = [threadlocals.get_current_user().id]
         if self.value() == 'me':
-            return queryset.filter(Q(faultdef__users__id__in=lst) | Q(faultdef__users=None))
+            return queryset.filter(
+                Q(faultdef__users__id__in=lst) | Q(faultdef__users=None)
+            )
         elif self.value() == 'only_me':
             return queryset.filter(Q(faultdef__users__id__in=lst))
         elif self.value() == 'others':
-            return queryset.exclude(faultdef__users__id__in=lst).exclude(faultdef__users=None)
+            return queryset.exclude(
+                faultdef__users__id__in=lst
+            ).exclude(faultdef__users=None)
         elif self.value() == 'no_assign':
             return queryset.filter(Q(faultdef__users=None))
 
@@ -439,9 +435,10 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'datelastupdate',
         'hw_link',
     )
+    #list_select_related = ('login',)
     ordering = ('name',)
     list_filter = ('version',)
-    search_fields = MIGASFREE_COMPUTER_SEARCH_FIELDS
+    search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
 
     readonly_fields = (
         'name',
@@ -590,7 +587,8 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         super(RepositoryAdmin, self).save_model(request, obj, form, change)
 
         # create physical repository  when packages is change or not have packages
-        if "packages" in form.changed_data or len(form.cleaned_data['packages']) == 0:
+        if "packages" in form.changed_data \
+        or len(form.cleaned_data['packages']) == 0:
             messages.add_message(
                 request,
                 messages.INFO,
