@@ -4,10 +4,10 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models.computer import Computer
-from migasfree.server.models import User, Attribute
+from migasfree.server.models import User, Attribute, MigasLink
 
 
-class Login(models.Model):
+class Login(models.Model, MigasLink):
     date = models.DateTimeField(
         _("date"),
         default=0
