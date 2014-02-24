@@ -3,10 +3,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import LANGUAGES_CHOICES
+from migasfree.server.models import LANGUAGES_CHOICES, MigasLink
 
 
-class Property(models.Model):
+class Property(models.Model, MigasLink):
     KIND_CHOICES = (
         ('N', _('NORMAL')),
         ('-', _('LIST')),
