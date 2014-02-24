@@ -52,20 +52,20 @@ class FaultDef(models.Model):
     )
 
     def list_attributes(self):
-        cattributes = ""
-        for i in self.attributes.all():
-            cattributes += i.value + ","
+        attributes = ""
+        for item in self.attributes.all():
+            attributes += item.value + ', '
 
-        return cattributes[0:len(cattributes) - 1]
+        return attributes[0:len(attributes) - 2]  # remove trailing ', '
 
     list_attributes.short_description = _("attributes")
 
     def list_users(self):
-        cusers = ""
-        for i in self.users.all():
-            cusers += i.username + ","
+        users = ""
+        for item in self.users.all():
+            users += item.username + ', '
 
-        return cusers[0:len(cusers) - 1]
+        return users[0:len(users) - 2]  # remove trailing ', '
 
     list_users.short_description = _("users")
 
