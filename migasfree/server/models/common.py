@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import os
-
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 
 from migasfree.server.functions import trans
 
-# Programming Language for Properties and FaultDefs
+# Programming Languages for Properties and FaultDefs
 LANGUAGES_CHOICES = (
     (0, 'bash'),
     (1, 'python'),
@@ -22,6 +20,17 @@ class MigasLink(object):
     _actions = None
 
     def link(self):
+        related_objects = self._meta.get_all_related_objects_with_model() \
+            + self._meta.get_all_related_m2m_objects_with_model()
+        if len(related_objects) == 0 and self._actions is None:
+            return '<a href="%s">%s</a>' % (
+                reverse(
+                    'admin:server_%s_change' % self._meta.model_name,
+                    args=(self.id, )
+                ),
+                self.__unicode__()
+            )
+
         _link = '<span class="sr-only">%s</span><a href="%s" class="btn btn-xs">%s</a>' % (
             self.__unicode__(),
             reverse(
@@ -49,17 +58,17 @@ class MigasLink(object):
             related_data += '<li role="presentation" class="divider"></li>'
 
         related_data += '<li role="presentation" class="dropdown-header">%s</li>' % trans("Related data")
-        related_objects = self._meta.get_all_related_objects_with_model() + self._meta.get_all_related_m2m_objects_with_model()
         for related_object, _ in related_objects:
             try:
                 related_link = reverse(
                     'admin:server_%s_changelist' % related_object.model._meta.model_name
                 )
-                related_data += '<li><a href="%s?%s__exact=%d">%s</a></li>' % (
+                related_data += '<li><a href="%s?%s__exact=%d">%s [%s]</a></li>' % (
                     related_link,
                     related_object.field.name,
                     self.id,
-                    trans(related_object.model._meta.verbose_name_plural)
+                    trans(related_object.model._meta.verbose_name_plural),
+                    trans(related_object.field.name)
                 )
             except:
                 pass
