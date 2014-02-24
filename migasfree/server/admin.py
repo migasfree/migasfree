@@ -79,7 +79,8 @@ admin.site.register(Version, VersionAdmin)
 
 class MigrationAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'version_link', 'date')
-    list_filter = ('date', 'version__platform', )
+    list_select_related = ('computer', 'version',)
+    list_filter = ('date', 'version__platform',)
     search_fields = add_computer_search_fields(['date'])
     readonly_fields = ('computer_link', 'version', 'date')
     exclude = ("computer",)
@@ -243,6 +244,7 @@ class LoginAdmin(MigasAdmin):
     form = make_ajax_form(Login, {'attributes': 'attribute'})
 
     list_display = ('id', 'user_link', 'computer_link', 'date',)
+    list_select_related = ('computer', 'user',)
     list_filter = ('date',)
     ordering = ('user', 'computer',)
     search_fields = add_computer_search_fields(
@@ -374,7 +376,7 @@ class FaultAdmin(MigasAdmin):
         'date',
         'text',
         'faultdef',
-        'list_users'
+        #'list_users'  # performance improvement
     )
     list_filter = (UserFaultFilter, 'checked', 'date', 'version', 'faultdef')
     ordering = ('date', 'computer',)
@@ -522,6 +524,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     })
 
     list_display = ('name', 'active', 'date', 'timeline',)
+    list_select_related = ('schedule',)
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'packages__name',)
