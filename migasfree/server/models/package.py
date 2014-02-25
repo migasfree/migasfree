@@ -4,13 +4,16 @@ import os
 
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
 from migasfree.server.functions import trans
-from migasfree.server.models import Version, VersionManager, \
-    Store, user_version, MigasLink
+from migasfree.server.models import (
+    Version,
+    VersionManager,
+    Store,
+    MigasLink
+)
 
 
 class Package(models.Model, MigasLink):
