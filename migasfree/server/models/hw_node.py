@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.core.urlresolvers import reverse
+from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Computer
+from migasfree.server.models import Computer, MigasLink
 
 
-class HwNode(models.Model):
+class HwNode(models.Model, MigasLink):
     parent = models.ForeignKey(
         'self',
         blank=True,
@@ -128,7 +130,19 @@ class HwNode(models.Model):
     )
 
     def __unicode__(self):
-        return self.name
+        return self.product
+
+    def link(self, default=True):
+        try:
+            return format_html('<a href="%s">%s</a>' % (
+                reverse('hardware_resume', args=(self.computer, )),
+                self.__unicode__()
+            ))
+        except:
+            return ''
+
+    link.allow_tags = True
+    link.short_description = _("Hardware")
 
     class Meta:
         app_label = 'server'
