@@ -19,10 +19,10 @@ LANGUAGES_CHOICES = (
 class MigasLink(object):
     _actions = None
 
-    def link(self):
+    def link(self, default=False):
         related_objects = self._meta.get_all_related_objects_with_model() \
             + self._meta.get_all_related_m2m_objects_with_model()
-        if len(related_objects) == 0 and self._actions is None:
+        if (len(related_objects) == 0 and self._actions is None) or default:
             return '<a href="%s">%s</a>' % (
                 reverse(
                     'admin:server_%s_change' % self._meta.model_name,
