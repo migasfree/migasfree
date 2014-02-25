@@ -12,7 +12,7 @@ from migasfree.server.models import (
     Version, DeviceLogical, Attribute, MigasLink
 )
 
-from migasfree.server.functions import s2l, l2s, trans
+from migasfree.server.functions import s2l, l2s
 
 
 class Computer(models.Model, MigasLink):
@@ -153,7 +153,6 @@ class Computer(models.Model, MigasLink):
 
     login_link.allow_tags = True
     login_link.short_description = _("login")
-
 
     def login(self):
         try:
