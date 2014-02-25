@@ -3,8 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Attribute, LANGUAGES_CHOICES
-from migasfree.server.models.version_manager import UserProfile
+from migasfree.server.models import Attribute, LANGUAGES_CHOICES, UserProfile
 
 
 class FaultDef(models.Model):
