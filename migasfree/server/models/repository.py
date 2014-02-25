@@ -11,8 +11,14 @@ from django.conf import settings
 
 from migasfree.server.functions import horizon
 
-from migasfree.server.models import Version, Package, Attribute, Schedule, \
-    VersionManager, ScheduleDelay
+from migasfree.server.models import (
+    Version,
+    Package,
+    Attribute,
+    Schedule,
+    VersionManager,
+    ScheduleDelay
+)
 
 
 class Repository(models.Model):
@@ -124,10 +130,10 @@ class Repository(models.Model):
         self.name = self.name.replace(" ", "_")
         self.toinstall = self.toinstall.replace("\r\n", "\n")
         self.toremove = self.toremove.replace("\r\n", "\n")
+
         super(Repository, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # remove the directory of repository
         path = os.path.join(
             settings.MIGASFREE_REPO_DIR,
             self.version.name,
@@ -136,6 +142,7 @@ class Repository(models.Model):
         )
         if os.path.exists(path):
             shutil.rmtree(path)
+
         super(Repository, self).delete(*args, **kwargs)
 
     def timeline(self):
