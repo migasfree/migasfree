@@ -71,7 +71,7 @@ class ExtraThinTextarea(forms.Textarea):
 
 
 class VersionAdmin(MigasAdmin):
-    list_display = ('name', 'platform', 'pms', 'computerbase', 'autoregister')
+    list_display = ('link', 'platform', 'pms', 'computerbase', 'autoregister')
     actions = None
 
 admin.site.register(Version, VersionAdmin)
