@@ -78,7 +78,7 @@ admin.site.register(Version, VersionAdmin)
 
 
 class MigrationAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'version_link', 'date')
+    list_display = ('id', 'computer_link', 'version', 'date')
     list_select_related = ('computer', 'version',)
     list_filter = ('date', 'version__platform',)
     search_fields = add_computer_search_fields(['date'])
