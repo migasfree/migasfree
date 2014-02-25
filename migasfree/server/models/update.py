@@ -3,10 +3,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Computer, Version, User
+from migasfree.server.models import Computer, Version, User, MigasLink
 
 
-class Update(models.Model):
+class Update(models.Model, MigasLink):
     computer = models.ForeignKey(
         Computer,
         verbose_name=_("computer")
