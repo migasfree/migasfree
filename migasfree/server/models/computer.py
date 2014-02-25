@@ -2,9 +2,7 @@
 
 from django.db import models
 from django.db.models import Q
-from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from django.template import Context, Template
 from django.conf import settings
 
@@ -138,12 +136,18 @@ class Computer(models.Model, MigasLink):
             pass
 
     def last_update(self):
+        return self.update_set.filter(
+            computer__id__exact=self.id
+        ).order_by('-date')[0]
+
+    def update_link(self):
         try:
-            return self.update_set.filter(
-                Q(computer__id=self.id)
-            ).order_by('-date')[0]
+            return self.last_update().link()
         except:
-            return None
+            return ''
+
+    update_link.allow_tags = True
+    update_link.short_description = _("Last update")
 
     def login_link(self):
         try:
@@ -155,23 +159,11 @@ class Computer(models.Model, MigasLink):
     login_link.short_description = _("login")
 
     def login(self):
-        try:
-            return self.login_set.filter(Q(computer__id=self.id))[0]
-        except:
-            return None
-
-    def update_link(self):
-        return self.last_update().link()
-
-    update_link.allow_tags = True
-    update_link.short_description = _("Last update")
+        return self.login_set.get(computer=self.id)
 
     def hw_link(self):
         try:
-            return format_html('<a href="%s">%s</a>' % (
-                reverse('hardware_resume', args=(self.id, )),
-                self.hwnode_set.get(computer=self.id, parent=None).product
-            ))
+            return self.hwnode_set.get(computer=self.id, parent=None).link()
         except:
             return ''
 
@@ -187,6 +179,12 @@ class Computer(models.Model, MigasLink):
 
     devices_link.allow_tags = True
     devices_link.short_description = _("Devices")
+
+    def version_link(self):
+        return self.version.link()
+
+    version_link.allow_tags = True
+    version_link.short_description = _("Version")
 
     def __unicode__(self):
         return str(self.__getattribute__(
