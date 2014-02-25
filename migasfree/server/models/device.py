@@ -8,8 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from migasfree.server.models import DeviceConnection, DeviceModel
 from migasfree.server.functions import add_default_device_logical
 
-class Device(models.Model):
 
+class Device(models.Model):
     name = models.CharField(
         _("name"),
         max_length=50,
