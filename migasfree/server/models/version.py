@@ -98,6 +98,9 @@ class Version(models.Model, MigasLink):
             default=(self.id != user_version().id)
         )
 
+    link.allow_tags = True
+    link.short_description = _("Version")
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Version")
