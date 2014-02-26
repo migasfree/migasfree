@@ -25,6 +25,7 @@ function web_service
 
 function own_web_server
 {
+  mkdir -p "$1"
   chown -R $_USER_WEB_SERVICE "$1"
 }
 
