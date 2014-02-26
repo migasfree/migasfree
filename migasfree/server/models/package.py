@@ -37,24 +37,25 @@ class Package(models.Model, MigasLink):
     def __init__(self, *args, **kwargs):
         super(Package, self).__init__(*args, **kwargs)
 
-        info_link = "%sSTORES/%s/%s/?version=%s" % (
-            reverse('package_info', args=('', )),
-            self.store.name,
-            self.name,
-            self.version.name
-        )
+        if self.id:
+            info_link = "%sSTORES/%s/%s/?version=%s" % (
+                reverse('package_info', args=('', )),
+                self.store.name,
+                self.name,
+                self.version.name
+            )
 
-        download_link = '%s%s/STORES/%s/%s' % (
-            settings.MEDIA_URL,
-            self.version.name,
-            self.store.name,
-            self.name
-        )
+            download_link = '%s%s/STORES/%s/%s' % (
+                settings.MEDIA_URL,
+                self.version.name,
+                self.store.name,
+                self.name
+            )
 
-        self._actions = [
-            [trans('Package Information'), info_link],
-            [trans('Download'), download_link]
-        ]
+            self._actions = [
+                [trans('Package Information'), info_link],
+                [trans('Download'), download_link]
+            ]
 
     def create_dir(self):
         _path = os.path.join(
