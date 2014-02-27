@@ -175,7 +175,7 @@ def computer_messages(request):
         if item.date < t:
             icon = 'warning'
         else:
-            icon = 'refresh'
+            icon = 'refresh fa-spin'
 
         try:
             login = Login.objects.get(computer=item.computer)
