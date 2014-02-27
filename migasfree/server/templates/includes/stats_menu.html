@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<ul class="dropdown-menu">
+    <li><a class="hourly_updated" href="{% url 'chart_hourly_updated' %}">{% trans 'Updated Computers / Hour' %}</a></li>
+    <li><a class="daily_updated" href="{% url 'chart_daily_updated' %}">{% trans 'Updated Computers / Day' %}</a></li>
+    <li><a class="monthly_updated" href="{% url 'chart_monthly_updated' %}">{% trans 'Updated Computers / Month' %}</a></li>
+    <li><a class="delay_updated" href="{% url 'chart_delay_schedule' %}">{% trans 'Provided Computers / Delay' %}</a></li>
+    <li><a class="version_computer" href="{% url 'chart_version_computer' %}">{% trans 'Computers / Version' %}</a></li>
+</ul>
