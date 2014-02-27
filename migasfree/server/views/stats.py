@@ -188,7 +188,7 @@ def monthly_updated(request):
 
     delta = relativedelta(months=+1)
     end_date = date.today() + delta
-    begin_date = datetime(2012, 1, 1, 0, 0, 0)  #end_date - timedelta(years=2)
+    begin_date = end_date - relativedelta(months=+18)
     compare_timeformat = '%Y-%m'
     xaxis_timeformat = '%Y-%m'
 
@@ -210,12 +210,10 @@ def monthly_updated(request):
     i = 0
     x_axis = []
     for monthly in month_year_iter(
-        1,
-        2012,
-        int(date.today().strftime("%m")) + 1,
-        int(date.today().strftime("%Y"))
+        begin_date.month, begin_date.year,
+        end_date.month, end_date.year
     ):
-        x_axis.append([i, '%d-%d' % (monthly[0], monthly[1])])
+        x_axis.append([i, '%d-%02d' % (monthly[0], monthly[1])])
         i += 1
 
     options = {
