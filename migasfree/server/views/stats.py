@@ -3,41 +3,86 @@
 import json
 
 from datetime import timedelta, datetime, date
+from dateutil.relativedelta import *
 
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.db.models import Max, Count, Q
 
-from migasfree.server.models import *
+from migasfree.server.models import (
+    Update,
+    Platform,
+    Computer,
+    Schedule,
+    ScheduleDelay,
+    Login
+)
 
 
-@login_required
-def hourly_updated(request):
-    timeformat = "%H h. %b %d"
-
+def get_updates_time_range(
+    begin_date, end_date, delta,
+    compare_timeformat, xaxis_timeformat,
+    by_platform=0
+):
     data = []
     x_axis = []
 
-    y = 24 * 2  # 4 days
+    if by_platform == 0:
+        updates = Update.objects.filter(
+            date__gte=begin_date,
+            date__lt=end_date
+        ).values('date', 'computer').order_by('date')
+    else:
+        updates = Update.objects.filter(
+            version__platform=by_platform
+        ).filter(
+            date__gte=begin_date,
+            date__lt=end_date
+        ).values('date', 'computer').order_by('date')
+
+    step = 0
+    next_date = begin_date
+    distinct_computers = []
+    count = 0
+    for update in updates:
+        if update['date'].strftime(compare_timeformat) == next_date.strftime(compare_timeformat):
+            if update['computer'] not in distinct_computers:
+                count += 1
+                distinct_computers.append(update['computer'])
+        else:
+            data.append([step, count])
+            x_axis.append([step, next_date.strftime(xaxis_timeformat)])
+
+            # reset counters
+            step += 1
+            next_date += delta
+            distinct_computers = []
+            if update['date'].strftime(compare_timeformat) == next_date.strftime(compare_timeformat):
+                count = 1
+                distinct_computers.append(update['computer'])
+            else:
+                count = 0
+
+    # append last value
+    data.append([step, count])
+    x_axis.append([step, next_date.strftime(xaxis_timeformat)])
+
+    return {'data': data, 'x_axis': x_axis}
+
+@login_required
+def hourly_updated(request):
     delta = timedelta(hours=1)
-    n = datetime.now() - ((y - 25) * delta)
-    n = datetime(n.year, n.month, n.day, 0)
+    end_date = datetime.now() + delta
+    begin_date = end_date - timedelta(days=3)
+    compare_timeformat = '%Y-%m-%d %H'
+    xaxis_timeformat = "%H h. %b %d"
 
-    for i in range(y):
-        value = Update.objects.filter(
-            date__gte=n,
-            date__lt=n + delta
-        ).values('computer').distinct().count()
-
-        # http://stackoverflow.com/questions/1077393/python-unix-time-doesnt-work-in-javascript
-        #data.append([int(n.strftime("%s")) * 1000, value])
-
-        data.append([i, value])
-        x_axis.append([i, n.strftime(timeformat)])
-        n += delta
+    updates_time_range = get_updates_time_range(
+        begin_date, end_date, delta,
+        compare_timeformat, xaxis_timeformat
+    )
 
     options = {
         'series': {
@@ -55,24 +100,10 @@ def hourly_updated(request):
         },
         'xaxis': {
             'tickLength': 5,
-            'ticks': x_axis,
+            'ticks': updates_time_range['x_axis'],
             'labelWidth': 80,
             'minTickSize': 4,
-
-            #'axisLabel': _("Hours"),
-
-            #'mode': 'time',
-            #'timeformat': timeformat,
-            #'minTickSize': [5, 'hour'],
-            #'monthNames': [
-            #    _("Jan"), _("Feb"), _("Mar"), _("Apr"),
-            #    _("May"), _("Jun"), _("Jul"), _("Aug"),
-            #    _("Sep"), _("Oct"), _("Nov"), _("Dec")
-            #]
         },
-        #'yaxis': {
-        #    'axisLabel': _("Computers"),
-        #}
     }
 
     return render(
@@ -81,30 +112,25 @@ def hourly_updated(request):
         {
             "title": _("Updated Computers / Hour"),
             "options": json.dumps(options),
-            "data": json.dumps([{'data': data, 'label': _("Computers")}]),
+            "data": json.dumps([{
+                'data': updates_time_range['data'],
+                'label': _("Computers")
+            }]),
         }
     )
 
-
 @login_required
 def daily_updated(request):
-    timeformat = "%b %d"
-
-    data = []
-    x_axis = []
-
-    days = 35
     delta = timedelta(days=1)
-    n = date.today() - ((days - 1) * delta)
-    for i in range(days):
-        value = Update.objects.filter(
-            date__gte=n,
-            date__lt=n + delta
-        ).values('computer').distinct().count()
+    end_date = date.today() + delta
+    begin_date = end_date - timedelta(days=35)
+    compare_timeformat = '%Y-%m-%d'
+    xaxis_timeformat = "%b %d"
 
-        data.append([i, value])
-        x_axis.append([i, n.strftime(timeformat)])
-        n += delta
+    updates_time_range = get_updates_time_range(
+        begin_date, end_date, delta,
+        compare_timeformat, xaxis_timeformat
+    )
 
     options = {
         'series': {
@@ -122,7 +148,7 @@ def daily_updated(request):
         },
         'xaxis': {
             'tickLength': 5,
-            'ticks': x_axis,
+            'ticks': updates_time_range['x_axis'],
             'labelWidth': 80
         }
     }
@@ -133,7 +159,10 @@ def daily_updated(request):
         {
             "title": _("Updated Computers / Day"),
             "options": json.dumps(options),
-            "data": json.dumps([{'data': data, 'label': _("Computers")}]),
+            "data": json.dumps([{
+                'data': updates_time_range['data'],
+                'label': _("Computers")
+            }]),
         }
     )
 
@@ -149,16 +178,34 @@ def month_year_iter(start_month, start_year, end_month, end_year):
 
 @login_required
 def monthly_updated(request):
-    platforms = Platform.objects.only("id", "name")
-
     labels = {}
     data = {}
+
+    platforms = Platform.objects.only("id", "name")
     for platform in platforms:
         data[platform.id] = []
         labels[platform.id] = platform.name
 
-    data['total'] = []
-    labels['total'] = _("Totals")
+    delta = relativedelta(months=+1)
+    end_date = date.today() + delta
+    begin_date = datetime(2012, 1, 1, 0, 0, 0)  #end_date - timedelta(years=2)
+    compare_timeformat = '%Y-%m'
+    xaxis_timeformat = '%Y-%m'
+
+    total = []
+    for platform in platforms:
+        updates_time_range = get_updates_time_range(
+            begin_date, end_date, delta,
+            compare_timeformat, xaxis_timeformat,
+            by_platform=platform.id
+        )
+        data[platform.id].append(updates_time_range['data'])
+
+        for item in updates_time_range['data']:
+            try:
+                total[item[0]][1] += item[1]
+            except:
+                total.append([item[0], item[1]])
 
     i = 0
     x_axis = []
@@ -169,19 +216,6 @@ def monthly_updated(request):
         int(date.today().strftime("%Y"))
     ):
         x_axis.append([i, '%d-%d' % (monthly[0], monthly[1])])
-        total_monthly = 0
-        for platform in platforms:
-            value = Update.objects.filter(
-                version__platform=platform.id
-            ).filter(
-                date__month=monthly[1],
-                date__year=monthly[0]
-            ).values('computer').distinct().count()
-
-            data[platform.id].append([i, value])
-            total_monthly += value
-
-        data['total'].append([i, total_monthly])
         i += 1
 
     options = {
@@ -209,7 +243,9 @@ def monthly_updated(request):
 
     output_data = []
     for item in data:
-        output_data.append({'data': data[item], 'label': labels[item]})
+        output_data.append({'data': data[item][0], 'label': labels[item]})
+
+    output_data.append({'data': total, 'label': _("Totals")})
 
     return render(
         request,
