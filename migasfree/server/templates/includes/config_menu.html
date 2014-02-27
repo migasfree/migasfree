@@ -1,7 +1,6 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
-    <li role="presentation" class="dropdown-header">{% trans 'General' %}</li>
     <li><a href="{% url 'admin:server_property_changelist' %}">{% trans 'Properties' %}</a></li>
     <li><a href="{% url 'admin:server_version_changelist' %}">{% trans 'Versions' %}</a></li>
     <li><a href="{% url 'admin:server_pms_changelist' %}">{% trans 'P.M.S.' %}</a></li>
@@ -11,14 +10,12 @@
 
     <li role="presentation" class="divider"></li>
 
-    <li role="presentation" class="dropdown-header">{% trans 'Users' %}</li>
     <li><a href="{% url 'admin:server_userprofile_changelist' %}">{% trans 'Users' %}</a></li>
     <li><a href="{% url 'admin:auth_group_changelist' %}">{% trans 'Groups' %}</a></li>
 
     <li role="presentation" class="divider"></li>
 
-    <li role="presentation" class="dropdown-header">{% trans 'Status' %}</li>
     <li><a href="{% url 'admin:server_checking_changelist' %}">{% trans 'Checkings' %}</a></li>
-    <li><a href="{% url 'admin:server_faultdef_changelist' %}">{% trans 'Faults' %}</a></li>
+    <li><a href="{% url 'admin:server_faultdef_changelist' %}">{% trans 'Faults Definition' %}</a></li>
     <li><a href="{% url 'admin:server_autocheckerror_changelist' %}">{% trans 'Auto Check Errors' %}</a></li>
 </ul>
