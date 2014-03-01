@@ -43,7 +43,10 @@ def get_updates_time_range(
         ).values('date', 'computer').order_by('date')
 
     step = 0
-    next_date = begin_date
+    try:
+        next_date = updates[0]['date']
+    except:
+        next_date = begin_date
     distinct_computers = []
     count = 0
     for update in updates:
@@ -73,6 +76,8 @@ def get_updates_time_range(
 
 @login_required
 def hourly_updated(request):
+    title = _("Updated Computers / Hour")
+
     delta = timedelta(hours=1)
     end_date = datetime.now() + delta
     begin_date = end_date - timedelta(days=3)
@@ -83,6 +88,16 @@ def hourly_updated(request):
         begin_date, end_date, delta,
         compare_timeformat, xaxis_timeformat
     )
+
+    if len(updates_time_range['data']) == 0:
+        return render(
+            request,
+            'info.html',
+            {
+                'title': title,
+                'contentpage': _('There are no updates')
+            }
+        )
 
     options = {
         'series': {
@@ -110,7 +125,7 @@ def hourly_updated(request):
         request,
         'lines.html',
         {
-            "title": _("Updated Computers / Hour"),
+            "title": title,
             "options": json.dumps(options),
             "data": json.dumps([{
                 'data': updates_time_range['data'],
@@ -121,6 +136,8 @@ def hourly_updated(request):
 
 @login_required
 def daily_updated(request):
+    title = _("Updated Computers / Day")
+
     delta = timedelta(days=1)
     end_date = date.today() + delta
     begin_date = end_date - timedelta(days=35)
@@ -131,6 +148,16 @@ def daily_updated(request):
         begin_date, end_date, delta,
         compare_timeformat, xaxis_timeformat
     )
+
+    if len(updates_time_range['data']) == 0:
+        return render(
+            request,
+            'info.html',
+            {
+                'title': title,
+                'contentpage': _('There are no updates')
+            }
+        )
 
     options = {
         'series': {
@@ -157,7 +184,7 @@ def daily_updated(request):
         request,
         'lines.html',
         {
-            "title": _("Updated Computers / Day"),
+            "title": title,
             "options": json.dumps(options),
             "data": json.dumps([{
                 'data': updates_time_range['data'],
@@ -176,15 +203,30 @@ def month_year_iter(start_month, start_year, end_month, end_year):
         yield y, m + 1
 
 
+# http://stackoverflow.com/questions/2170900/get-first-list-index-containing-sub-string-in-python
+def index_containing_substring(the_list, substring):
+    for i, s in enumerate(the_list):
+        if substring in s:
+              return i
+    return -1
+
+
 @login_required
 def monthly_updated(request):
     labels = {}
     data = {}
+    new_data = {}
+    x_axis = {}
 
     platforms = Platform.objects.only("id", "name")
     for platform in platforms:
-        data[platform.id] = []
+        data[platform.id] = None
+        new_data[platform.id] = []
+        x_axis[platform.id] = None
         labels[platform.id] = platform.name
+
+    total = []
+    labels['total'] = _("Totals")
 
     delta = relativedelta(months=+1)
     end_date = date.today() + delta
@@ -192,28 +234,35 @@ def monthly_updated(request):
     compare_timeformat = '%Y-%m'
     xaxis_timeformat = '%Y-%m'
 
-    total = []
     for platform in platforms:
         updates_time_range = get_updates_time_range(
             begin_date, end_date, delta,
             compare_timeformat, xaxis_timeformat,
             by_platform=platform.id
         )
-        data[platform.id].append(updates_time_range['data'])
+        data[platform.id] = updates_time_range['data']
+        x_axis[platform.id] = updates_time_range['x_axis']
 
-        for item in updates_time_range['data']:
-            try:
-                total[item[0]][1] += item[1]
-            except:
-                total.append([item[0], item[1]])
-
+    # shuffle data series
     i = 0
-    x_axis = []
+    x_axe = []
     for monthly in month_year_iter(
         begin_date.month, begin_date.year,
         end_date.month, end_date.year
     ):
-        x_axis.append([i, '%d-%02d' % (monthly[0], monthly[1])])
+        key = '%d-%02d' % (monthly[0], monthly[1])
+        x_axe.append([i, key])
+        total_month = 0
+        for serie in data:
+            index = index_containing_substring(x_axis[serie], key)
+            if index >= 0:
+                new_data[serie].append([i, data[serie][index][1]])
+            else:
+                new_data[serie].append([i , 0])
+
+            total_month += new_data[serie][i][1]
+
+        total.append([i, total_month])
         i += 1
 
     options = {
@@ -234,16 +283,22 @@ def monthly_updated(request):
         },
         'xaxis': {
             'tickLength': 5,
-            'ticks': x_axis,
+            'ticks': x_axe,
             'labelWidth': 80
         }
     }
 
     output_data = []
-    for item in data:
-        output_data.append({'data': data[item][0], 'label': labels[item]})
+    for item in new_data:
+        output_data.append({
+            'data': new_data[item],
+            'label': labels[item],
+        })
 
-    output_data.append({'data': total, 'label': _("Totals")})
+    output_data.append({
+        'data': total,
+        'label': labels['total'],
+    })
 
     return render(
         request,
@@ -258,6 +313,8 @@ def monthly_updated(request):
 
 @login_required
 def delay_schedule(request):
+    title = _("Provided Computers / Delay")
+
     data = []
     maximum_delay = 0
     for sched in Schedule.objects.all():
@@ -287,6 +344,16 @@ def delay_schedule(request):
             'data': line,
             'label': sched.name,
         })
+
+    if len(data) == 0:
+        return render(
+            request,
+            'info.html',
+            {
+                'title': title,
+                'contentpage': _('There are no defined schedules')
+            }
+        )
 
     x_axis = []
     for i in range(0, maximum_delay + 1):
@@ -320,7 +387,7 @@ def delay_schedule(request):
         request,
         'lines.html',
         {
-            "title": _("Provided Computers / Delay"),
+            "title": title,
             "options": json.dumps(options),
             "data": json.dumps(data),
         }
