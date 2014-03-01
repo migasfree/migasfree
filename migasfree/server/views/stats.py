@@ -43,9 +43,9 @@ def get_updates_time_range(
         ).values('date', 'computer').order_by('date')
 
     step = 0
-    try:
+    if len(updates):
         next_date = updates[0]['date']
-    except:
+    else:
         next_date = begin_date
     distinct_computers = []
     count = 0
