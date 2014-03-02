@@ -165,7 +165,12 @@ class Repository(models.Model):
 
         delta = end_date - begin_date
         progress = datetime.datetime.now() - begin_date
-        number = float(progress.days) / delta.days * 100
+
+        if delta.days > 0:
+            number = float(progress.days) / delta.days * 100
+        else:
+            number = 100
+
         if number > 100:
             number = 100
 
