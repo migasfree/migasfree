@@ -437,7 +437,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'datelastupdate',
         'hw_link',
     )
-    #list_select_related = ('login',)
+    list_per_page = 25
     ordering = ('name',)
     list_filter = ('version',)
     search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
