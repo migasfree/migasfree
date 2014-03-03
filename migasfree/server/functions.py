@@ -241,6 +241,24 @@ def uuid_validate(uuid):
     else:
         return uuid
 
+def uuid_change_format(uuid):
+    """
+    change to big-endian or little-endian format
+    """
+    if len(uuid) == 36:
+        return "%s%s%s%s-%s%s-%s%s-%s-%s" % (
+                uuid[6:8],
+                uuid[4:6],
+                uuid[2:4],
+                uuid[0:2],
+                uuid[11:13],
+                uuid[9:11],
+                uuid[16:18],
+                uuid[14:16],
+                uuid[19:23],
+                uuid[24:36])
+    return uuid
+
 
 def add_default_device_logical(device):
     from migasfree.server.models import DeviceFeature, DeviceLogical

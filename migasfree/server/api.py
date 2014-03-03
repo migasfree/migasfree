@@ -68,6 +68,14 @@ def get_computer(name, uuid):
     except Computer.DoesNotExist:
         pass
 
+    try: #search with endian format changed
+        computer = Computer.objects.get(uuid=uuid_change_format(uuid))
+        logger.debug('computer found by uuid (endian format changed)')
+
+        return computer
+    except Computer.DoesNotExist:
+        pass
+
     # DEPRECATED This Block. Only for compatibilty with client <= 2
     message = 'computer found by name. compatibility mode'
     if len(uuid.split("-")) == 5: # search for uuid (client >= 3)
