@@ -29,7 +29,6 @@ from migasfree.admin_bootstrapped.forms import *
 admin.site.register(DeviceType)
 admin.site.register(DeviceFeature)
 admin.site.register(DeviceManufacturer)
-admin.site.register(DeviceConnection)
 admin.site.register(UserProfile)
 admin.site.register(AutoCheckError)
 admin.site.register(Platform)
@@ -107,6 +106,12 @@ class CheckingAdmin(MigasAdmin):
 admin.site.register(Checking, CheckingAdmin)
 
 
+class DeviceConnectionAdmin(admin.ModelAdmin):
+    list_select_related = ('devicetype',)
+
+admin.site.register(DeviceConnection, DeviceConnectionAdmin)
+
+
 class DeviceDriverAdmin(MigasAdmin):
     list_display = ('id', 'model', 'version', 'feature')
 
@@ -149,6 +154,7 @@ class DeviceLogicalForm(forms.ModelForm):
 class DeviceLogicalAdmin(admin.ModelAdmin):
     form = DeviceLogicalForm
     fields = ("device", "feature", "computers")
+    list_select_related = ('device', 'feature',)
 
 admin.site.register(DeviceLogical, DeviceLogicalAdmin)
 
@@ -619,6 +625,7 @@ admin.site.register(Schedule, ScheduleAdmin)
 class PackageAdmin(MigasAdmin):
     list_display = ('link', 'store',)
     list_filter = ('store',)
+    list_per_page = 25
     search_fields = ('name', 'store__name',)
     ordering = ('name',)
 
