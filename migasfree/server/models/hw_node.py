@@ -135,7 +135,7 @@ class HwNode(models.Model, MigasLink):
     def link(self, default=True):
         try:
             return format_html('<a href="%s">%s</a>' % (
-                reverse('hardware_resume', args=(self.computer, )),
+                reverse('hardware_resume', args=(self.computer.id, )),
                 self.__unicode__()
             ))
         except:
