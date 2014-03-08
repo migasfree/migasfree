@@ -3,9 +3,9 @@
 import os
 import time
 
+from django.conf import settings
 from django.utils.translation import ugettext as _
 
-from migasfree.settings import MIGASFREE_REPO_DIR
 from migasfree.server.models import Version, MessageServer, Package
 from migasfree.server.functions import run_in_server
 
@@ -27,11 +27,13 @@ def create_physical_repository(repo, packages_list=None):
         if packages_list is not None:
             for id in packages_list:
                 pkg = Package.objects.get(id=id)
-                txt += _('%s in store %s') % (pkg.name, pkg.store.name) + '<br />'
+                txt += _('%s in store %s') % (pkg.name, pkg.store.name)
+                txt += '<br />'
         else:
             pkgs = repository.packages.all()
             for pkg in pkgs:
-                txt += _('%s in store %s') % (pkg.name, pkg.store.name) + '<br />'
+                txt += _('%s in store %s') % (pkg.name, pkg.store.name)
+                txt += '<br />'
 
         return txt
 
@@ -41,19 +43,19 @@ def create_physical_repository(repo, packages_list=None):
 
     # we remove it
     bash += "rm -rf %s\n" % os.path.join(
-        MIGASFREE_REPO_DIR,
+        settings.MIGASFREE_REPO_DIR,
         repo.version.name,
         o_pms.slug,
         repo.name
     )  # FIXME python command
 
     path_stores = os.path.join(
-        MIGASFREE_REPO_DIR,
+        settings.MIGASFREE_REPO_DIR,
         repo.version.name,
         'STORES'
     )
     path_tmp = os.path.join(
-        MIGASFREE_REPO_DIR,
+        settings.MIGASFREE_REPO_DIR,
         repo.version.name,
         'TMP',
         o_pms.slug
@@ -88,10 +90,14 @@ def create_physical_repository(repo, packages_list=None):
         "%REPONAME%", repo.name
     ).replace("%PATH%", path_tmp) + "\n"
 
-    path_tmp = os.path.join(MIGASFREE_REPO_DIR, repo.version.name, "TMP")
+    path_tmp = os.path.join(
+        settings.MIGASFREE_REPO_DIR,
+        repo.version.name,
+        "TMP"
+    )
     bash += 'cp -rf %s %s\n' % (
         os.path.join(path_tmp, '*'),
-        os.path.join(MIGASFREE_REPO_DIR, repo.version.name)
+        os.path.join(settings.MIGASFREE_REPO_DIR, repo.version.name)
     )
     bash += "rm -rf %s\n" % path_tmp  # FIXME python command
 
