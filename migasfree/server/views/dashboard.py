@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
-from migasfree.server.models import Checking
+from migasfree.server.models import *
 
 
 def execute_active_checkings():
