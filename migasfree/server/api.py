@@ -3,23 +3,11 @@
 import os
 import time
 import inspect
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.db.models import Q
 from django.contrib import auth
-
-from . import jsontemplate
-
-from migasfree.settings import (
-    MIGASFREE_REPO_DIR,
-    MIGASFREE_AUTOREGISTER,
-    MIGASFREE_HW_PERIOD,
-    MIGASFREE_NOTIFY_NEW_COMPUTER,
-    MIGASFREE_NOTIFY_CHANGE_UUID,
-    MIGASFREE_NOTIFY_CHANGE_NAME,
-    MIGASFREE_NOTIFY_CHANGE_IP
-)
+from django.conf import settings
 
 from migasfree.server.models import *
 from migasfree.server.errmfs import *
@@ -31,26 +19,27 @@ import logging
 logger = logging.getLogger('migasfree')
 
 
-def add_notification_platform(platform, o_computer):
-    o_notification = Notification()
-    o_notification.notification = \
+def add_notification_platform(platform, computer):
+    _notification = Notification()
+    _notification.notification = \
         "Platform [%s] registered by computer [%s]." % (
         platform,
-        o_computer.__unicode__()
+        computer.__unicode__()
     )
-    o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    o_notification.save()
+    _notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    _notification.save()
 
 
-def add_notification_version(version, pms, o_computer):
-    o_notification = Notification()
-    o_notification.notification = \
+def add_notification_version(version, pms, computer):
+    _notification = Notification()
+    _notification.notification = \
         "Version [%s] with P.M.S. [%s] registered by computer [%s]." % (
-        version, pms,
-        o_computer.__unicode__()
+        version,
+        pms,
+        computer.__unicode__()
     )
-    o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    o_notification.save()
+    _notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    _notification.save()
 
 
 def get_computer(name, uuid):
@@ -68,7 +57,7 @@ def get_computer(name, uuid):
     except Computer.DoesNotExist:
         pass
 
-    try: #search with endian format changed
+    try:  # search with endian format changed
         computer = Computer.objects.get(uuid=uuid_change_format(uuid))
         logger.debug('computer found by uuid (endian format changed)')
 
@@ -78,7 +67,7 @@ def get_computer(name, uuid):
 
     # DEPRECATED This Block. Only for compatibilty with client <= 2
     message = 'computer found by name. compatibility mode'
-    if len(uuid.split("-")) == 5: # search for uuid (client >= 3)
+    if len(uuid.split("-")) == 5:  # search for uuid (client >= 3)
         try:
             computer = Computer.objects.get(uuid=name)
             logger.debug(message)
@@ -143,33 +132,33 @@ def new_attribute(o_login, o_property, par):
     return o_attribute.id
 
 
-def save_login(o_computer, o_user):
-    login_date = time.strftime("%Y-%m-%d %H:%M:%S")
+def save_login(computer, user):
+    _login_date = time.strftime("%Y-%m-%d %H:%M:%S")
     try:
-        o_login = Login.objects.get(
-            computer=o_computer,
+        _login = Login.objects.get(
+            computer=computer,
         )
-        o_login.user = o_user
-        o_login.date = login_date
-        o_login.save()
+        _login.user = user
+        _login.date = login_date
+        _login.save()
     except:  # if Login not exists, we save it
-        o_login = Login(
-            computer=o_computer,
-            user=o_user,
-            date = login_date
+        _login = Login(
+            computer=computer,
+            user=user,
+            date=_login_date
         )
-        o_login.save()
+        _login.save()
 
-    return  o_login
+    return  _login
 
 
-def upload_computer_hardware(request, name, uuid, o_computer, data):
+def upload_computer_hardware(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        HwNode.objects.filter(computer=o_computer).delete()
-        load_hw(o_computer, data[cmd], None, 1)
-        o_computer.datehardware = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_computer.save()
+        HwNode.objects.filter(computer=computer).delete()
+        load_hw(computer, data[cmd], None, 1)
+        computer.datehardware = time.strftime("%Y-%m-%d %H:%M:%S")
+        computer.save()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -177,11 +166,11 @@ def upload_computer_hardware(request, name, uuid, o_computer, data):
     return ret
 
 
-def upload_computer_software_base_diff(request, name, uuid, o_computer, data):
+def upload_computer_software_base_diff(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_computer.software = data[cmd]
-        o_computer.save()
+        computer.software = data[cmd]
+        computer.save()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -189,12 +178,12 @@ def upload_computer_software_base_diff(request, name, uuid, o_computer, data):
     return ret
 
 
-def upload_computer_software_base(request, name, uuid, o_computer, data):
+def upload_computer_software_base(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_version = o_computer.version
-        o_version.base = data[cmd]
-        o_version.save()
+        _version = computer.version
+        _version.base = data[cmd]
+        _version.save()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -202,11 +191,11 @@ def upload_computer_software_base(request, name, uuid, o_computer, data):
     return ret
 
 
-def upload_computer_software_history(request, name, uuid, o_computer, data):
+def upload_computer_software_history(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_computer.history_sw = "%s\n\n%s" % (o_computer.history_sw, data[cmd])
-        o_computer.save()
+        computer.history_sw = "%s\n\n%s" % (computer.history_sw, data[cmd])
+        computer.save()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -214,12 +203,12 @@ def upload_computer_software_history(request, name, uuid, o_computer, data):
     return ret
 
 
-def get_computer_software(request, name, uuid, o_computer, data):
+def get_computer_software(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         ret = return_message(
             cmd,
-            o_computer.version.base
+            computer.version.base
         )
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -227,16 +216,16 @@ def get_computer_software(request, name, uuid, o_computer, data):
     return ret
 
 
-def upload_computer_errors(request, name, uuid, o_computer, data):
+def upload_computer_errors(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        o_version = o_computer.version
-        o_error = Error()
-        o_error.computer = o_computer
-        o_error.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        o_error.error = data[cmd]
-        o_error.version = o_version
-        o_error.save()
+        _error = Error()
+        _error.computer = computer
+        _error.date = time.strftime("%Y-%m-%d %H:%M:%S")
+        _error.error = data[cmd]
+        _error.version = computer.version
+        _error.save()
+
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -244,32 +233,32 @@ def upload_computer_errors(request, name, uuid, o_computer, data):
     return ret
 
 
-def upload_computer_message(request, name, uuid, o_computer, data):
+def upload_computer_message(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     date_now = time.strftime("%Y-%m-%d %H:%M:%S")
 
-    if not o_computer:
+    if not computer:
         return return_message(cmd, error(COMPUTERNOTFOUND))
 
     try:
-        o_message = Message.objects.get(computer=o_computer)
+        _message = Message.objects.get(computer=computer)
         if data[cmd] == "":
-            o_message.delete()
+            _message.delete()
     except:
-        o_message = Message(computer=o_computer)
+        _message = Message(computer=computer)
 
     try:
         if data[cmd] == "":
             Update(
-                computer=o_computer,
-                user_id=o_computer.login().user_id,
+                computer=computer,
+                user_id=computer.login().user_id,
                 date=date_now,
-                version=o_computer.version
+                version=computer.version
             ).save()
         else:
-            o_message.text = data[cmd]
-            o_message.date = date_now
-            o_message.save()
+            _message.text = data[cmd]
+            _message.date = date_now
+            _message.save()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -281,7 +270,7 @@ def return_message(cmd, data):
     return {'%s.return' % cmd: data}
 
 
-def get_properties(request, name, uuid, o_computer, data):
+def get_properties(request, name, uuid, computer, data):
     """
     First call of client requesting to server what he must do.
     The server responds with a string json with structure:
@@ -396,7 +385,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
-        if not MIGASFREE_AUTOREGISTER:
+        if not settings.MIGASFREE_AUTOREGISTER:
             return return_message(cmd, error(CANNOTREGISTER))
 
         # if all ok we add the platform
@@ -408,7 +397,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
     # Autoregister Version
     if not Version.objects.filter(name=version):
-        if not MIGASFREE_AUTOREGISTER:
+        if not settings.MIGASFREE_AUTOREGISTER:
             return return_message(cmd, error(CANNOTREGISTER))
 
         # if all ok we add the version
@@ -416,7 +405,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         o_version.name = version
         o_version.pms = Pms.objects.get(name=pms)
         o_version.platform = Platform.objects.get(name=platform)
-        o_version.autoregister = MIGASFREE_AUTOREGISTER
+        o_version.autoregister = settings.MIGASFREE_AUTOREGISTER
         o_version.save()
 
         notify_version = True
@@ -596,10 +585,6 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             for device in o_computer.devices_logical.all():
                 lst_dev_install.append(device.datadict(o_computer.version))
 
-#            o_computer.devices_copy = chk_devices.mms()
-#            o_computer.devices_modified = False
-#            o_computer.save()
-
         retdata = {}
         retdata["faultsdef"] = lst_faultsdef
         retdata["repositories"] = lst_repos
@@ -616,7 +601,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         #HARDWARE CAPTURE
         if o_computer.datehardware:
             hwcapture = (datetime.now() > (
-                o_computer.datehardware + timedelta(days=MIGASFREE_HW_PERIOD))
+                o_computer.datehardware + timedelta(
+                    days=settings.MIGASFREE_HW_PERIOD
+                ))
             )
         else:
             hwcapture = True
@@ -629,26 +616,26 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     return ret
 
 
-def upload_computer_faults(request, name, uuid, o_computer, data):
+def upload_computer_faults(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     faults = data.get(cmd).get("faults")
-    o_version = Version.objects.get(id=o_computer.version_id)
+    _version = Version.objects.get(id=computer.version_id)
 
     try:
         # PROCESS FAULTS
         for e in faults:
-            o_faultdef = FaultDef.objects.get(name=e)
+            _faultdef = FaultDef.objects.get(name=e)
             try:
                 msg = faults.get(e)
                 if msg != "":
                     # we add the fault
-                    o_fault = Fault()
-                    o_fault.computer = o_computer
-                    o_fault.date = time.strftime("%Y-%m-%d %H:%M:%S")
-                    o_fault.text = msg
-                    o_fault.faultdef = o_faultdef
-                    o_fault.version = o_version
-                    o_fault.save()
+                    _fault = Fault()
+                    _fault.computer = computer
+                    _fault.date = time.strftime("%Y-%m-%d %H:%M:%S")
+                    _fault.text = msg
+                    _fault.faultdef = _faultdef
+                    _fault.version = _version
+                    _fault.save()
             except:
                 pass
 
@@ -660,14 +647,14 @@ def upload_computer_faults(request, name, uuid, o_computer, data):
 
 
 #DEVICES CHANGES
-def upload_devices_changes(request, name, uuid, o_computer, data):
+def upload_devices_changes(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         for devicelogical_id in data.get("installed", []):
-            o_computer.append_device_copy(devicelogical_id)
+            computer.append_device_copy(devicelogical_id)
 
         for devicelogical_id in data.get("removed", []):
-            o_computer.remove_device_copy(devicelogical_id)
+            computer.remove_device_copy(devicelogical_id)
 
         ret = return_message(cmd, ok())
     except:
@@ -693,7 +680,7 @@ def register_computer(request, name, uuid, o_computer, data):
 
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
-        if not MIGASFREE_AUTOREGISTER:
+        if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_platform"):
                 return return_message(cmd, error(CANNOTREGISTER))
 
@@ -706,7 +693,7 @@ def register_computer(request, name, uuid, o_computer, data):
 
     # Autoregister Version
     if not Version.objects.filter(name=version):
-        if not MIGASFREE_AUTOREGISTER:
+        if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_version"):
                 return return_message(cmd, error(CANNOTREGISTER))
 
@@ -715,7 +702,7 @@ def register_computer(request, name, uuid, o_computer, data):
         o_version.name = version
         o_version.pms = Pms.objects.get(name=pms)
         o_version.platform = Platform.objects.get(name=platform)
-        o_version.autoregister = MIGASFREE_AUTOREGISTER
+        o_version.autoregister = settings.MIGASFREE_AUTOREGISTER
         o_version.save()
 
         notify_version = True
@@ -751,7 +738,7 @@ def register_computer(request, name, uuid, o_computer, data):
         return return_message(cmd, error(USERHAVENOTPERMISSION))
 
 
-def get_key_packager(request, name, uuid, o_computer, data):
+def get_key_packager(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     user = auth.authenticate(
         username=data['username'],
@@ -768,7 +755,7 @@ def upload_server_package(request, name, uuid, o_computer, data):
 
     f = request.FILES["package"]
     filename = os.path.join(
-        MIGASFREE_REPO_DIR,
+        settings.MIGASFREE_REPO_DIR,
         data['version'],
         'STORES',
         data['store'],
@@ -808,7 +795,7 @@ def upload_server_set(request, name, uuid, o_computer, data):
 
     f = request.FILES["package"]
     filename = os.path.join(
-        MIGASFREE_REPO_DIR,
+        settings.MIGASFREE_REPO_DIR,
         data['version'],
         "STORES",
         data['store'],
@@ -847,7 +834,7 @@ def upload_server_set(request, name, uuid, o_computer, data):
     # if exists path move it
     if ("path" in data) and (data["path"] != ""):
         dst = os.path.join(
-            MIGASFREE_REPO_DIR,
+            settings.MIGASFREE_REPO_DIR,
             data['version'],
             "STORES",
             data['store'],
@@ -864,11 +851,11 @@ def upload_server_set(request, name, uuid, o_computer, data):
     return return_message(cmd, ok())
 
 
-def get_computer_tags(request, name, uuid, o_computer, data):
+def get_computer_tags(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     retdata = ok()
     element = []
-    for tag in o_computer.tags.all():
+    for tag in computer.tags.all():
         element.append("%s-%s" % (tag.property_att.prefix, tag.value))
     retdata["selected"] = element
 
@@ -983,12 +970,12 @@ def set_computer_tags(request, name, uuid, o_computer, data):
     return ret
 
 
-def add_migration(o_computer, o_version):
-    o_migration = Migration()
-    o_migration.computer = o_computer
-    o_migration.version = o_version
-    o_migration.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    o_migration.save()
+def add_migration(computer, version):
+    _migration = Migration()
+    _migration.computer = computer
+    _migration.version = version
+    _migration.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    _migration.save()
 
 
 def check_computer(o_computer, name, version, ip, uuid):
@@ -1004,7 +991,7 @@ def check_computer(o_computer, name, version, ip, uuid):
         o_computer.save()
         add_migration(o_computer, o_version)
 
-        if MIGASFREE_NOTIFY_NEW_COMPUTER:
+        if settings.MIGASFREE_NOTIFY_NEW_COMPUTER:
             create_notification(
                 "New Computer added id=[%s]: NAME=[%s] UUID=[%s]" % (
                     o_computer.id,
@@ -1029,7 +1016,7 @@ def check_computer(o_computer, name, version, ip, uuid):
 
 
 def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
-    if MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name != name):
+    if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name != name):
         create_notification(
             "Computer id=[%s]: NAME [%s] changed by [%s]" % (
                 o_computer.id,
@@ -1038,7 +1025,7 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
             )
         )
 
-    if MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip != ip):
+    if settings.MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip != ip):
         if (o_computer.ip and ip):
             create_notification(
                 "Computer id=[%s]: IP [%s] changed by [%s]" % (
@@ -1048,7 +1035,7 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
                 )
             )
 
-    if MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid != uuid):
+    if settings.MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid != uuid):
         create_notification(
             "Computer id=[%s]: UUID [%s] changed by [%s]" % (
                 o_computer.id,
@@ -1059,10 +1046,10 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
 
 
 def create_notification(text):
-    o_notification = Notification()
-    o_notification.notification = text
-    o_notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    o_notification.save()
+    _notification = Notification()
+    _notification.notification = text
+    _notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    _notification.save()
 
 
 def create_repositories_package(packagename, versionname):
@@ -1076,7 +1063,7 @@ def create_repositories_package(packagename, versionname):
         pass
 
 
-def create_repositories_of_packageset(request, name, uuid, o_computer, data):
+def create_repositories_of_packageset(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     try:
