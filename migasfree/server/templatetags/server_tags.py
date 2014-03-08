@@ -2,16 +2,16 @@
 
 from django import template
 from django.contrib.auth.models import User as UserSystem
+from django.conf import settings
 
 from migasfree.server.models import UserProfile
-from migasfree.settings import MIGASFREE_ORGANIZATION
 
 register = template.Library()
 
 
 class TemplateOrganization(template.Node):
     def render(self, context):
-        return  MIGASFREE_ORGANIZATION
+        return settings.MIGASFREE_ORGANIZATION
 
 
 @register.tag
