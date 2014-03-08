@@ -17,11 +17,12 @@ from migasfree.server.models import (
     Attribute,
     Schedule,
     VersionManager,
-    ScheduleDelay
+    ScheduleDelay,
+    MigasLink
 )
 
 
-class Repository(models.Model):
+class Repository(models.Model, MigasLink):
     name = models.CharField(
         _("name"),
         max_length=50
