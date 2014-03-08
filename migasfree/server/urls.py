@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 
-try:
-    from django.conf.urls import patterns, include, url
-except:
-    from django.conf.urls.defaults import patterns, include, url
-
+from django.conf.urls import patterns, url
 from django.views.generic import RedirectView
 from django.core.urlresolvers import reverse_lazy
+from django.conf import settings
 
 from migasfree.server.views import *
-from migasfree.settings import STATIC_URL
 
 urlpatterns = patterns('',
     url(r'^accounts/login/$', login, name='login'),
@@ -28,7 +24,7 @@ urlpatterns = patterns('',
     url(
         r'^favicon\.ico$',
         RedirectView.as_view(
-            url='%simg/favicon.png' % STATIC_URL
+            url='%simg/favicon.png' % settings.STATIC_URL
         ),
     ),
 
