@@ -50,7 +50,8 @@ def get_updates_time_range(
     distinct_computers = []
     count = 0
     for update in updates:
-        if update['date'].strftime(compare_timeformat) == next_date.strftime(compare_timeformat):
+        if update['date'].strftime(compare_timeformat) == \
+        next_date.strftime(compare_timeformat):
             if update['computer'] not in distinct_computers:
                 count += 1
                 distinct_computers.append(update['computer'])
@@ -62,7 +63,8 @@ def get_updates_time_range(
             step += 1
             next_date += delta
             distinct_computers = []
-            if update['date'].strftime(compare_timeformat) == next_date.strftime(compare_timeformat):
+            if update['date'].strftime(compare_timeformat) == \
+            next_date.strftime(compare_timeformat):
                 count = 1
                 distinct_computers.append(update['computer'])
             else:
@@ -73,6 +75,7 @@ def get_updates_time_range(
     x_axis.append([step, next_date.strftime(xaxis_timeformat)])
 
     return {'data': data, 'x_axis': x_axis}
+
 
 @login_required
 def hourly_updated(request):
@@ -133,6 +136,7 @@ def hourly_updated(request):
             }]),
         }
     )
+
 
 @login_required
 def daily_updated(request):
@@ -207,7 +211,7 @@ def month_year_iter(start_month, start_year, end_month, end_year):
 def index_containing_substring(the_list, substring):
     for i, s in enumerate(the_list):
         if substring in s:
-              return i
+            return i
     return -1
 
 
@@ -258,7 +262,7 @@ def monthly_updated(request):
             if index >= 0:
                 new_data[serie].append([i, data[serie][index][1]])
             else:
-                new_data[serie].append([i , 0])
+                new_data[serie].append([i, 0])
 
             total_month += new_data[serie][i][1]
 
@@ -420,7 +424,7 @@ def version_computer(request):
         'series': {
             'pie': {
                 'show': True,
-                'radius': 4.0/5,
+                'radius': 4.0 / 5,
                 'label': {
                     'show': True,
                     'radius': 1,
