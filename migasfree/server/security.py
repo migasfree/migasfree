@@ -3,17 +3,16 @@
 import os
 import json
 
-from migasfree.server.functions import writefile
-from migasfree.server.functions import readfile
-
 import migasfree.server.errmfs as errmfs
 
-from migasfree.settings import MIGASFREE_KEYS_DIR
+from django.conf import settings
+
+from migasfree.server.functions import readfile, writefile
 
 
 def sign(filename):
     os.system("openssl dgst -sha1 -sign %s -out %s %s" % (
-        os.path.join(MIGASFREE_KEYS_DIR, 'migasfree-server.pri'),
+        os.path.join(settings.MIGASFREE_KEYS_DIR, 'migasfree-server.pri'),
         "%s.sign" % filename,
         filename
     ))
@@ -23,7 +22,7 @@ def verify(filename, key):
     return os.system(
         "openssl dgst -sha1 -verify %s -signature %s %s 1>/dev/null" %
         (
-            os.path.join(MIGASFREE_KEYS_DIR, '%s.pub' % key),
+            os.path.join(settings.MIGASFREE_KEYS_DIR, '%s.pub' % key),
             "%s.sign" % filename,
             filename
         )
@@ -36,18 +35,24 @@ def gen_keys(version):
     """
     # Private Key
     os.system("openssl genrsa -out %s 2048"
-        % os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version)
+        % os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pri" % version)
     )
 
     # Public Key
     os.system("openssl rsa -in %s -pubout > %s" % (
-        os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version),
-        os.path.join(MIGASFREE_KEYS_DIR, "%s.pub" % version)
+        os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pri" % version),
+        os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pub" % version)
     ))
 
     # read only keys
-    os.chmod(os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version), 0o400)
-    os.chmod(os.path.join(MIGASFREE_KEYS_DIR, "%s.pub" % version), 0o400)
+    os.chmod(os.path.join(
+        settings.MIGASFREE_KEYS_DIR,
+        "%s.pri" % version
+    ), 0o400)
+    os.chmod(os.path.join(
+        settings.MIGASFREE_KEYS_DIR,
+        "%s.pub" % version
+    ), 0o400)
 
 
 def get_keys_to_client(version):
@@ -55,12 +60,18 @@ def get_keys_to_client(version):
     Returns the keys for register computer
     """
     if not os.path.exists(
-        os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version)
+        os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pri" % version)
     ):
         gen_keys(version)
 
-    server = readfile(os.path.join(MIGASFREE_KEYS_DIR, "migasfree-server.pub"))
-    client = readfile(os.path.join(MIGASFREE_KEYS_DIR, "%s.pri" % version))
+    server = readfile(os.path.join(
+        settings.MIGASFREE_KEYS_DIR,
+        "migasfree-server.pub"
+    ))
+    client = readfile(os.path.join(
+        settings.MIGASFREE_KEYS_DIR,
+        "%s.pri" % version
+    ))
 
     return {
         "migasfree-server.pub": server,
@@ -72,9 +83,12 @@ def get_keys_to_packager():
     """
     Returns the keys for register packager
     """
-    server = readfile(os.path.join(MIGASFREE_KEYS_DIR, "migasfree-server.pub"))
+    server = readfile(os.path.join(
+        settings.MIGASFREE_KEYS_DIR,
+        "migasfree-server.pub"
+    ))
     packager = readfile(
-        os.path.join(MIGASFREE_KEYS_DIR, "migasfree-packager.pri")
+        os.path.join(settings.MIGASFREE_KEYS_DIR, "migasfree-packager.pri")
     )
 
     return {
@@ -84,8 +98,8 @@ def get_keys_to_packager():
 
 
 def create_keys_server():
-    if not os.path.lexists(MIGASFREE_KEYS_DIR):
-        os.makedirs(MIGASFREE_KEYS_DIR)
+    if not os.path.lexists(settings.MIGASFREE_KEYS_DIR):
+        os.makedirs(settings.MIGASFREE_KEYS_DIR)
 
     gen_keys("migasfree-server")
     gen_keys("migasfree-packager")
