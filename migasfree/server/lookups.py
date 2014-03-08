@@ -1,8 +1,17 @@
+# -*- coding: utf-8 -*-
+
 from django.db.models import Q
 from django.utils.html import escape
 
-from migasfree.server.models import Attribute, Package, Property, DeviceLogical, Computer
 from ajax_select import LookupChannel
+
+from migasfree.server.models import (
+    Attribute,
+    Package,
+    Property,
+    DeviceLogical,
+    Computer
+)
 
 
 class AttributeLookup(LookupChannel):
@@ -102,11 +111,12 @@ class DeviceLogicalLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
+
 class ComputerLookup(LookupChannel):
     model = Computer
 
     def get_query(self, q, request):
-        return Computer.objects.filter(Q(name__icontains=q)|Q(id=q))
+        return Computer.objects.filter(Q(name__icontains=q) | Q(id=q))
 
     def get_result(self, obj):
         return unicode(obj)
@@ -120,13 +130,16 @@ class ComputerLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
-    def get_objects(self,ids):
-        """ Get the currently selected objects when editing an existing model """
+    def get_objects(self, ids):
+        """
+        Get the currently selected objects when editing an existing model
+        """
         # return in the same order as passed in here
         # this will be however the related objects Manager returns them
-        # which is not guaranteed to be the same order they were in when you last edited
+        # which is not guaranteed to be the same order
+        # they were in when you last edited
         # see OrdredManyToMany.md
-        lst=[]
+        lst = []
         for id in ids:
             if id.__class__.__name__ == "Computer":
                 lst.append(int(id.pk))
@@ -135,4 +148,4 @@ class ComputerLookup(LookupChannel):
 
         things = self.model.objects.in_bulk(lst)
 
-        return [things[aid] for aid in lst if things.has_key(aid)]
+        return [things[aid] for aid in lst if aid in things]
