@@ -2,16 +2,15 @@
 
 import sys
 
-from datetime import timedelta
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django import forms
+from django.conf import settings
 
-from migasfree.settings import MIGASFREE_SECONDS_MESSAGE_ALERT
 from migasfree.server.models import *
 
 
@@ -122,7 +121,7 @@ def query(request, query_id):
     # show parameters form
     version = get_object_or_404(UserProfile, id=request.user.id).version
     if not version:
-        # The user not have a version. We assign to user the first version found.
+        # The user not have a version. We assign to user the first version found
         version = Version.objects.all().order_by("id")[0]
         user = UserProfile.objects.get(id=request.user.id)
         user.version = version
@@ -168,7 +167,7 @@ def computer_messages(request):
     if request.is_ajax():
         template = 'includes/computer_messages_result.html'
 
-    t = datetime.now() - timedelta(0, MIGASFREE_SECONDS_MESSAGE_ALERT)
+    t = datetime.now() - timedelta(0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT)
 
     result = []
     for item in Message.objects.all().order_by("-date"):
