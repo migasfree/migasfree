@@ -61,7 +61,8 @@ class MigasLink(object):
         for related_object, _ in related_objects:
             try:
                 related_link = reverse(
-                    'admin:server_%s_changelist' % related_object.model._meta.model_name
+                    'admin:server_%s_changelist'
+                    % related_object.model._meta.model_name
                 )
                 related_data += '<li><a href="%s?%s__exact=%d">%s [%s]</a></li>' % (
                     related_link,
@@ -74,8 +75,8 @@ class MigasLink(object):
                 pass
 
         return format_html(
-            '<div class="btn-group btn-group-xs">' + \
-            _link + '<ul class="dropdown-menu" role="menu">' + \
+            '<div class="btn-group btn-group-xs">' +
+            _link + '<ul class="dropdown-menu" role="menu">' +
             related_data + '</ul></div>'
         )
 
