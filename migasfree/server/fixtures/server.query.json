@@ -3,49 +3,79 @@
         "pk": 1,
         "model": "server.query",
         "fields": {
-            "code": "if parameters['id'] == '':\n    query = Query.objects.all()\nelse:\n    query = Query.objects.filter(id=parameters['id'])\n    fields = ('id', 'name', 'description', 'code', 'parameters')\n",
-            "name": "QUERIES",
-            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        id = forms.CharField()\n    return myForm\n",
-            "description": "LIST OF QUERIES"
+            "code": "from migasfree.server.models import Query\nif parameters['id'] == '':\n    query = Query.objects.all()\nelse:\n    query = Query.objects.filter(id=parameters['id'])\n    fields = ('id', 'name', 'description', 'code', 'parameters')\n",
+            "name": "Queries...",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        id = forms.CharField()\n    return myForm\n",
+            "description": "Queries List"
         }
     },
     {
         "pk": 2,
         "model": "server.query",
         "fields": {
-            "code": "query = Package.objects.filter(name__contains=parameters['name'])\nfields = ('id', 'link()', 'store.name')\ntitles = ('id', 'name', 'store')\n",
-            "name": "PACKAGES/SETS",
+            "code": "from migasfree.server.models import Package\nquery = Package.objects.filter(name__contains=parameters['name'])\nfields = ('id', 'link', 'store.name')\ntitles = ('id', 'name', 'store')\n",
+            "name": "Packages/Sets...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        name = forms.CharField()\n    return myForm\n",
-            "description": "LIST OF PACKAGES/SETS"
+            "description": "Packages/Sets List"
         }
     },
     {
         "pk": 3,
         "model": "server.query",
         "fields": {
-            "code": "query = Login.objects.all()\nif parameters['value'] != '':\n    query = query.filter(attributes__property_att__id = parameters['property_att'], attributes__value__contains = parameters['value'])\n    fields = ('computer.link()', 'user.link()', 'date')\n    titles = ('computer', 'user', 'date of login')\n",
-            "name": "COMPUTERS BY ATTRIBUTES",
-            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        property_att = forms.ModelChoiceField(Property.objects.all())\n        value = forms.CharField()\n    return myForm\n",
-            "description": "LIST THE COMPUTERS THAT HAVE A DETERMINATE ATTRIBUTE"
+            "code": "from migasfree.server.models import Login\nquery = Login.objects.all()\nif parameters['value'] != '':\n    query = query.filter(attributes__property_att__id = parameters['property_att'], attributes__value__contains = parameters['value'])\n    fields = ('computer.link()', 'user.link()', 'date')\n    titles = ('computer', 'user', 'date of login')\n",
+            "name": "Computers by Attributes...",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        property_att = forms.ModelChoiceField(Property.objects.all())\n        value = forms.CharField()\n    return myForm\n",
+            "description": "Computer list that have a certain attribute"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "server.query",
+        "fields": {
+            "code": "from migasfree.server.models import Computer\nquery = Computer.objects.filter(software__contains=parameters['package']).order_by('datelastupdate')\nfields = ('link', 'ip', 'datelastupdate', 'hw_link')\ntitles = ('Computer', 'ip', 'last update', 'hardware')",
+            "name": "Computers with the Package...",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm\n",
+            "description": "Computers list with the specified package"
         }
     },
     {
         "pk": 5,
         "model": "server.query",
         "fields": {
-            "code": "query = Package.objects.version(0).filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link()')\ntitles = ('version', 'store', 'package/set')\n",
-            "name": "PACKAGE/SET ORPHAN",
+            "code": "from migasfree.server.models import Package\nfrom django.db.models import Q\nquery = Package.objects.version(0).filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link')\ntitles = ('version', 'store', 'package/set')\n",
+            "name": "Package/Set Orphan",
             "parameters": "",
-            "description": "PACKAGES/SET THAT NOT HAVE BEEN ASIGNED TO A REPOSITORY"
+            "description": "Packages/Sets that have not been assigned to any repository"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "server.query",
+        "fields": {
+            "code": "from migasfree.server.models import Repository\nfrom django.db.models import Q\nquery = Repository.objects.filter(Q(packages__name__contains=parameters['package'])).distinct()\nfields = ('id', 'link', 'packages_link')\ntitles = ('id', 'Repository', 'Packages')\n",
+            "name": "Repositories with a Package/Set...",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm\n",
+            "description": "Repositories list that have assigned a certain Package/Set"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "server.query",
+        "fields": {
+            "code": "from migasfree.server.models import Computer\nquery = Computer.objects.all()\nif parameters['model'] != '':\n    query = query.filter(devices__model__id=parameters['model'])\n    query = query.filter(name__contains=parameters['computer'])\n    query = query.order_by('name')\n    fields = ('link', 'devices_link', 'login_link')\n    titles = ('computer', 'devices', 'last login')\n",
+            "name": "Computer Devices...",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        model = forms.ModelChoiceField(DeviceModel.objects.all())\n        computer = forms.CharField()\n    return myForm\n",
+            "description": ""
         }
     },
     {
         "pk": 8,
         "model": "server.query",
         "fields": {
-            "code": "query = Computer.objects.all()\nif parameters['model'] != '':\n    query = query.filter(devices__model__id=parameters['model'])\n    query = query.filter(name__contains=parameters['computer'])\n    query = query.order_by('name')\n    fields = ('link()', 'devices_link()', 'login_link()')\n    titles = ('computer', 'devices', 'last login')\n",
-            "name": "COMPUTER DEVICES",
-            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        model = forms.ModelChoiceField(DeviceModel.objects.all())\n        computer = forms.CharField()\n    return myForm\n",
+            "code": "from migasfree.server.models import Device\nfrom django.db.models import Q\nquery = Device.objects.all()\nif parameters['model'] != '':\n  query = query.filter(Q(model__id=parameters['model']))\n  query = query.filter(Q(computer__name__contains=parameters['computer']))\n  query = query.order_by('name').distinct()\n  fields = ('link', 'model.link', 'computers_link')\n  titles = ('device', 'model', 'computers')\n",
+            "name": "Device Computers...",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        model = forms.ModelChoiceField(DeviceModel.objects.all())\n        computer = forms.CharField()\n    return myForm\n",
             "description": ""
         }
     },
@@ -53,40 +83,10 @@
         "pk": 9,
         "model": "server.query",
         "fields": {
-            "code": "query = Device.objects.all()\nif parameters['model'] != '':\n  query = query.filter(Q(model__id=parameters['model']))\n  query = query.filter(Q(computer__name__contains=parameters['computer']))\n  query = query.order_by('name').distinct()\n  fields = ('link()', 'model.link()', 'computers_link()')\n  titles = ('device', 'model', 'computers')\n",
-            "name": "DEVICE COMPUTERS",
-            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        model = forms.ModelChoiceField(DeviceModel.objects.all())\n        computer = forms.CharField()\n    return myForm\n",
+            "code": "from datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.objects.filter(dateinput__gte = n, dateinput__lt = date.today() + delta).order_by('-dateinput')\nfields = ('link', 'version', 'dateinput', 'ip')\ntitles = ('link', 'version', 'dateinput', 'ip')",
+            "name": "Incoming Computers...",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        last_days = forms.CharField()\n    return myForm",
             "description": ""
-        }
-    },
-    {
-        "pk": 10,
-        "model": "server.query",
-        "fields": {
-            "code": "from datetime import timedelta\r\nfrom datetime import datetime\r\nfrom datetime import date\r\ndias=int(parameters['dias'])\r\ndelta = timedelta(days = 1)\r\nn = date.today()-((dias-1)*delta)\r\nquery = Computer.objects.all()\r\n\r\nquery = query.filter(dateinput__gte = n, dateinput__lt = date.today()+delta).order_by(\"dateinput\")\r\n\r\nfields = ('link()','version','dateinput','ip')\r\ntitles = ('link()','version','dateinput','ip')",
-            "name": "INPUT COMPUTER",
-            "parameters": "def form_params():\r\n    from migasfree.server.forms import ParametersForm\r\n    class myForm(ParametersForm):\r\n        dias = forms.CharField()\r\n    return myForm",
-            "description": ""
-        }
-    },
-    {
-        "pk": 6,
-        "model": "server.query",
-        "fields": {
-            "code": "from migasfree.server.models import Repository\r\nquery = Repository.objects.filter(Q(packages__name__contains=parameters['package']))\r\nquery = query.distinct()\r\nfields = ('id', 'link()', 'packages_link()')\r\ntitles = ('id', 'Repository', 'Packages')\r\n",
-            "name": "REPOSITORIES WITH A PACKAGE/SET",
-            "parameters": "def form_params():\r\n    from migasfree.server.forms import ParametersForm\r\n    class myForm(ParametersForm):\r\n        package = forms.CharField()\r\n    return myForm\r\n",
-            "description": "LIST THE REPOSITORIES THAT HAVE ASIGNNED A DETERMINATE PACKAGE/SET"
-        }
-    },
-    {
-        "pk": 4,
-        "model": "server.query",
-        "fields": {
-            "code": "query = Computer.objects.filter(software__contains=parameters['package']).order_by(\"datelastupdate\")\r\nfields = ('link()','ip','datelastupdate','login().link()')\r\ntitles = ('Computer','ip','last update','login')",
-            "name": "COMPUTERS WITH THE PACKAGE...",
-            "parameters": "def form_params():\r\n    from migasfree.server.forms import ParametersForm\r\n    class myForm(ParametersForm):\r\n        package = forms.CharField()\r\n    return myForm\r\n",
-            "description": "LIST THE COMPUTERS WITH THE PACKAGE ESPECIFIQUED"
         }
     }
 ]
