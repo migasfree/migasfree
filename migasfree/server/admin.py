@@ -122,7 +122,7 @@ class DeviceLogicalForm(forms.ModelForm):
     x = make_ajax_form(Computer, {'devices_logical': 'computer'})
 
     computers = x.devices_logical
-    computers.label =_('Computers')
+    computers.label = _('Computers')
 
     class Meta:
         model = DeviceLogical
@@ -136,8 +136,9 @@ class DeviceLogicalForm(forms.ModelForm):
             self.fields['computers'].initial = lst
 
     def save(self, commit=True):
-        instance=forms.ModelForm.save(self, False)
+        instance = forms.ModelForm.save(self, False)
         old_save_m2m = self.save_m2m
+
         def save_m2m():
             old_save_m2m()
             instance.computer_set.clear()
@@ -162,7 +163,7 @@ admin.site.register(DeviceLogical, DeviceLogicalAdmin)
 class DeviceLogicalInline(admin.TabularInline):
     model = DeviceLogical
     form = DeviceLogicalForm
-    fields = ( "feature", "computers")
+    fields = ("feature", "computers")
 
     extra = 0
 
@@ -328,7 +329,7 @@ class ErrorAdmin(MigasAdmin):
     #list_editable = ('checked',)  # TODO
     ordering = ('date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'error'])
-    readonly_fields = ('computer_link','version','date','error')
+    readonly_fields = ('computer_link', 'version', 'date', 'error')
     exclude = ('computer',)
 
     actions = ['checked_ok']
@@ -387,7 +388,7 @@ class FaultAdmin(MigasAdmin):
     list_filter = (UserFaultFilter, 'checked', 'date', 'version', 'faultdef')
     ordering = ('date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'faultdef__name'])
-    readonly_fields = ('computer_link','faultdef','version','date','text')
+    readonly_fields = ('computer_link', 'faultdef', 'version', 'date', 'text')
     exclude = ('computer',)
 
     actions = ['checked_ok']
@@ -595,7 +596,8 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     def save_model(self, request, obj, form, change):
         super(RepositoryAdmin, self).save_model(request, obj, form, change)
 
-        # create physical repository  when packages is change or not have packages
+        # create physical repository when packages has been changed
+        # or not have packages
         if "packages" in form.changed_data \
         or len(form.cleaned_data['packages']) == 0:
             messages.add_message(
