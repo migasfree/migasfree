@@ -6,10 +6,8 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
-from django.db.models import Q
-from django.http import HttpResponse
 
-from migasfree.server.models import *
+from migasfree.server.models import Checking
 
 
 def execute_active_checkings():
