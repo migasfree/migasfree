@@ -7,6 +7,9 @@
             {{ form.as_p }}
         </fieldset>
 
-        <p><input class="btn btn-primary" type="submit" value="{% trans 'Submit' %}" /></p>
+        <p>
+            <input class="btn btn-primary" type="submit" value="{% trans 'Submit' %}" />
+            {% csrf_token %}
+        </p>
     </form>
 {% endif %}
