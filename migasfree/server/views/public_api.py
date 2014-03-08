@@ -3,23 +3,19 @@
 import json
 
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
-
-from migasfree.settings import (
-    MIGASFREE_HELP_DESK,
-    MIGASFREE_COMPUTER_SEARCH_FIELDS
-)
+from django.shortcuts import render
+from django.conf import settings
 
 from migasfree.server.models import (
     Platform,
     Version,
-    Computer,
     Property,
     Attribute
 )
 
 from migasfree.server.api import get_computer
 from migasfree.server.functions import uuid_validate
+
 
 def get_versions(request):
     result = []
@@ -43,16 +39,15 @@ def get_computer_info(request):
     if _uuid == "":
         _uuid == _name
 
-#    computer = get_object_or_404(Computer, uuid=_uuid)
-    computer = get_computer( _name, _uuid)
+    computer = get_computer(_name, _uuid)
 
     result = {
         'id': computer.id,
         'uuid': computer.uuid,
         'name': computer.name,
-        'helpdesk': MIGASFREE_HELP_DESK,
+        'helpdesk': settings.MIGASFREE_HELP_DESK,
     }
-    result["search"] = result[MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
+    result["search"] = result[settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
 
     element = []
     for tag in computer.tags.all():
