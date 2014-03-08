@@ -6,8 +6,8 @@ import traceback
 import tempfile
 
 from django.template.loader import render_to_string
+from django.conf import settings
 
-from migasfree.settings import MIGASFREE_REPO_DIR
 from migasfree.server.functions import trans as _
 
 
@@ -46,7 +46,7 @@ def error(number):
         etype = sys.exc_info()[0]
         evalue = sys.exc_info()[1]
 
-        dir_errors = os.path.join(MIGASFREE_REPO_DIR, 'errors')
+        dir_errors = os.path.join(settings.MIGASFREE_REPO_DIR, 'errors')
         if not os.path.exists(dir_errors):
             os.makedirs(dir_errors)
 
@@ -59,7 +59,7 @@ def error(number):
             delete=False
         )
 
-        fp.write(print_exc_plus(etype,evalue))
+        fp.write(print_exc_plus(etype, evalue))
         fp.close()
 
         ret = '%s %s %s: %s' % (
