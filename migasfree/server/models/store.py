@@ -32,7 +32,10 @@ class Store(models.Model, MigasLink):
         super(Store, self).__init__(*args, **kwargs)
 
         if self.id:
-            info_link = reverse('package_info', args=('STORES/%s/' % self.name,))
+            info_link = reverse(
+                'package_info',
+                args=('STORES/%s/' % self.name,)
+            )
 
             download_link = '%s%s/STORES/%s/' % (
                 settings.MEDIA_URL,
