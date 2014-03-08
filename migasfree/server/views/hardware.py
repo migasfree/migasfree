@@ -7,7 +7,12 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.db.models import Q
 
-from migasfree.server.models import *
+from migasfree.server.models import (
+    HwNode,
+    HwConfiguration,
+    HwLogicalName,
+    HwCapability
+)
 
 
 @login_required
@@ -182,7 +187,7 @@ def load_hw(computer, node, parent, level):
                     c.name = x
                     c.save()
         elif e == "resource":
-            print e, node[e]
+            print(e, node[e])
         else:
             pass
 
