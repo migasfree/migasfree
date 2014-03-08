@@ -6,8 +6,8 @@ import json
 from datetime import datetime
 
 from django.http import HttpResponse
-
-from migasfree.settings import MIGASFREE_TMP_DIR
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
 
 from migasfree.server.models import Error
 from migasfree.server.api import *
@@ -16,16 +16,17 @@ from migasfree.server.security import *
 from migasfree.server.functions import (
     get_client_ip,
     uuid_validate
-    )
+)
 
 
+@csrf_exempt
 def api(request):
     # Other data on the request.FILES dictionary:
     #   filesize = len(file['content'])
     #   filetype = file['content-type']
 
     msg = request.FILES.get('message')
-    filename = os.path.join(MIGASFREE_TMP_DIR, msg.name)
+    filename = os.path.join(settings.MIGASFREE_TMP_DIR, msg.name)
     filename_return = "%s.return" % filename
 
     lst_msg = msg.name.split('.')
@@ -50,9 +51,9 @@ def api(request):
             mimetype='text/plain'
         )
 
-    if not os.path.exists(MIGASFREE_TMP_DIR):
+    if not os.path.exists(settings.MIGASFREE_TMP_DIR):
         try:
-            os.makedirs(MIGASFREE_TMP_DIR, 0o700)
+            os.makedirs(settings.MIGASFREE_TMP_DIR, 0o700)
         except:
             pass  # FIXME
 
