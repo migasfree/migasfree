@@ -9,14 +9,12 @@ import django
 
 from datetime import timedelta
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-
-from migasfree.settings import DATABASES, MIGASFREE_APP_DIR, \
-    MIGASFREE_REPO_DIR, MIGASFREE_INVALID_UUID
 
 
 def is_db_sqlite():
-    return DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
+    return settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
 
 
 def config_apache():
@@ -64,8 +62,8 @@ WSGIScriptAlias / %(migasfree_app_dir)s/wsgi.py
 def _write_web_config(filename, config):
     _content = config % {
         'django_dir': os.path.dirname(os.path.abspath(django.__file__)),
-        'migasfree_repo_dir': MIGASFREE_REPO_DIR,
-        'migasfree_app_dir': MIGASFREE_APP_DIR
+        'migasfree_repo_dir': settings.MIGASFREE_REPO_DIR,
+        'migasfree_app_dir': settings.MIGASFREE_APP_DIR
     }
 
     if not writefile(filename, _content):
@@ -236,10 +234,11 @@ def uuid_validate(uuid):
             uuid[20:32]
         )
 
-    if uuid in MIGASFREE_INVALID_UUID:
+    if uuid in settings.MIGASFREE_INVALID_UUID:
         return ""
     else:
         return uuid
+
 
 def uuid_change_format(uuid):
     """
