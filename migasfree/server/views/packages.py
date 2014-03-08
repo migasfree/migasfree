@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
-from migasfree.settings import MIGASFREE_REPO_DIR
 from migasfree.server.models import Version, UserProfile
 from migasfree.server.functions import run_in_server
 
@@ -31,7 +31,7 @@ def info(request, package):  # package info
 
     logger.debug('package: ' + package)
 
-    path = os.path.join(MIGASFREE_REPO_DIR, version.name, package)
+    path = os.path.join(settings.MIGASFREE_REPO_DIR, version.name, package)
     if os.path.isfile(path):
         cmd = 'PACKAGE=%s\n' % path
         cmd += version.pms.info
