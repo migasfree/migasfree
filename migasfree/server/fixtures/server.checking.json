@@ -15,7 +15,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from django.conf import settings\nfrom datetime import datetime, timedelta\nfrom migasfree.server.models import MessageServer\nurl = '/server_messages/'\nmsg = 'Server Messages'\nt = datetime.now() - timedelta(0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = MessageServer.objects.filter(date__gt=t).count()\nalert = 'warning'\ntarget = 'server'",
+            "code": "from django.conf import settings\nfrom datetime import datetime, timedelta\nfrom migasfree.server.models import MessageServer\nurl = '/server_messages/'\nmsg = 'Server Messages'\nt = datetime.now() - timedelta(0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = MessageServer.objects.filter(date__gte=t).count()\nalert = 'warning'\ntarget = 'server'",
             "name": "Server Messages",
             "alert": false,
             "description": "Server Messages"
@@ -26,7 +26,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from django.conf import settings\nfrom datetime import datetime, timedelta\nfrom migasfree.server.models import Message\nurl = '/computer_messages/'\nmsg = 'Computer delayed' \nt = datetime.now() - timedelta(0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = Message.objects.filter(date__lt=t).count()\nalert = 'warning'\ntarget = 'computer'\n\n",
+            "code": "from django.conf import settings\nfrom datetime import datetime, timedelta\nfrom migasfree.server.models import Message\nurl = '/computer_messages/'\nmsg = 'Computer delayed' \nt = datetime.now() - timedelta(0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = Message.objects.filter(date__lt=t).count()\nalert = 'warning'\ntarget = 'computer'\n",
             "name": "Computer delayed",
             "alert": true,
             "description": "Check how many computers are delayed"
@@ -37,10 +37,10 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Package\nresult = Package.objects.version(0).filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
+            "code": "from migasfree.server.models import Package\nfrom django.db.models import Q\nresult = Package.objects.version(0).filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
             "name": "Package/Set orphan",
             "alert": true,
-            "description": "Packages that not have been asigned to a Repository."
+            "description": "Packages that have not been assigned to any repository"
         }
     },
     {
@@ -48,7 +48,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Notification\nresult = Notification.objects.filter(checked__exact=0).count()\nurl = '/admin/server/notification/?checked__exact=0'\nalert = 'warning'\nmsg = 'Notifications to check'\ntarget = 'server'",
+            "code": "from migasfree.server.models import Notification\nresult = Notification.objects.filter(checked__exact=0).count()\nurl = '/admin/server/notification/?checked__exact=0'\nalert = 'warning'\nmsg = 'Notifications to check'\ntarget = 'server'\n",
             "name": "Notifications to check",
             "alert": true,
             "description": "Server Notifications that must be checked"
@@ -62,7 +62,7 @@
             "code": "from django.conf import settings\nfrom datetime import datetime, timedelta\nfrom migasfree.server.models import Message\nurl = '/computer_messages/'\nmsg = 'Computer updating now'\nt = datetime.now() - timedelta(0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT)\nresult = Message.objects.filter(date__gt=t).count()\nalert = 'info'\ntarget = 'computer'\n",
             "name": "Computer updating now",
             "alert": false,
-            "description": "Check how many computers are being updated at this time"
+            "description": "Check how many computers are being updated right now"
         }
     },
     {
@@ -73,7 +73,7 @@
             "code": "from migasfree.server.models import Fault\nfrom migasfree.middleware import threadlocals\nfrom django.db.models import Q\nresult = Fault.objects.filter(checked__exact=0).filter(Q(faultdef__users__id__in=[threadlocals.get_current_user().id,]) | Q(faultdef__users=None)).count()\nurl = '/admin/server/fault/?checked__exact=0&user=me'\nalert = 'danger'\nmsg = 'Faults to check'\ntarget = 'computer'\n",
             "name": "Faults to check",
             "alert": true,
-            "description": "Faults not marked as checked. You must mark the fault as checked when the fault is solved"
+            "description": "Faults not checked. You must check fault when fault is solved"
         }
     },
     {
@@ -84,7 +84,7 @@
             "code": "from migasfree.server.models import Error\nresult = Error.objects.filter(checked__exact=0).count()\nurl = '/admin/server/error/?checked__exact=0&user=me'\nalert = 'danger'\nmsg = 'Errors to check'\ntarget = 'computer'\n",
             "name": "Errors to check",
             "alert": true,
-            "description": "Errors not marked as checked. You must mark the error as checked when the error is solved"
+            "description": "Errors not checked. You must check error when error is solved"
         }
     }
 ]
