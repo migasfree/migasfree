@@ -6,7 +6,7 @@
             "code": "from migasfree.server.models import Query\nif parameters['id'] == '':\n    query = Query.objects.all()\nelse:\n    query = Query.objects.filter(id=parameters['id'])\n    fields = ('id', 'name', 'description', 'code', 'parameters')\n",
             "name": "Queries...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        id = forms.CharField()\n    return myForm\n",
-            "description": "Queries List"
+            "description": "Query List"
         }
     },
     {
@@ -16,7 +16,7 @@
             "code": "from migasfree.server.models import Package\nquery = Package.objects.filter(name__contains=parameters['name'])\nfields = ('id', 'link', 'store.name')\ntitles = ('id', 'name', 'store')\n",
             "name": "Packages/Sets...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    class myForm(ParametersForm):\n        name = forms.CharField()\n    return myForm\n",
-            "description": "Packages/Sets List"
+            "description": "Package/Set List"
         }
     },
     {
@@ -36,7 +36,7 @@
             "code": "from migasfree.server.models import Computer\nquery = Computer.objects.filter(software__contains=parameters['package']).order_by('datelastupdate')\nfields = ('link', 'ip', 'datelastupdate', 'hw_link')\ntitles = ('Computer', 'ip', 'last update', 'hardware')",
             "name": "Computers with the Package...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm\n",
-            "description": "Computers list with the specified package"
+            "description": "Computer list with the specified package"
         }
     },
     {
@@ -56,7 +56,7 @@
             "code": "from migasfree.server.models import Repository\nfrom django.db.models import Q\nquery = Repository.objects.filter(Q(packages__name__contains=parameters['package'])).distinct()\nfields = ('id', 'link', 'packages_link')\ntitles = ('id', 'Repository', 'Packages')\n",
             "name": "Repositories with a Package/Set...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm\n",
-            "description": "Repositories list that have assigned a certain Package/Set"
+            "description": "Repository list that have assigned a certain Package/Set"
         }
     },
     {
@@ -83,7 +83,7 @@
         "pk": 9,
         "model": "server.query",
         "fields": {
-            "code": "from datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.objects.filter(dateinput__gte = n, dateinput__lt = date.today() + delta).order_by('-dateinput')\nfields = ('link', 'version', 'dateinput', 'ip')\ntitles = ('link', 'version', 'dateinput', 'ip')",
+            "code": "from datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.objects.filter(dateinput__gte=n, dateinput__lt=date.today() + delta).order_by('-dateinput')\nfields = ('link', 'version', 'dateinput', 'ip')\ntitles = ('link', 'version', 'dateinput', 'ip')",
             "name": "Incoming Computers...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        last_days = forms.CharField()\n    return myForm",
             "description": ""
