@@ -1,16 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-set up our URLs
-"""
-
-import os
-import django
-
-try:
-    from django.conf.urls import patterns, include, url
-except:
-    from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
 admin.autodiscover()
@@ -37,4 +27,11 @@ if settings.DEBUG and settings.STATIC_ROOT is not None:
     urlpatterns += static(
         settings.STATIC_URL,
         document_root=settings.STATIC_ROOT
+    )
+
+if settings.DEBUG and settings.MEDIA_ROOT is not None:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT,
+        show_indexes=True
     )
