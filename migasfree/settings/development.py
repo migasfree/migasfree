@@ -9,11 +9,12 @@ from .ajax_select_config import *
 # development environment
 TEMPLATE_DEBUG = DEBUG = True
 
-STATIC_ROOT = os.path.join(MIGASFREE_APP_DIR, 'static')
-
 MIGASFREE_DB_DIR = os.path.dirname(MIGASFREE_PROJECT_DIR)
 MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
+
+STATIC_ROOT = os.path.join(MIGASFREE_APP_DIR, 'static')
+MEDIA_ROOT = MIGASFREE_REPO_DIR
 
 DATABASES = {
     'default': {
