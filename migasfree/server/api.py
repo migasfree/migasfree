@@ -139,7 +139,7 @@ def save_login(computer, user):
             computer=computer,
         )
         _login.user = user
-        _login.date = login_date
+        _login.date = _login_date
         _login.save()
     except:  # if Login not exists, we save it
         _login = Login(
