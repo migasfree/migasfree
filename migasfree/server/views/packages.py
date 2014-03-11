@@ -99,6 +99,7 @@ def change_version(request):
 
     next_page = request.META.get('HTTP_REFERER', reverse('bootstrap'))
     if next_page.find(reverse('admin:server_repository_changelist')) > 0:
-        next_page = reverse('admin:server_repository_changelist')
+        next_page = '%s?active__exact=1' \
+            % reverse('admin:server_repository_changelist')
 
     return HttpResponseRedirect(next_page)
