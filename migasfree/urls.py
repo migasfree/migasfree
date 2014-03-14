@@ -11,6 +11,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = patterns('',
+    url(r'', include('migasfree.server.urls')),
+
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
@@ -19,8 +21,6 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^admin/lookups/', include(ajax_select_urls)),
-
-    url(r'', include('migasfree.server.urls')),
 )
 
 if settings.DEBUG and settings.STATIC_ROOT is not None:
