@@ -86,6 +86,12 @@ urlpatterns = patterns('',
         name='hardware_resume'
     ),
 
+    url(
+        r'^admin/server/computer/(?P<pk>\d+)/delete/$',
+        ComputerDelete.as_view(),
+        name='computer_delete'
+    ),
+
     url(r'^api/$', api, name='api'),
 
     url(
