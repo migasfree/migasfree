@@ -6,7 +6,7 @@
     <ol class="breadcrumb">
         <li>{% trans 'Datum' %}</li>
         <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
-        <li><a href="{% url 'admin:server_computer_change' computer.id %}">{{ computer.name }}</a></li>
+        <li><a href="{% url 'admin:server_computer_change' computer.id %}">{{ computer }}</a></li>
     </ol>
 {% endblock breadcrumbs %}
 
