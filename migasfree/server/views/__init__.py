@@ -19,4 +19,5 @@ from migasfree.server.views.admin import connections_model
 
 from migasfree.server.views.login import login
 
-from migasfree.server.views.computer import ComputerDelete
+from migasfree.server.views.computer import ComputerDelete, \
+    computer_delete_selected
