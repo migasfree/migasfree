@@ -2,6 +2,7 @@
 
 import os
 import time
+import shutil
 
 from django.conf import settings
 from django.utils.translation import ugettext as _
@@ -10,103 +11,89 @@ from migasfree.server.models import Version, MessageServer, Package
 from migasfree.server.functions import run_in_server
 
 
-def create_physical_repository(repo, packages_list=None):
+# FIXME this is not a view (move to another location)
+def create_physical_repository(repo, packages=None):
     """
     Creates the repository metadata.
     repo = a Repository object
-    package_list = a packages_id list (called from RepositoryAdmin.save_model)
+    packages = a packages_id list (called from RepositoryAdmin.save_model)
     """
-    msg = MessageServer()
-    msg.text = _("Creating Repositories of %s...") \
+    _msg = MessageServer()
+    _msg.text = _("Creating Repositories of %s...") \
         % Version.objects.get(id=repo.version_id).name
-    msg.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    msg.save()
+    _msg.date = time.strftime("%Y-%m-%d %H:%M:%S")
+    _msg.save()
 
-    def history(repository, packages_list):
-        txt = _('Added packages:') + '<br />'
-        if packages_list is not None:
-            for id in packages_list:
-                pkg = Package.objects.get(id=id)
-                txt += _('%s in store %s') % (pkg.name, pkg.store.name)
-                txt += '<br />'
-        else:
-            pkgs = repository.packages.all()
-            for pkg in pkgs:
-                txt += _('%s in store %s') % (pkg.name, pkg.store.name)
-                txt += '<br />'
-
-        return txt
-
-    # Get the Package Management System
-    o_pms = repo.version.pms
-    bash = ""
-
-    # we remove it
-    bash += "rm -rf %s\n" % os.path.join(
+    # first, remove it
+    shutil.rmtree(os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
-        o_pms.slug,
+        repo.version.pms.slug,
         repo.name
-    )  # FIXME python command
+    ), ignore_errors=True)
 
-    path_stores = os.path.join(
+    _path_stores = os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
         'STORES'
     )
-    path_tmp = os.path.join(
+    _path_tmp = os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
         'TMP',
-        o_pms.slug
+        repo.version.pms.slug
     )
-    if path_tmp.endswith('/'):
+    if _path_tmp.endswith('/'):
         # remove trailing slash for replacing in template
-        path_tmp = path_tmp[:-1]
+        _path_tmp = _path_tmp[:-1]
 
-    bash += "/bin/mkdir -p %s\n" % os.path.join(
-        path_tmp,
+    _pkg_path = os.path.join(
+        _path_tmp,
         repo.name,
         'PKGS'
-    )  # FIXME python command
+    )
+    if not os.path.exists(_pkg_path):
+        os.makedirs(_pkg_path)
 
-    if packages_list is not None:
-        for id in packages_list:
-            package = Package.objects.get(id=id)
-            bash += 'ln -sf %s %s\n' % (
-                os.path.join(path_stores, package.store.name, package.name),
-                os.path.join(path_tmp, repo.name, 'PKGS')
+    _ret = _('Added packages:') + '<br />'
+    if packages is not None:
+        for _pkg_id in packages:
+            _pkg = Package.objects.get(id=_pkg_id)
+            os.symlink(
+                os.path.join(_path_stores, _pkg.store.name, _pkg.name),
+                os.path.join(_path_tmp, repo.name, 'PKGS')
             )
+            _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) \
+                + '<br />'
     else:
-        for package in repo.packages.all():
-            bash += 'ln -sf %s %s\n' % (
-                os.path.join(path_stores, package.store.name, package.name),
-                os.path.join(path_tmp, repo.name, 'PKGS')
+        for _pkg in repo.packages.all():
+            os.symlink(
+                os.path.join(_path_stores, _pkg.store.name, _pkg.name),
+                os.path.join(_path_tmp, repo.name, 'PKGS')
             )
+            _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) \
+                + '<br />'
 
-    # We create repository metadata
-    cad = o_pms.createrepo
-    bash += cad.replace(
-        "%REPONAME%", repo.name
-    ).replace("%PATH%", path_tmp) + "\n"
+    # create metadata
+    _run_err = run_in_server(
+        repo.version.pms.createrepo.replace(
+            "%REPONAME%", repo.name
+        ).replace("%PATH%", _path_tmp)
+    )["err"]
 
-    path_tmp = os.path.join(
+    _source = os.listdir(os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
         "TMP"
-    )
-    bash += 'cp -rf %s %s\n' % (
-        os.path.join(path_tmp, '*'),
-        os.path.join(settings.MIGASFREE_REPO_DIR, repo.version.name)
-    )
-    bash += "rm -rf %s\n" % path_tmp  # FIXME python command
+    ))
+    _destination = os.path.join(settings.MIGASFREE_REPO_DIR, repo.version.name)
+    for _file in _source:
+        shutil.move(_file, _destination)
+    shutil.rmtree(_path_tmp)
 
-    txt_err = run_in_server(bash)["err"]
+    _msg.delete()  # end of process -> message server erased
 
-    msg.delete()
+    if _run_err != '':
+        _ret += "<br /><br />*************" + _run_err.decode("utf-8")
 
-    txt = history(repo, packages_list)
-    if txt_err != '':
-        txt += "<br /><br />*************" + txt_err.decode("utf-8")
-
-    return txt
+    return _ret
