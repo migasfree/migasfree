@@ -6,11 +6,12 @@ Admin Models
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.admin import SimpleListFilter
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django import forms
 from django.db import models
 from django.db.models import Q
 from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
@@ -484,6 +485,23 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': ('tags', )
         }),
     )
+
+    actions = ['delete_selected']
+
+    def delete_selected(self, request, objects):
+        if not self.has_delete_permission(request):
+            raise PermissionDenied
+
+        _list = []
+        for obj in objects:
+            _list.append(obj.__str__())
+        return render(
+            request,
+            'computer_confirm_delete_selected.html',
+            {'object_list': ', '.join(_list)}
+        )
+
+    delete_selected.short_description = _("Delete selected %(verbose_name_plural)s")
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "devices_logical":
