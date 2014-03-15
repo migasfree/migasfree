@@ -87,6 +87,12 @@ urlpatterns = patterns('',
     ),
 
     url(
+        r'^admin/server/computer/delete_selected/$',
+        computer_delete_selected,
+        name='computer_delete_selected'
+    ),
+
+    url(
         r'^admin/server/computer/(?P<pk>\d+)/delete/$',
         ComputerDelete.as_view(),
         name='computer_delete'
