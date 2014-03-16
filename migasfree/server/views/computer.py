@@ -8,7 +8,7 @@ from django.views.generic import DeleteView
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Computer
+from .models import Computer
 
 
 class LoginRequiredMixin(object):
@@ -32,6 +32,8 @@ class ComputerDelete(LoginRequiredMixin, DeleteView):
 
 @login_required
 def computer_delete_selected(request):
+    success_url = reverse_lazy('admin:server_computer_changelist')
+
     selected = request.POST.get('selected', None)
     if selected:
         objects = selected.split(', ')
@@ -41,4 +43,4 @@ def computer_delete_selected(request):
             )
             computer.delete()
 
-    return redirect(reverse_lazy('admin:server_computer_changelist'))
+    return redirect(success_url)
