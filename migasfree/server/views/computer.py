@@ -8,7 +8,7 @@ from django.views.generic import DeleteView
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Computer
+from ..models import Computer
 
 
 class LoginRequiredMixin(object):
@@ -42,5 +42,7 @@ def computer_delete_selected(request):
                 **{settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: item}
             )
             computer.delete()
+
+        messages.success(request, _("Computers %s deleted!") % selected)
 
     return redirect(success_url)
