@@ -5,7 +5,7 @@ from django.views.generic import RedirectView
 from django.core.urlresolvers import reverse_lazy
 from django.conf import settings
 
-from migasfree.server.views import *
+from .views import *
 
 urlpatterns = patterns('',
     url(r'^accounts/login/$', login, name='login'),
