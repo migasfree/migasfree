@@ -6,8 +6,8 @@ from django.core import serializers
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
-from .models import DeviceModel, DeviceConnection
-from .functions import s2l, vl2s
+from ..models import DeviceModel, DeviceConnection
+from ..functions import s2l, vl2s
 
 
 @login_required
