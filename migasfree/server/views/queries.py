@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import inspect
 
 from datetime import datetime, timedelta
 
@@ -28,6 +29,7 @@ def execute_query(request, parameters, form_param):
 
     try:
         exec(o_query.code.replace("\r", ""))
+        # after exec, new available variables are: query, fields, titles
 
         if 'fields' not in vars():
             fields = []
@@ -37,14 +39,23 @@ def execute_query(request, parameters, form_param):
         if 'titles' not in vars():
             titles = fields
 
-        vl_fields = []
+        results = []
 
-        for o in query:
-            o = o  # for pylint
+        for obj in query:
             cols = []
-            for f in fields:
-                cols.append(eval("o.%s" % f))
-            vl_fields.append(cols)
+            for field in fields:
+                value = getattr(obj, field)
+
+                # to allow calls to model methods (as link)
+                if obj._deferred and inspect.ismethod(value):
+                    meta_model = obj._meta.proxy_for_model.objects.get(
+                        pk=obj.id
+                    )
+                    cols.append(getattr(meta_model, field)())
+                else:
+                    cols.append(value)
+
+            results.append(cols)
 
         filters = []
         for x in form_param:
@@ -61,7 +72,7 @@ def execute_query(request, parameters, form_param):
                 "title": o_query.name,
                 "description": o_query.description,
                 "titles": titles,
-                "query": vl_fields,
+                "query": results,
                 "filters": filters,
                 'form': form_param
             }
