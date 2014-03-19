@@ -44,16 +44,19 @@ def execute_query(request, parameters, form_param):
         for obj in query:
             cols = []
             for field in fields:
-                value = getattr(obj, field)
+                try:
+                    value = getattr(obj, field)
 
-                # to allow calls to model methods (as link)
-                if obj._deferred and inspect.ismethod(value):
-                    meta_model = obj._meta.proxy_for_model.objects.get(
-                        pk=obj.id
-                    )
-                    cols.append(getattr(meta_model, field)())
-                else:
-                    cols.append(value)
+                    # to allow calls to model methods (as link)
+                    if obj._deferred and inspect.ismethod(value):
+                        meta_model = obj._meta.proxy_for_model.objects.get(
+                            pk=obj.id
+                        )
+                        cols.append(getattr(meta_model, field)())
+                    else:
+                        cols.append(value)
+                except AttributeError:
+                    value = eval("obj.%s" % field)
 
             results.append(cols)
 
