@@ -56,7 +56,7 @@ def execute_query(request, parameters, form_param):
                     else:
                         cols.append(value)
                 except AttributeError:
-                    value = eval("obj.%s" % field)
+                    cols.append(eval("obj.%s" % field))
 
             results.append(cols)
 
