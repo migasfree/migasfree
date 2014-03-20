@@ -59,41 +59,50 @@ def create_physical_repository(repo, packages=None):
     if packages is not None:
         for _pkg_id in packages:
             _pkg = Package.objects.get(id=_pkg_id)
-            os.symlink(
-                os.path.join(_path_stores, _pkg.store.name, _pkg.name),
-                os.path.join(_path_tmp, repo.name, 'PKGS')
-            )
-            _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) \
-                + '<br />'
+            _dst = os.path.join(_path_tmp, repo.name, 'PKGS')
+            if not os.path.lexists(_dst):
+                os.symlink(
+                    os.path.join(_path_stores, _pkg.store.name, _pkg.name),
+                    _dst
+                )
+                _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) \
+                    + '<br />'
     else:
         for _pkg in repo.packages.all():
-            os.symlink(
-                os.path.join(_path_stores, _pkg.store.name, _pkg.name),
-                os.path.join(_path_tmp, repo.name, 'PKGS')
-            )
-            _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) \
-                + '<br />'
+            _dst = os.path.join(_path_tmp, repo.name, 'PKGS')
+            if not os.path.lexists(_dst):
+                os.symlink(
+                    os.path.join(_path_stores, _pkg.store.name, _pkg.name),
+                    _dst
+                )
+                _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) \
+                    + '<br />'
 
     # create metadata
     _run_err = run_in_server(
         repo.version.pms.createrepo.replace(
-            "%REPONAME%", repo.name
-        ).replace("%PATH%", _path_tmp)
+            '%REPONAME%', repo.name
+        ).replace('%PATH%', _path_tmp)
     )["err"]
 
-    _source = os.listdir(os.path.join(
+    _source = os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
-        "TMP"
-    ))
-    _destination = os.path.join(settings.MIGASFREE_REPO_DIR, repo.version.name)
-    for _file in _source:
-        shutil.move(_file, _destination)
+        'TMP'
+    )
+    _destination = os.path.join(
+        settings.MIGASFREE_REPO_DIR,
+        repo.version.name
+    )
+    for _file in os.listdir(_source):
+        _src = os.path.join(_source, _file)
+        if not os.path.exists(_src):
+            shutil.move(_src, _destination)
     shutil.rmtree(_path_tmp)
 
     _msg.delete()  # end of process -> message server erased
 
     if _run_err != '':
-        _ret += "<br /><br />*************" + _run_err.decode("utf-8")
+        _ret += '<br /><br />*************' + _run_err.decode("utf-8")
 
     return _ret
