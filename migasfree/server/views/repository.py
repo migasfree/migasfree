@@ -5,22 +5,20 @@ import time
 import shutil
 
 from django.conf import settings
+from django.contrib import messages
 from django.utils.translation import ugettext as _
 
 from migasfree.server.models import Version, MessageServer, Package
 from migasfree.server.functions import run_in_server
 
 
-# FIXME this is not a view (move to another location)
-def create_physical_repository(repo, packages=None):
+def create_physical_repository(request, repo):
     """
     Creates the repository metadata.
     repo = a Repository object
-    packages = a packages_id list (called from RepositoryAdmin.save_model)
     """
     _msg = MessageServer()
-    _msg.text = _("Creating Repositories of %s...") \
-        % Version.objects.get(id=repo.version_id).name
+    _msg.text = _("Creating repository %s...") % repo.name
     _msg.date = time.strftime("%Y-%m-%d %H:%M:%S")
     _msg.save()
 
@@ -55,28 +53,14 @@ def create_physical_repository(repo, packages=None):
     if not os.path.exists(_pkg_path):
         os.makedirs(_pkg_path)
 
-    _ret = _('Added packages:') + '<br />'
-    if packages is not None:
-        for _pkg_id in packages:
-            _pkg = Package.objects.get(id=_pkg_id)
-            _dst = os.path.join(_path_tmp, repo.name, 'PKGS')
-            if not os.path.lexists(_dst):
-                os.symlink(
-                    os.path.join(_path_stores, _pkg.store.name, _pkg.name),
-                    _dst
-                )
-                _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) \
-                    + '<br />'
-    else:
-        for _pkg in repo.packages.all():
-            _dst = os.path.join(_path_tmp, repo.name, 'PKGS')
-            if not os.path.lexists(_dst):
-                os.symlink(
-                    os.path.join(_path_stores, _pkg.store.name, _pkg.name),
-                    _dst
-                )
-                _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) \
-                    + '<br />'
+    for _pkg in repo.packages.all():
+        _dst = os.path.join(_path_tmp, repo.name, 'PKGS')
+        if not os.path.lexists(_dst):
+            os.symlink(
+                os.path.join(_path_stores, _pkg.store.name, _pkg.name),
+                _dst
+            )
+            _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) + '<br />'
 
     # create metadata
     _run_err = run_in_server(
@@ -103,6 +87,6 @@ def create_physical_repository(repo, packages=None):
     _msg.delete()  # end of process -> message server erased
 
     if _run_err != '':
-        _ret += '<br /><br />*************' + _run_err.decode("utf-8")
+        return messages.error(request, _run_err.decode("utf-8"))
 
-    return _ret
+    return messages.success(request, _('Added packages:') + '<br />' + _ret)
