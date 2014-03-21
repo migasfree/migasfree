@@ -3,7 +3,7 @@
 """
 Admin Models
 """
-from django.contrib import admin, messages
+from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.admin import SimpleListFilter
 from django.shortcuts import redirect, render
@@ -18,6 +18,8 @@ from django.conf import settings
 from migasfree.middleware import threadlocals
 from migasfree.server.models import *
 from migasfree.server.views.repository import create_physical_repository
+
+from .functions import compare_values
 
 #AJAX_SELECT
 from ajax_select import make_ajax_form
@@ -615,14 +617,11 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         super(RepositoryAdmin, self).save_model(request, obj, form, change)
 
         # create physical repository when packages has been changed
-        # or not have packages
-        if "packages" in form.changed_data \
-        or len(form.cleaned_data['packages']) == 0:
-            messages.add_message(
-                request,
-                messages.INFO,
-                create_physical_repository(obj, form.cleaned_data['packages'])
-            )
+        if compare_values(
+            obj.packages.values_list('id', flat=True),  # before
+            form.cleaned_data['packages']  # after
+        ) is False:
+            create_physical_repository(request, obj)
 
 admin.site.register(Repository, RepositoryAdmin)
 
