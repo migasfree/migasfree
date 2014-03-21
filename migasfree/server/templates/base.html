@@ -185,13 +185,11 @@
                     {% if messages %}
                         <div class="row">
                             <div class="col-sm-12">
-                                <div class="alert alert-info">
-                                    <ul class="list-unstyled">
-                                    {% for message in messages %}
-                                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
-                                    {% endfor %}
-                                    </ul>
-                                </div>
+                                <ul class="list-unstyled">
+                                {% for message in messages %}
+                                    <li{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>{{ message|safe }}</li>
+                                {% endfor %}
+                                </ul>
                             </div>
                         </div>
                     {% endif %}
