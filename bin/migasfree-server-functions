@@ -75,7 +75,7 @@ function verify_dependencies
 function configure_web_app
 {
     _CODE="from migasfree.server.functions import config_apache; config_apache();"
-    python -c "$_CODE"
+    DJANGO_SETTINGS_MODULE=migasfree.settings.production python -c "$_CODE"
     if [ $? -ne 0 ]
     then
         echo "Problem found configuring web app in server."
@@ -135,7 +135,7 @@ function test_app
 
 function create_server_keys
 {
-    python -c "from migasfree.server.security import create_keys_server; create_keys_server();"
+    DJANGO_SETTINGS_MODULE=migasfree.settings.production python -c "from migasfree.server.security import create_keys_server; create_keys_server();"
     if [ $? -ne 0 ]
     then
         echo "Problem found creating server keys. Server not operative."
