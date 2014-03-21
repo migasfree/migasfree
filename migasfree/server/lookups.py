@@ -45,6 +45,12 @@ class AttributeLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
+    def get_objects(self, ids):
+        return Attribute.objects.filter(pk__in=ids).order_by(
+            'property_att',
+            'value'
+        )
+
 
 class PackageLookup(LookupChannel):
     model = Package
@@ -63,6 +69,9 @@ class PackageLookup(LookupChannel):
 
     def can_add(self, user, model):
         return False
+
+    def get_objects(self, ids):
+        return Package.objects.filter(pk__in=ids).order_by('name')
 
 
 class TagLookup(LookupChannel):
@@ -91,6 +100,12 @@ class TagLookup(LookupChannel):
 
     def can_add(self, user, model):
         return False
+
+    def get_objects(self, ids):
+        return Attribute.objects.filter(pk__in=ids).order_by(
+            'property_att',
+            'value'
+        )
 
 
 class DeviceLogicalLookup(LookupChannel):
