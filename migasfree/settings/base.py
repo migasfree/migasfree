@@ -12,6 +12,8 @@ import os
 import django
 import django.conf.global_settings as DEFAULT_SETTINGS
 
+from django.contrib.messages import constants as message_constants
+
 from .migasfree import BASE_DIR, MIGASFREE_TMP_DIR
 
 if django.VERSION < (1, 6, 0, 'final'):
@@ -98,6 +100,10 @@ TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
 DEFAULT_CHARSET = 'utf-8'
 
 ROOT_URLCONF = 'migasfree.urls'
+
+MESSAGE_TAGS = {
+    message_constants.ERROR: 'danger'
+}
 
 INSTALLED_APPS = (
     'django.contrib.auth',
