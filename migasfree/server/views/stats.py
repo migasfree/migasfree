@@ -17,7 +17,8 @@ from migasfree.server.models import (
     Computer,
     Schedule,
     ScheduleDelay,
-    Login
+    Login,
+    UserProfile
 )
 
 
@@ -317,7 +318,8 @@ def monthly_updated(request):
 
 @login_required
 def delay_schedule(request):
-    title = _("Provided Computers / Delay")
+    current_version = UserProfile.objects.get(id=request.user.id).version
+    title = _("Provided Computers / Delay") + ' [' + current_version.name + ']'
 
     data = []
     maximum_delay = 0
@@ -338,6 +340,7 @@ def delay_schedule(request):
 
             value = Login.objects.filter(
                 Q(attributes__id__in=lst_attributes)
+                & Q(computer__version=current_version.id)
             ).values('computer_id').annotate(lastdate=Max('date')).count()
             d = delay.delay
 
