@@ -87,6 +87,13 @@ def create_physical_repository(request, repo):
     _msg.delete()  # end of process -> message server erased
 
     if _run_err != '':
-        return messages.error(request, _run_err.decode("utf-8"))
+        _msg_level = messages.ERROR
+        _ret = _run_err.decode("utf-8")
+    else:
+        _msg_level = messages.SUCCESS
+        _ret = _('Added packages:') + '<br />' + _ret
 
-    return messages.success(request, _('Added packages:') + '<br />' + _ret)
+    if hasattr(request, 'META'):
+        return messages.add_message(request, _msg_level, _ret)
+    else:
+        return _ret
