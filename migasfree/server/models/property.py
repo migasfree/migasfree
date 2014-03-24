@@ -14,9 +14,11 @@ class Property(models.Model, MigasLink):
         ('R', _('ADDS RIGHT')),
     )
 
+    PREFIX_LEN = 3
+
     prefix = models.CharField(
         _("prefix"),
-        max_length=3,
+        max_length=PREFIX_LEN,
         unique=True
     )
 
