@@ -19,10 +19,13 @@ class AttributeLookup(LookupChannel):
 
     def get_query(self, q, request):
         prps = Property.objects.all().values_list('prefix', flat=True)
-        if q[0:3].upper() in (prop.upper() for prop in prps) and len(q) > 4:
+        if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
+        and len(q) > (Property.PREFIX_LEN + 1):
             return Attribute.objects.filter(
-                Q(property_att__prefix__icontains=q[0:3])
-            ).filter(Q(value__icontains=q[4:])).order_by('value')
+                Q(property_att__prefix__icontains=q[0:Property.PREFIX_LEN])
+            ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])).order_by(
+                'value'
+            )
         else:
             return Attribute.objects.filter(
                 Q(value__icontains=q) | Q(description__icontains=q)
