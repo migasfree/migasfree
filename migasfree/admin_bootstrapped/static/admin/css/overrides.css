@@ -66,3 +66,8 @@ td.action-checkbox {
 .tooltip.in {opacity: 1} /* Hard to see against black text otherwise */
 
 #result_list {clear: both;}
+
+.has-error .control-label label,
+.has-error .help-inline {
+    color: #a94442 !important;
+}
