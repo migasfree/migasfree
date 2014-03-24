@@ -1058,7 +1058,11 @@ def create_repositories_package(packagename, versionname):
         package = Package.objects.get(name=packagename, version=o_version)
         qset = Repository.objects.filter(packages__id=package.id)
         for repo in qset:
-            create_physical_repository(repo)
+            create_physical_repository(
+                {},  # without request object
+                repo,
+                repo.packages.all().values_list('id', flat=True)
+            )
     except:
         pass
 
