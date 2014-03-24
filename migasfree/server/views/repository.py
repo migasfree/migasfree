@@ -8,56 +8,52 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import Version, MessageServer, Package
+from migasfree.server.models import Version, Package
 from migasfree.server.functions import run_in_server
 
 
-def create_physical_repository(request, repo):
+def create_physical_repository(request, repo, packages):
     """
     Creates the repository metadata.
     repo = a Repository object
+    packages = a packages_id list
     """
-    _msg = MessageServer()
-    _msg.text = _("Creating repository %s...") % repo.name
-    _msg.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    _msg.save()
-
-    # first, remove it
-    shutil.rmtree(os.path.join(
+    _tmp_path = os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
-        repo.version.pms.slug,
-        repo.name
-    ), ignore_errors=True)
-
-    _path_stores = os.path.join(
+        'TMP'
+    )
+    _stores_path = os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
         'STORES'
     )
-    _path_tmp = os.path.join(
+    _slug_tmp_path = os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
         'TMP',
         repo.version.pms.slug
     )
-    if _path_tmp.endswith('/'):
-        # remove trailing slash for replacing in template
-        _path_tmp = _path_tmp[:-1]
 
-    _pkg_path = os.path.join(
-        _path_tmp,
+    if _slug_tmp_path.endswith('/'):
+        # remove trailing slash for replacing in template
+        _slug_tmp_path = _slug_tmp_path[:-1]
+
+    _pkg_tmp_path = os.path.join(
+        _slug_tmp_path,
         repo.name,
         'PKGS'
     )
-    if not os.path.exists(_pkg_path):
-        os.makedirs(_pkg_path)
+    if not os.path.exists(_pkg_tmp_path):
+        os.makedirs(_pkg_tmp_path)
 
-    for _pkg in repo.packages.all():
-        _dst = os.path.join(_path_tmp, repo.name, 'PKGS')
+    _ret = ''
+    for _pkg_id in packages:
+        _pkg = Package.objects.get(id=_pkg_id)
+        _dst = os.path.join(_slug_tmp_path, repo.name, 'PKGS', _pkg.name)
         if not os.path.lexists(_dst):
             os.symlink(
-                os.path.join(_path_stores, _pkg.store.name, _pkg.name),
+                os.path.join(_stores_path, _pkg.store.name, _pkg.name),
                 _dst
             )
             _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) + '<br />'
@@ -66,25 +62,38 @@ def create_physical_repository(request, repo):
     _run_err = run_in_server(
         repo.version.pms.createrepo.replace(
             '%REPONAME%', repo.name
-        ).replace('%PATH%', _path_tmp)
+        ).replace('%PATH%', _slug_tmp_path)
     )["err"]
 
-    _source = os.path.join(
+    # remove original repository before move temporal
+    shutil.rmtree(os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
-        'TMP'
+        repo.version.pms.slug,
+        repo.name
+    ), ignore_errors=True)
+
+    # move temporal contents to original repository
+    _source = os.path.join(
+        _tmp_path,
+        'REPOSITORIES'
     )
     _destination = os.path.join(
         settings.MIGASFREE_REPO_DIR,
-        repo.version.name
+        repo.version.name,
+        'REPOSITORIES'
     )
-    for _file in os.listdir(_source):
-        _src = os.path.join(_source, _file)
-        if not os.path.exists(_src):
-            shutil.move(_src, _destination)
-    shutil.rmtree(_path_tmp)
-
-    _msg.delete()  # end of process -> message server erased
+    for src_dir, dirs, files in os.walk(_source):
+        dst_dir = src_dir.replace(_source, _destination)
+        if not os.path.exists(dst_dir):
+            os.mkdir(dst_dir)
+        for file_ in files:
+            src_file = os.path.join(src_dir, file_)
+            dst_file = os.path.join(dst_dir, file_)
+            if os.path.exists(dst_file):
+                os.remove(dst_file)
+            shutil.move(src_file, dst_dir)
+    shutil.rmtree(_tmp_path)
 
     if _run_err != '':
         _msg_level = messages.ERROR
