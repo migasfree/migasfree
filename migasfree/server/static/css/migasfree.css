@@ -93,6 +93,14 @@ td.nowrap {
     white-space: nowrap;
 }
 
+.boolean-yes {
+    color: #1D9E74;
+}
+
+.boolean-no {
+    color: #f00;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
