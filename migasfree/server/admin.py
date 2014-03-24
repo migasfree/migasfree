@@ -19,7 +19,7 @@ from migasfree.middleware import threadlocals
 from migasfree.server.models import *
 from migasfree.server.views.repository import create_physical_repository
 
-from .functions import compare_values
+from .functions import compare_values, trans
 
 #AJAX_SELECT
 from ajax_select import make_ajax_form
@@ -43,6 +43,16 @@ class MigasAdmin(admin.ModelAdmin):
         #models.DateField: {'widget': DateInput},
         models.CharField: {'widget': TextInput},
     }
+
+    def boolean_field(self, field):
+        if field:
+            ret = '<span class="fa fa-check boolean-yes">' \
+                + '<span class="sr-only">%s</span></span>' % trans('Yes')
+        else:
+            ret = '<span class="fa fa-times boolean-no">' \
+                + '<span class="sr-only">%s</span></span>' % trans('No')
+
+        return ret
 
 
 def add_computer_search_fields(fields_list):
@@ -73,8 +83,20 @@ class ExtraThinTextarea(forms.Textarea):
 
 
 class VersionAdmin(MigasAdmin):
-    list_display = ('link', 'platform', 'pms', 'computerbase', 'autoregister')
+    list_display = (
+        'link',
+        'platform',
+        'pms',
+        'computerbase',
+        'my_autoregister'
+    )
     actions = None
+
+    def my_autoregister(self, obj):
+        return self.boolean_field(obj.autoregister)
+
+    my_autoregister.allow_tags = True
+    my_autoregister.short_description = _('autoregister')
 
 admin.site.register(Version, VersionAdmin)
 
@@ -103,8 +125,20 @@ admin.site.register(Update, UpdateAdmin)
 
 
 class CheckingAdmin(MigasAdmin):
-    list_display = ('name', 'active', 'alert')
+    list_display = ('name', 'my_active', 'my_alert')
     list_filter = ('active', )
+
+    def my_active(self, obj):
+        return self.boolean_field(obj.active)
+
+    my_active.allow_tags = True
+    my_active.short_description = _('active')
+
+    def my_alert(self, obj):
+        return self.boolean_field(obj.alert)
+
+    my_alert.allow_tags = True
+    my_alert.short_description = _('alert')
 
 admin.site.register(Checking, CheckingAdmin)
 
@@ -231,11 +265,23 @@ admin.site.register(Store, StoreAdmin)
 
 
 class PropertyAdmin(MigasAdmin):
-    list_display = ('prefix', 'name', 'active', 'kind', 'auto',)
+    list_display = ('prefix', 'name', 'my_active', 'kind', 'my_auto',)
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'prefix',)
     actions = None
+
+    def my_active(self, obj):
+        return self.boolean_field(obj.active)
+
+    my_active.allow_tags = True
+    my_active.short_description = _('active')
+
+    def my_auto(self, obj):
+        return self.boolean_field(obj.auto)
+
+    my_auto.allow_tags = True
+    my_auto.short_description = _('auto')
 
 admin.site.register(Property, PropertyAdmin)
 
@@ -296,7 +342,7 @@ admin.site.register(User, UserAdmin)
 class NotificationAdmin(MigasAdmin):
     list_display = (
         'id',
-        'checked',
+        'my_checked',
         'date',
         'notification',
     )
@@ -304,6 +350,12 @@ class NotificationAdmin(MigasAdmin):
     ordering = ('date',)
     search_fields = ('date', 'notification',)
     readonly_fields = ('date', 'notification',)
+
+    def my_checked(self, obj):
+        return self.boolean_field(obj.checked)
+
+    my_checked.allow_tags = True
+    my_checked.short_description = _('checked')
 
     actions = ['checked_ok']
 
@@ -324,7 +376,7 @@ class ErrorAdmin(MigasAdmin):
         'id',
         'computer_link',
         'version',
-        'checked',
+        'my_checked',
         'date',
         'truncate_error',
     )
@@ -334,6 +386,12 @@ class ErrorAdmin(MigasAdmin):
     search_fields = add_computer_search_fields(['date', 'error'])
     readonly_fields = ('computer_link', 'version', 'date', 'error')
     exclude = ('computer',)
+
+    def my_checked(self, obj):
+        return self.boolean_field(obj.checked)
+
+    my_checked.allow_tags = True
+    my_checked.short_description = _('checked')
 
     actions = ['checked_ok']
 
@@ -382,7 +440,7 @@ class FaultAdmin(MigasAdmin):
         'id',
         'computer_link',
         'version',
-        'checked',
+        'my_checked',
         'date',
         'text',
         'faultdef',
@@ -393,6 +451,12 @@ class FaultAdmin(MigasAdmin):
     search_fields = add_computer_search_fields(['date', 'faultdef__name'])
     readonly_fields = ('computer_link', 'faultdef', 'version', 'date', 'text')
     exclude = ('computer',)
+
+    def my_checked(self, obj):
+        return self.boolean_field(obj.checked)
+
+    my_checked.allow_tags = True
+    my_checked.short_description = _('checked')
 
     actions = ['checked_ok']
 
@@ -410,7 +474,7 @@ admin.site.register(Fault, FaultAdmin)
 
 class FaultDefAdmin(MigasAdmin):
     form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
-    list_display = ('name', 'active', 'list_attributes', 'list_users')
+    list_display = ('name', 'my_active', 'list_attributes', 'list_users')
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'function',)
@@ -429,6 +493,12 @@ class FaultDefAdmin(MigasAdmin):
             'fields': ('users',)
         }),
     )
+
+    def my_active(self, obj):
+        return self.boolean_field(obj.active)
+
+    my_active.allow_tags = True
+    my_active.short_description = _('active')
 
 admin.site.register(FaultDef, FaultDefAdmin)
 
@@ -550,7 +620,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         'excludes': 'attribute'
     })
 
-    list_display = ('name', 'active', 'date', 'timeline',)
+    list_display = ('name', 'my_active', 'date', 'timeline',)
     list_select_related = ('schedule',)
     list_filter = ('active',)
     ordering = ('name',)
@@ -581,6 +651,12 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': ('attributes', 'excludes')
         }),
     )
+
+    def my_active(self, obj):
+        return self.boolean_field(obj.active)
+
+    my_active.allow_tags = True
+    my_active.short_description = _('active')
 
     # QuerySet filter by user version.
     def queryset(self, request):
