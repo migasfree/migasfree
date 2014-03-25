@@ -47,15 +47,9 @@ class Device(models.Model):
 
     def datadict(self):
         return {
-            'device_id': self.id,
-            'device': self.name,
-            'connection': {
-                'name': self.connection.name,
-                'data': json.loads(self.data)
-            },
-            'type': self.connection.devicetype.name,
-            'manufacturer': self.model.manufacturer.name,
+            'name': self.name,
             'model': self.model.name,
+            self.connection.name: json.loads(self.data),
         }
 
     def __unicode__(self):

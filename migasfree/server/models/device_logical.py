@@ -17,29 +17,36 @@ class DeviceLogical(models.Model):
         verbose_name=_("feature")
     )
 
-    def datadict(self, oVersion):
+    def datadict(self, version):
         dictdevice = self.device.datadict()
         try:
-            oDeviceDriver = DeviceDriver.objects.filter(
-                version__id=oVersion.id,
+            device_driver = DeviceDriver.objects.filter(
+                version__id=version.id,
                 model__id=self.device.model.id,
                 feature__id=self.feature.id
             )[0]
-            if oDeviceDriver:
-                dictdriver = oDeviceDriver.datadict()
+            if device_driver:
+                dictdriver = device_driver.datadict()
         except:
             dictdriver = {}
 
-        return {
-            "devicelogical_id": self.id,
-            "device": dictdevice,
-            "driver": dictdriver
+        ret = {
+            self.device.connection.devicetype.name: {
+                'feature': self.feature.name,
+                'id': self.id,
+            }
         }
+        for key, value in dictdevice.items():
+            ret[self.device.connection.devicetype.name][key] = value
+        for key, value in dictdriver.items():
+            ret[self.device.connection.devicetype.name][key] = value
+
+        return ret
 
     def computers_link(self):
         ret = ""
-        for c in self.computer_set.all():
-            ret += c.link() + " "
+        for computer in self.computer_set.all():
+            ret += computer.link() + " "
         return ret
 
     computers_link.allow_tags = True

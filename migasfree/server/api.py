@@ -577,13 +577,15 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             )
             for d in lst_diff:
                 try:
-                    device = DeviceLogical.objects.get(id=d)
-                    lst_dev_remove.append(device.datadict(o_computer.version))
+                    device_logical = DeviceLogical.objects.get(id=d)
+                    lst_dev_remove.append(device_logical.id)
                 except:
                     pass
 
-            for device in o_computer.devices_logical.all():
-                lst_dev_install.append(device.datadict(o_computer.version))
+            for device_logical in o_computer.devices_logical.all():
+                lst_dev_install.append(
+                    device_logical.datadict(o_computer.version)
+                )
 
         retdata = {}
         retdata["faultsdef"] = lst_faultsdef

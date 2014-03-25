@@ -37,14 +37,13 @@ class DeviceDriver(models.Model):
     def datadict(self):
         lst_install = []
         for p in self.install.replace("\r", " ").replace("\n", " ").split(" "):
-            if p != "" and p != 'None':
+            if p != '' and p != 'None':
                 lst_install.append(p)
 
-        return {'driver_id': self.id,
+        return {
             'driver': self.name,
-            'feature': self.feature.name,
             'packages': lst_install,
-             }
+        }
 
     def save(self, *args, **kwargs):
         self.install = self.install.replace("\r\n", "\n")
