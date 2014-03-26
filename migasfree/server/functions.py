@@ -143,7 +143,7 @@ class Mmcheck():
         return vl2s(self.field)
 
     def changed(self):
-        return not self.mms() == str(self.field_copy)
+        return self.mms() != str(self.field_copy)
 
 
 def horizon(mydate, delay):
