@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models.signals import m2m_changed
 from django.utils.translation import ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
@@ -195,3 +196,12 @@ class Computer(models.Model, MigasLink):
         verbose_name = _("Computer")
         verbose_name_plural = _("Computers")
         permissions = (("can_save_computer", "Can save Computer"),)
+
+
+def computers_changed(sender, **kwargs):
+    if kwargs['action'] == 'post_add':
+        print sender, kwargs
+        for computer in Computer.objects.filter(pk__in=kwargs['pk_set']):
+            computer.remove_device_copy(kwargs['instance'].id)
+
+m2m_changed.connect(computers_changed, sender=Computer.devices_logical.through)
