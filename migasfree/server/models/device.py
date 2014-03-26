@@ -42,9 +42,6 @@ class Device(models.Model):
         if is_new:
             add_default_device_logical(self)
 
-        for device_logical in self.devicelogical_set.all():
-            device_logical.reinstall()
-
     def datadict(self):
         return {
             'name': self.name,
