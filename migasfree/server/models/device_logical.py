@@ -54,11 +54,6 @@ class DeviceLogical(models.Model):
 
     def save(self, *args, **kwargs):
         super(DeviceLogical, self).save(*args, **kwargs)
-        self.reinstall()
-
-    def reinstall(self):
-        for computer in self.computer_set.all():
-            computer.remove_device_copy(self.id)
 
     def __unicode__(self):
         return "%s-%s-%s" % (
