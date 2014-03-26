@@ -665,7 +665,7 @@ def upload_devices_changes(request, name, uuid, computer, data):
     return ret
 
 
-def register_computer(request, name, uuid, o_computer, data):
+def register_computer(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     user = auth.authenticate(
@@ -673,46 +673,46 @@ def register_computer(request, name, uuid, o_computer, data):
         password=data.get('password')
     )
 
-    platform = data.get('platform', 'unknown')
-    version = data.get('version', 'unknown')
-    pms = data.get('pms', 'apt-get')
+    platform_name = data.get('platform', 'unknown')
+    version_name = data.get('version', 'unknown')
+    pms_name = data.get('pms', 'apt-get')
 
     notify_platform = False
     notify_version = False
 
     # Autoregister Platform
-    if not Platform.objects.filter(name=platform):
+    if not Platform.objects.filter(name=platform_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_platform"):
                 return return_message(cmd, error(CANNOTREGISTER))
 
         # if all ok we add the platform
-        o_platform = Platform()
-        o_platform.name = platform
-        o_platform.save()
+        platform = Platform()
+        platform.name = platform_name
+        platform.save()
 
         notify_platform = True
 
     # Autoregister Version
-    if not Version.objects.filter(name=version):
+    if not Version.objects.filter(name=version_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_version"):
                 return return_message(cmd, error(CANNOTREGISTER))
 
         # if all ok we add the version
-        o_version = Version()
-        o_version.name = version
-        o_version.pms = Pms.objects.get(name=pms)
-        o_version.platform = Platform.objects.get(name=platform)
-        o_version.autoregister = settings.MIGASFREE_AUTOREGISTER
-        o_version.save()
+        version = Version()
+        version.name = version_name
+        version.pms = Pms.objects.get(name=pms_name)
+        version.platform = Platform.objects.get(name=platform_name)
+        version.autoregister = settings.MIGASFREE_AUTOREGISTER
+        version.save()
 
         notify_version = True
 
     # REGISTER COMPUTER
     # Check Version
     try:
-        o_version = Version.objects.get(name=data['version'])
+        version = Version.objects.get(name=version_name)
         # if not autoregister, check that the user can save computer
         if not o_version.autoregister:
             if not user or not user.has_perm("server.can_save_computer"):
@@ -721,21 +721,21 @@ def register_computer(request, name, uuid, o_computer, data):
         # ALL IS OK
         # 1.- Add Computer
         o_computer = check_computer(
-            o_computer,
+            computer,
             name,
-            data.get('version'),
+            version_name,
             data.get('ip', ''),
             uuid
         )
 
         if notify_platform:
-            add_notification_platform(platform, o_computer)
+            add_notification_platform(platform_name, o_computer)
 
         if notify_version:
-            add_notification_version(version, pms, o_computer)
+            add_notification_version(version_name, pms_name, o_computer)
 
         # 2.- returns keys to client
-        return return_message(cmd, get_keys_to_client(data['version']))
+        return return_message(cmd, get_keys_to_client(version_name))
     except:
         return return_message(cmd, error(USERHAVENOTPERMISSION))
 
