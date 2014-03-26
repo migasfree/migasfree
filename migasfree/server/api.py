@@ -569,23 +569,30 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             o_computer.devices_logical,
             o_computer.devices_copy
         )
-        if chk_devices.changed() is True:
-            #remove the devices
+        logger.debug('devices_logical %s' % vl2s(o_computer.devices_logical))
+        logger.debug('devices_copy %s' % o_computer.devices_copy)
+        if chk_devices.changed():
+            # remove devices
             lst_diff = list_difference(
                 s2l(o_computer.devices_copy),
                 s2l(chk_devices.mms())
             )
+            logger.debug('list diff: %s' % lst_diff)
             for d in lst_diff:
                 try:
                     device_logical = DeviceLogical.objects.get(id=d)
-                    lst_dev_remove.append(device_logical.id)
+                    lst_dev_remove.append({
+                        device_logical.device.connection.devicetype.name: device_logical.id
+                    })
                 except:
                     pass
 
+            # install devices
             for device_logical in o_computer.devices_logical.all():
                 lst_dev_install.append(
                     device_logical.datadict(o_computer.version)
                 )
+        logger.debug('remove devices: %s' % lst_dev_remove)
 
         retdata = {}
         retdata["faultsdef"] = lst_faultsdef
@@ -650,18 +657,20 @@ def upload_computer_faults(request, name, uuid, computer, data):
 
 #DEVICES CHANGES
 def upload_devices_changes(request, name, uuid, computer, data):
+    logger.debug('upload_devices_changes data: %s' % data)
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        for devicelogical_id in data.get("installed", []):
+        for devicelogical_id in data.get(cmd).get("installed", []):
             computer.append_device_copy(devicelogical_id)
 
-        for devicelogical_id in data.get("removed", []):
+        for devicelogical_id in data.get(cmd).get("removed", []):
             computer.remove_device_copy(devicelogical_id)
 
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
 
+    logger.debug('upload_devices_changes ret: %s' % ret)
     return ret
 
 
