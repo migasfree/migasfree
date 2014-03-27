@@ -723,7 +723,7 @@ def register_computer(request, name, uuid, computer, data):
     try:
         version = Version.objects.get(name=version_name)
         # if not autoregister, check that the user can save computer
-        if not o_version.autoregister:
+        if not version.autoregister:
             if not user or not user.has_perm("server.can_save_computer"):
                 return return_message(cmd, error(CANNOTREGISTER))
 
