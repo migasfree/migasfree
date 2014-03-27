@@ -578,20 +578,32 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 s2l(chk_devices.mms())
             )
             logger.debug('list diff: %s' % lst_diff)
-            for d in lst_diff:
+            for item_id in lst_diff:
                 try:
-                    device_logical = DeviceLogical.objects.get(id=d)
+                    device_logical = DeviceLogical.objects.get(id=item_id)
                     lst_dev_remove.append({
-                        device_logical.device.connection.devicetype.name: device_logical.id
+                        device_logical.device.connection.devicetype.name: item_id
                     })
+                except:
+                    # maybe device_logical has been deleted
+                    # FIXME harcoded values
+                    lst_dev_remove.append({'PRINTER': item_id})
+
+            # install devices
+            lst_diff = list_difference(
+                s2l(chk_devices.mms()),
+                s2l(o_computer.devices_copy)
+            )
+            for item_id in lst_diff:
+                try:
+                    device_logical = DeviceLogical.objects.get(id=item_id)
+                    lst_dev_install.append(
+                        device_logical.datadict(o_computer.version)
+                    )
                 except:
                     pass
 
-            # install devices
-            for device_logical in o_computer.devices_logical.all():
-                lst_dev_install.append(
-                    device_logical.datadict(o_computer.version)
-                )
+        logger.debug('install devices: %s' % lst_dev_install)
         logger.debug('remove devices: %s' % lst_dev_remove)
 
         retdata = {}
