@@ -120,18 +120,20 @@ class Computer(models.Model, MigasLink):
     def remove_device_copy(self, devicelogical_id):
         try:
             lst = s2l(self.devices_copy)
-            lst.remove(devicelogical_id)
-            self.devices_copy = l2s(lst)
-            self.save()
+            if devicelogical_id in lst:
+                lst.remove(devicelogical_id)
+                self.devices_copy = l2s(lst)
+                self.save()
         except:
             pass
 
     def append_device_copy(self, devicelogical_id):
         try:
             lst = s2l(self.devices_copy)
-            lst.append(devicelogical_id)
-            self.devices_copy = l2s(lst)
-            self.save()
+            if devicelogical_id not in lst:
+                lst.append(devicelogical_id)
+                self.devices_copy = l2s(lst)
+                self.save()
         except:
             pass
 
