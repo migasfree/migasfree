@@ -202,7 +202,6 @@ class Computer(models.Model, MigasLink):
 
 def computers_changed(sender, **kwargs):
     if kwargs['action'] == 'post_add':
-        print sender, kwargs
         for computer in Computer.objects.filter(pk__in=kwargs['pk_set']):
             computer.remove_device_copy(kwargs['instance'].id)
 
