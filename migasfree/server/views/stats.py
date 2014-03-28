@@ -318,6 +318,7 @@ def monthly_updated(request):
 
 @login_required
 def delay_schedule(request):
+    title = _("Provided Computers / Delay")
     current_version = UserProfile.objects.get(id=request.user.id).version
 
     if current_version is None:
@@ -330,7 +331,7 @@ def delay_schedule(request):
             }
         )
 
-    title = _("Provided Computers / Delay") + ' [%s]' % current_version.name
+     title += ' [%s]' % current_version.name
 
     data = []
     maximum_delay = 0
