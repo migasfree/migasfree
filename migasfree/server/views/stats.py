@@ -331,7 +331,7 @@ def delay_schedule(request):
             }
         )
 
-     title += ' [%s]' % current_version.name
+    title += ' [%s]' % current_version.name
 
     data = []
     maximum_delay = 0
