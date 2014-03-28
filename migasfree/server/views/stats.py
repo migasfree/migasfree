@@ -319,7 +319,18 @@ def monthly_updated(request):
 @login_required
 def delay_schedule(request):
     current_version = UserProfile.objects.get(id=request.user.id).version
-    title = _("Provided Computers / Delay") + ' [' + current_version.name + ']'
+
+    if current_version is None:
+        return render(
+            request,
+            'info.html',
+            {
+                'title': title,
+                'contentpage': _('Choose a version before continue')
+            }
+        )
+
+    title = _("Provided Computers / Delay") + ' [%s]' % current_version.name
 
     data = []
     maximum_delay = 0
