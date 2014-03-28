@@ -50,7 +50,11 @@ class Device(models.Model):
         }
 
     def __unicode__(self):
-        return u'%s-%s-%s' % (self.name, self.model.name, self.connection.name)
+        return u'%s__%s__%s' % (
+            self.name,
+            self.model.name,
+            self.connection.name
+        )
 
     class Meta:
         app_label = 'server'

@@ -56,10 +56,11 @@ class DeviceLogical(models.Model):
         super(DeviceLogical, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return "%s-%s-%s" % (
+        return '%s__%s__%s__%d' % (
             self.device.name,
             self.device.model.name,
-            self.feature.name
+            self.feature.name,
+            self.id
         )
 
     class Meta:
