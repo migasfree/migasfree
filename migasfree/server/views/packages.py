@@ -19,10 +19,21 @@ logger = logging.getLogger('migasfree')
 @login_required
 def info(request, package):  # package info
     #logger.debug('request:' + str(request))
+
     if request.GET.get('version'):
         version = get_object_or_404(Version, name=request.GET.get('version'))
     else:
         version = get_object_or_404(UserProfile, id=request.user.id).version
+
+    if version is None:
+        return render(
+            request,
+            'info.html',
+            {
+                'title': _("Package Information"),
+                'contentpage': _('Choose a version before continue')
+            }
+        )
 
     logger.debug('version: ' + version.name)
 
