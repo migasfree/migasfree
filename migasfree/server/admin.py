@@ -223,10 +223,26 @@ class DeviceAdmin(MigasAdmin):
         'data',
     )
 
-    inlines = [DeviceLogicalInline, ]
+    inlines = [DeviceLogicalInline]
 
     class Media:
         js = ('js/device_admin.js',)
+
+    def save_related(self, request, form, formsets, change):
+        super(type(self), self).save_related(request, form, formsets, change)
+        device = form.instance
+
+        for feature in DeviceFeature.objects.filter(
+            devicedriver__model__id=device.model.id
+        ).distinct():
+            if DeviceLogical.objects.filter(
+                Q(device__id=device.id) & Q(feature=feature)
+            ).count() == 0:
+                logical = device.devicelogical_set.create(
+                    device=device,
+                    feature=feature
+                )
+                logical.save()
 
 admin.site.register(Device, DeviceAdmin)
 
