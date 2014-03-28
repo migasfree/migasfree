@@ -94,8 +94,14 @@ class Version(models.Model, MigasLink):
         super(Version, self).delete(*args, **kwargs)
 
     def link(self):
+        current_version = user_version()
+        if current_version is None:
+            current_version_id = 0
+        else:
+            current_version_id = current_version.id
+
         return super(Version, self).link(
-            default=(self.id != user_version().id)
+            default=(self.id != current_version_id)
         )
 
     link.allow_tags = True
