@@ -6,7 +6,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models import DeviceConnection, DeviceModel
-from migasfree.server.functions import add_default_device_logical
 
 
 class Device(models.Model):
@@ -34,13 +33,6 @@ class Device(models.Model):
         blank=False,
         default="{}"
     )
-
-    def save(self, *args, **kwargs):
-        is_new = self.pk is None
-        super(Device, self).save(*args, **kwargs)
-
-        if is_new:
-            add_default_device_logical(self)
 
     def datadict(self):
         return {
