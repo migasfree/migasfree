@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-12 21:29+0100\n"
-"PO-Revision-Date: 2014-02-12 21:34+0100\n"
+"POT-Creation-Date: 2014-03-28 20:10+0100\n"
+"PO-Revision-Date: 2014-03-28 20:16+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: \n"
@@ -53,7 +53,7 @@ msgstr "Lo sentimos, pero la página solicitada no pudo ser encontrada."
 #: admin_bootstrapped/templates/registration/password_reset_confirm.html:6
 #: admin_bootstrapped/templates/registration/password_reset_done.html:6
 #: admin_bootstrapped/templates/registration/password_reset_form.html:6
-#: server/templates/includes/breadcrumb.html:7
+#: server/templates/includes/breadcrumb.html:6
 msgid "Home"
 msgstr "Inicio"
 
@@ -148,7 +148,7 @@ msgstr "Sitio de administración de Django"
 #: admin_bootstrapped/templates/admin/index.html:65
 #: admin_bootstrapped/templates/admin/cms/page/change_form.html:80
 #: admin_bootstrapped/templates/admin/cms/page/plugin_change_form.html:87
-#: server/templates/includes/breadcrumb.html:23
+#: server/templates/includes/breadcrumb.html:26
 msgid "Add"
 msgstr "Añadir"
 
@@ -157,7 +157,6 @@ msgstr "Añadir"
 #: admin_bootstrapped/templates/admin/cms/page/change_form.html:112
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:22
 #: admin_bootstrapped/templates/admin/filer/image/change_form.html:15
-#: server/templates/admin/change_form.html:35
 msgid "History"
 msgstr "Historial"
 
@@ -167,12 +166,11 @@ msgstr "Historial"
 #: admin_bootstrapped/templates/admin/edit_inline/tabular.html:33
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:23
 #: admin_bootstrapped/templates/admin/filer/image/change_form.html:16
-#: server/templates/admin/change_form.html:37
 msgid "View on site"
 msgstr "Ver en el sitio"
 
 #: admin_bootstrapped/templates/admin/change_form.html:69
-#: server/templates/admin/change_form.html:56
+#: server/templates/admin/change_form.html:46
 msgid "Fields in <strong>bold</strong> are required."
 msgstr "Los campos en <strong>negrita</strong> son obligatorios."
 
@@ -183,7 +181,7 @@ msgstr "Los campos en <strong>negrita</strong> son obligatorios."
 #: admin_bootstrapped/templates/admin/cms/page/change_form.html:147
 #: admin_bootstrapped/templates/admin/cms/page/plugin_change_form.html:101
 #: admin_bootstrapped/templates/registration/password_change_form.html:20
-#: server/templates/admin/change_form.html:61
+#: server/templates/admin/change_form.html:51
 #: server/templates/admin/login.html:27
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
@@ -247,6 +245,8 @@ msgstr ""
 
 #: admin_bootstrapped/templates/admin/delete_confirmation.html:40
 #: admin_bootstrapped/templates/admin/delete_selected_confirmation.html:47
+#: server/templates/computer_confirm_delete.html:21
+#: server/templates/computer_confirm_delete_selected.html:21
 msgid "Yes, I'm sure"
 msgstr "Sí, estoy seguro"
 
@@ -326,9 +326,9 @@ msgid "Date/time"
 msgstr "Fecha/hora"
 
 #: admin_bootstrapped/templates/admin/object_history.html:25
-#: server/admin.py:370
-#: server/models/login.py:45
-#: server/models/user.py:25
+#: server/admin.py:427
+#: server/models/login.py:44
+#: server/models/user.py:26
 msgid "User"
 msgstr "Usuario"
 
@@ -367,8 +367,8 @@ msgstr "Mostrar todo"
 
 #: admin_bootstrapped/templates/admin/search_form.html:8
 #: admin_bootstrapped/templates/admin/search_form.html:13
-#: server/templates/base.html:113
-#: server/templates/base.html.py:115
+#: server/templates/base.html:130
+#: server/templates/base.html.py:132
 msgid "Search"
 msgstr "Buscar"
 
@@ -640,7 +640,7 @@ msgstr ""
 
 #: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:7
 msgid "Go back to root folder"
-msgstr ""
+msgstr "Volver a la carpeta principal"
 
 #: admin_bootstrapped/templates/admin/filer/breadcrumbs.html:7
 #: admin_bootstrapped/templates/admin/filer/folder/change_form.html:9
@@ -705,7 +705,7 @@ msgstr "Subir"
 
 #: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:79
 msgid "Go back to the parent folder"
-msgstr ""
+msgstr "Volver a la carpeta superior"
 
 #: admin_bootstrapped/templates/admin/filer/folder/directory_listing.html:81
 #: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:42
@@ -771,7 +771,7 @@ msgid "disabled"
 msgstr "deshabilitado"
 
 #: admin_bootstrapped/templates/admin/filer/folder/directory_table.html:78
-#: server/models/hw_node.py:46
+#: server/models/hw_node.py:48
 msgid "enabled"
 msgstr "habilitado"
 
@@ -801,7 +801,7 @@ msgstr "siguiente"
 
 #: admin_bootstrapped/templates/admin/filer/image/change_form.html:28
 msgid "Full size preview"
-msgstr ""
+msgstr "Previsualización a tamaño completo"
 
 #: admin_bootstrapped/templates/admin/filer/tools/search_form.html:8
 msgid "Enter your search phrase here"
@@ -813,7 +813,7 @@ msgstr "Comprobar para"
 
 #: admin_bootstrapped/templates/admin/filer/tools/search_form.html:11
 msgid "limit the search to current folder"
-msgstr ""
+msgstr "limitar la búsqueda a la carpeta actual"
 
 #: admin_bootstrapped/templates/admin/filer/tools/search_form.html:12
 msgid "search the current folder"
@@ -867,7 +867,7 @@ msgstr "Loguearse de nuevo"
 #: admin_bootstrapped/templates/registration/password_change_form.html:8
 #: admin_bootstrapped/templates/registration/password_change_form.html:12
 #: admin_bootstrapped/templates/registration/password_change_form.html:13
-#: server/templates/base.html:145
+#: server/templates/base.html:162
 msgid "Password change"
 msgstr "Cambio de contraseña"
 
@@ -965,149 +965,182 @@ msgstr "Dirección de correo:"
 msgid "Reset my password"
 msgstr "Cambiar mi contraseña"
 
-#: server/admin.py:123
-#: server/models/computer.py:173
-#: server/models/device_logical.py:39
+#: server/admin.py:99
+#: server/models/version.py:51
+msgid "autoregister"
+msgstr "autoregistrado"
+
+#: server/admin.py:135
+#: server/admin.py:294
+#: server/admin.py:517
+#: server/admin.py:675
+#: server/models/checking.py:35
+#: server/models/fault_def.py:23
+#: server/models/property.py:44
+#: server/models/repository.py:69
+msgid "active"
+msgstr "habilitado"
+
+#: server/admin.py:141
+#: server/models/checking.py:40
+msgid "alert"
+msgstr "alerta"
+
+#: server/admin.py:162
+#: server/models/computer.py:199
+#: server/models/device_logical.py:53
+#: server/templates/computer_confirm_delete.html:9
+#: server/templates/computer_confirm_delete_selected.html:9
 #: server/templates/computer_hardware_extract.html:8
-#: server/templates/computer_hardware_resume.html:8
-#: server/templates/includes/mining_menu.html:9
-#: server/views/stats.py:83
-#: server/views/stats.py:135
+#: server/templates/computer_hardware_resume.html:7
+#: server/templates/includes/mining_menu.html:4
+#: server/views/stats.py:136
+#: server/views/stats.py:196
 msgid "Computers"
 msgstr "Ordenadores"
 
-#: server/admin.py:233
-#: server/admin.py:676
-msgid "Download"
-msgstr "Descargar"
+#: server/admin.py:300
+#: server/models/property.py:56
+msgid "auto"
+msgstr "automático"
 
-#: server/admin.py:243
-#: server/admin.py:666
-#: server/views/packages.py:45
-#: server/views/packages.py:75
-msgid "Package Information"
-msgstr "Información del paquete"
+#: server/admin.py:374
+#: server/admin.py:410
+#: server/admin.py:475
+#: server/models/error.py:27
+#: server/models/fault.py:32
+#: server/models/notification.py:21
+msgid "checked"
+msgstr "comprobado"
 
-#: server/admin.py:335
-#: server/admin.py:364
-#: server/admin.py:419
+#: server/admin.py:385
+#: server/admin.py:421
+#: server/admin.py:486
 msgid "Checking is O.K."
 msgstr "La comprobación es correcta"
 
-#: server/admin.py:375
+#: server/admin.py:432
 msgid "To check for me"
 msgstr "Para comprobar por mí"
 
-#: server/admin.py:376
+#: server/admin.py:433
 msgid "Assigned to me"
 msgstr "Asignado a mí"
 
-#: server/admin.py:377
+#: server/admin.py:434
 msgid "Assigned to others"
 msgstr "Asignado a otros"
 
-#: server/admin.py:378
+#: server/admin.py:435
 msgid "Not assigned"
 msgstr "No asignado"
 
-#: server/admin.py:436
-#: server/admin.py:573
+#: server/admin.py:503
+#: server/admin.py:665
 msgid "Atributtes"
 msgstr "Atributos"
 
-#: server/admin.py:440
-#: server/models/user.py:26
-#: server/templates/includes/config_menu.html:18
-#: server/templates/includes/config_menu.html:20
-#: server/templates/includes/mining_menu.html:10
+#: server/admin.py:507
+#: server/models/user.py:27
+#: server/templates/includes/config_menu.html:11
+#: server/templates/includes/mining_menu.html:5
 msgid "Users"
 msgstr "Usuarios"
 
-#: server/admin.py:480
-#: server/admin.py:555
-#: server/templates/includes/config_menu.html:6
+#: server/admin.py:554
+#: server/admin.py:647
 msgid "General"
 msgstr "General"
 
-#: server/admin.py:491
+#: server/admin.py:565
 msgid "Software"
 msgstr "Software"
 
-#: server/admin.py:495
-#: server/models/computer.py:165
-#: server/models/device.py:68
-#: server/templates/includes/config_menu.html:35
-#: server/templates/includes/config_menu.html:43
+#: server/admin.py:569
+#: server/models/computer.py:183
+#: server/models/device.py:54
+#: server/templates/base.html:90
+#: server/templates/includes/breadcrumb.html:17
+#: server/templates/includes/devices_menu.html:10
 msgid "Devices"
 msgstr "Dispositivos"
 
-#: server/admin.py:498
+#: server/admin.py:572
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: server/admin.py:558
-#: server/models/schedule.py:30
+#: server/admin.py:592
+#, python-format
+msgid "Delete selected %(verbose_name_plural)s"
+msgstr ""
+
+#: server/admin.py:650
+#: server/models/schedule.py:28
 msgid "Schedule"
 msgstr "Calendario"
 
-#: server/admin.py:561
-#: server/models/repository.py:119
+#: server/admin.py:653
+#: server/models/repository.py:125
 msgid "Packages"
 msgstr "Paquetes"
 
-#: server/admin.py:565
+#: server/admin.py:657
 msgid "Default"
 msgstr "Por defecto"
 
-#: server/admin.py:689
+#: server/admin.py:756
 msgid "Run Query"
 msgstr "Ejecutar consulta"
 
-#: server/errmfs.py:25
+#: server/errmfs.py:26
 msgid "User not authenticated"
 msgstr "Usuario no autenticado"
 
-#: server/errmfs.py:26
+#: server/errmfs.py:27
 msgid "User can not register computers"
 msgstr "El usuario no puede registrar ordenadores"
 
-#: server/errmfs.py:27
-msgid "Method GET not allowed"
-msgstr ""
-
 #: server/errmfs.py:28
+msgid "Method GET not allowed"
+msgstr "Método GET no permitido"
+
+#: server/errmfs.py:29
 msgid "Command not found"
 msgstr "Comando no encontrado"
 
-#: server/errmfs.py:29
+#: server/errmfs.py:30
 msgid "Signature is not valid"
 msgstr "La firma no es válida"
 
-#: server/errmfs.py:30
+#: server/errmfs.py:31
 msgid "Computer not found"
 msgstr "Ordenador no encontrado"
 
-#: server/errmfs.py:31
+#: server/errmfs.py:32
 msgid "Device not found"
 msgstr "Dispositivo no encontrado"
 
-#: server/errmfs.py:32
+#: server/errmfs.py:33
 msgid "Version not found"
 msgstr "Versión no encontrada"
 
-#: server/errmfs.py:33
+#: server/errmfs.py:34
 msgid "User have not permission"
 msgstr "El usuario no tiene permisos"
 
-#: server/errmfs.py:34
+#: server/errmfs.py:35
 msgid "Generic error"
 msgstr "Error genérico"
 
-#: server/errmfs.py:73
+#: server/errmfs.py:68
+msgid "Traceback"
+msgstr ""
+
+#: server/errmfs.py:79
 msgid "No errors"
 msgstr "Sin errores"
 
-#: server/errmfs.py:113
+#: server/errmfs.py:124
 msgid "Generic error in server"
 msgstr "Error genérico en el servidor"
 
@@ -1115,272 +1148,266 @@ msgstr "Error genérico en el servidor"
 msgid "Time:"
 msgstr "Hora:"
 
-#: server/models/attribute.py:13
+#: server/models/attribute.py:12
 msgid "Property of attribute"
 msgstr "Propiedad de atributo"
 
-#: server/models/attribute.py:17
+#: server/models/attribute.py:16
 #: server/models/hw_configuration.py:22
 msgid "value"
 msgstr "valor"
 
-#: server/models/attribute.py:22
-#: server/models/checking.py:23
-#: server/models/fault_def.py:19
+#: server/models/attribute.py:21
+#: server/models/checking.py:22
+#: server/models/fault_def.py:17
 #: server/models/hw_capability.py:22
-#: server/models/hw_node.py:56
-#: server/models/query.py:18
-#: server/models/schedule.py:20
+#: server/models/hw_node.py:58
+#: server/models/query.py:17
+#: server/models/schedule.py:18
 msgid "description"
 msgstr "descripción"
 
-#: server/models/attribute.py:30
-#: server/models/property.py:81
+#: server/models/attribute.py:29
+#: server/models/property.py:84
 msgid "Property"
 msgstr "Propiedad"
 
-#: server/models/attribute.py:42
+#: server/models/attribute.py:41
 msgid "Attribute"
 msgstr "Atributo"
 
-#: server/models/attribute.py:43
-#: server/templates/includes/mining_menu.html:14
+#: server/models/attribute.py:42
+#: server/templates/includes/mining_menu.html:9
 msgid "Attributes"
 msgstr "Atributos"
 
-#: server/models/autocheck_error.py:16
+#: server/models/autocheck_error.py:15
 msgid "message"
 msgstr "mensaje"
 
-#: server/models/autocheck_error.py:19
+#: server/models/autocheck_error.py:18
 msgid "Text of error that is only a warning. You can copy/paste from the field 'error' of a Error."
 msgstr "Texto del error que es sólo un aviso. Puede copiar/pegar desde el campo 'error' de un Error."
 
-#: server/models/autocheck_error.py:31
+#: server/models/autocheck_error.py:30
 msgid "Auto Check Error"
 msgstr "Error autocomprobable"
 
-#: server/models/autocheck_error.py:32
-#: server/templates/includes/config_menu.html:30
+#: server/models/autocheck_error.py:31
+#: server/templates/includes/config_menu.html:19
 msgid "Auto Check Errors"
 msgstr "Errores autocomprobables"
 
-#: server/models/checking.py:15
-#: server/models/computer.py:19
-#: server/models/device.py:16
-#: server/models/device_connection.py:12
-#: server/models/device_feature.py:11
-#: server/models/device_manufacturer.py:11
+#: server/models/checking.py:14
+#: server/models/computer.py:18
+#: server/models/device.py:13
+#: server/models/device_connection.py:11
+#: server/models/device_feature.py:9
+#: server/models/device_manufacturer.py:9
 #: server/models/device_model.py:13
-#: server/models/device_type.py:11
-#: server/models/fault_def.py:13
+#: server/models/device_type.py:9
+#: server/models/fault_def.py:11
 #: server/models/hw_capability.py:16
 #: server/models/hw_configuration.py:16
 #: server/models/hw_logical_name.py:16
-#: server/models/package.py:17
-#: server/models/platform.py:14
-#: server/models/pms.py:24
-#: server/models/property.py:23
-#: server/models/query.py:10
-#: server/models/repository.py:21
-#: server/models/schedule.py:11
+#: server/models/package.py:21
+#: server/models/platform.py:13
+#: server/models/pms.py:23
+#: server/models/property.py:26
+#: server/models/query.py:9
+#: server/models/repository.py:27
+#: server/models/schedule.py:9
 #: server/models/store.py:20
-#: server/models/user.py:10
-#: server/models/version.py:22
+#: server/models/user.py:11
+#: server/models/version.py:26
 msgid "name"
 msgstr "nombre"
 
-#: server/models/checking.py:29
-#: server/models/query.py:24
+#: server/models/checking.py:28
+#: server/models/query.py:23
 msgid "code"
 msgstr "código"
 
-#: server/models/checking.py:32
+#: server/models/checking.py:31
 msgid "Code django. <br><b>VARIABLES TO SETTINGS:</b><br><b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br><b>alert</b>: type of alert. Default is 'info'. Enumeration value: {'info' | 'warning' | 'danger'}<br><b>url</b>: link. Default is '/'<br><b>msg</b>: The text to show. Default is the field name.<br><b>target</b>: Enumeration value: {'computer' | 'server'}"
 msgstr ""
 
-#: server/models/checking.py:36
-#: server/models/fault_def.py:25
-#: server/models/property.py:41
-#: server/models/repository.py:63
-msgid "active"
-msgstr "habilitado"
-
-#: server/models/checking.py:41
-msgid "alert"
-msgstr "alerta"
-
-#: server/models/checking.py:54
+#: server/models/checking.py:53
 msgid "Checking"
 msgstr "Comprobación"
 
-#: server/models/checking.py:55
-#: server/templates/includes/config_menu.html:28
+#: server/models/checking.py:54
+#: server/templates/includes/config_menu.html:17
 msgid "Checkings"
 msgstr "Comprobaciones"
 
-#: server/models/computer.py:27
+#: server/models/computer.py:26
 msgid "uuid"
 msgstr "uuid"
 
-#: server/models/computer.py:37
-#: server/models/device_driver.py:25
-#: server/models/error.py:34
-#: server/models/fault.py:39
-#: server/models/hw_node.py:74
-#: server/models/migration.py:18
-#: server/models/package.py:23
-#: server/models/repository.py:27
+#: server/models/computer.py:36
+#: server/models/device_driver.py:23
+#: server/models/error.py:33
+#: server/models/fault.py:38
+#: server/models/hw_node.py:76
+#: server/models/migration.py:16
+#: server/models/package.py:27
+#: server/models/repository.py:33
 #: server/models/store.py:26
-#: server/models/update.py:23
-#: server/models/version_manager.py:55
+#: server/models/update.py:22
+#: server/models/version.py:146
 msgid "version"
 msgstr "versión"
 
-#: server/models/computer.py:41
+#: server/models/computer.py:40
 msgid "date input"
 msgstr "fecha de alta"
 
-#: server/models/computer.py:42
+#: server/models/computer.py:41
 msgid "Date of input of Computer in migasfree system"
 msgstr "Fecha de alta del ordenador en migasfree"
 
-#: server/models/computer.py:46
+#: server/models/computer.py:45
 msgid "ip"
 msgstr "IP"
 
-#: server/models/computer.py:53
+#: server/models/computer.py:52
 msgid "software inventory"
 msgstr "inventario de software"
 
-#: server/models/computer.py:56
+#: server/models/computer.py:55
 msgid "gap between software base packages and computer ones"
 msgstr "diferencia entre el conjunto de paquetes base y el del ordenador"
 
-#: server/models/computer.py:60
+#: server/models/computer.py:59
 msgid "software history"
 msgstr "historial de software"
 
-#: server/models/computer.py:70
+#: server/models/computer.py:69
 msgid "devices"
 msgstr "dispositivos"
 
-#: server/models/computer.py:74
+#: server/models/computer.py:73
 msgid "devices copy"
 msgstr "copia de dispositivos"
 
-#: server/models/computer.py:81
+#: server/models/computer.py:80
 msgid "last update"
 msgstr "última actualización"
 
-#: server/models/computer.py:86
+#: server/models/computer.py:85
 msgid "last hardware capture"
 msgstr "fecha de la última actualización del hardware"
 
-#: server/models/computer.py:95
+#: server/models/computer.py:94
 msgid "tags"
 msgstr "etiquetas"
 
-#: server/models/computer.py:130
-msgid "login"
-msgstr "login"
-
-#: server/models/computer.py:143
+#: server/models/computer.py:152
 msgid "Last update"
 msgstr "Última actualización"
 
-#: server/models/computer.py:155
+#: server/models/computer.py:161
+msgid "login"
+msgstr "login"
+
+#: server/models/computer.py:173
+#: server/models/hw_node.py:145
 msgid "Hardware"
 msgstr "Hardware"
 
-#: server/models/computer.py:172
-#: server/models/error.py:56
-#: server/models/fault.py:46
-#: server/models/login.py:39
-#: server/models/message.py:35
-#: server/models/migration.py:32
-#: server/models/update.py:39
-#: server/templates/base.html:109
-#: server/templates/base.html.py:110
+#: server/models/computer.py:189
+#: server/models/migration.py:37
+#: server/models/version.py:108
+#: server/models/version.py:112
 #: server/templates/includes/computer_messages_result.html:12
+msgid "Version"
+msgstr "Versión"
+
+#: server/models/computer.py:198
+#: server/models/error.py:55
+#: server/models/fault.py:45
+#: server/models/login.py:38
+#: server/models/message.py:34
+#: server/models/migration.py:31
+#: server/models/update.py:45
+#: server/templates/base.html:126
+#: server/templates/base.html.py:127
+#: server/templates/includes/computer_messages_result.html:11
 msgid "Computer"
 msgstr "Ordenador"
 
-#: server/models/computer.py:211
-msgid "Toggle Dropdown"
-msgstr "Alternar desplegable"
-
-#: server/models/device.py:25
-#: server/models/device_driver.py:20
+#: server/models/device.py:22
+#: server/models/device_driver.py:18
 msgid "model"
 msgstr "modelo"
 
-#: server/models/device.py:30
+#: server/models/device.py:27
 msgid "connection"
 msgstr "conexión"
 
-#: server/models/device.py:34
+#: server/models/device.py:31
 msgid "data"
 msgstr "dato"
 
-#: server/models/device.py:67
+#: server/models/device.py:53
 msgid "Device"
 msgstr "Dispositivo"
 
-#: server/models/device_connection.py:19
+#: server/models/device_connection.py:18
 msgid "fields"
 msgstr "campos"
 
-#: server/models/device_connection.py:23
+#: server/models/device_connection.py:22
 msgid "Fields separated by comma"
 msgstr "Campos separados por coma"
 
-#: server/models/device_connection.py:28
+#: server/models/device_connection.py:27
 msgid "device type"
 msgstr "tipo de dispositivo"
 
-#: server/models/device_connection.py:36
+#: server/models/device_connection.py:35
 msgid "Device (Connection)"
 msgstr "Conexión de dispositivo"
 
-#: server/models/device_connection.py:37
+#: server/models/device_connection.py:36
 msgid "Device (Connections)"
 msgstr "Conexiones de dispositivo"
 
-#: server/models/device_driver.py:30
+#: server/models/device_driver.py:28
 #: server/models/device_logical.py:17
 msgid "feature"
 msgstr "prestación"
 
-#: server/models/device_driver.py:34
-#: server/models/repository.py:80
+#: server/models/device_driver.py:32
+#: server/models/repository.py:86
 msgid "packages to install"
 msgstr "paquetes a instalar"
 
-#: server/models/device_driver.py:60
-#: server/models/device_driver.py:61
+#: server/models/device_driver.py:57
+#: server/models/device_driver.py:58
 msgid "Device (Driver)"
 msgstr "Dispositivo (Controlador)"
 
-#: server/models/device_feature.py:23
-#: server/models/device_feature.py:24
+#: server/models/device_feature.py:21
+#: server/models/device_feature.py:22
 msgid "Device (Feature)"
 msgstr "Dispositivo (prestación)"
 
-#: server/models/device_logical.py:13
+#: server/models/device_logical.py:12
 msgid "device"
 msgstr "dispositivo"
 
-#: server/models/device_logical.py:54
-#: server/models/device_logical.py:55
+#: server/models/device_logical.py:68
+#: server/models/device_logical.py:69
 msgid "Device (Logical)"
 msgstr "Dispositivo (lógico)"
 
-#: server/models/device_manufacturer.py:23
+#: server/models/device_manufacturer.py:21
 msgid "Device (Manufacturer)"
 msgstr "Dispositivo (fabricante)"
 
-#: server/models/device_manufacturer.py:24
+#: server/models/device_manufacturer.py:22
 msgid "Device (Manufacturers)"
 msgstr "Dispositivo (fabricantes)"
 
@@ -1404,107 +1431,99 @@ msgstr "Dispositivo (modelo)"
 msgid "Device (Models)"
 msgstr "Dispositivo (modelos)"
 
-#: server/models/device_type.py:23
+#: server/models/device_type.py:21
 msgid "Device (Type)"
 msgstr "Dispositivo (tipo)"
 
-#: server/models/device_type.py:24
+#: server/models/device_type.py:22
 msgid "Device (Types)"
 msgstr "Dispositivo (tipos)"
 
-#: server/models/error.py:13
-#: server/models/fault.py:13
-#: server/models/hw_node.py:30
-#: server/models/login.py:19
-#: server/models/message.py:13
-#: server/models/migration.py:13
-#: server/models/update.py:13
+#: server/models/error.py:12
+#: server/models/fault.py:12
+#: server/models/hw_node.py:32
+#: server/models/login.py:18
+#: server/models/message.py:12
+#: server/models/migration.py:11
+#: server/models/update.py:12
 msgid "computer"
 msgstr "ordenador"
 
-#: server/models/error.py:17
-#: server/models/fault.py:22
-#: server/models/login.py:13
-#: server/models/message.py:24
-#: server/models/message_server.py:17
-#: server/models/migration.py:22
-#: server/models/notification.py:12
-#: server/models/repository.py:69
-#: server/models/update.py:28
+#: server/models/error.py:16
+#: server/models/fault.py:21
+#: server/models/login.py:12
+#: server/models/message.py:23
+#: server/models/message_server.py:15
+#: server/models/migration.py:20
+#: server/models/notification.py:10
+#: server/models/repository.py:75
+#: server/models/update.py:27
 msgid "date"
 msgstr "fecha"
 
-#: server/models/error.py:22
+#: server/models/error.py:21
 msgid "error"
 msgstr "error"
 
-#: server/models/error.py:28
-#: server/models/fault.py:33
-#: server/models/notification.py:23
-msgid "checked"
-msgstr "comprobado"
-
-#: server/models/error.py:72
-#: server/views/packages.py:85
+#: server/models/error.py:71
+#: server/views/packages.py:96
 msgid "Error"
 msgstr "Error"
 
-#: server/models/error.py:73
-#: server/templates/admin_model_computer_change_form.html:14
-#: server/templates/includes/mining_menu.html:12
+#: server/models/error.py:72
+#: server/templates/includes/mining_menu.html:7
 msgid "Errors"
 msgstr "Errores"
 
-#: server/models/fault.py:18
+#: server/models/fault.py:17
 msgid "fault definition"
 msgstr "definición de falla"
 
-#: server/models/fault.py:27
-#: server/models/message.py:18
-#: server/models/message_server.py:11
+#: server/models/fault.py:26
+#: server/models/message.py:17
+#: server/models/message_server.py:9
 msgid "text"
 msgstr "texto"
 
-#: server/models/fault.py:57
+#: server/models/fault.py:59
 msgid "Fault"
 msgstr "Falla"
 
-#: server/models/fault.py:58
-#: server/templates/admin_model_computer_change_form.html:16
-#: server/templates/includes/config_menu.html:29
-#: server/templates/includes/mining_menu.html:13
+#: server/models/fault.py:60
+#: server/templates/includes/mining_menu.html:8
 msgid "Faults"
 msgstr "Fallas"
 
-#: server/models/fault_def.py:30
-#: server/models/property.py:28
+#: server/models/fault_def.py:28
+#: server/models/property.py:31
 msgid "programming language"
 msgstr "lenguaje de programación"
 
-#: server/models/fault_def.py:36
-#: server/models/property.py:34
+#: server/models/fault_def.py:34
+#: server/models/property.py:37
 msgid "Code"
 msgstr "Código"
 
-#: server/models/fault_def.py:45
-#: server/models/fault_def.py:62
-#: server/models/login.py:31
-#: server/models/repository.py:42
-#: server/models/schedule_delay.py:22
-#: server/models/schedule_delay.py:36
+#: server/models/fault_def.py:43
+#: server/models/fault_def.py:60
+#: server/models/login.py:30
+#: server/models/repository.py:48
+#: server/models/schedule_delay.py:21
+#: server/models/schedule_delay.py:35
 msgid "attributes"
 msgstr "atributos"
 
-#: server/models/fault_def.py:52
-#: server/models/fault_def.py:71
+#: server/models/fault_def.py:50
+#: server/models/fault_def.py:69
 msgid "users"
 msgstr "usuarios"
 
-#: server/models/fault_def.py:86
+#: server/models/fault_def.py:84
 msgid "Fault Definition"
 msgstr "Definición de falla"
 
-#: server/models/fault_def.py:87
+#: server/models/fault_def.py:85
+#: server/templates/includes/config_menu.html:18
 msgid "Faults Definition"
 msgstr "Definiciones de fallas"
 
@@ -1532,468 +1551,476 @@ msgstr ""
 msgid "Hardware Logical Names"
 msgstr ""
 
-#: server/models/hw_node.py:14
+#: server/models/hw_node.py:16
 msgid "parent"
 msgstr "padre"
 
-#: server/models/hw_node.py:19
-#: server/models/hw_node.py:24
+#: server/models/hw_node.py:21
+#: server/models/hw_node.py:26
 msgid "width"
 msgstr "Longitud"
 
-#: server/models/hw_node.py:34
+#: server/models/hw_node.py:36
 msgid "id"
 msgstr "identificador"
 
-#: server/models/hw_node.py:40
+#: server/models/hw_node.py:42
 msgid "class"
 msgstr "clase"
 
-#: server/models/hw_node.py:51
+#: server/models/hw_node.py:53
 msgid "claimed"
 msgstr "reclamado"
 
-#: server/models/hw_node.py:62
+#: server/models/hw_node.py:64
 msgid "vendor"
 msgstr "vendedor"
 
-#: server/models/hw_node.py:68
+#: server/models/hw_node.py:70
 msgid "product"
 msgstr "producto"
 
-#: server/models/hw_node.py:80
+#: server/models/hw_node.py:82
 msgid "serial"
 msgstr "número de serie"
 
-#: server/models/hw_node.py:86
+#: server/models/hw_node.py:88
 msgid "businfo"
 msgstr "información del bus"
 
-#: server/models/hw_node.py:92
+#: server/models/hw_node.py:94
 msgid "physid"
 msgstr "identificador físico"
 
-#: server/models/hw_node.py:98
+#: server/models/hw_node.py:100
 msgid "slot"
 msgstr "bahía"
 
-#: server/models/hw_node.py:104
+#: server/models/hw_node.py:106
 msgid "size"
 msgstr "tamaño"
 
-#: server/models/hw_node.py:109
+#: server/models/hw_node.py:111
 msgid "capacity"
 msgstr "capacidad"
 
-#: server/models/hw_node.py:114
+#: server/models/hw_node.py:116
 msgid "clock"
 msgstr "reloj"
 
-#: server/models/hw_node.py:119
+#: server/models/hw_node.py:121
 msgid "dev"
 msgstr "dispositivo"
 
-#: server/models/hw_node.py:125
+#: server/models/hw_node.py:127
 msgid "icon"
 msgstr "icono"
 
-#: server/models/hw_node.py:135
+#: server/models/hw_node.py:149
 msgid "Hardware Node"
 msgstr "Nodo hardware"
 
-#: server/models/hw_node.py:136
+#: server/models/hw_node.py:150
 msgid "Hardware Nodes"
 msgstr "Nodos hardware"
 
-#: server/models/login.py:24
-#: server/models/update.py:18
+#: server/models/login.py:23
+#: server/models/update.py:17
 msgid "user"
 msgstr "usuario"
 
-#: server/models/login.py:32
+#: server/models/login.py:31
 msgid "Sent attributes"
 msgstr "Atributos enviados"
 
-#: server/models/login.py:55
-#: server/templates/includes/computer_messages_result.html:15
+#: server/models/login.py:54
+#: server/templates/includes/computer_messages_result.html:14
 msgid "Login"
 msgstr "Login"
 
-#: server/models/login.py:56
-#: server/templates/admin_model_attribute_change_form.html:12
-#: server/templates/admin_model_computer_change_form.html:18
-#: server/templates/includes/mining_menu.html:11
+#: server/models/login.py:55
+#: server/templates/includes/mining_menu.html:6
 msgid "Logins"
 msgstr "Logins"
 
-#: server/models/message.py:39
-#: server/templates/includes/computer_messages_result.html:16
-#: server/templates/includes/server_messages_result.html:12
+#: server/models/message.py:38
+#: server/templates/includes/computer_messages_result.html:15
+#: server/templates/includes/server_messages_result.html:11
 msgid "Message"
 msgstr "Mensaje"
 
-#: server/models/message.py:40
+#: server/models/message.py:39
 msgid "Messages"
 msgstr "Mensajes"
 
-#: server/models/message_server.py:26
+#: server/models/message_server.py:24
 msgid "Message Server"
 msgstr "Mensaje del servidor"
 
-#: server/models/message_server.py:27
+#: server/models/message_server.py:25
 msgid "Messages Server"
 msgstr "Mensajes del servidor"
-
-#: server/models/migration.py:37
-#: server/models/version.py:83
-#: server/templates/includes/computer_messages_result.html:13
-msgid "Version"
-msgstr "Versión"
 
 #: server/models/migration.py:41
 msgid "Migration"
 msgstr "Migración"
 
 #: server/models/migration.py:42
-#: server/templates/admin_model_computer_change_form.html:12
-#: server/templates/includes/mining_menu.html:15
+#: server/templates/includes/mining_menu.html:10
 msgid "Migrations"
 msgstr "Migraciones"
 
-#: server/models/notification.py:17
+#: server/models/notification.py:15
 msgid "notification"
 msgstr "notificación"
 
-#: server/models/notification.py:39
+#: server/models/notification.py:37
 msgid "Notification"
 msgstr "Notificación"
 
-#: server/models/notification.py:40
-#: server/templates/includes/mining_menu.html:16
+#: server/models/notification.py:38
+#: server/templates/includes/mining_menu.html:11
 msgid "Notifications"
 msgstr "Notificaciones"
 
-#: server/models/package.py:28
+#: server/models/package.py:32
 msgid "store"
 msgstr "almacén"
 
-#: server/models/package.py:49
+#: server/models/package.py:76
 msgid "Package/Set"
 msgstr "Paquete/Conjunto"
 
-#: server/models/package.py:50
-#: server/templates/includes/software_menu.html:16
+#: server/models/package.py:77
+#: server/templates/includes/software_menu.html:14
 msgid "Packages/Sets"
 msgstr "Paquetes/Conjuntos"
 
-#: server/models/package.py:72
-msgid "information"
-msgstr "información"
-
-#: server/models/platform.py:26
+#: server/models/platform.py:25
 msgid "Platform"
 msgstr "Plataforma"
 
-#: server/models/platform.py:27
-#: server/templates/includes/config_menu.html:11
+#: server/models/platform.py:26
+#: server/templates/includes/config_menu.html:7
 msgid "Platforms"
 msgstr "Plataformas"
 
-#: server/models/pms.py:30
+#: server/models/pms.py:29
 msgid "slug"
 msgstr "slug"
 
-#: server/models/pms.py:38
+#: server/models/pms.py:37
 msgid "create repository"
 msgstr "crear repositorio"
 
-#: server/models/pms.py:41
+#: server/models/pms.py:40
 msgid "Code bash. Define how create the metadata of repositories in the migasfree server."
 msgstr "Código en bash. Define cómo crear los metadatos de los repositorios en el servidor migasfree."
 
-#: server/models/pms.py:45
+#: server/models/pms.py:44
 msgid "package information"
 msgstr "información del paquete"
 
-#: server/models/pms.py:48
+#: server/models/pms.py:47
 msgid "Code bash. Define how get info of packages in the server"
 msgstr "Código en bash. Define cómo obtener información de los paquetes en el servidor"
 
-#: server/models/pms.py:61
+#: server/models/pms.py:60
 msgid "Package Management System"
 msgstr "Sistema de gestión de paquetes"
 
-#: server/models/pms.py:62
+#: server/models/pms.py:61
 msgid "Package Management Systems"
 msgstr "Sistemas de gestión de paquetes"
 
-#: server/models/property.py:10
+#: server/models/property.py:11
 msgid "NORMAL"
 msgstr "NORMAL"
 
-#: server/models/property.py:11
+#: server/models/property.py:12
 msgid "LIST"
 msgstr "LISTA"
 
-#: server/models/property.py:12
+#: server/models/property.py:13
 msgid "ADDS LEFT"
 msgstr "AGREGA POR LA IZQUIERDA"
 
-#: server/models/property.py:13
+#: server/models/property.py:14
 msgid "ADDS RIGHT"
 msgstr "AGREGA POR LA DERECHA"
 
-#: server/models/property.py:17
+#: server/models/property.py:20
 msgid "prefix"
 msgstr "prefijo"
 
-#: server/models/property.py:37
+#: server/models/property.py:40
 msgid "This code will execute in the client computer, and it must put in the standard output the value of the attribute correspondent to this property.<br>The format of this value is 'name~description', where 'description' is optional.<br><b>Example of code:</b><br>#Create a attribute with the name of computer from bash<br> echo $HOSTNAME"
 msgstr ""
 
-#: server/models/property.py:46
+#: server/models/property.py:49
 msgid "kind"
 msgstr "clase"
 
-#: server/models/property.py:53
-msgid "auto"
-msgstr "automático"
-
-#: server/models/property.py:55
+#: server/models/property.py:58
 msgid "automatically add the attribute to database"
 msgstr "añade automáticamente el atributo a la base de datos"
 
-#: server/models/property.py:59
-#: server/models/property.py:61
+#: server/models/property.py:62
+#: server/models/property.py:64
 msgid "tag"
 msgstr "etiqueta"
 
-#: server/models/property.py:82
-#: server/templates/includes/config_menu.html:8
+#: server/models/property.py:85
+#: server/templates/includes/config_menu.html:4
 msgid "Properties"
 msgstr "Propiedades"
 
-#: server/models/query.py:27
+#: server/models/query.py:26
 msgid "Code Django: version=user.version, query=QuerySet, fields=list of QuerySet fields names to show, titles=list of QuerySet fields titles"
 msgstr ""
 
-#: server/models/query.py:32
+#: server/models/query.py:31
 msgid "parameters"
 msgstr "parámetros"
 
-#: server/models/query.py:43
+#: server/models/query.py:42
 msgid "Query"
 msgstr "Consulta"
 
-#: server/models/query.py:44
-#: server/templates/query.html:7
-#: server/templates/includes/config_menu.html:12
-#: server/templates/includes/mining_menu.html:22
+#: server/models/query.py:43
+#: server/templates/base.html:106
+#: server/templates/query.html:6
+#: server/templates/includes/config_menu.html:20
 msgid "Queries"
 msgstr "Consultas"
 
-#: server/models/repository.py:34
+#: server/models/repository.py:40
 msgid "Packages/Set"
 msgstr "Paquetes/Conjuntos"
 
-#: server/models/repository.py:35
+#: server/models/repository.py:41
 msgid "Assigned Packages"
 msgstr "Paquetes asignados"
 
-#: server/models/repository.py:43
+#: server/models/repository.py:49
 msgid "Assigned Attributes"
 msgstr "Atributos asignados"
 
-#: server/models/repository.py:51
+#: server/models/repository.py:57
 msgid "excludes"
 msgstr "exclusiones"
 
-#: server/models/repository.py:52
+#: server/models/repository.py:58
 msgid "Excluded Attributes"
 msgstr "Atributos excluidos"
 
-#: server/models/repository.py:59
-#: server/models/schedule_delay.py:15
+#: server/models/repository.py:65
+#: server/models/schedule_delay.py:14
 msgid "schedule"
 msgstr "calendario"
 
-#: server/models/repository.py:65
+#: server/models/repository.py:71
 msgid "if you uncheck this field, the repository is hidden for all computers."
 msgstr "Si desmarca este campo, el repositorio está oculto para todos los ordenadores."
 
-#: server/models/repository.py:70
+#: server/models/repository.py:76
 msgid "Date initial for distribute."
 msgstr "Fecha inicial para la distribución."
 
-#: server/models/repository.py:74
+#: server/models/repository.py:80
 msgid "comment"
 msgstr "comentario"
 
-#: server/models/repository.py:86
+#: server/models/repository.py:92
 msgid "packages to remove"
 msgstr "paquetes a desinstalar"
 
-#: server/models/repository.py:92
+#: server/models/repository.py:98
 msgid "default preinclude packages"
 msgstr "paquetes pre-incluidos por defecto"
 
-#: server/models/repository.py:98
+#: server/models/repository.py:104
 msgid "default include packages"
 msgstr "paquetes incluidos por defecto"
 
-#: server/models/repository.py:104
+#: server/models/repository.py:110
 msgid "default exclude packages"
 msgstr "paquetes excluidos por defecto"
 
-#: server/models/repository.py:144
+#: server/models/repository.py:151
 msgid "Without schedule"
 msgstr "Sin calendario"
 
-#: server/models/repository.py:193
+#: server/models/repository.py:205
 msgid "timeline"
 msgstr "línea temporal"
 
-#: server/models/repository.py:197
+#: server/models/repository.py:209
 msgid "Repository"
 msgstr "Repositorio"
 
-#: server/models/repository.py:198
-#: server/templates/admin_model_attribute_change_form.html:14
-#: server/templates/admin_model_package_change_form.html:12
-#: server/templates/includes/software_menu.html:7
+#: server/models/repository.py:210
+#: server/templates/includes/software_menu.html:5
 msgid "Repositories"
 msgstr "Repositorios"
 
-#: server/models/schedule.py:31
-#: server/templates/includes/software_menu.html:10
+#: server/models/schedule.py:29
+#: server/templates/includes/software_menu.html:8
 msgid "Schedules"
 msgstr "Calendarios"
 
-#: server/models/schedule_delay.py:11
+#: server/models/schedule_delay.py:10
 msgid "delay"
 msgstr "demora"
 
-#: server/models/schedule_delay.py:40
+#: server/models/schedule_delay.py:39
 msgid "Schedule Delay"
 msgstr "Demora del calendario"
 
-#: server/models/schedule_delay.py:41
+#: server/models/schedule_delay.py:40
 msgid "Schedule Delays"
 msgstr "Demoras del calendario"
 
-#: server/models/store.py:62
+#: server/models/store.py:83
 msgid "Store"
 msgstr "Almacén"
 
-#: server/models/store.py:63
-#: server/templates/includes/software_menu.html:13
+#: server/models/store.py:84
+#: server/templates/includes/software_menu.html:11
 msgid "Stores"
 msgstr "Almacenes"
 
-#: server/models/update.py:43
+#: server/models/update.py:49
 msgid "Update"
 msgstr "Actualización"
 
-#: server/models/update.py:44
-#: server/templates/admin_model_computer_change_form.html:20
+#: server/models/update.py:50
 msgid "Updates"
 msgstr "Actualizaciones"
 
-#: server/models/user.py:16
+#: server/models/user.py:17
 msgid "fullname"
 msgstr "nombre completo"
 
-#: server/models/version.py:29
+#: server/models/version.py:33
 msgid "package management system"
 msgstr "sistema de gestión de paquetes"
 
-#: server/models/version.py:33
+#: server/models/version.py:37
 msgid "Actual line computer"
 msgstr ""
 
-#: server/models/version.py:35
+#: server/models/version.py:39
 msgid "Computer with the actual line software"
 msgstr ""
 
-#: server/models/version.py:40
+#: server/models/version.py:44
 msgid "Actual line packages"
 msgstr ""
 
-#: server/models/version.py:43
+#: server/models/version.py:47
 msgid "List ordered of packages of actual line computer"
 msgstr ""
 
-#: server/models/version.py:47
-msgid "autoregister"
-msgstr "autoregistrado"
-
-#: server/models/version.py:49
+#: server/models/version.py:53
 msgid "Is not neccesary a user for register the computer in                      database and get the keys."
 msgstr "No es necesario un usuario para registrar el ordenador en la base de datos y obtener las claves."
 
-#: server/models/version.py:55
+#: server/models/version.py:59
 msgid "platform"
 msgstr "plataforma"
 
-#: server/models/version.py:84
-#: server/templates/includes/config_menu.html:9
+#: server/models/version.py:113
+#: server/templates/includes/config_menu.html:5
 msgid "Versions"
 msgstr "Versiones"
 
-#: server/models/version_manager.py:70
+#: server/models/version.py:162
 msgid "User Profile"
 msgstr "Perfil de usuario"
 
-#: server/models/version_manager.py:71
+#: server/models/version.py:163
 msgid "User Profiles"
 msgstr "Perfiles de usuario"
 
-#: server/templates/admin_model_attribute_change_form.html:7
-#: server/templates/admin_model_computer_change_form.html:7
-#: server/templates/admin_model_package_change_form.html:7
-msgid "Relations"
-msgstr "Relaciones"
-
-#: server/templates/base.html:78
+#: server/templates/base.html:72
 msgid "Toggle navigation"
 msgstr "Alternar navegación"
 
-#: server/templates/base.html:91
-#: server/templates/includes/breadcrumb.html:14
+#: server/templates/base.html:85
+#: server/templates/computer_messages.html:6
+#: server/templates/server_messages.html:6
+#: server/templates/includes/breadcrumb.html:13
 msgid "Settings"
 msgstr "Configuración"
 
-#: server/templates/base.html:96
+#: server/templates/base.html:95
 #: server/templates/package_info.html:6
-#: server/templates/includes/breadcrumb.html:18
+#: server/templates/includes/breadcrumb.html:21
 msgid "Liberation"
 msgstr "Liberación"
 
-#: server/templates/base.html:101
+#: server/templates/base.html:100
+#: server/templates/computer_confirm_delete.html:8
+#: server/templates/computer_confirm_delete_selected.html:8
 #: server/templates/computer_hardware_extract.html:7
-#: server/templates/computer_hardware_resume.html:7
-#: server/templates/query.html:6
-#: server/templates/stats.html:63
-#: server/templates/includes/breadcrumb.html:10
-msgid "Audit"
-msgstr "Auditoría"
+#: server/templates/computer_hardware_resume.html:6
+#: server/templates/includes/breadcrumb.html:9
+msgid "Datum"
+msgstr "Datos"
 
-#: server/templates/base.html:125
+#: server/templates/base.html:118
+#: server/templates/stats.html:63
+msgid "Stats"
+msgstr "Estadísticas"
+
+#: server/templates/base.html:142
 msgid "Change Version"
 msgstr "Cambiar versión"
 
-#: server/templates/base.html:138
+#: server/templates/base.html:155
 #: server/templates/includes/alerts.html:3
 msgid "Alerts"
 msgstr "Alertas"
 
-#: server/templates/base.html:147
+#: server/templates/base.html:164
 msgid "Logout"
 msgstr "Salir"
 
-#: server/templates/base.html:197
+#: server/templates/base.html:212
 msgid "Data Model"
 msgstr "Modelo de datos"
+
+#: server/templates/computer_confirm_delete.html:4
+#: server/templates/computer_confirm_delete.html:15
+msgid "Delete Computer"
+msgstr "Borrar ordenador"
+
+#: server/templates/computer_confirm_delete.html:19
+msgid "Are you sure you want to delete this computer?"
+msgstr "¿Está seguro de que quiere borrar este ordenador?"
+
+#: server/templates/computer_confirm_delete.html:21
+#: server/templates/computer_confirm_delete_selected.html:21
+msgid "or"
+msgstr "o"
+
+#: server/templates/computer_confirm_delete.html:22
+#: server/templates/computer_confirm_delete_selected.html:22
+msgid "cancel"
+msgstr "cancelar"
+
+#: server/templates/computer_confirm_delete_selected.html:4
+msgid "Delete selected computers"
+msgstr "Borrar los ordenadores seleccionados"
+
+#: server/templates/computer_confirm_delete_selected.html:14
+msgid "Are you sure?"
+msgstr "¿Está seguro?"
+
+#: server/templates/computer_confirm_delete_selected.html:18
+msgid "Are you sure you want to delete these computers?"
+msgstr "¿Está seguro de que quiere borrar estos ordenadores?"
 
 #: server/templates/computer_hardware_extract.html:118
 msgid "Back to main tree information"
@@ -2007,20 +2034,20 @@ msgstr "Fichero"
 msgid "Line"
 msgstr "Línea"
 
-#: server/templates/query.html:17
-#: server/templates/includes/computer_messages_result.html:5
+#: server/templates/query.html:16
+#: server/templates/includes/computer_messages_result.html:4
 #: server/templates/includes/server_messages_result.html:4
 msgid "results"
 msgstr "resultados"
 
-#: server/templates/query.html:44
+#: server/templates/query.html:43
 msgid "No results for query"
 msgstr "No hay resultados para la consulta"
 
 #: server/templates/admin_doc/model_detail.html:8
 #: server/templates/admin_doc/model_index.html:9
 #: server/templates/admin_doc/model_index.html:13
-#: server/templates/includes/config_menu.html:39
+#: server/templates/includes/devices_menu.html:6
 msgid "Models"
 msgstr "Modelos"
 
@@ -2044,108 +2071,109 @@ msgstr "Descripción"
 msgid "Back to Data Model Documentation"
 msgstr "Volver a la documentación del modelo de datos"
 
-#: server/templates/includes/computer_messages_result.html:11
-#: server/templates/includes/server_messages_result.html:11
+#: server/templates/includes/computer_messages_result.html:10
+#: server/templates/includes/server_messages_result.html:10
 msgid "Date"
 msgstr "Fecha"
 
-#: server/templates/includes/computer_messages_result.html:14
+#: server/templates/includes/computer_messages_result.html:13
 msgid "IP"
 msgstr "IP"
 
-#: server/templates/includes/computer_messages_result.html:40
-#: server/templates/includes/server_messages_result.html:27
+#: server/templates/includes/computer_messages_result.html:39
+#: server/templates/includes/server_messages_result.html:25
 msgid "No messages to show"
 msgstr "No hay mensajes para mostrar"
 
-#: server/templates/includes/config_menu.html:10
+#: server/templates/includes/config_menu.html:6
 msgid "P.M.S."
 msgstr "P.M.S."
+
+#: server/templates/includes/config_menu.html:12
+msgid "Groups"
+msgstr "Grupos"
 
 #: server/templates/includes/config_menu.html:13
 msgid "Site administration"
 msgstr "Administración del sitio"
 
-#: server/templates/includes/config_menu.html:21
-msgid "Groups"
-msgstr "Grupos"
-
-#: server/templates/includes/config_menu.html:26
-#: server/views/dashboard.py:67
-msgid "Status"
-msgstr "Estado"
-
-#: server/templates/includes/config_menu.html:37
+#: server/templates/includes/devices_menu.html:4
 msgid "Features"
 msgstr "Prestaciones"
 
-#: server/templates/includes/config_menu.html:38
+#: server/templates/includes/devices_menu.html:5
 msgid "Drivers"
 msgstr "Controladores"
 
-#: server/templates/includes/config_menu.html:40
+#: server/templates/includes/devices_menu.html:7
 msgid "Manufacturer"
 msgstr "Fabricante"
 
-#: server/templates/includes/config_menu.html:41
+#: server/templates/includes/devices_menu.html:8
 msgid "Connections"
 msgstr "Conexiones"
 
-#: server/templates/includes/config_menu.html:42
+#: server/templates/includes/devices_menu.html:9
 msgid "Types"
 msgstr "Tipos"
 
-#: server/templates/includes/config_menu.html:44
+#: server/templates/includes/devices_menu.html:11
 msgid "Devices Logical"
 msgstr "Dispositivos lógicos"
-
-#: server/templates/includes/mining_menu.html:7
-msgid "Datum"
-msgstr "Datos"
-
-#: server/templates/includes/mining_menu.html:34
-msgid "Stats"
-msgstr "Estadísticas"
-
-#: server/templates/includes/mining_menu.html:36
-#: server/views/stats.py:81
-msgid "Updated Computers / Hour"
-msgstr "Ordenadores actualizados/hora"
-
-#: server/templates/includes/mining_menu.html:37
-#: server/views/stats.py:133
-msgid "Updated Computers / Day"
-msgstr "Ordenadores actualizados/día"
-
-#: server/templates/includes/mining_menu.html:38
-#: server/views/stats.py:217
-msgid "Updated Computers / Month"
-msgstr "Ordenadores actualizados/mes"
-
-#: server/templates/includes/mining_menu.html:39
-#: server/views/stats.py:288
-msgid "Provided Computers / Delay"
-msgstr "Ordenadores previstos/demora"
-
-#: server/templates/includes/mining_menu.html:40
-#: server/views/stats.py:346
-msgid "Computers / Version"
-msgstr "Ordenadores/versión"
 
 #: server/templates/includes/parameters.html:6
 msgid "Parameters"
 msgstr "Parámetros"
 
-#: server/templates/includes/parameters.html:10
+#: server/templates/includes/parameters.html:11
 msgid "Submit"
 msgstr "Enviar"
 
-#: server/templates/includes/software_menu.html:19
+#: server/templates/includes/software_menu.html:17
 msgid "Packages information"
 msgstr "Información de paquetes"
 
-#: server/views/hardware.py:26
-#: server/views/hardware.py:45
+#: server/templates/includes/stats_menu.html:4
+#: server/views/stats.py:83
+msgid "Updated Computers / Hour"
+msgstr "Ordenadores actualizados/hora"
+
+#: server/templates/includes/stats_menu.html:5
+#: server/views/stats.py:144
+msgid "Updated Computers / Day"
+msgstr "Ordenadores actualizados/día"
+
+#: server/templates/includes/stats_menu.html:6
+#: server/views/stats.py:312
+msgid "Updated Computers / Month"
+msgstr "Ordenadores actualizados/mes"
+
+#: server/templates/includes/stats_menu.html:7
+#: server/views/stats.py:321
+msgid "Provided Computers / Delay"
+msgstr "Ordenadores previstos/demora"
+
+#: server/templates/includes/stats_menu.html:8
+#: server/views/stats.py:467
+msgid "Computers / Version"
+msgstr "Ordenadores/versión"
+
+#: server/views/computer.py:29
+#, python-format
+msgid "Computer %s deleted!"
+msgstr "¡El ordenador %s ha sido borrado!"
+
+#: server/views/computer.py:46
+#, python-format
+msgid "Computers %s deleted!"
+msgstr "¡Los ordenadores %s han sido borrados!"
+
+#: server/views/dashboard.py:66
+msgid "Status"
+msgstr "Estado"
+
+#: server/views/hardware.py:31
+#: server/views/hardware.py:50
 msgid "Hardware Information"
 msgstr "Información del hardware"
 
@@ -2153,54 +2181,83 @@ msgstr "Información del hardware"
 msgid "Credentials not valid"
 msgstr "Los credenciales no son válidos"
 
+#: server/views/packages.py:33
+#: server/views/packages.py:56
 #: server/views/packages.py:86
+msgid "Package Information"
+msgstr "Información del paquete"
+
+#: server/views/packages.py:34
+#: server/views/stats.py:330
+msgid "Choose a version before continue"
+msgstr "Selecciona una versión antes de continuar"
+
+#: server/views/packages.py:97
 msgid "No package information exists"
 msgstr "No existe información sobre el paquete"
 
-#: server/views/queries.py:207
+#: server/views/queries.py:220
 msgid "Computer Messages"
 msgstr "Mensajes de ordenadores"
 
-#: server/views/queries.py:234
+#: server/views/queries.py:245
 msgid "Server Messages"
 msgstr "Mensajes del servidor"
 
-#: server/views/repository.py:20
-#, python-format
-msgid "Creating Repositories of %s..."
-msgstr "Creando repositorios de %s..."
-
-#: server/views/repository.py:26
-msgid "Added packages:"
-msgstr "Paquetes añadidos:"
-
-#: server/views/repository.py:30
-#: server/views/repository.py:34
+#: server/views/repository.py:59
 #, python-format
 msgid "%s in store %s"
 msgstr "%s en el almacén %s"
 
-#: server/views/stats.py:160
+#: server/views/repository.py:103
+msgid "Added packages:"
+msgstr "Paquetes añadidos:"
+
+#: server/views/stats.py:102
+#: server/views/stats.py:163
+msgid "There are no updates"
+msgstr "No hay actualizaciones"
+
+#: server/views/stats.py:234
 msgid "Totals"
 msgstr "Totales"
 
-#: server/views/stats.py:258
+#: server/views/stats.py:373
+msgid "There are no defined schedules"
+msgstr "No hay calendarios definidos"
+
+#: server/views/stats.py:379
 #, python-format
 msgid "%d days"
 msgstr "%d días"
 
-#: server/views/stats.py:354
+#: server/views/stats.py:475
 msgid "There are no computers"
 msgstr "No hay ordenadores"
+
+#~ msgid "Download"
+#~ msgstr "Descargar"
+
+#~ msgid "Toggle Dropdown"
+#~ msgstr "Alternar desplegable"
+
+#~ msgid "information"
+#~ msgstr "información"
+
+#~ msgid "Relations"
+#~ msgstr "Relaciones"
+
+#~ msgid "Audit"
+#~ msgstr "Auditoría"
+
+#~ msgid "Creating Repositories of %s..."
+#~ msgstr "Creando repositorios de %s..."
 
 #~ msgid "Last login"
 #~ msgstr "Último login"
 
 #~ msgid "VERSION: %s"
 #~ msgstr "Versión: %s"
-
-#~ msgid "Hour"
-#~ msgstr "Hora"
 
 #~ msgid "Day"
 #~ msgstr "Día"
