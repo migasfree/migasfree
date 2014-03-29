@@ -3,10 +3,15 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Device, DeviceFeature, DeviceDriver
+from migasfree.server.models import (
+    Device,
+    DeviceFeature,
+    DeviceDriver,
+    MigasLink
+)
 
 
-class DeviceLogical(models.Model):
+class DeviceLogical(models.Model, MigasLink):
     device = models.ForeignKey(
         Device,
         verbose_name=_("device")
