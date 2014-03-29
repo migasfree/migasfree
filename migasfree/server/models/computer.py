@@ -173,11 +173,7 @@ class Computer(models.Model, MigasLink):
     hw_link.short_description = _("Hardware")
 
     def devices_link(self):
-        ret = ""
-        for dev in self.devices.all():
-            ret += dev.link() + " "
-
-        return ret
+        return ' '.join(dev.link() for dev in self.devices_logical.all())
 
     devices_link.allow_tags = True
     devices_link.short_description = _("Devices")
