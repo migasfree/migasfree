@@ -65,34 +65,19 @@ def create_physical_repository(request, repo, packages):
         ).replace('%PATH%', _slug_tmp_path)
     )["err"]
 
-    # remove original repository before move temporal
-    shutil.rmtree(os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        repo.version.name,
-        repo.version.pms.slug,
-        repo.name
-    ), ignore_errors=True)
-
-    # move temporal contents to original repository
     _source = os.path.join(
         _tmp_path,
-        'REPOSITORIES'
+        repo.version.pms.slug,
+        repo.name
     )
     _destination = os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
-        'REPOSITORIES'
+        repo.version.pms.slug,
+        repo.name
     )
-    for src_dir, dirs, files in os.walk(_source):
-        dst_dir = src_dir.replace(_source, _destination)
-        if not os.path.exists(dst_dir):
-            os.mkdir(dst_dir)
-        for file_ in files:
-            src_file = os.path.join(src_dir, file_)
-            dst_file = os.path.join(dst_dir, file_)
-            if os.path.exists(dst_file):
-                os.remove(dst_file)
-            shutil.move(src_file, dst_dir)
+    shutil.rmtree(_destination, ignore_errors=True)
+    shutil.copytree(_source, _destination, symlinks=True)
     shutil.rmtree(_tmp_path)
 
     if _run_err != '':
