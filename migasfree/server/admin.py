@@ -22,7 +22,7 @@ from migasfree.server.views.repository import create_physical_repository
 from .functions import compare_values, trans
 
 #AJAX_SELECT
-from ajax_select import make_ajax_form
+from ajax_select import make_ajax_form, make_ajax_field
 from ajax_select.admin import AjaxSelectAdmin
 
 #WIDGETS
@@ -629,12 +629,23 @@ class MessageServerAdmin(MigasAdmin):
 admin.site.register(MessageServer, MessageServerAdmin)
 
 
+class RepositoryForm(forms.ModelForm):
+    attributes = make_ajax_field(Repository, 'attributes', 'attribute')
+    packages = make_ajax_field(Repository, 'packages', 'package')
+    excludes = make_ajax_field(Repository, 'excludes', 'attribute')
+
+    class Meta:
+        model = Repository
+
+    def __init__(self, *args, **kwargs):
+        super(RepositoryForm, self).__init__(*args, **kwargs)
+        self.fields['version'].initial = UserProfile.objects.get(
+            pk=threadlocals.get_current_user().id
+        ).version.id
+
+
 class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
-    form = make_ajax_form(Repository, {
-        'attributes': 'attribute',
-        'packages': 'package',
-        'excludes': 'attribute'
-    })
+    form = RepositoryForm
 
     list_display = ('name', 'my_active', 'date', 'timeline',)
     list_select_related = ('schedule',)
