@@ -706,13 +706,14 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         )
 
     def save_model(self, request, obj, form, change):
+        is_new = (obj.pk is None)
         packages_after = form.cleaned_data['packages']
         super(RepositoryAdmin, self).save_model(request, obj, form, change)
 
         # create physical repository when packages has been changed
-        # or repository not have packages (to avoid client errors)
-        if len(packages_after) == 0 or compare_values(
-            obj.packages.values_list('id', flat=True),  # before
+        # or repository not have packages at first time (to avoid client errors)
+        if (is_new and len(packages_after) == 0) or compare_values(
+            obj.packages.values_list('id', flat=True),  # packages before
             packages_after
         ) is False:
             create_physical_repository(request, obj, packages_after)
