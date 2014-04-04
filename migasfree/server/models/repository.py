@@ -154,6 +154,9 @@ class Repository(models.Model, MigasLink):
             schedule__id=self.schedule.id
         ).order_by('delay')
 
+        if len(delays) == 0:
+            return _('%s (without delays)') % self.schedule
+
         date_format = "%Y-%m-%d"
         end_date = datetime.datetime.strptime(
             str(horizon(self.date, delays.reverse()[0].delay)),
@@ -168,15 +171,15 @@ class Repository(models.Model, MigasLink):
         progress = datetime.datetime.now() - begin_date
 
         if delta.days > 0:
-            number = float(progress.days) / delta.days * 100
+            percent = float(progress.days) / delta.days * 100
         else:
-            number = 100
+            percent = 100
 
-        if number > 100:
-            number = 100
+        if percent > 100:
+            percent = 100
 
-        ret = '<div class="progress" title="%(number)d%%"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%(number)d" aria-valuemin="0" aria-valuemax="100" style="width: %(number)d%%"><span class="sr-only">%(number)d%% complete</span></div></div>' % {
-            'number': number
+        ret = '<div class="progress" title="%(percent)d%%"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%(percent)d" aria-valuemin="0" aria-valuemax="100" style="width: %(percent)d%%"><span class="sr-only">%(percent)d%% complete</span></div></div>' % {
+            'percent': percent
         }
 
         ret += str(self.schedule) + ' <div class="btn-group btn-group-xs timeline">'
