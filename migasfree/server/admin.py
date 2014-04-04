@@ -658,9 +658,6 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         (_('General'), {
             'fields': ('name', 'version', 'active', 'comment',)
         }),
-        (_('Schedule'), {
-            'fields': ('date', 'schedule',)
-        }),
         (_('Packages'), {
             'classes': ('collapse',),
             'fields': ('packages', 'toinstall', 'toremove',)
@@ -677,6 +674,9 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             'classes': ('collapse',),
             'fields': ('attributes', 'excludes')
         }),
+        (_('Schedule'), {
+            'fields': ('date', 'schedule',)
+        }),
     )
 
     def my_active(self, obj):
@@ -685,7 +685,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     my_active.allow_tags = True
     my_active.short_description = _('active')
 
-    # QuerySet filter by user version.
+    # QuerySet filter by user version
     def queryset(self, request):
         if request.user.is_superuser:
             return self.model._default_manager.get_query_set()
