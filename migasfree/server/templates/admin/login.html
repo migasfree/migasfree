@@ -20,6 +20,7 @@ $(document).ready(function() {
 {% block sliding_panel %}{% endblock %}
 
 {% block content %}
+<div class="col-sm-6 col-sm-offset-3">
     <h1>{% trans 'Log in' %} @ migasfree</h1>
 
     {% if form.errors and not form.non_field_errors and not form.this_is_the_login_form.errors %}
@@ -61,4 +62,5 @@ $(document).ready(function() {
             <input class="btn btn-primary" type="submit" value="{% trans 'Log in' %}" />
         </div>
     </form>
+</div>
 {% endblock content %}
