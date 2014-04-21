@@ -53,6 +53,7 @@
                 }, 10000);
 
                 $('.controls input[type="text"]').addClass('form-control');
+                $('.controls input[type="password"]').addClass('form-control');
                 $('.controls textarea').addClass('form-control');
                 $('.controls select').addClass('form-control');
                 $('.actions select').addClass('form-control input-sm');
@@ -120,7 +121,7 @@
                         </li>
                     </ul>
 
-                    <div class="col-sm-1 col-md-1">
+                    <div class="col-sm-1">
                         <form action="{% url 'admin:server_computer_changelist' %}" method="get" class="navbar-form navbar-left" role="search">
                             <div class="input-group">
                                 <label for="search-computer" class="sr-only">{% trans 'Computer' %}:</label>
@@ -172,7 +173,7 @@
         {% endif %}{# is_popup #}
 
         <div id="wrapper" class="container">
-            <article class="col-lg-12" role="main">
+            <article class="col-md-12" role="main">
                 {% block breadcrumbs %}
                     {% include 'includes/breadcrumb.html' %}
                 {% endblock breadcrumbs %}
