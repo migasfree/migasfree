@@ -9,7 +9,7 @@
             <li>{% trans 'Datum' %}</li>
         {% endif %}
 
-        {% if opts.object_name.lower = 'property' or opts.object_name.lower = 'version' or opts.object_name.lower = 'pms' or opts.object_name.lower = 'platform' or opts.object_name.lower = 'query' or opts.object_name.lower = 'userprofile' or opts.object_name.lower = 'group' or opts.object_name.lower = 'checking' or opts.object_name.lower = 'faultdef' or opts.object_name.lower = 'autocheckerror' %}
+        {% if opts.object_name.lower = 'property' or opts.object_name.lower = 'tag' or opts.object_name.lower = 'version' or opts.object_name.lower = 'pms' or opts.object_name.lower = 'platform' or opts.object_name.lower = 'query' or opts.object_name.lower = 'userprofile' or opts.object_name.lower = 'group' or opts.object_name.lower = 'checking' or opts.object_name.lower = 'faultdef' or opts.object_name.lower = 'autocheckerror' %}
             <li>{% trans 'Settings' %}</li>
         {% endif %}
 
@@ -21,9 +21,16 @@
             <li>{% trans 'Liberation' %}</li>
         {% endif %}
 
+        <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
+
         {% if original %}
-            <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
-            <li>{% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}</li>
+            <li>
+                {% if add %}
+                    {% trans 'Add' %} {{ opts.verbose_name }}
+                {% else %}
+                    {{ original|truncatewords:"18" }}
+                {% endif %}
+            </li>
         {% endif %}
     </ul>
 {% endif %}
