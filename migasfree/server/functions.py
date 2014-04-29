@@ -25,6 +25,8 @@ def config_apache():
         _apache_path = '/etc/apache2/conf.d'
     elif os.path.exists('/etc/httpd/conf.d'):
         _apache_path = '/etc/httpd/conf.d'
+    elif os.path.exists('/etc/apache2/sites-enabled'):
+        _apache_path = '/etc/apache2/sites-enabled'
 
     if not _apache_path:
         print('Apache path not found.')
