@@ -2,6 +2,10 @@
 
 <ul class="dropdown-menu">
     <li><a href="{% url 'admin:server_property_changelist' %}">{% trans 'Properties' %}</a></li>
+    <li><a href="{% url 'admin:server_tag_changelist' %}">{% trans 'Tags' %}</a></li>
+
+    <li role="presentation" class="divider"></li>
+
     <li><a href="{% url 'admin:server_version_changelist' %}">{% trans 'Versions' %}</a></li>
     <li><a href="{% url 'admin:server_pms_changelist' %}">{% trans 'P.M.S.' %}</a></li>
     <li><a href="{% url 'admin:server_platform_changelist' %}">{% trans 'Platforms' %}</a></li>
