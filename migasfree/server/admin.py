@@ -280,11 +280,26 @@ class StoreAdmin(MigasAdmin):
 admin.site.register(Store, StoreAdmin)
 
 
+class PropertyForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PropertyForm, self).__init__(*args, **kwargs)
+
+        self.fields['code'].required = True
+
+    class Meta:
+        model = Property
+
+
 class PropertyAdmin(MigasAdmin):
     list_display = ('prefix', 'name', 'my_active', 'kind', 'my_auto',)
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'prefix',)
+    form = PropertyForm
+    fields = (
+        'prefix', 'name', 'active',
+        'language', 'code', 'kind', 'auto',
+    )
     actions = None
 
     def my_active(self, obj):
@@ -299,7 +314,26 @@ class PropertyAdmin(MigasAdmin):
     my_auto.allow_tags = True
     my_auto.short_description = _('auto')
 
+    def queryset(self, request):
+        return self.model.objects.filter(tag=False)
+
 admin.site.register(Property, PropertyAdmin)
+
+
+class TagAdmin(MigasAdmin):
+    list_display = ('prefix', 'name', 'my_active')
+    fields = ('prefix', 'name', 'active')
+
+    def my_active(self, obj):
+        return self.boolean_field(obj.active)
+
+    my_active.allow_tags = True
+    my_active.short_description = _('active')
+
+    def queryset(self, request):
+        return self.model.objects.filter(tag=True)
+
+admin.site.register(Tag, TagAdmin)
 
 
 class AttributeAdmin(MigasAdmin):
