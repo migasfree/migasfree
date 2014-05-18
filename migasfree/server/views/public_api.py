@@ -15,6 +15,7 @@ from migasfree.server.models import (
 
 from migasfree.server.api import get_computer
 from migasfree.server.functions import uuid_validate
+from migasfree.server.security import gpg_export_key_name
 
 
 def get_versions(request):
@@ -73,3 +74,11 @@ def computer_label(request):
         'computer_label.html',
         json.loads(get_computer_info(request).content)
     )
+
+
+def get_key_repositories(request):
+    """
+    Return the repositories public key
+    """
+    return HttpResponse(gpg_export_key_name("migasfree-repository"),
+        mimetype="text/plain")

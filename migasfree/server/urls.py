@@ -115,6 +115,11 @@ urlpatterns = patterns('',
         computer_label,
         name='computer_label'
     ),
+    url(
+        r'^get_key_repositories/$',
+        get_key_repositories,
+        name='get_key_repositories'
+    ),
 
     url(
         r'^connections_model/$',
