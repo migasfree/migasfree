@@ -60,11 +60,11 @@ def gen_keys(name):
 def gpg_exist_key(name):
     # create a context
     ctx = gpgme.Context()
-    for key in ctx.keylist():
-        for uid in key.uids:
-            if name == uid.name:
-                return True
-    return False
+    try:
+        ctx.get_key(name)
+    except:
+        return False
+    return True
 
 
 def gpg_gen_key(name):
