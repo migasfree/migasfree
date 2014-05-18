@@ -3,6 +3,7 @@
 import os
 import json
 import gpgme
+from io import BytesIO
 
 import migasfree.server.errmfs as errmfs
 
@@ -92,6 +93,14 @@ Expire-Date: 0
         ctx.genkey(key_params % name)
 
     return gpg_exist_key(name)
+
+
+def gpg_export_key_name(name):
+    ctx = gpgme.Context()
+    ctx.armor = True
+    keydata = BytesIO()
+    ctx.export(name, keydata)
+    return keydata.getvalue()
 
 
 def get_keys_to_client(version):
