@@ -2,6 +2,7 @@
 
 import os
 import json
+import gpgme
 
 import migasfree.server.errmfs as errmfs
 
@@ -10,6 +11,9 @@ from django.conf import settings
 from migasfree.server.functions import readfile, writefile
 
 SIGN_LEN = 256
+
+gpghome = os.path.join(settings.MIGASFREE_KEYS_DIR, ".gnupg")
+os.environ['GNUPGHOME'] = gpghome
 
 
 def sign(filename):
@@ -51,6 +55,43 @@ def gen_keys(name):
     # read only keys
     os.chmod(private_key, 0o400)
     os.chmod(public_key, 0o400)
+
+
+def gpg_exist_key(name):
+    # create a context
+    ctx = gpgme.Context()
+    for key in ctx.keylist():
+        for uid in key.uids:
+            if name == uid.name:
+                return True
+    return False
+
+
+def gpg_gen_key(name):
+    """
+    Generates keys gpg
+    """
+    if not os.path.exists(gpghome):
+        os.mkdir(gpghome, 0o700)
+        # create a blank configuration file
+        with open(os.path.join(gpghome, 'gpg.conf'), 'wv') as handle:
+            handle.write('')
+
+    if not gpg_exist_key(name):
+        # create a context
+        ctx = gpgme.Context()
+
+        key_params = """
+<GnupgKeyParms format="internal">
+Key-Type: RSA
+Key-Length: 4096
+Name-Real: %s
+Expire-Date: 0
+</GnupgKeyParms>
+"""
+        ctx.genkey(key_params % name)
+
+    return gpg_exist_key(name)
 
 
 def get_keys_to_client(version):
@@ -98,6 +139,7 @@ def get_keys_to_packager():
 def create_keys_server():
     gen_keys("migasfree-server")
     gen_keys("migasfree-packager")
+    gpg_gen_key("migasfree-repository")
 
 
 def wrap(filename, data):
