@@ -883,12 +883,14 @@ def get_computer_tags(request, name, uuid, computer, data):
     retdata["selected"] = element
 
     retdata["available"] = {}
-    for prp in Property.objects.filter(tag=True).filter(active=True):
-        retdata["available"][prp.name] = []
-        for tag in Attribute.objects.filter(property_att=prp):
-            retdata["available"][prp.name].append(
-                "%s-%s" % (prp.prefix, tag.value)
-            )
+    for rps in Repository.objects.all().filter(version=computer.version).filter(active=True):
+        for tag in rps.attributes.all().filter(property_att__tag=True).filter(property_att__active=True):
+            if not tag.property_att.name in retdata["available"]:
+                retdata["available"][tag.property_att.name] = []
+
+            value="%s-%s" % (tag.property_att.prefix, tag.value)
+            if not value in retdata["available"][tag.property_att.name]:
+                retdata["available"][tag.property_att.name].append(value)
 
     return return_message(cmd, retdata)
 

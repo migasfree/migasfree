@@ -9,8 +9,7 @@ from django.conf import settings
 from migasfree.server.models import (
     Platform,
     Version,
-    Property,
-    Attribute
+    Repository,
 )
 
 from migasfree.server.api import get_computer
@@ -56,11 +55,14 @@ def get_computer_info(request):
     result["tags"] = element
 
     result["available_tags"] = {}
-    for prp in Property.objects.filter(tag=True).filter(active=True):
-        result["available_tags"][prp.name] = []
-        for tag in Attribute.objects.filter(property_att=prp):
-            result["available_tags"][prp.name].append("%s-%s" %
-                (prp.prefix, tag.value))
+    for rps in Repository.objects.all().filter(version=computer.version).filter(active=True):
+        for tag in rps.attributes.all().filter(property_att__tag=True).filter(property_att__active=True):
+            if not tag.property_att.name in result["available_tags"]:
+                result["available_tags"][tag.property_att.name] = []
+
+            value="%s-%s" % (tag.property_att.prefix, tag.value)
+            if not value in result["available_tags"][tag.property_att.name]:
+                result["available_tags"][tag.property_att.name].append(value)
 
     return HttpResponse(json.dumps(result), mimetype="text/plain")
 
