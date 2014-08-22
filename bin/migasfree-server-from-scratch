@@ -28,6 +28,8 @@ _PWD=$(dirname $(readlink -f $0))
 
 export _USER_WEB_SERVICE=$(get_user_web_service)
 
+export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
+
 _IS_DB_SQLITE=$(python -c "from migasfree.server.functions import is_db_sqlite; print is_db_sqlite()")
 
 if [ -z "$_USER_WEB_SERVICE" ]
@@ -43,8 +45,6 @@ cd $_MIGASFREE_PATH
 remove_old_data
 
 migasfree-server-create-database
-
-export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
 
 create_server_keys
 if [ $? -ne 0 ]
