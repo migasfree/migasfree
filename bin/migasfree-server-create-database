@@ -35,7 +35,7 @@ def create_db():
             _PORT = " --port=%s " % DB.get('PORT')
 
         # DROP DATABASE
-        cmd_linux = "echo 'DROP DATABASE %s;' | su postgres -c psql -" \
+        cmd_linux = "echo 'DROP DATABASE %s;' | su postgres -c psql - &>/dev/null" \
             % (DB.get('NAME'))
         (out, err) = run(cmd_linux)
 
