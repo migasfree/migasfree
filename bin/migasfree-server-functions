@@ -92,7 +92,7 @@ function remove_old_data
         rm -f $_DB_NAME
     else
         _NAME=$(basename $_DB_NAME) # $_DB_NAME contains path and filename
-        su - postgres -c "psql -c 'DROP DATABASE IF EXISTS $_NAME'"
+        su - postgres -c "psql -c 'DROP DATABASE IF EXISTS $_NAME' &>/dev/null"
         su - postgres -c "createdb -E utf8 -O migasfree $_NAME"
     fi
 
