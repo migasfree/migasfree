@@ -3,6 +3,7 @@
 from .migasfree import *
 from .base import *
 from .ajax_select_config import *
+from .functions import secret_key
 
 # production environment
 TEMPLATE_DEBUG = DEBUG = False
@@ -12,6 +13,8 @@ ALLOWED_HOSTS = ['*']
 MIGASFREE_DB_DIR = '/usr/share/migasfree-server'
 MIGASFREE_REPO_DIR = '/var/migasfree/repo'
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_DB_DIR, 'keys')
+
+SECRET_KEY = secret_key(MIGASFREE_KEYS_DIR)
 
 DATABASES = {
     'default': {
