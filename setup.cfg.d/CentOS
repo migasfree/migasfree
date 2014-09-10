@@ -19,3 +19,5 @@ requires = python >= 2.6
            gnupg
            haveged
            pygpgme
+           postgresql
+           python-psycopg2

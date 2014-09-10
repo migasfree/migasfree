@@ -1,5 +1,18 @@
 #!/bin/sh
 
+export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
+
+if which update-python-modules > /dev/null 2>&1
+then
+    if [ -f /usr/share/python-support/migasfree-server.public ]
+    then
+        update-python-modules -p migasfree-server.public || :
+    fi
+fi
+
+# Config, create user and database (posgresql)
+python -c "from migasfree.server.functions_pg import pg_config ;pg_config()" || :
+
 # migrate DB with south
 cd /
 cd $(python -c "import migasfree;print migasfree.__path__[0]")
