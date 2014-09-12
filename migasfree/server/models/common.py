@@ -79,9 +79,7 @@ class MigasLink(object):
 
         for _include in self._include_links:
             try:
-                print _include
                 (_modelname, _fieldname) = _include.split(" - ")
-                print _modelname, _fieldname
                 related_link = reverse(
                     'admin:server_%s_changelist'
                     % _modelname
