@@ -10,7 +10,7 @@ from .checking import Checking
 from .autocheck_error import AutoCheckError
 
 from .pms import Pms
-from .property import Property, KindTag
+from .property import Property, TagType
 
 from .platform import Platform
 from .version import (

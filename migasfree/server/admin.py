@@ -320,8 +320,8 @@ class PropertyAdmin(MigasAdmin):
 admin.site.register(Property, PropertyAdmin)
 
 
-class KindTagAdmin(MigasAdmin):
-    list_display = ('link','prefix', 'my_active')
+class TagTypeAdmin(MigasAdmin):
+    list_display = ('link', 'prefix', 'my_active')
     fields = ('prefix', 'name', 'active')
 
     def my_active(self, obj):
@@ -333,7 +333,7 @@ class KindTagAdmin(MigasAdmin):
     def queryset(self, request):
         return self.model.objects.filter(tag=True)
 
-admin.site.register(KindTag, KindTagAdmin)
+admin.site.register(TagType, TagTypeAdmin)
 
 
 class AttributeFilter(SimpleListFilter):
@@ -376,6 +376,7 @@ class TagFilter(SimpleListFilter):
         else:
             return queryset
 
+
 class TagForm(forms.ModelForm):
     x = make_ajax_form(Computer, {'tags': 'computer'})
 
@@ -413,7 +414,7 @@ class TagForm(forms.ModelForm):
 class TagAdmin(admin.ModelAdmin):
     form = TagForm
     list_display = ('link', 'value', 'description', 'property_att')
-    fields = ("property_att", "value", "description", "computers", )
+    fields = ('property_att', 'value', 'description', 'computers')
     list_select_related = ('tag_att',)
     list_filter = (TagFilter,)
     ordering = ('property_att', 'value',)
