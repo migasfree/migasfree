@@ -86,13 +86,16 @@ class Property(models.Model, MigasLink):
         permissions = (("can_save_property", "Can save Property"),)
 
 
-class Tag(Property):
+class KindTag(Property):
+    _exclude_links = ["attribute - property_att", ]
+    _include_links = ["tag - property_att", ]
+
     def save(self, *args, **kwargs):
         self.tag = True
-        super(Tag, self).save(*args, **kwargs)
+        super(KindTag, self).save(*args, **kwargs)
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Tag")
-        verbose_name_plural = _("Tags")
+        verbose_name = _("Kind Tag")
+        verbose_name_plural = _("Kinds Tag")
         proxy = True

@@ -10,7 +10,7 @@ from .checking import Checking
 from .autocheck_error import AutoCheckError
 
 from .pms import Pms
-from .property import Property, Tag
+from .property import Property, KindTag
 
 from .platform import Platform
 from .version import (
@@ -18,7 +18,7 @@ from .version import (
     VersionManager,
     UserProfile, user_version
 )
-from .attribute import Attribute
+from .attribute import Attribute, Tag
 
 from .device_type import DeviceType
 from .device_manufacturer import DeviceManufacturer

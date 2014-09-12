@@ -291,7 +291,7 @@ class PropertyForm(forms.ModelForm):
 
 
 class PropertyAdmin(MigasAdmin):
-    list_display = ('prefix', 'name', 'my_active', 'kind', 'my_auto',)
+    list_display = ('link', 'name', 'my_active', 'kind', 'my_auto',)
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'prefix',)
@@ -320,8 +320,8 @@ class PropertyAdmin(MigasAdmin):
 admin.site.register(Property, PropertyAdmin)
 
 
-class TagAdmin(MigasAdmin):
-    list_display = ('prefix', 'name', 'my_active')
+class KindTagAdmin(MigasAdmin):
+    list_display = ('link','prefix', 'my_active')
     fields = ('prefix', 'name', 'active')
 
     def my_active(self, obj):
@@ -333,17 +333,96 @@ class TagAdmin(MigasAdmin):
     def queryset(self, request):
         return self.model.objects.filter(tag=True)
 
-admin.site.register(Tag, TagAdmin)
+admin.site.register(KindTag, KindTagAdmin)
+
+
+class AttributeFilter(SimpleListFilter):
+    title = 'Attribute'
+    parameter_name = 'Attribute'
+
+    def lookups(self, request, model_admin):
+        return [(c.id, c.name) for c in Property.objects.filter(tag=False)]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(property_att__id__exact=self.value())
+        else:
+            return queryset
 
 
 class AttributeAdmin(MigasAdmin):
     list_display = ('link', 'value', 'description', 'property_link',)
     list_select_related = ('property_att',)
-    list_filter = ('property_att',)
+    list_filter = (AttributeFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
 
+    def queryset(self, request):
+        return self.model.objects.filter(property_att__tag=False)
+
 admin.site.register(Attribute, AttributeAdmin)
+
+
+class TagFilter(SimpleListFilter):
+    title = 'Tag'
+    parameter_name = 'Tag'
+
+    def lookups(self, request, model_admin):
+        return [(c.id, c.name) for c in Property.objects.filter(tag=True)]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(property_att__id__exact=self.value())
+        else:
+            return queryset
+
+class TagForm(forms.ModelForm):
+    x = make_ajax_form(Computer, {'tags': 'computer'})
+
+    computers = x.tags
+    computers.label = _('Computers')
+
+    class Meta:
+        model = Tag
+
+    def __init__(self, *args, **kwargs):
+        super(TagForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            lst = []
+            for computer in self.instance.computer_set.all():
+                lst.append(computer.id)
+            self.fields['computers'].initial = lst
+
+    def save(self, commit=True):
+        instance = forms.ModelForm.save(self, False)
+        old_save_m2m = self.save_m2m
+
+        def save_m2m():
+            old_save_m2m()
+            instance.computer_set.clear()
+            for computer in self.cleaned_data['computers']:
+                instance.computer_set.add(computer)
+
+        self.save_m2m = save_m2m
+        if commit:
+            instance.save()
+            self.save_m2m()
+        return instance
+
+
+class TagAdmin(admin.ModelAdmin):
+    form = TagForm
+    list_display = ('link', 'value', 'description', 'property_att')
+    fields = ("property_att", "value", "description", "computers", )
+    list_select_related = ('tag_att',)
+    list_filter = (TagFilter,)
+    ordering = ('property_att', 'value',)
+    search_fields = ('value', 'description')
+    readonly_fields = ('property_att', 'value',)
+    def queryset(self, request):
+        return self.model.objects.filter(property_att__tag=True)
+
+admin.site.register(Tag, TagAdmin)
 
 
 class LoginAdmin(MigasAdmin):

@@ -9,7 +9,7 @@ from migasfree.server.models import Property, MigasLink
 class Attribute(models.Model, MigasLink):
     property_att = models.ForeignKey(
         Property,
-        verbose_name=_("Property of attribute")
+        verbose_name=_("Property")
     )
 
     value = models.CharField(
@@ -22,6 +22,8 @@ class Attribute(models.Model, MigasLink):
         null=True,
         blank=True
     )
+
+    _exclude_links = ["computer - tags",]
 
     def property_link(self):
         return self.property_att.link()
@@ -42,3 +44,13 @@ class Attribute(models.Model, MigasLink):
         verbose_name_plural = _("Attributes")
         unique_together = (("property_att", "value"),)
         permissions = (("can_save_attribute", "Can save Attribute"),)
+
+
+class Tag(Attribute):
+    _exclude_links = ["login - attributes", ]
+
+    class Meta:
+        app_label = 'server'
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+        proxy = True

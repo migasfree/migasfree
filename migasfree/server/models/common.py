@@ -18,6 +18,8 @@ LANGUAGES_CHOICES = (
 
 class MigasLink(object):
     _actions = None
+    _exclude_links = []
+    _include_links = []
 
     def link(self, default=False):
         related_objects = self._meta.get_all_related_objects_with_model() \
@@ -59,27 +61,45 @@ class MigasLink(object):
 
         related_data += '<li role="presentation" class="dropdown-header">%s</li>' % trans("Related data")
         for related_object, _ in related_objects:
+            if not "%s - %s" % (related_object.model._meta.model_name,related_object.field.name) in self._exclude_links:
+                try:
+                    related_link = reverse(
+                        'admin:server_%s_changelist'
+                        % related_object.model._meta.model_name
+                    )
+                    related_data += '<li><a href="%s?%s__exact=%d">%s [%s]</a></li>' % (
+                        related_link,
+                        related_object.field.name,
+                        self.id,
+                        trans(related_object.model._meta.verbose_name_plural),
+                        trans(related_object.field.name)
+                    )
+                except:
+                    pass
+
+        for _include in self._include_links:
             try:
+                print _include
+                (_modelname, _fieldname) = _include.split(" - ")
+                print _modelname, _fieldname
                 related_link = reverse(
                     'admin:server_%s_changelist'
-                    % related_object.model._meta.model_name
+                    % _modelname
                 )
                 related_data += '<li><a href="%s?%s__exact=%d">%s [%s]</a></li>' % (
                     related_link,
-                    related_object.field.name,
+                    _fieldname,
                     self.id,
-                    trans(related_object.model._meta.verbose_name_plural),
-                    trans(related_object.field.name)
+                    trans(_modelname),
+                    trans(_fieldname)
                 )
             except:
                 pass
 
         return format_html(
             '<div class="btn-group btn-group-xs">' +
-            _link.replace('{', '{{').replace('}', '}}') +
-            '<ul class="dropdown-menu" role="menu">' +
-            related_data.replace('{', '{{').replace('}', '}}') +
-            '</ul></div>'
+            _link + '<ul class="dropdown-menu" role="menu">' +
+            related_data + '</ul></div>'
         )
 
     link.allow_tags = True
