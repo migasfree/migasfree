@@ -98,8 +98,10 @@ class MigasLink(object):
 
         return format_html(
             '<div class="btn-group btn-group-xs">' +
-            _link + '<ul class="dropdown-menu" role="menu">' +
-            related_data + '</ul></div>'
+            _link.replace('{', '{{').replace('}', '}}') +
+            '<ul class="dropdown-menu" role="menu">' +
+            related_data.replace('{', '{{').replace('}', '}}') +
+            '</ul></div>'
         )
 
     link.allow_tags = True
