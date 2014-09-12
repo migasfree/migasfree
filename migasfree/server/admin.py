@@ -673,9 +673,12 @@ class RepositoryForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(RepositoryForm, self).__init__(*args, **kwargs)
-        self.fields['version'].initial = UserProfile.objects.get(
-            pk=threadlocals.get_current_user().id
-        ).version.id
+        try:
+            self.fields['version'].initial = UserProfile.objects.get(
+                pk=threadlocals.get_current_user().id
+            ).version.id
+        except UserProfile.DoesNotExist:
+            pass
 
 
 class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
