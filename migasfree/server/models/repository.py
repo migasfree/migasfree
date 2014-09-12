@@ -6,6 +6,7 @@ import shutil
 
 from django.db import models
 from django.utils.html import format_html
+from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
@@ -128,7 +129,7 @@ class Repository(models.Model, MigasLink):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.name = self.name.replace(" ", "_")
+        self.name = slugify(self.name)
         self.toinstall = self.toinstall.replace("\r\n", "\n")
         self.toremove = self.toremove.replace("\r\n", "\n")
 
