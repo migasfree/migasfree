@@ -41,7 +41,7 @@ class RepositoryTestCase(TransactionTestCase):
 
 # WARNING: the following methods must start with "test"
     def test_repository_name(self):
-        self.assertEqual(self.test1.name, 'TEST_1_2')
+        self.assertEqual(self.test1.name, 'test-1-2')
 
 
     def test_login_site(self):
