@@ -394,7 +394,7 @@ class TagForm(forms.ModelForm):
                 lst.append(computer.id)
             self.fields['computers'].initial = lst
 
-            self.fields['property_att'].queryset = Property.objects.filter(tag=True)
+        self.fields['property_att'].queryset = Property.objects.filter(tag=True)
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
