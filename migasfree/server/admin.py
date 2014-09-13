@@ -356,7 +356,7 @@ class AttributeAdmin(MigasAdmin):
     list_filter = (AttributeFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
-
+    readonly_fields = ('property_att', 'value',)
     def queryset(self, request):
         return self.model.objects.filter(property_att__tag=False)
 
@@ -394,6 +394,8 @@ class TagForm(forms.ModelForm):
                 lst.append(computer.id)
             self.fields['computers'].initial = lst
 
+            self.fields['property_att'].queryset = Property.objects.filter(tag=True)
+
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
         old_save_m2m = self.save_m2m
@@ -419,7 +421,6 @@ class TagAdmin(admin.ModelAdmin):
     list_filter = (TagFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
-    readonly_fields = ('property_att', 'value',)
     def queryset(self, request):
         return self.model.objects.filter(property_att__tag=True)
 
