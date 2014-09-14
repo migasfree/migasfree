@@ -11,7 +11,15 @@ def pg_hba_file():
     _cmd = """
     su - postgres -c "psql -t -P format=unaligned -c 'show hba_file';"
     """
-    return subprocess.check_output(_cmd, shell=True).replace("\n", "")
+    process = subprocess.Popen(_cmd, shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+    out, err = process.communicate()
+    errcode = process.returncode
+    if errcode == 0:
+        return out.replace("\n", "")
+    else:
+        return ""
 
 
 def pg_hba_file_is_config():
@@ -53,6 +61,7 @@ def pg_config(name="migasfree", password="migasfree"):
     if is_db_postgres():
         if not pg_hba_file_is_config():
             _cmd = """
+            service postgresql initdb &>/dev/null || :
             _CAD='\# Put your actual configuration here'
             sed -i "s/$_CAD/$_CAD\\nlocal   migasfree             %(user)s                     password\\nlocal   test_migasfree        %(user)s                     password\\n/g" %(file)s
             service postgresql restart
