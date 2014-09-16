@@ -96,6 +96,8 @@ Expire-Date: 0
 
 
 def gpg_export_key_name(name):
+    if not  gpg_exist_key(name):
+        gpg_gen_key(name)
     ctx = gpgme.Context()
     ctx.armor = True
     keydata = BytesIO()
