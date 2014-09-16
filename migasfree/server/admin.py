@@ -17,7 +17,7 @@ from django.conf import settings
 
 from migasfree.middleware import threadlocals
 from migasfree.server.models import *
-from migasfree.server.views.repository import create_physical_repository
+from migasfree.server.views.repository import create_physical_repository, remove_physical_repository
 
 from .functions import compare_values, trans
 
@@ -839,13 +839,22 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         packages_after = form.cleaned_data['packages']
         super(RepositoryAdmin, self).save_model(request, obj, form, change)
 
+        name_old = "%s" % form.initial.get('name')
+        name_new = "%s" % obj.name
+
         # create physical repository when packages has been changed
-        # or repository not have packages at first time (to avoid client errors)
-        if (is_new and len(packages_after) == 0) or compare_values(
-            obj.packages.values_list('id', flat=True),  # packages before
-            packages_after
-        ) is False:
+        # or repository not have packages at first time
+        # or name is changed (to avoid client errors)
+        if ((is_new and len(packages_after) == 0)
+                or compare_values(
+                    obj.packages.values_list('id', flat=True),  # packages before
+                    packages_after
+                ) is False) or (name_new != name_old):
             create_physical_repository(request, obj, packages_after)
+
+            # delete old repository by name changed
+            if name_new != name_old and not is_new:
+                remove_physical_repository(request, obj, name_old)
 
 admin.site.register(Repository, RepositoryAdmin)
 

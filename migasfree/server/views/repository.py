@@ -12,6 +12,25 @@ from migasfree.server.models import Version, Package
 from migasfree.server.functions import run_in_server
 
 
+def remove_physical_repository(request, repo, oldname=""):
+    if oldname:
+        name = oldname
+    else:
+        name = repo.name
+    _destination = os.path.join(
+        settings.MIGASFREE_REPO_DIR,
+        repo.version.name,
+        repo.version.pms.slug,
+        name
+    )
+    shutil.rmtree(_destination, ignore_errors=True)
+    _msg = ("Deleted repository: %s " % name)
+    if hasattr(request, 'META'):
+        return messages.add_message(request, messages.SUCCESS, _msg)
+    else:
+        return _msg
+
+
 def create_physical_repository(request, repo, packages):
     """
     Creates the repository metadata.
