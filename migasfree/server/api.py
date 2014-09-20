@@ -300,7 +300,7 @@ def get_properties(request, name, uuid, computer, data):
         # All active properties
         for e in Property.objects.filter(active=True).filter(
             tag=False
-        ).exclude(prefix="CID"):  # FIXME improve exclusion method
+        ).exclude(prefix="CID").exclude(prefix="MID"):  # FIXME improve exclusion method
             properties.append({
                 "language": LANGUAGES_CHOICES[e.language][1],
                 "name": e.prefix,
@@ -532,6 +532,16 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 )
         except:
             pass
+        # ADD ATTRIBUTE MID (not running on clients!!!)
+        try:
+            prp_mid = Property.objects.get(prefix="MID", active=True)
+            if prp_mid:
+                lst_attributes.append(
+                    new_attribute(o_login, prp_mid, "%02d" % (o_computer.id % 100))
+                )
+        except:
+            pass
+
 
         # 3 FaultsDef
         lst_faultsdef = []

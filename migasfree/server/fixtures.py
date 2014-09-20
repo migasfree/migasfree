@@ -172,6 +172,8 @@ def create_registers():
         'server.property.json',
         'server.attribute.json',
         'server.faultdef.json',
+        'server.schedule.json',
+        'server.scheduledelay.json',
     ]
     for fixture in fixtures:
         django.core.management.call_command(

@@ -38,6 +38,11 @@ class Attribute(models.Model, MigasLink):
             self.description
         )
 
+    def delete(self, *args, **kwargs):
+        # Not allowed delete atributte of ALL, CID, and MID Property.prefix
+        if self.property_att.prefix not in ["ALL", "CID", "MID"]:
+            super(Attribute, self).delete(*args, **kwargs)
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Attribute")

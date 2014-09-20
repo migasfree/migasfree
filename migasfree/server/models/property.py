@@ -75,9 +75,10 @@ class Property(models.Model, MigasLink):
         super(Property, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # Not allowed delete CID and ALL Property
-        if self.prefix != "CID" and self.prefix != "ALL":
+        # Not allowed delete ALL, CID, and MID Property
+        if self.prefix not in ["ALL", "CID", "MID"]:
             super(Property, self).delete(*args, **kwargs)
+
 
     class Meta:
         app_label = 'server'
