@@ -97,6 +97,49 @@ def get_computer(name, uuid):
     return computer
 
 
+def process_kind_property(o_login, o_property, value):
+    attributes = []
+    try:
+        # NORMAL
+        if o_property.kind == "N":
+            attributes.append(
+                new_attribute(o_login, o_property, value)
+            )
+
+        # LIST
+        if o_property.kind == "-":
+            mylist = value.split(",")
+            for element in mylist:
+                attributes.append(
+                    new_attribute(o_login, o_property, element)
+                )
+
+        # ADDS RIGHT
+        if o_property.kind == "R":
+            lista = value.split(".")
+            c = value
+            l = 0
+            for x in lista:
+                attributes.append(
+                    new_attribute(o_login, o_property, c[l:])
+                )
+                l += len(x) + 1
+
+        # ADDS LEFT
+        if o_property.kind == "L":
+            lista = value.split(".")
+            c = value
+            l = 0
+            for x in lista:
+                l += len(x) + 1
+                attributes.append(
+                    new_attribute(o_login, o_property, c[0:l - 1])
+                )
+    except:
+        pass
+    return attributes
+
+
 def new_attribute(o_login, o_property, par):
     """
     Adds an attribute to the system
@@ -477,51 +520,13 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         for e in properties:
             o_property = Property.objects.get(prefix=e)
             value = properties.get(e)
+            for att in process_kind_property(o_login, o_property, value):
+                lst_attributes.append(att)
 
-            try:
-                # NORMAL
-                if o_property.kind == "N":
-                    lst_attributes.append(
-                        new_attribute(o_login, o_property, value)
-                    )
-
-                # LIST
-                if o_property.kind == "-":
-                    mylist = value.split(",")
-                    for element in mylist:
-                        lst_attributes.append(
-                            new_attribute(o_login, o_property, element)
-                        )
-
-                # ADDS RIGHT
-                if o_property.kind == "R":
-                    lista = value.split(".")
-                    c = value
-                    l = 0
-                    for x in lista:
-                        lst_attributes.append(
-                            new_attribute(o_login, o_property, c[l:])
-                        )
-                        l += len(x) + 1
-
-                # ADDS LEFT
-                if o_property.kind == "L":
-                    lista = value.split(".")
-                    c = value
-                    l = 0
-                    for x in lista:
-                        l += len(x) + 1
-                        lst_attributes.append(
-                            new_attribute(o_login, o_property, c[0:l - 1])
-                        )
-            except:
-                pass
-
-        # add Tags (not running on clients!!!)
+        # ADD Tags (not running on clients!!!)
         for tag in o_computer.tags.all().filter(property_att__active=True):
-            lst_attributes.append(
-                new_attribute(o_login, tag.property_att, tag.value)
-            )
+            for att in process_kind_property(o_login, tag.property_att, tag.value):
+                lst_attributes.append(att)
 
         # ADD ATTRIBUTE CID (not running on clients!!!)
         try:

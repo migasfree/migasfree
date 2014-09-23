@@ -333,7 +333,7 @@ admin.site.register(Property, PropertyAdmin)
 
 class TagTypeAdmin(MigasAdmin):
     list_display = ('link', 'prefix', 'my_active')
-    fields = ('prefix', 'name', 'active')
+    fields = ('prefix', 'name', 'kind','active')
 
     def my_active(self, obj):
         return self.boolean_field(obj.active)

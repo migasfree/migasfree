@@ -51,7 +51,7 @@ class Attribute(models.Model, MigasLink):
 
 
 class Tag(Attribute):
-    _exclude_links = ["login - attributes", ]
+    _include_links = ["computer - tags", ]
 
     class Meta:
         app_label = 'server'
