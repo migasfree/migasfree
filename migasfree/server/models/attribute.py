@@ -32,10 +32,9 @@ class Attribute(models.Model, MigasLink):
     property_link.allow_tags = True
 
     def __unicode__(self):
-        return u'%s-%s %s' % (
+        return u'%s-%s' % (
             self.property_att.prefix,
             self.value,
-            self.description
         )
 
     def delete(self, *args, **kwargs):
@@ -58,4 +57,12 @@ class Tag(Attribute):
         app_label = 'server'
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
+        proxy = True
+
+class Att(Attribute):
+
+    class Meta:
+        app_label = 'server'
+        verbose_name = _("Attribute/Tag")
+        verbose_name_plural = _("Attributes/Tags")
         proxy = True

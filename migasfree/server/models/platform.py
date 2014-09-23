@@ -2,9 +2,10 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from migasfree.server.models import MigasLink
 
 
-class Platform(models.Model):
+class Platform(models.Model, MigasLink):
     """
     Computer Platform
     """

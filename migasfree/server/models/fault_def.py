@@ -3,10 +3,10 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Attribute, LANGUAGES_CHOICES, UserProfile
+from migasfree.server.models import Attribute, LANGUAGES_CHOICES, UserProfile, MigasLink
 
 
-class FaultDef(models.Model):
+class FaultDef(models.Model, MigasLink):
     name = models.CharField(
         _("name"),
         max_length=50,

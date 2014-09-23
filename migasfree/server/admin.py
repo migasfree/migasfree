@@ -32,9 +32,7 @@ from migasfree.admin_bootstrapped.forms import *
 admin.site.register(DeviceType)
 admin.site.register(DeviceFeature)
 admin.site.register(DeviceManufacturer)
-admin.site.register(UserProfile)
 admin.site.register(AutoCheckError)
-admin.site.register(Platform)
 
 
 class MigasAdmin(admin.ModelAdmin):
@@ -80,6 +78,18 @@ class ExtraThinTextarea(forms.Textarea):
         attrs.setdefault('cols', 20)
         attrs.setdefault('rows', 1)
         super(ExtraThinTextarea, self).__init__(*args, **kwargs)
+
+
+class PlatformAdmin(MigasAdmin):
+    list_display = ("link",)
+
+admin.site.register(Platform, PlatformAdmin)
+
+
+class UserProfileAdmin(MigasAdmin):
+    list_display = ("link",)
+
+admin.site.register(UserProfile, UserProfileAdmin)
 
 
 class VersionAdmin(MigasAdmin):
@@ -189,10 +199,11 @@ class DeviceLogicalForm(forms.ModelForm):
         return instance
 
 
-class DeviceLogicalAdmin(admin.ModelAdmin):
+class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
     fields = ("device", "feature", "computers")
     list_select_related = ('device', 'feature',)
+    list_display = ('link', 'feature')
 
 admin.site.register(DeviceLogical, DeviceLogicalAdmin)
 
@@ -268,7 +279,7 @@ admin.site.register(DeviceModel, DeviceModelAdmin)
 
 
 class PmsAdmin(MigasAdmin):
-    list_display = ('name',)
+    list_display = ('link',)
 
 admin.site.register(Pms, PmsAdmin)
 
@@ -291,7 +302,7 @@ class PropertyForm(forms.ModelForm):
 
 
 class PropertyAdmin(MigasAdmin):
-    list_display = ('link', 'name', 'my_active', 'kind', 'my_auto',)
+    list_display = ('link', 'my_active', 'kind', 'my_auto',)
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'prefix',)
@@ -350,13 +361,18 @@ class AttributeFilter(SimpleListFilter):
             return queryset
 
 
-class AttributeAdmin(MigasAdmin):
-    list_display = ('link', 'value', 'description', 'property_link',)
+class AttAdmin(MigasAdmin):
+    list_display = ('link', 'description', 'property_link',)
     list_select_related = ('property_att',)
     list_filter = (AttributeFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
     readonly_fields = ('property_att', 'value',)
+
+admin.site.register(Att, AttAdmin)
+
+
+class AttributeAdmin(AttAdmin, MigasAdmin):
     def queryset(self, request):
         return self.model.objects.filter(property_att__tag=False)
 
@@ -415,7 +431,7 @@ class TagForm(forms.ModelForm):
 
 class TagAdmin(admin.ModelAdmin):
     form = TagForm
-    list_display = ('link', 'value', 'description', 'property_att')
+    list_display = ('link', 'description', 'property_att')
     fields = ('property_att', 'value', 'description', 'computers')
     list_select_related = ('tag_att',)
     list_filter = (TagFilter,)
@@ -427,10 +443,11 @@ class TagAdmin(admin.ModelAdmin):
 admin.site.register(Tag, TagAdmin)
 
 
+
 class LoginAdmin(MigasAdmin):
     form = make_ajax_form(Login, {'attributes': 'attribute'})
 
-    list_display = ('id', 'user_link', 'computer_link', 'date',)
+    list_display = ('link', 'user_link', 'computer_link', 'date',)
     list_select_related = ('computer', 'user',)
     list_filter = ('date',)
     ordering = ('user', 'computer',)
@@ -462,7 +479,7 @@ admin.site.register(Login, LoginAdmin)
 
 
 class UserAdmin(MigasAdmin):
-    list_display = ('name', 'fullname',)
+    list_display = ('link', 'fullname',)
     ordering = ('name',)
     search_fields = ('name', 'fullname')
     readonly_fields = ('name', 'fullname')
@@ -605,7 +622,7 @@ admin.site.register(Fault, FaultAdmin)
 
 class FaultDefAdmin(MigasAdmin):
     form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
-    list_display = ('name', 'my_active', 'list_attributes', 'list_users')
+    list_display = ('link', 'my_active', 'list_attributes', 'list_users')
     list_filter = ('active',)
     ordering = ('name',)
     search_fields = ('name', 'function',)
@@ -765,7 +782,7 @@ class RepositoryForm(forms.ModelForm):
 class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     form = RepositoryForm
 
-    list_display = ('name', 'my_active', 'date', 'timeline',)
+    list_display = ('link', 'my_active', 'date', 'timeline',)
     list_select_related = ('schedule',)
     list_filter = ('active',)
     ordering = ('name',)
@@ -867,7 +884,7 @@ class ScheduleDelayline(admin.TabularInline):
 
 
 class ScheduleAdmin(MigasAdmin):
-    list_display = ('name', 'description',)
+    list_display = ('link', 'description',)
     inlines = [ScheduleDelayline, ]
     extra = 0
 

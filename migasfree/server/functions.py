@@ -130,7 +130,7 @@ def vl2s(field):
     """
     value_list("id") to string
     """
-    return str(field.values_list("id")).replace("(", "").replace(",)", "")
+    return str(list(field.values_list("id"))).replace("(", "").replace(",)", "")
 
 
 class Mmcheck():

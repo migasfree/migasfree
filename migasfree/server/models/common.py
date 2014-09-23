@@ -3,7 +3,7 @@
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 
-from migasfree.server.functions import trans
+from migasfree.server.functions import trans, vl2s
 
 # Programming Languages for Properties and FaultDefs
 LANGUAGES_CHOICES = (
@@ -24,14 +24,8 @@ class MigasLink(object):
     def link(self, default=False):
         related_objects = self._meta.get_all_related_objects_with_model() \
             + self._meta.get_all_related_m2m_objects_with_model()
-        if (len(related_objects) == 0 and self._actions is None) or default:
-            return '<a href="%s">%s</a>' % (
-                reverse(
-                    'admin:server_%s_change' % self._meta.model_name,
-                    args=(self.id, )
-                ),
-                self.__unicode__()
-            )
+
+        objs = self._meta.get_m2m_with_model()
 
         _link = '<span class="sr-only">%s</span><a href="%s" class="btn btn-xs">%s</a>' % (
             self.__unicode__(),
@@ -60,8 +54,31 @@ class MigasLink(object):
             related_data += '<li role="presentation" class="divider"></li>'
 
         related_data += '<li role="presentation" class="dropdown-header">%s</li>' % trans("Related data")
+
+        for obj, _ in objs:
+            try:
+                _name = obj.related.field.related.parent_model.__name__.lower()
+                if _name == "attribute":
+                    _name = "att"
+
+                related_link = reverse(
+                    'admin:%s_%s_changelist' % (
+                        obj.related.model._meta.app_label,
+                        _name)
+                    )
+                values = vl2s(self.__getattribute__(obj.related.field.name)).replace("[", "").replace("]", "")
+                if values:
+                    related_data += '<li><a href="%s?%s__in=%s">%s </a></li>' % (
+                        related_link,
+                        "id",
+                        values,
+                        trans(obj.related.field.name)
+                    )
+            except:
+                pass
+
         for related_object, _ in related_objects:
-            if not "%s - %s" % (related_object.model._meta.model_name,related_object.field.name) in self._exclude_links:
+            if not "%s - %s" % (related_object.model._meta.model_name, related_object.field.name) in self._exclude_links:
                 try:
                     related_link = reverse(
                         'admin:server_%s_changelist'

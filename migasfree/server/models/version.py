@@ -135,7 +135,7 @@ class VersionManager(models.Manager):
             )
 
 
-class UserProfile(UserSystem):
+class UserProfile(UserSystem, MigasLink):
     """
     info = 'For change password use <a href="%s">change password form</a>.' \
         % reverse('admin:password_change')
