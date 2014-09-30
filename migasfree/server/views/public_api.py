@@ -46,6 +46,7 @@ def get_computer_info(request):
         'uuid': computer.uuid,
         'name': computer.name,
         'helpdesk': settings.MIGASFREE_HELP_DESK,
+        'server': request.META.get('HTTP_HOST'),
     }
     result["search"] = result[settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
 
@@ -82,5 +83,7 @@ def get_key_repositories(request):
     """
     Return the repositories public key
     """
-    return HttpResponse(gpg_export_key_name("migasfree-repository"),
-        mimetype="text/plain")
+    return HttpResponse(
+        gpg_export_key_name("migasfree-repository"),
+        mimetype="text/plain"
+    )

@@ -1,11 +1,13 @@
 <!doctype>
 {% load admin_static %}
+{% load i18n %}
 <html>
     <head>
         <title>{{ search }}</title>
         <style type="text/css">
         body {
             width: 25em;
+            height: 10em;
             border: 1px solid #000;
             padding: .5em 1em;
         }
@@ -27,6 +29,7 @@
     <body>
         <h1>{{ search }}</h1>
         <h2>{{ uuid }}</h2>
+        <h2>{% trans 'Server' %}: {{ server }}</h2>
         <p>{{ helpdesk }}</p>
     </body>
 </html>
