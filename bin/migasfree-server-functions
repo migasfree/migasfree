@@ -25,7 +25,7 @@ function web_service
 
 function own_web_server
 {
-  mkdir -p "$1"
+  mkdir -p "$1" &>/dev/null || :
   chown -R $_USER_WEB_SERVICE "$1"
 }
 
@@ -118,8 +118,9 @@ function set_permissions
     own_web_server $_KEYS_PATH
     chmod 700 $_KEYS_PATH
 
-    # owner for /tmp/migasfree.log     # FIXME
-    own_web_server /tmp/migasfree.log
+    # owner for migasfree.log
+    touch "$_TMP_DIR/migasfree.log"
+    own_web_server "$_TMP_DIR/migasfree.log"
 }
 
 function test_app

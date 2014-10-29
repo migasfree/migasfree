@@ -18,17 +18,18 @@ then
     exit 2
 fi
 
+export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
+
 _MIGASFREE_PATH=$(python -c "import os; import migasfree; print os.path.dirname(os.path.abspath(migasfree.__file__))")
 _REPO_PATH=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_REPO_DIR")
 _DB_PATH=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_DB_DIR")
 _DB_NAME=$(python -c "import migasfree.settings; print migasfree.settings.DATABASES['default']['NAME']")
 _KEYS_PATH=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_KEYS_DIR")
+_TMP_DIR=$(python -c "import migasfree.settings; print migasfree.settings.MIGASFREE_TMP_DIR")
 
 _PWD=$(dirname $(readlink -f $0))
 
 export _USER_WEB_SERVICE=$(get_user_web_service)
-
-export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
 
 _IS_DB_SQLITE=$(python -c "from migasfree.server.functions import is_db_sqlite; print is_db_sqlite()")
 
