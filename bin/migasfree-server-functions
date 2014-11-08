@@ -136,6 +136,7 @@ function test_app
 
 function create_server_keys
 {
+    service haveged start || :
     DJANGO_SETTINGS_MODULE=migasfree.settings.production python -c "from migasfree.server.security import create_keys_server; create_keys_server();"
     if [ $? -ne 0 ]
     then
