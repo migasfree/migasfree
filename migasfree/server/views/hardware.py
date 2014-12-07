@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import time
 
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
@@ -11,7 +12,8 @@ from migasfree.server.models import (
     HwNode,
     HwConfiguration,
     HwLogicalName,
-    HwCapability
+    HwCapability,
+    Notification,
 )
 
 
@@ -214,7 +216,17 @@ def load_hw(computer, node, parent, level):
 
 def process_hw(computer, jsonfile):
     with open(jsonfile, "r") as f:
-        data = json.load(f)
+        try:
+            data = json.load(f)
+        except:
+            _notification = Notification()
+            _notification.notification = \
+                "Error: Hardware dictionary is not valid by computer [%s]." % (
+                computer.__unicode__()
+            )
+            _notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
+            _notification.save()
+            return
 
     HwNode.objects.filter(computer=computer).delete()
     load_hw(computer, data, None, 1)
