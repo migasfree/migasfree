@@ -81,7 +81,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Error\nresult = Error.objects.filter(checked__exact=0).count()\nurl = '/admin/server/error/?checked__exact=0&user=me'\nalert = 'danger'\nmsg = 'Errors to check'\ntarget = 'computer'\n",
+            "code": "from migasfree.server.models import Error\nresult = Error.objects.filter(checked__exact=0).count()\nurl = '/admin/server/error/?checked__exact=0'\nalert = 'danger'\nmsg = 'Errors to check'\ntarget = 'computer'\n",
             "name": "Errors to check",
             "alert": true,
             "description": "Errors not checked. You must check error when error is solved"
