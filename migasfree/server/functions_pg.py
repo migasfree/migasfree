@@ -52,7 +52,7 @@ def pg_change_password(name, password):
 
 def pg_create_user(name, password):
     _cmd = """
-    su - postgres -c "echo -ne '%(password)s\\n%(password)s\\n' | createuser -S -d -R -E -P %(name)s"
+    su - postgres -c "psql -c \\\" CREATE USER %(name)s WITH CREATEDB NOCREATEUSER ENCRYPTED PASSWORD '%(password)s'; \\\" > /dev/null"
     """ % {"name": name, "password": password}
     return (os.system(_cmd) == 0)
 
