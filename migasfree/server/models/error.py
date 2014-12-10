@@ -5,6 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models import Computer, Version, AutoCheckError
 
+import re
+
 
 class Error(models.Model):
     computer = models.ForeignKey(
@@ -42,11 +44,9 @@ class Error(models.Model):
     def auto_check(self):
         msg = self.error
         for ace in AutoCheckError.objects.all():
-            msg = msg.replace(ace.message, "")
-
-        msg = msg.replace("\n", "")
-        if msg == "":
-            self.checked = True
+            if re.search(ace.message,msg):
+                self.checked =True
+                return
 
     def computer_link(self):
         return self.computer.link()

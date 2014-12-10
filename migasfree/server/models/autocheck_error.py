@@ -15,7 +15,7 @@ class AutoCheckError(models.Model):
         _("message"),
         null=True,
         blank=True,
-        help_text=_("Text of error that is only a warning. You can copy/paste from the field 'error' of a Error.")
+        help_text = _("Pattern to search . See https://docs.python.org/2/library/re.html#module-re")
     )
 
     def save(self, *args, **kwargs):
