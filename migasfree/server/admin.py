@@ -120,6 +120,9 @@ class MigrationAdmin(MigasAdmin):
     exclude = ("computer",)
     actions = None
 
+    def has_add_permission(self, request):
+        return False
+
 admin.site.register(Migration, MigrationAdmin)
 
 
@@ -376,6 +379,9 @@ class AttributeAdmin(AttAdmin, MigasAdmin):
     def queryset(self, request):
         return self.model.objects.filter(property_att__tag=False)
 
+    def has_add_permission(self, request):
+        return False
+
 admin.site.register(Attribute, AttributeAdmin)
 
 
@@ -475,6 +481,9 @@ class LoginAdmin(MigasAdmin):
             **kwargs
         )
 
+    def has_add_permission(self, request):
+        return False
+
 admin.site.register(Login, LoginAdmin)
 
 
@@ -483,6 +492,9 @@ class UserAdmin(MigasAdmin):
     ordering = ('name',)
     search_fields = ('name', 'fullname')
     readonly_fields = ('name', 'fullname')
+
+    def has_add_permission(self, request):
+        return False
 
 admin.site.register(User, UserAdmin)
 
@@ -515,6 +527,9 @@ class NotificationAdmin(MigasAdmin):
         return redirect(request.get_full_path())
 
     checked_ok.short_description = _("Checking is O.K.")
+
+    def has_add_permission(self, request):
+        return False
 
 admin.site.register(Notification, NotificationAdmin)
 
@@ -551,6 +566,9 @@ class ErrorAdmin(MigasAdmin):
         return redirect(request.get_full_path())
 
     checked_ok.short_description = _("Checking is O.K.")
+
+    def has_add_permission(self, request):
+        return False
 
 admin.site.register(Error, ErrorAdmin)
 
@@ -616,6 +634,9 @@ class FaultAdmin(MigasAdmin):
         return redirect(request.get_full_path())
 
     checked_ok.short_description = _("Checking is O.K.")
+
+    def has_add_permission(self, request):
+        return False
 
 admin.site.register(Fault, FaultAdmin)
 
@@ -736,6 +757,9 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             request,
             **kwargs
         )
+
+    def has_add_permission(self, request):
+        return False
 
 admin.site.register(Computer, ComputerAdmin)
 
