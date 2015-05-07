@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+MAXINT = 9223372036854775807 # sys.maxint= (2**63) -1
 import json
 import time
 
@@ -83,7 +84,12 @@ def load_hw(computer, node, parent, level):
     if "slot" in node:
         n.slot = node["slot"]
     if "size" in node:
-        n.size = int(node["size"])
+        # validate bigint unsigned (#126)
+        size = int(node["size"])
+        if size <= MAXINT and size >= - MAXINT - 1:
+            n.size = size
+        else:
+            n.size = 0
     if "capacity" in node:
         n.capacity = node["capacity"]
     if "clock" in node:
