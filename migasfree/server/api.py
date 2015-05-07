@@ -561,7 +561,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 "code": d.code
             })
 
-        repositories = select_repositories(o_version, lst_attributes)
+        repositories = select_repositories(o_computer, lst_attributes)
 
         #4.- CREATE JSON
         lst_repos = []
@@ -948,7 +948,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         lst_pkg_preinstall = []
 
         # Repositories old
-        repositories = select_repositories(o_computer.version, old_tags_id)
+        repositories = select_repositories(o_computer, old_tags_id)
         for r in repositories:
             # INVERSE !!!!
             pkgs = "%s %s %s" % (
@@ -969,7 +969,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
 
         # Repositories new
         repositories = select_repositories(
-            o_computer.version,
+            o_computer,
             new_tags_id + com_tags_id
         )
         for r in repositories:
@@ -1141,7 +1141,7 @@ def save_request_file(requestfile, filename):
         pass
 
 
-def select_repositories(o_version, lst_attributes):
+def select_repositories(o_computer, lst_attributes):
     """
     Return the repositories availables for a version and attributes list
     """
@@ -1150,10 +1150,10 @@ def select_repositories(o_version, lst_attributes):
     # 1.- Add to "dic_repos" all repositories by attribute
     repositories = Repository.objects.filter(
         Q(attributes__id__in=lst_attributes),
-        Q(version__id=o_version.id)
+        Q(version__id=o_computer.version.id)
     )
     repositories = repositories.filter(
-        Q(version__id=o_version.id),
+        Q(version__id=o_computer.version.id),
         Q(active=True)
     )
 
@@ -1166,16 +1166,20 @@ def select_repositories(o_version, lst_attributes):
         Q(active=True)
     )
     repositories = repositories.filter(
-        Q(version__id=o_version.id),
+        Q(version__id=o_computer.version.id),
         Q(active=True)
     )
     repositories = repositories.extra(
-        select={'delay': "server_scheduledelay.delay"}
+        select={'delay': "server_scheduledelay.delay","duration": "server_scheduledelay.duration"}
     )
 
     for r in repositories:
-        if horizon(r.date, r.delay) <= datetime.now().date():
-            dic_repos[r.name] = r.id
+        for duration in range(0, r.duration):
+            if o_computer.id % r.duration == duration:
+                if horizon(r.date, r.delay + duration) <= datetime.now().date():
+                    dic_repos[r.name] = r.id
+                    break
+
 
     # 3.- Attributtes Excluded
     repositories = Repository.objects.filter(

@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models import Property, MigasLink
+#from migasfree.server.models import Login
 
 
 class Attribute(models.Model, MigasLink):
@@ -23,7 +24,7 @@ class Attribute(models.Model, MigasLink):
         blank=True
     )
 
-    _exclude_links = ["computer - tags",]
+    _exclude_links = ["computer - tags", ]
 
     def property_link(self):
         return self.property_att.link()
@@ -36,6 +37,13 @@ class Attribute(models.Model, MigasLink):
             self.property_att.prefix,
             self.value,
         )
+
+    def total_computers(self, version=None):
+        from migasfree.server.models import Login
+        if version:
+            return Login.objects.filter(attributes__id=self.id, computer__version_id=version.id).count()
+        else:
+            return Login.objects.filter(attributes__id=self.id).count()
 
     def delete(self, *args, **kwargs):
         # Not allowed delete atributte of ALL, CID, and MID Property.prefix
@@ -58,6 +66,7 @@ class Tag(Attribute):
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
         proxy = True
+
 
 class Att(Attribute):
 

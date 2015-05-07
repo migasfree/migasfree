@@ -336,7 +336,7 @@ admin.site.register(Property, PropertyAdmin)
 
 class TagTypeAdmin(MigasAdmin):
     list_display = ('link', 'prefix', 'my_active')
-    fields = ('prefix', 'name', 'kind','active')
+    fields = ('prefix', 'name', 'kind', 'active')
 
     def my_active(self, obj):
         return self.boolean_field(obj.active)
@@ -365,7 +365,7 @@ class AttributeFilter(SimpleListFilter):
 
 
 class AttAdmin(MigasAdmin):
-    list_display = ('link', 'description', 'property_link',)
+    list_display = ('link', 'description', 'total_computers', 'property_link',)
     list_select_related = ('property_att',)
     list_filter = (AttributeFilter,)
     ordering = ('property_att', 'value',)
@@ -443,11 +443,11 @@ class TagAdmin(admin.ModelAdmin):
     list_filter = (TagFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
+
     def queryset(self, request):
         return self.model.objects.filter(property_att__tag=True)
 
 admin.site.register(Tag, TagAdmin)
-
 
 
 class LoginAdmin(MigasAdmin):
@@ -902,9 +902,11 @@ admin.site.register(Repository, RepositoryAdmin)
 
 class ScheduleDelayline(admin.TabularInline):
     model = ScheduleDelay
-    form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute'})
+    fields = ('delay', 'attributes', 'total_computers', 'duration')
+    form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute_computers'})
     extra = 0
     ordering = ('delay',)
+    readonly_fields = ('total_computers',)
 
 
 class ScheduleAdmin(MigasAdmin):

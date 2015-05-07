@@ -10,6 +10,7 @@ from migasfree.server.models import (
     Package,
     Property,
     DeviceLogical,
+    user_version,
     Computer
 )
 
@@ -43,6 +44,48 @@ class AttributeLookup(LookupChannel):
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description)
+        )
+
+    def can_add(self, user, model):
+        return False
+
+    def get_objects(self, ids):
+        return Attribute.objects.filter(pk__in=ids).order_by(
+            'property_att',
+            'value'
+        )
+
+
+class Attribute_ComputersLookup(LookupChannel):
+    model = Attribute
+
+    def get_query(self, q, request):
+        prps = Property.objects.all().values_list('prefix', flat=True)
+        if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
+        and len(q) > (Property.PREFIX_LEN + 1):
+            return Attribute.objects.filter(
+                Q(property_att__prefix__icontains=q[0:Property.PREFIX_LEN])
+            ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])).order_by(
+                'value'
+            )
+        else:
+            return Attribute.objects.filter(
+                Q(value__icontains=q) | Q(description__icontains=q)
+                | Q(property_att__prefix__icontains=q)
+            ).order_by('value')
+
+    def get_result(self, obj):
+        return unicode(obj)
+
+    def format_match(self, obj):
+        return self.format_item_display(obj)
+
+    def format_item_display(self, obj):
+        return u"%s-%s %s (%s)" % (
+            escape(obj.property_att.prefix),
+            escape(obj.value),
+            escape(obj.description),
+            escape(obj.total_computers(user_version()))
         )
 
     def can_add(self, user, model):

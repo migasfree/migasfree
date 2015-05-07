@@ -14,6 +14,7 @@ AJAX_LOOKUP_CHANNELS = {
     'tag': ('migasfree.server.lookups', 'TagLookup'),
     'devicelogical': ('migasfree.server.lookups', 'DeviceLogicalLookup'),
     'computer': ('migasfree.server.lookups', 'ComputerLookup'),
+    'attribute_computers': ('migasfree.server.lookups', 'Attribute_ComputersLookup'),
 }
 
 AJAX_SELECT_BOOTSTRAP = False

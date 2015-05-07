@@ -23,6 +23,27 @@ from migasfree.server.models import (
 )
 
 
+def percent_horizon(begin_date, end_date):
+    delta = end_date - begin_date
+    progress = datetime.datetime.now().date() - begin_date.date()
+    if delta.days > 0:
+        percent = float(progress.days + 1) / delta.days * 100
+    else:
+        percent = 100
+    if percent < 0:
+        percent = 0
+    if percent > 100:
+        percent = 100
+    return percent
+
+
+def show_percent(percent):
+    if percent > 0 and percent < 100:
+        return " " + str(int(percent)) + "%"
+    else:
+        return ""
+
+
 class Repository(models.Model, MigasLink):
     name = models.CharField(
         _("name"),
@@ -159,25 +180,16 @@ class Repository(models.Model, MigasLink):
             return _('%s (without delays)') % self.schedule
 
         date_format = "%Y-%m-%d"
-        end_date = datetime.datetime.strptime(
-            str(horizon(self.date, delays.reverse()[0].delay)),
-            date_format
-        )
         begin_date = datetime.datetime.strptime(
             str(horizon(self.date, delays[0].delay)),
             date_format
         )
+        end_date = datetime.datetime.strptime(
+            str(horizon(self.date, delays.reverse()[0].delay + delays.reverse()[0].duration  )),
+            date_format
+        )
 
-        delta = end_date - begin_date
-        progress = datetime.datetime.now() - begin_date
-
-        if delta.days > 0:
-            percent = float(progress.days) / delta.days * 100
-        else:
-            percent = 100
-
-        if percent > 100:
-            percent = 100
+        percent = percent_horizon(begin_date, end_date)
 
         ret = '<div class="progress" title="%(percent)d%%"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%(percent)d" aria-valuemin="0" aria-valuemax="100" style="width: %(percent)d%%"><span class="sr-only">%(percent)d%% complete</span></div></div>' % {
             'percent': percent
@@ -187,16 +199,24 @@ class Repository(models.Model, MigasLink):
         ret += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>'
         ret += '<ul class="dropdown-menu">'
 
-        now = datetime.datetime.now().date()
         for item in delays:
             ret += '<li class="list-group-item">'
             ret += '<p class="list-group-item-heading label label-'
-            hori = horizon(self.date, item.delay)
-            if hori <= now:
+            hori = datetime.datetime.strptime(
+                str(horizon(self.date, item.delay)),
+                date_format
+            )
+            horf = datetime.datetime.strptime(
+                str(horizon(self.date, item.delay + item.duration)),
+                date_format
+            )
+
+            percent = percent_horizon(hori, horf)
+            if hori <= datetime.datetime.now():
                 ret += 'success'
             else:
                 ret += 'default'
-            ret += '">' + hori.strftime("%a-%b-%d") + '</p>'
+            ret += '">' + hori.strftime("%a-%b-%d") + '</p>' + show_percent(percent)
             ret += '<p class="list-group-item-text">'
             for e in item.attributes.values_list("value"):
                 ret += e[0] + " "

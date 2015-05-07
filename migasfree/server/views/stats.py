@@ -344,19 +344,33 @@ def delay_schedule(request):
             schedule__name=sched.name
         ).order_by("delay")
         for delay in delays:
+
             for i in range(d, delay.delay):
+
                 line.append([i, value])
+                d = d + 1
+
+            for duration in range(0, delay.duration):
+
+                lst_att_delay = []
+                for att in delay.attributes.all():
+                    lst_att_delay.append(att.id)
+
+                value = value + Login.objects.extra(
+                    select={'deployment': 'computer_id'},
+                    where=["computer_id %%%% %s = %s" %
+                        (delay.duration, duration)]).filter(
+                    ~ Q(attributes__id__in=lst_attributes)
+                    & Q(attributes__id__in=lst_att_delay)
+                    & Q(computer__version=current_version.id)
+                ).values('computer_id').annotate(lastdate=Max('date')).count()
+
+                line.append([d, value])
+
+                d = d + 1
 
             for att in delay.attributes.all():
                 lst_attributes.append(att.id)
-
-            value = Login.objects.filter(
-                Q(attributes__id__in=lst_attributes)
-                & Q(computer__version=current_version.id)
-            ).values('computer_id').annotate(lastdate=Max('date')).count()
-            d = delay.delay
-
-        line.append([d, value])
 
         maximum_delay = max(maximum_delay, d)
         data.append({
