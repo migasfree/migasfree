@@ -107,8 +107,12 @@ class Computer(models.Model, MigasLink):
             try:
                 _token = n.filter_expression.token
                 if not _token.startswith("computer"):
-                    _context[_token] = self.login().attributes.get(
-                        property_att__prefix=_token).value
+                    attributes= self.login().attributes.filter(property_att__prefix=_token)
+                    cad = ""
+                    for attribute in attributes:
+                        print "attribute.value", attribute.value
+                        cad += attribute.value + ","
+                    _context[_token] = cad[:-1]
             except:
                 pass
         _remote_admin = _template.render(Context(_context))
