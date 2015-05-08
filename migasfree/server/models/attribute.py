@@ -44,6 +44,7 @@ class Attribute(models.Model, MigasLink):
             return Login.objects.filter(attributes__id=self.id, computer__version_id=version.id).count()
         else:
             return Login.objects.filter(attributes__id=self.id).count()
+    total_computers.admin_order_field = 'total_computers'
 
     def delete(self, *args, **kwargs):
         # Not allowed delete atributte of ALL, CID, and MID Property.prefix

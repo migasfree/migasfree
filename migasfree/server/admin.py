@@ -34,6 +34,11 @@ admin.site.register(DeviceFeature)
 admin.site.register(DeviceManufacturer)
 admin.site.register(AutoCheckError)
 
+sql_total_computer = "SELECT COUNT(server_login.id) \
+    FROM server_login,server_login_attributes  \
+    WHERE server_attribute.id=server_login_attributes.attribute_id \
+    and server_login_attributes.login_id=server_login.id"
+
 
 class MigasAdmin(admin.ModelAdmin):
     formfield_overrides = {
@@ -377,7 +382,10 @@ admin.site.register(Att, AttAdmin)
 
 class AttributeAdmin(AttAdmin, MigasAdmin):
     def queryset(self, request):
-        return self.model.objects.filter(property_att__tag=False)
+        return self.model.objects.filter(property_att__tag=False).extra(
+    select={
+        'total_computers': sql_total_computer
+    },)
 
     def has_add_permission(self, request):
         return False
@@ -445,7 +453,11 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ('value', 'description')
 
     def queryset(self, request):
-        return self.model.objects.filter(property_att__tag=True)
+        return self.model.objects.filter(property_att__tag=True).extra(
+    select={
+        'total_computers': sql_total_computer
+    },)
+
 
 admin.site.register(Tag, TagAdmin)
 
