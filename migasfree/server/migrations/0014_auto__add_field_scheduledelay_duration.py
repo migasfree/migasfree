@@ -1,28 +1,21 @@
-# encoding: utf-8
+# -*- coding: utf-8 -*-
 import datetime
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
 
+
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        
         # Adding field 'ScheduleDelay.duration'
-        db.add_column(u'server_scheduledelay', 'duration', self.gf('django.db.models.fields.IntegerField')(default=1), keep_default=False)
-
-        # Changing field 'UserProfile.version'
-        db.alter_column(u'server_userprofile', 'version_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Version'], null=True))
-
+        db.add_column(u'server_scheduledelay', 'duration',
+                      self.gf('django.db.models.fields.IntegerField')(default=1),
+                      keep_default=False)
 
     def backwards(self, orm):
-        
         # Deleting field 'ScheduleDelay.duration'
         db.delete_column(u'server_scheduledelay', 'duration')
-
-        # Changing field 'UserProfile.version'
-        db.alter_column(u'server_userprofile', 'version_id', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['server.Version'], null=True, on_delete=models.SET_NULL))
-
 
     models = {
         u'auth.group': {
@@ -40,7 +33,7 @@ class Migration(SchemaMigration):
         },
         u'auth.user': {
             'Meta': {'object_name': 'User'},
-            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2015, 5, 6, 10, 51, 17, 794826)'}),
+            'date_joined': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'email': ('django.db.models.fields.EmailField', [], {'max_length': '75', 'blank': 'True'}),
             'first_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'groups': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Group']"}),
@@ -48,7 +41,7 @@ class Migration(SchemaMigration):
             'is_active': ('django.db.models.fields.BooleanField', [], {'default': 'True'}),
             'is_staff': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_superuser': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime(2015, 5, 6, 10, 51, 17, 794327)'}),
+            'last_login': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'last_name': ('django.db.models.fields.CharField', [], {'max_length': '30', 'blank': 'True'}),
             'password': ('django.db.models.fields.CharField', [], {'max_length': '128'}),
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'related_name': "u'user_set'", 'blank': 'True', 'to': u"orm['auth.Permission']"}),
@@ -356,7 +349,7 @@ class Migration(SchemaMigration):
         'server.userprofile': {
             'Meta': {'object_name': 'UserProfile', '_ormbases': [u'auth.User']},
             u'user_ptr': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True', 'primary_key': 'True'}),
-            'version': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['server.Version']", 'null': 'True'})
+            'version': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['server.Version']", 'null': 'True', 'on_delete': 'models.SET_NULL'})
         },
         'server.version': {
             'Meta': {'object_name': 'Version'},
