@@ -30,19 +30,6 @@
         "model": "server.property",
         "fields": {
             "kind": "N",
-            "code": "",
-            "name": "MODULE CID",
-            "language": 1,
-            "auto": true,
-            "prefix": "MID",
-            "active": true
-        }
-    },
-    {
-        "pk": 4,
-        "model": "server.property",
-        "fields": {
-            "kind": "N",
             "code": "import platform\nprint platform.system()",
             "name": "PLATFORM",
             "language": 1,
@@ -52,7 +39,7 @@
         }
     },
     {
-        "pk": 5,
+        "pk": 4,
         "model": "server.property",
         "fields": {
             "kind": "N",
@@ -65,7 +52,7 @@
         }
     },
     {
-        "pk": 6,
+        "pk": 5,
         "model": "server.property",
         "fields": {
             "kind": "N",
@@ -78,7 +65,7 @@
         }
     },
     {
-        "pk": 7,
+        "pk": 6,
         "model": "server.property",
         "fields": {
             "kind": "N",
@@ -91,7 +78,7 @@
         }
     },
     {
-        "pk": 8,
+        "pk": 7,
         "model": "server.property",
         "fields": {
             "kind": "N",
@@ -104,7 +91,7 @@
         }
     },
     {
-        "pk": 9,
+        "pk": 8,
         "model": "server.property",
         "fields": {
             "kind": "-",
@@ -117,7 +104,7 @@
         }
     },
     {
-        "pk": 10,
+        "pk": 9,
         "model": "server.property",
         "fields": {
             "kind": "N",

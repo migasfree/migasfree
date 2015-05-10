@@ -47,8 +47,8 @@ class Attribute(models.Model, MigasLink):
     total_computers.admin_order_field = 'total_computers'
 
     def delete(self, *args, **kwargs):
-        # Not allowed delete atributte of ALL, CID, and MID Property.prefix
-        if self.property_att.prefix not in ["ALL", "CID", "MID"]:
+        # Not allowed delete atributte of ALL and CID Property.prefix
+        if self.property_att.prefix not in ["ALL", "CID"]:
             super(Attribute, self).delete(*args, **kwargs)
 
     class Meta:

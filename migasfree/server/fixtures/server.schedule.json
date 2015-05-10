@@ -1,17 +1,17 @@
 [
 {
-    "pk": 1, 
-    "model": "server.schedule", 
+    "pk": 1,
+    "model": "server.schedule",
     "fields": {
-        "name": "2 weeks (by MID)", 
+        "name": "2 weeks",
         "description": ""
     }
 },
 {
-    "pk": 2, 
-    "model": "server.schedule", 
+    "pk": 2,
+    "model": "server.schedule",
     "fields": {
-        "name": "4 weeks (by MID)", 
+        "name": "4 weeks",
         "description": ""
     }
 }
