@@ -70,7 +70,9 @@ def gpg_get_key(name):
             # create a blank configuration file
             with open(os.path.join(gpghome, 'gpg.conf'), 'wb') as handle:
                 handle.write('')
-            #os.chmod(os.path.join(gpghome, 'gpg.conf'), 0o600)
+
+            # read only is necessary in centos (#127)
+            os.chmod(os.path.join(gpghome, 'gpg.conf'), 0o600)
 
         # create a context
         ctx = gpgme.Context()
