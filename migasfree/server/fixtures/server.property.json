@@ -5,10 +5,10 @@
         "fields": {
             "kind": "N",
             "code": "print \"ALL SYSTEMS\"\n",
-            "name": "ALL SYSTEMS",
+            "name": "ATTRIBUTES SET",
             "language": 1,
             "auto": true,
-            "prefix": "ALL",
+            "prefix": "SET",
             "active": true
         }
     },

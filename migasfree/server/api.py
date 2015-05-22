@@ -19,6 +19,57 @@ import logging
 logger = logging.getLogger('migasfree')
 
 
+def idx(lst, ele):
+    for i in range(0, len(lst)):
+        if lst[i] == ele:
+            return i
+    return -1
+
+
+def order_groups(lst, element, before=-1):
+    id_before = idx(lst, before)
+    id_element = idx(lst, element)
+    if id_element == -1:
+        if id_before == -1:
+            lst.append(element)
+        else:
+            lst.insert(id_before, element)
+    else:
+        if id_before > -1:
+            if id_before < id_element:
+                lst = lst[0:id_before] + \
+                      lst[id_element:] + \
+                      lst[id_before:id_element]
+    return lst
+
+
+def list_groups(lst_attributes):
+    groups = []
+    for grp in AttributeSet.objects.filter(active=True):
+        groups = order_groups(groups, grp.id)
+        for subgrp in grp.attributes.filter(
+            id__gt=1).filter(
+            property_att__id=1).filter(
+            ~Q(value=grp.name)):
+            groups = order_groups(groups, AttributeSet.objects.get(name=subgrp.value).id, grp.id)
+        for subgrp in grp.excludes.filter(
+            id__gt=1).filter(
+            property_att__id=1).filter(
+            ~Q(value=grp.name)):
+            groups = order_groups(groups, AttributeSet.objects.get(name=subgrp.value).id, grp.id)
+    return groups
+
+
+def add_attributes_sets(o_login, lst_attributes):
+    prp_grp = Property.objects.get(id=1)
+    for g in list_groups(lst_attributes):
+        for grp in AttributeSet.objects.filter(id=g).filter(
+            Q(attributes__id__in=lst_attributes)).filter(
+            ~Q(excludes__id__in=lst_attributes)):
+            lst_attributes.append(new_attribute(o_login, prp_grp, grp.name))
+    return lst_attributes
+
+
 def add_notification_platform(platform, computer):
     _notification = Notification()
     _notification.notification = \
@@ -538,6 +589,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         except:
             pass
 
+        # ADD AttributeSets
+        lst_attributes=add_attributes_sets(o_login,lst_attributes)
+
         # 3 FaultsDef
         lst_faultsdef = []
         faultsdef = FaultDef.objects.filter(
@@ -904,7 +958,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     tags = data["set_computer_tags"]["tags"]
     all_id = Attribute.objects.get(
-        property_att__prefix="ALL",
+        property_att__prefix="SET",
         value="ALL SYSTEMS"
     ).id
 

@@ -19,6 +19,7 @@ from .version import (
     UserProfile, user_version
 )
 from .attribute import Attribute, Tag, Att
+from .attribute_set import AttributeSet
 
 from .device_type import DeviceType
 from .device_manufacturer import DeviceManufacturer

@@ -75,8 +75,8 @@ class Property(models.Model, MigasLink):
         super(Property, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # Not allowed delete ALL and CID Property
-        if self.prefix not in ["ALL", "CID"]:
+        # Not allowed delete SET and CID Property
+        if self.prefix not in ["SET", "CID"]:
             super(Property, self).delete(*args, **kwargs)
 
 

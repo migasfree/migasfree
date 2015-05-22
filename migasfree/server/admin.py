@@ -950,3 +950,10 @@ class QueryAdmin(MigasAdmin):
     run_query.short_description = _("Run Query")
 
 admin.site.register(Query, QueryAdmin)
+
+
+class AttributeSetAdmin(MigasAdmin):
+    form = make_ajax_form(AttributeSet, {'attributes': 'attribute','excludes':'attribute'})
+    list_display = ('name', )
+
+admin.site.register(AttributeSet, AttributeSetAdmin)
