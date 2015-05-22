@@ -110,7 +110,6 @@ class Computer(models.Model, MigasLink):
                     attributes= self.login().attributes.filter(property_att__prefix=_token)
                     cad = ""
                     for attribute in attributes:
-                        print "attribute.value", attribute.value
                         cad += attribute.value + ","
                     _context[_token] = cad[:-1]
             except:
