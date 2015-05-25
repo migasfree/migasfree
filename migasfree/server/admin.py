@@ -519,7 +519,7 @@ class NotificationAdmin(MigasAdmin):
         'notification',
     )
     list_filter = ('checked', 'date')
-    ordering = ('date',)
+    ordering = ('-date',)
     search_fields = ('date', 'notification',)
     readonly_fields = ('date', 'notification',)
 
@@ -557,7 +557,7 @@ class ErrorAdmin(MigasAdmin):
     )
     list_filter = ('checked', 'date', "version")
     #list_editable = ('checked',)  # TODO
-    ordering = ('date', 'computer',)
+    ordering = ('-date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'error'])
     readonly_fields = ('computer_link', 'version', 'date', 'error')
     exclude = ('computer',)
@@ -625,7 +625,7 @@ class FaultAdmin(MigasAdmin):
         #'list_users'  # performance improvement
     )
     list_filter = (UserFaultFilter, 'checked', 'date', 'version', 'faultdef')
-    ordering = ('date', 'computer',)
+    ordering = ('-date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'faultdef__name'])
     readonly_fields = ('computer_link', 'faultdef', 'version', 'date', 'text')
     exclude = ('computer',)
@@ -778,7 +778,7 @@ admin.site.register(Computer, ComputerAdmin)
 
 class MessageAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'date', 'text',)
-    ordering = ('date',)
+    ordering = ('-date',)
     list_filter = ('date',)
     search_fields = ('computer', 'text', 'date',)
     readonly_fields = ('computer_link', 'text', 'date')
@@ -789,7 +789,7 @@ admin.site.register(Message, MessageAdmin)
 
 class MessageServerAdmin(MigasAdmin):
     list_display = ('id', 'date', 'text',)
-    ordering = ('date',)
+    ordering = ('-date',)
     list_filter = ('date',)
     search_fields = ('text', 'date',)
     readonly_fields = ('text', 'date')
