@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n sizify %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
@@ -10,21 +10,40 @@
 {% endblock breadcrumbs %}
 
 {% block content %}
-    <ul class="hardware list-unstyled">
-    {% for row in query %}
-        {% if row.claimed = 1 %}
-            <li class="node" style="margin-left: {{ row.level }}em;">
-        {% else %}
-            <li class="node-unclaimed" style="margin-left: {{ row.level }}em;">
-        {% endif %}
-
-        {% if row.name %}
-            {% if row.icon %}
-                <img src="{{ STATIC_URL }}img/hw/{{ row.icon }}" alt="{{ row.icon }}" width="32" />
+    <div class="container-fluid">
+        <div class="row">
+        {% for item in data %}
+            <div class="col-xs-6 col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">
+                            <a href="{% url 'hardware_extract' item.pk %}">
+                                {{ item.fields.description }}{% if item.fields.product %}: {{ item.fields.product }}{% endif %}
+                            </a>
+                        </h2>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                        {% for field, value in item.fields.items %}
+                            {% if value and field != 'parent' and field != 'claimed' and field != 'computer' and field != 'product' and field != 'description' and field != 'level' and field != 'icon' and field != 'physid' %}
+                                {{ field|capfirst }}:
+                                {% if field == 'size' or field == 'capacity' %}
+                                    {{ value|sizify }}
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
+                                <br />
+                            {% endif %}
+                        {% endfor %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:"3" %}
+            </div>
+            <div class="row">
             {% endif %}
-
-            <a href="{% url 'hardware' row.id %}">{{ row.name }}</a>
-        {% endif %}
-        </li>
-    {% endfor %}
+        {% endfor %}
+        </div>
+    </div>
 {% endblock content %}

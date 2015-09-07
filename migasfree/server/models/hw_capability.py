@@ -25,7 +25,11 @@ class HwCapability(models.Model):
     )
 
     def __unicode__(self):
-        return self.name
+        ret = self.name
+        if self.description:
+            ret += ': %s' % self.description
+
+        return ret
 
     class Meta:
         app_label = 'server'

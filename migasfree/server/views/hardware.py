@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-MAXINT = 9223372036854775807 # sys.maxint= (2**63) -1
 import json
 import time
 
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
+from django.core import serializers
 
 from migasfree.server.models import (
     HwNode,
@@ -15,43 +15,51 @@ from migasfree.server.models import (
     HwLogicalName,
     HwCapability,
     Notification,
+    Computer
 )
 
-
-@login_required
-def hardware(request, param):
-    qry = HwNode.objects.filter(Q(id=param) | Q(parent=param))
-    if qry.count > 0:
-        computer = qry[0].computer
-        product = qry[0].product
-
-    return render(
-        request,
-        'computer_hardware_extract.html',
-        {
-            "title": product,
-            "computer": computer,
-            "description": _("Hardware Information"),
-            "query": qry,
-        }
-    )
+MAXINT = 9223372036854775807  # sys.maxint = (2**63) - 1
 
 
 @login_required
 def hardware_resume(request, param):
-    qry = HwNode.objects.filter(Q(computer__id=param)).order_by("id")
-    if qry.count > 0:
-        computer = qry[0].computer
-        product = qry[0].product
+    computer = get_object_or_404(Computer, id=param)
+
+    hardware = HwNode.objects.filter(computer__id=param).order_by('id')
+    data = serializers.serialize('python', hardware)
 
     return render(
         request,
         'computer_hardware_resume.html',
         {
-            "title": product,
-            "computer": computer,
-            "description": _("Hardware Information"),
-            "query": qry,
+            'title': '%s: %s' % (_("Hardware Information"), computer),
+            'computer': computer,
+            'data': data
+        }
+    )
+
+
+@login_required
+def hardware_extract(request, node):
+    node = get_object_or_404(HwNode, id=node)
+
+    capability = HwCapability.objects.filter(node=node.id).values(
+        'name', 'description'
+    )
+    logical_name = HwLogicalName.objects.filter(node=node.id).values('name')
+    configuration = HwConfiguration.objects.filter(node=node.id).values(
+        'name', 'value'
+    )
+
+    return render(
+        request,
+        'computer_hardware_extract.html',
+        {
+            'title': '%s: %s' % (_("Hardware Information"), node),
+            'computer': node.computer,
+            'capability': capability,
+            'logical_name': logical_name,
+            'configuration': configuration,
         }
     )
 
@@ -86,7 +94,7 @@ def load_hw(computer, node, parent, level):
     if "size" in node:
         # validate bigint unsigned (#126)
         size = int(node["size"])
-        if size <= MAXINT and size >= - MAXINT - 1:
+        if size <= MAXINT and size >= -MAXINT - 1:
             n.size = size
         else:
             n.size = 0
@@ -98,68 +106,6 @@ def load_hw(computer, node, parent, level):
         n.width = node["width"]
     if "dev" in node:
         n.dev = node["dev"]
-
-    #set icons
-    if n.product is not None:
-        if n.classname == "system" and n.product == "VirtualBox ()":
-            n.icon = "virtualbox.png"
-
-        if n.classname == "system" \
-        and n.product == "VMware Virtual Platform ()":
-            n.icon = "vmplayer.png"
-
-    if n.businfo is not None:
-        if n.classname == "processor" and "cpu@" in n.businfo:
-            n.icon = "cpu.png"
-
-    if n.classname == "display":
-        n.icon = "display.png"
-
-    if n.description is not None:
-#    if n.classname=="system" and n.description.lower() in ["notebook",]:
-#      n.icon="laptop.png"
-
-        if n.classname == "memory" \
-        and n.description.lower() == "system memory":
-            n.icon = "memory.png"
-
-        if n.classname == "bus" and n.description.lower() == "motherboard":
-            n.icon = "motherboard.png"
-
-        if n.classname == "memory" and n.description.lower() == "bios":
-            n.icon = "chip.png"
-
-        if n.classname == "network" \
-        and n.description.lower() == "ethernet interface":
-            n.icon = "network.png"
-
-        if n.classname == "network" \
-        and n.description.lower() == "wireless interface":
-            n.icon = "radio.png"
-
-        if n.classname == "multimedia" \
-        and n.description.lower() \
-        in ["audio device", "multimedia audio controller"]:
-            n.icon = "audio.png"
-
-        if n.classname == "bus" and n.description.lower() == "smbus":
-            n.icon = "serial.png"
-
-        if n.classname == "bus" and n.description.lower() == "usb controller":
-            n.icon = "usb.png"
-
-        if n.name is not None:
-            if n.classname == "disk" and n.name.lower() == "disk":
-                n.icon = "disc.png"
-
-            if n.classname == "disk" and n.name.lower() == "cdrom":
-                n.icon = "cd.png"
-
-        if n.classname == "power" and n.name.lower() == "battery":
-            n.icon = "battery.png"
-
-        if n.classname == "storage" and n.name.lower() == "scsi":
-            n.icon = "scsi.png"
 
     n.save()
     level += 3
@@ -197,24 +143,6 @@ def load_hw(computer, node, parent, level):
         elif e == "resource":
             print(e, node[e])
         else:
-            pass
-
-    if n.classname == "system":
-        try:
-            chassis = HwConfiguration.objects.get(name="chassis", node__id=n.id)
-            chassisname = chassis.value.lower()
-            if chassisname == "notebook":
-                n.icon = "laptop.png"
-
-            if chassisname == "low-profile":
-                n.icon = "desktopcomputer.png"
-
-            if chassisname == "mini-tower":
-                n.icon = "towercomputer.png"
-
-            n.save()
-
-        except:
             pass
 
     return  # ???

@@ -76,14 +76,14 @@ urlpatterns = patterns('',
     ),
 
     url(
-        r'^hardware/(.*)',
-        hardware,
-        name='hardware'
-    ),
-    url(
         r'^hardware_resume/(.*)',
         hardware_resume,
         name='hardware_resume'
+    ),
+    url(
+        r'^hardware_extract/(.*)',
+        hardware_extract,
+        name='hardware_extract'
     ),
 
     url(

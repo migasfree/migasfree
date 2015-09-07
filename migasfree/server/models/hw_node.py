@@ -130,7 +130,8 @@ class HwNode(models.Model, MigasLink):
     )
 
     def __unicode__(self):
-        return self.product
+        return self.product if self.description and 'lshw' in self.description \
+            else '%s: %s' % (self.description, self.product)
 
     def link(self, default=True):
         try:
