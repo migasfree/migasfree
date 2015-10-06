@@ -5,10 +5,10 @@ import json
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import DeviceConnection, DeviceModel
+from migasfree.server.models import DeviceConnection, DeviceModel, MigasLink
 
 
-class Device(models.Model):
+class Device(models.Model, MigasLink):
     name = models.CharField(
         _("name"),
         max_length=50,
@@ -34,6 +34,11 @@ class Device(models.Model):
         default="{}"
     )
 
+    def model_link(self):
+        return self.model.link()
+    model_link.short_description = _("DeviceModel")
+    model_link.allow_tags = True
+
     def datadict(self):
         return {
             'name': self.name,
@@ -42,10 +47,8 @@ class Device(models.Model):
         }
 
     def __unicode__(self):
-        return u'%s__%s__%s' % (
+        return u'%s' % (
             self.name,
-            self.model.name,
-            self.connection.name
         )
 
     class Meta:

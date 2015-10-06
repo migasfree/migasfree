@@ -4,11 +4,11 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models import (
-    DeviceType, DeviceManufacturer, DeviceConnection
+    DeviceType, DeviceManufacturer, DeviceConnection, MigasLink
 )
 
 
-class DeviceModel(models.Model):
+class DeviceModel(models.Model, MigasLink):
     name = models.CharField(
         _("name"),
         max_length=50,

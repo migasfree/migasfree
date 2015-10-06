@@ -14,6 +14,7 @@ from migasfree.server.models import (
     Computer
 )
 
+from django.conf import settings
 
 class AttributeLookup(LookupChannel):
     model = Attribute
@@ -177,7 +178,10 @@ class ComputerLookup(LookupChannel):
     model = Computer
 
     def get_query(self, q, request):
-        return Computer.objects.filter(Q(name__icontains=q) | Q(id=q))
+        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]=="id":
+            return Computer.objects.filter(Q(id__exact=q))
+        else:
+            return Computer.objects.filter(Q(name__icontains=q))
 
     def get_result(self, obj):
         return unicode(obj)

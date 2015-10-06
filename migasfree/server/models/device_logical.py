@@ -39,6 +39,7 @@ class DeviceLogical(models.Model, MigasLink):
             self.device.connection.devicetype.name: {
                 'feature': self.feature.name,
                 'id': self.id,
+                'manufacturer': self.device.model.manufacturer.name
             }
         }
         for key, value in dictdevice.items():
@@ -47,6 +48,11 @@ class DeviceLogical(models.Model, MigasLink):
             ret[self.device.connection.devicetype.name][key] = value
 
         return ret
+
+    def device_link(self):
+        return self.device.link()
+    device_link.short_description = _("Device")
+    device_link.allow_tags = True
 
     def computers_link(self):
         ret = ""
@@ -61,12 +67,14 @@ class DeviceLogical(models.Model, MigasLink):
         super(DeviceLogical, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return '%s__%s__%s__%s' % (
-            self.device.name,
+        return '%s__%s__%s__%s__%s' % (
+            self.device.model.manufacturer.name,
             self.device.model.name,
             self.feature.name,
-            str(self.id)
+            self.device.name,
+            self.id
         )
+
 
     class Meta:
         app_label = 'server'

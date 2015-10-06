@@ -211,7 +211,18 @@ class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
     fields = ("device", "feature", "computers")
     list_select_related = ('device', 'feature',)
-    list_display = ('link', 'feature')
+    list_display = ('link',
+        'device_link',
+        'feature',
+    )
+    search_fields = (
+        'id',
+        'device__name',
+        'device__model__name',
+        'device__model__manufacturer__name',
+        'feature__name',
+    )
+
 
 admin.site.register(DeviceLogical, DeviceLogicalAdmin)
 
@@ -227,7 +238,8 @@ class DeviceLogicalInline(admin.TabularInline):
 class DeviceAdmin(MigasAdmin):
     list_display = (
         'name',
-        'model',
+        'model_link',
+        'connection'
     )
     list_filter = ('model',)
     search_fields = (
