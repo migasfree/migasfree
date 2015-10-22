@@ -45,8 +45,8 @@ footer p {
 
 p#copyright {
     background: url('../img/migasfree-logo.svg') left center no-repeat;
-    background-size: 2%;
-    padding-left: 26px;
+    background-size: contain;
+    padding-left: 40px;
 }
 
 form .form-group p {
@@ -111,6 +111,61 @@ html, body {height: 92.5%;}
     content: "";
     display: block;
 }
-footer, #wrapper:after {
+footer {
     height: 50px;
+}
+
+@media screen and (max-width: 600px) {
+    .navbar-nav a.dropdown-toggle:before {
+        font-size: 3em;
+    }
+
+    .nav>li, .nav>li>a {
+        display: inline !important;
+    }
+
+    .navbar-nav>li>a {
+        line-height: 50px;
+    }
+
+    #wrapper {
+        margin: 0;
+    }
+
+    .vLargeTextField, .vXMLLargeTextField {
+        max-width: 75vw !important;
+    }
+
+    .form-actions {
+        line-height: 50px !important;
+    }
+
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr { border: 1px solid #ccc; }
+
+    td {
+        border: none;
+        border-bottom: 1px dashed #eee;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-th);
+    }
 }
