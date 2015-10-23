@@ -12,12 +12,12 @@
     src: local('Strait'), local('Strait-Regular'), url('../bootstrap/fonts/Strait-Regular.ttf') format('truetype'), url('../bootstrap/fonts/strait.woff') format('woff');
 }
 
-#wrapper {
-    margin-top: 5em;
-}
-
 article * {
     font-family: 'Average Sans', sans-serif;
+}
+
+.navbar-fixed-top * {
+  z-index: 1001;
 }
 
 header *, footer * {
@@ -115,7 +115,7 @@ footer {
     height: 50px;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 767px) {
     .navbar-nav a.dropdown-toggle:before {
         font-size: 3em;
     }
@@ -130,6 +130,7 @@ footer {
 
     #wrapper {
         margin: 0;
+        min-height: 0;
     }
 
     .vLargeTextField, .vXMLLargeTextField {
@@ -140,6 +141,19 @@ footer {
         line-height: 50px !important;
     }
 
+    .nav.navbar-nav.pull-right {
+        float: none !important;
+    }
+
+}
+
+@media screen and (min-width: 985px) {
+    #wrapper {
+        margin-top: 5em;
+    }
+}
+
+@media screen and (max-width: 500px) {
     table, thead, tbody, th, td, tr {
         display: block;
     }
