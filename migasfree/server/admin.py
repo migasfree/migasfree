@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+## -*- coding: utf-8 -*-
 
 """
 Admin Models
@@ -29,9 +29,6 @@ from ajax_select.admin import AjaxSelectAdmin
 from migasfree.server.widgets import MigasfreeSplitDateTime
 from migasfree.admin_bootstrapped.forms import *
 
-admin.site.register(DeviceType)
-admin.site.register(DeviceFeature)
-admin.site.register(DeviceManufacturer)
 admin.site.register(AutoCheckError)
 
 sql_total_computer = "SELECT COUNT(server_login.id) \
@@ -161,8 +158,27 @@ class CheckingAdmin(MigasAdmin):
 admin.site.register(Checking, CheckingAdmin)
 
 
+class DeviceTypeAdmin(MigasAdmin):
+    ordering = ['name', ]
+
+admin.site.register(DeviceType, DeviceTypeAdmin)
+
+
+class DeviceFeatureAdmin(MigasAdmin):
+    ordering = ['name', ]
+
+admin.site.register(DeviceFeature, DeviceFeatureAdmin)
+
+
+class DeviceManufacturerAdmin(MigasAdmin):
+    ordering = ['name', ]
+
+admin.site.register(DeviceManufacturer, DeviceManufacturerAdmin)
+
+
 class DeviceConnectionAdmin(admin.ModelAdmin):
     list_select_related = ('devicetype',)
+    ordering = ['devicetype__name', 'name', ]
 
 admin.site.register(DeviceConnection, DeviceConnectionAdmin)
 
@@ -215,6 +231,7 @@ class DeviceLogicalAdmin(MigasAdmin):
         'device_link',
         'feature',
     )
+    ordering = ['device__name', 'feature__name']
     search_fields = (
         'id',
         'device__name',
@@ -253,6 +270,7 @@ class DeviceAdmin(MigasAdmin):
         'connection',
         'data',
     )
+    ordering = ['name', ]
 
     inlines = [DeviceLogicalInline]
 
@@ -288,6 +306,7 @@ class DeviceDriverInline(admin.TabularInline):
 class DeviceModelAdmin(MigasAdmin):
     list_display = ('name', 'manufacturer', 'devicetype')
     list_filter = ('devicetype', 'manufacturer')
+    ordering = ('devicetype__name', 'manufacturer__name', 'name',)
     search_fields = (
         'name',
         'manufacturer__name',
