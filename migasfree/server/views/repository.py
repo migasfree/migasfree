@@ -75,7 +75,8 @@ def create_physical_repository(request, repo, packages):
                 os.path.join(_stores_path, _pkg.store.name, _pkg.name),
                 _dst
             )
-            _ret += _('%s in store %s') % (_pkg.name, _pkg.store.name) + '<br />'
+            _ret += _('%(package)s in store %(store)s') % \
+            {"package": _pkg.name, "store": _pkg.store.name} + '<br />'
 
     # create metadata
     _run_err = run_in_server(
