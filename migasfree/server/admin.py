@@ -705,6 +705,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     list_display = (
         'link',
         'version',
+        'status',
         'ip',
         'login_link',
         'datelastupdate',
@@ -712,7 +713,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     )
     list_per_page = 25
     ordering = ('name',)
-    list_filter = ('version',)
+    list_filter = ('version','status')
     search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
 
     readonly_fields = (
@@ -732,6 +733,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': (
                 'uuid',
                 'version',
+                'status',
                 'dateinput',
                 'datelastupdate',
                 'ip',
@@ -784,6 +786,12 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def has_add_permission(self, request):
         return False
+
+    def save_model(self, request, obj, form, change):
+        super(ComputerAdmin, self).save_model(request, obj, form, change)
+
+        if obj.status == "available":  # Clear tags
+            form.cleaned_data['tags'] = []
 
 admin.site.register(Computer, ComputerAdmin)
 

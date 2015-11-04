@@ -14,6 +14,15 @@ from migasfree.server.functions import s2l, l2s
 
 
 class Computer(models.Model, MigasLink):
+
+    STATUS_CHOICES = (
+        ('intended', _('Intended')),
+        ('available', _('Available')),
+        ('reserved', _('Reserved')),
+        ('unsubscribed', _('Unsubscribed')),
+        ('unknown', _('Unknown')),
+    )
+
     name = models.CharField(
         _("name"),
         max_length=50,
@@ -30,6 +39,14 @@ class Computer(models.Model, MigasLink):
         unique=True,
         default=""
     )  # south 0003 & 0004
+
+    status = models.CharField(
+        verbose_name=_('status'),
+        max_length=20,
+        null=False,
+        choices=STATUS_CHOICES,
+        default='intended'
+    )
 
     version = models.ForeignKey(
         Version,
@@ -186,6 +203,29 @@ class Computer(models.Model, MigasLink):
 
     version_link.allow_tags = True
     version_link.short_description = _("Version")
+
+    def change_status(self, status):
+        if status not in dict(self.STATUS_CHOICES).keys():
+            return False
+
+        self.status = status
+        self.save()
+
+        return True
+
+    @staticmethod
+    def replacement(source, target):
+        source.tags, target.tags = target.tags, source.tags
+        source.status, target.status = target.status, source.status
+
+        source.save()
+        target.save()
+
+    def save(self, *args, **kwargs):
+        if 'available' == self.status:
+            self.tags.clear()
+
+        super(Computer, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return str(self.__getattribute__(
