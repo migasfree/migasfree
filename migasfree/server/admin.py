@@ -17,9 +17,13 @@ from django.conf import settings
 
 from migasfree.middleware import threadlocals
 from migasfree.server.models import *
-from migasfree.server.views.repository import create_physical_repository, remove_physical_repository
+from migasfree.server.views.repository import (
+    create_physical_repository,
+    remove_physical_repository
+)
 
 from .functions import compare_values, trans
+from .filters import ProductiveFilterSpec
 
 #AJAX_SELECT
 from ajax_select import make_ajax_form, make_ajax_field
@@ -476,7 +480,7 @@ class TagForm(forms.ModelForm):
 
 class TagAdmin(admin.ModelAdmin):
     form = TagForm
-    list_display = ('link', 'description','total_computers', 'property_att')
+    list_display = ('link', 'description', 'total_computers', 'property_att')
     fields = ('property_att', 'value', 'description', 'computers')
     list_select_related = ('tag_att',)
     list_filter = (TagFilter,)
@@ -732,7 +736,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     )
     list_per_page = 25
     ordering = ('name',)
-    list_filter = ('version','status')
+    list_filter = ('version', ('status', ProductiveFilterSpec))
     search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
 
     readonly_fields = (
@@ -992,7 +996,8 @@ admin.site.register(Query, QueryAdmin)
 
 
 class AttributeSetAdmin(MigasAdmin):
-    form = make_ajax_form(AttributeSet, {'attributes': 'attribute','excludes':'attribute'})
+    form = make_ajax_form(AttributeSet,
+        {'attributes': 'attribute', 'excludes': 'attribute'})
     list_display = ('name', )
 
 admin.site.register(AttributeSet, AttributeSetAdmin)
