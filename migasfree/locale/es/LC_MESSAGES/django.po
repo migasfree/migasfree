@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-04 14:18+0100\n"
-"PO-Revision-Date: 2015-11-04 15:00+0100\n"
+"POT-Creation-Date: 2015-11-09 09:36+0100\n"
+"PO-Revision-Date: 2015-11-09 09:40+0100\n"
 "Last-Translator: Alberto Gacías <alberto@migasfree.org>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -325,7 +325,7 @@ msgid "Date/time"
 msgstr "Fecha/hora"
 
 #: admin_bootstrapped/templates/admin/object_history.html:25
-#: server/admin.py:620
+#: server/admin.py:621
 #: server/models/login.py:44
 #: server/models/user.py:26
 msgid "User"
@@ -967,16 +967,16 @@ msgstr "Dirección de correo:"
 msgid "Reset my password"
 msgstr "Cambiar mi contraseña"
 
-#: server/admin.py:111
+#: server/admin.py:112
 #: server/models/version.py:51
 msgid "autoregister"
 msgstr "autoregistrado"
 
-#: server/admin.py:150
-#: server/admin.py:359
-#: server/admin.py:381
-#: server/admin.py:713
-#: server/admin.py:896
+#: server/admin.py:151
+#: server/admin.py:360
+#: server/admin.py:382
+#: server/admin.py:714
+#: server/admin.py:897
 #: server/models/attribute_set.py:20
 #: server/models/checking.py:35
 #: server/models/fault_def.py:23
@@ -985,14 +985,14 @@ msgstr "autoregistrado"
 msgid "active"
 msgstr "habilitado"
 
-#: server/admin.py:156
+#: server/admin.py:157
 #: server/models/checking.py:40
 msgid "alert"
 msgstr "alerta"
 
-#: server/admin.py:196
-#: server/admin.py:445
-#: server/models/computer.py:238
+#: server/admin.py:197
+#: server/admin.py:446
+#: server/models/computer.py:263
 #: server/models/device_logical.py:64
 #: server/templates/computer_confirm_delete.html:9
 #: server/templates/computer_confirm_delete_selected.html:9
@@ -1004,65 +1004,65 @@ msgstr "alerta"
 msgid "Computers"
 msgstr "Ordenadores"
 
-#: server/admin.py:365
+#: server/admin.py:366
 #: server/models/property.py:56
 msgid "auto"
 msgstr "automático"
 
-#: server/admin.py:561
-#: server/admin.py:600
-#: server/admin.py:668
+#: server/admin.py:562
+#: server/admin.py:601
+#: server/admin.py:669
 #: server/models/error.py:29
 #: server/models/fault.py:32
 #: server/models/notification.py:21
 msgid "checked"
 msgstr "comprobado"
 
-#: server/admin.py:572
-#: server/admin.py:611
-#: server/admin.py:679
+#: server/admin.py:573
+#: server/admin.py:612
+#: server/admin.py:680
 msgid "Checking is O.K."
 msgstr "La comprobación es correcta"
 
-#: server/admin.py:625
+#: server/admin.py:626
 msgid "To check for me"
 msgstr "Para comprobar por mí"
 
-#: server/admin.py:626
+#: server/admin.py:627
 msgid "Assigned to me"
 msgstr "Asignado a mí"
 
-#: server/admin.py:627
+#: server/admin.py:628
 msgid "Assigned to others"
 msgstr "Asignado a otros"
 
-#: server/admin.py:628
+#: server/admin.py:629
 msgid "Not assigned"
 msgstr "No asignado"
 
-#: server/admin.py:699
-#: server/admin.py:883
+#: server/admin.py:700
+#: server/admin.py:884
 msgid "Atributtes"
 msgstr "Atributos"
 
-#: server/admin.py:703
+#: server/admin.py:704
 #: server/models/user.py:27
 #: server/templates/includes/config_menu.html:16
 #: server/templates/includes/mining_menu.html:5
 msgid "Users"
 msgstr "Usuarios"
 
-#: server/admin.py:751
-#: server/admin.py:868
+#: server/admin.py:752
+#: server/admin.py:869
 msgid "General"
 msgstr "General"
 
-#: server/admin.py:763
+#: server/admin.py:764
 msgid "Software"
 msgstr "Software"
 
-#: server/admin.py:767
-#: server/models/computer.py:199
+#: server/admin.py:768
+#: server/models/computer.py:216
 #: server/models/device.py:57
 #: server/templates/base.html:91
 #: server/templates/includes/breadcrumb.html:17
@@ -1070,32 +1070,32 @@ msgstr "Software"
 msgid "Devices"
 msgstr "Dispositivos"
 
-#: server/admin.py:770
+#: server/admin.py:771
 #: server/models/attribute.py:68
 #: server/templates/includes/mining_menu.html:10
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: server/admin.py:790
+#: server/admin.py:791
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr ""
 
-#: server/admin.py:871
+#: server/admin.py:872
 #: server/models/repository.py:147
 msgid "Packages"
 msgstr "Paquetes"
 
-#: server/admin.py:875
+#: server/admin.py:876
 msgid "Default"
 msgstr "Por defecto"
 
-#: server/admin.py:887
+#: server/admin.py:888
 #: server/models/schedule.py:29
 msgid "Schedule"
 msgstr "Calendario"
 
-#: server/admin.py:989
+#: server/admin.py:990
 msgid "Run Query"
 msgstr "Ejecutar consulta"
 
@@ -1151,6 +1151,43 @@ msgstr "Sin errores"
 msgid "Generic error in server"
 msgstr "Error genérico en el servidor"
 
+#: server/filters.py:13
+#: server/views/dashboard.py:66
+msgid "Status"
+msgstr "Estado"
+
+#: server/filters.py:19
+msgid "All"
+msgstr "Todos"
+
+#: server/filters.py:27
+msgid "Productive"
+msgstr "Productivo"
+
+#: server/filters.py:35
+msgid "intended"
+msgstr "asignado"
+
+#: server/filters.py:43
+msgid "reserved"
+msgstr "reservado"
+
+#: server/filters.py:51
+msgid "unknown"
+msgstr "desconocido"
+
+#: server/filters.py:59
+msgid "Unproductive"
+msgstr "Improductivo"
+
+#: server/filters.py:67
+msgid "available"
+msgstr "disponible"
+
+#: server/filters.py:75
+msgid "unsubscribed"
+msgstr "baja"
+
 #: server/widgets.py:19
 msgid "Time:"
 msgstr "Hora:"
@@ -1199,7 +1236,7 @@ msgstr "Atributos/Etiquetas"
 
 #: server/models/attribute_set.py:15
 #: server/models/checking.py:14
-#: server/models/computer.py:27
+#: server/models/computer.py:42
 #: server/models/device.py:13
 #: server/models/device_connection.py:11
 #: server/models/device_feature.py:9
@@ -1292,35 +1329,35 @@ msgstr "Comprobación"
 msgid "Checkings"
 msgstr "Comprobaciones"
 
-#: server/models/computer.py:19
+#: server/models/computer.py:32
 msgid "Intended"
 msgstr "Asignado"
 
-#: server/models/computer.py:20
+#: server/models/computer.py:33
 msgid "Available"
 msgstr "Disponible"
 
-#: server/models/computer.py:21
+#: server/models/computer.py:34
 msgid "Reserved"
 msgstr "Reservado"
 
-#: server/models/computer.py:22
+#: server/models/computer.py:35
 msgid "Unsubscribed"
 msgstr "Baja"
 
-#: server/models/computer.py:23
+#: server/models/computer.py:36
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: server/models/computer.py:35
+#: server/models/computer.py:50
 msgid "uuid"
 msgstr "uuid"
 
-#: server/models/computer.py:44
+#: server/models/computer.py:59
 msgid "status"
 msgstr "estado"
 
-#: server/models/computer.py:53
+#: server/models/computer.py:68
 #: server/models/device_driver.py:23
 #: server/models/error.py:35
 #: server/models/fault.py:38
@@ -1334,64 +1371,64 @@ msgstr "estado"
 msgid "version"
 msgstr "versión"
 
-#: server/models/computer.py:57
+#: server/models/computer.py:72
 msgid "date input"
 msgstr "fecha de alta"
 
-#: server/models/computer.py:58
+#: server/models/computer.py:73
 msgid "Date of input of Computer in migasfree system"
 msgstr "Fecha de alta del ordenador en migasfree"
 
-#: server/models/computer.py:62
+#: server/models/computer.py:77
 msgid "ip"
 msgstr "IP"
 
-#: server/models/computer.py:69
+#: server/models/computer.py:84
 msgid "software inventory"
 msgstr "inventario de software"
 
-#: server/models/computer.py:72
+#: server/models/computer.py:87
 msgid "gap between software base packages and computer ones"
 msgstr "diferencia entre el conjunto de paquetes base y el del ordenador"
 
-#: server/models/computer.py:76
+#: server/models/computer.py:91
 msgid "software history"
 msgstr "historial de software"
 
-#: server/models/computer.py:86
+#: server/models/computer.py:101
 msgid "devices"
 msgstr "dispositivos"
 
-#: server/models/computer.py:90
+#: server/models/computer.py:105
 msgid "devices copy"
 msgstr "copia de dispositivos"
 
-#: server/models/computer.py:97
+#: server/models/computer.py:112
 msgid "last update"
 msgstr "última actualización"
 
-#: server/models/computer.py:102
+#: server/models/computer.py:117
 msgid "last hardware capture"
 msgstr "fecha de la última actualización del hardware"
 
-#: server/models/computer.py:111
+#: server/models/computer.py:126
 msgid "tags"
 msgstr "etiquetas"
 
-#: server/models/computer.py:172
+#: server/models/computer.py:189
 msgid "Last update"
 msgstr "Última actualización"
 
-#: server/models/computer.py:181
+#: server/models/computer.py:198
 msgid "login"
 msgstr "login"
 
-#: server/models/computer.py:193
+#: server/models/computer.py:210
 #: server/models/hw_node.py:146
 msgid "Hardware"
 msgstr "Hardware"
 
-#: server/models/computer.py:205
+#: server/models/computer.py:222
 #: server/models/migration.py:37
 #: server/models/version.py:108
 #: server/models/version.py:112
@@ -1399,7 +1436,7 @@ msgstr "Hardware"
 msgid "Version"
 msgstr "Versión"
 
-#: server/models/computer.py:237
+#: server/models/computer.py:262
 #: server/models/error.py:55
 #: server/models/fault.py:45
 #: server/models/login.py:38
@@ -2264,7 +2301,6 @@ msgid "Provided Computers / Delay"
 msgstr "Ordenadores previstos/demora"
 
 #: server/templates/includes/stats_menu.html:8
-#: server/views/stats.py:481
 msgid "Computers / Version"
 msgstr "Ordenadores/versión"
 
@@ -2277,10 +2313,6 @@ msgstr "¡El ordenador %s ha sido borrado!"
 #, python-format
 msgid "Computers %s deleted!"
 msgstr "¡Los ordenadores %s han sido borrados!"
-
-#: server/views/dashboard.py:66
-msgid "Status"
-msgstr "Estado"
 
 #: server/views/login.py:25
 msgid "Credentials not valid"
@@ -2327,16 +2359,20 @@ msgstr "No hay actualizaciones"
 msgid "Totals"
 msgstr "Totales"
 
-#: server/views/stats.py:387
+#: server/views/stats.py:388
 msgid "There are no defined schedules"
 msgstr "No hay calendarios definidos"
 
-#: server/views/stats.py:393
+#: server/views/stats.py:394
 #, python-format
 msgid "%d days"
 msgstr "%d días"
 
-#: server/views/stats.py:489
+#: server/views/stats.py:482
+msgid "Productives Computers / Version"
+msgstr "Ordenadores Productivos / Versión"
+
+#: server/views/stats.py:490
 msgid "There are no computers"
 msgstr "No hay ordenadores"
 
