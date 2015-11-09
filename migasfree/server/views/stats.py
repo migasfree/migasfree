@@ -363,6 +363,7 @@ def delay_schedule(request):
                     ~ Q(attributes__id__in=lst_attributes)
                     & Q(attributes__id__in=lst_att_delay)
                     & Q(computer__version=current_version.id)
+                    & Q(computer__status__in=Computer.PRODUCTIVE_STATUS)
                 ).values('computer_id').annotate(lastdate=Max('date')).count()
 
                 line.append([d, value])
@@ -431,7 +432,7 @@ def delay_schedule(request):
 def version_computer(request):
     data = []
     total = 0
-    for version in Computer.objects.values(
+    for version in Computer.productives.values(
         "version__name",
         "version__id"
     ).annotate(
@@ -478,7 +479,7 @@ def version_computer(request):
         }
     }
 
-    title = _("Computers / Version")
+    title = _("Productives Computers / Version")
 
     if len(data) == 0:
         return render(
