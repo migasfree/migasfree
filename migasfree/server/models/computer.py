@@ -13,8 +13,21 @@ from migasfree.server.models import (
 from migasfree.server.functions import s2l, l2s
 
 
-class Computer(models.Model, MigasLink):
+class ProductiveManager(models.Manager):
+    def get_query_set(self):
+        return super(ProductiveManager, self).get_queryset().filter(
+            status__in=Computer.PRODUCTIVE_STATUS
+        )
 
+
+class UnproductiveManager(models.Manager):
+    def get_query_set(self):
+        return super(UnproductiveManager, self).get_queryset().exclude(
+            status__in=Computer.PRODUCTIVE_STATUS
+        )
+
+
+class Computer(models.Model, MigasLink):
     STATUS_CHOICES = (
         ('intended', _('Intended')),
         ('available', _('Available')),
@@ -22,6 +35,8 @@ class Computer(models.Model, MigasLink):
         ('unsubscribed', _('Unsubscribed')),
         ('unknown', _('Unknown')),
     )
+
+    PRODUCTIVE_STATUS = ['intended', 'reserved', 'unkown']
 
     name = models.CharField(
         _("name"),
@@ -124,7 +139,9 @@ class Computer(models.Model, MigasLink):
             try:
                 _token = n.filter_expression.token
                 if not _token.startswith("computer"):
-                    attributes= self.login().attributes.filter(property_att__prefix=_token)
+                    attributes = self.login().attributes.filter(
+                        property_att__prefix=_token
+                    )
                     cad = ""
                     for attribute in attributes:
                         cad += attribute.value + ","
@@ -205,7 +222,7 @@ class Computer(models.Model, MigasLink):
     version_link.short_description = _("Version")
 
     def change_status(self, status):
-        if status not in dict(self.STATUS_CHOICES).keys():
+        if status not in list(dict(self.STATUS_CHOICES).keys()):
             return False
 
         self.status = status
@@ -221,6 +238,9 @@ class Computer(models.Model, MigasLink):
         source.save()
         target.save()
 
+    def productive(self):
+        return self.status in self.PRODUCTIVE_STATUS
+
     def save(self, *args, **kwargs):
         if 'available' == self.status:
             self.tags.clear()
@@ -231,6 +251,11 @@ class Computer(models.Model, MigasLink):
         return str(self.__getattribute__(
             settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]
         ))
+
+    # Managers
+    objects = models.Manager()
+    productives = ProductiveManager()
+    unproductives = UnproductiveManager()
 
     class Meta:
         app_label = 'server'
