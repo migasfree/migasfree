@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
-    <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
+    <li><a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown">{% trans 'Computers' %}</a></li>
     <li><a href="{% url 'admin:server_user_changelist' %}">{% trans 'Users' %}</a></li>
     <li><a href="{% url 'admin:server_login_changelist' %}">{% trans 'Logins' %}</a></li>
     <li><a href="{% url 'admin:server_error_changelist' %}?checked__exact=0">{% trans 'Errors' %}</a></li>
