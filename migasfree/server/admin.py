@@ -132,6 +132,21 @@ class MigrationAdmin(MigasAdmin):
 admin.site.register(Migration, MigrationAdmin)
 
 
+class StatusLogAdmin(MigasAdmin):
+    list_display = ('id', 'computer_link', 'status', 'created_at')
+    list_select_related = ('computer', )
+    list_filter = ('created_at', ('status', ProductiveFilterSpec),)
+    search_fields = add_computer_search_fields(['created_at'])
+    readonly_fields = ('computer_link', 'status', 'created_at')
+    exclude = ("computer",)
+    actions = None
+
+    def has_add_permission(self, request):
+        return False
+
+admin.site.register(StatusLog, StatusLogAdmin)
+
+
 class UpdateAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'user', 'date', 'version')
     list_filter = ('date', )

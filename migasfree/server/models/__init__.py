@@ -43,6 +43,7 @@ from .error import Error
 from .fault_def import FaultDef
 from .fault import Fault
 from .migration import Migration
+from .status_log import StatusLog
 
 from .hw_capability import HwCapability
 from .hw_configuration import HwConfiguration

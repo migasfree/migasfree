@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.db.models.signals import m2m_changed, pre_save
+from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
@@ -271,3 +272,15 @@ def computers_changed(sender, **kwargs):
             computer.remove_device_copy(kwargs['instance'].id)
 
 m2m_changed.connect(computers_changed, sender=Computer.devices_logical.through)
+
+
+from .status_log import StatusLog
+
+
+@receiver(pre_save, sender=Computer)
+def pre_save_computer(sender, instance, **kwargs):
+    if instance.id:
+        old_obj = Computer.objects.get(pk=instance.id)
+        if old_obj.status != instance.status:
+            StatusLog.objects.create(instance)
+
