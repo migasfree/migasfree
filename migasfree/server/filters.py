@@ -52,11 +52,19 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
         }
 
         yield {
-            'selected': self.lookup_val == 'available,unsubscribed',
+            'selected': self.lookup_val == 'available,unsubscribed,in repair',
             'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'available,unsubscribed'}
+                {self.lookup_kwarg: 'available,unsubscribed,in repair'}
             ),
             'display': _("Unproductive")
+        }
+
+        yield {
+            'selected': self.lookup_val == 'in repair',
+            'query_string': cl.get_query_string(
+                {self.lookup_kwarg: 'in repair'}
+            ),
+            'display': "* " + _("in repair")
         }
 
         yield {

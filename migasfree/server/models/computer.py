@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, pre_save
 from django.utils.translation import ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
@@ -30,10 +30,11 @@ class UnproductiveManager(models.Manager):
 class Computer(models.Model, MigasLink):
     STATUS_CHOICES = (
         ('intended', _('Intended')),
-        ('available', _('Available')),
         ('reserved', _('Reserved')),
-        ('unsubscribed', _('Unsubscribed')),
         ('unknown', _('Unknown')),
+        ('in repair', _('In repair')),
+        ('available', _('Available')),
+        ('unsubscribed', _('Unsubscribed')),
     )
 
     PRODUCTIVE_STATUS = ['intended', 'reserved', 'unkown']
