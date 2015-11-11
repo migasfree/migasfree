@@ -5,9 +5,7 @@ Admin Models
 """
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.contrib.admin import SimpleListFilter
 from django.shortcuts import redirect, render
-from django import forms
 from django.db import models
 from django.db.models import Q
 from django.core.urlresolvers import reverse
@@ -15,22 +13,26 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from migasfree.middleware import threadlocals
-from migasfree.server.models import *
-from migasfree.server.views.repository import (
+from .models import *
+from .views.repository import (
     create_physical_repository,
     remove_physical_repository
 )
 
 from .functions import compare_values, trans
-from .filters import ProductiveFilterSpec
+from .filters import (
+    ProductiveFilterSpec, TagFilter, AttributeFilter, UserFaultFilter
+)
+from .forms import (
+    RepositoryForm, DeviceLogicalForm, PropertyForm,
+    TagForm, ComputerForm, ExtraThinTextarea
+)
 
-#AJAX_SELECT
-from ajax_select import make_ajax_form, make_ajax_field
+from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
 #WIDGETS
-from migasfree.server.widgets import MigasfreeSplitDateTime
+from .widgets import MigasfreeSplitDateTime
 from migasfree.admin_bootstrapped.forms import *
 
 admin.site.register(AutoCheckError)
@@ -76,14 +78,6 @@ def user_version(user):
         version = None
 
     return version
-
-
-class ExtraThinTextarea(forms.Textarea):
-    def __init__(self, *args, **kwargs):
-        attrs = kwargs.setdefault('attrs', {})
-        attrs.setdefault('cols', 20)
-        attrs.setdefault('rows', 1)
-        super(ExtraThinTextarea, self).__init__(*args, **kwargs)
 
 
 class PlatformAdmin(MigasAdmin):
@@ -208,40 +202,6 @@ class DeviceDriverAdmin(MigasAdmin):
 admin.site.register(DeviceDriver, DeviceDriverAdmin)
 
 
-class DeviceLogicalForm(forms.ModelForm):
-    x = make_ajax_form(Computer, {'devices_logical': 'computer'})
-
-    computers = x.devices_logical
-    computers.label = _('Computers')
-
-    class Meta:
-        model = DeviceLogical
-
-    def __init__(self, *args, **kwargs):
-        super(DeviceLogicalForm, self).__init__(*args, **kwargs)
-        if self.instance and self.instance.pk:
-            lst = []
-            for computer in self.instance.computer_set.all():
-                lst.append(computer.id)
-            self.fields['computers'].initial = lst
-
-    def save(self, commit=True):
-        instance = forms.ModelForm.save(self, False)
-        old_save_m2m = self.save_m2m
-
-        def save_m2m():
-            old_save_m2m()
-            instance.computer_set.clear()
-            for computer in self.cleaned_data['computers']:
-                instance.computer_set.add(computer)
-
-        self.save_m2m = save_m2m
-        if commit:
-            instance.save()
-            self.save_m2m()
-        return instance
-
-
 class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
     fields = ("device", "feature", "computers")
@@ -258,7 +218,6 @@ class DeviceLogicalAdmin(MigasAdmin):
         'device__model__manufacturer__name',
         'feature__name',
     )
-
 
 admin.site.register(DeviceLogical, DeviceLogicalAdmin)
 
@@ -349,16 +308,6 @@ class StoreAdmin(MigasAdmin):
 admin.site.register(Store, StoreAdmin)
 
 
-class PropertyForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(PropertyForm, self).__init__(*args, **kwargs)
-
-        self.fields['code'].required = True
-
-    class Meta:
-        model = Property
-
-
 class PropertyAdmin(MigasAdmin):
     list_display = ('link', 'my_active', 'kind', 'my_auto',)
     list_filter = ('active',)
@@ -405,20 +354,6 @@ class TagTypeAdmin(MigasAdmin):
 admin.site.register(TagType, TagTypeAdmin)
 
 
-class AttributeFilter(SimpleListFilter):
-    title = 'Attribute'
-    parameter_name = 'Attribute'
-
-    def lookups(self, request, model_admin):
-        return [(c.id, c.name) for c in Property.objects.filter(tag=False)]
-
-    def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(property_att__id__exact=self.value())
-        else:
-            return queryset
-
-
 class AttAdmin(MigasAdmin):
     list_display = ('link', 'description', 'total_computers', 'property_link',)
     list_select_related = ('property_att',)
@@ -441,56 +376,6 @@ class AttributeAdmin(AttAdmin, MigasAdmin):
         return False
 
 admin.site.register(Attribute, AttributeAdmin)
-
-
-class TagFilter(SimpleListFilter):
-    title = 'Tag'
-    parameter_name = 'Tag'
-
-    def lookups(self, request, model_admin):
-        return [(c.id, c.name) for c in Property.objects.filter(tag=True)]
-
-    def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(property_att__id__exact=self.value())
-        else:
-            return queryset
-
-
-class TagForm(forms.ModelForm):
-    x = make_ajax_form(Computer, {'tags': 'computer'})
-
-    computers = x.tags
-    computers.label = _('Computers')
-
-    class Meta:
-        model = Tag
-
-    def __init__(self, *args, **kwargs):
-        super(TagForm, self).__init__(*args, **kwargs)
-        if self.instance and self.instance.pk:
-            lst = []
-            for computer in self.instance.computer_set.all():
-                lst.append(computer.id)
-            self.fields['computers'].initial = lst
-
-        self.fields['property_att'].queryset = Property.objects.filter(tag=True)
-
-    def save(self, commit=True):
-        instance = forms.ModelForm.save(self, False)
-        old_save_m2m = self.save_m2m
-
-        def save_m2m():
-            old_save_m2m()
-            instance.computer_set.clear()
-            for computer in self.cleaned_data['computers']:
-                instance.computer_set.add(computer)
-
-        self.save_m2m = save_m2m
-        if commit:
-            instance.save()
-            self.save_m2m()
-        return instance
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -605,7 +490,7 @@ class ErrorAdmin(MigasAdmin):
         'date',
         'truncate_error',
     )
-    list_filter = ('checked', 'date', "version")
+    list_filter = ('checked', 'date', 'version__platform', 'version')
     #list_editable = ('checked',)  # TODO
     ordering = ('-date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'error'])
@@ -635,34 +520,6 @@ class ErrorAdmin(MigasAdmin):
 admin.site.register(Error, ErrorAdmin)
 
 
-class UserFaultFilter(SimpleListFilter):
-    title = _('User')
-    parameter_name = 'user'
-
-    def lookups(self, request, model_admin):
-        return (
-            ('me', _('To check for me')),
-            ('only_me', _('Assigned to me')),
-            ('others', _('Assigned to others')),
-            ('no_assign', _('Not assigned')),
-        )
-
-    def queryset(self, request, queryset):
-        lst = [threadlocals.get_current_user().id]
-        if self.value() == 'me':
-            return queryset.filter(
-                Q(faultdef__users__id__in=lst) | Q(faultdef__users=None)
-            )
-        elif self.value() == 'only_me':
-            return queryset.filter(Q(faultdef__users__id__in=lst))
-        elif self.value() == 'others':
-            return queryset.exclude(
-                faultdef__users__id__in=lst
-            ).exclude(faultdef__users=None)
-        elif self.value() == 'no_assign':
-            return queryset.filter(Q(faultdef__users=None))
-
-
 class FaultAdmin(MigasAdmin):
     list_display = (
         'id',
@@ -674,7 +531,10 @@ class FaultAdmin(MigasAdmin):
         'faultdef',
         #'list_users'  # performance improvement
     )
-    list_filter = (UserFaultFilter, 'checked', 'date', 'version', 'faultdef')
+    list_filter = (
+        UserFaultFilter, 'checked', 'date',
+        'version__platform', 'version', 'faultdef'
+    )
     ordering = ('-date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'faultdef__name'])
     readonly_fields = ('computer_link', 'faultdef', 'version', 'date', 'text')
@@ -735,10 +595,7 @@ admin.site.register(FaultDef, FaultDefAdmin)
 
 
 class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
-    form = make_ajax_form(Computer, {
-        'devices_logical': 'devicelogical',
-        'tags': 'tag',
-    })
+    form = ComputerForm
 
     list_display = (
         'link',
@@ -806,7 +663,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             {'object_list': ', '.join(_list)}
         )
 
-    delete_selected.short_description = _("Delete selected %(verbose_name_plural)s")
+    delete_selected.short_description = _("Delete selected "
+        "%(verbose_name_plural)s")
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "devices_logical":
@@ -824,12 +682,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def has_add_permission(self, request):
         return False
-
-    def save_model(self, request, obj, form, change):
-        super(ComputerAdmin, self).save_model(request, obj, form, change)
-
-        if obj.status == "available":  # Clear tags
-            form.cleaned_data['tags'] = []
 
 admin.site.register(Computer, ComputerAdmin)
 
@@ -853,24 +705,6 @@ class MessageServerAdmin(MigasAdmin):
     readonly_fields = ('text', 'date')
 
 admin.site.register(MessageServer, MessageServerAdmin)
-
-
-class RepositoryForm(forms.ModelForm):
-    attributes = make_ajax_field(Repository, 'attributes', 'attribute')
-    packages = make_ajax_field(Repository, 'packages', 'package')
-    excludes = make_ajax_field(Repository, 'excludes', 'attribute')
-
-    class Meta:
-        model = Repository
-
-    def __init__(self, *args, **kwargs):
-        super(RepositoryForm, self).__init__(*args, **kwargs)
-        try:
-            self.fields['version'].initial = UserProfile.objects.get(
-                pk=threadlocals.get_current_user().id
-            ).version.id
-        except UserProfile.DoesNotExist:
-            pass
 
 
 class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
@@ -958,7 +792,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         # or name is changed (to avoid client errors)
         if ((is_new and len(packages_after) == 0)
                 or compare_values(
-                    obj.packages.values_list('id', flat=True),  # packages before
+                    obj.packages.values_list('id', flat=True),  # pkgs before
                     packages_after
                 ) is False) or (name_new != name_old):
             create_physical_repository(request, obj, packages_after)

@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.admin.filters import ChoicesFieldListFilter
+from django.contrib.admin import SimpleListFilter
+from django.db.models import Q
+
+from migasfree.middleware import threadlocals
+from .models import Property
 from .functions import trans as _
 
 
@@ -20,11 +25,19 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
         }
 
         yield {
+            'selected': self.lookup_val == 'intended,reserved,unknown,available,in repair',
+            'query_string': cl.get_query_string(
+                {self.lookup_kwarg: 'intended,reserved,unknown,available,in repair'}
+            ),
+            'display': _("Subscribed")
+        }
+
+        yield {
             'selected': self.lookup_val == 'intended,reserved,unknown',
             'query_string': cl.get_query_string(
                 {self.lookup_kwarg: 'intended,reserved,unknown'}
             ),
-            'display': _("Productive")
+            'display': "* " + _("Productive")
         }
 
         yield {
@@ -32,7 +45,7 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
             'query_string': cl.get_query_string(
                 {self.lookup_kwarg: 'intended'}
             ),
-            'display': "* " + _("intended")
+            'display': "--- " + _("intended")
         }
 
         yield {
@@ -40,7 +53,7 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
             'query_string': cl.get_query_string(
                 {self.lookup_kwarg: 'reserved'}
             ),
-            'display': "* " + _("reserved")
+            'display': "--- " + _("reserved")
         }
 
         yield {
@@ -48,15 +61,15 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
             'query_string': cl.get_query_string(
                 {self.lookup_kwarg: 'unknown'}
             ),
-            'display': "* " + _("unknown")
+            'display': "--- " + _("unknown")
         }
 
         yield {
-            'selected': self.lookup_val == 'available,unsubscribed,in repair',
+            'selected': self.lookup_val == 'available,in repair',
             'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'available,unsubscribed,in repair'}
+                {self.lookup_kwarg: 'available,in repair'}
             ),
-            'display': _("Unproductive")
+            'display': "* " + _("Unproductive")
         }
 
         yield {
@@ -64,7 +77,7 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
             'query_string': cl.get_query_string(
                 {self.lookup_kwarg: 'in repair'}
             ),
-            'display': "* " + _("in repair")
+            'display': "--- " + _("in repair")
         }
 
         yield {
@@ -72,7 +85,7 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
             'query_string': cl.get_query_string(
                 {self.lookup_kwarg: 'available'}
             ),
-            'display': "* " + _("available")
+            'display': "--- " + _("available")
         }
 
         yield {
@@ -80,6 +93,61 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
             'query_string': cl.get_query_string(
                 {self.lookup_kwarg: 'unsubscribed'}
             ),
-            'display': "* " + _("unsubscribed")
+            'display': _("unsubscribed")
         }
 
+
+class TagFilter(SimpleListFilter):
+    title = _('Tag')
+    parameter_name = 'Tag'
+
+    def lookups(self, request, model_admin):
+        return [(c.id, c.name) for c in Property.objects.filter(tag=True)]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(property_att__id__exact=self.value())
+        else:
+            return queryset
+
+
+class AttributeFilter(SimpleListFilter):
+    title = _('Attribute')
+    parameter_name = 'Attribute'
+
+    def lookups(self, request, model_admin):
+        return [(c.id, c.name) for c in Property.objects.filter(tag=False)]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(property_att__id__exact=self.value())
+        else:
+            return queryset
+
+
+class UserFaultFilter(SimpleListFilter):
+    title = _('User')
+    parameter_name = 'user'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('me', _('To check for me')),
+            ('only_me', _('Assigned to me')),
+            ('others', _('Assigned to others')),
+            ('no_assign', _('Not assigned')),
+        )
+
+    def queryset(self, request, queryset):
+        lst = [threadlocals.get_current_user().id]
+        if self.value() == 'me':
+            return queryset.filter(
+                Q(faultdef__users__id__in=lst) | Q(faultdef__users=None)
+            )
+        elif self.value() == 'only_me':
+            return queryset.filter(Q(faultdef__users__id__in=lst))
+        elif self.value() == 'others':
+            return queryset.exclude(
+                faultdef__users__id__in=lst
+            ).exclude(faultdef__users=None)
+        elif self.value() == 'no_assign':
+            return queryset.filter(Q(faultdef__users=None))
