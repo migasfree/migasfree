@@ -8,7 +8,9 @@ from migasfree.server.models import Computer, StatusLog
 
 def insert_status_log_initial():
     for computer in Computer.objects.all():
-        StatusLog.objects.create(computer)
+        sl = StatusLog.objects.create(computer)
+        sl.created_at = computer.dateinput
+        sl.save()
 
 
 class Migration(SchemaMigration):
