@@ -36,6 +36,7 @@ def config_apache():
     _config = \
 """
 Alias /static/ajax_select %(migasfree_app_dir)s/../ajax_select/static/ajax_select
+Alias /static/autocomplete_light %(migasfree_app_dir)s/../autocomplete_light/static/autocomplete_light
 Alias /static/admin/css/admin-inlines.css %(migasfree_app_dir)s/admin_bootstrapped/static/admin/css/admin-inlines.css
 Alias /static/admin/css/overrides.css %(migasfree_app_dir)s/admin_bootstrapped/static/admin/css/overrides.css
 Alias /static/admin/js/generic-lookup.js %(migasfree_app_dir)s/admin_bootstrapped/static/admin/js/generic-lookup.js
