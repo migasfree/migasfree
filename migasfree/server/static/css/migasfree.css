@@ -183,3 +183,7 @@ footer {
         content: attr(data-th);
     }
 }
+
+span[data-value] {
+    display: block !important;
+}
