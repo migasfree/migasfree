@@ -109,6 +109,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'migasfree.server',  # before admin apps to override
     'migasfree.admin_bootstrapped',  # before django.contrib.admin to override
+    'autocomplete_light',  # before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.admindocs',
