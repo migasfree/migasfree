@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Datum' %}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <p>{% trans 'This procedure changes status, labels and devices between two computers.' %}</p>
+
+    <form action="#" method="post" class="controls">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p><input type="submit" value="{% trans 'Replace' %}" class="btn btn-primary" /></p>
+    </form>
+{% endblock content %}
