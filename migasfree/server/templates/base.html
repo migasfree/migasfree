@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="{% static 'bootstrap/css/font-awesome.min.css' %}" />
         <link rel="stylesheet" href="{% static 'admin/css/overrides.css' %}" />
 
-        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20151022" />
+        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20151113" />
         <link rel="stylesheet" href="{% static 'css/migasfree_print.css' %}?20140129" media="print" />
 
         <link rel="stylesheet" href="{% static 'css/ajax_select.css' %}" />
@@ -44,6 +44,8 @@
         <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
         <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+
+        {% include 'autocomplete_light/static.html' %}
 
         <script>
             $(document).ready(function() {
