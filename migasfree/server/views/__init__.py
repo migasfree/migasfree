@@ -13,7 +13,10 @@ from .queries import query, computer_messages, server_messages
 from .hardware import hardware_resume, hardware_extract, load_hw, process_hw
 from .repository import create_physical_repository
 from .client_api import api
-from .public_api import get_versions, get_computer_info, computer_label, get_key_repositories
+from .public_api import (
+    get_versions, get_computer_info, computer_label,
+    get_key_repositories, computer_replacement
+)
 from .packages import change_version, info
 from .dashboard import alerts
 from .admin import connections_model
