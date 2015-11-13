@@ -23,13 +23,13 @@ class AttributeLookup(LookupChannel):
         prps = Property.objects.all().values_list('prefix', flat=True)
         if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
         and len(q) > (Property.PREFIX_LEN + 1):
-            return Attribute.objects.filter(
+            return self.model.objects.filter(
                 Q(property_att__prefix__icontains=q[0:Property.PREFIX_LEN])
             ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])).order_by(
                 'value'
             )
         else:
-            return Attribute.objects.filter(
+            return self.model.objects.filter(
                 Q(value__icontains=q) | Q(description__icontains=q)
                 | Q(property_att__prefix__icontains=q)
             ).order_by('value')
@@ -51,7 +51,7 @@ class AttributeLookup(LookupChannel):
         return False
 
     def get_objects(self, ids):
-        return Attribute.objects.filter(pk__in=ids).order_by(
+        return self.model.objects.filter(pk__in=ids).order_by(
             'property_att',
             'value'
         )
@@ -64,13 +64,13 @@ class Attribute_ComputersLookup(LookupChannel):
         prps = Property.objects.all().values_list('prefix', flat=True)
         if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
         and len(q) > (Property.PREFIX_LEN + 1):
-            return Attribute.objects.filter(
+            return self.model.objects.filter(
                 Q(property_att__prefix__icontains=q[0:Property.PREFIX_LEN])
             ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])).order_by(
                 'value'
             )
         else:
-            return Attribute.objects.filter(
+            return self.model.objects.filter(
                 Q(value__icontains=q) | Q(description__icontains=q)
                 | Q(property_att__prefix__icontains=q)
             ).order_by('value')
@@ -93,7 +93,7 @@ class Attribute_ComputersLookup(LookupChannel):
         return False
 
     def get_objects(self, ids):
-        return Attribute.objects.filter(pk__in=ids).order_by(
+        return self.model.objects.filter(pk__in=ids).order_by(
             'property_att',
             'value'
         )
@@ -103,7 +103,7 @@ class PackageLookup(LookupChannel):
     model = Package
 
     def get_query(self, q, request):
-        return Package.objects.filter(Q(name__icontains=q)).order_by('name')
+        return sel.model.objects.filter(Q(name__icontains=q)).order_by('name')
 
     def get_result(self, obj):
         return unicode(obj)
@@ -118,14 +118,14 @@ class PackageLookup(LookupChannel):
         return False
 
     def get_objects(self, ids):
-        return Package.objects.filter(pk__in=ids).order_by('name')
+        return self.model.objects.filter(pk__in=ids).order_by('name')
 
 
 class TagLookup(LookupChannel):
     model = Attribute
 
     def get_query(self, q, request):
-        return Attribute.objects.filter(
+        return self.model.objects.filter(
             property_att__active=True).filter(
             property_att__tag=True).filter(
             Q(value__icontains=q) | Q(description__icontains=q)
@@ -149,7 +149,7 @@ class TagLookup(LookupChannel):
         return False
 
     def get_objects(self, ids):
-        return Attribute.objects.filter(pk__in=ids).order_by(
+        return self.model.objects.filter(pk__in=ids).order_by(
             'property_att',
             'value'
         )
@@ -159,7 +159,7 @@ class DeviceLogicalLookup(LookupChannel):
     model = DeviceLogical
 
     def get_query(self, q, request):
-        return DeviceLogical.objects.filter(Q(device__name__icontains=q))
+        return self.model.objects.filter(Q(device__name__icontains=q))
 
     def get_result(self, obj):
         return unicode(obj)
@@ -178,10 +178,10 @@ class ComputerLookup(LookupChannel):
     model = Computer
 
     def get_query(self, q, request):
-        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]=="id":
-            return Computer.objects.filter(Q(id__exact=q))
+        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
+            return self.model.objects.filter(Q(id__exact=q))
         else:
-            return Computer.objects.filter(Q(name__icontains=q))
+            return self.model.objects.filter(Q(name__icontains=q))
 
     def get_result(self, obj):
         return unicode(obj)
