@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import autocomplete_light
+
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
@@ -15,6 +17,11 @@ from .models import (
 class ParametersForm(forms.Form):
     id_query = forms.CharField(required=True, widget=forms.HiddenInput())
     user_version = forms.CharField(required=True, widget=forms.HiddenInput())
+
+
+class ComputerReplacementForm(forms.Form):
+    source = autocomplete_light.ChoiceField('ComputerAutocomplete')
+    target = autocomplete_light.ChoiceField('ComputerAutocomplete')
 
 
 class RepositoryForm(forms.ModelForm):
