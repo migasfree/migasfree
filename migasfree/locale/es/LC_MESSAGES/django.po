@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-11 14:54+0100\n"
-"PO-Revision-Date: 2015-11-11 14:57+0100\n"
+"POT-Creation-Date: 2015-11-13 15:00+0100\n"
+"PO-Revision-Date: 2015-11-13 15:05+0100\n"
 "Last-Translator: Alberto Gacías <alberto@migasfree.org>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -366,8 +366,8 @@ msgstr "Mostrar todo"
 
 #: admin_bootstrapped/templates/admin/search_form.html:8
 #: admin_bootstrapped/templates/admin/search_form.html:13
-#: server/templates/base.html:131
-#: server/templates/base.html.py:133
+#: server/templates/base.html:133
+#: server/templates/base.html.py:135
 msgid "Search"
 msgstr "Buscar"
 
@@ -869,7 +869,7 @@ msgstr "Loguearse de nuevo"
 #: admin_bootstrapped/templates/registration/password_change_form.html:13
 #: admin_bootstrapped/templates/registration/password_change_form.html:17
 #: admin_bootstrapped/templates/registration/password_change_form.html:19
-#: server/templates/base.html:163
+#: server/templates/base.html:165
 msgid "Password change"
 msgstr "Cambio de contraseña"
 
@@ -976,7 +976,7 @@ msgstr "autoregistrado"
 #: server/admin.py:327
 #: server/admin.py:349
 #: server/admin.py:592
-#: server/admin.py:749
+#: server/admin.py:750
 #: server/models/attribute_set.py:20
 #: server/models/checking.py:35
 #: server/models/fault_def.py:23
@@ -1011,7 +1011,7 @@ msgid "Checking is O.K."
 msgstr "La comprobación es correcta"
 
 #: server/admin.py:578
-#: server/admin.py:736
+#: server/admin.py:737
 msgid "Atributtes"
 msgstr "Atributos"
 
@@ -1023,51 +1023,66 @@ msgid "Users"
 msgstr "Usuarios"
 
 #: server/admin.py:627
-#: server/admin.py:721
+#: server/admin.py:722
 msgid "General"
 msgstr "General"
 
-#: server/admin.py:639
+#: server/admin.py:640
 msgid "Software"
 msgstr "Software"
 
-#: server/admin.py:643
+#: server/admin.py:644
 #: server/models/computer.py:238
 #: server/models/device.py:57
-#: server/templates/base.html:91
+#: server/templates/base.html:93
 #: server/templates/includes/breadcrumb.html:17
 #: server/templates/includes/devices_menu.html:10
 msgid "Devices"
 msgstr "Dispositivos"
 
-#: server/admin.py:646
+#: server/admin.py:647
 #: server/models/attribute.py:68
 #: server/templates/includes/mining_menu.html:10
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: server/admin.py:666
+#: server/admin.py:667
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr ""
 
-#: server/admin.py:724
+#: server/admin.py:725
 #: server/models/repository.py:147
 msgid "Packages"
 msgstr "Paquetes"
 
-#: server/admin.py:728
+#: server/admin.py:729
 msgid "Default"
 msgstr "Por defecto"
 
-#: server/admin.py:740
+#: server/admin.py:741
 #: server/models/schedule.py:29
 msgid "Schedule"
 msgstr "Calendario"
 
-#: server/admin.py:842
+#: server/admin.py:843
 msgid "Run Query"
 msgstr "Ejecutar consulta"
+
+#: server/autocomplete_light_registry.py:15
+#: server/models/computer.py:291
+#: server/models/error.py:55
+#: server/models/fault.py:45
+#: server/models/login.py:38
+#: server/models/message.py:34
+#: server/models/migration.py:31
+#: server/models/status_log.py:47
+#: server/models/update.py:45
+#: server/templates/base.html:129
+#: server/templates/base.html.py:130
+#: server/templates/includes/computer_messages_result.html:11
+msgid "Computer"
+msgstr "Ordenador"
 
 #: server/errmfs.py:26
 msgid "User not authenticated"
@@ -1192,9 +1207,9 @@ msgstr "Asignado a otros"
 msgid "Not assigned"
 msgstr "No asignado"
 
-#: server/forms.py:42
-#: server/forms.py:86
-#: server/models/computer.py:271
+#: server/forms.py:49
+#: server/forms.py:93
+#: server/models/computer.py:292
 #: server/models/device_logical.py:64
 #: server/templates/computer_confirm_delete.html:9
 #: server/templates/computer_confirm_delete_selected.html:9
@@ -1206,11 +1221,11 @@ msgstr "No asignado"
 msgid "Computers"
 msgstr "Ordenadores"
 
-#: server/forms.py:132
+#: server/forms.py:139
 msgid "Status available can not have tags"
 msgstr "Estado disponible no puede tener etiquetas"
 
-#: server/forms.py:134
+#: server/forms.py:141
 msgid "Status available can not have devices logical"
 msgstr "Estado disponible no puede tener dispositivos logicos"
 
@@ -1458,20 +1473,6 @@ msgstr "Hardware"
 #: server/templates/includes/computer_messages_result.html:12
 msgid "Version"
 msgstr "Versión"
-
-#: server/models/computer.py:270
-#: server/models/error.py:55
-#: server/models/fault.py:45
-#: server/models/login.py:38
-#: server/models/message.py:34
-#: server/models/migration.py:31
-#: server/models/status_log.py:47
-#: server/models/update.py:45
-#: server/templates/base.html:127
-#: server/templates/base.html.py:128
-#: server/templates/includes/computer_messages_result.html:11
-msgid "Computer"
-msgstr "Ordenador"
 
 #: server/models/device.py:22
 #: server/models/device_driver.py:18
@@ -1931,7 +1932,7 @@ msgid "Query"
 msgstr "Consulta"
 
 #: server/models/query.py:43
-#: server/templates/base.html:107
+#: server/templates/base.html:109
 #: server/templates/query.html:6
 #: server/templates/includes/config_menu.html:25
 msgid "Queries"
@@ -2091,51 +2092,52 @@ msgstr "Perfil de usuario"
 msgid "User Profiles"
 msgstr "Perfiles de usuario"
 
-#: server/templates/base.html:73
+#: server/templates/base.html:75
 msgid "Toggle navigation"
 msgstr "Alternar navegación"
 
-#: server/templates/base.html:86
+#: server/templates/base.html:88
 #: server/templates/computer_messages.html:6
 #: server/templates/server_messages.html:6
 #: server/templates/includes/breadcrumb.html:13
 msgid "Settings"
 msgstr "Configuración"
 
-#: server/templates/base.html:96
+#: server/templates/base.html:98
 #: server/templates/package_info.html:6
 #: server/templates/includes/breadcrumb.html:21
 msgid "Liberation"
 msgstr "Liberación"
 
-#: server/templates/base.html:101
+#: server/templates/base.html:103
 #: server/templates/computer_confirm_delete.html:8
 #: server/templates/computer_confirm_delete_selected.html:8
 #: server/templates/computer_hardware_extract.html:7
 #: server/templates/computer_hardware_resume.html:6
+#: server/templates/computer_replacement.html:6
 #: server/templates/includes/breadcrumb.html:9
 msgid "Datum"
 msgstr "Datos"
 
-#: server/templates/base.html:119
+#: server/templates/base.html:121
 #: server/templates/stats.html:59
 msgid "Stats"
 msgstr "Estadísticas"
 
-#: server/templates/base.html:143
+#: server/templates/base.html:145
 msgid "Change Version"
 msgstr "Cambiar versión"
 
-#: server/templates/base.html:156
+#: server/templates/base.html:158
 #: server/templates/includes/alerts.html:3
 msgid "Alerts"
 msgstr "Alertas"
 
-#: server/templates/base.html:165
+#: server/templates/base.html:167
 msgid "Logout"
 msgstr "Salir"
 
-#: server/templates/base.html:213
+#: server/templates/base.html:215
 msgid "Data Model"
 msgstr "Modelo de datos"
 
@@ -2210,6 +2212,14 @@ msgstr "Volver al árbol principal de información"
 #: server/templates/computer_label.html:32
 msgid "Server"
 msgstr "Servidor"
+
+#: server/templates/computer_replacement.html:11
+msgid "This procedure changes status, labels and devices between two computers."
+msgstr "Este procedimiento cambia el estado, etiquetas y dispositivos entre dos ordenadores."
+
+#: server/templates/computer_replacement.html:16
+msgid "Replace"
+msgstr "Reemplazar"
 
 #: server/templates/error.html:12
 msgid "File"
@@ -2302,6 +2312,11 @@ msgstr "Tipos"
 msgid "Devices Logical"
 msgstr "Dispositivos lógicos"
 
+#: server/templates/includes/mining_menu.html:14
+#: server/views/public_api.py:130
+msgid "Computers Replacement"
+msgstr "Reemplazo de ordenadores"
+
 #: server/templates/includes/parameters.html:6
 msgid "Parameters"
 msgstr "Parámetros"
@@ -2367,6 +2382,10 @@ msgstr "Selecciona una versión antes de continuar"
 #: server/views/packages.py:97
 msgid "No package information exists"
 msgstr "No existe información sobre el paquete"
+
+#: server/views/public_api.py:110
+msgid "Replacement done."
+msgstr "Reemplazo realizado."
 
 #: server/views/queries.py:220
 msgid "Computer Messages"
