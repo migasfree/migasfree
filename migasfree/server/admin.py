@@ -627,6 +627,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         (_('General'), {
             'fields': (
                 'uuid',
+                'name',
                 'version',
                 'status',
                 'dateinput',
