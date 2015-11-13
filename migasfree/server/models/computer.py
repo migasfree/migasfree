@@ -254,7 +254,28 @@ class Computer(models.Model, MigasLink):
 
     @staticmethod
     def replacement(source, target):
-        source.tags, target.tags = target.tags, source.tags
+        source_tags = list(source.tags.all())
+        target_tags = list(target.tags.all())
+
+        source.tags.clear()
+        for tag in target_tags:
+            source.tags.add(tag)
+
+        target.tags.clear()
+        for tag in source_tags:
+            target.tags.add(tag)
+
+        source_devices = list(source.devices_logical.all())
+        target_devices = list(target.devices_logical.all())
+
+        source.devices_logical.clear()
+        for device in target_devices:
+            source.devices_logical.add(device)
+
+        target.devices_logical.clear()
+        for device in source_devices:
+            target.devices_logical.add(device)
+
         source.status, target.status = target.status, source.status
 
         source.save()
@@ -298,4 +319,3 @@ def post_save_computer(sender, instance, created, **kwargs):
     if  instance.status == 'available':  # clear tags and devices_logical
         instance.tags.clear()
         instance.devices_logical.clear()
-
