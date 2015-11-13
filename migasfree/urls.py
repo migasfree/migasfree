@@ -2,6 +2,10 @@
 
 from django.conf.urls import patterns, include, url
 
+import autocomplete_light.shortcuts as al
+# import every app/autocomplete_light_registry.py
+al.autodiscover()
+
 from django.contrib import admin
 admin.autodiscover()
 
@@ -20,6 +24,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
+    url(r'^autocomplete/', include('autocomplete_light.urls')),
     url(r'^admin/lookups/', include(ajax_select_urls)),
 )
 
