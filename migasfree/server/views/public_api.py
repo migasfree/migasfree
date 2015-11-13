@@ -2,19 +2,25 @@
 
 import json
 
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.utils.translation import ugettext_lazy as _
+from django.shortcuts import render, get_object_or_404
 from django.conf import settings
+from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 from migasfree.server.models import (
     Platform,
     Version,
     Repository,
+    Computer
 )
 
 from migasfree.server.api import get_computer
-from migasfree.server.functions import uuid_validate
+from migasfree.server.functions import uuid_validate, trans
 from migasfree.server.security import gpg_get_key
+
+from migasfree.server.forms import ComputerReplacementForm
 
 
 def get_versions(request):
@@ -84,6 +90,44 @@ def get_key_repositories(request):
     Return the repositories public key
     """
     return HttpResponse(
-            gpg_get_key("migasfree-repository"),
-            mimetype="text/plain"
-        )
+        gpg_get_key("migasfree-repository"),
+        mimetype="text/plain"
+    )
+
+
+def computer_replacement(request):
+    if request.method == 'POST':
+        form = ComputerReplacementForm(request.POST)
+        if form.is_valid():
+            source = get_object_or_404(
+                Computer, pk=form.cleaned_data.get('source')
+            )
+            target = get_object_or_404(
+                Computer, pk=form.cleaned_data.get('target')
+            )
+            Computer.replacement(source, target)
+
+            messages.success(request, _('Replacement done.'))
+            messages.info(request, '%s (%s): [%s], [%s]' % (
+                source.__str__(), trans(source.status),
+                ', '.join(str(x) for x in source.tags.all()),
+                ', '.join(str(x) for x in source.devices_logical.all())
+            ))
+            messages.info(request, '%s (%s): [%s], [%s]' % (
+                target.__str__(), trans(target.status),
+                ', '.join(str(x) for x in target.tags.all()),
+                ', '.join(str(x) for x in target.devices_logical.all())
+            ))
+
+            return HttpResponseRedirect(reverse('computer_replacement'))
+    else:
+        form = ComputerReplacementForm()
+
+    return render(
+        request,
+        'computer_replacement.html',
+        {
+            'title': _('Computers Replacement'),
+            'form': form
+        }
+    )
