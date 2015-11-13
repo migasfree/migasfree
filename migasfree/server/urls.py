@@ -127,6 +127,12 @@ urlpatterns = patterns('',
         name='connections_model'
     ),
 
+    url(
+        r'^computer_replacement/$',
+        computer_replacement,
+        name='computer_replacement'
+    ),
+
     # backwards compatibility
     url(
         r'^migasfree/$',
