@@ -3,7 +3,7 @@
 """
 Admin Models
 """
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
 from django.db import models
@@ -471,6 +471,8 @@ class NotificationAdmin(MigasAdmin):
             noti.checked = True
             noti.save()
 
+        messages.success(request, _('Checked %s') % _('Notifications'))
+
         return redirect(request.get_full_path())
 
     checked_ok.short_description = _("Checking is O.K.")
@@ -509,6 +511,8 @@ class ErrorAdmin(MigasAdmin):
         for error in queryset:
             error.checked = True
             error.save()
+
+        messages.success(request, _('Checked %s') % _('Errors'))
 
         return redirect(request.get_full_path())
 
@@ -552,6 +556,8 @@ class FaultAdmin(MigasAdmin):
         for fault in queryset:
             fault.checked = True
             fault.save()
+
+        messages.success(request, _('Checked %s') % _('Faults'))
 
         return redirect(request.get_full_path())
 
@@ -658,6 +664,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         _list = []
         for obj in objects:
             _list.append(obj.__str__())
+
         return render(
             request,
             'computer_confirm_delete_selected.html',
