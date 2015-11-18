@@ -13,6 +13,8 @@ from .models import (
     Property, Tag
 )
 
+autocomplete_light.autodiscover()
+
 
 class ParametersForm(forms.Form):
     id_query = forms.CharField(required=True, widget=forms.HiddenInput())
