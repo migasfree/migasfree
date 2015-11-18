@@ -89,6 +89,7 @@ MIDDLEWARE_CLASSES = (
 
 TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
     'django.core.context_processors.request',
+    'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
     'migasfree.server.context_processors.query_names',
     'migasfree.server.context_processors.version_names',
