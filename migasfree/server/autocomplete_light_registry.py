@@ -13,7 +13,7 @@ class ComputerAutocomplete(al.AutocompleteModelBase):
     model = Computer
     attrs = {
         'placeholder': _('Computer'),
-        'data-autocomplete-minimum-characters': 3,
+        'data-autocomplete-minimum-characters': 1,
     }
     widget_attrs={
         'data-widget-maximum-values': 1,
