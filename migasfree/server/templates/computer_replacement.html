@@ -10,29 +10,10 @@
 {% block content %}
     <p>{% trans 'This procedure changes status, labels and devices between two computers.' %}</p>
 
-    <form action="." method="post" class="controls">
+    <form action="." method="post" class="controls" role="form">
         {% csrf_token %}
-        {% for field in form %}
-            {% if field.errors %}
-                <div class="control-group has-error">
-                    <label class="control-label">{{ field.label }}</label>
-                    <div class="controls">{{ field }}
-                        <span class="help-inline">
-                            {% for error in  field.errors %}{{ error }}{% endfor %}
-                        </span>
-                    </div>
-                </div>
-            {% else %}
-                <div class="control-group">
-                    <label class="control-label">{{ field.label }}</label>
-                    <div class="controls">{{ field }}
-                        {% if field.help_text %}
-                            <p class="help-inline"><small>{{ field.help_text }}</small></p>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-        <p><input type="submit" value="{% trans 'Replace' %}" class="btn btn-primary" /></p>
+        {% include 'includes/custom_form.html' %}
+
+        <p><input type="submit" class="btn btn-primary" value="{% trans 'Replace' %}" /></p>
     </form>
 {% endblock content %}

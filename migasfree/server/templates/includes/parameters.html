@@ -1,15 +1,13 @@
 {% load i18n %}
 
 {% if form %}
-    <form action="." method="post" role="form">
+    <form action="." method="post" class="controls" role="form">
+        {% csrf_token %}
         <fieldset class="form-group input-group">
             <legend>{% trans 'Parameters' %}</legend>
-            {{ form.as_p }}
+            {% include 'includes/custom_form.html' %}
         </fieldset>
 
-        <p>
-            <input class="btn btn-primary" type="submit" value="{% trans 'Submit' %}" />
-            {% csrf_token %}
-        </p>
+        <p><input type="submit" class="btn btn-primary" value="{% trans 'Submit' %}" /></p>
     </form>
 {% endif %}
