@@ -15,8 +15,11 @@ class ComputerAutocomplete(al.AutocompleteModelBase):
         'placeholder': _('Computer'),
         'data-autocomplete-minimum-characters': 1,
     }
-    widget_attrs={
+    widget_attrs = {
         'data-widget-maximum-values': 1,
     }
+
+    def choice_label(self, choice):
+        return choice.display()
 
 al.register(ComputerAutocomplete)

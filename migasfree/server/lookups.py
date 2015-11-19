@@ -16,6 +16,7 @@ from migasfree.server.models import (
 
 from django.conf import settings
 
+
 class AttributeLookup(LookupChannel):
     model = Attribute
 
@@ -41,7 +42,7 @@ class AttributeLookup(LookupChannel):
         return self.format_item_display(obj)
 
     def format_item_display(self, obj):
-        return u"%s-%s %s" % (
+        return "%s-%s %s" % (
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description)
@@ -82,7 +83,7 @@ class Attribute_ComputersLookup(LookupChannel):
         return self.format_item_display(obj)
 
     def format_item_display(self, obj):
-        return u"%s-%s %s (%s)" % (
+        return "%s-%s %s (%s)" % (
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description),
@@ -103,7 +104,7 @@ class PackageLookup(LookupChannel):
     model = Package
 
     def get_query(self, q, request):
-        return sel.model.objects.filter(Q(name__icontains=q)).order_by('name')
+        return self.model.objects.filter(Q(name__icontains=q)).order_by('name')
 
     def get_result(self, obj):
         return unicode(obj)
@@ -112,7 +113,7 @@ class PackageLookup(LookupChannel):
         return self.format_item_display(obj)
 
     def format_item_display(self, obj):
-        return u"%s" % escape(obj.name)
+        return "%s" % escape(obj.name)
 
     def can_add(self, user, model):
         return False
@@ -139,7 +140,7 @@ class TagLookup(LookupChannel):
         return self.format_item_display(obj)
 
     def format_item_display(self, obj):
-        return u"%s-%s %s" % (
+        return "%s-%s %s" % (
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description)
@@ -168,7 +169,7 @@ class DeviceLogicalLookup(LookupChannel):
         return self.format_item_display(obj)
 
     def format_item_display(self, obj):
-        return u"%s" % escape(obj.__str__())
+        return "%s" % escape(obj.__str__())
 
     def can_add(self, user, model):
         return False
@@ -190,7 +191,7 @@ class ComputerLookup(LookupChannel):
         return self.format_item_display(obj)
 
     def format_item_display(self, obj):
-        return u"%s" % escape(obj.__unicode__())
+        return obj.display()
 
     def can_add(self, user, model):
         return False
