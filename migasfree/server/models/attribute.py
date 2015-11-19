@@ -6,6 +6,29 @@ from django.utils.translation import ugettext_lazy as _
 from migasfree.server.models import Property, MigasLink
 
 
+class AttributeManager(models.Manager):
+    def create(self, property_att, value, description=None):
+        """
+        if value = "text~other", description = "other"
+        """
+        if '~' in value:
+            value, description = value.split('~')
+
+        queryset = Attribute.objects.filter(
+            property_att=property_att, value=value
+        )
+        if queryset.exists():
+            return queryset[0]
+
+        attribute = Attribute()
+        attribute.property_att = property_att
+        attribute.value = value
+        attribute.description = description
+        attribute.save()
+
+        return attribute
+
+
 class Attribute(models.Model, MigasLink):
     property_att = models.ForeignKey(
         Property,
@@ -13,17 +36,19 @@ class Attribute(models.Model, MigasLink):
     )
 
     value = models.CharField(
-        _("value"),
+        verbose_name=_("value"),
         max_length=250
     )
 
     description = models.TextField(
-        _("description"),
+        verbose_name=_("description"),
         null=True,
         blank=True
     )
 
     _exclude_links = ["computer - tags", ]
+
+    objects = AttributeManager()
 
     def property_link(self):
         return self.property_att.link()
@@ -32,7 +57,7 @@ class Attribute(models.Model, MigasLink):
     property_link.allow_tags = True
 
     def __unicode__(self):
-        return u'%s-%s' % (
+        return '%s-%s' % (
             self.property_att.prefix,
             self.value,
         )
