@@ -257,36 +257,9 @@ class Computer(models.Model, MigasLink):
         swap_m2m(source.tags, target.tags)
         swap_m2m(source.devices_logical, target.devices_logical)
 
-        source.status, target.status = target.status, source.status
-        source.save()
-        target.save()
-
         # SWAP CID
-        o_property = Property.objects.get(prefix="CID", active=True)
-        try:
-            source_cid = Attribute.objects.get(
-                value=source.id,
-                property_att__id=o_property.id
-            )
-        except:
-            source_cid = Attribute.objects.create(
-                property_att=o_property,
-                value=str(source.id),
-                description=source.get_cid_description()
-            )
-
-        try:
-            target_cid = Attribute.objects.get(
-                value=target.id,
-                property_att__id=o_property.id
-            )
-        except:
-            target_cid = Attribute.objects.create(
-                property_att=o_property,
-                value=str(target.id),
-                description=target.get_cid_description()
-            )
-
+        source_cid = source.get_cid_attribute()
+        target_cid = target.get_cid_attribute()
         swap_m2m(source_cid.faultdef_set, target_cid.faultdef_set)
         swap_m2m(source_cid.repository_set, target_cid.repository_set)
         swap_m2m(source_cid.ExcludeAttribute, target_cid.ExcludeAttribute)
@@ -295,6 +268,22 @@ class Computer(models.Model, MigasLink):
             source_cid.ExcludeAttributeGroup, target_cid.ExcludeAttributeGroup
         )
         swap_m2m(source_cid.scheduledelay_set, target_cid.scheduledelay_set)
+
+        source.status, target.status = target.status, source.status
+
+        # finally save changes!!! (order is important)
+        source.save()
+        target.save()
+
+    def get_cid_attribute(self):
+        o_property = Property.objects.get(prefix="CID", active=True)
+        cid_att, created = Attribute.objects.get_or_create(
+            property_att=o_property,
+            value=str(self.id),
+            defaults={'description': self.get_cid_description()}
+        )
+
+        return cid_att
 
     def get_cid_description(self):
         _desc = list(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS)
@@ -341,6 +330,14 @@ def pre_save_computer(sender, instance, **kwargs):
 def post_save_computer(sender, instance, created, **kwargs):
     if created:
         StatusLog.objects.create(instance)
-    if  instance.status == 'available':  # clear tags and devices_logical
+    if instance.status in ['available', 'unsubscribed']:
         instance.tags.clear()
         instance.devices_logical.clear()
+
+        cid = instance.get_cid_attribute()
+        cid.faultdef_set.clear()
+        cid.repository_set.clear()
+        cid.ExcludeAttribute.clear()
+        cid.attributeset_set.clear()
+        cid.ExcludeAttributeGroup.clear()
+        cid.scheduledelay_set.clear()
