@@ -4,7 +4,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models import Property, MigasLink
-#from migasfree.server.models import Login
 
 
 class Attribute(models.Model, MigasLink):
@@ -41,10 +40,18 @@ class Attribute(models.Model, MigasLink):
     def total_computers(self, version=None):
         from migasfree.server.models import Login
         if version:
-            return Login.objects.filter(attributes__id=self.id, computer__version_id=version.id).count()
+            return Login.objects.filter(
+                attributes__id=self.id,
+                computer__version_id=version.id
+            ).count()
         else:
             return Login.objects.filter(attributes__id=self.id).count()
     total_computers.admin_order_field = 'total_computers'
+
+    def update_description(self, new_value):
+        if self.description != new_value:
+            self.description = new_value
+            self.save()
 
     def delete(self, *args, **kwargs):
         # Not allowed delete atributte 'SET-ALL SYSTEM' or CID Property.prefix

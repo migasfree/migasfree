@@ -50,13 +50,23 @@ def list_groups(lst_attributes):
         for subgrp in grp.attributes.filter(
             id__gt=1).filter(
             property_att__id=1).filter(
-            ~Q(value=grp.name)):
-            groups = order_groups(groups, AttributeSet.objects.get(name=subgrp.value).id, grp.id)
+            ~Q(value=grp.name)
+        ):
+            groups = order_groups(
+                groups,
+                AttributeSet.objects.get(name=subgrp.value).id,
+                grp.id
+            )
         for subgrp in grp.excludes.filter(
             id__gt=1).filter(
             property_att__id=1).filter(
-            ~Q(value=grp.name)):
-            groups = order_groups(groups, AttributeSet.objects.get(name=subgrp.value).id, grp.id)
+            ~Q(value=grp.name)
+        ):
+            groups = order_groups(
+                groups,
+                AttributeSet.objects.get(name=subgrp.value).id,
+                grp.id
+            )
     return groups
 
 
@@ -66,7 +76,7 @@ def add_attributes_sets(o_login, lst_attributes):
         for grp in AttributeSet.objects.filter(id=g).filter(
             Q(attributes__id__in=lst_attributes)).filter(
             ~Q(excludes__id__in=lst_attributes)):
-            lst_attributes.append(new_attribute(o_login, prp_grp, grp.name))
+            lst_attributes.append(new_attribute(o_login, prp_grp, grp.name).id)
     return lst_attributes
 
 
@@ -154,7 +164,7 @@ def process_kind_property(o_login, o_property, value):
         # NORMAL
         if o_property.kind == "N":
             attributes.append(
-                new_attribute(o_login, o_property, value)
+                new_attribute(o_login, o_property, value).id
             )
 
         # LIST
@@ -162,7 +172,7 @@ def process_kind_property(o_login, o_property, value):
             mylist = value.split(",")
             for element in mylist:
                 attributes.append(
-                    new_attribute(o_login, o_property, element)
+                    new_attribute(o_login, o_property, element).id
                 )
 
         # ADDS RIGHT
@@ -172,7 +182,7 @@ def process_kind_property(o_login, o_property, value):
             l = 0
             for x in lista:
                 attributes.append(
-                    new_attribute(o_login, o_property, c[l:])
+                    new_attribute(o_login, o_property, c[l:]).id
                 )
                 l += len(x) + 1
 
@@ -184,7 +194,7 @@ def process_kind_property(o_login, o_property, value):
             for x in lista:
                 l += len(x) + 1
                 attributes.append(
-                    new_attribute(o_login, o_property, c[0:l - 1])
+                    new_attribute(o_login, o_property, c[0:l - 1]).id
                 )
     except:
         pass
@@ -223,7 +233,7 @@ def new_attribute(o_login, o_property, par):
     # Add the attribute to Login
     o_login.attributes.add(o_attribute)
 
-    return o_attribute.id
+    return o_attribute
 
 
 def save_login(computer, user):
@@ -560,12 +570,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         o_login.attributes.clear()
 
         # Get version
-        version = dic_computer["version"]
+        version = dic_computer.get("version")
 
         o_version = Version.objects.get(name=version)
-
-        # Get the Package Management System
-        #o_pms = Pms.objects.get(id=o_version.pms.id)
 
         # 2.- PROCESS PROPERTIES
         for e in properties:
@@ -576,21 +583,29 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # ADD Tags (not running on clients!!!)
         for tag in o_computer.tags.all().filter(property_att__active=True):
-            for att in process_kind_property(o_login, tag.property_att, tag.value):
+            for att in process_kind_property(
+                o_login, tag.property_att, tag.value
+            ):
                 lst_attributes.append(att)
 
         # ADD ATTRIBUTE CID (not running on clients!!!)
         try:
             prp_cid = Property.objects.get(prefix="CID", active=True)
             if prp_cid:
-                lst_attributes.append(
-                    new_attribute(o_login, prp_cid, str(o_computer.id))
+                cid_description = o_computer.get_cid_description()
+                cid = new_attribute(
+                    o_login,
+                    prp_cid,
+                    "%s~%s" % (str(o_computer.id), cid_description)
                 )
+                lst_attributes.append(cid.id)
+
+                cid.update_description(cid_description)
         except:
             pass
 
         # ADD AttributeSets
-        lst_attributes=add_attributes_sets(o_login,lst_attributes)
+        lst_attributes = add_attributes_sets(o_login, lst_attributes)
 
         # 3 FaultsDef
         lst_faultsdef = []
@@ -639,9 +654,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             logger.debug('list diff: %s' % lst_diff)
             for item_id in lst_diff:
                 try:
-                    device_logical = DeviceLogical.objects.get(id=item_id)
+                    dev_logical = DeviceLogical.objects.get(id=item_id)
                     lst_dev_remove.append({
-                        device_logical.device.connection.devicetype.name: item_id
+                        dev_logical.device.connection.devicetype.name: item_id
                     })
                 except:
                     # maybe device_logical has been deleted
@@ -942,12 +957,16 @@ def get_computer_tags(request, name, uuid, computer, data):
     retdata["selected"] = element
 
     retdata["available"] = {}
-    for rps in Repository.objects.all().filter(version=computer.version).filter(active=True):
-        for tag in rps.attributes.all().filter(property_att__tag=True).filter(property_att__active=True):
+    for rps in Repository.objects.all().filter(
+        version=computer.version
+    ).filter(active=True):
+        for tag in rps.attributes.all().filter(
+            property_att__tag=True
+        ).filter(property_att__active=True):
             if not tag.property_att.name in retdata["available"]:
                 retdata["available"][tag.property_att.name] = []
 
-            value="%s-%s" % (tag.property_att.prefix, tag.value)
+            value = "%s-%s" % (tag.property_att.prefix, tag.value)
             if not value in retdata["available"][tag.property_att.name]:
                 retdata["available"][tag.property_att.name].append(value)
 
@@ -1214,7 +1233,10 @@ def select_repositories(o_computer, lst_attributes):
         Q(active=True)
     )
     repositories = repositories.extra(
-        select={'delay': "server_scheduledelay.delay","duration": "server_scheduledelay.duration"}
+        select={
+            'delay': "server_scheduledelay.delay",
+            "duration": "server_scheduledelay.duration"
+        }
     )
 
     for r in repositories:
@@ -1223,7 +1245,6 @@ def select_repositories(o_computer, lst_attributes):
                 if horizon(r.date, r.delay + duration) <= datetime.now().date():
                     dic_repos[r.name] = r.id
                     break
-
 
     # 3.- Attributtes Excluded
     repositories = Repository.objects.filter(

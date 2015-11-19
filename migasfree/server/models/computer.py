@@ -11,7 +11,7 @@ from migasfree.server.models import (
     Version, DeviceLogical, Attribute, MigasLink
 )
 
-from migasfree.server.functions import s2l, l2s
+from migasfree.server.functions import s2l, l2s, swap_m2m
 
 
 class ProductiveManager(models.Manager):
@@ -254,32 +254,19 @@ class Computer(models.Model, MigasLink):
 
     @staticmethod
     def replacement(source, target):
-        source_tags = list(source.tags.all())
-        target_tags = list(target.tags.all())
-
-        source.tags.clear()
-        for tag in target_tags:
-            source.tags.add(tag)
-
-        target.tags.clear()
-        for tag in source_tags:
-            target.tags.add(tag)
-
-        source_devices = list(source.devices_logical.all())
-        target_devices = list(target.devices_logical.all())
-
-        source.devices_logical.clear()
-        for device in target_devices:
-            source.devices_logical.add(device)
-
-        target.devices_logical.clear()
-        for device in source_devices:
-            target.devices_logical.add(device)
-
+        swap_m2m(source.tags, target.tags)
+        swap_m2m(source.devices_logical, target.devices_logical)
         source.status, target.status = target.status, source.status
 
         source.save()
         target.save()
+
+    def get_cid_description(self):
+        _desc = list(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS)
+        if 'id' in _desc:
+            _desc.remove('id')
+
+        return '(%s)' % ', '.join(self.__getattribute__(x) for x in _desc)
 
     def __unicode__(self):
         return str(self.__getattribute__(
