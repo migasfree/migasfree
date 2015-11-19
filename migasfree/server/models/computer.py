@@ -8,7 +8,7 @@ from django.template import Context, Template
 from django.conf import settings
 
 from migasfree.server.models import (
-    Version, DeviceLogical, Attribute, MigasLink
+    Version, DeviceLogical, Attribute, Property, MigasLink
 )
 
 from migasfree.server.functions import s2l, l2s, swap_m2m
@@ -256,17 +256,55 @@ class Computer(models.Model, MigasLink):
     def replacement(source, target):
         swap_m2m(source.tags, target.tags)
         swap_m2m(source.devices_logical, target.devices_logical)
-        source.status, target.status = target.status, source.status
 
+        source.status, target.status = target.status, source.status
         source.save()
         target.save()
+
+        # SWAP CID
+        o_property = Property.objects.get(prefix="CID", active=True)
+        try:
+            source_cid = Attribute.objects.get(
+                value=source.id,
+                property_att__id=o_property.id
+            )
+        except:
+            source_cid = Attribute.objects.create(
+                property_att=o_property,
+                value=str(source.id),
+                description=source.get_cid_description()
+            )
+
+        try:
+            target_cid = Attribute.objects.get(
+                value=target.id,
+                property_att__id=o_property.id
+            )
+        except:
+            target_cid = Attribute.objects.create(
+                property_att=o_property,
+                value=str(target.id),
+                description=target.get_cid_description()
+            )
+
+        swap_m2m(source_cid.faultdef_set, target_cid.faultdef_set)
+        swap_m2m(source_cid.repository_set, target_cid.repository_set)
+        swap_m2m(source_cid.ExcludeAttribute, target_cid.ExcludeAttribute)
+        swap_m2m(source_cid.attributeset_set, target_cid.attributeset_set)
+        swap_m2m(
+            source_cid.ExcludeAttributeGroup, target_cid.ExcludeAttributeGroup
+        )
+        swap_m2m(source_cid.scheduledelay_set, target_cid.scheduledelay_set)
 
     def get_cid_description(self):
         _desc = list(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS)
         if 'id' in _desc:
             _desc.remove('id')
 
-        return '(%s)' % ', '.join(self.__getattribute__(x) for x in _desc)
+        return '(%s)' % ', '.join(str(self.__getattribute__(x)) for x in _desc)
+
+    def display(self):
+        return "CID-%d %s" % (self.id, self.get_cid_description())
 
     def __unicode__(self):
         return str(self.__getattribute__(
