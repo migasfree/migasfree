@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-13 15:00+0100\n"
-"PO-Revision-Date: 2015-11-13 15:05+0100\n"
+"POT-Creation-Date: 2015-11-19 13:46+0100\n"
+"PO-Revision-Date: 2015-11-19 13:47+0100\n"
 "Last-Translator: Alberto Gacías <alberto@migasfree.org>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -975,8 +975,8 @@ msgstr "autoregistrado"
 #: server/admin.py:163
 #: server/admin.py:327
 #: server/admin.py:349
-#: server/admin.py:592
-#: server/admin.py:750
+#: server/admin.py:598
+#: server/admin.py:757
 #: server/models/attribute_set.py:20
 #: server/models/checking.py:35
 #: server/models/fault_def.py:23
@@ -996,42 +996,67 @@ msgid "auto"
 msgstr "automático"
 
 #: server/admin.py:465
-#: server/admin.py:504
-#: server/admin.py:547
+#: server/admin.py:506
+#: server/admin.py:551
 #: server/models/error.py:29
 #: server/models/fault.py:32
 #: server/models/notification.py:21
 msgid "checked"
 msgstr "comprobado"
 
-#: server/admin.py:476
+#: server/admin.py:474
 #: server/admin.py:515
-#: server/admin.py:558
+#: server/admin.py:560
+#, python-format
+msgid "Checked %s"
+msgstr "%s comprobado"
+
+#: server/admin.py:474
+#: server/models/notification.py:38
+#: server/templates/includes/mining_menu.html:12
+msgid "Notifications"
+msgstr "Notificaciones"
+
+#: server/admin.py:478
+#: server/admin.py:519
+#: server/admin.py:564
 msgid "Checking is O.K."
 msgstr "La comprobación es correcta"
 
-#: server/admin.py:578
-#: server/admin.py:737
+#: server/admin.py:515
+#: server/models/error.py:72
+#: server/templates/includes/mining_menu.html:7
+msgid "Errors"
+msgstr "Errores"
+
+#: server/admin.py:560
+#: server/models/fault.py:60
+#: server/templates/includes/mining_menu.html:8
+msgid "Faults"
+msgstr "Fallas"
+
+#: server/admin.py:584
+#: server/admin.py:744
 msgid "Atributtes"
 msgstr "Atributos"
 
-#: server/admin.py:582
+#: server/admin.py:588
 #: server/models/user.py:27
 #: server/templates/includes/config_menu.html:16
 #: server/templates/includes/mining_menu.html:5
 msgid "Users"
 msgstr "Usuarios"
 
-#: server/admin.py:627
-#: server/admin.py:722
+#: server/admin.py:633
+#: server/admin.py:729
 msgid "General"
 msgstr "General"
 
-#: server/admin.py:640
+#: server/admin.py:646
 msgid "Software"
 msgstr "Software"
 
-#: server/admin.py:644
+#: server/admin.py:650
 #: server/models/computer.py:238
 #: server/models/device.py:57
 #: server/templates/base.html:93
@@ -1040,37 +1065,37 @@ msgstr "Software"
 msgid "Devices"
 msgstr "Dispositivos"
 
-#: server/admin.py:647
-#: server/models/attribute.py:68
+#: server/admin.py:653
+#: server/models/attribute.py:100
 #: server/templates/includes/mining_menu.html:10
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: server/admin.py:667
+#: server/admin.py:674
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr ""
 
-#: server/admin.py:725
+#: server/admin.py:732
 #: server/models/repository.py:147
 msgid "Packages"
 msgstr "Paquetes"
 
-#: server/admin.py:729
+#: server/admin.py:736
 msgid "Default"
 msgstr "Por defecto"
 
-#: server/admin.py:741
+#: server/admin.py:748
 #: server/models/schedule.py:29
 msgid "Schedule"
 msgstr "Calendario"
 
-#: server/admin.py:843
+#: server/admin.py:850
 msgid "Run Query"
 msgstr "Ejecutar consulta"
 
 #: server/autocomplete_light_registry.py:15
-#: server/models/computer.py:291
+#: server/models/computer.py:305
 #: server/models/error.py:55
 #: server/models/fault.py:45
 #: server/models/login.py:38
@@ -1182,12 +1207,12 @@ msgid "unsubscribed"
 msgstr "baja"
 
 #: server/filters.py:101
-#: server/models/attribute.py:67
+#: server/models/attribute.py:99
 msgid "Tag"
 msgstr "Etiqueta"
 
 #: server/filters.py:115
-#: server/models/attribute.py:56
+#: server/models/attribute.py:88
 msgid "Attribute"
 msgstr "Atributo"
 
@@ -1207,9 +1232,9 @@ msgstr "Asignado a otros"
 msgid "Not assigned"
 msgstr "No asignado"
 
-#: server/forms.py:49
-#: server/forms.py:93
-#: server/models/computer.py:292
+#: server/forms.py:51
+#: server/forms.py:95
+#: server/models/computer.py:306
 #: server/models/device_logical.py:64
 #: server/templates/computer_confirm_delete.html:9
 #: server/templates/computer_confirm_delete_selected.html:9
@@ -1221,11 +1246,11 @@ msgstr "No asignado"
 msgid "Computers"
 msgstr "Ordenadores"
 
-#: server/forms.py:139
+#: server/forms.py:141
 msgid "Status available can not have tags"
 msgstr "Estado disponible no puede tener etiquetas"
 
-#: server/forms.py:141
+#: server/forms.py:143
 msgid "Status available can not have devices logical"
 msgstr "Estado disponible no puede tener dispositivos logicos"
 
@@ -1233,18 +1258,18 @@ msgstr "Estado disponible no puede tener dispositivos logicos"
 msgid "Time:"
 msgstr "Hora:"
 
-#: server/models/attribute.py:13
-#: server/models/attribute.py:32
+#: server/models/attribute.py:35
+#: server/models/attribute.py:56
 #: server/models/property.py:85
 msgid "Property"
 msgstr "Propiedad"
 
-#: server/models/attribute.py:17
+#: server/models/attribute.py:39
 #: server/models/hw_configuration.py:22
 msgid "value"
 msgstr "valor"
 
-#: server/models/attribute.py:22
+#: server/models/attribute.py:44
 #: server/models/checking.py:22
 #: server/models/fault_def.py:17
 #: server/models/hw_capability.py:22
@@ -1254,16 +1279,16 @@ msgstr "valor"
 msgid "description"
 msgstr "descripción"
 
-#: server/models/attribute.py:57
+#: server/models/attribute.py:89
 #: server/templates/includes/mining_menu.html:9
 msgid "Attributes"
 msgstr "Atributos"
 
-#: server/models/attribute.py:76
+#: server/models/attribute.py:108
 msgid "Attribute/Tag"
 msgstr "Atributo/Etiqueta"
 
-#: server/models/attribute.py:77
+#: server/models/attribute.py:109
 msgid "Attributes/Tags"
 msgstr "Atributos/Etiquetas"
 
@@ -1614,11 +1639,6 @@ msgstr "error"
 msgid "Error"
 msgstr "Error"
 
-#: server/models/error.py:72
-#: server/templates/includes/mining_menu.html:7
-msgid "Errors"
-msgstr "Errores"
-
 #: server/models/fault.py:17
 msgid "fault definition"
 msgstr "definición de falla"
@@ -1632,11 +1652,6 @@ msgstr "texto"
 #: server/models/fault.py:59
 msgid "Fault"
 msgstr "Falla"
-
-#: server/models/fault.py:60
-#: server/templates/includes/mining_menu.html:8
-msgid "Faults"
-msgstr "Fallas"
 
 #: server/models/fault_def.py:28
 #: server/models/property.py:31
@@ -1812,11 +1827,6 @@ msgstr "notificación"
 #: server/models/notification.py:37
 msgid "Notification"
 msgstr "Notificación"
-
-#: server/models/notification.py:38
-#: server/templates/includes/mining_menu.html:12
-msgid "Notifications"
-msgstr "Notificaciones"
 
 #: server/models/package.py:32
 msgid "store"
@@ -2217,7 +2227,7 @@ msgstr "Servidor"
 msgid "This procedure changes status, labels and devices between two computers."
 msgstr "Este procedimiento cambia el estado, etiquetas y dispositivos entre dos ordenadores."
 
-#: server/templates/computer_replacement.html:16
+#: server/templates/computer_replacement.html:17
 msgid "Replace"
 msgstr "Reemplazar"
 
@@ -2317,7 +2327,7 @@ msgstr "Dispositivos lógicos"
 msgid "Computers Replacement"
 msgstr "Reemplazo de ordenadores"
 
-#: server/templates/includes/parameters.html:6
+#: server/templates/includes/parameters.html:7
 msgid "Parameters"
 msgstr "Parámetros"
 
