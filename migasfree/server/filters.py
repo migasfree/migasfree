@@ -3,10 +3,10 @@
 from django.contrib.admin.filters import ChoicesFieldListFilter
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Q
+from django.utils.translation import ugettext as _
 
 from migasfree.middleware import threadlocals
 from .models import Property
-from .functions import trans as _
 
 
 class ProductiveFilterSpec(ChoicesFieldListFilter):

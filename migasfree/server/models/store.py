@@ -4,12 +4,11 @@ import os
 import shutil
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
 from migasfree.server.models import Version, VersionManager, MigasLink
-from migasfree.server.functions import trans
 
 
 class Store(models.Model, MigasLink):
@@ -17,7 +16,7 @@ class Store(models.Model, MigasLink):
     Location where packages will be stored (p.e. /third/vmware)
     """
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50
     )
 
@@ -44,8 +43,8 @@ class Store(models.Model, MigasLink):
             )
 
             self._actions = [
-                [trans('Package Information'), info_link],
-                [trans('Download'), download_link]
+                [ugettext('Package Information'), info_link],
+                [ugettext('Download'), download_link]
             ]
 
     def create_dir(self):

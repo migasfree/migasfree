@@ -4,10 +4,9 @@ import os
 
 from django.db import models
 from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.conf import settings
 
-from migasfree.server.functions import trans
 from migasfree.server.models import (
     Version,
     VersionManager,
@@ -18,7 +17,7 @@ from migasfree.server.models import (
 
 class Package(models.Model, MigasLink):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=100
     )
 
@@ -53,8 +52,8 @@ class Package(models.Model, MigasLink):
             )
 
             self._actions = [
-                [trans('Package Information'), info_link],
-                [trans('Download'), download_link]
+                [ugettext('Package Information'), info_link],
+                [ugettext('Download'), download_link]
             ]
 
     def create_dir(self):

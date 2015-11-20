@@ -3,7 +3,7 @@
 from django.db import models
 from django.db.models.signals import m2m_changed, pre_save, post_save
 from django.dispatch import receiver
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
 
@@ -15,7 +15,6 @@ from migasfree.server.functions import (
     s2l,
     l2s,
     swap_m2m,
-    trans,
     remove_empty_elements_from_dict
 )
 
@@ -305,28 +304,28 @@ class Computer(models.Model, MigasLink):
         cid = self.get_cid_attribute()
 
         return remove_empty_elements_from_dict({
-            trans("Computer"): self.display(),
-            trans("Status"): trans(self.status),
-            trans("Tags"): ', '.join(str(x) for x in self.tags.all()),
-            trans("Devices"): ', '.join(
+            ugettext("Computer"): self.display(),
+            ugettext("Status"): ugettext(self.status),
+            ugettext("Tags"): ', '.join(str(x) for x in self.tags.all()),
+            ugettext("Devices"): ', '.join(
                 str(x) for x in self.devices_logical.all()
             ),
-            trans("Faults"): ', '.join(
+            ugettext("Faults"): ', '.join(
                 str(x) for x in cid.faultdef_set.all()
             ),
-            trans("Repositories"): ', '.join(
+            ugettext("Repositories"): ', '.join(
                 str(x) for x in cid.repository_set.all()
             ),
-            trans("Repositories (excluded)"): ', '.join(
+            ugettext("Repositories (excluded)"): ', '.join(
                 str(x) for x in cid.ExcludeAttribute.all()
             ),
-            trans("Sets"): ', '.join(
+            ugettext("Sets"): ', '.join(
                 str(x) for x in cid.attributeset_set.all()
             ),
-            trans("Sets (excluded)"): ', '.join(
+            ugettext("Sets (excluded)"): ', '.join(
                 str(x) for x in cid.ExcludeAttributeGroup.all()
             ),
-            trans("Delays"): ', '.join(
+            ugettext("Delays"): ', '.join(
                 str(x) for x in cid.scheduledelay_set.all()
             ),
         })

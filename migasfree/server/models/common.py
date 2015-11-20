@@ -2,8 +2,9 @@
 
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
+from django.utils.translation import ugettext
 
-from migasfree.server.functions import trans, vl2s
+from migasfree.server.functions import vl2s
 
 # Programming Languages for Properties and FaultDefs
 LANGUAGES_CHOICES = (
@@ -39,12 +40,12 @@ class MigasLink(object):
         _link += '<button type="button" ' + \
             'class="btn btn-default dropdown-toggle" data-toggle="dropdown">' + \
             '<span class="caret"></span>' + \
-            '<span class="sr-only">' + trans("Toggle Dropdown") + \
+            '<span class="sr-only">' + ugettext("Toggle Dropdown") + \
             '</span></button>'
 
         related_data = ''
         if self._actions is not None:
-            related_data += '<li role="presentation" class="dropdown-header">%s</li>' % trans("Actions")
+            related_data += '<li role="presentation" class="dropdown-header">%s</li>' % ugettext("Actions")
             for item in self._actions:
                 related_data += '<li><a href="%(href)s">%(protocol)s</a></li>' % {
                     'href': item[1],
@@ -53,7 +54,7 @@ class MigasLink(object):
 
             related_data += '<li role="presentation" class="divider"></li>'
 
-        related_data += '<li role="presentation" class="dropdown-header">%s</li>' % trans("Related data")
+        related_data += '<li role="presentation" class="dropdown-header">%s</li>' % ugettext("Related data")
 
         for obj, _ in objs:
             try:
@@ -66,19 +67,24 @@ class MigasLink(object):
                         obj.related.model._meta.app_label,
                         _name)
                     )
-                values = vl2s(self.__getattribute__(obj.related.field.name)).replace("[", "").replace("]", "")
+                values = vl2s(
+                    self.__getattribute__(obj.related.field.name)
+                ).replace("[", "").replace("]", "")
                 if values:
                     related_data += '<li><a href="%s?%s__in=%s">%s </a></li>' % (
                         related_link,
                         "id",
                         values,
-                        trans(obj.related.field.name)
+                        ugettext(obj.related.field.name)
                     )
             except:
                 pass
 
         for related_object, _ in related_objects:
-            if not "%s - %s" % (related_object.model._meta.model_name, related_object.field.name) in self._exclude_links:
+            if not "%s - %s" % (
+                related_object.model._meta.model_name,
+                related_object.field.name
+            ) in self._exclude_links:
                 try:
                     related_link = reverse(
                         'admin:server_%s_changelist'
@@ -88,8 +94,8 @@ class MigasLink(object):
                         related_link,
                         related_object.field.name,
                         self.id,
-                        trans(related_object.model._meta.verbose_name_plural),
-                        trans(related_object.field.name)
+                        ugettext(related_object.model._meta.verbose_name_plural),
+                        ugettext(related_object.field.name)
                     )
                 except:
                     pass
@@ -105,8 +111,8 @@ class MigasLink(object):
                     related_link,
                     _fieldname,
                     self.id,
-                    trans(_modelname),
-                    trans(_fieldname)
+                    ugettext(_modelname),
+                    ugettext(_fieldname)
                 )
             except:
                 pass

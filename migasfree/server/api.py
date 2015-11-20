@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from django.contrib import auth
 from django.conf import settings
+from django.utils.translation import ugettext
 
 from migasfree.server.models import *
 from migasfree.server.errmfs import *
@@ -524,7 +525,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # 1.- PROCESS COMPUTER
         if dic_computer["hostname"] == "desktop":
-            str_error = trans(
+            str_error = ugettext(
                 'desktop is not valid name for this computer: IP=%(ip)s'
             ) % {'ip': dic_computer["ip"]}
             o_error = Error()

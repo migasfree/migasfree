@@ -10,7 +10,6 @@ import django
 from datetime import timedelta
 
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _
 
 
 def is_db_sqlite():
@@ -103,8 +102,7 @@ def _apache_version():
 
 
 def _write_web_config(filename, config):
-
-    if _apache_version() < "2.4.": #issue 112
+    if _apache_version() < "2.4.":  # issue 112
         _require = """    Order allow,deny
     Allow from all
 """
@@ -121,10 +119,6 @@ def _write_web_config(filename, config):
     if not writefile(filename, _content):
         print('Problem found creating web server configuration file.')
         sys.exit(errno.EINPROGRESS)
-
-
-def trans(string):
-    return unicode(_(string))  # pylint: disable-msg=E1102
 
 
 def writefile(filename, content):

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-11-19 13:46+0100\n"
-"PO-Revision-Date: 2015-11-19 13:47+0100\n"
+"POT-Creation-Date: 2015-11-20 13:58+0100\n"
+"PO-Revision-Date: 2015-11-20 13:59+0100\n"
 "Last-Translator: Alberto Gacías <alberto@migasfree.org>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -967,6 +967,14 @@ msgstr "Dirección de correo:"
 msgid "Reset my password"
 msgstr "Cambiar mi contraseña"
 
+#: server/admin.py:56
+msgid "Yes"
+msgstr "Sí"
+
+#: server/admin.py:59
+msgid "No"
+msgstr "No"
+
 #: server/admin.py:109
 #: server/models/version.py:51
 msgid "autoregister"
@@ -1030,6 +1038,7 @@ msgid "Errors"
 msgstr "Errores"
 
 #: server/admin.py:560
+#: server/models/computer.py:313
 #: server/models/fault.py:60
 #: server/templates/includes/mining_menu.html:8
 msgid "Faults"
@@ -1057,7 +1066,8 @@ msgid "Software"
 msgstr "Software"
 
 #: server/admin.py:650
-#: server/models/computer.py:238
+#: server/models/computer.py:243
+#: server/models/computer.py:310
 #: server/models/device.py:57
 #: server/templates/base.html:93
 #: server/templates/includes/breadcrumb.html:17
@@ -1067,6 +1077,7 @@ msgstr "Dispositivos"
 
 #: server/admin.py:653
 #: server/models/attribute.py:100
+#: server/models/computer.py:309
 #: server/templates/includes/mining_menu.html:10
 msgid "Tags"
 msgstr "Etiquetas"
@@ -1094,8 +1105,14 @@ msgstr "Calendario"
 msgid "Run Query"
 msgstr "Ejecutar consulta"
 
+#: server/api.py:529
+#, python-format
+msgid "desktop is not valid name for this computer: IP=%(ip)s"
+msgstr "desktop no es un nombre válido para el ordenador: IP=%(ip)s"
+
 #: server/autocomplete_light_registry.py:15
-#: server/models/computer.py:305
+#: server/models/computer.py:307
+#: server/models/computer.py:340
 #: server/models/error.py:55
 #: server/models/fault.py:45
 #: server/models/login.py:38
@@ -1109,59 +1126,60 @@ msgstr "Ejecutar consulta"
 msgid "Computer"
 msgstr "Ordenador"
 
-#: server/errmfs.py:26
+#: server/errmfs.py:25
 msgid "User not authenticated"
 msgstr "Usuario no autenticado"
 
-#: server/errmfs.py:27
+#: server/errmfs.py:26
 msgid "User can not register computers"
 msgstr "El usuario no puede registrar ordenadores"
 
-#: server/errmfs.py:28
+#: server/errmfs.py:27
 msgid "Method GET not allowed"
 msgstr "Método GET no permitido"
 
-#: server/errmfs.py:29
+#: server/errmfs.py:28
 msgid "Command not found"
 msgstr "Comando no encontrado"
 
-#: server/errmfs.py:30
+#: server/errmfs.py:29
 msgid "Signature is not valid"
 msgstr "La firma no es válida"
 
-#: server/errmfs.py:31
+#: server/errmfs.py:30
 msgid "Computer not found"
 msgstr "Ordenador no encontrado"
 
-#: server/errmfs.py:32
+#: server/errmfs.py:31
 msgid "Device not found"
 msgstr "Dispositivo no encontrado"
 
-#: server/errmfs.py:33
+#: server/errmfs.py:32
 msgid "Version not found"
 msgstr "Versión no encontrada"
 
-#: server/errmfs.py:34
+#: server/errmfs.py:33
 msgid "User have not permission"
 msgstr "El usuario no tiene permisos"
 
-#: server/errmfs.py:35
+#: server/errmfs.py:34
 msgid "Generic error"
 msgstr "Error genérico"
 
-#: server/errmfs.py:68
+#: server/errmfs.py:67
 msgid "Traceback"
 msgstr ""
 
-#: server/errmfs.py:79
+#: server/errmfs.py:78
 msgid "No errors"
 msgstr "Sin errores"
 
-#: server/errmfs.py:124
+#: server/errmfs.py:123
 msgid "Generic error in server"
 msgstr "Error genérico en el servidor"
 
 #: server/filters.py:18
+#: server/models/computer.py:308
 #: server/views/dashboard.py:66
 msgid "Status"
 msgstr "Estado"
@@ -1234,7 +1252,7 @@ msgstr "No asignado"
 
 #: server/forms.py:51
 #: server/forms.py:95
-#: server/models/computer.py:306
+#: server/models/computer.py:341
 #: server/models/device_logical.py:64
 #: server/templates/computer_confirm_delete.html:9
 #: server/templates/computer_confirm_delete_selected.html:9
@@ -1294,7 +1312,7 @@ msgstr "Atributos/Etiquetas"
 
 #: server/models/attribute_set.py:15
 #: server/models/checking.py:14
-#: server/models/computer.py:58
+#: server/models/computer.py:63
 #: server/models/device.py:13
 #: server/models/device_connection.py:11
 #: server/models/device_feature.py:9
@@ -1305,14 +1323,14 @@ msgstr "Atributos/Etiquetas"
 #: server/models/hw_capability.py:16
 #: server/models/hw_configuration.py:16
 #: server/models/hw_logical_name.py:16
-#: server/models/package.py:21
+#: server/models/package.py:20
 #: server/models/platform.py:14
 #: server/models/pms.py:24
 #: server/models/property.py:26
 #: server/models/query.py:9
 #: server/models/repository.py:49
 #: server/models/schedule.py:10
-#: server/models/store.py:20
+#: server/models/store.py:19
 #: server/models/user.py:11
 #: server/models/version.py:26
 msgid "name"
@@ -1324,7 +1342,7 @@ msgstr "nombre"
 #: server/models/login.py:30
 #: server/models/repository.py:70
 #: server/models/schedule_delay.py:24
-#: server/models/schedule_delay.py:51
+#: server/models/schedule_delay.py:53
 msgid "attributes"
 msgstr "atributos"
 
@@ -1343,11 +1361,11 @@ msgstr "exclusiones"
 msgid "Excluded Attributes"
 msgstr "Atributos excluidos"
 
-#: server/models/attribute_set.py:56
+#: server/models/attribute_set.py:55
 msgid "Attributes Set"
 msgstr "Conjunto de Atributos"
 
-#: server/models/attribute_set.py:57
+#: server/models/attribute_set.py:56
 #: server/templates/includes/config_menu.html:6
 msgid "Attributes Sets"
 msgstr "Conjuntos de Atributos"
@@ -1387,117 +1405,151 @@ msgstr "Comprobación"
 msgid "Checkings"
 msgstr "Comprobaciones"
 
-#: server/models/computer.py:47
+#: server/models/common.py:43
+msgid "Toggle Dropdown"
+msgstr "Alternar desplegable"
+
+#: server/models/common.py:48
+msgid "Actions"
+msgstr "Acciones"
+
+#: server/models/common.py:57
+msgid "Related data"
+msgstr "Datos relacionados"
+
+#: server/models/computer.py:52
 msgid "Intended"
 msgstr "Asignado"
 
-#: server/models/computer.py:48
+#: server/models/computer.py:53
 msgid "Reserved"
 msgstr "Reservado"
 
-#: server/models/computer.py:49
+#: server/models/computer.py:54
 msgid "Unknown"
 msgstr "Desconocido"
 
-#: server/models/computer.py:50
+#: server/models/computer.py:55
 msgid "In repair"
 msgstr "En reparación"
 
-#: server/models/computer.py:51
+#: server/models/computer.py:56
 msgid "Available"
 msgstr "Disponible"
 
-#: server/models/computer.py:52
+#: server/models/computer.py:57
 msgid "Unsubscribed"
 msgstr "Baja"
 
-#: server/models/computer.py:66
+#: server/models/computer.py:71
 msgid "uuid"
 msgstr "uuid"
 
-#: server/models/computer.py:75
+#: server/models/computer.py:80
 #: server/models/status_log.py:26
 msgid "status"
 msgstr "estado"
 
-#: server/models/computer.py:84
+#: server/models/computer.py:89
 #: server/models/device_driver.py:23
 #: server/models/error.py:35
 #: server/models/fault.py:38
 #: server/models/hw_node.py:76
 #: server/models/migration.py:16
-#: server/models/package.py:27
+#: server/models/package.py:26
 #: server/models/repository.py:55
-#: server/models/store.py:26
+#: server/models/store.py:25
 #: server/models/update.py:22
 #: server/models/version.py:146
 msgid "version"
 msgstr "versión"
 
-#: server/models/computer.py:88
+#: server/models/computer.py:93
 msgid "date input"
 msgstr "fecha de alta"
 
-#: server/models/computer.py:89
+#: server/models/computer.py:94
 msgid "Date of input of Computer in migasfree system"
 msgstr "Fecha de alta del ordenador en migasfree"
 
-#: server/models/computer.py:93
+#: server/models/computer.py:98
 msgid "ip"
 msgstr "IP"
 
-#: server/models/computer.py:100
+#: server/models/computer.py:105
 msgid "software inventory"
 msgstr "inventario de software"
 
-#: server/models/computer.py:103
+#: server/models/computer.py:108
 msgid "gap between software base packages and computer ones"
 msgstr "diferencia entre el conjunto de paquetes base y el del ordenador"
 
-#: server/models/computer.py:107
+#: server/models/computer.py:112
 msgid "software history"
 msgstr "historial de software"
 
-#: server/models/computer.py:117
+#: server/models/computer.py:122
 msgid "devices"
 msgstr "dispositivos"
 
-#: server/models/computer.py:121
+#: server/models/computer.py:126
 msgid "devices copy"
 msgstr "copia de dispositivos"
 
-#: server/models/computer.py:128
+#: server/models/computer.py:133
 msgid "last update"
 msgstr "última actualización"
 
-#: server/models/computer.py:133
+#: server/models/computer.py:138
 msgid "last hardware capture"
 msgstr "fecha de la última actualización del hardware"
 
-#: server/models/computer.py:142
+#: server/models/computer.py:147
 msgid "tags"
 msgstr "etiquetas"
 
-#: server/models/computer.py:211
+#: server/models/computer.py:216
 msgid "Last update"
 msgstr "Última actualización"
 
-#: server/models/computer.py:220
+#: server/models/computer.py:225
 msgid "login"
 msgstr "login"
 
-#: server/models/computer.py:232
+#: server/models/computer.py:237
 #: server/models/hw_node.py:146
 msgid "Hardware"
 msgstr "Hardware"
 
-#: server/models/computer.py:244
+#: server/models/computer.py:249
 #: server/models/migration.py:37
 #: server/models/version.py:108
 #: server/models/version.py:112
 #: server/templates/includes/computer_messages_result.html:12
 msgid "Version"
 msgstr "Versión"
+
+#: server/models/computer.py:316
+#: server/models/repository.py:234
+#: server/templates/includes/software_menu.html:5
+msgid "Repositories"
+msgstr "Repositorios"
+
+#: server/models/computer.py:319
+msgid "Repositories (excluded)"
+msgstr "Repositorios (excluidos)"
+
+#: server/models/computer.py:322
+msgid "Sets"
+msgstr "Conjuntos"
+
+#: server/models/computer.py:325
+msgid "Sets (excluded)"
+msgstr "Conjuntos (excluidos)"
+
+#: server/models/computer.py:328
+msgid "Delays"
+msgstr "Demoras"
 
 #: server/models/device.py:22
 #: server/models/device_driver.py:18
@@ -1828,15 +1880,28 @@ msgstr "notificación"
 msgid "Notification"
 msgstr "Notificación"
 
-#: server/models/package.py:32
+#: server/models/package.py:31
 msgid "store"
 msgstr "almacén"
 
-#: server/models/package.py:76
+#: server/models/package.py:55
+#: server/models/store.py:46
+#: server/views/packages.py:33
+#: server/views/packages.py:56
+#: server/views/packages.py:86
+msgid "Package Information"
+msgstr "Información del paquete"
+
+#: server/models/package.py:56
+#: server/models/store.py:47
+msgid "Download"
+msgstr "Descargar"
+
+#: server/models/package.py:75
 msgid "Package/Set"
 msgstr "Paquete/Conjunto"
 
-#: server/models/package.py:77
+#: server/models/package.py:76
 #: server/templates/includes/software_menu.html:14
 msgid "Packages/Sets"
 msgstr "Paquetes/Conjuntos"
@@ -2006,11 +2071,6 @@ msgstr "línea temporal"
 msgid "Repository"
 msgstr "Repositorio"
 
-#: server/models/repository.py:234
-#: server/templates/includes/software_menu.html:5
-msgid "Repositories"
-msgstr "Repositorios"
-
 #: server/models/schedule.py:30
 #: server/templates/includes/software_menu.html:8
 msgid "Schedules"
@@ -2024,11 +2084,11 @@ msgstr "demora"
 msgid "duration"
 msgstr "duración"
 
-#: server/models/schedule_delay.py:55
+#: server/models/schedule_delay.py:57
 msgid "Schedule Delay"
 msgstr "Demora del calendario"
 
-#: server/models/schedule_delay.py:56
+#: server/models/schedule_delay.py:58
 msgid "Schedule Delays"
 msgstr "Demoras del calendario"
 
@@ -2040,11 +2100,11 @@ msgstr "Registro de Estados"
 msgid "Status Logs"
 msgstr "Registros de Estados"
 
-#: server/models/store.py:83
+#: server/models/store.py:82
 msgid "Store"
 msgstr "Almacén"
 
-#: server/models/store.py:84
+#: server/models/store.py:83
 #: server/templates/includes/software_menu.html:11
 msgid "Stores"
 msgstr "Almacenes"
@@ -2323,7 +2383,7 @@ msgid "Devices Logical"
 msgstr "Dispositivos lógicos"
 
 #: server/templates/includes/mining_menu.html:14
-#: server/views/public_api.py:130
+#: server/views/public_api.py:132
 msgid "Computers Replacement"
 msgstr "Reemplazo de ordenadores"
 
@@ -2378,12 +2438,6 @@ msgstr "¡Los ordenadores %s han sido borrados!"
 msgid "Credentials not valid"
 msgstr "Los credenciales no son válidos"
 
-#: server/views/packages.py:33
-#: server/views/packages.py:56
-#: server/views/packages.py:86
-msgid "Package Information"
-msgstr "Información del paquete"
-
 #: server/views/packages.py:34
 #: server/views/stats.py:330
 msgid "Choose a version before continue"
@@ -2393,7 +2447,7 @@ msgstr "Selecciona una versión antes de continuar"
 msgid "No package information exists"
 msgstr "No existe información sobre el paquete"
 
-#: server/views/public_api.py:110
+#: server/views/public_api.py:114
 msgid "Replacement done."
 msgstr "Reemplazo realizado."
 
@@ -2500,12 +2554,6 @@ msgstr "No hay ordenadores"
 #~ msgid "Property of attribute"
 #~ msgstr "Propiedad de atributo"
 
-#~ msgid "Download"
-#~ msgstr "Descargar"
-
-#~ msgid "Toggle Dropdown"
-#~ msgstr "Alternar desplegable"
-
 #~ msgid "information"
 #~ msgstr "información"
 
@@ -2538,9 +2586,6 @@ msgstr "No hay ordenadores"
 
 #~ msgid "Month"
 #~ msgstr "Mes"
-
-#~ msgid "Delay"
-#~ msgstr "Demora"
 
 #~ msgid "of"
 #~ msgstr "de"
@@ -2626,9 +2671,6 @@ msgstr "No hay ordenadores"
 
 #~ msgid "Packaging"
 #~ msgstr "Empaquetado"
-
-#~ msgid "desktop is not valid name for this computer: IP=%(ip)s"
-#~ msgstr "desktop no es un nombre válido para el ordenador: IP=%(ip)s"
 
 #~ msgid "Upload changes of software"
 #~ msgstr "Subir cambios de software"

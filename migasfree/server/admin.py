@@ -10,7 +10,7 @@ from django.db import models
 from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.core.exceptions import PermissionDenied
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.conf import settings
 
 from .models import *
@@ -19,7 +19,7 @@ from .views.repository import (
     remove_physical_repository
 )
 
-from .functions import compare_values, trans
+from .functions import compare_values
 from .filters import (
     ProductiveFilterSpec, TagFilter, AttributeFilter, UserFaultFilter
 )
@@ -53,10 +53,10 @@ class MigasAdmin(admin.ModelAdmin):
     def boolean_field(self, field):
         if field:
             ret = '<span class="fa fa-check boolean-yes">' \
-                + '<span class="sr-only">%s</span></span>' % trans('Yes')
+                + '<span class="sr-only">%s</span></span>' % ugettext('Yes')
         else:
             ret = '<span class="fa fa-times boolean-no">' \
-                + '<span class="sr-only">%s</span></span>' % trans('No')
+                + '<span class="sr-only">%s</span></span>' % ugettext('No')
 
         return ret
 
