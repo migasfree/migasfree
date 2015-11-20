@@ -12,12 +12,12 @@ from migasfree.server.models import (
 
 class AttributeSet(models.Model, MigasLink):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50
     )
 
     active = models.BooleanField(
-        _("active"),
+        verbose_name=_("active"),
         default=True,
     )
 
@@ -39,17 +39,16 @@ class AttributeSet(models.Model, MigasLink):
     )
 
     def save(self, *args, **kwargs):
-        # Create a Attributte
-        try:
-            att = Attribute.objects.get(property_att=Property(id=1), value=self.name)
-        except:
-            att = Attribute()
-            att.value = self.name
-            att.property_att = Property(id=1)
-            att.description = ""
-            att.save()
+        Attribute.objects.get_or_create(
+            property_att=Property(id=1),
+            value=self.name,
+            defaults={'description': ''}
+        )
 
         super(AttributeSet, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.name
 
     class Meta:
         app_label = 'server'
