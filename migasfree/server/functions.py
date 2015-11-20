@@ -155,6 +155,19 @@ def readfile(filename):
     return ret
 
 
+def d2s(dic):
+    '''Dictionary to String'''
+    return ['%s: %s' % (k, v) for (k, v) in list(dic.items())]
+
+
+def remove_empty_elements_from_dict(dic):
+    for (k, v) in list(dic.items()):
+        if not v:
+            del dic[k]
+
+    return dic
+
+
 def l2s(lst):
     """
     list to string

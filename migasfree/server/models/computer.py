@@ -11,7 +11,13 @@ from migasfree.server.models import (
     Version, DeviceLogical, Attribute, Property, MigasLink
 )
 
-from migasfree.server.functions import s2l, l2s, swap_m2m
+from migasfree.server.functions import (
+    s2l,
+    l2s,
+    swap_m2m,
+    trans,
+    remove_empty_elements_from_dict
+)
 
 
 class ProductiveManager(models.Manager):
@@ -294,6 +300,36 @@ class Computer(models.Model, MigasLink):
 
     def display(self):
         return "CID-%d %s" % (self.id, self.get_cid_description())
+
+    def get_replacement_info(self):
+        cid = self.get_cid_attribute()
+
+        return remove_empty_elements_from_dict({
+            trans("Computer"): self.display(),
+            trans("Status"): trans(self.status),
+            trans("Tags"): ', '.join(str(x) for x in self.tags.all()),
+            trans("Devices"): ', '.join(
+                str(x) for x in self.devices_logical.all()
+            ),
+            trans("Faults"): ', '.join(
+                str(x) for x in cid.faultdef_set.all()
+            ),
+            trans("Repositories"): ', '.join(
+                str(x) for x in cid.repository_set.all()
+            ),
+            trans("Repositories (excluded)"): ', '.join(
+                str(x) for x in cid.ExcludeAttribute.all()
+            ),
+            trans("Sets"): ', '.join(
+                str(x) for x in cid.attributeset_set.all()
+            ),
+            trans("Sets (excluded)"): ', '.join(
+                str(x) for x in cid.ExcludeAttributeGroup.all()
+            ),
+            trans("Delays"): ', '.join(
+                str(x) for x in cid.scheduledelay_set.all()
+            ),
+        })
 
     def __unicode__(self):
         return str(self.__getattribute__(

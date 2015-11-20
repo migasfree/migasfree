@@ -17,7 +17,7 @@ from migasfree.server.models import (
 )
 
 from migasfree.server.api import get_computer
-from migasfree.server.functions import uuid_validate, trans
+from migasfree.server.functions import uuid_validate, d2s
 from migasfree.server.security import gpg_get_key
 
 from migasfree.server.forms import ComputerReplacementForm
@@ -62,12 +62,16 @@ def get_computer_info(request):
     result["tags"] = element
 
     result["available_tags"] = {}
-    for rps in Repository.objects.all().filter(version=computer.version).filter(active=True):
-        for tag in rps.attributes.all().filter(property_att__tag=True).filter(property_att__active=True):
+    for rps in Repository.objects.all().filter(
+        version=computer.version
+    ).filter(active=True):
+        for tag in rps.attributes.all().filter(
+            property_att__tag=True
+        ).filter(property_att__active=True):
             if not tag.property_att.name in result["available_tags"]:
                 result["available_tags"][tag.property_att.name] = []
 
-            value="%s-%s" % (tag.property_att.prefix, tag.value)
+            value = "%s-%s" % (tag.property_att.prefix, tag.value)
             if not value in result["available_tags"][tag.property_att.name]:
                 result["available_tags"][tag.property_att.name].append(value)
 
@@ -108,16 +112,14 @@ def computer_replacement(request):
             Computer.replacement(source, target)
 
             messages.success(request, _('Replacement done.'))
-            messages.info(request, '%s (%s): [%s], [%s]' % (
-                source.__str__(), trans(source.status),
-                ', '.join(str(x) for x in source.tags.all()),
-                ', '.join(str(x) for x in source.devices_logical.all())
-            ))
-            messages.info(request, '%s (%s): [%s], [%s]' % (
-                target.__str__(), trans(target.status),
-                ', '.join(str(x) for x in target.tags.all()),
-                ', '.join(str(x) for x in target.devices_logical.all())
-            ))
+            messages.info(
+                request,
+                '<br/>'.join(sorted(d2s(source.get_replacement_info())))
+            )
+            messages.info(
+                request,
+                '<br/>'.join(sorted(d2s(target.get_replacement_info())))
+            )
 
             return HttpResponseRedirect(reverse('computer_replacement'))
     else:
