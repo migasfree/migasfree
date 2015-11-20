@@ -10,7 +10,7 @@ from migasfree.server.models import Login
 
 
 class ScheduleDelay(models.Model):
-    delay = models.IntegerField(_("delay"))
+    delay = models.IntegerField(verbose_name=_("delay"))
 
     schedule = models.ForeignKey(
         Schedule,
@@ -25,28 +25,30 @@ class ScheduleDelay(models.Model):
     )
 
     duration = models.IntegerField(
-        _("duration"),
+        verbose_name=_("duration"),
         default=1,
         validators=[MinValueValidator(1), ]
     )
 
     def total_computers(self):
-        version=user_version()
+        version = user_version()
         if version:
-            return Login.objects.filter(attributes__id__in=self.attributes.all().values_list("id"), computer__version_id=version.id).annotate(total=Count('id')).order_by('id').count()
+            return Login.objects.filter(
+                attributes__id__in=self.attributes.all().values_list("id"),
+                computer__version_id=version.id
+            ).annotate(total=Count('id')).order_by('id').count()
         else:
-            return Login.objects.filter(attributes__id__in=self.attributes.all().values_list("id")).annotate(total=Count('id')).order_by('id').count()
+            return Login.objects.filter(
+                attributes__id__in=self.attributes.all().values_list("id")
+            ).annotate(total=Count('id')).order_by('id').count()
 
     def __unicode__(self):
-        # return u'%s - %s' % (str(self.delay), self.schedule.name)
-        return u''
+        return '%s - %d' % (self.schedule.name, self.delay)
 
     def list_attributes(self):
-        cattributes = ""
-        for i in self.attributes.all():
-            cattributes = cattributes + i.value + ","
-
-        return cattributes[0:len(cattributes) - 1]
+        return ', '.join(
+            self.attributes.values_list('value', flat=True).order_by('value')
+        )
 
     list_attributes.short_description = _("attributes")
 
