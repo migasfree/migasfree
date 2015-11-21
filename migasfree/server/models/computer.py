@@ -8,7 +8,9 @@ from django.template import Context, Template
 from django.conf import settings
 
 from migasfree.server.models import (
-    Version, DeviceLogical, Attribute, Property, MigasLink
+    Version,
+    # DeviceLogical,
+    Attribute, Property, MigasLink
 )
 
 from migasfree.server.functions import (
@@ -57,10 +59,10 @@ class Computer(models.Model, MigasLink):
         ('unsubscribed', _('Unsubscribed')),
     )
 
-    PRODUCTIVE_STATUS = ['intended', 'reserved', 'unkown']
+    PRODUCTIVE_STATUS = ['intended', 'reserved', 'unknown']
 
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         null=True,
         blank=True,
@@ -68,7 +70,7 @@ class Computer(models.Model, MigasLink):
     )  # south 0004
 
     uuid = models.CharField(
-        _("uuid"),
+        verbose_name=_("uuid"),
         max_length=36,
         null=True,
         blank=True,
@@ -90,52 +92,54 @@ class Computer(models.Model, MigasLink):
     )
 
     dateinput = models.DateField(
-        _("date input"),
+        verbose_name=_("date input"),
         help_text=_("Date of input of Computer in migasfree system")
     )
 
     ip = models.CharField(
-        _("ip"),
+        verbose_name=_("ip"),
         max_length=50,
         null=True,
         blank=True
     )
 
     software = models.TextField(
-        _("software inventory"),
+        verbose_name=_("software inventory"),
         null=True,
         blank=True,
         help_text=_("gap between software base packages and computer ones")
     )
 
     history_sw = models.TextField(
-        _("software history"),
+        verbose_name=_("software history"),
         default="",
         null=True,
         blank=True
     )
 
     devices_logical = models.ManyToManyField(
-        DeviceLogical,
+        # DeviceLogical,
+        # http://python.6.x6.nabble.com/many-to-many-between-apps-td5026629.html
+        'server.DeviceLogical',
         null=True,
         blank=True,
         verbose_name=_("devices"),
     )
 
     devices_copy = models.TextField(
-        _("devices copy"),
+        verbose_name=_("devices copy"),
         null=True,
         blank=False,
         editable=False
     )
 
     datelastupdate = models.DateTimeField(
-        _("last update"),
+        verbose_name=_("last update"),
         null=True,
     )
 
     datehardware = models.DateTimeField(
-        _("last hardware capture"),
+        verbose_name=_("last hardware capture"),
         null=True,
         blank=True,
     )
