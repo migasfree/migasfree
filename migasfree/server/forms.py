@@ -22,8 +22,14 @@ class ParametersForm(forms.Form):
 
 
 class ComputerReplacementForm(forms.Form):
-    source = autocomplete_light.ChoiceField('ComputerAutocomplete')
-    target = autocomplete_light.ChoiceField('ComputerAutocomplete')
+    source = autocomplete_light.ChoiceField(
+        'ComputerAutocomplete',
+        label=_('Source')
+    )
+    target = autocomplete_light.ChoiceField(
+        'ComputerAutocomplete',
+        label=_('Target')
+    )
 
 
 class RepositoryForm(forms.ModelForm):
