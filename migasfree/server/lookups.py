@@ -26,14 +26,13 @@ class AttributeLookup(LookupChannel):
         and len(q) > (Property.PREFIX_LEN + 1):
             return self.model.objects.filter(
                 Q(property_att__prefix__icontains=q[0:Property.PREFIX_LEN])
-            ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])).order_by(
-                'value'
-            )
+            ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])).filter(
+                Q(property_att__active=True)).order_by('value')
         else:
             return self.model.objects.filter(
                 Q(value__icontains=q) | Q(description__icontains=q)
                 | Q(property_att__prefix__icontains=q)
-            ).order_by('value')
+            ).filter(Q(property_att__active=True)).order_by('value')
 
     def get_result(self, obj):
         return unicode(obj)
@@ -67,14 +66,13 @@ class Attribute_ComputersLookup(LookupChannel):
         and len(q) > (Property.PREFIX_LEN + 1):
             return self.model.objects.filter(
                 Q(property_att__prefix__icontains=q[0:Property.PREFIX_LEN])
-            ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])).order_by(
-                'value'
-            )
+            ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])
+            ).filter(Q(property_att__active=True)).order_by('value')
         else:
             return self.model.objects.filter(
                 Q(value__icontains=q) | Q(description__icontains=q)
                 | Q(property_att__prefix__icontains=q)
-            ).order_by('value')
+            ).filter(Q(property_att__active=True)).order_by('value')
 
     def get_result(self, obj):
         return unicode(obj)
