@@ -62,10 +62,8 @@ class DeviceLogicalForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DeviceLogicalForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
-            lst = []
-            for computer in self.instance.computer_set.all():
-                lst.append(computer.id)
-            self.fields['computers'].initial = lst
+            self.fields['computers'].initial = \
+                self.instance.computer_set.all().values_list('id', flat=True)
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
@@ -106,10 +104,8 @@ class TagForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(TagForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
-            lst = []
-            for computer in self.instance.computer_set.all():
-                lst.append(computer.id)
-            self.fields['computers'].initial = lst
+            self.fields['computers'].initial = \
+                self.instance.computer_set.all().values_list('id', flat=True)
 
         self.fields['property_att'].queryset = Property.objects.filter(tag=True)
 
