@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block extrahead %}
+    {% include 'autocomplete_light/static.html' %}
+{% endblock extrahead %}
+
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>{% trans 'Datum' %}</li>
