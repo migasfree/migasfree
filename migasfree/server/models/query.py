@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Query(models.Model):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         null=True,
         blank=True,
@@ -14,24 +14,24 @@ class Query(models.Model):
     )
 
     description = models.TextField(
-        _("description"),
+        verbose_name=_("description"),
         null=True,
         blank=True
     )
 
     code = models.TextField(
-        _("code"),
+        verbose_name=_("code"),
         null=True,
         blank=True,
-        help_text=_("Code Django: version=user.version, query=QuerySet, fields=list of QuerySet fields names to show, titles=list of QuerySet fields titles"),
+        help_text=_("%s: version=user.version, query=QuerySet, fields=list of QuerySet fields names to show, titles=list of QuerySet fields titles") % _("Django Code"),
         default="query=Package.objects.filter(version=VERSION).filter(Q(repository__id__exact=None))\nfields=('id','name','store__name')\ntitles=('id','name','store')"
     )
 
     parameters = models.TextField(
-        _("parameters"),
+        verbose_name=_("parameters"),
         null=True,
         blank=True,
-        help_text="Code Django: "
+        help_text=_("Django Code")
     )
 
     def __unicode__(self):
@@ -45,8 +45,4 @@ class Query(models.Model):
 
 
 def get_query_names():
-    result = []
-    for item in Query.objects.all().order_by("-id"):
-        result.append([item.id, item.name])
-
-    return result
+    return Query.objects.all().order_by("-id").values_list('id', 'name')
