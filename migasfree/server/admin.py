@@ -435,8 +435,6 @@ admin.site.register(Tag, TagAdmin)
 
 
 class LoginAdmin(MigasAdmin):
-    form = make_ajax_form(Login, {'attributes': 'attribute'})
-
     list_display = ('my_link', 'user_link', 'computer_link', 'date',)
     list_select_related = ('computer', 'user',)
     list_filter = ('date',)
@@ -456,19 +454,6 @@ class LoginAdmin(MigasAdmin):
         return object.link()
 
     my_link.short_description = _("Login")
-
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
-        if db_field.name == "attributes":
-            kwargs["queryset"] = Attribute.objects.filter(
-                property_att__active=True
-            )
-            return db_field.formfield(**kwargs)
-
-        return super(LoginAdmin, self).formfield_for_manytomany(
-            db_field,
-            request,
-            **kwargs
-        )
 
     def has_add_permission(self, request):
         return False
