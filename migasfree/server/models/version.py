@@ -23,7 +23,7 @@ class Version(models.Model, MigasLink):
     Distribution for personalize.
     """
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         unique=True
     )
@@ -34,21 +34,21 @@ class Version(models.Model, MigasLink):
     )
 
     computerbase = models.CharField(
-        _("Actual line computer"),
+        verbose_name=_("Actual line computer"),
         max_length=50,
         help_text=_("Computer with the actual line software"),
         default="---"
     )
 
     base = models.TextField(
-        _("Actual line packages"),
+        verbose_name=_("Actual line packages"),
         null=False,
         blank=True,
         help_text=_("List ordered of packages of actual line computer")
     )
 
     autoregister = models.BooleanField(
-        _("autoregister"),
+        verbose_name=_("autoregister"),
         default=False,
         help_text=_("Is not neccesary a user for register the computer in \
                      database and get the keys.")
@@ -165,11 +165,7 @@ class UserProfile(UserSystem, MigasLink):
 
 
 def get_version_names():
-    result = []
-    for item in Version.objects.all().order_by("name"):
-        result.append([item.id, item.name])
-
-    return result
+    return Version.objects.all().order_by('name').values_list('id', 'name')
 
 
 def user_version():
