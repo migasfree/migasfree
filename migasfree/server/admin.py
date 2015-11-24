@@ -81,13 +81,23 @@ def user_version(user):
 
 
 class PlatformAdmin(MigasAdmin):
-    list_display = ("link",)
+    list_display = ('my_link',)
+
+    def my_link(self, object):
+        return object.link()
+
+    my_link.short_description = _("Platform")
 
 admin.site.register(Platform, PlatformAdmin)
 
 
 class UserProfileAdmin(MigasAdmin):
-    list_display = ("link",)
+    list_display = ('my_link',)
+
+    def my_link(self, object):
+        return object.link()
+
+    my_link.short_description = _("User Profile")
 
 admin.site.register(UserProfile, UserProfileAdmin)
 
@@ -154,7 +164,7 @@ admin.site.register(Update, UpdateAdmin)
 
 class CheckingAdmin(MigasAdmin):
     list_display = ('name', 'my_active', 'my_alert')
-    list_filter = ('active', )
+    list_filter = ('active',)
 
     def my_active(self, obj):
         return self.boolean_field(obj.active)
@@ -172,26 +182,26 @@ admin.site.register(Checking, CheckingAdmin)
 
 
 class DeviceTypeAdmin(MigasAdmin):
-    ordering = ['name', ]
+    ordering = ('name',)
 
 admin.site.register(DeviceType, DeviceTypeAdmin)
 
 
 class DeviceFeatureAdmin(MigasAdmin):
-    ordering = ['name', ]
+    ordering = ('name',)
 
 admin.site.register(DeviceFeature, DeviceFeatureAdmin)
 
 
 class DeviceManufacturerAdmin(MigasAdmin):
-    ordering = ['name', ]
+    ordering = ('name',)
 
 admin.site.register(DeviceManufacturer, DeviceManufacturerAdmin)
 
 
 class DeviceConnectionAdmin(admin.ModelAdmin):
     list_select_related = ('devicetype',)
-    ordering = ['devicetype__name', 'name', ]
+    ordering = ('devicetype__name', 'name')
 
 admin.site.register(DeviceConnection, DeviceConnectionAdmin)
 
@@ -211,7 +221,7 @@ class DeviceLogicalAdmin(MigasAdmin):
         'device_link',
         'feature',
     )
-    ordering = ['device__name', 'feature__name']
+    ordering = ('device__name', 'feature__name')
     search_fields = (
         'id',
         'device__name',
