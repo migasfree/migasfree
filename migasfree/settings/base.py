@@ -119,6 +119,10 @@ INSTALLED_APPS = (
     'ajax_select',
     'south',
     'migasfree.flot',
+    'migasfree.apps',
+    'rest_framework',
+    'migasfree.rest',
+    'oauth2_provider',
 )
 
 # http://stackoverflow.com/questions/15682814/how-do-i-fake-certain-south-migration-in-django-testsin-a-custom-test-runner
@@ -164,3 +168,19 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+    #'PAGINATE_BY': 10,
+}
