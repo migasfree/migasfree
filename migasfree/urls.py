@@ -16,7 +16,6 @@ from django.conf.urls.static import static
 
 urlpatterns = patterns('',
     url(r'', include('migasfree.server.urls')),
-    url(r'^apps/', include('migasfree.apps.urls')),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
     # to INSTALLED_APPS to enable admin documentation:
@@ -27,11 +26,6 @@ urlpatterns = patterns('',
 
     url(r'^autocomplete/', include('autocomplete_light.urls')),
     url(r'^admin/lookups/', include(ajax_select_urls)),
-    url(r'^autocomplete/', include('autocomplete_light.urls')),
-
-    url(r'^rest/', include('migasfree.rest.urls')),
-
-    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 )
 
 if settings.DEBUG and settings.STATIC_ROOT is not None:
