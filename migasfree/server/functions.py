@@ -48,17 +48,22 @@ Alias /static/flot %(migasfree_app_dir)s/flot/static/flot
 Alias /static %(migasfree_app_dir)s/server/static
 Alias /repo %(migasfree_repo_dir)s
 
-<Directory  %(migasfree_app_dir)s>
+<Directory %(migasfree_app_dir)s>
 %(require)s
     Options FollowSymLinks
 </Directory>
 
-<Directory  %(migasfree_app_dir)s/../ajax_select/static/ajax_select>
+<Directory %(migasfree_app_dir)s/../ajax_select/static/ajax_select>
 %(require)s
     Options FollowSymLinks
 </Directory>
 
-<Directory  %(migasfree_app_dir)s/admin_bootstrapped/static>
+<Directory %(migasfree_app_dir)s/../autocomplete_light/static/autocomplete_light>
+%(require)s
+    Options FollowSymLinks
+</Directory>
+
+<Directory %(migasfree_app_dir)s/admin_bootstrapped/static>
 %(require)s
     Options FollowSymLinks
 </Directory>
@@ -68,7 +73,7 @@ Alias /repo %(migasfree_repo_dir)s
     Options FollowSymLinks
 </Directory>
 
-<Directory  %(migasfree_app_dir)s/server/static>
+<Directory %(migasfree_app_dir)s/server/static>
 %(require)s
     Options FollowSymLinks
 </Directory>
