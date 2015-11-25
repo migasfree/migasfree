@@ -74,7 +74,8 @@ def create_tables():
         'migrate',
         'server',
         verbosity=1,
-        fake=True
+        fake=True,
+        interactive=False
     )
 
 def is_user_root():
