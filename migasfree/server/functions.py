@@ -84,6 +84,15 @@ Alias /repo %(migasfree_repo_dir)s
     IndexOptions FancyIndexing
 </Directory>
 
+<Directory %(migasfree_repo_dir)s/errors>
+    Order deny, allow
+    Deny from all
+    Allow from 127.0.0.1
+
+    Options Indexes FollowSymlinks
+    IndexOptions FancyIndexing
+</Directory>
+
 WSGIScriptAlias / %(migasfree_app_dir)s/wsgi.py
 """
 
@@ -103,7 +112,9 @@ def _apache_name():
 def _apache_version():
     _name = _apache_name()
     if _name:
-        return run_in_server("%s -v | grep '^Server version' | cut -d ' ' -f 3 " % _name)["out"].split("/")[1].replace("\n","")
+        return run_in_server(
+            "%s -v | grep '^Server version' | cut -d ' ' -f 3 " % _name
+        )["out"].split("/")[1].replace("\n", "")
 
 
 def _write_web_config(filename, config):
