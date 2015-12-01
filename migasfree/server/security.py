@@ -60,19 +60,19 @@ def gpg_get_key(name):
     Return keys gpg and if not exists it is created
     """
 
-    gpghome = os.path.join(settings.MIGASFREE_KEYS_DIR, ".gnupg")
-    _file = os.path.join(gpghome, name + ".gpg")
+    gpg_home = os.path.join(settings.MIGASFREE_KEYS_DIR, '.gnupg')
+    gpg_conf = os.path.join(gpg_home, 'gpg.conf')
+    _file = os.path.join(gpg_home, '%s.gpg' % name)
 
     if not os.path.exists(_file):
-        os.environ['GNUPGHOME'] = gpghome
-        if not os.path.exists(gpghome):
-            os.mkdir(gpghome, 0o700)
+        os.environ['GNUPGHOME'] = gpg_home
+        if not os.path.exists(gpg_home):
+            os.mkdir(gpg_home, 0o700)
             # create a blank configuration file
-            with open(os.path.join(gpghome, 'gpg.conf'), 'wb') as handle:
+            with open(gpg_conf, 'wb') as handle:
                 handle.write('')
 
-            # read only is necessary in centos (#127)
-            os.chmod(os.path.join(gpghome, 'gpg.conf'), 0o600)
+            os.chmod(gpg_conf, 0o600)
 
         # create a context
         ctx = gpgme.Context()
