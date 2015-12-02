@@ -7,20 +7,20 @@ from migasfree.server.models import Computer
 
 
 class Message(models.Model):
-    computer = models.ForeignKey(
+    computer = models.OneToOneField(
         Computer,
+        on_delete=models.CASCADE,
         verbose_name=_("computer"),
-        unique=True
     )
 
     text = models.TextField(
-        _("text"),
+        verbose_name=_("text"),
         null=True,
         blank=True
     )
 
     date = models.DateTimeField(
-        _("date"),
+        verbose_name=_("date"),
         default=0
     )
 
