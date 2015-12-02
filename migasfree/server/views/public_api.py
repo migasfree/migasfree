@@ -36,7 +36,7 @@ def get_versions(request):
 
         result.append(element)
 
-    return HttpResponse(json.dumps(result), mimetype="text/plain")
+    return HttpResponse(json.dumps(result), content_type="text/plain")
 
 
 def get_computer_info(request):
@@ -75,7 +75,7 @@ def get_computer_info(request):
             if not value in result["available_tags"][tag.property_att.name]:
                 result["available_tags"][tag.property_att.name].append(value)
 
-    return HttpResponse(json.dumps(result), mimetype="text/plain")
+    return HttpResponse(json.dumps(result), content_type="text/plain")
 
 
 def computer_label(request):
@@ -95,7 +95,7 @@ def get_key_repositories(request):
     """
     return HttpResponse(
         gpg_get_key("migasfree-repository"),
-        mimetype="text/plain"
+        content_type="text/plain"
     )
 
 
