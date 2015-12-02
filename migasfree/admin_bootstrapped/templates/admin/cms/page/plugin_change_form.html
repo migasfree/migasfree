@@ -1,6 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_modify adminmedia cms_admin %}
-{% load url from future %}
+
 {% block extrahead %}{{ block.super }}
 <script type="text/javascript" src="{% admin_static_url %}js/jquery.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}cms/js/csrf.js"></script>
@@ -26,59 +26,59 @@
 <script type="text/javascript">
 //<![CDATA[
 (function($) {
-	function runOnLoad(f) {
-		if (runOnLoad.loaded){
-			f();
-		}else{
-			runOnLoad.funcs.push(f);
-		}
-	}
-	runOnLoad.funcs = [];
-	runOnLoad.loaded = false;
-	runOnLoad.run = function() {
-		if (runOnLoad.loaded) return;
-	
-		for(var i = 0; i < runOnLoad.funcs.length; i++) {
-			try { 
-				runOnLoad.funcs[i](); 
-			}catch(e) { }
-		}
-		runOnLoad.loaded = true;
-		delete runOnLoad.funcs;
-		delete runOnLoad.run;
-	};
-	if (window.addEventListener){
-		window.addEventListener("load", runOnLoad.run, false);
-	}else if (window.attachEvent){
-		window.attachEvent("onload", runOnLoad.run);
-	}else{
-		window.onload = runOnLoad.run;
-	}
-	runOnLoad(function(){
-		parent.setiframeheight($('body').height()+20, {{ plugin.pk }});
-	});
-	$(document).ready(function(){
-		$("a.add-another,a.related-lookup").each(function(i, sign){
-			var href = $(sign).attr("href");
-			if (href.substr(0,2) == ".."){
-				href = "../../"+href;
-				$(sign).attr("href", href); 
-			}
-		});
-	});
+    function runOnLoad(f) {
+        if (runOnLoad.loaded){
+            f();
+        }else{
+            runOnLoad.funcs.push(f);
+        }
+    }
+    runOnLoad.funcs = [];
+    runOnLoad.loaded = false;
+    runOnLoad.run = function() {
+        if (runOnLoad.loaded) return;
+
+        for(var i = 0; i < runOnLoad.funcs.length; i++) {
+            try {
+                runOnLoad.funcs[i]();
+            }catch(e) { }
+        }
+        runOnLoad.loaded = true;
+        delete runOnLoad.funcs;
+        delete runOnLoad.run;
+    };
+    if (window.addEventListener){
+        window.addEventListener("load", runOnLoad.run, false);
+    }else if (window.attachEvent){
+        window.attachEvent("onload", runOnLoad.run);
+    }else{
+        window.onload = runOnLoad.run;
+    }
+    runOnLoad(function(){
+        parent.setiframeheight($('body').height()+20, {{ plugin.pk }});
+    });
+    $(document).ready(function(){
+        $("a.add-another,a.related-lookup").each(function(i, sign){
+            var href = $(sign).attr("href");
+            if (href.substr(0,2) == ".."){
+                href = "../../"+href;
+                $(sign).attr("href", href);
+            }
+        });
+    });
 })(window.CMS.$);
 //]]>
 </script>
 
 
 {% endblock %}
- 
+
 {% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% admin_static_url %}css/forms.css" />{% endblock %}
- 
+
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
- 
+
 {% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
- 
+
 {% block breadcrumbs %}{% if not is_popup %}
 <ul class="breadcrumb">
   <li><a href="../../../">{% trans "Home" %}</a> <span class="divider">/</span></li>
@@ -87,12 +87,12 @@
   <li>{% if add %}{% trans "Add" %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}</li>
 </ul>
 {% endif %}{% endblock %}
- 
+
 {% block content_title %}<span class="brand">{{ plugin.get_plugin_name }}</span>{% endblock %}
- 
+
 {% block content %}<div id="content-main" class="row">
 {% block top %}{% if preview %}{% render_plugin plugin %}{% endif %}{% endblock %}
-<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
+<form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">{% csrf_token %}{% block form_top %}{% endblock %}
 <div>
 {% if is_popup %}<input type="hidden" name="_popup" value="1" />{% endif %}
 {% if save_on_top %}{% submit_row %}{% endif %}
@@ -108,26 +108,26 @@
   {% include "admin/includes/fieldset.html" %}
 {% endfor %}
 {% endblock %}
- 
+
 {% block after_field_sets %}{% endblock %}
- 
+
 {% for inline_admin_formset in inline_admin_formsets %}
     {% include inline_admin_formset.opts.template %}
 {% endfor %}
- 
+
 {% block after_related_objects %}{% endblock %}
 
 {% if add %}
    <script>document.getElementById("{{ adminform.first_field.auto_id }}").focus();</script>
 {% endif %}
- 
+
 {# JavaScript for prepopulated fields #}
 {% prepopulated_fields_js %}
- 
+
 </div>
 <div class="form-actions">
   <span class="plugin-submit-row"{% if is_popup %} style="overflow: auto;"{% endif %}>
-  	<button type="submit" style="margin-left: 8px;" name="_cancel" class="btn cancel-btn">{% trans "Cancel" %}</button>
+    <button type="submit" style="margin-left: 8px;" name="_cancel" class="btn cancel-btn">{% trans "Cancel" %}</button>
     <button type="submit" style="float:none;" name="_save" class="btn btn-primary default" {{ onclick_attrib }}>{% trans "Save" %}</button>
   </span>
 </div>
