@@ -46,9 +46,9 @@ def api(request):
         return HttpResponse(
             return_message(
                 command,
-                errmfs.error(errmfs.METHODGETNOTALLOW)
+                errmfs.error(errmfs.GET_METHOD_NOT_ALLOWED)
             ),
-            mimetype='text/plain'
+            content_type='text/plain'
         )
 
     if not os.path.exists(settings.MIGASFREE_TMP_DIR):
@@ -98,7 +98,7 @@ def api(request):
             if 'errmfs' in data:
                 ret = return_message(command, data)
 
-                if data["errmfs"]["code"] == errmfs.SIGNNOTOK:
+                if data["errmfs"]["code"] == errmfs.INVALID_SIGNATURE:
                     # add an error
                     oerr = Error()
                     oerr.computer = o_computer
@@ -106,7 +106,7 @@ def api(request):
                     oerr.error = "%s - %s - %s" % (
                         get_client_ip(request),
                         command,
-                        errmfs.message(errmfs.SIGNNOTOK)
+                        errmfs.error_info(errmfs.INVALID_SIGNATURE)
                     )
                     oerr.date = datetime.now()
                     oerr.save()
@@ -117,7 +117,7 @@ def api(request):
         else:  # Computer not exists
             ret = return_message(
                 command,
-                errmfs.error(errmfs.COMPUTERNOTFOUND)
+                errmfs.error(errmfs.COMPUTER_NOT_FOUND)
             )
 
         # WRAP THE RESULT OF COMMAND
@@ -126,7 +126,7 @@ def api(request):
             ret = fp.read()
         os.remove(filename_return)
 
-        return HttpResponse(ret, mimetype='text/plain')
+        return HttpResponse(ret, content_type='text/plain')
 
     # REGISTERS
     # COMMAND NOT USE KEYS PAIR, ONLY USERNAME AND PASSWORD
@@ -143,7 +143,7 @@ def api(request):
 
         os.remove(filename)
 
-        return HttpResponse(json.dumps(ret), mimetype='text/plain')
+        return HttpResponse(json.dumps(ret), content_type='text/plain')
 
     # PACKAGER
     elif command in cmd_packager:
@@ -164,13 +164,13 @@ def api(request):
             ret = fp.read()
         os.remove(filename_return)
 
-        return HttpResponse(ret, mimetype='text/plain')
+        return HttpResponse(ret, content_type='text/plain')
 
     else:  # Command not exists
         return HttpResponse(
             return_message(
                 command,
-                errmfs.error(errmfs.COMMANDNOTFOUND)
+                errmfs.error(errmfs.COMMAND_NOT_FOUND)
             ),
-            mimetype='text/plain'
+            content_type='text/plain'
         )
