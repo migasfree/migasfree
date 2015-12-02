@@ -10,38 +10,43 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 
 
-NOAUTHENTICATED = 1
-CANNOTREGISTER = 2
-METHODGETNOTALLOW = 3
-COMMANDNOTFOUND = 4
-SIGNNOTOK = 5
-COMPUTERNOTFOUND = 6
-DEVICENOTFOUND = 7
-VERSIONNOTFOUND = 8
-USERHAVENOTPERMISSION = 9
+ALL_OK = 0
+UNAUTHENTICATED = 1
+CAN_NOT_REGISTER_COMPUTER = 2
+GET_METHOD_NOT_ALLOWED = 3
+COMMAND_NOT_FOUND = 4
+INVALID_SIGNATURE = 5
+COMPUTER_NOT_FOUND = 6
+DEVICE_NOT_FOUND = 7
+VERSION_NOT_FOUND = 8
+USER_DOES_NOT_HAVE_PERMISSION = 9
 GENERIC = 100
 
-DSTR = {
-    NOAUTHENTICATED: _("User not authenticated"),
-    CANNOTREGISTER: _("User can not register computers"),
-    METHODGETNOTALLOW: _("Method GET not allowed"),
-    COMMANDNOTFOUND: _("Command not found"),
-    SIGNNOTOK: _("Signature is not valid"),
-    COMPUTERNOTFOUND: _("Computer not found"),
-    DEVICENOTFOUND: _("Device not found"),
-    VERSIONNOTFOUND: _("Version not found"),
-    USERHAVENOTPERMISSION: _("User have not permission"),
+ERROR_INFO = {
+    ALL_OK: _("No errors"),
+    UNAUTHENTICATED: _("User unauthenticated"),
+    CAN_NOT_REGISTER_COMPUTER: _("User can not register computers"),
+    GET_METHOD_NOT_ALLOWED: _("Method GET not allowed"),
+    COMMAND_NOT_FOUND: _("Command not found"),
+    INVALID_SIGNATURE: _("Signature is not valid"),
+    COMPUTER_NOT_FOUND: _("Computer not found"),
+    DEVICE_NOT_FOUND: _("Device not found"),
+    VERSION_NOT_FOUND: _("Version not found"),
+    USER_DOES_NOT_HAVE_PERMISSION: _("User does not have permission"),
     GENERIC: _("Generic error")
 }
 
 
-def message(number):
-    return DSTR[number]
+def error_info(number):
+    '''
+    string error_info(int number)
+    '''
+    return ERROR_INFO.get(number, '')
 
 
 def error(number):
-    ret = ''
-    if number == GENERIC:
+    ret = error_info(number)
+    if settings.DEBUG and number == GENERIC:
         etype = sys.exc_info()[0]
         evalue = sys.exc_info()[1]
 
@@ -75,7 +80,7 @@ def error(number):
 
 
 def ok():
-    return {"errmfs": {"code": 0, "info": _("No errors")}}
+    return error(ALL_OK)
 
 
 def print_exc_plus(etype, evalue):
