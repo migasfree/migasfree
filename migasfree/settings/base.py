@@ -87,14 +87,14 @@ MIDDLEWARE_CLASSES = (
     'migasfree.middleware.threadlocals.ThreadLocals',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + [
     'django.core.context_processors.request',
     'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
     'migasfree.server.context_processors.query_names',
     'migasfree.server.context_processors.version_names',
     'migasfree.server.context_processors.migasfree_version',
-)
+]
 
 DEFAULT_CHARSET = 'utf-8'
 
@@ -117,12 +117,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'ajax_select',
-    'south',
     'migasfree.flot',
 )
-
-# http://stackoverflow.com/questions/15682814/how-do-i-fake-certain-south-migration-in-django-testsin-a-custom-test-runner
-SOUTH_TESTS_MIGRATE = False
 
 # http://docs.python.org/2/howto/logging-cookbook.html
 # http://docs.python.org/2/library/logging.html#logrecord-attributes
