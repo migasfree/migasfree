@@ -21,4 +21,4 @@ def connections_model(request):
             DeviceConnection.objects.filter(id__in=lst_id)
         )
 
-    return HttpResponse(json, mimetype="application/javascript")
+    return HttpResponse(json, content_type="application/javascript")
