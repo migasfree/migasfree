@@ -76,7 +76,7 @@ def submit_row(context):
     save_as = context['save_as']
     user_id = context['user'].id
     can_save = UserSystem.objects.get(id=user_id).has_perm(
-        'server.can_save_%s' % opts.module_name
+        'server.can_save_%s' % opts.model_name
     )
 
     return {
