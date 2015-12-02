@@ -13,8 +13,6 @@ from .models import (
     Property, Tag
 )
 
-autocomplete_light.autodiscover()
-
 
 class ParametersForm(forms.Form):
     id_query = forms.CharField(required=True, widget=forms.HiddenInput())
@@ -22,11 +20,11 @@ class ParametersForm(forms.Form):
 
 
 class ComputerReplacementForm(forms.Form):
-    source = autocomplete_light.ChoiceField(
+    source = autocomplete_light.fields.ChoiceField(
         'ComputerAutocomplete',
         label=_('Source')
     )
-    target = autocomplete_light.ChoiceField(
+    target = autocomplete_light.fields.ChoiceField(
         'ComputerAutocomplete',
         label=_('Target')
     )
@@ -39,6 +37,7 @@ class RepositoryForm(forms.ModelForm):
 
     class Meta:
         model = Repository
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(RepositoryForm, self).__init__(*args, **kwargs)
@@ -53,11 +52,12 @@ class RepositoryForm(forms.ModelForm):
 class DeviceLogicalForm(forms.ModelForm):
     x = make_ajax_form(Computer, {'devices_logical': 'computer'})
 
-    computers = x.devices_logical
+    computers = x.declared_fields['devices_logical']
     computers.label = _('Computers')
 
     class Meta:
         model = DeviceLogical
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(DeviceLogicalForm, self).__init__(*args, **kwargs)
@@ -90,16 +90,18 @@ class PropertyForm(forms.ModelForm):
 
     class Meta:
         model = Property
+        fields = '__all__'
 
 
 class TagForm(forms.ModelForm):
     x = make_ajax_form(Computer, {'tags': 'computer'})
 
-    computers = x.tags
+    computers = x.declared_fields['tags']
     computers.label = _('Computers')
 
     class Meta:
         model = Tag
+        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(TagForm, self).__init__(*args, **kwargs)
@@ -134,6 +136,7 @@ class ComputerForm(forms.ModelForm):
 
     class Meta:
         model = Computer
+        fields = '__all__'
 
     def clean(self):
         super(ComputerForm, self).clean()
