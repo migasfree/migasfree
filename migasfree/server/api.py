@@ -343,7 +343,7 @@ def upload_computer_message(request, name, uuid, computer, data):
     date_now = time.strftime("%Y-%m-%d %H:%M:%S")
 
     if not computer:
-        return return_message(cmd, error(COMPUTERNOTFOUND))
+        return return_message(cmd, error(COMPUTER_NOT_FOUND))
 
     try:
         _message = Message.objects.get(computer=computer)
@@ -491,7 +491,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
         if not settings.MIGASFREE_AUTOREGISTER:
-            return return_message(cmd, error(CANNOTREGISTER))
+            return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the platform
         o_platform = Platform()
@@ -503,7 +503,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     # Autoregister Version
     if not Version.objects.filter(name=version):
         if not settings.MIGASFREE_AUTOREGISTER:
-            return return_message(cmd, error(CANNOTREGISTER))
+            return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the version
         o_version = Version()
@@ -534,7 +534,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             o_error.error = str_error
             o_error.save()
 
-            return return_message(cmd, error(COMPUTERNOTFOUND))
+            return return_message(cmd, error(COMPUTER_NOT_FOUND))
 
         #registration of ip, version an Migration of computer
         o_computer = check_computer(
@@ -780,7 +780,7 @@ def register_computer(request, name, uuid, computer, data):
     if not Platform.objects.filter(name=platform_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_platform"):
-                return return_message(cmd, error(CANNOTREGISTER))
+                return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the platform
         platform = Platform()
@@ -793,7 +793,7 @@ def register_computer(request, name, uuid, computer, data):
     if not Version.objects.filter(name=version_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_version"):
-                return return_message(cmd, error(CANNOTREGISTER))
+                return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the version
         version = Version()
@@ -812,7 +812,7 @@ def register_computer(request, name, uuid, computer, data):
         # if not autoregister, check that the user can save computer
         if not version.autoregister:
             if not user or not user.has_perm("server.can_save_computer"):
-                return return_message(cmd, error(CANNOTREGISTER))
+                return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # ALL IS OK
         # 1.- Add Computer
@@ -833,7 +833,7 @@ def register_computer(request, name, uuid, computer, data):
         # 2.- returns keys to client
         return return_message(cmd, get_keys_to_client(version_name))
     except:
-        return return_message(cmd, error(USERHAVENOTPERMISSION))
+        return return_message(cmd, error(USER_DOES_NOT_HAVE_PERMISSION))
 
 
 def get_key_packager(request, name, uuid, computer, data):
@@ -843,7 +843,7 @@ def get_key_packager(request, name, uuid, computer, data):
         password=data['password']
     )
     if not user.has_perm("server.can_save_package"):
-        return return_message(cmd, error(CANNOTREGISTER))
+        return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
     return return_message(cmd, get_keys_to_packager())
 
@@ -863,7 +863,7 @@ def upload_server_package(request, name, uuid, o_computer, data):
     try:
         o_version = Version.objects.get(name=data['version'])
     except:
-        return return_message(cmd, error(VERSIONNOTFOUND))
+        return return_message(cmd, error(VERSION_NOT_FOUND))
 
     try:
         o_store = Store.objects.get(name=data['store'], version=o_version)
@@ -904,7 +904,7 @@ def upload_server_set(request, name, uuid, o_computer, data):
     try:
         o_version = Version.objects.get(name=data['version'])
     except:
-        return return_message(cmd, error(VERSIONNOTFOUND))
+        return return_message(cmd, error(VERSION_NOT_FOUND))
 
     try:
         o_store = Store.objects.get(name=data['store'], version=o_version)
