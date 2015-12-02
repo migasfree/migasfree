@@ -128,9 +128,9 @@ class VersionManager(models.Manager):
 
     def version(self, version):
         if version == 0:  # return the objects of ALL VERSIONS
-            return super(VersionManager, self).get_query_set()
+            return super(VersionManager, self).get_queryset()
         else:  # return only the objects of this VERSION
-            return super(VersionManager, self).get_query_set().filter(
+            return super(VersionManager, self).get_queryset().filter(
                 version=version
             )
 
