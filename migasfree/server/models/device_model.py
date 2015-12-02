@@ -10,7 +10,7 @@ from migasfree.server.models import (
 
 class DeviceModel(models.Model, MigasLink):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         null=True,
         blank=True
@@ -28,7 +28,6 @@ class DeviceModel(models.Model, MigasLink):
 
     connections = models.ManyToManyField(
         DeviceConnection,
-        null=True,
         blank=True,
         verbose_name=_("connections")
     )
