@@ -653,7 +653,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     ordering = ('name',)
     list_filter = ('version', ('status', ProductiveFilterSpec))
     search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
-    list_select_related = None
+    list_select_related = False
 
     readonly_fields = (
         'name',
@@ -807,9 +807,9 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     # QuerySet filter by user version
     def queryset(self, request):
         if request.user.is_superuser:
-            return self.model._default_manager.get_query_set()
+            return self.model._default_manager.get_queryset()
         else:
-            return self.model._default_manager.get_query_set().filter(
+            return self.model._default_manager.get_queryset().filter(
                 version=user_version(request.user)
             )
 
