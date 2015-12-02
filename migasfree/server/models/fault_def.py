@@ -8,63 +8,53 @@ from migasfree.server.models import Attribute, LANGUAGES_CHOICES, UserProfile, M
 
 class FaultDef(models.Model, MigasLink):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         unique=True
     )
 
     description = models.TextField(
-        _("description"),
+        verbose_name=_("description"),
         null=True,
         blank=True
     )
 
     active = models.BooleanField(
-        _("active"),
+        verbose_name=_("active"),
         default=True
     )
 
     language = models.IntegerField(
-        _("programming language"),
+        verbose_name=_("programming language"),
         default=0,
         choices=LANGUAGES_CHOICES
     )
 
     code = models.TextField(
-        _("Code"),
+        verbose_name=_("Code"),
         null=False,
         blank=True
     )
 
     attributes = models.ManyToManyField(
         Attribute,
-        null=True,
         blank=True,
         verbose_name=_("attributes")
     )
 
     users = models.ManyToManyField(
         UserProfile,
-        null=True,
         blank=True,
         verbose_name=_("users")
     )
 
     def list_attributes(self):
-        attributes = ""
-        for item in self.attributes.all():
-            attributes += item.value + ', '
-
-        return attributes[0:len(attributes) - 2]  # remove trailing ', '
+        return ', '.join(self.attributes.all().values_list('value', flat=True))
 
     list_attributes.short_description = _("attributes")
 
     def list_users(self):
-        users = ""
-        for item in self.users.all():
-            users += item.username + ', '
-
-        return users[0:len(users) - 2]  # remove trailing ', '
+        return ', '.join(self.users.all().values_list('username', flat=True))
 
     list_users.short_description = _("users")
 
