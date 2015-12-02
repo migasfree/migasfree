@@ -23,7 +23,6 @@ class AttributeSet(models.Model, MigasLink):
 
     attributes = models.ManyToManyField(
         Attribute,
-        null=True,
         blank=True,
         verbose_name=_("attributes"),
         help_text=_("Assigned Attributes")
@@ -32,7 +31,6 @@ class AttributeSet(models.Model, MigasLink):
     excludes = models.ManyToManyField(
         Attribute,
         related_name="ExcludeAttributeGroup",
-        null=True,
         blank=True,
         verbose_name=_("excludes"),
         help_text=_("Excluded Attributes")
