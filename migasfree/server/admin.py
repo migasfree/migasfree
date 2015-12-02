@@ -1,8 +1,5 @@
 ## -*- coding: utf-8 -*-
 
-"""
-Admin Models
-"""
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
@@ -31,7 +28,6 @@ from .forms import (
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
-#WIDGETS
 from .widgets import MigasfreeSplitDateTime
 from migasfree.admin_bootstrapped.forms import *
 
@@ -80,6 +76,7 @@ def user_version(user):
     return version
 
 
+@admin.register(Platform)
 class PlatformAdmin(MigasAdmin):
     list_display = ('my_link',)
 
@@ -88,9 +85,8 @@ class PlatformAdmin(MigasAdmin):
 
     my_link.short_description = _("Platform")
 
-admin.site.register(Platform, PlatformAdmin)
 
-
+@admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
     list_display = ('my_link',)
 
@@ -99,9 +95,8 @@ class UserProfileAdmin(MigasAdmin):
 
     my_link.short_description = _("User Profile")
 
-admin.site.register(UserProfile, UserProfileAdmin)
 
-
+@admin.register(Version)
 class VersionAdmin(MigasAdmin):
     list_display = (
         'link',
@@ -118,9 +113,8 @@ class VersionAdmin(MigasAdmin):
     my_autoregister.allow_tags = True
     my_autoregister.short_description = _('autoregister')
 
-admin.site.register(Version, VersionAdmin)
 
-
+@admin.register(Migration)
 class MigrationAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'version', 'date')
     list_select_related = ('computer', 'version',)
@@ -133,9 +127,8 @@ class MigrationAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(Migration, MigrationAdmin)
 
-
+@admin.register(StatusLog)
 class StatusLogAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'status', 'created_at')
     list_select_related = ('computer', )
@@ -148,9 +141,8 @@ class StatusLogAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(StatusLog, StatusLogAdmin)
 
-
+@admin.register(Update)
 class UpdateAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'user', 'date', 'version')
     list_filter = ('date', )
@@ -159,9 +151,8 @@ class UpdateAdmin(MigasAdmin):
     exclude = ('computer',)
     actions = None
 
-admin.site.register(Update, UpdateAdmin)
 
-
+@admin.register(Checking)
 class CheckingAdmin(MigasAdmin):
     list_display = ('name', 'my_active', 'my_alert')
     list_filter = ('active',)
@@ -178,40 +169,34 @@ class CheckingAdmin(MigasAdmin):
     my_alert.allow_tags = True
     my_alert.short_description = _('alert')
 
-admin.site.register(Checking, CheckingAdmin)
 
-
+@admin.register(DeviceType)
 class DeviceTypeAdmin(MigasAdmin):
     ordering = ('name',)
 
-admin.site.register(DeviceType, DeviceTypeAdmin)
 
-
+@admin.register(DeviceFeature)
 class DeviceFeatureAdmin(MigasAdmin):
     ordering = ('name',)
 
-admin.site.register(DeviceFeature, DeviceFeatureAdmin)
 
-
+@admin.register(DeviceManufacturer)
 class DeviceManufacturerAdmin(MigasAdmin):
     ordering = ('name',)
 
-admin.site.register(DeviceManufacturer, DeviceManufacturerAdmin)
 
-
+@admin.register(DeviceConnection)
 class DeviceConnectionAdmin(admin.ModelAdmin):
     list_select_related = ('devicetype',)
     ordering = ('devicetype__name', 'name')
 
-admin.site.register(DeviceConnection, DeviceConnectionAdmin)
 
-
+@admin.register(DeviceDriver)
 class DeviceDriverAdmin(MigasAdmin):
     list_display = ('id', 'model', 'version', 'feature')
 
-admin.site.register(DeviceDriver, DeviceDriverAdmin)
 
-
+@admin.register(DeviceLogical)
 class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
     fields = ("device", "feature", "computers")
@@ -230,8 +215,6 @@ class DeviceLogicalAdmin(MigasAdmin):
         'feature__name',
     )
 
-admin.site.register(DeviceLogical, DeviceLogicalAdmin)
-
 
 class DeviceLogicalInline(admin.TabularInline):
     model = DeviceLogical
@@ -241,6 +224,7 @@ class DeviceLogicalInline(admin.TabularInline):
     extra = 0
 
 
+@admin.register(Device)
 class DeviceAdmin(MigasAdmin):
     list_display = (
         'name',
@@ -282,8 +266,6 @@ class DeviceAdmin(MigasAdmin):
                 )
                 logical.save()
 
-admin.site.register(Device, DeviceAdmin)
-
 
 class DeviceDriverInline(admin.TabularInline):
     model = DeviceDriver
@@ -292,6 +274,7 @@ class DeviceDriverInline(admin.TabularInline):
     ordering = ['version', 'feature']
 
 
+@admin.register(DeviceModel)
 class DeviceModelAdmin(MigasAdmin):
     list_display = ('name', 'manufacturer', 'devicetype')
     list_filter = ('devicetype', 'manufacturer')
@@ -303,9 +286,8 @@ class DeviceModelAdmin(MigasAdmin):
     )
     inlines = [DeviceDriverInline, ]
 
-admin.site.register(DeviceModel, DeviceModelAdmin)
 
-
+@admin.register(Pms)
 class PmsAdmin(MigasAdmin):
     list_display = ('my_link',)
 
@@ -314,9 +296,8 @@ class PmsAdmin(MigasAdmin):
 
     my_link.short_description = _("Package Management System")
 
-admin.site.register(Pms, PmsAdmin)
 
-
+@admin.register(Store)
 class StoreAdmin(MigasAdmin):
     list_display = ('my_link',)
     search_fields = ('name',)
@@ -326,14 +307,13 @@ class StoreAdmin(MigasAdmin):
 
     my_link.short_description = _("Store")
 
-admin.site.register(Store, StoreAdmin)
 
-
+@admin.register(Property)
 class PropertyAdmin(MigasAdmin):
-    list_display = ('my_link', 'my_active', 'kind', 'my_auto',)
+    list_display = ('my_link', 'my_active', 'kind', 'my_auto')
     list_filter = ('active',)
     ordering = ('name',)
-    search_fields = ('name', 'prefix',)
+    search_fields = ('name', 'prefix')
     form = PropertyForm
     fields = (
         'prefix', 'name', 'active',
@@ -361,9 +341,8 @@ class PropertyAdmin(MigasAdmin):
     def queryset(self, request):
         return self.model.objects.filter(tag=False)
 
-admin.site.register(Property, PropertyAdmin)
 
-
+@admin.register(TagType)
 class TagTypeAdmin(MigasAdmin):
     list_display = ('my_link', 'prefix', 'my_active')
     fields = ('prefix', 'name', 'kind', 'active')
@@ -382,9 +361,8 @@ class TagTypeAdmin(MigasAdmin):
     def queryset(self, request):
         return self.model.objects.filter(tag=True)
 
-admin.site.register(TagType, TagTypeAdmin)
 
-
+@admin.register(Attribute)
 class AttributeAdmin(MigasAdmin):
     list_display = (
         'my_link', 'description', 'total_computers', 'property_link'
@@ -408,9 +386,8 @@ class AttributeAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(Attribute, AttributeAdmin)
 
-
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     form = TagForm
     list_display = ('my_link', 'description', 'total_computers', 'property_att')
@@ -431,9 +408,7 @@ class TagAdmin(admin.ModelAdmin):
         )
 
 
-admin.site.register(Tag, TagAdmin)
-
-
+@admin.register(Login)
 class LoginAdmin(MigasAdmin):
     list_display = ('my_link', 'user_link', 'computer_link', 'date',)
     list_select_related = ('computer', 'user',)
@@ -458,9 +433,8 @@ class LoginAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(Login, LoginAdmin)
 
-
+@admin.register(User)
 class UserAdmin(MigasAdmin):
     list_display = ('my_link', 'fullname')
     ordering = ('name',)
@@ -475,9 +449,8 @@ class UserAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(User, UserAdmin)
 
-
+@admin.register(Notification)
 class NotificationAdmin(MigasAdmin):
     list_display = (
         'id',
@@ -512,9 +485,8 @@ class NotificationAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(Notification, NotificationAdmin)
 
-
+@admin.register(Error)
 class ErrorAdmin(MigasAdmin):
     list_display = (
         'id',
@@ -553,9 +525,8 @@ class ErrorAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(Error, ErrorAdmin)
 
-
+@admin.register(Fault)
 class FaultAdmin(MigasAdmin):
     list_display = (
         'id',
@@ -598,9 +569,8 @@ class FaultAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(Fault, FaultAdmin)
 
-
+@admin.register(FaultDef)
 class FaultDefAdmin(MigasAdmin):
     form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
     list_display = ('my_link', 'my_active', 'list_attributes', 'list_users')
@@ -634,9 +604,8 @@ class FaultDefAdmin(MigasAdmin):
     my_active.allow_tags = True
     my_active.short_description = _('active')
 
-admin.site.register(FaultDef, FaultDefAdmin)
 
-
+@admin.register(Computer)
 class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     form = ComputerForm
 
@@ -725,7 +694,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             )
             return db_field.formfield(**kwargs)
 
-        return super(ComputerAdmin, self).formfield_for_manytomany(
+        return super(type(self), self).formfield_for_manytomany(
             db_field,
             request,
             **kwargs
@@ -734,9 +703,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     def has_add_permission(self, request):
         return False
 
-admin.site.register(Computer, ComputerAdmin)
 
-
+@admin.register(Message)
 class MessageAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'date', 'text',)
     ordering = ('-date',)
@@ -745,9 +713,8 @@ class MessageAdmin(MigasAdmin):
     readonly_fields = ('computer_link', 'text', 'date')
     exclude = ('computer',)
 
-admin.site.register(Message, MessageAdmin)
 
-
+@admin.register(MessageServer)
 class MessageServerAdmin(MigasAdmin):
     list_display = ('id', 'date', 'text',)
     ordering = ('-date',)
@@ -755,9 +722,8 @@ class MessageServerAdmin(MigasAdmin):
     search_fields = ('text', 'date',)
     readonly_fields = ('text', 'date')
 
-admin.site.register(MessageServer, MessageServerAdmin)
 
-
+@admin.register(Repository)
 class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     form = RepositoryForm
 
@@ -829,7 +795,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
 
             return db_field.formfield(**kwargs)
 
-        return super(RepositoryAdmin, self).formfield_for_manytomany(
+        return super(type(self), self).formfield_for_manytomany(
             db_field,
             request,
             **kwargs
@@ -838,7 +804,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     def save_model(self, request, obj, form, change):
         is_new = (obj.pk is None)
         packages_after = form.cleaned_data['packages']
-        super(RepositoryAdmin, self).save_model(request, obj, form, change)
+        super(type(self), self).save_model(request, obj, form, change)
 
         name_old = "%s" % form.initial.get('name')
         name_new = "%s" % obj.name
@@ -857,8 +823,6 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             if name_new != name_old and not is_new:
                 remove_physical_repository(request, obj, name_old)
 
-admin.site.register(Repository, RepositoryAdmin)
-
 
 class ScheduleDelayline(admin.TabularInline):
     model = ScheduleDelay
@@ -869,6 +833,7 @@ class ScheduleDelayline(admin.TabularInline):
     readonly_fields = ('total_computers',)
 
 
+@admin.register(Schedule)
 class ScheduleAdmin(MigasAdmin):
     list_display = ('my_link', 'description',)
     inlines = [ScheduleDelayline, ]
@@ -879,9 +844,8 @@ class ScheduleAdmin(MigasAdmin):
 
     my_link.short_description = _("Schedule")
 
-admin.site.register(Schedule, ScheduleAdmin)
 
-
+@admin.register(Package)
 class PackageAdmin(MigasAdmin):
     list_display = ('my_link', 'store',)
     list_filter = ('store',)
@@ -894,9 +858,8 @@ class PackageAdmin(MigasAdmin):
 
     my_link.short_description = _("Package/Set")
 
-admin.site.register(Package, PackageAdmin)
 
-
+@admin.register(Query)
 class QueryAdmin(MigasAdmin):
     list_display = ('name', 'description',)
     actions = ['run_query']
@@ -907,14 +870,11 @@ class QueryAdmin(MigasAdmin):
 
     run_query.short_description = _("Run Query")
 
-admin.site.register(Query, QueryAdmin)
 
-
+@admin.register(AttributeSet)
 class AttributeSetAdmin(MigasAdmin):
     form = make_ajax_form(
         AttributeSet,
         {'attributes': 'attribute', 'excludes': 'attribute'}
     )
     list_display = ('name',)
-
-admin.site.register(AttributeSet, AttributeSetAdmin)
