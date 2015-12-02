@@ -46,7 +46,7 @@ def show_percent(percent):
 
 class Repository(models.Model, MigasLink):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50
     )
 
@@ -57,7 +57,6 @@ class Repository(models.Model, MigasLink):
 
     packages = models.ManyToManyField(
         Package,
-        null=True,
         blank=True,
         verbose_name=_("Packages/Set"),
         help_text=_("Assigned Packages")
@@ -65,7 +64,6 @@ class Repository(models.Model, MigasLink):
 
     attributes = models.ManyToManyField(
         Attribute,
-        null=True,
         blank=True,
         verbose_name=_("attributes"),
         help_text=_("Assigned Attributes")
@@ -74,7 +72,6 @@ class Repository(models.Model, MigasLink):
     excludes = models.ManyToManyField(
         Attribute,
         related_name="ExcludeAttribute",
-        null=True,
         blank=True,
         verbose_name=_("excludes"),
         help_text=_("Excluded Attributes")
@@ -88,48 +85,48 @@ class Repository(models.Model, MigasLink):
     )
 
     active = models.BooleanField(
-        _("active"),
+        verbose_name=_("active"),
         default=True,
         help_text=_("if you uncheck this field, the repository is hidden for all computers.")
     )
 
     date = models.DateField(
-        _("date"),
+        verbose_name=_("date"),
         help_text=_("Date initial for distribute.")
     )
 
     comment = models.TextField(
-        _("comment"),
+        verbose_name=_("comment"),
         null=True,
         blank=True
     )
 
     toinstall = models.TextField(
-        _("packages to install"),
+        verbose_name=_("packages to install"),
         null=True,
         blank=True
     )
 
     toremove = models.TextField(
-        _("packages to remove"),
+        verbose_name=_("packages to remove"),
         null=True,
         blank=True
     )
 
     defaultpreinclude = models.TextField(
-        _("default preinclude packages"),
+        verbose_name=_("default preinclude packages"),
         null=True,
         blank=True
     )
 
     defaultinclude = models.TextField(
-        _("default include packages"),
+        verbose_name=_("default include packages"),
         null=True,
         blank=True
     )
 
     defaultexclude = models.TextField(
-        _("default exclude packages"),
+        verbose_name=_("default exclude packages"),
         null=True,
         blank=True
     )

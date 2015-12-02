@@ -9,7 +9,7 @@ from migasfree.server.models import User, Attribute, MigasLink
 
 class Login(models.Model, MigasLink):
     date = models.DateTimeField(
-        _("date"),
+        verbose_name=_("date"),
         default=0
     )
 
@@ -25,7 +25,6 @@ class Login(models.Model, MigasLink):
 
     attributes = models.ManyToManyField(
         Attribute,
-        null=True,
         blank=True,
         verbose_name=_("attributes"),
         help_text=_("Sent attributes")
