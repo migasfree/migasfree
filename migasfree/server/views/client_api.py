@@ -9,14 +9,11 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
-from migasfree.server.models import Error
-from migasfree.server.api import *
-from migasfree.server.errmfs import *
-from migasfree.server.security import *
-from migasfree.server.functions import (
-    get_client_ip,
-    uuid_validate
-)
+from ..models import Error
+from ..api import *
+from ..errmfs import *
+from ..security import *
+from ..functions import get_client_ip, uuid_validate
 
 
 @csrf_exempt
@@ -24,6 +21,15 @@ def api(request):
     # Other data on the request.FILES dictionary:
     #   filesize = len(file['content'])
     #   filetype = file['content-type']
+
+    if request.method != 'POST':
+        return HttpResponse(
+            return_message(
+                command,
+                errmfs.error(errmfs.GET_METHOD_NOT_ALLOWED)
+            ),
+            content_type='text/plain'
+        )
 
     msg = request.FILES.get('message')
     filename = os.path.join(settings.MIGASFREE_TMP_DIR, msg.name)
@@ -41,15 +47,6 @@ def api(request):
         command = lst_msg[-1]
 
     o_computer = get_computer(name, uuid)
-
-    if request.method != 'POST':
-        return HttpResponse(
-            return_message(
-                command,
-                errmfs.error(errmfs.GET_METHOD_NOT_ALLOWED)
-            ),
-            content_type='text/plain'
-        )
 
     if not os.path.exists(settings.MIGASFREE_TMP_DIR):
         try:
@@ -99,17 +96,15 @@ def api(request):
                 ret = return_message(command, data)
 
                 if data["errmfs"]["code"] == errmfs.INVALID_SIGNATURE:
-                    # add an error
-                    oerr = Error()
-                    oerr.computer = o_computer
-                    oerr.version = o_computer.version
-                    oerr.error = "%s - %s - %s" % (
-                        get_client_ip(request),
-                        command,
-                        errmfs.error_info(errmfs.INVALID_SIGNATURE)
+                    Error.objects.create(
+                        o_computer,
+                        o_computer.version,
+                        "%s - %s - %s" % (
+                            get_client_ip(request),
+                            command,
+                            errmfs.error_info(errmfs.INVALID_SIGNATURE)
+                        )
                     )
-                    oerr.date = datetime.now()
-                    oerr.save()
             else:
                 ret = eval(command)(request, name, uuid, o_computer, data)
 
