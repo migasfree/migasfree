@@ -102,11 +102,10 @@ def info(request, package):  # package info
 @login_required()
 def change_version(request):
     if request.method == 'GET':
+        version = get_object_or_404(Version, pk=request.GET.get('version'))
+
         user_profile = UserProfile.objects.get(id=request.user.id)
-        user_profile.version = Version.objects.get(
-            id=request.GET.get('version')
-        )
-        user_profile.save()
+        user_profile.update_version(version)
 
     next_page = request.META.get('HTTP_REFERER', reverse('bootstrap'))
     if next_page.find(reverse('admin:server_repository_changelist')) > 0:
