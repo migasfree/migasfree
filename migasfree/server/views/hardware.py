@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.core import serializers
 
-from migasfree.server.models import (
+from ..models import (
     HwNode,
     HwConfiguration,
     HwLogicalName,
@@ -65,50 +65,31 @@ def hardware_extract(request, node):
 
 
 def load_hw(computer, node, parent, level):
-    n = HwNode()
-    n.parent = parent
-    n.computer = computer
-    n.level = level
-    n.name = str(node["id"])
-    n.classname = node["class"]
-    if "enabled" in node:
-        n.enabled = node["enabled"]
-    if "claimed" in node:
-        n.claimed = node["claimed"]
-    if "description" in node:
-        n.description = node["description"]
-    if "vendor" in node:
-        n.vendor = node["vendor"]
-    if "product" in node:
-        n.product = node["product"]
-    if "version" in node:
-        n.version = node["version"]
-    if "serial" in node:
-        n.serial = node["serial"]
-    if "businfo" in node:
-        n.businfo = node["businfo"]
-    if "physid" in node:
-        n.physid = node["physid"]
-    if "slot" in node:
-        n.slot = node["slot"]
-    if "size" in node:
-        # validate bigint unsigned (#126)
-        size = int(node["size"])
-        if size <= MAXINT and size >= -MAXINT - 1:
-            n.size = size
-        else:
-            n.size = 0
-    if "capacity" in node:
-        n.capacity = node["capacity"]
-    if "clock" in node:
-        n.clock = node["clock"]
-    if "width" in node:
-        n.width = node["width"]
-    if "dev" in node:
-        n.dev = node["dev"]
+    size = node.get('size')
+    n = HwNode.objects.create({
+        'parent': parent,
+        'computer': Computer.objects.get(id=computer_id),
+        'level': level,
+        'name': str(node.get('id')),
+        'classname': node.get('class'),
+        'enabled': node.get('enabled', False),
+        'claimed': node.get('claimed', False),
+        'description': node.get('description'),
+        'vendor': node.get('vendor'),
+        'product': node.get('product'),
+        'version': node.get('version'),
+        'serial': node.get('serial'),
+        'businfo': node.get('businfo'),
+        'physid': node.get('physid'),
+        'slot': node.get('slot'),
+        'size': size if (size <= MAXINT and size >= -MAXINT - 1) else 0,
+        'capacity': node.get('capacity'),
+        'clock': node.get('clock'),
+        'width': node.get('width'),
+        'dev': node.get('dev')
+    })
 
-    n.save()
-    level += 3
+    level += 1
 
     for e in node:
         if e == "children":
@@ -116,30 +97,18 @@ def load_hw(computer, node, parent, level):
                 load_hw(computer, x, n, level)
         elif e == "capabilities":
             for x in node[e]:
-                c = HwCapability()
-                c.node = n
-                c.name = x
-                c.description = node[e][x]
-                c.save()
+                HwCapability.objects.create(
+                    node=n, name=x, description=node[e][x]
+                )
         elif e == "configuration":
             for x in node[e]:
-                c = HwConfiguration()
-                c.node = n
-                c.name = x
-                c.value = node[e][x]
-                c.save()
+                HwConfiguration.objects.create(node=n, name=x, value=node[e][x])
         elif e == "logicalname":
             if type(node[e]) == unicode:
-                c = HwLogicalName()
-                c.node = n
-                c.name = node[e]
-                c.save()
+                HwLogicalName.objects.create(node=n, name=node[e])
             else:
                 for x in node[e]:
-                    c = HwLogicalName()
-                    c.node = n
-                    c.name = x
-                    c.save()
+                    HwLogicalName.objects.create(node=n, name=x)
         elif e == "resource":
             print(e, node[e])
         else:
@@ -153,13 +122,11 @@ def process_hw(computer, jsonfile):
         try:
             data = json.load(f)
         except:
-            _notification = Notification()
-            _notification.notification = \
-                "Error: Hardware dictionary is not valid by computer [%s]." % (
-                computer.__unicode__()
+            Notification.objects.create(
+                _("Error: Hardware dictionary is not valid in computer [%s].") % (
+                    computer.__unicode__()
+                )
             )
-            _notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-            _notification.save()
             return
 
     HwNode.objects.filter(computer=computer).delete()
