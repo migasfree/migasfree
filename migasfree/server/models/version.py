@@ -11,16 +11,46 @@ from django.contrib.auth.models import (
 )
 from django.conf import settings
 
-from migasfree.server.models import Pms, Platform, MigasLink
-
 from migasfree.middleware import threadlocals
+from . import Pms, Platform, MigasLink
+
+
+class VersionManager(models.Manager):
+    """
+    VersionManager is used for filter the property "objects" of several
+    classes by logged user version.
+    """
+    def create(self, name, pms, platform, autoregister=False):
+        version = Version()
+        version.name = name
+        version.pms = pms
+        version.platform = platform
+        version.autoregister = autoregister
+        version.save()
+
+        return version
+
+    def get_queryset(self):
+        version = UserProfile.get_logged_version()
+        if version is None:
+            return self.version(0)
+        else:
+            return self.version(version)
+
+    def version(self, version):
+        if version == 0:  # return the objects of ALL VERSIONS
+            return super(VersionManager, self).get_queryset()
+        else:  # return only the objects of this VERSION
+            return super(VersionManager, self).get_queryset().filter(
+                version=version
+            )
 
 
 class Version(models.Model, MigasLink):
     """
     Version of S.O. by example 'Ubuntu natty 32bit' or 'AZLinux-2'
     This is 'your distribution', a set of computers with a determinate
-    Distribution for personalize.
+    Distribution for customize.
     """
     name = models.CharField(
         verbose_name=_("name"),
@@ -79,6 +109,14 @@ class Version(models.Model, MigasLink):
         if not os.path.exists(_stores):
             os.makedirs(_stores)
 
+    def update_base(self, base):
+        self.base = base
+        self.save()
+
+    @staticmethod
+    def get_version_names():
+        return Version.objects.all().order_by('name').values_list('id', 'name')
+
     def save(self, *args, **kwargs):
         self.name = self.name.replace(" ", "-")
         self.create_dirs()
@@ -94,7 +132,7 @@ class Version(models.Model, MigasLink):
         super(Version, self).delete(*args, **kwargs)
 
     def link(self):
-        current_version = user_version()
+        current_version = UserProfile.get_logged_version()
         if current_version is None:
             current_version_id = 0
         else:
@@ -114,27 +152,6 @@ class Version(models.Model, MigasLink):
         permissions = (("can_save_version", "Can save Version"),)
 
 
-class VersionManager(models.Manager):
-    """
-    VersionManager is used for filter the property "objects" of several
-    classes by the version of user logged.
-    """
-    def get_query_set(self):
-        user = user_version()
-        if user is None:
-            return self.version(0)
-        else:
-            return self.version(user)
-
-    def version(self, version):
-        if version == 0:  # return the objects of ALL VERSIONS
-            return super(VersionManager, self).get_queryset()
-        else:  # return only the objects of this VERSION
-            return super(VersionManager, self).get_queryset().filter(
-                version=version
-            )
-
-
 class UserProfile(UserSystem, MigasLink):
     """
     info = 'For change password use <a href="%s">change password form</a>.' \
@@ -151,10 +168,27 @@ class UserProfile(UserSystem, MigasLink):
     # Use UserManager to get the create_user method, etc.
     objects = UserManager()
 
+    @staticmethod
+    def get_logged_version():
+        """
+        Return the user version that is logged
+        """
+        try:
+            return UserProfile.objects.get(
+                id=threadlocals.get_current_user().id
+            ).version
+        except:
+            return None
+
+    def update_version(self, version):
+        self.version = version
+        self.save()
+
     def save(self, *args, **kwargs):
         if not (self.password.startswith("sha1$") or
-                self.password.startswith("pbkdf2")):
+        self.password.startswith("pbkdf2")):
             super(UserProfile, self).set_password(self.password)
+
         super(UserProfile, self).save(*args, **kwargs)
 
     class Meta:
@@ -162,19 +196,3 @@ class UserProfile(UserSystem, MigasLink):
         verbose_name = _("User Profile")
         verbose_name_plural = _("User Profiles")
         permissions = (("can_save_userprofile", "Can save User Profile"),)
-
-
-def get_version_names():
-    return Version.objects.all().order_by('name').values_list('id', 'name')
-
-
-def user_version():
-    """
-    Return the user version that is logged
-    """
-    try:
-        return UserProfile.objects.get(
-            id=threadlocals.get_current_user().id
-        ).version
-    except:
-        return None
