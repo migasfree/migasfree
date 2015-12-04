@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import LANGUAGES_CHOICES, MigasLink
+from . import LANGUAGES_CHOICES, MigasLink
 
 
 class Property(models.Model, MigasLink):
@@ -17,49 +17,49 @@ class Property(models.Model, MigasLink):
     PREFIX_LEN = 3
 
     prefix = models.CharField(
-        _("prefix"),
+        verbose_name=_("prefix"),
         max_length=PREFIX_LEN,
         unique=True
     )
 
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50
     )
 
     language = models.IntegerField(
-        _("programming language"),
+        verbose_name=_("programming language"),
         default=1,
         choices=LANGUAGES_CHOICES
     )
 
     code = models.TextField(
-        _("Code"),
+        verbose_name=_("Code"),
         null=False,
         blank=True,
         help_text=_("This code will execute in the client computer, and it must put in the standard output the value of the attribute correspondent to this property.<br>The format of this value is 'name~description', where 'description' is optional.<br><b>Example of code:</b><br>#Create a attribute with the name of computer from bash<br> echo $HOSTNAME")
     )
 
     active = models.BooleanField(
-        _("active"),
+        verbose_name=_("active"),
         default=True,
     )
 
     kind = models.CharField(
-        _("kind"),
+        verbose_name=_("kind"),
         max_length=1,
         default="N",
         choices=KIND_CHOICES
     )
 
     auto = models.BooleanField(
-        _("auto"),
+        verbose_name=_("auto"),
         default=True,
         help_text=_("automatically add the attribute to database")
     )
 
     tag = models.BooleanField(
-        _("tag"),
+        verbose_name=_("tag"),
         default=False,
         help_text=_("tag")
     )
@@ -78,7 +78,6 @@ class Property(models.Model, MigasLink):
         # Not allowed delete SET and CID Property
         if self.prefix not in ["SET", "CID"]:
             super(Property, self).delete(*args, **kwargs)
-
 
     class Meta:
         app_label = 'server'
