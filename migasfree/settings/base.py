@@ -12,12 +12,12 @@ import os
 import django
 import django.conf.global_settings as DEFAULT_SETTINGS
 
-from django.contrib.messages import constants as message_constants
+from django.contrib import messages
 
 from .migasfree import BASE_DIR, MIGASFREE_TMP_DIR
 
-if django.VERSION < (1, 6, 0, 'final'):
-    print('Migasfree requires Django 1.6.0. Please, update it.')
+if django.VERSION < (1, 8, 0, 'final'):
+    print('Migasfree requires Django 1.8.0. Please, update it.')
     exit(1)
 
 ADMINS = (
@@ -101,7 +101,9 @@ DEFAULT_CHARSET = 'utf-8'
 ROOT_URLCONF = 'migasfree.urls'
 
 MESSAGE_TAGS = {
-    message_constants.ERROR: 'danger'
+    messages.WARNING: 'alert-warning warning',
+    messages.ERROR: 'alert-danger error',
+    messages.SUCCESS: 'alert-success success',
 }
 
 INSTALLED_APPS = (
@@ -109,7 +111,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'migasfree.server',  # before admin apps to override
-    'migasfree.admin_bootstrapped',  # before django.contrib.admin to override
+    'django_admin_bootstrapped',  # before django.contrib.admin to override
     'autocomplete_light',  # before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.humanize',
@@ -118,7 +120,10 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'ajax_select',
     'migasfree.flot',
+    'bootstrap3',
 )
+
+DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
 # http://docs.python.org/2/howto/logging-cookbook.html
 # http://docs.python.org/2/library/logging.html#logrecord-attributes
