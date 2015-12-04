@@ -2,8 +2,19 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 
-from migasfree.server.models import Computer
+from . import Computer
+
+
+class MessageManager(models.Manager):
+    def create(self, computer, text):
+        msg = Message()
+        msg.computer = computer
+        msg.text = text
+        msg.save()
+
+        return msg
 
 
 class Message(models.Model):
@@ -21,8 +32,15 @@ class Message(models.Model):
 
     date = models.DateTimeField(
         verbose_name=_("date"),
-        default=0
+        auto_now_add=True
     )
+
+    objects = MessageManager()
+
+    def update_message(self, text):
+        self.text = text
+        self.date = timezone.now()
+        self.save()
 
     def __unicode__(self):
         return u'%s - %s' % (self.computer.__unicode__(), self.text)
