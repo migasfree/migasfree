@@ -3,23 +3,35 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import MigasLink
+from . import MigasLink
+
+
+class UserManager(models.Manager):
+    def create(self, name, fullname=''):
+        user = User()
+        user.name = name
+        user.fullname = fullname
+        user.save()
+
+        return user
 
 
 class User(models.Model, MigasLink):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         unique=True
     )
 
     fullname = models.CharField(
-        _("fullname"),
+        verbose_name=_("fullname"),
         max_length=100
     )
 
+    objects = UserManager()
+
     def __unicode__(self):
-        return u'%s - %s' % (self.name, self.fullname)
+        return '%s - %s' % (self.name, self.fullname)
 
     class Meta:
         app_label = 'server'
