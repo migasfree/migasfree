@@ -2,14 +2,14 @@
     font-family: 'Average Sans';
     font-style: normal;
     font-weight: 400;
-    src: local('Average Sans'), local('AverageSans-Regular'), url('../bootstrap/fonts/AverageSans-Regular.ttf') format('truetype'), url('../bootstrap/fonts/average-sans.woff') format('woff');
+    src: local('Average Sans'), local('AverageSans-Regular'), url('../fonts/AverageSans-Regular.ttf') format('truetype'), url('../fonts/average-sans.woff') format('woff');
 }
 
 @font-face {
     font-family: 'Strait';
     font-style: normal;
     font-weight: 400;
-    src: local('Strait'), local('Strait-Regular'), url('../bootstrap/fonts/Strait-Regular.ttf') format('truetype'), url('../bootstrap/fonts/strait.woff') format('woff');
+    src: local('Strait'), local('Strait-Regular'), url('../fonts/Strait-Regular.ttf') format('truetype'), url('../fonts/strait.woff') format('woff');
 }
 
 article * {
@@ -59,7 +59,7 @@ form.form-horizontal .alert-warning {
 }
 
 .inline-related fieldset.module td.original p {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 table .ordinal {
@@ -147,12 +147,6 @@ footer {
 
 }
 
-@media screen and (min-width: 985px) {
-    #wrapper {
-        margin-top: 5em;
-    }
-}
-
 @media screen and (max-width: 500px) {
     table, thead, tbody, th, td, tr {
         display: block;
@@ -186,4 +180,9 @@ footer {
 
 span[data-value] {
     display: block !important;
+}
+
+.has-error .control-label label,
+.has-error .help-inline {
+    color: #a94442 !important;
 }
