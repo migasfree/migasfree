@@ -3,7 +3,18 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Computer, Version, User, MigasLink
+from . import Computer, Version, User, MigasLink
+
+
+class UpdateManager(models.Manager):
+    def create(self, computer):
+        update = Update()
+        update.computer = computer
+        update.version = computer.version
+        update.user = computer.login().user
+        update.save()
+
+        return update
 
 
 class Update(models.Model, MigasLink):
@@ -24,9 +35,11 @@ class Update(models.Model, MigasLink):
     )
 
     date = models.DateTimeField(
-        _("date"),
-        default=0
+        verbose_name=_("date"),
+        auto_now_add=True
     )
+
+    objects = UpdateManager()
 
     def save(self, *args, **kwargs):
         super(Update, self).save(*args, **kwargs)
