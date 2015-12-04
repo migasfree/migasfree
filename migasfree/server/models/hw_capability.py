@@ -3,7 +3,19 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import HwNode
+from . import HwNode
+
+
+class HwCapabilityManager(models.Manager):
+    def create(self, node, name, description):
+        obj = HwCapability(
+            node=node,
+            name=name,
+            description=description
+        )
+        obj.save()
+
+        return obj
 
 
 class HwCapability(models.Model):
@@ -13,16 +25,18 @@ class HwCapability(models.Model):
     )
 
     name = models.TextField(
-        _("name"),
+        verbose_name=_("name"),
         null=False,
         blank=True
     )  # This is the field "capability" in lshw
 
     description = models.TextField(
-        _("description"),
+        verbose_name=_("description"),
         null=True,
         blank=True
     )
+
+    objects = HwCapabilityManager()
 
     def __unicode__(self):
         ret = self.name

@@ -5,7 +5,36 @@ from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Computer, MigasLink
+from . import Computer, MigasLink
+
+
+class HwNodeManager(models.Manager):
+    def create(self, data):
+        obj = HwNode(
+            parent=data.get('parent'),
+            computer=data.get('computer'),
+            level=data.get('level'),
+            width=data.get('width'),
+            name=data.get('name'),
+            classname=data.get('classname'),
+            enabled=data.get('enabled', False),
+            claimed=data.get('claimed', False),
+            description=data.get('description'),
+            vendor=data.get('vendor'),
+            product=data.get('product'),
+            version=data.get('version'),
+            serial=data.get('serial'),
+            businfo=data.get('businfo'),
+            physid=data.get('physid'),
+            slot=data.get('slot'),
+            size=data.get('size'),
+            capacity=data.get('capacity'),
+            clock=data.get('clock'),
+            dev=data.get('dev')
+        )
+        obj.save()
+
+        return obj
 
 
 class HwNode(models.Model, MigasLink):
@@ -17,13 +46,13 @@ class HwNode(models.Model, MigasLink):
         related_name="child"
     )
 
-    level = width = models.IntegerField(
-        _("width"),
+    level = models.IntegerField(
+        verbose_name=_("level"),
         null=False
     )
 
     width = models.IntegerField(
-        _("width"),
+        verbose_name=_("width"),
         null=True
     )
 
@@ -128,6 +157,8 @@ class HwNode(models.Model, MigasLink):
         null=True,
         blank=True
     )
+
+    objects = HwNodeManager()
 
     def __unicode__(self):
         return self.product if self.description and 'lshw' in self.description \

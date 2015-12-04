@@ -3,7 +3,19 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import HwNode
+from . import HwNode
+
+
+class HwConfigurationManager(models.Manager):
+    def create(self, node, name, value):
+        obj = HwConfiguration(
+            node=node,
+            name=name,
+            value=value
+        )
+        obj.save()
+
+        return obj
 
 
 class HwConfiguration(models.Model):
@@ -13,16 +25,18 @@ class HwConfiguration(models.Model):
     )
 
     name = models.TextField(
-        _("name"),
+        verbose_name=_("name"),
         null=False,
         blank=True
     )  # This is the field "config" in lshw
 
     value = models.TextField(
-        _("value"),
+        verbose_name=_("value"),
         null=True,
         blank=True
     )
+
+    objects = HwConfigurationManager()
 
     def __unicode__(self):
         return self.name

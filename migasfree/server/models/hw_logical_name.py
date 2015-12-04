@@ -3,7 +3,18 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import HwNode
+from . import HwNode
+
+
+class HwLogicalNameManager(models.Manager):
+    def create(self, node, name):
+        obj = HwLogicalName(
+            node=node,
+            name=name
+        )
+        obj.save()
+
+        return obj
 
 
 class HwLogicalName(models.Model):
@@ -13,10 +24,12 @@ class HwLogicalName(models.Model):
     )
 
     name = models.TextField(
-        _("name"),
+        verbose_name=_("name"),
         null=False,
         blank=True
     )  # This is the field "logicalname" in lshw
+
+    objects = HwLogicalNameManager()
 
     def __unicode__(self):
         return self.name
