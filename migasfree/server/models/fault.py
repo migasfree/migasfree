@@ -3,7 +3,19 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Computer, FaultDef, Version
+from . import Computer, FaultDef, Version
+
+
+class FaultManager(models.Manager):
+    def create(self, computer, version, faultdef, text):
+        fault = Fault()
+        fault.computer = computer
+        fault.version = version
+        fault.faultdef = faultdef
+        fault.text = text
+        fault.save()
+
+        return fault
 
 
 class Fault(models.Model):
@@ -18,18 +30,18 @@ class Fault(models.Model):
     )
 
     date = models.DateTimeField(
-        _("date"),
-        default=0
+        verbose_name=_("date"),
+        auto_now_add=True
     )
 
     text = models.TextField(
-        _("text"),
+        verbose_name=_("text"),
         null=True,
         blank=True
     )
 
     checked = models.BooleanField(
-        _("checked"),
+        verbose_name=_("checked"),
         default=False,
     )
 
@@ -37,6 +49,8 @@ class Fault(models.Model):
         Version,
         verbose_name=_("version")
     )
+
+    objects = FaultManager()
 
     def computer_link(self):
         return self.computer.link()
@@ -48,8 +62,8 @@ class Fault(models.Model):
         return self.faultdef.list_users()
 
     def __unicode__(self):
-        return u'%s - %s - %s' % (
-            str(self.id),
+        return '%d - %s - %s' % (
+            self.id,
             self.computer.__unicode__(),
             str(self.date)
         )
