@@ -3,9 +3,20 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Computer, Version, AutoCheckError
+from . import Computer, Version, AutoCheckError
 
 import re
+
+
+class ErrorManager(models.Manager):
+    def create(self, computer, version, error):
+        error = Error()
+        error.computer = computer
+        error.version = version
+        error.error = error
+        error.save()
+
+        return error
 
 
 class Error(models.Model):
@@ -15,18 +26,18 @@ class Error(models.Model):
     )
 
     date = models.DateTimeField(
-        _("date"),
-        default=0
+        verbose_name=_("date"),
+        auto_now_add=True
     )
 
     error = models.TextField(
-        _("error"),
+        verbose_name=_("error"),
         null=True,
         blank=True
     )
 
     checked = models.BooleanField(
-        _("checked"),
+        verbose_name=_("checked"),
         default=False,
     )
 
@@ -35,16 +46,20 @@ class Error(models.Model):
         verbose_name=_("version")
     )
 
-    def truncate_error(self):
+    objects = ErrorManager()
+
+    def truncated_error(self):
         if len(self.error) <= 250:
             return self.error
         else:
             return self.error[:250] + " ..."
 
+    truncated_error.short_description = _("Truncated error")
+
     def auto_check(self):
         msg = self.error
         for ace in AutoCheckError.objects.all():
-            if re.search(ace.message,msg):
+            if re.search(ace.message, msg):
                 self.checked =True
                 return
 
