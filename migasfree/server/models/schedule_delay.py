@@ -5,8 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinValueValidator
 from django.db.models import Count
 
-from migasfree.server.models import Schedule, Attribute, user_version
-from migasfree.server.models import Login
+from . import Schedule, Attribute, Login, UserProfile
 
 
 class ScheduleDelay(models.Model):
@@ -30,7 +29,7 @@ class ScheduleDelay(models.Model):
     )
 
     def total_computers(self):
-        version = user_version()
+        version = UserProfile.get_logged_version()
         if version:
             return Login.objects.filter(
                 attributes__id__in=self.attributes.all().values_list("id"),
