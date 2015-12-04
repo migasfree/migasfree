@@ -82,26 +82,22 @@ def add_attributes_sets(o_login, lst_attributes):
 
 
 def add_notification_platform(platform, computer):
-    _notification = Notification()
-    _notification.notification = \
+    Notification.objects.create(
         "Platform [%s] registered by computer [%s]." % (
-        platform,
-        computer.__unicode__()
+            platform,
+            computer.__unicode__()
+        )
     )
-    _notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    _notification.save()
 
 
 def add_notification_version(version, pms, computer):
-    _notification = Notification()
-    _notification.notification = \
+    Notification.objects.create(
         "Version [%s] with P.M.S. [%s] registered by computer [%s]." % (
-        version,
-        pms,
-        computer.__unicode__()
+            version,
+            pms,
+            computer.__unicode__()
+        )
     )
-    _notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    _notification.save()
 
 
 def get_computer(name, uuid):
@@ -225,11 +221,9 @@ def new_attribute(o_login, o_property, par):
             )
         except:  # if not exist the attribute, we add it
             if o_property.auto is True:
-                o_attribute = Attribute()
-                o_attribute.property_att = o_property
-                o_attribute.value = value_att
-                o_attribute.description = description_att
-                o_attribute.save()
+                o_attribute = Attribute.objects.create(
+                    o_property, value_att, description_att
+                )
 
     # Add the attribute to Login
     o_login.attributes.add(o_attribute)
@@ -237,33 +231,12 @@ def new_attribute(o_login, o_property, par):
     return o_attribute
 
 
-def save_login(computer, user):
-    _login_date = time.strftime("%Y-%m-%d %H:%M:%S")
-    try:
-        _login = Login.objects.get(
-            computer=computer,
-        )
-        _login.user = user
-        _login.date = _login_date
-        _login.save()
-    except:  # if Login not exists, we save it
-        _login = Login(
-            computer=computer,
-            user=user,
-            date=_login_date
-        )
-        _login.save()
-
-    return  _login
-
-
 def upload_computer_hardware(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         HwNode.objects.filter(computer=computer).delete()
         load_hw(computer, data[cmd], None, 1)
-        computer.datehardware = time.strftime("%Y-%m-%d %H:%M:%S")
-        computer.save()
+        computer.update_last_hardware_capture()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -274,8 +247,7 @@ def upload_computer_hardware(request, name, uuid, computer, data):
 def upload_computer_software_base_diff(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        computer.software = data[cmd]
-        computer.save()
+        computer.update_software_inventory(data[cmd])
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -286,9 +258,9 @@ def upload_computer_software_base_diff(request, name, uuid, computer, data):
 def upload_computer_software_base(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        _version = computer.version
-        _version.base = data[cmd]
-        _version.save()
+        version = Version.objects.get(pk=computer.version_id)
+        version.update_base(data[cmd])
+
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -299,8 +271,7 @@ def upload_computer_software_base(request, name, uuid, computer, data):
 def upload_computer_software_history(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        computer.history_sw = "%s\n\n%s" % (computer.history_sw, data[cmd])
-        computer.save()
+        computer.update_software_history(data[cmd])
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -324,12 +295,7 @@ def get_computer_software(request, name, uuid, computer, data):
 def upload_computer_errors(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        _error = Error()
-        _error.computer = computer
-        _error.date = time.strftime("%Y-%m-%d %H:%M:%S")
-        _error.error = data[cmd]
-        _error.version = computer.version
-        _error.save()
+        Error.objects.create(computer, computer.version, data[cmd])
 
         ret = return_message(cmd, ok())
     except:
@@ -340,7 +306,6 @@ def upload_computer_errors(request, name, uuid, computer, data):
 
 def upload_computer_message(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    date_now = time.strftime("%Y-%m-%d %H:%M:%S")
 
     if not computer:
         return return_message(cmd, error(COMPUTER_NOT_FOUND))
@@ -354,16 +319,9 @@ def upload_computer_message(request, name, uuid, computer, data):
 
     try:
         if data[cmd] == "":
-            Update(
-                computer=computer,
-                user_id=computer.login().user_id,
-                date=date_now,
-                version=computer.version
-            ).save()
+            Update.objects.create(computer)
         else:
-            _message.text = data[cmd]
-            _message.date = date_now
-            _message.save()
+            _message.update_message(data[cmd])
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -494,9 +452,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the platform
-        o_platform = Platform()
-        o_platform.name = platform
-        o_platform.save()
+        o_platform = Platform.objects.create(platform)
 
         notify_platform = True
 
@@ -506,12 +462,12 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the version
-        o_version = Version()
-        o_version.name = version
-        o_version.pms = Pms.objects.get(name=pms)
-        o_version.platform = Platform.objects.get(name=platform)
-        o_version.autoregister = settings.MIGASFREE_AUTOREGISTER
-        o_version.save()
+        o_version = Version.objects.create(
+            version,
+            Pms.objects.get(name=pms),
+            Platform.objects.get(name=platform),
+            settings.MIGASFREE_AUTOREGISTER
+        )
 
         notify_version = True
 
@@ -524,18 +480,6 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         properties = data.get("upload_computer_info").get("attributes")
 
         # 1.- PROCESS COMPUTER
-        if dic_computer["hostname"] == "desktop":
-            str_error = ugettext(
-                'desktop is not valid name for this computer: IP=%(ip)s'
-            ) % {'ip': dic_computer["ip"]}
-            o_error = Error()
-            o_error.computer = Computer.objects.get(name="desktop")
-            o_error.date = m
-            o_error.error = str_error
-            o_error.save()
-
-            return return_message(cmd, error(COMPUTER_NOT_FOUND))
-
         #registration of ip, version an Migration of computer
         o_computer = check_computer(
             o_computer,
@@ -552,22 +496,16 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             add_notification_version(version, pms, o_computer)
 
         # if not exists the user, we add it
-        try:
-            o_user = User.objects.get(name=dic_computer["user"])
-        except:
-            o_user = User()
-            o_user.name = dic_computer["user"]
-            try:
-                o_user.fullname = dic_computer["user_fullname"]
-            except:
-                o_user.fullname = ""
-            o_user.save()
+        o_user, _ = User.objects.get_or_create(
+            name=dic_computer["user"],
+            fullname=dic_computer.get("user_fullname", "")
+        )
 
         # Save Login
-        o_login = save_login(
-            o_computer,
-            User.objects.get(name=dic_computer["user"])
-            )
+        o_login, _ = Login.objects.get_or_create(
+            computer=o_computer,
+            user=User.objects.get(name=dic_computer["user"])
+        )
         o_login.attributes.clear()
 
         # Get version
@@ -719,19 +657,16 @@ def upload_computer_faults(request, name, uuid, computer, data):
 
     try:
         # PROCESS FAULTS
-        for e in faults:
-            _faultdef = FaultDef.objects.get(name=e)
+        for f in faults:
             try:
-                msg = faults.get(e)
+                msg = faults.get(f)
                 if msg != "":
-                    # we add the fault
-                    _fault = Fault()
-                    _fault.computer = computer
-                    _fault.date = time.strftime("%Y-%m-%d %H:%M:%S")
-                    _fault.text = msg
-                    _fault.faultdef = _faultdef
-                    _fault.version = _version
-                    _fault.save()
+                    Fault.objects.create(
+                        computer,
+                        _version,
+                        FaultDef.objects.get(name=f),
+                        msg
+                    )
             except:
                 pass
 
@@ -783,9 +718,7 @@ def register_computer(request, name, uuid, computer, data):
                 return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the platform
-        platform = Platform()
-        platform.name = platform_name
-        platform.save()
+        platform = Platform.objects.create(platform_name)
 
         notify_platform = True
 
@@ -796,12 +729,12 @@ def register_computer(request, name, uuid, computer, data):
                 return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the version
-        version = Version()
-        version.name = version_name
-        version.pms = Pms.objects.get(name=pms_name)
-        version.platform = Platform.objects.get(name=platform_name)
-        version.autoregister = settings.MIGASFREE_AUTOREGISTER
-        version.save()
+        version = Version.objects.create(
+            version_name,
+            Pms.objects.get(name=pms_name),
+            Platform.objects.get(name=platform_name),
+            settings.MIGASFREE_AUTOREGISTER
+        )
 
         notify_version = True
 
@@ -865,25 +798,19 @@ def upload_server_package(request, name, uuid, o_computer, data):
     except:
         return return_message(cmd, error(VERSION_NOT_FOUND))
 
-    try:
-        o_store = Store.objects.get(name=data['store'], version=o_version)
-    except:
-        o_store = Store()
-        o_store.name = data['store']
-        o_store.version = o_version
-        o_store.save()
+    o_store, _ = Store.objects.get_or_create(
+        name=data['store'], version=o_version
+    )
 
     save_request_file(f, filename)
 
     # we add the package
     if not data['source']:
-        try:
-            o_package = Package.objects.get(name=f.name, version=o_version)
-        except:
-            o_package = Package(name=f.name, version=o_version)
-
-        o_package.store = o_store
-        o_package.save()
+        o_package, _ = Package.objects.get_or_create(
+            name=f.name,
+            version=o_version,
+            store=o_store
+        )
 
     return return_message(cmd, ok())
 
@@ -906,25 +833,16 @@ def upload_server_set(request, name, uuid, o_computer, data):
     except:
         return return_message(cmd, error(VERSION_NOT_FOUND))
 
-    try:
-        o_store = Store.objects.get(name=data['store'], version=o_version)
-    except:
-        o_store = Store()
-        o_store.name = data['store']
-        o_store.version = o_version
-        o_store.save()
+    o_store, _ = Store.objects.get_or_create(
+        name=data['store'], version=o_version
+    )
 
     # we add the packageset and create the directory
-    try:
-        o_package = Package.objects.get(
-            name=data['packageset'],
-            version=o_version
-        )
-    except:
-        o_package = Package(name=data['packageset'], version=o_version)
-
-    o_package.store = o_store
-    o_package.save()
+    o_package, _ = Package.objects.get_or_create(
+        name=data['packageset'],
+        version=o_version,
+        store=o_store
+    )
     o_package.create_dir()
 
     save_request_file(f, filename)
@@ -1074,29 +992,16 @@ def set_computer_tags(request, name, uuid, o_computer, data):
     return ret
 
 
-def add_migration(computer, version):
-    _migration = Migration()
-    _migration.computer = computer
-    _migration.version = version
-    _migration.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    _migration.save()
-
-
 def check_computer(o_computer, name, version, ip, uuid):
     # registration of ip, version, uuid and Migration of computer
     o_version = Version.objects.get(name=version)
 
     if not o_computer:
-        o_computer = Computer()
-        o_computer.name = name
-        o_computer.dateinput = time.strftime("%Y-%m-%d")
-        o_computer.version = o_version
-        o_computer.uuid = uuid
-        o_computer.save()
-        add_migration(o_computer, o_version)
+        o_computer = Computer.objects.create(name, o_version, uuid)
+        Migration.objects.create(o_computer, o_version)
 
         if settings.MIGASFREE_NOTIFY_NEW_COMPUTER:
-            create_notification(
+            Notification.objects.create(
                 "New Computer added id=[%s]: NAME=[%s] UUID=[%s]" % (
                     o_computer.id,
                     o_computer.__unicode__(),
@@ -1106,22 +1011,18 @@ def check_computer(o_computer, name, version, ip, uuid):
 
     # Check Migration
     if o_computer.version != o_version:
-        add_migration(o_computer, o_version)
+        Migration.objects.create(o_computer, o_version)
 
     notify_change_data_computer(o_computer, name, o_version, ip, uuid)
 
-    o_computer.name = name
-    o_computer.version = o_version
-    o_computer.ip = ip
-    o_computer.uuid = uuid
-    o_computer.save()
+    o_computer.update_identification(name, o_version, uuid, ip)
 
     return o_computer
 
 
 def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
     if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name != name):
-        create_notification(
+        Notification.objects.create(
             "Computer id=[%s]: NAME [%s] changed by [%s]" % (
                 o_computer.id,
                 o_computer.__unicode__(),
@@ -1131,7 +1032,7 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
 
     if settings.MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip != ip):
         if (o_computer.ip and ip):
-            create_notification(
+            Notification.objects.create(
                 "Computer id=[%s]: IP [%s] changed by [%s]" % (
                     o_computer.id,
                     o_computer.ip,
@@ -1140,20 +1041,13 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
             )
 
     if settings.MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid != uuid):
-        create_notification(
+        Notification.objects.create(
             "Computer id=[%s]: UUID [%s] changed by [%s]" % (
                 o_computer.id,
                 o_computer.uuid,
                 uuid
             )
         )
-
-
-def create_notification(text):
-    _notification = Notification()
-    _notification.notification = text
-    _notification.date = time.strftime("%Y-%m-%d %H:%M:%S")
-    _notification.save()
 
 
 def create_repositories_package(packagename, versionname):
