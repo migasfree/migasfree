@@ -6,10 +6,10 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
+from django.utils import timezone
 
 from migasfree.server.models import (
     Version,
-    # DeviceLogical,
     Attribute, Property, MigasLink
 )
 
@@ -49,6 +49,18 @@ class UnsubscribedManager(models.Manager):
         )
 
 
+class ComputerManager(models.Manager):
+    def create(self, name, version, uuid, ip=None):
+        comp = Computer()
+        comp.name = name
+        comp.version = version
+        comp.uuid = uuid
+        comp.ip = ip
+        comp.save()
+
+        return comp
+
+
 class Computer(models.Model, MigasLink):
     STATUS_CHOICES = (
         ('intended', _('Intended')),
@@ -67,7 +79,7 @@ class Computer(models.Model, MigasLink):
         null=True,
         blank=True,
         unique=False
-    )  # south 0004
+    )
 
     uuid = models.CharField(
         verbose_name=_("uuid"),
@@ -76,7 +88,7 @@ class Computer(models.Model, MigasLink):
         blank=True,
         unique=True,
         default=""
-    )  # south 0003 & 0004
+    )
 
     status = models.CharField(
         verbose_name=_('status'),
@@ -93,6 +105,7 @@ class Computer(models.Model, MigasLink):
 
     dateinput = models.DateField(
         verbose_name=_("date input"),
+        auto_now_add=True,
         help_text=_("Date of input of Computer in migasfree system")
     )
 
@@ -118,7 +131,6 @@ class Computer(models.Model, MigasLink):
     )
 
     devices_logical = models.ManyToManyField(
-        # DeviceLogical,
         # http://python.6.x6.nabble.com/many-to-many-between-apps-td5026629.html
         'server.DeviceLogical',
         blank=True,
@@ -149,7 +161,7 @@ class Computer(models.Model, MigasLink):
         verbose_name=_("tags")
     )
 
-    objects = models.Manager()
+    objects = ComputerManager()
     productives = ProductiveManager()
     unproductives = UnproductiveManager()
     subscribed = SubscribedManager()
@@ -180,6 +192,27 @@ class Computer(models.Model, MigasLink):
         for element in _remote_admin.split(" "):
             protocol = element.split("://")[0]
             self._actions.append([protocol, element])
+
+    def update_identification(self, name, version, uuid, ip):
+        self.name = name
+        self.version = version
+        self.uuid = uuid
+        self.ip = ip
+        self.save()
+
+    def update_software_history(self, history):
+        if history:
+            self.history_sw = self.history_sw + '\n\n' + history
+            self.save()
+
+    def update_software_inventory(self, pkgs):
+        if pkgs:
+            self.software = pkgs
+            self.save()
+
+    def update_last_hardware_capture(self):
+        self.datehardware = timezone.now()
+        self.save()
 
     def remove_device_copy(self, devicelogical_id):
         try:
