@@ -1,6 +1,6 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_static admin_modify bootstrapped_goodies_tags server_tags %}
-{% load admin_urls %}
+<pre>{% debug %}</pre>
+{% load i18n admin_urls admin_static admin_modify bootstrapped_goodies_tags server_tags %}
 
 {% block extrahead %}
     {{ block.super }}
@@ -16,7 +16,7 @@
 
 {% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
 
-{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+{% block bodyclass %}{{ block.super }} {{ opts.app_label }}-{{ opts.object_model }} change-form{% endblock %}
 
 {% block title %}{% trans opts.verbose_name %} {{ original }}{% endblock title %}
 
@@ -32,11 +32,11 @@
 {% endblock %}
 
 {% block content %}
-    {% with model_name=opts.model_name|lower|slugify %}
-        {% render_with_template_if_exist "admin_model_"|add:opts.model_name|add:"_change_form.html" "" %}
+    {% with module_name=opts.model_name|lower|slugify %}
+        {% render_with_template_if_exist opts.app_label|lower|add:"/admin_model_"|add:module_name|add:"_change_form.html" "" %}
     {% endwith %}
 
-    <form class="form-horizontal" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form">
+    <form class="form-horizontal" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form" novalidate>
         {% csrf_token %}
 
         {% block form_top %}{% endblock %}
@@ -47,7 +47,7 @@
 
         {% if errors %}
             <div class="alert alert-danger">
-                {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %}Please correct the errors below.{% endblocktrans %}
+                {% if errors|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
 
                 {{ adminform.form.non_field_errors }}
             </div>
@@ -61,7 +61,7 @@
 
                 {% block field_sets %}
                     {% for fieldset in adminform %}
-                        {% include "admin/includes/fieldset.html" %}
+                        {% include "admin/includes/fieldset.html" with group_column_width=adminform|form_fieldset_column_width %}
                     {% endfor %}
                 {% endblock %}
 
@@ -75,9 +75,26 @@
 
                 {% block after_related_objects %}{% endblock %}
 
-                {% if adminform and add %}
-                   <script type="text/javascript">document.getElementById("{{ adminform.first_field.id_for_label }}").focus();</script>
-                {% endif %}
+                {% block admin_change_form_document_ready %}
+
+                <script type="text/javascript">
+                    (function($) {
+                        $(document).ready(function() {
+                            $('.add-another').click(function(e) {
+                                e.preventDefault();
+                                showAddAnotherPopup(this);
+                            });
+                            $('.related-lookup').click(function(e) {
+                                e.preventDefault();
+                                showRelatedObjectLookupPopup(this);
+                            });
+                        {% if adminform and add %}
+                            $('form#{{ opts.model_name }}_form :input:visible:enabled:first').focus()
+                        {% endif %}
+                        });
+                    })(django.jQuery);
+                </script>
+                {% endblock %}
 
                 {# JavaScript for prepopulated fields #}
                 {% prepopulated_fields_js %}
