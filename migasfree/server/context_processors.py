@@ -2,7 +2,7 @@
 
 from migasfree import __version__
 
-from .models import get_version_names, get_query_names, UserProfile
+from .models import Version, get_query_names, UserProfile
 
 
 def query_names(request):
@@ -16,7 +16,7 @@ def version_names(request):
         current = ''
 
     return {
-        'version_names': get_version_names(),
+        'version_names': Version.get_version_names(),
         'current_version': current
     }
 
