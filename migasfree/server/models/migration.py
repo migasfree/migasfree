@@ -2,7 +2,17 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Computer, Version
+from . import Computer, Version
+
+
+class MigrationManager(models.Manager):
+    def create(self, computer, version):
+        mig = Migration()
+        mig.computer = computer
+        mig.version = version
+        mig.save()
+
+        return mig
 
 
 class Migration(models.Model):
@@ -17,9 +27,11 @@ class Migration(models.Model):
     )
 
     date = models.DateTimeField(
-        _("date"),
-        default=0
+        verbose_name=_("date"),
+        auto_now_add=True
     )
+
+    objects = MigrationManager()
 
     def __unicode__(self):
         return u'%s - %s' % (self.computer.__unicode__(), self.version)
