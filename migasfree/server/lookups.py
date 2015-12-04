@@ -10,7 +10,7 @@ from migasfree.server.models import (
     Package,
     Property,
     DeviceLogical,
-    user_version,
+    UserProfile,
     Computer
 )
 
@@ -85,7 +85,7 @@ class Attribute_ComputersLookup(LookupChannel):
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description),
-            escape(obj.total_computers(user_version()))
+            escape(obj.total_computers(UserProfile.get_logged_version()))
         )
 
     def can_add(self, user, model):
