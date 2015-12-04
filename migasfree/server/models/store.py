@@ -8,7 +8,17 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from migasfree.server.models import Version, VersionManager, MigasLink
+from . import Version, VersionManager, MigasLink
+
+
+class StoreManager(models.Manager):
+    def create(self, name, version):
+        store = Store()
+        store.name = name
+        store.version = version
+        store.save()
+
+        return store
 
 
 class Store(models.Model, MigasLink):
@@ -25,7 +35,8 @@ class Store(models.Model, MigasLink):
         verbose_name=_("version")
     )
 
-    objects = VersionManager()  # manager by user version
+    objects = StoreManager()
+    user_version = VersionManager()  # manager by user version
 
     def __init__(self, *args, **kwargs):
         super(Store, self).__init__(*args, **kwargs)

@@ -7,12 +7,23 @@ from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.conf import settings
 
-from migasfree.server.models import (
+from . import (
     Version,
     VersionManager,
     Store,
     MigasLink
 )
+
+
+class PackageManager(models.Manager):
+    def create(self, name, version, store):
+        pkg = Package()
+        pkg.name = name
+        pkg.version = version
+        pkg.store = store
+        pkg.save()
+
+        return pkg
 
 
 class Package(models.Model, MigasLink):
@@ -31,7 +42,8 @@ class Package(models.Model, MigasLink):
         verbose_name=_("store")
     )
 
-    objects = VersionManager()  # manager by user version
+    objects = PackageManager()
+    user_version = VersionManager()  # manager by user version
 
     def __init__(self, *args, **kwargs):
         super(Package, self).__init__(*args, **kwargs)
