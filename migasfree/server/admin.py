@@ -29,7 +29,6 @@ from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
 from .widgets import MigasfreeSplitDateTime
-from migasfree.admin_bootstrapped.forms import *
 
 admin.site.register(AutoCheckError)
 
@@ -43,7 +42,7 @@ class MigasAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.DateTimeField: {'widget': MigasfreeSplitDateTime},
         #models.DateField: {'widget': DateInput},
-        models.CharField: {'widget': TextInput},
+        #models.CharField: {'widget': TextInput},
     }
 
     def boolean_field(self, field):
@@ -494,7 +493,7 @@ class ErrorAdmin(MigasAdmin):
         'version',
         'my_checked',
         'date',
-        'truncate_error',
+        'truncated_error',
     )
     list_filter = ('checked', 'date', 'version__platform', 'version')
     #list_editable = ('checked',)  # TODO
@@ -857,6 +856,13 @@ class PackageAdmin(MigasAdmin):
         return object.link()
 
     my_link.short_description = _("Package/Set")
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['store'].widget.can_add_related = False
+
+        return form
 
 
 @admin.register(Query)
