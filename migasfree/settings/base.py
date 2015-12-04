@@ -16,8 +16,8 @@ from django.contrib import messages
 
 from .migasfree import BASE_DIR, MIGASFREE_TMP_DIR
 
-if django.VERSION < (1, 8, 0, 'final'):
-    print('Migasfree requires Django 1.8.0. Please, update it.')
+if django.VERSION < (1, 9, 0, 'final'):
+    print('Migasfree requires Django 1.9.0. Please, update it.')
     exit(1)
 
 ADMINS = (
@@ -70,12 +70,6 @@ LOCALE_PATHS = (
 
 ADMIN_SITE_ROOT_URL = '/admin/'
 
-# List of callables that know how to import templates from various sources.
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -87,13 +81,19 @@ MIDDLEWARE_CLASSES = (
     'migasfree.middleware.threadlocals.ThreadLocals',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + [
-    'django.core.context_processors.request',
-    'django.core.context_processors.static',
-    'django.contrib.messages.context_processors.messages',
-    'migasfree.server.context_processors.query_names',
-    'migasfree.server.context_processors.version_names',
-    'migasfree.server.context_processors.migasfree_version',
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS
+            + [
+                'migasfree.server.context_processors.query_names',
+                'migasfree.server.context_processors.version_names',
+                'migasfree.server.context_processors.migasfree_version',
+            ],
+        },
+    },
 ]
 
 DEFAULT_CHARSET = 'utf-8'
@@ -110,17 +110,17 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'bootstrap3',
     'migasfree.server',  # before admin apps to override
     'django_admin_bootstrapped',  # before django.contrib.admin to override
     'autocomplete_light',  # before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.admindocs',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
     'ajax_select',
     'migasfree.flot',
-    'bootstrap3',
 )
 
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
