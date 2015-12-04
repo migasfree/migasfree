@@ -138,8 +138,7 @@ def query(request, query_id):
         # The user not have a version. We assign to user the first version found
         version = Version.objects.all().order_by("id")[0]
         user = UserProfile.objects.get(id=request.user.id)
-        user.version = version
-        user.save()
+        user.update_version(version)
 
     o_query = get_object_or_404(Query, id=query_id)
     dic_initial = {
