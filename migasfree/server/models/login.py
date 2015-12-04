@@ -4,13 +4,24 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models.computer import Computer
-from migasfree.server.models import User, Attribute, MigasLink
+from . import User, Attribute, MigasLink
+
+
+class LoginManager(models.Manager):
+    def create(self, computer, user, attributes=None):
+        login = Login()
+        login.computer = computer
+        login.user = user
+        login.attributes = attributes
+        login.save()
+
+        return login
 
 
 class Login(models.Model, MigasLink):
     date = models.DateTimeField(
         verbose_name=_("date"),
-        default=0
+        auto_now_add=True
     )
 
     computer = models.ForeignKey(
@@ -29,6 +40,8 @@ class Login(models.Model, MigasLink):
         verbose_name=_("attributes"),
         help_text=_("Sent attributes")
     )
+
+    objects = LoginManager()
 
     def computer_link(self):
         return self.computer.link()
