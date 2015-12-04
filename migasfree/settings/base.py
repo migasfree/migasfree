@@ -101,9 +101,9 @@ DEFAULT_CHARSET = 'utf-8'
 ROOT_URLCONF = 'migasfree.urls'
 
 MESSAGE_TAGS = {
-    messages.WARNING: 'alert-warning warning',
-    messages.ERROR: 'alert-danger error',
-    messages.SUCCESS: 'alert-success success',
+    messages.WARNING: 'warning',
+    messages.ERROR: 'danger',
+    messages.SUCCESS: 'success',
 }
 
 INSTALLED_APPS = (
