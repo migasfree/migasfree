@@ -48,7 +48,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Package\nfrom django.db.models import Q\nresult = Package.objects.version(0).filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
+            "code": "from migasfree.server.models import Package\nfrom django.db.models import Q\nresult = Package.user_version.version(0).filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
             "name": "Package/Set orphan",
             "alert": true,
             "description": "Packages that have not been assigned to any repository"
