@@ -14,9 +14,9 @@ from .property import Property, TagType
 
 from .platform import Platform
 from .version import (
-    Version, get_version_names,
+    Version,
     VersionManager,
-    UserProfile, user_version
+    UserProfile
 )
 from .attribute import Attribute, Tag, Att
 from .attribute_set import AttributeSet
