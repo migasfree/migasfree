@@ -1,4 +1,4 @@
-Django==1.9rc2
+Django==1.9
 pycrypto==2.6.1
 pygpgme==0.3
 django-ajax-selects==1.4.1
