@@ -80,6 +80,9 @@ def submit_row(context):
     )
 
     return {
+        'opts': opts,
+        'original': context['original'],
+        'preserved_filters': context['preserved_filters'],
         'show_delete_link': (not is_popup and context['has_delete_permission']
             and (change or context.get('show_delete', True))),
         'show_save_as_new': not is_popup and change and save_as and can_save,
