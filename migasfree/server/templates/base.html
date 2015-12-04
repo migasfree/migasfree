@@ -1,7 +1,5 @@
 <!doctype html>
-{% load i18n %}
-{% load server_tags %}
-{% load admin_static %}
+{% load i18n admin_static bootstrapped_goodies_tags server_tags %}
 {% load current_option from navigation %}
 <html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
     <head>
@@ -19,14 +17,12 @@
 
         <!-- Bootstrap core CSS -->
         <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-responsive.min.css' %}" />
 
         <!-- Add custom CSS here -->
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap-theme.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'bootstrap/css/font-awesome.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
         <link rel="stylesheet" href="{% static 'admin/css/overrides.css' %}" />
 
-        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20151113" />
+        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20151204" />
         <link rel="stylesheet" href="{% static 'css/migasfree_print.css' %}?20140129" media="print" />
 
         <link rel="stylesheet" href="{% static 'css/ajax_select.css' %}" />
@@ -38,14 +34,18 @@
 
         {% block extrastyle %}{% endblock extrastyle %}
 
-        <script>window.__admin_media_prefix__ = "{% filter escapejs %}{% static 'admin/' %}{% endfilter %}";</script>
+        <script type="text/javascript">
+        //<![CDATA[
+            window.__admin_media_prefix__ = "{% filter escapejs %}{% static 'admin/' %}{% endfilter %}";
+            window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";
+        //]]>
+        </script>
 
-        <script src="{% static 'js/jquery.min.js' %}"></script>
+        <script src="{% static 'admin/js/jquery-1.9.1.min.js' %}"></script>
+        <script src="{% static 'admin/js/jquery-migrate-1.2.1.min.js' %}"></script>
         <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 
-        <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-
-        <script>
+        <script type="text/javascript">
             $(document).ready(function() {
                 $('#alerts').load("{% url 'alerts' %}");
                 setInterval(function() {
@@ -57,6 +57,8 @@
                 $('.controls textarea').addClass('form-control');
                 $('.controls select').addClass('form-control');
                 $('.actions select').addClass('form-control input-sm');
+                $('input[type="submit"]').addClass('btn');
+                $('[title]').tooltip();
             });
         </script>
 
