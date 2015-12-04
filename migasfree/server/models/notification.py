@@ -4,23 +4,33 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
-class Notification(models.Model):
+class NotificationManager(models.Manager):
+    def create(self, notification):
+        notification = Notification()
+        notification.notification = notification
+        notification.save()
 
+        return notification
+
+
+class Notification(models.Model):
     date = models.DateTimeField(
-        _("date"),
-        default=0
+        verbose_name=_("date"),
+        auto_now_add=True
     )
 
     notification = models.TextField(
-        _("notification"),
+        verbose_name=_("notification"),
         null=True,
         blank=True
     )
 
     checked = models.BooleanField(
-        _("checked"),
+        verbose_name=_("checked"),
         default=False,
     )
+
+    objects = NotificationManager()
 
     def save(self, *args, **kwargs):
         self.notification = self.notification.replace("\r\n", "\n")
