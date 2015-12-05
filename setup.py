@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011-2014 Jose Antonio Chavarría
+# Copyright (c) 2011-2015 Jose Antonio Chavarría
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -34,8 +34,8 @@ __license__ = 'GPLv3'
 
 import sys
 
-if not hasattr(sys, 'version_info') or sys.version_info < (2, 6, 0, 'final'):
-    raise SystemExit('migasfree-server requires Python 2.6 or later.')
+if not hasattr(sys, 'version_info') or sys.version_info < (2, 7, 0, 'final'):
+    raise SystemExit('migasfree-server requires Python 2.7 or later.')
 
 import os
 PATH = os.path.dirname(__file__)
@@ -136,15 +136,10 @@ setup(
         'migasfree.server.models',
         'migasfree.server.views',
         'migasfree.settings',
-        'migasfree.admin_bootstrapped',
-        'migasfree.admin_bootstrapped.admin',
-        'migasfree.admin_bootstrapped.forms',
-        'migasfree.admin_bootstrapped.templatetags',
         'migasfree.flot',
     ],
     package_dir={
         'migasfree': 'migasfree',
-        'migasfree.admin_bootstrapped.templatetags': 'migasfree/admin_bootstrapped/templatetags',
         'migasfree.middleware': 'migasfree/middleware',
         'migasfree.server': 'migasfree/server',
         'migasfree.server.migrations': 'migasfree/server/migrations',
@@ -157,12 +152,6 @@ setup(
     },
     package_data={
         'migasfree': [
-            'admin_bootstrapped/static/js/*',
-            'admin_bootstrapped/static/*/*/*',
-            'admin_bootstrapped/templates/*/*.html',
-            'admin_bootstrapped/templates/*/*/*.html',
-            'admin_bootstrapped/templates/*/*/*/*.html',
-            'admin_bootstrapped/templates/*/*/*/*/*.html',
             'flot/*.md',
             'flot/*.txt',
             'flot/static/flot/*.js',
@@ -172,11 +161,7 @@ setup(
             'server/static/ajax-select/*.css',
             'server/static/ajax-select/images/*',
             'server/static/css/*',
-            'server/static/img/*.gif',
-            'server/static/img/*.png',
-            'server/static/img/*.svg',
-            'server/static/img/hw/*',
-            'server/static/img/source/*',
+            'server/static/img/*',
             'server/static/js/*',
             'server/templates/*.html',
             'server/templates/*/*.html',
