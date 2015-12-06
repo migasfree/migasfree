@@ -79,6 +79,12 @@ class Property(models.Model, MigasLink):
         if self.prefix not in ["SET", "CID"]:
             super(Property, self).delete(*args, **kwargs)
 
+    @staticmethod
+    def enabled_client_properties():
+        return Property.objects.filter(active=True).filter(
+            tag=False
+        ).exclude(prefix="CID").values('language', 'prefix', 'code')
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Property")
