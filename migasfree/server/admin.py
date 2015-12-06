@@ -28,8 +28,6 @@ from .forms import (
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
-from .widgets import MigasfreeSplitDateTime
-
 admin.site.register(AutoCheckError)
 
 sql_total_computer = "SELECT COUNT(server_login.id) \
@@ -39,12 +37,6 @@ sql_total_computer = "SELECT COUNT(server_login.id) \
 
 
 class MigasAdmin(admin.ModelAdmin):
-    formfield_overrides = {
-        models.DateTimeField: {'widget': MigasfreeSplitDateTime},
-        #models.DateField: {'widget': DateInput},
-        #models.CharField: {'widget': TextInput},
-    }
-
     def boolean_field(self, field):
         if field:
             ret = '<span class="fa fa-check boolean-yes">' \
@@ -98,8 +90,6 @@ class UserProfileAdmin(MigasAdmin):
         form = super(type(self), self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
         form.base_fields['groups'].widget.can_add_related = False
-        form.base_fields['last_login'].widget = admin.widgets.AdminDateWidget()
-        form.base_fields['date_joined'].widget = admin.widgets.AdminDateWidget()
 
         return form
 
