@@ -17,13 +17,6 @@
 {% block extrahead %}
     {{ block.super }}
     {{ media.js }}
-    <script type="text/javascript">
-        (function($) {
-            $(document).ready(function($) {
-                $("table#result_list").removeClass("table-bordered").addClass("table-hover table-condensed");
-            });
-        })(django.jQuery);
-    </script>
     {% if action_form %}
         {% if actions_on_top or actions_on_bottom %}
             <script type="text/javascript">
