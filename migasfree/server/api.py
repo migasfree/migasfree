@@ -94,82 +94,6 @@ def get_computer(name, uuid):
     return computer
 
 
-def process_kind_property(o_login, o_property, value):
-    attributes = []
-    try:
-        # NORMAL
-        if o_property.kind == "N":
-            attributes.append(
-                new_attribute(o_login, o_property, value).id
-            )
-
-        # LIST
-        if o_property.kind == "-":
-            mylist = value.split(",")
-            for element in mylist:
-                attributes.append(
-                    new_attribute(o_login, o_property, element).id
-                )
-
-        # ADDS RIGHT
-        if o_property.kind == "R":
-            lista = value.split(".")
-            c = value
-            l = 0
-            for x in lista:
-                attributes.append(
-                    new_attribute(o_login, o_property, c[l:]).id
-                )
-                l += len(x) + 1
-
-        # ADDS LEFT
-        if o_property.kind == "L":
-            lista = value.split(".")
-            c = value
-            l = 0
-            for x in lista:
-                l += len(x) + 1
-                attributes.append(
-                    new_attribute(o_login, o_property, c[0:l - 1]).id
-                )
-    except:
-        pass
-    return attributes
-
-
-def new_attribute(o_login, o_property, par):
-    """
-    Adds an attribute to the system
-        par is a "value~name" string or only "value"
-
-    Returns id of new attribute
-    """
-    reg = par.split("~")
-    value_att = reg[0].strip()
-    if len(reg) > 1:
-        description_att = reg[1]
-    else:
-        description_att = ""
-
-    # Add the attribute
-    if value_att != "":
-        try:
-            o_attribute = Attribute.objects.get(
-                value=value_att,
-                property_att__id=o_property.id
-            )
-        except:  # if not exist the attribute, we add it
-            if o_property.auto is True:
-                o_attribute = Attribute.objects.create(
-                    o_property, value_att, description_att
-                )
-
-    # Add the attribute to Login
-    o_login.attributes.add(o_attribute)
-
-    return o_attribute
-
-
 def upload_computer_hardware(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
@@ -453,14 +377,17 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         for e in properties:
             o_property = Property.objects.get(prefix=e)
             value = properties.get(e)
-            for att in process_kind_property(o_login, o_property, value):
+            for att in Attribute.process_kind_property(o_property, value):
+                o_login.attributes.add(att)
                 lst_attributes.append(att)
 
         # ADD Tags (not running on clients!!!)
         for tag in o_computer.tags.all().filter(property_att__active=True):
-            for att in process_kind_property(
-                o_login, tag.property_att, tag.value
+            for att in Attribute.process_kind_property(
+                tag.property_att,
+                tag.value
             ):
+                o_login.attributes.add(att)
                 lst_attributes.append(att)
 
         # ADD ATTRIBUTE CID (not running on clients!!!)
@@ -468,11 +395,11 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             prp_cid = Property.objects.get(prefix="CID", active=True)
             if prp_cid:
                 cid_description = o_computer.get_cid_description()
-                cid = new_attribute(
-                    o_login,
+                cid = Attribute.objects.create(
                     prp_cid,
                     "%s~%s" % (str(o_computer.id), cid_description)
                 )
+                o_login.attributes.add(cid)
                 lst_attributes.append(cid.id)
 
                 cid.update_description(cid_description)
@@ -481,6 +408,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # ADD AttributeSets
         lst_attributes = AttributeSet.process(lst_attributes)
+        o_login.attributes.add(lst_attributes)
 
         # 3 FaultsDef
         lst_faultsdef = []
