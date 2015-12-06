@@ -391,7 +391,6 @@ class TagAdmin(admin.ModelAdmin):
     form = TagForm
     list_display = ('my_link', 'description', 'total_computers', 'property_att')
     fields = ('property_att', 'value', 'description', 'computers')
-    list_select_related = ('tag_att',)
     list_filter = (TagFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
