@@ -10,75 +10,14 @@ from django.contrib import auth
 from django.conf import settings
 from django.utils.translation import ugettext
 
-from migasfree.server.models import *
-from migasfree.server.errmfs import *
-from migasfree.server.functions import *
-from migasfree.server.security import *
-from migasfree.server.views import load_hw, create_physical_repository
+from .models import *
+from .errmfs import *
+from .functions import *
+from .security import *
+from .views import load_hw, create_physical_repository
 
 import logging
 logger = logging.getLogger('migasfree')
-
-
-def idx(lst, ele):
-    for i in range(0, len(lst)):
-        if lst[i] == ele:
-            return i
-    return -1
-
-
-def order_groups(lst, element, before=-1):
-    id_before = idx(lst, before)
-    id_element = idx(lst, element)
-    if id_element == -1:
-        if id_before == -1:
-            lst.append(element)
-        else:
-            lst.insert(id_before, element)
-    else:
-        if id_before > -1:
-            if id_before < id_element:
-                lst = lst[0:id_before] + \
-                      lst[id_element:] + \
-                      lst[id_before:id_element]
-    return lst
-
-
-def list_groups(lst_attributes):
-    groups = []
-    for grp in AttributeSet.objects.filter(active=True):
-        groups = order_groups(groups, grp.id)
-        for subgrp in grp.attributes.filter(
-            id__gt=1).filter(
-            property_att__id=1).filter(
-            ~Q(value=grp.name)
-        ):
-            groups = order_groups(
-                groups,
-                AttributeSet.objects.get(name=subgrp.value).id,
-                grp.id
-            )
-        for subgrp in grp.excludes.filter(
-            id__gt=1).filter(
-            property_att__id=1).filter(
-            ~Q(value=grp.name)
-        ):
-            groups = order_groups(
-                groups,
-                AttributeSet.objects.get(name=subgrp.value).id,
-                grp.id
-            )
-    return groups
-
-
-def add_attributes_sets(o_login, lst_attributes):
-    prp_grp = Property.objects.get(id=1)
-    for g in list_groups(lst_attributes):
-        for grp in AttributeSet.objects.filter(id=g).filter(
-            Q(attributes__id__in=lst_attributes)).filter(
-            ~Q(excludes__id__in=lst_attributes)):
-            lst_attributes.append(new_attribute(o_login, prp_grp, grp.name).id)
-    return lst_attributes
 
 
 def add_notification_platform(platform, computer):
@@ -344,8 +283,8 @@ def get_properties(request, name, uuid, computer, data):
                 "properties":
                     [
                         {
-                            "prefix": "PREFIX",
-                            "function": "CODE" ,
+                            "name": "PREFIX",
+                            "code": "CODE" ,
                             "language": "LANGUAGE"
                         },
                         ...
@@ -360,14 +299,11 @@ def get_properties(request, name, uuid, computer, data):
     properties = []
 
     try:
-        # All active properties
-        for e in Property.objects.filter(active=True).filter(
-            tag=False
-        ).exclude(prefix="CID"):  # FIXME improve exclusion method
+        for p in Property.enabled_client_properties():
             properties.append({
-                "language": LANGUAGES_CHOICES[e.language][1],
-                "name": e.prefix,
-                "code": e.code
+                "language": LANGUAGES_CHOICES[p.language][1],
+                "name": p.prefix,
+                "code": p.code
             })
 
         ret = return_message(cmd, {"properties": properties})
@@ -544,22 +480,18 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             pass
 
         # ADD AttributeSets
-        lst_attributes = add_attributes_sets(o_login, lst_attributes)
+        lst_attributes = AttributeSet.process(lst_attributes)
 
         # 3 FaultsDef
         lst_faultsdef = []
-        faultsdef = FaultDef.objects.filter(
-            Q(attributes__id__in=lst_attributes)
-        )
-        faultsdef = faultsdef.filter(Q(active=True))
-        for d in faultsdef:
+        for d in FaultDef.enabled_for_attributes(lst_attributes):
             lst_faultsdef.append({
                 "language": LANGUAGES_CHOICES[d.language][1],
                 "name": d.name,
                 "code": d.code
             })
 
-        repositories = select_repositories(o_computer, lst_attributes)
+        repositories = Repository.available_repos(o_computer, lst_attributes)
 
         #4.- CREATE JSON
         lst_repos = []
@@ -633,14 +565,14 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         retdata["base"] = (o_version.computerbase == o_computer.__unicode__())
 
         #HARDWARE CAPTURE
+        hwcapture = True
         if o_computer.datehardware:
             hwcapture = (datetime.now() > (
                 o_computer.datehardware + timedelta(
                     days=settings.MIGASFREE_HW_PERIOD
                 ))
             )
-        else:
-            hwcapture = True
+
         retdata["hardware_capture"] = hwcapture
 
         ret = return_message(cmd, retdata)
@@ -930,7 +862,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         lst_pkg_preinstall = []
 
         # Repositories old
-        repositories = select_repositories(o_computer, old_tags_id)
+        repositories = Repository.available_repos(o_computer, old_tags_id)
         for r in repositories:
             # INVERSE !!!!
             pkgs = "%s %s %s" % (
@@ -950,7 +882,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
                     lst_pkg_install.append(p)
 
         # Repositories new
-        repositories = select_repositories(
+        repositories = Repository.available_repos(
             o_computer,
             new_tags_id + com_tags_id
         )
@@ -1097,55 +1029,3 @@ def save_request_file(requestfile, filename):
         os.remove(requestfile.temporary_file_path)
     except:
         pass
-
-
-def select_repositories(o_computer, lst_attributes):
-    """
-    Return the repositories availables for a version and attributes list
-    """
-    dic_repos = {}
-
-    # 1.- Add to "dic_repos" all repositories by attribute
-    repositories = Repository.objects.filter(
-        Q(attributes__id__in=lst_attributes),
-        Q(version__id=o_computer.version.id)
-    )
-    repositories = repositories.filter(
-        Q(version__id=o_computer.version.id),
-        Q(active=True)
-    )
-
-    for r in repositories:
-        dic_repos[r.name] = r.id
-
-    # 2.- Add to "dic_repos" all repositories by schedule
-    repositories = Repository.objects.filter(
-        Q(schedule__scheduledelay__attributes__id__in=lst_attributes),
-        Q(active=True)
-    )
-    repositories = repositories.filter(
-        Q(version__id=o_computer.version.id),
-        Q(active=True)
-    )
-    repositories = repositories.extra(
-        select={
-            'delay': "server_scheduledelay.delay",
-            "duration": "server_scheduledelay.duration"
-        }
-    )
-
-    for r in repositories:
-        for duration in range(0, r.duration):
-            if o_computer.id % r.duration == duration:
-                if horizon(r.date, r.delay + duration) <= datetime.now().date():
-                    dic_repos[r.name] = r.id
-                    break
-
-    # 3.- Attributtes Excluded
-    repositories = Repository.objects.filter(
-        Q(id__in=dic_repos.values())
-    )
-
-    repositories = repositories.filter(~Q(excludes__id__in=lst_attributes))
-
-    return repositories
