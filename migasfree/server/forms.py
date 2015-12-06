@@ -139,10 +139,6 @@ class ComputerForm(forms.ModelForm):
         model = Computer
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super(ComputerForm, self).__init__(*args, **kwargs)
-        self.fields['datehardware'].widget = widgets.AdminDateWidget()
-
     def clean(self):
         super(ComputerForm, self).clean()
         errors = []
