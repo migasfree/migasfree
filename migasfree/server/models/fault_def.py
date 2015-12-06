@@ -69,6 +69,14 @@ class FaultDef(models.Model, MigasLink):
     def __unicode__(self):
         return self.name
 
+    @staticmethod
+    def enabled_for_attributes(attributes):
+        return FaultDefinition.objects.filter(
+            Q(active=True) &
+            Q(attributes__id__in=lst_attributes)
+        ).values('language', 'name', 'code')
+        # FIXME .distinct('id') NOT supported in sqlite
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Fault Definition")
