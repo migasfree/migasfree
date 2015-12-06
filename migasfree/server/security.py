@@ -3,13 +3,13 @@
 import os
 import json
 import gpgme
-from io import BytesIO
 
-import migasfree.server.errmfs as errmfs
+from io import BytesIO
 
 from django.conf import settings
 
-from migasfree.server.functions import readfile, writefile
+from . import errmfs
+from .functions import readfile, writefile
 
 SIGN_LEN = 256
 
@@ -181,7 +181,7 @@ def unwrap(filename, key):
         with open(filename, "rb") as f:
             data = json.load(f)
     else:
-        data = errmfs.error(errmfs.SIGNNOTOK)  # Sign not OK
+        data = errmfs.error(errmfs.INVALID_SIGNATURE)
 
     os.remove("%s.sign" % filename)
 
