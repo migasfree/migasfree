@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models import Property, MigasLink
@@ -19,6 +20,10 @@ class AttributeManager(models.Manager):
         )
         if queryset.exists():
             return queryset[0]
+
+        if property_att.auto is False:
+            raise ValidationError(_('The attribute can not be created because'
+            ' it prevents property'))
 
         attribute = Attribute()
         attribute.property_att = property_att
