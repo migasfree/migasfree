@@ -88,6 +88,44 @@ class Attribute(models.Model, MigasLink):
         if not (self.property_att.prefix in ["CID", ] or self.id == 1):
             super(Attribute, self).delete(*args, **kwargs)
 
+    @staticmethod
+    def process_kind_property(property_att, value):
+        attributes = []
+        try:
+            if property_att.kind == "N":  # Normal
+                obj = Attribute.objects.create(property_att, value)
+                attributes.append(obj.id)
+
+            if property_att.kind == "-":  # List
+                lst = value.split(",")
+                for item in lst:
+                    item = item.replace('\n', '')
+                    if item:
+                        obj = Attribute.objects.create(property_att, item)
+                        attributes.append(obj.id)
+
+            if property_att.kind == "R":  # Adds right
+                lst = value.split(".")
+                pos = 0
+                for item in lst:
+                    obj = Attribute.objects.create(property_att, value[pos:])
+                    attributes.append(obj.id)
+                    pos += len(item) + 1
+
+            if property_att.kind == "L":  # Adds left
+                lst = value.split(".")
+                pos = 0
+                for item in lst:
+                    pos += len(item) + 1
+                    obj = Attribute.objects.create(
+                        property_att, value[0:pos - 1]
+                    )
+                    attributes.append(obj.id)
+        except:
+            pass
+
+        return attributes
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Attribute")
