@@ -9,8 +9,8 @@ from datetime import datetime
 
 from django.test import TransactionTestCase
 from django.core.urlresolvers import reverse
-from migasfree.server.models import *
-from migasfree.server.fixtures import create_registers, sequence_reset
+from .models import *
+from .fixtures import create_registers, sequence_reset
 
 
 class RepositoryTestCase(TransactionTestCase):
@@ -18,31 +18,25 @@ class RepositoryTestCase(TransactionTestCase):
         create_registers()
         sequence_reset()
 
-        p = Platform()
-        p.name = "Linux"
-        p.save()
+        platform = Platform.objects.create("Linux")
 
-        version = Version()
-        version.name = "UBUNTU"
-        version.pms =  Pms.objects.get(name="apt-get")
-        version.platform = Platform.objects.get(name="Linux")
-        version.save()
+        version = Version.objects.create(
+            "UBUNTU",
+            Pms.objects.get(name="apt-get"),
+            platform
+        )
 
         self.test1 = Repository()
         self.test1.name = "TEST 1 2"
         self.test1.active = True
         self.test1.version = version
         self.test1.date = datetime.now().date()
-#        self.test1.schedule = Schedule.objects.get(name="STANDARD")
         self.test1.toinstall = "bluefish"
         self.test1.toremove = ""
         self.test1.save()
 
-
-# WARNING: the following methods must start with "test"
     def test_repository_name(self):
         self.assertEqual(self.test1.name, 'test-1-2')
-
 
     def test_login_site(self):
         result = self.client.login(username='admin', password='admin')
