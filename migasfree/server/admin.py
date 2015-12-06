@@ -94,6 +94,15 @@ class UserProfileAdmin(MigasAdmin):
 
     my_link.short_description = _("User Profile")
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['groups'].widget.can_add_related = False
+        form.base_fields['last_login'].widget = admin.widgets.AdminDateWidget()
+        form.base_fields['date_joined'].widget = admin.widgets.AdminDateWidget()
+
+        return form
+
 
 @admin.register(Version)
 class VersionAdmin(MigasAdmin):
@@ -111,6 +120,13 @@ class VersionAdmin(MigasAdmin):
 
     my_autoregister.allow_tags = True
     my_autoregister.short_description = _('autoregister')
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['pms'].widget.can_add_related = False
+        form.base_fields['platform'].widget.can_add_related = False
+
+        return form
 
 
 @admin.register(Migration)
@@ -189,10 +205,24 @@ class DeviceConnectionAdmin(admin.ModelAdmin):
     list_select_related = ('devicetype',)
     ordering = ('devicetype__name', 'name')
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['devicetype'].widget.can_add_related = False
+
+        return form
+
 
 @admin.register(DeviceDriver)
 class DeviceDriverAdmin(MigasAdmin):
     list_display = ('id', 'model', 'version', 'feature')
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['model'].widget.can_add_related = False
+        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['feature'].widget.can_add_related = False
+
+        return form
 
 
 @admin.register(DeviceLogical)
@@ -213,6 +243,13 @@ class DeviceLogicalAdmin(MigasAdmin):
         'device__model__manufacturer__name',
         'feature__name',
     )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['device'].widget.can_add_related = False
+        form.base_fields['feature'].widget.can_add_related = False
+
+        return form
 
 
 class DeviceLogicalInline(admin.TabularInline):
@@ -265,6 +302,13 @@ class DeviceAdmin(MigasAdmin):
                 )
                 logical.save()
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['model'].widget.can_add_related = False
+        form.base_fields['connection'].widget.can_add_related = False
+
+        return form
+
 
 class DeviceDriverInline(admin.TabularInline):
     model = DeviceDriver
@@ -284,6 +328,14 @@ class DeviceModelAdmin(MigasAdmin):
         'connections__devicetype__name'
     )
     inlines = [DeviceDriverInline, ]
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['manufacturer'].widget.can_add_related = False
+        form.base_fields['devicetype'].widget.can_add_related = False
+        form.base_fields['connections'].widget.can_add_related = False
+
+        return form
 
 
 @admin.register(Pms)
@@ -305,6 +357,12 @@ class StoreAdmin(MigasAdmin):
         return object.link()
 
     my_link.short_description = _("Store")
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['version'].widget.can_add_related = False
+
+        return form
 
 
 @admin.register(Property)
@@ -405,6 +463,12 @@ class TagAdmin(admin.ModelAdmin):
             select={'total_computers': sql_total_computer}
         )
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['property_att'].widget.can_add_related = False
+
+        return form
+
 
 @admin.register(Login)
 class LoginAdmin(MigasAdmin):
@@ -415,12 +479,7 @@ class LoginAdmin(MigasAdmin):
     search_fields = add_computer_search_fields(
         ['user__name', 'user__fullname']
     )
-
-    fieldsets = (
-        (None, {
-            'fields': ('date', 'user', 'computer_link', 'attributes')
-        }),
-    )
+    fields = ('date', 'user', 'computer_link', 'attributes')
     readonly_fields = ('date', 'user', 'computer_link', 'attributes')
 
     def my_link(self, object):
@@ -582,11 +641,9 @@ class FaultDefAdmin(MigasAdmin):
             'fields': ('name', 'description', 'active', 'language', 'code')
         }),
         (_('Atributtes'), {
-            'classes': ('collapse',),
             'fields': ('attributes',)
         }),
         (_('Users'), {
-            'classes': ('collapse',),
             'fields': ('users',)
         }),
     )
@@ -601,6 +658,12 @@ class FaultDefAdmin(MigasAdmin):
 
     my_active.allow_tags = True
     my_active.short_description = _('active')
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['users'].widget.can_add_related = False
+
+        return form
 
 
 @admin.register(Computer)
@@ -749,7 +812,6 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         }),
         (_('Atributtes'), {
-            'classes': ('collapse',),
             'fields': ('attributes', 'excludes')
         }),
         (_('Schedule'), {
@@ -820,6 +882,13 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             # delete old repository by name changed
             if name_new != name_old and not is_new:
                 remove_physical_repository(request, obj, name_old)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['schedule'].widget.can_add_related = False
+
+        return form
 
 
 class ScheduleDelayline(admin.TabularInline):
