@@ -530,8 +530,7 @@ class NotificationAdmin(MigasAdmin):
 
     def checked_ok(self, request, queryset):
         for noti in queryset:
-            noti.checked = True
-            noti.save()
+            noti.okay()
 
         messages.success(request, _('Checked %s') % _('Notifications'))
 
@@ -570,8 +569,7 @@ class ErrorAdmin(MigasAdmin):
 
     def checked_ok(self, request, queryset):
         for error in queryset:
-            error.checked = True
-            error.save()
+            error.okay()
 
         messages.success(request, _('Checked %s') % _('Errors'))
 
@@ -614,8 +612,7 @@ class FaultAdmin(MigasAdmin):
 
     def checked_ok(self, request, queryset):
         for fault in queryset:
-            fault.checked = True
-            fault.save()
+            fault.okay()
 
         messages.success(request, _('Checked %s') % _('Faults'))
 
