@@ -225,6 +225,51 @@ class Repository(models.Model, MigasLink):
     timeline.allow_tags = True
     timeline.short_description = _('timeline')
 
+    @staticmethod
+    def available_repos(computer, attributes):
+        """
+        Return available repositories for a computer and attributes list
+        """
+        # 1.- all repositories by attribute
+        attributed = Repository.objects.filter(
+            active=True
+        ).filter(
+            version__id=computer.version.id
+        ).filter(
+            attributes__id__in=lst_attributes
+        ).values_list('id', flat=True)
+        lst = list(attributed)
+
+        # 2.- Add to "dic_repos" all repositories by schedule
+        scheduled = Repository.objects.filter(
+            active=True
+        ).filter(
+            version__id=computer.version.id
+        ).filter(
+            schedule__scheduledelay__attributes__id__in=lst_attributes
+        ).extra(
+            select={
+                'delay': "server_scheduledelay.delay",
+                "duration": "server_scheduledelay.duration"
+            }
+        )
+
+        for r in scheduled:
+            for duration in range(0, r.duration):
+                if computer.id % r.duration == duration:
+                    if horizon(
+                        r.date, r.delay + duration
+                    ) <= datetime.now().date():
+                        lst.append(r.id)
+                        break
+
+        # 3.- excluded attributtes
+        repositories = Repository.objects.filter(
+            id__in=lst
+        ).filter(~Q(excludes__id__in=lst_attributes))
+
+        return repositories
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Repository")
