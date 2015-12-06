@@ -3,6 +3,7 @@
 import autocomplete_light
 
 from django import forms
+from django.contrib.admin import widgets
 from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import make_ajax_form, make_ajax_field
@@ -137,6 +138,10 @@ class ComputerForm(forms.ModelForm):
     class Meta:
         model = Computer
         fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(ComputerForm, self).__init__(*args, **kwargs)
+        self.fields['datehardware'].widget = widgets.AdminDateWidget()
 
     def clean(self):
         super(ComputerForm, self).clean()
