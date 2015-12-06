@@ -52,6 +52,10 @@ class Fault(models.Model):
 
     objects = FaultManager()
 
+    def okay(self):
+        self.checked = True
+        self.save()
+
     def computer_link(self):
         return self.computer.link()
 

@@ -48,6 +48,10 @@ class Error(models.Model):
 
     objects = ErrorManager()
 
+    def okay(self, *args, **kwargs):
+        self.checked = True
+        super(Error, self).save(*args, **kwargs)
+
     def truncated_error(self):
         if len(self.error) <= 250:
             return self.error

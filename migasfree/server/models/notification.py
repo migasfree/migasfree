@@ -32,6 +32,10 @@ class Notification(models.Model):
 
     objects = NotificationManager()
 
+    def okay(self):
+        self.checked = True
+        self.save()
+
     def save(self, *args, **kwargs):
         self.notification = self.notification.replace("\r\n", "\n")
         super(Notification, self).save(*args, **kwargs)
