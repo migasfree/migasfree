@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import os
-import time
 import shutil
 
 from django.conf import settings
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import Version, Package
+from migasfree.server.models import Package
 from migasfree.server.functions import run_in_server
 
 
@@ -82,7 +81,8 @@ def create_physical_repository(request, repo, packages):
     _run_err = run_in_server(
         repo.version.pms.createrepo.replace(
             '%REPONAME%', repo.name
-        ).replace('%PATH%', _slug_tmp_path)
+        ).replace('%PATH%', _slug_tmp_path).replace(
+            '%KEYS%', settings.MIGASFREE_KEYS_DIR)
     )["err"]
 
     _source = os.path.join(
