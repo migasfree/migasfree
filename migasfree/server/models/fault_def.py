@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Attribute, LANGUAGES_CHOICES, UserProfile, MigasLink
+from . import Attribute, LANGUAGES_CHOICES, UserProfile, MigasLink
 
 
 class FaultDef(models.Model, MigasLink):
@@ -71,9 +71,9 @@ class FaultDef(models.Model, MigasLink):
 
     @staticmethod
     def enabled_for_attributes(attributes):
-        return FaultDefinition.objects.filter(
-            Q(active=True) &
-            Q(attributes__id__in=lst_attributes)
+        return FaultDef.objects.filter(
+            models.Q(active=True) &
+            models.Q(attributes__id__in=attributes)
         ).values('language', 'name', 'code')
         # FIXME .distinct('id') NOT supported in sqlite
 
