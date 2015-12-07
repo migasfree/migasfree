@@ -9,18 +9,17 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from migasfree.server.models import (
+from ..models import (
     Platform,
     Version,
     Repository,
     Computer
 )
 
-from migasfree.server.api import get_computer
-from migasfree.server.functions import uuid_validate, d2s
-from migasfree.server.security import gpg_get_key
-
-from migasfree.server.forms import ComputerReplacementForm
+from ..api import get_computer
+from ..functions import uuid_validate, d2s
+from ..security import gpg_get_key
+from ..forms import ComputerReplacementForm
 
 
 def get_versions(request):
