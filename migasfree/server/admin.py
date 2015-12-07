@@ -11,7 +11,8 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.conf import settings
 
 from .models import *
-from .views.repository import (
+
+from .tasks import (
     create_physical_repository,
     remove_physical_repository
 )
