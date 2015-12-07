@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import autocomplete_light.shortcuts as al
-
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+
+from autocomplete_light import shortcuts as al
 
 from .models import Computer
 
