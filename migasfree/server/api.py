@@ -408,9 +408,10 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             pass
 
         # ADD AttributeSets
-        lst_attributes = AttributeSet.process(lst_attributes)
-        if lst_attributes:
-            o_login.attributes.add(lst_attributes)
+        lst_set = AttributeSet.process(lst_attributes)
+        if lst_set:
+            lst_attributes.extend(lst_set)
+            o_login.attributes.add(lst_set)
 
         # 3 FaultsDef
         lst_faultsdef = []
