@@ -83,7 +83,7 @@ class AttributeSet(models.Model, MigasLink):
                 id__gt=1
             ).filter(
                 property_att__id=1
-            ).filter(~Q(value=item.name)):
+            ).filter(~models.Q(value=item.name)):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -94,7 +94,7 @@ class AttributeSet(models.Model, MigasLink):
                 id__gt=1
             ).filter(
                 property_att__id=1
-            ).filter(~Q(value=item.name)):
+            ).filter(~models.Q(value=item.name)):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -110,8 +110,8 @@ class AttributeSet(models.Model, MigasLink):
         att_id = []
         for item in AttributeSet.get_sets():
             for soa in AttributeSet.objects.filter(id=item).filter(
-                Q(attributes__id__in=attributes)
-            ).filter(~Q(excludes__id__in=attributes)):
+                models.Q(attributes__id__in=attributes)
+            ).filter(~models.Q(excludes__id__in=attributes)):
                 att_id.append(
                     Attribute.objects.create(property_set, soa.name).id
                 )
