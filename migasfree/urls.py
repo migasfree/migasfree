@@ -1,11 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import patterns, include, url
-
-import autocomplete_light.shortcuts as al
-# import every app/autocomplete_light_registry.py
-al.autodiscover()
-
 from django.contrib import admin
 admin.autodiscover()
 
@@ -17,11 +12,7 @@ from django.conf.urls.static import static
 urlpatterns = patterns('',
     url(r'', include('migasfree.server.urls')),
 
-    # Uncomment the admin/doc line below and add 'django.contrib.admindocs'
-    # to INSTALLED_APPS to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
-    # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^autocomplete/', include('autocomplete_light.urls')),
