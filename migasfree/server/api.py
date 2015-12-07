@@ -14,7 +14,8 @@ from .models import *
 from .errmfs import *
 from .functions import *
 from .security import *
-from .views import load_hw, create_physical_repository
+from .views import load_hw
+from .tasks import create_physical_repository
 
 import logging
 logger = logging.getLogger('migasfree')
