@@ -24,14 +24,12 @@ from ..forms import ComputerReplacementForm
 
 def get_versions(request):
     result = []
-    _platforms = Platform.objects.all()
-    for _platform in _platforms:
+    for plat in Platform.objects.all():
         element = {}
-        element["platform"] = _platform.name
+        element["platform"] = plat.name
         element["versions"] = []
-        _versions = Version.objects.filter(platform=_platform)
-        for _version in _versions:
-            element["versions"].append({"name": _version.name})
+        for ver in Version.objects.filter(platform=plat):
+            element["versions"].append({"name": ver.name})
 
         result.append(element)
 
