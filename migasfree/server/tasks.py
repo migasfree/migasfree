@@ -7,8 +7,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import Package
-from migasfree.server.functions import run_in_server
+from .models import Package
+from .functions import run_in_server
 
 
 def remove_physical_repository(request, repo, oldname=""):
