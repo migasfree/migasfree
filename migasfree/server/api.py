@@ -226,9 +226,9 @@ def get_properties(request, name, uuid, computer, data):
     try:
         for p in Property.enabled_client_properties():
             properties.append({
-                "language": LANGUAGES_CHOICES[p.language][1],
-                "name": p.prefix,
-                "code": p.code
+                "language": LANGUAGES_CHOICES[p['language']][1],
+                "name": p['prefix'],
+                "code": p['code']
             })
 
         ret = return_message(cmd, {"properties": properties})
@@ -409,7 +409,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # ADD AttributeSets
         lst_attributes = AttributeSet.process(lst_attributes)
-        o_login.attributes.add(lst_attributes)
+        if lst_attributes:
+            o_login.attributes.add(lst_attributes)
 
         # 3 FaultsDef
         lst_faultsdef = []
