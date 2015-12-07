@@ -10,9 +10,9 @@ from django.template.defaultfilters import slugify
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
-from migasfree.server.functions import horizon
+from ..functions import horizon
 
-from migasfree.server.models import (
+from . import (
     Version,
     Package,
     Attribute,
@@ -236,7 +236,7 @@ class Repository(models.Model, MigasLink):
         ).filter(
             version__id=computer.version.id
         ).filter(
-            attributes__id__in=lst_attributes
+            attributes__id__in=attributes
         ).values_list('id', flat=True)
         lst = list(attributed)
 
@@ -246,7 +246,7 @@ class Repository(models.Model, MigasLink):
         ).filter(
             version__id=computer.version.id
         ).filter(
-            schedule__scheduledelay__attributes__id__in=lst_attributes
+            schedule__scheduledelay__attributes__id__in=attributes
         ).extra(
             select={
                 'delay': "server_scheduledelay.delay",
@@ -266,7 +266,7 @@ class Repository(models.Model, MigasLink):
         # 3.- excluded attributtes
         repositories = Repository.objects.filter(
             id__in=lst
-        ).filter(~Q(excludes__id__in=lst_attributes))
+        ).filter(~models.Q(excludes__id__in=attributes))
 
         return repositories
 
