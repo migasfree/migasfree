@@ -68,7 +68,7 @@ def load_hw(computer, node, parent, level):
     size = node.get('size')
     n = HwNode.objects.create({
         'parent': parent,
-        'computer': Computer.objects.get(id=computer_id),
+        'computer': Computer.objects.get(id=computer.id),
         'level': level,
         'name': str(node.get('id')),
         'classname': node.get('class'),
