@@ -89,6 +89,8 @@ class Version(models.Model, MigasLink):
         verbose_name=_("platform")
     )
 
+    objects = VersionManager()
+
     def __unicode__(self):
         return self.name
 
