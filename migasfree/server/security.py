@@ -79,13 +79,14 @@ def gpg_get_key(name):
 
         key_params = """
 <GnupgKeyParms format="internal">
-Key-Type: RSA
-Key-Length: 4096
-Name-Real: %s
-Expire-Date: 0
+  Key-Type: RSA
+  Key-Length: 4096
+  Name-Real: %s
+  Name-Email: fun_with@migasfree.org
+  Expire-Date: 0
 </GnupgKeyParms>
 """
-        ctx.genkey(key_params % name)
+        result = ctx.genkey(key_params % name)
 
         # export and save
         ctx.armor = True
