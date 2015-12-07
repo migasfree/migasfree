@@ -8,6 +8,7 @@ from django.views.generic import DeleteView
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
+from ..forms import ComputerReplacementForm
 from ..models import Computer
 
 
@@ -46,3 +47,40 @@ def computer_delete_selected(request):
         messages.success(request, _("Computers %s deleted!") % selected)
 
     return redirect(success_url)
+
+
+@login_required
+def computer_replacement(request):
+    if request.method == 'POST':
+        form = ComputerReplacementForm(request.POST)
+        if form.is_valid():
+            source = get_object_or_404(
+                Computer, pk=form.cleaned_data.get('source')
+            )
+            target = get_object_or_404(
+                Computer, pk=form.cleaned_data.get('target')
+            )
+            Computer.replacement(source, target)
+
+            messages.success(request, _('Replacement done.'))
+            messages.info(
+                request,
+                '<br/>'.join(sorted(d2s(source.get_replacement_info())))
+            )
+            messages.info(
+                request,
+                '<br/>'.join(sorted(d2s(target.get_replacement_info())))
+            )
+
+            return HttpResponseRedirect(reverse('computer_replacement'))
+    else:
+        form = ComputerReplacementForm()
+
+    return render(
+        request,
+        'computer_replacement.html',
+        {
+            'title': _('Computers Replacement'),
+            'form': form
+        }
+    )

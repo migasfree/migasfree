@@ -14,10 +14,14 @@ from .hardware import hardware_resume, hardware_extract, load_hw, process_hw
 from .client_api import api
 from .public_api import (
     get_versions, get_computer_info, computer_label,
-    get_key_repositories, computer_replacement
+    get_key_repositories
 )
 from .packages import change_version, info
 from .dashboard import alerts
 from .admin import connections_model
 from .login import login
-from .computer import ComputerDelete, computer_delete_selected
+from .computer import (
+    ComputerDelete,
+    computer_delete_selected,
+    computer_replacement
+)

@@ -19,7 +19,6 @@ from ..models import (
 from ..api import get_computer
 from ..functions import uuid_validate, d2s
 from ..security import gpg_get_key
-from ..forms import ComputerReplacementForm
 
 
 def get_versions(request):
@@ -93,40 +92,4 @@ def get_key_repositories(request):
     return HttpResponse(
         gpg_get_key("migasfree-repository"),
         content_type="text/plain"
-    )
-
-
-def computer_replacement(request):
-    if request.method == 'POST':
-        form = ComputerReplacementForm(request.POST)
-        if form.is_valid():
-            source = get_object_or_404(
-                Computer, pk=form.cleaned_data.get('source')
-            )
-            target = get_object_or_404(
-                Computer, pk=form.cleaned_data.get('target')
-            )
-            Computer.replacement(source, target)
-
-            messages.success(request, _('Replacement done.'))
-            messages.info(
-                request,
-                '<br/>'.join(sorted(d2s(source.get_replacement_info())))
-            )
-            messages.info(
-                request,
-                '<br/>'.join(sorted(d2s(target.get_replacement_info())))
-            )
-
-            return HttpResponseRedirect(reverse('computer_replacement'))
-    else:
-        form = ComputerReplacementForm()
-
-    return render(
-        request,
-        'computer_replacement.html',
-        {
-            'title': _('Computers Replacement'),
-            'form': form
-        }
     )
