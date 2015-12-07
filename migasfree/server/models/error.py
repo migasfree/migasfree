@@ -10,13 +10,13 @@ import re
 
 class ErrorManager(models.Manager):
     def create(self, computer, version, error):
-        error = Error()
-        error.computer = computer
-        error.version = version
-        error.error = error
-        error.save()
+        obj = Error()
+        obj.computer = computer
+        obj.version = version
+        obj.error = error
+        obj.save()
 
-        return error
+        return obj
 
 
 class Error(models.Model):
