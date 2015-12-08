@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'ajax_select',
     'migasfree.flot',
+    'import_export',
 )
 
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
