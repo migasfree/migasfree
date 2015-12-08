@@ -98,6 +98,24 @@ urlpatterns = patterns('',
         name='computer_delete'
     ),
 
+    url(
+        r'^admin/server/platform/delete_selected/$',
+        platform_delete_selected,
+        name='platform_delete_selected'
+    ),
+
+    url(
+        r'^admin/server/platform/(?P<pk>\d+)/delete/$',
+        PlatformDelete.as_view(),
+        name='platform_delete'
+    ),
+
+    url(
+        r'^admin/server/version/(?P<pk>\d+)/delete/$',
+        VersionDelete.as_view(),
+        name='version_delete'
+    ),
+
     url(r'^api/$', api, name='api'),
 
     url(
