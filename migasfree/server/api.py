@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from django.contrib import auth
 from django.conf import settings
-from django.utils.translation import ugettext
+from django.utils.translation import ugettext as _
 
 from .models import *
 from .errmfs import *
@@ -23,7 +23,7 @@ logger = logging.getLogger('migasfree')
 
 def add_notification_platform(platform, computer):
     Notification.objects.create(
-        "Platform [%s] registered by computer [%s]." % (
+        _("Platform [%s] registered by computer [%s].") % (
             platform,
             computer.__unicode__()
         )
@@ -32,7 +32,7 @@ def add_notification_platform(platform, computer):
 
 def add_notification_version(version, pms, computer):
     Notification.objects.create(
-        "Version [%s] with P.M.S. [%s] registered by computer [%s]." % (
+        _("Version [%s] with P.M.S. [%s] registered by computer [%s].") % (
             version,
             pms,
             computer.__unicode__()
