@@ -10,14 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ..forms import ComputerReplacementForm
 from ..models import Computer
-
-
-class LoginRequiredMixin(object):
-    # https://code.djangoproject.com/ticket/16626
-
-    @classmethod
-    def as_view(cls):
-        return login_required(super(LoginRequiredMixin, cls).as_view())
+from ..mixins import LoginRequiredMixin
 
 
 class ComputerDelete(LoginRequiredMixin, DeleteView):
@@ -39,10 +32,13 @@ def computer_delete_selected(request):
     if selected:
         objects = selected.split(', ')
         for item in objects:
-            computer = Computer.objects.get(
-                **{settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: item}
-            )
-            computer.delete()
+            try:
+                computer = Computer.objects.get(
+                    **{settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: item}
+                )
+                computer.delete()
+            except:
+                pass
 
         messages.success(request, _("Computers %s deleted!") % selected)
 
