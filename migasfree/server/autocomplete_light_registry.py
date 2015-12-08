@@ -19,6 +19,18 @@ class ComputerAutocomplete(al.AutocompleteModelBase):
         'data-widget-maximum-values': 1,
     }
 
+    def __init__(self, request=None, values=None):
+        super(ComputerAutocomplete, self).__init__(request, values)
+        try:
+            from django.db import connection
+            table_names = connection.introspection.table_names()
+            if 'server_computer' in table_names:
+                self.choices = Computer.objects.all()
+            else:
+                self.choices = Computer.objects.none()
+        except:
+            self.choices = Computer.objects.none()
+
     def choice_label(self, choice):
         return choice.display()
 
