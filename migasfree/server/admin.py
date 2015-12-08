@@ -504,18 +504,25 @@ class NotificationAdmin(MigasAdmin):
         'id',
         'my_checked',
         'date',
-        'notification',
+        'my_notification',
     )
     list_filter = ('checked', 'date')
     ordering = ('-date',)
     search_fields = ('date', 'notification',)
-    readonly_fields = ('date', 'notification',)
+    readonly_fields = ('date', 'my_notification',)
+    exclude = ('notification',)
 
     def my_checked(self, obj):
         return self.boolean_field(obj.checked)
 
     my_checked.allow_tags = True
     my_checked.short_description = _('checked')
+
+    def my_notification(self, obj):
+        return obj.notification
+
+    my_notification.allow_tags = True
+    my_notification.short_description = _('notification')
 
     actions = ['checked_ok']
 
@@ -870,6 +877,15 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             # delete old repository by name changed
             if name_new != name_old and not is_new:
                 remove_physical_repository(request, obj, name_old)
+
+        Notification.objects.create(
+            _('Repository [%s] modified by user [%s] '
+                '(<a href="%s">review changes</a>)') % (
+                obj.name,
+                request.user,
+                reverse('admin:server_repository_history', args=(obj.id,))
+            )
+        )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(type(self), self).get_form(request, obj, **kwargs)
