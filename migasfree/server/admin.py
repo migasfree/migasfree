@@ -10,7 +10,10 @@ from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.conf import settings
 
+from import_export.admin import ExportActionModelAdmin
+
 from .models import *
+from .resources import ComputerResource
 
 from .tasks import (
     create_physical_repository,
@@ -37,7 +40,7 @@ sql_total_computer = "SELECT COUNT(server_login.id) \
     and server_login_attributes.login_id=server_login.id"
 
 
-class MigasAdmin(admin.ModelAdmin):
+class MigasAdmin(ExportActionModelAdmin):
     def boolean_field(self, field):
         if field:
             ret = '<span class="fa fa-check boolean-yes">' \
@@ -735,6 +738,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         }),
     )
 
+    resource_class = ComputerResource
     actions = ['delete_selected']
 
     def my_link(self, object):
