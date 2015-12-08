@@ -417,9 +417,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         lst_faultsdef = []
         for d in FaultDef.enabled_for_attributes(lst_attributes):
             lst_faultsdef.append({
-                "language": LANGUAGES_CHOICES[d.language][1],
-                "name": d.name,
-                "code": d.code
+                "language": LANGUAGES_CHOICES[d['language']][1],
+                "name": d['name'],
+                "code": d['code']
             })
 
         repositories = Repository.available_repos(o_computer, lst_attributes)
