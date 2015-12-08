@@ -72,10 +72,27 @@ def user_version(user):
 class PlatformAdmin(MigasAdmin):
     list_display = ('my_link',)
 
+    actions = ['delete_selected']
+
     def my_link(self, object):
         return object.link()
 
     my_link.short_description = _("Platform")
+
+    def delete_selected(self, request, objects):
+        if not self.has_delete_permission(request):
+            raise PermissionDenied
+
+        return render(
+            request,
+            'platform_confirm_delete_selected.html',
+            {
+                'object_list': ', '.join([x.__str__() for x in objects])
+            }
+        )
+
+    delete_selected.short_description = _("Delete selected "
+        "%(verbose_name_plural)s")
 
 
 @admin.register(UserProfile)
@@ -729,14 +746,12 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         if not self.has_delete_permission(request):
             raise PermissionDenied
 
-        _list = []
-        for obj in objects:
-            _list.append(obj.__str__())
-
         return render(
             request,
             'computer_confirm_delete_selected.html',
-            {'object_list': ', '.join(_list)}
+            {
+                'object_list': ', '.join([x.__str__() for x in objects])
+            }
         )
 
     delete_selected.short_description = _("Delete selected "
