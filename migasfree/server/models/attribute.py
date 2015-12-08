@@ -4,7 +4,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Property, MigasLink
+from . import Property, MigasLink
 
 
 class AttributeManager(models.Manager):
@@ -14,6 +14,8 @@ class AttributeManager(models.Manager):
         """
         if '~' in value:
             value, description = value.split('~')
+
+        value = value.replace('\n', '')  # clean field
 
         queryset = Attribute.objects.filter(
             property_att=property_att, value=value
@@ -25,11 +27,11 @@ class AttributeManager(models.Manager):
             raise ValidationError(_('The attribute can not be created because'
             ' it prevents property'))
 
-        attribute = Attribute()
-        attribute.property_att = property_att
-        attribute.value = value
-        attribute.description = description
-        attribute.save()
+        obj = Attribute()
+        obj.property_att = property_att
+        obj.value = value
+        obj.description = description
+        obj.save()
 
         return attribute
 
@@ -68,7 +70,7 @@ class Attribute(models.Model, MigasLink):
         )
 
     def total_computers(self, version=None):
-        from migasfree.server.models import Login
+        from . import Login
         if version:
             return Login.objects.filter(
                 attributes__id=self.id,
@@ -76,6 +78,7 @@ class Attribute(models.Model, MigasLink):
             ).count()
         else:
             return Login.objects.filter(attributes__id=self.id).count()
+
     total_computers.admin_order_field = 'total_computers'
 
     def update_description(self, new_value):
@@ -135,7 +138,7 @@ class Attribute(models.Model, MigasLink):
 
 
 class Tag(Attribute):
-    _include_links = ["computer - tags", ]
+    _include_links = ["computer - tags",]
 
     class Meta:
         app_label = 'server'
@@ -145,7 +148,6 @@ class Tag(Attribute):
 
 
 class Att(Attribute):
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Attribute/Tag")
