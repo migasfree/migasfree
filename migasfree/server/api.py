@@ -865,7 +865,7 @@ def check_computer(o_computer, name, version, ip, uuid):
 
         if settings.MIGASFREE_NOTIFY_NEW_COMPUTER:
             Notification.objects.create(
-                "New Computer added id=[%s]: NAME=[%s] UUID=[%s]" % (
+                _("New Computer added id=[%s]: NAME=[%s] UUID=[%s]") % (
                     o_computer.id,
                     o_computer.__unicode__(),
                     o_computer.uuid
@@ -886,7 +886,7 @@ def check_computer(o_computer, name, version, ip, uuid):
 def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
     if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name != name):
         Notification.objects.create(
-            "Computer id=[%s]: NAME [%s] changed by [%s]" % (
+            _("Computer id=[%s]: NAME [%s] changed by [%s]") % (
                 o_computer.id,
                 o_computer.__unicode__(),
                 name
@@ -896,7 +896,7 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
     if settings.MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip != ip):
         if (o_computer.ip and ip):
             Notification.objects.create(
-                "Computer id=[%s]: IP [%s] changed by [%s]" % (
+                _("Computer id=[%s]: IP [%s] changed by [%s]") % (
                     o_computer.id,
                     o_computer.ip,
                     ip
@@ -905,7 +905,7 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
 
     if settings.MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid != uuid):
         Notification.objects.create(
-            "Computer id=[%s]: UUID [%s] changed by [%s]" % (
+            _("Computer id=[%s]: UUID [%s] changed by [%s]") % (
                 o_computer.id,
                 o_computer.uuid,
                 uuid
