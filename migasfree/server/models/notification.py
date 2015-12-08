@@ -6,11 +6,11 @@ from django.utils.translation import ugettext_lazy as _
 
 class NotificationManager(models.Manager):
     def create(self, notification):
-        notification = Notification()
-        notification.notification = notification
-        notification.save()
+        obj = Notification()
+        obj.notification = notification
+        obj.save()
 
-        return notification
+        return obj
 
 
 class Notification(models.Model):
