@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans 'Delete Platform' %} {{ platform }}{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li>{% trans 'Config' %}</li>
+        <li><a href="{% url 'admin:server_platform_changelist' %}">{% trans 'Platforms' %}</a></li>
+        <li><a href="{% url 'admin:server_platform_change' platform.id %}">{{ platform }}</a></li>
+    </ol>
+{% endblock breadcrumbs %}
+
+{% block content %}
+    <h1 class="">{% trans 'Delete Platform' %} {{ platform }}</h1>
+
+    <form action="." method="post">
+        {% csrf_token %}
+        <p>{% trans 'Are you sure you want to delete this platform?' %}</p>
+        <div class="form-actions">
+            <button class="btn btn-large btn-danger" type="submit">{% trans "Yes, I'm sure" %}</button> {% trans 'or' %}
+            <a href="{% url 'admin:server_platform_change' platform.id %}" class="btn btn-default">{% trans 'cancel' %}</a>
+        </div>
+    </form>
+{% endblock %}

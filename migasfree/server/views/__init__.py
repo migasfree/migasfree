@@ -25,3 +25,5 @@ from .computer import (
     computer_delete_selected,
     computer_replacement
 )
+from .version import VersionDelete
+from .platform import PlatformDelete, platform_delete_selected
