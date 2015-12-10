@@ -47,12 +47,13 @@ def gen_keys(name):
     private_key = os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pri" % name)
     public_key = os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pub" % name)
 
-    os.system("openssl genrsa -out %s 2048" % private_key)
-    os.system("openssl rsa -in %s -pubout > %s" % (private_key, public_key))
+    if not (os.path.exists(private_key) and os.path.exists(public_key)):
+        os.system("openssl genrsa -out %s 2048" % private_key)
+        os.system("openssl rsa -in %s -pubout > %s" % (private_key, public_key))
 
-    # read only keys
-    os.chmod(private_key, 0o400)
-    os.chmod(public_key, 0o400)
+        # read only keys
+        os.chmod(private_key, 0o400)
+        os.chmod(public_key, 0o400)
 
 
 def gpg_get_key(name):
