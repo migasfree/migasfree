@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from django.contrib import auth
 from django.conf import settings
+from django.utils import timezone, dateformat
 from django.utils.translation import ugettext as _
 
 from .models import *
@@ -365,7 +366,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         # Save Login
         o_login, _ = Login.objects.get_or_create(
             computer=o_computer,
-            user=User.objects.get(name=dic_computer["user"])
+            user=User.objects.get(name=dic_computer["user"]),
+            date=dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         )
         o_login.attributes.clear()
 
