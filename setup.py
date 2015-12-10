@@ -163,6 +163,7 @@ setup(
             'server/static/css/*',
             'server/static/img/*',
             'server/static/js/*',
+            'server/static/fonts/*',
             'server/templates/*.html',
             'server/templates/*/*.html',
         ],
