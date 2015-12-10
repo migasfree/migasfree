@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, Version, User, MigasLink
@@ -8,13 +9,14 @@ from . import Computer, Version, User, MigasLink
 
 class UpdateManager(models.Manager):
     def create(self, computer):
-        update = Update()
-        update.computer = computer
-        update.version = computer.version
-        update.user = computer.login().user
-        update.save()
+        obj = Update()
+        obj.computer = computer
+        obj.version = computer.version
+        obj.user = computer.login().user
+        obj.date = timezone.now()
+        obj.save()
 
-        return update
+        return obj
 
 
 class Update(models.Model, MigasLink):
@@ -36,7 +38,7 @@ class Update(models.Model, MigasLink):
 
     date = models.DateTimeField(
         verbose_name=_("date"),
-        auto_now_add=True
+        default=0
     )
 
     objects = UpdateManager()

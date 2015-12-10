@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -8,6 +9,7 @@ class NotificationManager(models.Manager):
     def create(self, notification):
         obj = Notification()
         obj.notification = notification
+        obj.date = timezone.now()
         obj.save()
 
         return obj
@@ -16,7 +18,7 @@ class NotificationManager(models.Manager):
 class Notification(models.Model):
     date = models.DateTimeField(
         verbose_name=_("date"),
-        auto_now_add=True
+        default=0
     )
 
     notification = models.TextField(
@@ -41,8 +43,8 @@ class Notification(models.Model):
         super(Notification, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s - %s' % (
-            str(self.id),
+        return u'%d - %s' % (
+            self.id,
             str(self.date)
         )
 

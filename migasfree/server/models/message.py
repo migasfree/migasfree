@@ -9,12 +9,13 @@ from . import Computer
 
 class MessageManager(models.Manager):
     def create(self, computer, text):
-        msg = Message()
-        msg.computer = computer
-        msg.text = text
-        msg.save()
+        obj = Message()
+        obj.computer = computer
+        obj.text = text
+        obj.date = timezone.now()
+        obj.save()
 
-        return msg
+        return obj
 
 
 class Message(models.Model):
@@ -32,7 +33,7 @@ class Message(models.Model):
 
     date = models.DateTimeField(
         verbose_name=_("date"),
-        auto_now_add=True
+        default=0
     )
 
     objects = MessageManager()

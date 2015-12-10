@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, FaultDef, Version
@@ -8,14 +9,15 @@ from . import Computer, FaultDef, Version
 
 class FaultManager(models.Manager):
     def create(self, computer, version, faultdef, text):
-        fault = Fault()
-        fault.computer = computer
-        fault.version = version
-        fault.faultdef = faultdef
-        fault.text = text
-        fault.save()
+        obj = Fault()
+        obj.computer = computer
+        obj.version = version
+        obj.faultdef = faultdef
+        obj.text = text
+        obj.date = timezone.now()
+        obj.save()
 
-        return fault
+        return obj
 
 
 class Fault(models.Model):
@@ -31,7 +33,7 @@ class Fault(models.Model):
 
     date = models.DateTimeField(
         verbose_name=_("date"),
-        auto_now_add=True
+        default=0
     )
 
     text = models.TextField(

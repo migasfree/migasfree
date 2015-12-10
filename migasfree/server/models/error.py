@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, Version, AutoCheckError
-
-import re
 
 
 class ErrorManager(models.Manager):
@@ -14,6 +15,7 @@ class ErrorManager(models.Manager):
         obj.computer = computer
         obj.version = version
         obj.error = error
+        obj.date = timezone.now()
         obj.save()
 
         return obj
@@ -27,7 +29,7 @@ class Error(models.Model):
 
     date = models.DateTimeField(
         verbose_name=_("date"),
-        auto_now_add=True
+        default=0
     )
 
     error = models.TextField(
@@ -61,9 +63,8 @@ class Error(models.Model):
     truncated_error.short_description = _("Truncated error")
 
     def auto_check(self):
-        msg = self.error
         for ace in AutoCheckError.objects.all():
-            if re.search(ace.message, msg):
+            if re.search(ace.message, self.error):
                 self.checked =True
                 return
 

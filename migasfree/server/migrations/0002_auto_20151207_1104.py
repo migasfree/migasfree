@@ -62,16 +62,6 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(blank=True, to='server.DeviceConnection', verbose_name='connections'),
         ),
         migrations.AlterField(
-            model_name='error',
-            name='date',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='date'),
-        ),
-        migrations.AlterField(
-            model_name='fault',
-            name='date',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='date'),
-        ),
-        migrations.AlterField(
             model_name='faultdef',
             name='attributes',
             field=models.ManyToManyField(blank=True, to='server.Attribute', verbose_name='attributes'),
@@ -102,21 +92,6 @@ class Migration(migrations.Migration):
             field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='server.Computer', verbose_name='computer'),
         ),
         migrations.AlterField(
-            model_name='message',
-            name='date',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='date'),
-        ),
-        migrations.AlterField(
-            model_name='migration',
-            name='date',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='date'),
-        ),
-        migrations.AlterField(
-            model_name='notification',
-            name='date',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='date'),
-        ),
-        migrations.AlterField(
             model_name='query',
             name='code',
             field=models.TextField(blank=True, default=b"query=Package.objects.filter(version=VERSION).filter(Q(repository__id__exact=None))\nfields=('id','name','store__name')\ntitles=('id','name','store')", help_text='Django Code: version=user.version, query=QuerySet, fields=list of QuerySet fields names to show, titles=list of QuerySet fields titles', null=True, verbose_name='code'),
@@ -145,11 +120,6 @@ class Migration(migrations.Migration):
             model_name='scheduledelay',
             name='attributes',
             field=models.ManyToManyField(blank=True, to='server.Attribute', verbose_name='attributes'),
-        ),
-        migrations.AlterField(
-            model_name='update',
-            name='date',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='date'),
         ),
         migrations.AddField(
             model_name='statuslog',
@@ -207,7 +177,7 @@ class Migration(migrations.Migration):
         )]),
         migrations.RunSQL([(
             "UPDATE server_property SET code=%s WHERE id=8;",
-            [ "import subprocess\nimport platform\nimport os\n\n_platform = platform.system()\nif _platform == 'Linux' :\n    if os.path.exists('/proc/bus/pci'):\n        cmd_linux=\"\"\"r=''\n      if [ `lspci -n |sed -n 1p|awk '{print $2}'` = 'Class' ]; then\n        dev=`lspci -n |awk '{print $4}'`\n      else\n        dev=`lspci -n |awk '{print $3}'`\n      fi\n      for l in $dev\n      do\n        n=`lspci -d $l|awk '{for (i = 2; i <=NF;++i) print $i}'|tr \"\\n\" \" \"|sed 's/,//g'`\n        r=\"$r$l~$n,\"\n      done\n      echo $r\"\"\"\n        (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n        print out,\n    else:\n        print 'none',\nelif _platform == 'Windows' :\n    print 'none',\n\nelse:\n    print 'none',"]
+            ["import subprocess\nimport platform\nimport os\n\n_platform = platform.system()\nif _platform == 'Linux' :\n    if os.path.exists('/proc/bus/pci'):\n        cmd_linux=\"\"\"r=''\n      if [ `lspci -n |sed -n 1p|awk '{print $2}'` = 'Class' ]; then\n        dev=`lspci -n |awk '{print $4}'`\n      else\n        dev=`lspci -n |awk '{print $3}'`\n      fi\n      for l in $dev\n      do\n        n=`lspci -d $l|awk '{for (i = 2; i <=NF;++i) print $i}'|tr \"\\n\" \" \"|sed 's/,//g'`\n        r=\"$r$l~$n,\"\n      done\n      echo $r\"\"\"\n        (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n        print out,\n    else:\n        print 'none',\nelif _platform == 'Windows' :\n    print 'none',\n\nelse:\n    print 'none',"]
         )]),
         migrations.RunSQL([(
             "UPDATE server_pms SET createrepo=%s WHERE name='apt-get';",

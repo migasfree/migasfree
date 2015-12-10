@@ -1,5 +1,7 @@
 # -*- coding: utf-8 *-*
+
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, Version
@@ -7,12 +9,13 @@ from . import Computer, Version
 
 class MigrationManager(models.Manager):
     def create(self, computer, version):
-        mig = Migration()
-        mig.computer = computer
-        mig.version = version
-        mig.save()
+        obj = Migration()
+        obj.computer = computer
+        obj.version = version
+        obj.date = timezone.now()
+        obj.save()
 
-        return mig
+        return obj
 
 
 class Migration(models.Model):
@@ -28,7 +31,7 @@ class Migration(models.Model):
 
     date = models.DateTimeField(
         verbose_name=_("date"),
-        auto_now_add=True
+        default=0
     )
 
     objects = MigrationManager()
