@@ -1,27 +1,29 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models.computer import Computer
+from .computer import Computer
 from . import User, Attribute, MigasLink
 
 
 class LoginManager(models.Manager):
     def create(self, computer, user, attributes=None):
-        login = Login()
-        login.computer = computer
-        login.user = user
-        login.attributes = attributes
-        login.save()
+        obj = Login()
+        obj.computer = computer
+        obj.user = user
+        obj.attributes = attributes
+        obj.date = timezone.now()
+        obj.save()
 
-        return login
+        return obj
 
 
 class Login(models.Model, MigasLink):
     date = models.DateTimeField(
         verbose_name=_("date"),
-        auto_now_add=True
+        default=0
     )
 
     computer = models.ForeignKey(

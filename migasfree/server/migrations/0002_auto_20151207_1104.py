@@ -82,11 +82,6 @@ class Migration(migrations.Migration):
             field=models.ManyToManyField(blank=True, help_text='Sent attributes', to='server.Attribute', verbose_name='attributes'),
         ),
         migrations.AlterField(
-            model_name='login',
-            name='date',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='date'),
-        ),
-        migrations.AlterField(
             model_name='message',
             name='computer',
             field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='server.Computer', verbose_name='computer'),
