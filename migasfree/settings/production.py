@@ -10,6 +10,8 @@ TEMPLATE_DEBUG = DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+STATIC_ROOT = '/var/migasfree/static'
+
 MIGASFREE_DB_DIR = '/usr/share/migasfree-server'
 MIGASFREE_REPO_DIR = '/var/migasfree/repo'
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_DB_DIR, 'keys')
