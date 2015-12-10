@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
+from django.utils import timezone, dateformat
 
 from . import Computer
 
@@ -12,7 +12,7 @@ class MessageManager(models.Manager):
         obj = Message()
         obj.computer = computer
         obj.text = text
-        obj.date = timezone.now()
+        obj.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         obj.save()
 
         return obj
@@ -40,7 +40,7 @@ class Message(models.Model):
 
     def update_message(self, text):
         self.text = text
-        self.date = timezone.now()
+        self.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         self.save()
 
     def __unicode__(self):

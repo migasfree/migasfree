@@ -6,14 +6,14 @@ from django.dispatch import receiver
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
-from django.utils import timezone
+from django.utils import timezone, dateformat
 
-from migasfree.server.models import (
+from . import (
     Version,
     Attribute, Property, MigasLink
 )
 
-from migasfree.server.functions import (
+from ..functions import (
     s2l,
     l2s,
     swap_m2m,
@@ -211,7 +211,7 @@ class Computer(models.Model, MigasLink):
             self.save()
 
     def update_last_hardware_capture(self):
-        self.datehardware = timezone.now()
+        self.datehardware = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         self.save()
 
     def remove_device_copy(self, devicelogical_id):

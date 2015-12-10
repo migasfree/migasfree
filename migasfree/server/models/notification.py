@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils import timezone
+from django.utils import timezone, dateformat
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -9,7 +9,7 @@ class NotificationManager(models.Manager):
     def create(self, notification):
         obj = Notification()
         obj.notification = notification
-        obj.date = timezone.now()
+        obj.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         obj.save()
 
         return obj

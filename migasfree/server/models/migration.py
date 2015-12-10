@@ -1,7 +1,7 @@
 # -*- coding: utf-8 *-*
 
 from django.db import models
-from django.utils import timezone
+from django.utils import timezone, dateformat
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, Version
@@ -12,7 +12,7 @@ class MigrationManager(models.Manager):
         obj = Migration()
         obj.computer = computer
         obj.version = version
-        obj.date = timezone.now()
+        obj.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         obj.save()
 
         return obj
