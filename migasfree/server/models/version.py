@@ -42,7 +42,7 @@ class VersionManager(models.Manager):
             return super(VersionManager, self).get_queryset()
         else:  # return only the objects of this VERSION
             return super(VersionManager, self).get_queryset().filter(
-                version=version
+                pk=version.pk
             )
 
 
