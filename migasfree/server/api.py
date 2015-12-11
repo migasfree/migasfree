@@ -357,18 +357,19 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         # if not exists the user, we add it
         o_user, _ = User.objects.get_or_create(
             name=dic_computer["user"],
-            fullname=dic_computer.get("user_fullname", "")
+            defaults={
+                'fullname': dic_computer.get("user_fullname", "")
+            }
         )
 
         # Save Login
-        try:
-            o_login = Login.objects.get(computer=o_computer)
-        except:
-            o_login = Login()
-            o_login.computer = o_computer
-        o_login.user = User.objects.get(name=dic_computer["user"])
-        o_login.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
-        o_login.save()
+        o_login, _ = Login.objects.get_or_create(
+            computer=o_computer,
+            defaults={
+                'user': User.objects.get(name=dic_computer["user"]),
+                'date': dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+            }
+        )
         o_login.attributes.clear()
 
         # Get version
@@ -674,7 +675,7 @@ def upload_server_package(request, name, uuid, o_computer, data):
         o_package, _ = Package.objects.get_or_create(
             name=f.name,
             version=o_version,
-            store=o_store
+            defaults={'store': o_store}
         )
 
     return return_message(cmd, ok())
@@ -706,7 +707,7 @@ def upload_server_set(request, name, uuid, o_computer, data):
     o_package, _ = Package.objects.get_or_create(
         name=data['packageset'],
         version=o_version,
-        store=o_store
+        defaults={'store': o_store}
     )
     o_package.create_dir()
 
