@@ -186,3 +186,7 @@ span[data-value] {
 .has-error .help-inline {
     color: #a94442 !important;
 }
+
+.change-list .filtered .results {
+    margin-right: 0 !important;
+}
