@@ -1,7 +1,8 @@
 nav.ui-widget,
 .object-tools,
 .breadcrumb,
-footer > p + p {
+footer > p + p,
+.actions {
     display: none !important;
 }
 
