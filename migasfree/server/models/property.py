@@ -6,6 +6,20 @@ from django.utils.translation import ugettext_lazy as _
 from . import LANGUAGES_CHOICES, MigasLink
 
 
+class PropertyManager(models.Manager):
+    def get_queryset(self):
+        return super(PropertyManager, self).get_queryset().filter(
+            tag=False
+            )
+
+
+class TagTypeManager(models.Manager):
+    def get_queryset(self):
+        return super(TagTypeManager, self).get_queryset().filter(
+            tag=True
+            )
+
+
 class Property(models.Model, MigasLink):
     KIND_CHOICES = (
         ('N', _('NORMAL')),
@@ -64,6 +78,8 @@ class Property(models.Model, MigasLink):
         help_text=_("tag")
     )
 
+    objects = PropertyManager()
+
     def namefunction(self):
         return "PROPERTY_%s" % self.prefix
 
@@ -95,6 +111,7 @@ class Property(models.Model, MigasLink):
 class TagType(Property):
     _exclude_links = ["attribute - property_att", ]
     _include_links = ["tag - property_att", ]
+    objects = TagTypeManager()
 
     def save(self, *args, **kwargs):
         self.tag = True
