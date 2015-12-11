@@ -259,7 +259,7 @@ class Repository(models.Model, MigasLink):
                 if computer.id % r.duration == duration:
                     if horizon(
                         r.date, r.delay + duration
-                    ) <= datetime.now().date():
+                    ) <= datetime.datetime.now().date():
                         lst.append(r.id)
                         break
 
