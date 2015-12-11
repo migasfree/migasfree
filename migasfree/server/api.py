@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import os
-import time
 import inspect
 from datetime import datetime, timedelta
 
-from django.db.models import Q
 from django.contrib import auth
 from django.conf import settings
 from django.utils import timezone, dateformat
@@ -290,7 +288,6 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     """
 
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    m = time.strftime("%Y-%m-%d %H:%M:%S")
 
     platform = data.get("upload_computer_info").get("computer").get(
         'platform',
@@ -314,7 +311,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the platform
-        o_platform = Platform.objects.create(platform)
+        Platform.objects.create(platform)
 
         notify_platform = True
 
@@ -364,11 +361,14 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         )
 
         # Save Login
-        o_login, _ = Login.objects.get_or_create(
-            computer=o_computer,
-            user=User.objects.get(name=dic_computer["user"]),
-            date=dateformat.format(timezone.now(), 'Y-m-d H:i:s')
-        )
+        try:
+            o_login = Login.objects.get(computer=o_computer)
+        except:
+            o_login = Login()
+            o_login.computer = o_computer
+        o_login.user = User.objects.get(name=dic_computer["user"])
+        o_login.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+        o_login.save()
         o_login.attributes.clear()
 
         # Get version
@@ -583,7 +583,7 @@ def register_computer(request, name, uuid, computer, data):
                 return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the platform
-        platform = Platform.objects.create(platform_name)
+        Platform.objects.create(platform_name)
 
         notify_platform = True
 
