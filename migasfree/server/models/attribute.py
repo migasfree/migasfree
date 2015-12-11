@@ -27,13 +27,52 @@ class AttributeManager(models.Manager):
             raise ValidationError(_('The attribute can not be created because'
             ' it prevents property'))
 
-        obj = Attribute()
-        obj.property_att = property_att
-        obj.value = value
-        obj.description = description
-        obj.save()
+        attribute = Attribute()
+        attribute.property_att = property_att
+        attribute.value = value
+        attribute.description = description
+        attribute.save()
 
         return attribute
+
+    def get_queryset(self):
+        return super(AttributeManager, self).get_queryset().filter(
+            property_att__tag=False
+            )
+
+
+class TagManager(models.Manager):
+    def create(self, property_att, value, description=None):
+        """
+        if value = "text~other", description = "other"
+        """
+        if '~' in value:
+            value, description = value.split('~')
+
+        value = value.replace('\n', '')  # clean field
+
+        queryset = Attribute.objects.filter(
+            property_att=property_att, value=value
+        )
+        if queryset.exists():
+            return queryset[0]
+
+        if property_att.auto is False:
+            raise ValidationError(_('The attribute can not be created because'
+            ' it prevents property'))
+
+        attribute = Attribute()
+        attribute.property_att = property_att
+        attribute.value = value
+        attribute.description = description
+        attribute.save()
+
+        return attribute
+
+    def get_queryset(self):
+        return super(TagManager, self).get_queryset().filter(
+            property_att__tag=True
+        )
 
 
 class Attribute(models.Model, MigasLink):
@@ -138,7 +177,8 @@ class Attribute(models.Model, MigasLink):
 
 
 class Tag(Attribute):
-    _include_links = ["computer - tags",]
+    _include_links = ["computer - tags", ]
+    objects = TagManager()
 
     class Meta:
         app_label = 'server'
@@ -148,6 +188,8 @@ class Tag(Attribute):
 
 
 class Att(Attribute):
+    objects = AttributeManager()
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Attribute/Tag")
