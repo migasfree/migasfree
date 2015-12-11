@@ -172,6 +172,7 @@ class Computer(models.Model, MigasLink):
         if settings.MIGASFREE_REMOTE_ADMIN_LINK == '' \
         or settings.MIGASFREE_REMOTE_ADMIN_LINK is None:
             self._actions = None
+            return
 
         self._actions = []
         _template = Template(settings.MIGASFREE_REMOTE_ADMIN_LINK)
