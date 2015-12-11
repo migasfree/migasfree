@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.utils.html import format_html
 from django.utils.translation import ugettext
 
-from migasfree.server.functions import vl2s
+from ..functions import vl2s
 
 # Programming Languages for Properties and FaultDefs
 LANGUAGES_CHOICES = (
@@ -28,34 +28,16 @@ class MigasLink(object):
 
         objs = self._meta.get_m2m_with_model()
 
-        _link = '<span class="sr-only">%s</span><a href="%s" class="btn btn-xs">%s</a>' % (
-            self.__unicode__(),
-            reverse(
-                'admin:server_%s_change' % self._meta.model_name,
-                args=(self.id, )
-            ),
-            self.__unicode__()
-        )
-
-        _link += '<button type="button" ' + \
-            'class="btn btn-default dropdown-toggle" data-toggle="dropdown">' + \
-            '<span class="caret"></span>' + \
-            '<span class="sr-only">' + ugettext("Toggle Dropdown") + \
-            '</span></button>'
-
-        related_data = ''
-        if self._actions is not None:
-            related_data += '<li role="presentation" class="dropdown-header">%s</li>' % ugettext("Actions")
+        action_data = ''
+        if self._actions is not None and any(self._actions):
+            action_data += '<li role="presentation" class="dropdown-header">%s</li>' % ugettext("Actions")
             for item in self._actions:
-                related_data += '<li><a href="%(href)s">%(protocol)s</a></li>' % {
+                action_data += '<li><a href="%(href)s">%(protocol)s</a></li>' % {
                     'href': item[1],
                     'protocol': item[0]
                 }
 
-            related_data += '<li role="presentation" class="divider"></li>'
-
-        related_data += '<li role="presentation" class="dropdown-header">%s</li>' % ugettext("Related data")
-
+        related_data = ''
         for obj, _ in objs:
             try:
                 _name = obj.related.field.related.parent_model.__name__.lower()
@@ -82,19 +64,19 @@ class MigasLink(object):
 
         for related_object, _ in related_objects:
             if not "%s - %s" % (
-                related_object.model._meta.model_name,
+                related_object.related_model._meta.model_name,
                 related_object.field.name
             ) in self._exclude_links:
                 try:
                     related_link = reverse(
                         'admin:server_%s_changelist'
-                        % related_object.model._meta.model_name
+                        % related_object.related_model._meta.model_name
                     )
                     related_data += '<li><a href="%s?%s__exact=%d">%s [%s]</a></li>' % (
                         related_link,
                         related_object.field.name,
                         self.id,
-                        ugettext(related_object.model._meta.verbose_name_plural),
+                        ugettext(related_object.related_model._meta.verbose_name_plural),
                         ugettext(related_object.field.name)
                     )
                 except:
@@ -117,13 +99,38 @@ class MigasLink(object):
             except:
                 pass
 
-        return format_html(
-            '<div class="btn-group btn-group-xs">' +
-            _link.replace('{', '{{').replace('}', '}}') +
-            '<ul class="dropdown-menu" role="menu">' +
-            related_data.replace('{', '{{').replace('}', '}}') +
-            '</ul></div>'
+        _link = '<span class="sr-only">%s</span><a href="%s" class="btn btn-xs">%s</a>' % (
+            self.__unicode__(),
+            reverse(
+                'admin:server_%s_change' % self._meta.model_name,
+                args=(self.id,)
+            ),
+            self.__unicode__()
         )
+        if action_data or related_data:
+            _link += '<button type="button" ' + \
+                'class="btn btn-default dropdown-toggle" data-toggle="dropdown">' + \
+                '<span class="caret"></span>' + \
+                '<span class="sr-only">' + ugettext("Toggle Dropdown") + \
+                '</span></button>'
+
+        links = ''
+        if action_data:
+            links += action_data
+        if action_data and related_data:
+            links += '<li role="presentation" class="divider"></li>'
+        if related_data:
+            links += '<li role="presentation" class="dropdown-header">%s</li>' % ugettext("Related data") + related_data
+        if links:
+            return format_html(
+                '<div class="btn-group btn-group-xs">' +
+                _link.replace('{', '{{').replace('}', '}}') +
+                '<ul class="dropdown-menu" role="menu">' +
+                links.replace('{', '{{').replace('}', '}}') +
+                '</ul></div>'
+            )
+
+        return format_html(_link.replace('{', '{{').replace('}', '}}'))
 
     link.allow_tags = True
     link.short_description = ''
