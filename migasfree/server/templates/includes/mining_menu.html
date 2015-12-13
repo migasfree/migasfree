@@ -1,15 +1,16 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
+    <li><a href="{% url 'admin:server_error_changelist' %}?checked__exact=0">{% trans 'Errors' %}</a></li>
+    <li><a href="{% url 'admin:server_fault_changelist' %}?checked__exact=0">{% trans 'Faults' %}</a></li>
+    <li><a href="{% url 'admin:server_notification_changelist' %}?checked__exact=0">{% trans 'Notifications' %}</a></li>
+    <li><a href="{% url 'admin:server_migration_changelist' %}">{% trans 'Migrations' %}</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="{% url 'admin:server_feature_changelist' %}">{% trans 'Attributes' %}</a></li>
+    <li><a href="{% url 'admin:server_tag_changelist' %}">{% trans 'Tags' %}</a></li>
+    <li role="separator" class="divider"></li>
     <li><a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown,available,in repair">{% trans 'Computers' %}</a></li>
     <li><a href="{% url 'admin:server_user_changelist' %}">{% trans 'Users' %}</a></li>
     <li><a href="{% url 'admin:server_login_changelist' %}">{% trans 'Logins' %}</a></li>
-    <li><a href="{% url 'admin:server_error_changelist' %}?checked__exact=0">{% trans 'Errors' %}</a></li>
-    <li><a href="{% url 'admin:server_fault_changelist' %}?checked__exact=0">{% trans 'Faults' %}</a></li>
-    <li><a href="{% url 'admin:server_attribute_changelist' %}">{% trans 'Attributes' %}</a></li>
-    <li><a href="{% url 'admin:server_tag_changelist' %}">{% trans 'Tags' %}</a></li>
-    <li><a href="{% url 'admin:server_migration_changelist' %}">{% trans 'Migrations' %}</a></li>
-    <li><a href="{% url 'admin:server_notification_changelist' %}?checked__exact=0">{% trans 'Notifications' %}</a></li>
-    <li role="separator" class="divider"></li>
     <li><a href="{% url 'computer_replacement' %}">{% trans 'Computers Replacement' %}</a></li>
 </ul>
