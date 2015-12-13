@@ -35,45 +35,6 @@ class AttributeManager(models.Manager):
 
         return attribute
 
-    def get_queryset(self):
-        return super(AttributeManager, self).get_queryset().filter(
-            property_att__tag=False
-            )
-
-
-class TagManager(models.Manager):
-    def create(self, property_att, value, description=None):
-        """
-        if value = "text~other", description = "other"
-        """
-        if '~' in value:
-            value, description = value.split('~')
-
-        value = value.replace('\n', '')  # clean field
-
-        queryset = Attribute.objects.filter(
-            property_att=property_att, value=value
-        )
-        if queryset.exists():
-            return queryset[0]
-
-        if property_att.auto is False:
-            raise ValidationError(_('The attribute can not be created because'
-            ' it prevents property'))
-
-        attribute = Attribute()
-        attribute.property_att = property_att
-        attribute.value = value
-        attribute.description = description
-        attribute.save()
-
-        return attribute
-
-    def get_queryset(self):
-        return super(TagManager, self).get_queryset().filter(
-            property_att__tag=True
-        )
-
 
 class Attribute(models.Model, MigasLink):
     property_att = models.ForeignKey(
@@ -92,9 +53,14 @@ class Attribute(models.Model, MigasLink):
         blank=True
     )
 
-    _exclude_links = ["computer - tags", ]
+    _exclude_links = ["computer - tags",]
 
     objects = AttributeManager()
+
+    TOTAL_COMPUTER_QUERY = "SELECT COUNT(server_login.id) \
+        FROM server_login,server_login_attributes  \
+        WHERE server_attribute.id=server_login_attributes.attribute_id \
+        and server_login_attributes.login_id=server_login.id"
 
     def property_link(self):
         return self.property_att.link()
@@ -170,15 +136,27 @@ class Attribute(models.Model, MigasLink):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Attribute")
-        verbose_name_plural = _("Attributes")
+        verbose_name = _("Attribute/Tag")
+        verbose_name_plural = _("Attributes/Tags")
         unique_together = (("property_att", "value"),)
         permissions = (("can_save_attribute", "Can save Attribute"),)
 
 
+class TagManager(AttributeManager):
+    def get_queryset(self):
+        return super(TagManager, self).get_queryset().filter(
+            property_att__tag=True
+        )
+
+
 class Tag(Attribute):
-    _include_links = ["computer - tags", ]
+    _include_links = ["computer - tags",]
+
     objects = TagManager()
+
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('property_att').verbose_name = _("Tag Type")
+        super(Tag, self).__init__(*args, **kwargs)
 
     class Meta:
         app_label = 'server'
@@ -187,11 +165,22 @@ class Tag(Attribute):
         proxy = True
 
 
-class Att(Attribute):
-    objects = AttributeManager()
+class FeatureManager(AttributeManager):
+    def get_queryset(self):
+        return super(FeatureManager, self).get_queryset().filter(
+            property_att__tag=False
+        )
+
+
+class Feature(Attribute):
+    objects = FeatureManager()
+
+    def __init__(self, *args, **kwargs):
+        self._meta.get_field('property_att').verbose_name = _("Property")
+        super(Feature, self).__init__(*args, **kwargs)
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Attribute/Tag")
-        verbose_name_plural = _("Attributes/Tags")
+        verbose_name = _("Attribute")
+        verbose_name_plural = _("Attributes")
         proxy = True
