@@ -11,7 +11,7 @@ from ajax_select import make_ajax_form, make_ajax_field
 from migasfree.middleware import threadlocals
 from .models import (
     Repository, UserProfile, Computer, DeviceLogical,
-    Property, Tag
+    Property, Tag, TagType
 )
 
 
@@ -110,7 +110,8 @@ class TagForm(forms.ModelForm):
             self.fields['computers'].initial = \
                 self.instance.computer_set.all().values_list('id', flat=True)
 
-        self.fields['property_att'].queryset = Property.objects.filter(tag=True)
+        self.fields['property_att'].queryset = TagType.objects.all()
+        self.fields['property_att'].label = _('Tag Type')
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
@@ -126,6 +127,7 @@ class TagForm(forms.ModelForm):
         if commit:
             instance.save()
             self.save_m2m()
+
         return instance
 
 
