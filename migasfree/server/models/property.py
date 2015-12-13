@@ -6,18 +6,18 @@ from django.utils.translation import ugettext_lazy as _
 from . import LANGUAGES_CHOICES, MigasLink
 
 
-class PropertyManager(models.Manager):
+class ClientPropertyManager(models.Manager):
     def get_queryset(self):
-        return super(PropertyManager, self).get_queryset().filter(
+        return super(ClientPropertyManager, self).get_queryset().filter(
             tag=False
-            )
+        )
 
 
 class TagTypeManager(models.Manager):
     def get_queryset(self):
         return super(TagTypeManager, self).get_queryset().filter(
             tag=True
-            )
+        )
 
 
 class Property(models.Model, MigasLink):
@@ -78,8 +78,6 @@ class Property(models.Model, MigasLink):
         help_text=_("tag")
     )
 
-    objects = PropertyManager()
-
     def namefunction(self):
         return "PROPERTY_%s" % self.prefix
 
@@ -97,20 +95,35 @@ class Property(models.Model, MigasLink):
 
     @staticmethod
     def enabled_client_properties():
-        return Property.objects.filter(active=True).filter(
-            tag=False
-        ).exclude(prefix="CID").values('language', 'prefix', 'code')
+        return Property.objects.filter(active=True, tag=False).exclude(
+            prefix="CID"
+        ).values('language', 'prefix', 'code')
+
+    class Meta:
+        app_label = 'server'
+        verbose_name = _("Property/TagType")
+        verbose_name_plural = _("Properties/TagTypes")
+        permissions = (("can_save_property", "Can save Property"),)
+
+
+class ClientProperty(Property):
+    objects = ClientPropertyManager()
+
+    def save(self, *args, **kwargs):
+        self.tag = False
+        super(ClientProperty, self).save(*args, **kwargs)
 
     class Meta:
         app_label = 'server'
         verbose_name = _("Property")
         verbose_name_plural = _("Properties")
-        permissions = (("can_save_property", "Can save Property"),)
+        proxy = True
 
 
 class TagType(Property):
-    _exclude_links = ["attribute - property_att", ]
-    _include_links = ["tag - property_att", ]
+    _exclude_links = ["attribute - property_att",]
+    _include_links = ["tag - property_att",]
+
     objects = TagTypeManager()
 
     def save(self, *args, **kwargs):
