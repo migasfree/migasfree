@@ -59,6 +59,15 @@
                 $('.actions select').addClass('form-control input-sm');
                 $('input[type="submit"]').addClass('btn');
                 $('[title]').tooltip();
+
+                // wait until all elements has been drawn
+                // https://github.com/crucialfelix/django-ajax-selects/pull/67
+                setTimeout(function() {
+                  $('.inline-group ul.tools a.add, .inline-group div.add-row a, .inline-group .tabular tr.add-row td a')
+                    .on('click', function() {
+                      $(window).trigger('init-autocomplete');
+                    });
+                }, 100);
             });
         </script>
 
