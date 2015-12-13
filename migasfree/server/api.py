@@ -379,7 +379,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # 2.- PROCESS PROPERTIES
         for e in properties:
-            o_property = Property.objects.get(prefix=e)
+            o_property = ClientProperty.objects.get(prefix=e)
             value = properties.get(e)
             for att in Attribute.process_kind_property(o_property, value):
                 o_login.attributes.add(att)
@@ -399,7 +399,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             prp_cid = Property.objects.get(prefix="CID", active=True)
             if prp_cid:
                 cid_description = o_computer.get_cid_description()
-                cid = Attribute.objects.create(
+                cid = Feature.objects.create(
                     prp_cid,
                     "%s~%s" % (str(o_computer.id), cid_description)
                 )
@@ -772,7 +772,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         lst_tags_id = []
         for tag in tags:
             ltag = tag.split("-", 1)
-            o_attribute = Attribute.objects.get(
+            o_attribute = Tag.objects.get(
                 property_att__prefix=ltag[0],
                 value=ltag[1]
             )
