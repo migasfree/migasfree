@@ -22,7 +22,7 @@ from .tasks import (
 
 from .functions import compare_values
 from .filters import (
-    ProductiveFilterSpec, TagFilter, AttributeFilter, UserFaultFilter
+    ProductiveFilterSpec, TagFilter, FeatureFilter, UserFaultFilter
 )
 from .forms import (
     RepositoryForm, DeviceLogicalForm, PropertyForm,
@@ -33,11 +33,6 @@ from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
 admin.site.register(AutoCheckError)
-
-sql_total_computer = "SELECT COUNT(server_login.id) \
-    FROM server_login,server_login_attributes  \
-    WHERE server_attribute.id=server_login_attributes.attribute_id \
-    and server_login_attributes.login_id=server_login.id"
 
 
 class MigasAdmin(ExportActionModelAdmin):
@@ -376,8 +371,8 @@ class StoreAdmin(MigasAdmin):
         return form
 
 
-@admin.register(Property)
-class PropertyAdmin(MigasAdmin):
+@admin.register(ClientProperty)
+class ClientPropertyAdmin(MigasAdmin):
     list_display = ('my_link', 'my_active', 'kind', 'my_auto')
     list_filter = ('active',)
     ordering = ('name',)
@@ -406,8 +401,20 @@ class PropertyAdmin(MigasAdmin):
     my_auto.allow_tags = True
     my_auto.short_description = _('auto')
 
-    def queryset(self, request):
-        return self.model.objects.filter(tag=False)
+
+@admin.register(Property)
+class PropertyAdmin(ClientPropertyAdmin):
+    list_display = ('my_link', 'my_active', 'kind', 'my_auto', 'my_tag')
+    fields = (
+        'prefix', 'name', 'active',
+        'language', 'code', 'kind', 'auto', 'tag'
+    )
+
+    def my_tag(self, obj):
+        return self.boolean_field(obj.tag)
+
+    my_tag.allow_tags = True
+    my_tag.short_description = _('tag')
 
 
 @admin.register(TagType)
@@ -426,17 +433,14 @@ class TagTypeAdmin(MigasAdmin):
     my_active.allow_tags = True
     my_active.short_description = _('active')
 
-    def queryset(self, request):
-        return self.model.objects.filter(tag=True)
 
-
-@admin.register(Attribute)
-class AttributeAdmin(MigasAdmin):
+@admin.register(Feature)
+class FeatureAdmin(MigasAdmin):
     list_display = (
-        'my_link', 'description', 'total_computers', 'property_link'
+        'my_link', 'description', 'total_computers', 'property_att'
     )
     list_select_related = ('property_att',)
-    list_filter = (AttributeFilter,)
+    list_filter = (FeatureFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
     readonly_fields = ('property_att', 'value',)
@@ -447,8 +451,8 @@ class AttributeAdmin(MigasAdmin):
     my_link.short_description = _("Attribute")
 
     def queryset(self, request):
-        return self.model.objects.filter(property_att__tag=False).extra(
-            select={'total_computers': sql_total_computer}
+        return super(Feature, self).get_queryset().extra(
+            select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
         )
 
     def has_add_permission(self, request):
@@ -470,8 +474,8 @@ class TagAdmin(admin.ModelAdmin):
     my_link.short_description = _("Tag")
 
     def queryset(self, request):
-        return self.model.objects.filter(property_att__tag=True).extra(
-            select={'total_computers': sql_total_computer}
+        return self.model.objects.extra(
+            select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
         )
 
     def get_form(self, request, obj=None, **kwargs):
