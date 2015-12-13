@@ -10,7 +10,7 @@ from .checking import Checking
 from .autocheck_error import AutoCheckError
 
 from .pms import Pms
-from .property import Property, TagType
+from .property import Property, TagType, ClientProperty
 
 from .platform import Platform
 from .version import (
@@ -18,7 +18,7 @@ from .version import (
     VersionManager,
     UserProfile
 )
-from .attribute import Attribute, Tag, Att
+from .attribute import Attribute, Tag, Feature
 from .attribute_set import AttributeSet
 
 from .device_type import DeviceType
