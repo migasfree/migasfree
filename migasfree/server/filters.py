@@ -6,7 +6,7 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 
 from migasfree.middleware import threadlocals
-from .models import Property
+from .models import ClientProperty, TagType
 
 
 class ProductiveFilterSpec(ChoicesFieldListFilter):
@@ -98,11 +98,11 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
 
 
 class TagFilter(SimpleListFilter):
-    title = _('Tag')
+    title = _('Tag Type')
     parameter_name = 'Tag'
 
     def lookups(self, request, model_admin):
-        return [(c.id, c.name) for c in Property.objects.filter(tag=True)]
+        return [(c.id, c.name) for c in TagType.objects.all()]
 
     def queryset(self, request, queryset):
         if self.value():
@@ -111,12 +111,12 @@ class TagFilter(SimpleListFilter):
             return queryset
 
 
-class AttributeFilter(SimpleListFilter):
-    title = _('Attribute')
+class FeatureFilter(SimpleListFilter):
+    title = _('Property')
     parameter_name = 'Attribute'
 
     def lookups(self, request, model_admin):
-        return [(c.id, c.name) for c in Property.objects.filter(tag=False)]
+        return [(c.id, c.name) for c in ClientProperty.objects.all()]
 
     def queryset(self, request, queryset):
         if self.value():
