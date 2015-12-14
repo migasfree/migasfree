@@ -112,9 +112,9 @@ class AttributeSet(models.Model, MigasLink):
             for soa in AttributeSet.objects.filter(id=item).filter(
                 models.Q(attributes__id__in=attributes)
             ).filter(~models.Q(excludes__id__in=attributes)):
-                att_id.append(
-                    Attribute.objects.create(property_set, soa.name).id
-                )
+                att = Attribute.objects.create(property_set, soa.name)
+                att_id.append(att.id)
+                attributes.append(att.id)
 
         return att_id
 
