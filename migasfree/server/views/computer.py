@@ -3,7 +3,9 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.views.generic import DeleteView
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
@@ -11,6 +13,7 @@ from django.utils.translation import ugettext_lazy as _
 from ..forms import ComputerReplacementForm
 from ..models import Computer
 from ..mixins import LoginRequiredMixin
+from ..functions import d2s
 
 
 class ComputerDelete(LoginRequiredMixin, DeleteView):
