@@ -1,3 +1,4 @@
+{% spaceless %}
 <!doctype html>
 {% load i18n admin_static bootstrapped_goodies_tags server_tags %}
 {% load current_option from navigation %}
@@ -37,7 +38,7 @@
         <script type="text/javascript">
         //<![CDATA[
             window.__admin_media_prefix__ = "{% filter escapejs %}{% static 'admin/' %}{% endfilter %}";
-            window.__admin_utc_offset__ = "{% filter escapejs %}{% now "Z" %}{% endfilter %}";
+            window.__admin_utc_offset__ = "{% filter escapejs %}{% now 'Z' %}{% endfilter %}";
         //]]>
         </script>
 
@@ -229,3 +230,4 @@
         {% endif %}{# is_popup #}
     </body>
 </html>
+{% endspaceless %}
