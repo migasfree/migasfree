@@ -36,6 +36,8 @@ admin.site.register(AutoCheckError)
 
 
 class MigasAdmin(ExportActionModelAdmin):
+    list_display_links = None
+
     def boolean_field(self, field):
         if field:
             ret = '<span class="fa fa-check boolean-yes">' \
@@ -460,7 +462,7 @@ class FeatureAdmin(MigasAdmin):
 
 
 @admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(MigasAdmin):
     form = TagForm
     list_display = ('my_link', 'description', 'total_computers', 'property_att')
     fields = ('property_att', 'value', 'description', 'computers')
