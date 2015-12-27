@@ -2,7 +2,14 @@ nav.ui-widget,
 .object-tools,
 .breadcrumb,
 footer > p + p,
-.actions {
+.actions,
+article #content-navbar-collapse,
+footer a.pull-right,
+article button.dropdown-toggle,
+article input.action-select,
+#action-toggle,
+#result_list .sortoptions,
+#result_list th.sortable a:after {
     display: none !important;
 }
 
