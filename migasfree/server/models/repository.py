@@ -7,6 +7,7 @@ import shutil
 from django.db import models
 from django.utils.html import format_html
 from django.template.defaultfilters import slugify
+from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
@@ -34,14 +35,8 @@ def percent_horizon(begin_date, end_date):
         percent = 0
     if percent > 100:
         percent = 100
+
     return percent
-
-
-def show_percent(percent):
-    if percent > 0 and percent < 100:
-        return " " + str(int(percent)) + "%"
-    else:
-        return ""
 
 
 class Repository(models.Model, MigasLink):
@@ -87,7 +82,8 @@ class Repository(models.Model, MigasLink):
     active = models.BooleanField(
         verbose_name=_("active"),
         default=True,
-        help_text=_("if you uncheck this field, the repository is hidden for all computers.")
+        help_text=_("if you uncheck this field, the repository is hidden for"
+        " all computers.")
     )
 
     date = models.DateField(
@@ -182,23 +178,15 @@ class Repository(models.Model, MigasLink):
             date_format
         )
         end_date = datetime.datetime.strptime(
-            str(horizon(self.date, delays.reverse()[0].delay + delays.reverse()[0].duration  )),
+            str(horizon(
+                self.date,
+                delays.reverse()[0].delay + delays.reverse()[0].duration
+            )),
             date_format
         )
 
-        percent = percent_horizon(begin_date, end_date)
-
-        ret = '<div class="progress" title="%(percent)d%%"><div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="%(percent)d" aria-valuemin="0" aria-valuemax="100" style="width: %(percent)d%%"><span class="sr-only">%(percent)d%% complete</span></div></div>' % {
-            'percent': percent
-        }
-
-        ret += str(self.schedule) + ' <div class="btn-group btn-group-xs timeline">'
-        ret += '<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>'
-        ret += '<ul class="dropdown-menu">'
-
+        timeline_delays = []
         for item in delays:
-            ret += '<li class="list-group-item">'
-            ret += '<p class="list-group-item-heading label label-'
             hori = datetime.datetime.strptime(
                 str(horizon(self.date, item.delay)),
                 date_format
@@ -208,19 +196,29 @@ class Repository(models.Model, MigasLink):
                 date_format
             )
 
-            percent = percent_horizon(hori, horf)
+            deploy = 'default'
             if hori <= datetime.datetime.now():
-                ret += 'success'
-            else:
-                ret += 'default'
-            ret += '">' + hori.strftime("%a-%b-%d") + '</p>' + show_percent(percent)
-            ret += '<p class="list-group-item-text">'
-            for e in item.attributes.values_list("value"):
-                ret += e[0] + " "
+                deploy = 'success'
 
-            ret += '</p></li>'
+            timeline_delays.append({
+                'deploy': deploy,
+                'date': hori.strftime("%a-%b-%d"),
+                'percent': int(percent_horizon(hori, horf)),
+                'attributes': ' '.join(
+                    item.attributes.values_list("value", flat=True)
+                )
+            })
 
-        return format_html(ret + '</ul></div>')
+        return render_to_string(
+            'includes/deployment_timeline.html',
+            {
+                'timeline': {
+                    'percent': int(percent_horizon(begin_date, end_date)),
+                    'schedule': self.schedule,
+                    'delays': timeline_delays
+                }
+            }
+        )
 
     timeline.allow_tags = True
     timeline.short_description = _('timeline')

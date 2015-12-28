@@ -1,0 +1,25 @@
+{% load i18n %}
+
+{% if timeline %}
+    <div class="progress" title="{{ timeline.percent }}%">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ timeline.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ timeline.percent }}%">
+            <span class="sr-only">{% blocktrans with percent=timeline.percent %}{{ percent }}% completed{% endblocktrans %}</span>
+        </div>
+    </div>
+
+    <div class="btn-group btn-group-xs timeline">
+        <button type="button" class="btn btn-default">{{ timeline.schedule }}</button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
+        </button>
+        <ul class="dropdown-menu">
+            {% for item in timeline.delays %}
+                <li class="list-group-item">
+                    <p class="list-group-item-heading"><span class="label label-{{ item.deploy }}">{{ item.date }}</span> {% if item.percent > 0 and item.percent <= 100 %}{{ item.percent }}%{% endif %}</p>
+                    <p class="list-group-item-text">{{ item.attributes }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
