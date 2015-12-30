@@ -1,5 +1,6 @@
 {% load i18n %}
 
+{% spaceless %}
 {% if lnk.actions or lnk.related %}
     <div class="btn-group btn-group-xs">
 {% endif %}
@@ -30,3 +31,4 @@
 {% if lnk.actions or lnk.related %}
     </div>
 {% endif %}
+{% endspaceless %}

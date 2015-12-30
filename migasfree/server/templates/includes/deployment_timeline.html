@@ -1,5 +1,6 @@
 {% load i18n %}
 
+{% spaceless %}
 {% if timeline %}
     <div class="progress" title="{{ timeline.percent }}%">
         <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ timeline.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ timeline.percent }}%">
@@ -27,3 +28,4 @@
         </ul>
     </div>
 {% endif %}
+{% endspaceless %}
