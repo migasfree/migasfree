@@ -17,7 +17,11 @@
             {% for item in timeline.delays %}
                 <li class="list-group-item">
                     <p class="list-group-item-heading"><span class="label label-{{ item.deploy }}">{{ item.date }}</span> {% if item.percent > 0 and item.percent <= 100 %}{{ item.percent }}%{% endif %}</p>
-                    <p class="list-group-item-text">{{ item.attributes }}</p>
+                    <p class="list-group-item-text">
+                        {% for att in item.attributes %}
+                            {{ att }}<br />
+                        {% endfor %}
+                    </p>
                 </li>
             {% endfor %}
         </ul>
