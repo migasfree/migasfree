@@ -178,6 +178,7 @@ class UpdateAdmin(MigasAdmin):
 @admin.register(Checking)
 class CheckingAdmin(MigasAdmin):
     list_display = ('name', 'my_active', 'my_alert')
+    list_display_links = ('name',)
     list_filter = ('active',)
 
     def my_active(self, obj):
@@ -195,23 +196,31 @@ class CheckingAdmin(MigasAdmin):
 
 @admin.register(DeviceType)
 class DeviceTypeAdmin(MigasAdmin):
+    list_display= ('name',)
+    list_display_links = ('name',)
     ordering = ('name',)
 
 
 @admin.register(DeviceFeature)
 class DeviceFeatureAdmin(MigasAdmin):
+    list_display= ('name',)
+    list_display_links = ('name',)
     ordering = ('name',)
 
 
 @admin.register(DeviceManufacturer)
 class DeviceManufacturerAdmin(MigasAdmin):
+    list_display = ('name',)
+    list_display_links = ('name',)
     ordering = ('name',)
 
 
 @admin.register(DeviceConnection)
 class DeviceConnectionAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'fields')
     list_select_related = ('devicetype',)
     ordering = ('devicetype__name', 'name')
+    fields = ('devicetype', 'name', 'fields')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(type(self), self).get_form(request, obj, **kwargs)
@@ -222,7 +231,9 @@ class DeviceConnectionAdmin(admin.ModelAdmin):
 
 @admin.register(DeviceDriver)
 class DeviceDriverAdmin(MigasAdmin):
-    list_display = ('id', 'model', 'version', 'feature')
+    list_display = ('model', 'version', 'feature', 'name')
+    list_display_links = ('model',)
+    fields = ('model', 'version', 'feature', 'name', 'install')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(type(self), self).get_form(request, obj, **kwargs)
@@ -275,6 +286,7 @@ class DeviceAdmin(MigasAdmin):
         'model_link',
         'connection'
     )
+    list_display_links = ('name',)
     list_filter = ('model',)
     search_fields = (
         'name',
@@ -287,7 +299,7 @@ class DeviceAdmin(MigasAdmin):
         'connection',
         'data',
     )
-    ordering = ['name', ]
+    ordering = ('name',)
 
     inlines = [DeviceLogicalInline]
 
@@ -328,6 +340,7 @@ class DeviceDriverInline(admin.TabularInline):
 @admin.register(DeviceModel)
 class DeviceModelAdmin(MigasAdmin):
     list_display = ('name', 'manufacturer', 'devicetype')
+    list_display_links = ('name',)
     list_filter = ('devicetype', 'manufacturer')
     ordering = ('devicetype__name', 'manufacturer__name', 'name',)
     search_fields = (
@@ -965,6 +978,7 @@ class PackageAdmin(MigasAdmin):
 @admin.register(Query)
 class QueryAdmin(MigasAdmin):
     list_display = ('name', 'description',)
+    list_display_links = ('name',)
     actions = ['run_query']
 
     def run_query(self, request, queryset):
