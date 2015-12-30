@@ -130,11 +130,7 @@ class Repository(models.Model, MigasLink):
     objects = VersionManager()  # manager by user version
 
     def packages_link(self):
-        ret = ""
-        for pack in self.packages.all():
-            ret += pack.link() + " "
-
-        return ret
+        return ' '.join([pkg.link() for pkg in self.packages.all()])
 
     packages_link.allow_tags = True
     packages_link.short_description = _("Packages")
@@ -204,9 +200,7 @@ class Repository(models.Model, MigasLink):
                 'deploy': deploy,
                 'date': hori.strftime("%a-%b-%d"),
                 'percent': int(percent_horizon(hori, horf)),
-                'attributes': ' '.join(
-                    item.attributes.values_list("value", flat=True)
-                )
+                'attributes': item.attributes.values_list("value", flat=True)
             })
 
         return render_to_string(
