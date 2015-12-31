@@ -23,7 +23,7 @@ class MigasLink(object):
     _exclude_links = []
     _include_links = []
 
-    def link(self, default=False):
+    def link(self):
         related_objects = self._meta.get_all_related_objects_with_model() \
             + self._meta.get_all_related_m2m_objects_with_model()
 
