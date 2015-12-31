@@ -11,7 +11,7 @@ from django.db.models import Q  # backwards compatibility
 from migasfree.server.models import *
 
 
-def execute_active_checkings():
+def execute_active_checkings(request):
     """
     Returns active checkings results, as a list
     If an error occurs, returns a dictionary with execution error information
@@ -48,7 +48,7 @@ def alerts(request):
     """
     template = 'includes/alerts.html'
 
-    alerts = execute_active_checkings()
+    alerts = execute_active_checkings(request)
     if type(alerts) is dict and alerts.get('error').get('description'):
         return render(
             request,

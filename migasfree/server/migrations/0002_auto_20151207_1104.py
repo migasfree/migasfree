@@ -158,6 +158,16 @@ class Migration(migrations.Migration):
         migrations.RunSQL("DELETE FROM server_query WHERE id=8 OR id=9;"),
         migrations.RunSQL(
             [(
+                "UPDATE server_checking SET code=%s WHERE id=2;",
+                ["from migasfree.server.models import Fault\nfrom django.db.models import Q\nresult = Fault.objects.filter(checked__exact=0).filter(Q(faultdef__users__id__in=[request.user.id,]) | Q(faultdef__users=None)).count()\nurl = '/admin/server/fault/?checked__exact=0&user=me'\nalert = 'danger'\nmsg = 'Faults to check'\ntarget = 'computer'\n"]
+            )],
+            [(
+                "UPDATE server_checking SET code=%s WHERE id=2;",
+                ["from migasfree.server.models import Fault\nfrom migasfree.middleware import threadlocals\nfrom django.db.models import Q\nresult = Fault.objects.filter(checked__exact=0).filter(Q(faultdef__users__id__in=[threadlocals.get_current_user().id,]) | Q(faultdef__users=None)).count()\nurl = '/admin/server/fault/?checked__exact=0&user=me'\nalert = 'danger'\nmsg = 'Faults to check'\ntarget = 'computer'\n"]
+            )]
+        ),
+        migrations.RunSQL(
+            [(
                 "UPDATE server_checking SET code=%s WHERE id=3;",
                 ["from migasfree.server.models import Package\nfrom django.db.models import Q\nresult = Package.user_version.version(0).filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n"]
             )],
