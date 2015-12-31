@@ -324,6 +324,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         form = super(type(self), self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
         form.base_fields['schedule'].widget.can_add_related = False
+        form.current_user = request.user
 
         return form
 

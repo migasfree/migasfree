@@ -8,7 +8,6 @@ from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import make_ajax_form, make_ajax_field
 
-from migasfree.middleware import threadlocals
 from .models import (
     Repository, UserProfile, Computer, DeviceLogical,
     Property, Tag, TagType
@@ -44,7 +43,7 @@ class RepositoryForm(forms.ModelForm):
         super(RepositoryForm, self).__init__(*args, **kwargs)
         try:
             self.fields['version'].initial = UserProfile.objects.get(
-                pk=threadlocals.get_current_user().id
+                pk=self.current_user.id
             ).version.id
         except UserProfile.DoesNotExist:
             pass
