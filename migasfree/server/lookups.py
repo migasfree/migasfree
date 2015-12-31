@@ -2,8 +2,9 @@
 
 from django.db.models import Q
 from django.utils.html import escape
+from django.conf import settings
 
-from ajax_select import LookupChannel
+from ajax_select import register, LookupChannel
 
 from migasfree.server.models import (
     Attribute,
@@ -14,9 +15,8 @@ from migasfree.server.models import (
     Computer
 )
 
-from django.conf import settings
 
-
+@register('attribute')
 class AttributeLookup(LookupChannel):
     model = Attribute
 
@@ -57,7 +57,8 @@ class AttributeLookup(LookupChannel):
         )
 
 
-class Attribute_ComputersLookup(LookupChannel):
+@register('attribute_computers')
+class AttributeComputersLookup(LookupChannel):
     model = Attribute
 
     def get_query(self, q, request):
@@ -98,6 +99,7 @@ class Attribute_ComputersLookup(LookupChannel):
         )
 
 
+@register('package')
 class PackageLookup(LookupChannel):
     model = Package
 
@@ -122,6 +124,7 @@ class PackageLookup(LookupChannel):
         return self.model.objects.filter(pk__in=ids).order_by('name')
 
 
+@register('tag')
 class TagLookup(LookupChannel):
     model = Attribute
 
@@ -156,6 +159,7 @@ class TagLookup(LookupChannel):
         )
 
 
+@register('devicelogical')
 class DeviceLogicalLookup(LookupChannel):
     model = DeviceLogical
 
@@ -175,6 +179,7 @@ class DeviceLogicalLookup(LookupChannel):
         return False
 
 
+@register('computer')
 class ComputerLookup(LookupChannel):
     model = Computer
 

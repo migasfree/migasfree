@@ -1,22 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# DEFINE THE SEARCH CHANNELS:
-
-AJAX_LOOKUP_CHANNELS = {
-    # simplest way, automatically construct a search channel
-    # by passing a dictionary
-    #'label': {'model': 'server.label', 'search_field': 'name'},
-
-    # Custom channels are specified with a tuple
-    # channel: ( module.where_lookup_is, ClassNameOfLookup )
-    'attribute': ('migasfree.server.lookups', 'AttributeLookup'),
-    'package': ('migasfree.server.lookups', 'PackageLookup'),
-    'tag': ('migasfree.server.lookups', 'TagLookup'),
-    'devicelogical': ('migasfree.server.lookups', 'DeviceLogicalLookup'),
-    'computer': ('migasfree.server.lookups', 'ComputerLookup'),
-    'attribute_computers': ('migasfree.server.lookups', 'Attribute_ComputersLookup'),
-}
-
 AJAX_SELECT_BOOTSTRAP = False
 # True: [easiest]
 #   use the admin's jQuery if present else load from jquery's CDN
