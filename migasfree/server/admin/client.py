@@ -138,6 +138,7 @@ class ErrorAdmin(MigasAdmin):
         'date',
         'truncated_error',
     )
+    list_display_links = ('id',)
     list_filter = ('checked', 'date', 'version__platform', 'version')
     #list_editable = ('checked',)  # TODO
     ordering = ('-date', 'computer',)
@@ -179,6 +180,7 @@ class FaultAdmin(MigasAdmin):
         'faultdef',
         #'list_users'  # performance improvement
     )
+    list_display_links = ('id',)
     list_filter = (
         UserFaultFilter, 'checked', 'date',
         'version__platform', 'version', 'faultdef'
