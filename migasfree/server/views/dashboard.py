@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.db.models import Q  # backwards compatibility
 
-from migasfree.server.models import *
+from ..models import *
 
 
 def execute_active_checkings(request):
@@ -23,7 +23,7 @@ def execute_active_checkings(request):
             exec(check.code.replace("\r", ""))
         except:
             return {'error': {
-                'description': "Error in field 'code' of Checking: %s"
+                'description': _("Error in field 'code' of Checking: %s")
                     % check.name,
                 'contentpage': '%s\n%s' % (check.code, str(sys.exc_info()))
             }}
