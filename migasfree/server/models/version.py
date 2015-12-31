@@ -16,10 +16,6 @@ from . import Pms, Platform, MigasLink
 
 
 class VersionManager(models.Manager):
-    """
-    VersionManager is used for filter the property "objects" of several
-    classes by logged user version.
-    """
     def create(self, name, pms, platform, autoregister=False):
         version = Version()
         version.name = name
@@ -29,21 +25,6 @@ class VersionManager(models.Manager):
         version.save()
 
         return version
-
-    def get_queryset(self):
-        version = UserProfile.get_logged_version()
-        if version is None:
-            return self.version(0)
-        else:
-            return self.version(version)
-
-    def version(self, version):
-        if version == 0:  # return the objects of ALL VERSIONS
-            return super(VersionManager, self).get_queryset()
-        else:  # return only the objects of this VERSION
-            return super(VersionManager, self).get_queryset().filter(
-                pk=version.pk
-            )
 
 
 class Version(models.Model, MigasLink):
@@ -174,6 +155,7 @@ class UserProfile(UserSystem, MigasLink):
     def get_logged_version():
         """
         Return the user version that is logged
+        # TODO remove this method
         """
         try:
             return UserProfile.objects.get(
