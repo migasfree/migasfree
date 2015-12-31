@@ -2,20 +2,14 @@
 
 import json
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse
 from django.utils.translation import ugettext_lazy as _
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 from django.contrib import messages
 from django.core.urlresolvers import reverse
 
-from ..models import (
-    Platform,
-    Version,
-    Repository,
-    Computer
-)
-
+from ..models import Platform, Version, Repository, Computer
 from ..api import get_computer
 from ..functions import uuid_validate, d2s
 from ..security import gpg_get_key
@@ -32,7 +26,7 @@ def get_versions(request):
 
         result.append(element)
 
-    return HttpResponse(json.dumps(result), content_type="text/plain")
+    return JsonResponse(result, safe=False)
 
 
 def get_computer_info(request):
@@ -71,7 +65,7 @@ def get_computer_info(request):
             if not value in result["available_tags"][tag.property_att.name]:
                 result["available_tags"][tag.property_att.name].append(value)
 
-    return HttpResponse(json.dumps(result), content_type="text/plain")
+    return JsonResponse(result)
 
 
 def computer_label(request):
