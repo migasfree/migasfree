@@ -9,16 +9,16 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from migasfree.server.models import Version, UserProfile
-from migasfree.server.functions import run_in_server
+from ..models import Version, UserProfile
+from ..functions import run_in_server
 
 import logging
 logger = logging.getLogger('migasfree')
 
 
 @login_required
-def info(request, package):  # package info
-    #logger.debug('request:' + str(request))
+def info(request, package):
+    logger.debug('request:' + str(request))
 
     if request.GET.get('version'):
         version = get_object_or_404(Version, name=request.GET.get('version'))
@@ -84,7 +84,6 @@ def info(request, package):  # package info
             'package_info.html',
             {
                 "title": '%s: %s' % (_("Package Information"), package),
-                #"description": _("VERSION: %s") % version.name,
                 "query": vl_fields,
             }
         )
@@ -99,7 +98,7 @@ def info(request, package):  # package info
     )
 
 
-@login_required()
+@login_required
 def change_version(request):
     if request.method == 'GET':
         version = get_object_or_404(Version, pk=request.GET.get('version'))
