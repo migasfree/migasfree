@@ -428,7 +428,7 @@ class UserProfileAdmin(MigasAdmin):
 @admin.register(Version)
 class VersionAdmin(MigasAdmin):
     list_display = (
-        'link',
+        'my_link',
         'platform',
         'pms',
         'computerbase',
@@ -436,6 +436,11 @@ class VersionAdmin(MigasAdmin):
     )
     fields = ('name', 'platform', 'pms', 'computerbase', 'autoregister', 'base')
     actions = None
+
+    def my_link(self, object):
+        return object.link()
+
+    my_link.short_description = _("Version")
 
     def my_autoregister(self, obj):
         return self.boolean_field(obj.autoregister)
