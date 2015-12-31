@@ -78,7 +78,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'migasfree.middleware.threadlocals.ThreadLocals',
+    'migasfree.middleware.threadlocals.ThreadLocalMiddleware',
 )
 
 TEMPLATES = [
