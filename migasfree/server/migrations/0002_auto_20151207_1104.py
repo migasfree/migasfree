@@ -144,7 +144,7 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             [(
                 "UPDATE server_query SET code=%s WHERE id=5;",
-                ["from migasfree.server.models import Package\nfrom django.db.models import Q\nquery = Package.user_version.version(0).filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link')\ntitles = ('version', 'store', 'package/set')\n"]
+                ["from migasfree.server.models import Package\nfrom django.db.models import Q\nquery = Package.objects.filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link')\ntitles = ('version', 'store', 'package/set')\n"]
             )],
             [(
                 "UPDATE server_query SET code=%s WHERE id=5;",
@@ -169,7 +169,7 @@ class Migration(migrations.Migration):
         migrations.RunSQL(
             [(
                 "UPDATE server_checking SET code=%s WHERE id=3;",
-                ["from migasfree.server.models import Package\nfrom django.db.models import Q\nresult = Package.user_version.version(0).filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n"]
+                ["from migasfree.server.models import Package\nfrom django.db.models import Q\nresult = Package.objects.filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n"]
             )],
             [(
                 "UPDATE server_checking SET code=%s WHERE id=3;",

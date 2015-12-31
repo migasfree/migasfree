@@ -43,7 +43,7 @@
         "pk": 5,
         "model": "server.query",
         "fields": {
-            "code": "from migasfree.server.models import Package\nfrom django.db.models import Q\nquery = Package.user_version.version(0).filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link')\ntitles = ('version', 'store', 'package/set')\n",
+            "code": "from migasfree.server.models import Package\nfrom django.db.models import Q\nquery = Package.objects.filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link')\ntitles = ('version', 'store', 'package/set')\n",
             "name": "Package/Set Orphan",
             "parameters": "",
             "description": "Packages/Sets that have not been assigned to any repository"
