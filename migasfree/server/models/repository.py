@@ -18,7 +18,6 @@ from . import (
     Package,
     Attribute,
     Schedule,
-    VersionManager,
     ScheduleDelay,
     MigasLink
 )
@@ -37,6 +36,11 @@ def percent_horizon(begin_date, end_date):
         percent = 100
 
     return percent
+
+
+class RepositoryManager(models.Manager):
+    def by_version(self, version_id):
+        return self.get_queryset().filter(version__id=version_id)
 
 
 class Repository(models.Model, MigasLink):
@@ -127,7 +131,7 @@ class Repository(models.Model, MigasLink):
         blank=True
     )
 
-    objects = VersionManager()  # manager by user version
+    objects = RepositoryManager()
 
     def packages_link(self):
         return ' '.join([pkg.link() for pkg in self.packages.all()])
