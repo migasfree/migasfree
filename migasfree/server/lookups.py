@@ -102,7 +102,9 @@ class PackageLookup(LookupChannel):
     model = Package
 
     def get_query(self, q, request):
-        return self.model.objects.filter(Q(name__icontains=q)).order_by('name')
+        return self.model.objects.by_version(
+            request.user.userprofile.version_id
+        ).filter(name__icontains=q).order_by('name')
 
     def get_result(self, obj):
         return unicode(obj)
