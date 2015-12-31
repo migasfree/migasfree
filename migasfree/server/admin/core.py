@@ -13,7 +13,7 @@ from .migasfree import MigasAdmin
 
 from ..models import (
     Attribute, AttributeSet, Checking, ClientProperty, Feature, MessageServer,
-    Package, Platform, Pms, Property, Query, Repository, Schedule,
+    Notification, Package, Platform, Pms, Property, Query, Repository, Schedule,
     ScheduleDelay, Store, Tag, TagType, UserProfile, Version
 )
 from ..forms import PropertyForm, RepositoryForm, TagForm
@@ -101,8 +101,8 @@ class FeatureAdmin(MigasAdmin):
 
     my_link.short_description = _("Attribute")
 
-    def queryset(self, request):
-        return super(Feature, self).get_queryset().extra(
+    def get_queryset(self, request):
+        return super(FeatureAdmin, self).get_queryset(request).extra(
             select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
         )
 
@@ -131,6 +131,11 @@ class PackageAdmin(MigasAdmin):
         return object.link()
 
     my_link.short_description = _("Package/Set")
+
+    def get_queryset(self, request):
+        return self.model._default_manager.by_version(
+            request.user.userprofile.version_id
+        )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(type(self), self).get_form(request, obj, **kwargs)
@@ -250,28 +255,16 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     my_active.allow_tags = True
     my_active.short_description = _('active')
 
-    def user_current_version(self, user):
-        try:
-            version = UserProfile.objects.get(id=user.id).version.id
-        except:
-            version = None
+    def get_queryset(self, request):
+        return self.model._default_manager.by_version(
+            request.user.userprofile.version_id
+        )
 
-        return version
-
-    # QuerySet filter by user version
-    def queryset(self, request):
-        if request.user.is_superuser:
-            return self.model._default_manager.get_queryset()
-        else:
-            return self.model._default_manager.get_queryset().filter(
-                version=self.user_current_version(request.user)
-            )
-
-    # Packages filter by user version
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == 'packages':
+            # Packages filter by user version
             kwargs['queryset'] = Package.objects.filter(
-                version=self.user_current_version(request.user)
+                version__id=request.user.userprofile.version_id
             )
 
             return db_field.formfield(**kwargs)
@@ -360,6 +353,11 @@ class StoreAdmin(MigasAdmin):
 
     my_link.short_description = _("Store")
 
+    def get_queryset(self, request):
+        return self.model._default_manager.by_version(
+            request.user.userprofile.version_id
+        )
+
     def get_form(self, request, obj=None, **kwargs):
         form = super(type(self), self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
@@ -398,8 +396,8 @@ class TagAdmin(MigasAdmin):
 
     my_link.short_description = _("Tag")
 
-    def queryset(self, request):
-        return self.model.objects.extra(
+    def get_queryset(self, request):
+        return super(TagAdmin, self).get_queryset(request).extra(
             select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
         )
 
