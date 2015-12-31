@@ -5,7 +5,7 @@
 from .common import LANGUAGES_CHOICES, MigasLink
 
 from .user import User
-from .query import Query, get_query_names
+from .query import Query
 from .checking import Checking
 from .autocheck_error import AutoCheckError
 

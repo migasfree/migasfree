@@ -34,6 +34,11 @@ class Query(models.Model):
         help_text=_("Django Code")
     )
 
+
+    @staticmethod
+    def get_query_names():
+        return Query.objects.all().order_by("-id").values_list('id', 'name')
+
     def __unicode__(self):
         return self.name
 
@@ -42,7 +47,3 @@ class Query(models.Model):
         verbose_name = _("Query")
         verbose_name_plural = _("Queries")
         permissions = (("can_save_query", "Can save Query"),)
-
-
-def get_query_names():
-    return Query.objects.all().order_by("-id").values_list('id', 'name')
