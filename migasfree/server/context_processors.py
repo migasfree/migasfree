@@ -2,16 +2,16 @@
 
 from migasfree import __version__
 
-from .models import Version, get_query_names, UserProfile
+from .models import Version, Query
 
 
 def query_names(request):
-    return {'query_names': get_query_names()}
+    return {'query_names': Query.get_query_names()}
 
 
 def version_names(request):
     try:
-        current = UserProfile.objects.get(id=request.user.id).version.name
+        current = request.user.userprofile.version
     except:
         current = ''
 
