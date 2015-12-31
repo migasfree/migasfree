@@ -12,7 +12,7 @@ from django.db.models import Q
 from django import forms
 from django.conf import settings
 
-from migasfree.server.models import *
+from ..models import *
 
 
 def option_description(field, value):
@@ -25,7 +25,7 @@ def option_description(field, value):
 
 
 def execute_query(request, parameters, form_param):
-    o_query = Query.objects.get(id=parameters["id_query"])
+    o_query = get_object_or_404(Query, id=parameters.get('id_query', ''))
 
     try:
         exec(o_query.code.replace("\r", ""))
@@ -85,8 +85,8 @@ def execute_query(request, parameters, form_param):
             request,
             'error.html',
             {
-                'description': "Error in field 'code' of query:",
-                'contentpage': str(sys.exc_info())
+                'description': _("Error in field 'code' of query:"),
+                'contentpage': o_query.code + '\n' + str(sys.exc_info())
             }
         )
 
@@ -98,39 +98,37 @@ def query(request, query_id):
         for p in request.POST:
             parameters[p] = request.POST.get(p)
 
-        o_query = Query.objects.get(id=request.POST.get('id_query', ''))
+        query = get_object_or_404(Query, id=request.POST.get('id_query', ''))
         dic_initial = {
             'id_query': request.POST.get('id_query', ''),
-            'user_version': UserProfile.objects.get(
-                id=request.user.id
-            ).version.id
+            'user_version': request.user.userprofile.version_id
         }
         dic_initial.update(parameters)
-        if o_query.parameters == "":
+        if query.parameters == "":
             return execute_query(request, dic_initial, {})
-        else:
-            try:
-                def form_params():
-                    pass
 
-                exec(o_query.parameters.replace("\r", ""))
-                g_form_param = form_params()(initial=dic_initial)
+        try:
+            def form_params():
+                pass
 
-                for x in g_form_param:
-                    parameters[x.name + "_display"] = option_description(
-                        str(x), parameters[x.name]
-                    )
+            exec(query.parameters.replace("\r", ""))
+            g_form_param = form_params()(initial=dic_initial)
 
-                return execute_query(request, parameters, g_form_param)
-            except:
-                return render(
-                    request,
-                    'error.html',
-                    {
-                        'description': "Error in field 'parameters' of query:",
-                        'contentpage': str(sys.exc_info()[1])
-                    }
+            for x in g_form_param:
+                parameters[x.name + "_display"] = option_description(
+                    str(x), parameters[x.name]
                 )
+
+            return execute_query(request, parameters, g_form_param)
+        except:
+            return render(
+                request,
+                'error.html',
+                {
+                    'description': _("Error in field 'parameters' of query:"),
+                    'contentpage': str(sys.exc_info()[1])
+                }
+            )
 
     # show parameters form
     version = get_object_or_404(UserProfile, id=request.user.id).version
@@ -140,38 +138,37 @@ def query(request, query_id):
         user = UserProfile.objects.get(id=request.user.id)
         user.update_version(version)
 
-    o_query = get_object_or_404(Query, id=query_id)
+    query = get_object_or_404(Query, id=query_id)
     dic_initial = {
         'id_query': query_id,
         'user_version': version.id
     }
-    if o_query.parameters == "":
+    if query.parameters == "":
         return execute_query(request, dic_initial, {})
-    else:
-        try:
-            # What's that, Alberto???
-            def form_params():
-                pass
 
-            exec(o_query.parameters.replace("\r", ""))
+    try:
+        def form_params():
+            pass
 
-            return render(
-                request,
-                'query.html',
-                {
-                    'form': form_params()(initial=dic_initial),
-                    'title': o_query.name,
-                }
-            )
-        except:
-            return render(
-                request,
-                'error.html',
-                {
-                    'description': "Error in field 'parameters' of query",
-                    'contentpage': str(sys.exc_info()[1])
-                }
-            )
+        exec(query.parameters.replace("\r", ""))
+
+        return render(
+            request,
+            'query.html',
+            {
+                'form': form_params()(initial=dic_initial),
+                'title': query.name,
+            }
+        )
+    except:
+        return render(
+            request,
+            'error.html',
+            {
+                'description': _("Error in field 'parameters' of query:"),
+                'contentpage': str(sys.exc_info()[1])
+            }
+        )
 
 
 @login_required
