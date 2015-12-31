@@ -5,7 +5,6 @@ from django.contrib.admin import SimpleListFilter
 from django.db.models import Q
 from django.utils.translation import ugettext as _
 
-from migasfree.middleware import threadlocals
 from .models import ClientProperty, TagType
 
 
@@ -138,7 +137,7 @@ class UserFaultFilter(SimpleListFilter):
         )
 
     def queryset(self, request, queryset):
-        lst = [threadlocals.get_current_user().id]
+        lst = [request.user.id]
         if self.value() == 'me':
             return queryset.filter(
                 Q(faultdef__users__id__in=lst) | Q(faultdef__users=None)
