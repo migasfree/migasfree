@@ -352,8 +352,8 @@ class StatusLogAdmin(MigasAdmin):
 
 @admin.register(Update)
 class UpdateAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'user', 'date', 'version')
-    list_display_links = ('id',)
+    list_display = ('__str__', 'user', 'computer_link', 'version')
+    list_display_links = ('__str__',)
     list_filter = ('date',)
     search_fields = add_computer_search_fields(['date', 'user__name'])
     readonly_fields = ('computer_link', 'user', 'version', 'date')
