@@ -46,12 +46,11 @@ class Update(models.Model, MigasLink):
     def save(self, *args, **kwargs):
         super(Update, self).save(*args, **kwargs)
 
-        #update last update in computer
         self.computer.datelastupdate = self.date
         self.computer.save()
 
     def __unicode__(self):
-        return u'%s-%s' % (self.computer.__unicode__(), self.date)
+        return '%s (%s)' % (self.computer.__str__(), self.date)
 
     def computer_link(self):
         return self.computer.link()
