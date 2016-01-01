@@ -32,6 +32,7 @@ class AttributeSetAdmin(MigasAdmin):
         {'attributes': 'attribute', 'excludes': 'attribute'}
     )
     list_display = ('name',)
+    list_display_links = ('name',)
 
 
 @admin.register(Checking)
@@ -113,6 +114,7 @@ class FeatureAdmin(MigasAdmin):
 @admin.register(MessageServer)
 class MessageServerAdmin(MigasAdmin):
     list_display = ('id', 'date', 'text')
+    list_display_links = ('id',)
     ordering = ('-date',)
     list_filter = ('date',)
     search_fields = ('text', 'date')

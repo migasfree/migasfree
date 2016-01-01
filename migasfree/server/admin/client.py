@@ -33,7 +33,6 @@ def add_computer_search_fields(fields_list):
 @admin.register(Computer)
 class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     form = ComputerForm
-
     list_display = (
         'my_link',
         'version',
@@ -275,6 +274,7 @@ class LoginAdmin(MigasAdmin):
 @admin.register(Message)
 class MessageAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'date', 'text')
+    list_display_links = ('id',)
     ordering = ('-date',)
     list_filter = ('date',)
     search_fields = ('computer', 'text', 'date')
@@ -338,6 +338,7 @@ class NotificationAdmin(MigasAdmin):
 @admin.register(StatusLog)
 class StatusLogAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'status', 'created_at')
+    list_display_links = ('id',)
     list_select_related = ('computer',)
     list_filter = ('created_at', ('status', ProductiveFilterSpec),)
     search_fields = add_computer_search_fields(['created_at'])
@@ -352,6 +353,7 @@ class StatusLogAdmin(MigasAdmin):
 @admin.register(Update)
 class UpdateAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'user', 'date', 'version')
+    list_display_links = ('id',)
     list_filter = ('date',)
     search_fields = add_computer_search_fields(['date', 'user__name'])
     readonly_fields = ('computer_link', 'user', 'version', 'date')
