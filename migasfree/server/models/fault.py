@@ -68,11 +68,7 @@ class Fault(models.Model):
         return self.faultdef.list_users()
 
     def __unicode__(self):
-        return '%d - %s - %s' % (
-            self.id,
-            self.computer.__unicode__(),
-            str(self.date)
-        )
+        return '%s (%s)' % (self.computer.__str__(), self.date)
 
     class Meta:
         app_label = 'server'

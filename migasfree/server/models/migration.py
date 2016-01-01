@@ -37,7 +37,7 @@ class Migration(models.Model):
     objects = MigrationManager()
 
     def __unicode__(self):
-        return u'%s - %s' % (self.computer.__unicode__(), self.version)
+        return '%s (%s) %s' % (self.computer.__str__(), self.date, self.version)
 
     def computer_link(self):
         return self.computer.link()

@@ -43,10 +43,7 @@ class Notification(models.Model):
         super(Notification, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%d - %s' % (
-            self.id,
-            str(self.date)
-        )
+        return '%d (%s)' % (self.id, self.date)
 
     class Meta:
         app_label = 'server'

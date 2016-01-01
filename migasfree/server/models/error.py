@@ -80,11 +80,7 @@ class Error(models.Model):
         super(Error, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s - %s - %s' % (
-            str(self.id),
-            self.computer.__unicode__(),
-            str(self.date)
-        )
+        return '%s (%s)' % (self.computer.__str__(), self.date)
 
     class Meta:
         app_label = 'server'
