@@ -1,19 +1,21 @@
 # -*- coding: utf-8 *-*
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 
+@python_2_unicode_compatible
 class DeviceFeature(models.Model):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         null=True,
         blank=True,
         unique=True
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

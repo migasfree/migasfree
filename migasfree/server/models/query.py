@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 
+@python_2_unicode_compatible
 class Query(models.Model):
     name = models.CharField(
         verbose_name=_("name"),
@@ -39,7 +41,7 @@ class Query(models.Model):
     def get_query_names():
         return Query.objects.all().order_by("-id").values_list('id', 'name')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

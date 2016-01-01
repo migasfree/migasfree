@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from migasfree.server.models import MigasLink
+
+from . import MigasLink
 
 
+@python_2_unicode_compatible
 class Schedule(models.Model, MigasLink):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         null=False,
         blank=False,
@@ -16,12 +19,12 @@ class Schedule(models.Model, MigasLink):
     )
 
     description = models.TextField(
-        _("description"),
+        verbose_name=_("description"),
         null=True,
         blank=True
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

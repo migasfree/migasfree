@@ -4,6 +4,7 @@ import os
 import shutil
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -13,17 +14,18 @@ from . import Version, MigasLink
 
 class StoreManager(models.Manager):
     def create(self, name, version):
-        store = Store()
-        store.name = name
-        store.version = version
-        store.save()
+        obj = Store()
+        obj.name = name
+        obj.version = version
+        obj.save()
 
-        return store
+        return obj
 
     def by_version(self, version_id):
         return self.get_queryset().filter(version__id=version_id)
 
 
+@python_2_unicode_compatible
 class Store(models.Model, MigasLink):
     """
     Location where packages will be stored (p.e. /third/vmware)
@@ -85,9 +87,10 @@ class Store(models.Model, MigasLink):
         )
         if os.path.exists(path):
             shutil.rmtree(path)
+
         super(Store, self).delete(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta():

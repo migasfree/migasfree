@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import LANGUAGES_CHOICES, MigasLink
@@ -20,6 +21,7 @@ class TagTypeManager(models.Manager):
         )
 
 
+@python_2_unicode_compatible
 class Property(models.Model, MigasLink):
     KIND_CHOICES = (
         ('N', _('NORMAL')),
@@ -81,7 +83,7 @@ class Property(models.Model, MigasLink):
     def namefunction(self):
         return "PROPERTY_%s" % self.prefix
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):

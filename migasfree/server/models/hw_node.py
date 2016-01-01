@@ -3,6 +3,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.html import format_html
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, MigasLink
@@ -37,6 +38,7 @@ class HwNodeManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class HwNode(models.Model, MigasLink):
     parent = models.ForeignKey(
         'self',
@@ -62,113 +64,113 @@ class HwNode(models.Model, MigasLink):
     )
 
     name = models.TextField(
-        _("id"),
+        verbose_name=_("id"),
         null=False,
         blank=True
     )  # This is the field "id" in lshw
 
     classname = models.TextField(
-        _("class"),
+        verbose_name=_("class"),
         null=False,
         blank=True
     )  # This is the field "class" in lshw
 
     enabled = models.BooleanField(
-        _("enabled"),
+        verbose_name=_("enabled"),
         default=False,
     )
 
     claimed = models.BooleanField(
-        _("claimed"),
+        verbose_name=_("claimed"),
         default=False,
     )
 
     description = models.TextField(
-        _("description"),
+        verbose_name=_("description"),
         null=True,
         blank=True
     )
 
     vendor = models.TextField(
-        _("vendor"),
+        verbose_name=_("vendor"),
         null=True,
         blank=True
     )
 
     product = models.TextField(
-        _("product"),
+        verbose_name=_("product"),
         null=True,
         blank=True
     )
 
     version = models.TextField(
-        _("version"),
+        verbose_name=_("version"),
         null=True,
         blank=True
     )
 
     serial = models.TextField(
-        _("serial"),
+        verbose_name=_("serial"),
         null=True,
         blank=True
     )
 
     businfo = models.TextField(
-        _("businfo"),
+        verbose_name=_("businfo"),
         null=True,
         blank=True
     )
 
     physid = models.TextField(
-        _("physid"),
+        verbose_name=_("physid"),
         null=True,
         blank=True
     )
 
     slot = models.TextField(
-        _("slot"),
+        verbose_name=_("slot"),
         null=True,
         blank=True
     )
 
     size = models.BigIntegerField(
-        _("size"),
+        verbose_name=_("size"),
         null=True
     )
 
     capacity = models.BigIntegerField(
-        _("capacity"),
+        verbose_name=_("capacity"),
         null=True
     )
 
     clock = models.IntegerField(
-        _("clock"),
+        verbose_name=_("clock"),
         null=True
     )
 
     dev = models.TextField(
-        _("dev"),
+        verbose_name=_("dev"),
         null=True,
         blank=True
     )
 
     icon = models.TextField(
-        _("icon"),
+        verbose_name=_("icon"),
         null=True,
         blank=True
     )
 
     objects = HwNodeManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.product if self.description and 'lshw' in self.description \
             else '%s: %s' % (self.description, self.product)
 
-    def link(self, default=True):
+    def link(self):
         try:
             return format_html('<a href="%s">%s</a>' % (
-                reverse('hardware_resume', args=(self.computer.id, )),
-                self.__unicode__()
+                reverse('hardware_resume', args=(self.computer.id,)),
+                self.__str__()
             ))
         except:
             return ''

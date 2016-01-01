@@ -3,14 +3,16 @@
 import json
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import DeviceConnection, DeviceModel, MigasLink
+from . import DeviceConnection, DeviceModel, MigasLink
 
 
+@python_2_unicode_compatible
 class Device(models.Model, MigasLink):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         null=True,
         blank=True,
@@ -28,7 +30,7 @@ class Device(models.Model, MigasLink):
     )
 
     data = models.TextField(
-        _("data"),
+        verbose_name=_("data"),
         null=True,
         blank=False,
         default="{}"
@@ -36,7 +38,8 @@ class Device(models.Model, MigasLink):
 
     def model_link(self):
         return self.model.link()
-    model_link.short_description = _("DeviceModel")
+
+    model_link.short_description = _("Device Model")
     model_link.allow_tags = True
 
     def datadict(self):
@@ -46,10 +49,8 @@ class Device(models.Model, MigasLink):
             self.connection.name: json.loads(self.data),
         }
 
-    def __unicode__(self):
-        return u'%s' % (
-            self.name,
-        )
+    def __str__(self):
+        return self.name
 
     class Meta:
         app_label = 'server'

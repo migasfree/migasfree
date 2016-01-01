@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import HwNode
@@ -18,6 +19,7 @@ class HwConfigurationManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class HwConfiguration(models.Model):
     node = models.ForeignKey(
         HwNode,
@@ -38,7 +40,7 @@ class HwConfiguration(models.Model):
 
     objects = HwConfigurationManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

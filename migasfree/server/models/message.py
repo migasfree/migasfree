@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone, dateformat
 
@@ -18,6 +19,7 @@ class MessageManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class Message(models.Model):
     computer = models.OneToOneField(
         Computer,
@@ -43,8 +45,8 @@ class Message(models.Model):
         self.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         self.save()
 
-    def __unicode__(self):
-        return u'%s - %s' % (self.computer.__unicode__(), self.text)
+    def __str__(self):
+        return '%s (%s)' % (self.computer, self.date)
 
     def computer_link(self):
         return self.computer.link()

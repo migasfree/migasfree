@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from migasfree.server.models import MigasLink
+
+from . import MigasLink
 
 
+@python_2_unicode_compatible
 class Pms(models.Model, MigasLink):
     """
     Package Management System
@@ -21,13 +24,13 @@ class Pms(models.Model, MigasLink):
     """
 
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         unique=True
     )
 
     slug = models.CharField(
-        _("slug"),
+        verbose_name=_("slug"),
         max_length=50,
         null=True,
         blank=True,
@@ -35,20 +38,20 @@ class Pms(models.Model, MigasLink):
     )
 
     createrepo = models.TextField(
-        _("create repository"),
+        verbose_name=_("create repository"),
         null=True,
         blank=True,
         help_text=_("Code bash. Define how create the metadata of repositories in the migasfree server.")
     )
 
     info = models.TextField(
-        _("package information"),
+        verbose_name=_("package information"),
         null=True,
         blank=True,
         help_text=_("Code bash. Define how get info of packages in the server")
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):

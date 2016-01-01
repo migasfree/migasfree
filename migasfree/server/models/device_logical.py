@@ -1,9 +1,10 @@
 # -*- coding: utf-8 *-*
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import (
+from . import (
     Device,
     DeviceFeature,
     DeviceDriver,
@@ -11,6 +12,7 @@ from migasfree.server.models import (
 )
 
 
+@python_2_unicode_compatible
 class DeviceLogical(models.Model, MigasLink):
     device = models.ForeignKey(
         Device,
@@ -51,14 +53,14 @@ class DeviceLogical(models.Model, MigasLink):
 
     def device_link(self):
         return self.device.link()
+
     device_link.short_description = _("Device")
     device_link.allow_tags = True
 
     def computers_link(self):
-        ret = ""
-        for computer in self.computer_set.all():
-            ret += computer.link() + " "
-        return ret
+        return ' '.join(
+            [computer.link() for computer in self.computer_set.all()]
+        )
 
     computers_link.allow_tags = True
     computers_link.short_description = _("Computers")
@@ -66,8 +68,8 @@ class DeviceLogical(models.Model, MigasLink):
     def save(self, *args, **kwargs):
         super(DeviceLogical, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return '%s__%s__%s__%s__%s' % (
+    def __str__(self):
+        return '%s__%s__%s__%s__%d' % (
             self.device.model.manufacturer.name,
             self.device.model.name,
             self.feature.name,

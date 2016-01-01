@@ -24,7 +24,7 @@ def add_notification_platform(platform, computer):
     Notification.objects.create(
         _("Platform [%s] registered by computer [%s].") % (
             platform,
-            computer.__unicode__()
+            computer.__str__()
         )
     )
 
@@ -34,7 +34,7 @@ def add_notification_version(version, pms, computer):
         _("Version [%s] with P.M.S. [%s] registered by computer [%s].") % (
             version,
             pms,
-            computer.__unicode__()
+            computer.__str__()
         )
     )
 
@@ -496,7 +496,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             "remove": lst_dev_remove,
             "install": lst_dev_install
         }
-        retdata["base"] = (o_version.computerbase == o_computer.__unicode__())
+        retdata["base"] = (o_version.computerbase == o_computer.__str__())
 
         #HARDWARE CAPTURE
         hwcapture = True
@@ -870,7 +870,7 @@ def check_computer(o_computer, name, version, ip, uuid):
             Notification.objects.create(
                 _("New Computer added id=[%s]: NAME=[%s] UUID=[%s]") % (
                     o_computer.id,
-                    o_computer.__unicode__(),
+                    o_computer.__str__(),
                     o_computer.uuid
                 )
             )
@@ -891,7 +891,7 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
         Notification.objects.create(
             _("Computer id=[%s]: NAME [%s] changed by [%s]") % (
                 o_computer.id,
-                o_computer.__unicode__(),
+                o_computer.__str__(),
                 name
             )
         )

@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import DeviceType
+from . import DeviceType
 
 
+@python_2_unicode_compatible
 class DeviceConnection(models.Model):
     name = models.CharField(
-        _("name"),
+        verbose_name=_("name"),
         max_length=50,
         null=True,
         blank=True
     )
 
     fields = models.CharField(
-        _("fields"),
+        verbose_name=_("fields"),
         max_length=100,
         null=True,
         blank=True,
@@ -27,8 +29,8 @@ class DeviceConnection(models.Model):
         verbose_name=_("device type")
     )
 
-    def __unicode__(self):
-        return u'(%s) %s' % (self.devicetype.name, self.name)
+    def __str__(self):
+        return '(%s) %s' % (self.devicetype.name, self.name)
 
     class Meta:
         app_label = 'server'

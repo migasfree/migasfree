@@ -8,6 +8,7 @@ from django.db import models
 from django.utils.html import format_html
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 
@@ -43,6 +44,7 @@ class RepositoryManager(models.Manager):
         return self.get_queryset().filter(version__id=version_id)
 
 
+@python_2_unicode_compatible
 class Repository(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
@@ -139,7 +141,7 @@ class Repository(models.Model, MigasLink):
     packages_link.allow_tags = True
     packages_link.short_description = _("Packages")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):

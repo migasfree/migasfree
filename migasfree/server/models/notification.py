@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils import timezone, dateformat
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -15,6 +16,7 @@ class NotificationManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class Notification(models.Model):
     date = models.DateTimeField(
         verbose_name=_("date"),
@@ -42,7 +44,7 @@ class Notification(models.Model):
         self.notification = self.notification.replace("\r\n", "\n")
         super(Notification, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%d (%s)' % (self.id, self.date)
 
     class Meta:

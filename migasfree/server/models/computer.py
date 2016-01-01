@@ -3,6 +3,7 @@
 from django.db import models
 from django.db.models.signals import m2m_changed, pre_save, post_save
 from django.dispatch import receiver
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
@@ -61,6 +62,7 @@ class ComputerManager(models.Manager):
         return comp
 
 
+@python_2_unicode_compatible
 class Computer(models.Model, MigasLink):
     STATUS_CHOICES = (
         ('intended', _('Intended')),
@@ -364,7 +366,7 @@ class Computer(models.Model, MigasLink):
             ),
         })
 
-    def __unicode__(self):
+    def __str__(self):
         return str(self.__getattribute__(
             settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]
         ))
@@ -399,6 +401,7 @@ def pre_save_computer(sender, instance, **kwargs):
 def post_save_computer(sender, instance, created, **kwargs):
     if created:
         StatusLog.objects.create(instance)
+
     if instance.status in ['available', 'unsubscribed']:
         instance.tags.clear()
         instance.devices_logical.clear()

@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils import timezone, dateformat
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, FaultDef, Version
@@ -20,6 +21,7 @@ class FaultManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class Fault(models.Model):
     computer = models.ForeignKey(
         Computer,
@@ -67,8 +69,8 @@ class Fault(models.Model):
     def list_users(self):
         return self.faultdef.list_users()
 
-    def __unicode__(self):
-        return '%s (%s)' % (self.computer.__str__(), self.date)
+    def __str__(self):
+        return '%s (%s)' % (self.computer, self.date)
 
     class Meta:
         app_label = 'server'

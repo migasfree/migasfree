@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils import timezone, dateformat
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from .computer import Computer
@@ -20,6 +21,7 @@ class LoginManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class Login(models.Model, MigasLink):
     date = models.DateTimeField(
         verbose_name=_("date"),
@@ -57,11 +59,8 @@ class Login(models.Model, MigasLink):
     user_link.allow_tags = True
     user_link.short_description = _("User")
 
-    def __unicode__(self):
-        return u'%s@%s' % (
-            self.user.name,
-            self.computer.__unicode__()
-        )
+    def __str__(self):
+        return '%s@%s' % (self.user.name, self.computer)
 
     class Meta:
         app_label = 'server'

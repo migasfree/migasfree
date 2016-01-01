@@ -4,6 +4,7 @@ import os
 
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.conf import settings
 
@@ -24,6 +25,7 @@ class PackageManager(models.Manager):
         return self.get_queryset().filter(version__id=version_id)
 
 
+@python_2_unicode_compatible
 class Package(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
@@ -76,7 +78,7 @@ class Package(models.Model, MigasLink):
         if not os.path.exists(_path):
             os.makedirs(_path)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

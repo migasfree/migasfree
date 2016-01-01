@@ -4,6 +4,7 @@ import re
 
 from django.db import models
 from django.utils import timezone, dateformat
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, Version, AutoCheckError
@@ -21,6 +22,7 @@ class ErrorManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class Error(models.Model):
     computer = models.ForeignKey(
         Computer,
@@ -79,8 +81,8 @@ class Error(models.Model):
         self.auto_check()
         super(Error, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return '%s (%s)' % (self.computer.__str__(), self.date)
+    def __str__(self):
+        return '%s (%s)' % (self.computer, self.date)
 
     class Meta:
         app_label = 'server'

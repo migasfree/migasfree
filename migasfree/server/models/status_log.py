@@ -1,6 +1,7 @@
 # -*- coding: utf-8 *-*
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from .computer import Computer
@@ -8,14 +9,15 @@ from .computer import Computer
 
 class StatusLogManager(models.Manager):
     def create(self, computer):
-        sl = StatusLog()
-        sl.computer = computer
-        sl.status = computer.status
-        sl.save()
+        obj = StatusLog()
+        obj.computer = computer
+        obj.status = computer.status
+        obj.save()
 
-        return sl
+        return obj
 
 
+@python_2_unicode_compatible
 class StatusLog(models.Model):
     computer = models.ForeignKey(
         Computer,
@@ -37,8 +39,8 @@ class StatusLog(models.Model):
 
     objects = StatusLogManager()
 
-    def __unicode__(self):
-        return '%s - %s' % (self.computer.__unicode__(), self.status)
+    def __str__(self):
+        return '%s (%s)' % (self.computer, self.status)
 
     def computer_link(self):
         return self.computer.link()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 *-*
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import MigasLink
@@ -8,13 +9,14 @@ from . import MigasLink
 
 class PlatformManager(models.Manager):
     def create(self, name):
-        plat = Platform()
-        plat.name = name
-        plat.save()
+        obj = Platform()
+        obj.name = name
+        obj.save()
 
-        return plat
+        return obj
 
 
+@python_2_unicode_compatible
 class Platform(models.Model, MigasLink):
     """
     Computer Platform
@@ -30,7 +32,7 @@ class Platform(models.Model, MigasLink):
 
     objects = PlatformManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:

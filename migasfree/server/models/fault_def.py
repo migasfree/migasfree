@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Attribute, LANGUAGES_CHOICES, UserProfile, MigasLink
 
 
+@python_2_unicode_compatible
 class FaultDef(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
@@ -66,7 +68,7 @@ class FaultDef(models.Model, MigasLink):
     def namefunction(self):
         return "FAULT_%s" % self.name
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     @staticmethod

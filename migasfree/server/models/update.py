@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.utils import timezone, dateformat
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, Version, User, MigasLink
@@ -19,6 +20,7 @@ class UpdateManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class Update(models.Model, MigasLink):
     computer = models.ForeignKey(
         Computer,
@@ -49,8 +51,8 @@ class Update(models.Model, MigasLink):
         self.computer.datelastupdate = self.date
         self.computer.save()
 
-    def __unicode__(self):
-        return '%s (%s)' % (self.computer.__str__(), self.date)
+    def __str__(self):
+        return '%s (%s)' % (self.computer, self.date)
 
     def computer_link(self):
         return self.computer.link()

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import HwNode
@@ -18,6 +19,7 @@ class HwCapabilityManager(models.Manager):
         return obj
 
 
+@python_2_unicode_compatible
 class HwCapability(models.Model):
     node = models.ForeignKey(
         HwNode,
@@ -38,7 +40,7 @@ class HwCapability(models.Model):
 
     objects = HwCapabilityManager()
 
-    def __unicode__(self):
+    def __str__(self):
         ret = self.name
         if self.description:
             ret += ': %s' % self.description

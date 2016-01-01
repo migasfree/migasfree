@@ -124,7 +124,7 @@ def process_hw(computer, jsonfile):
         except:
             Notification.objects.create(
                 _("Error: Hardware dictionary is not valid in computer [%s].") % (
-                    computer.__unicode__()
+                    computer.__str__()
                 )
             )
             return

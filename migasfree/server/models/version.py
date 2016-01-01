@@ -4,6 +4,7 @@ import os
 import shutil
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import (
     User as UserSystem,
@@ -17,16 +18,17 @@ from . import Pms, Platform, MigasLink
 
 class VersionManager(models.Manager):
     def create(self, name, pms, platform, autoregister=False):
-        version = Version()
-        version.name = name
-        version.pms = pms
-        version.platform = platform
-        version.autoregister = autoregister
-        version.save()
+        obj = Version()
+        obj.name = name
+        obj.pms = pms
+        obj.platform = platform
+        obj.autoregister = autoregister
+        obj.save()
 
-        return version
+        return obj
 
 
+@python_2_unicode_compatible
 class Version(models.Model, MigasLink):
     """
     Version of S.O. by example 'Ubuntu natty 32bit' or 'AZLinux-2'
@@ -72,7 +74,7 @@ class Version(models.Model, MigasLink):
 
     objects = VersionManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def create_dirs(self):

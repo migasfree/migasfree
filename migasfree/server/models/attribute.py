@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Property, MigasLink
@@ -36,6 +37,7 @@ class AttributeManager(models.Manager):
         return attribute
 
 
+@python_2_unicode_compatible
 class Attribute(models.Model, MigasLink):
     property_att = models.ForeignKey(
         Property,
@@ -68,11 +70,8 @@ class Attribute(models.Model, MigasLink):
     property_link.short_description = _("Property")
     property_link.allow_tags = True
 
-    def __unicode__(self):
-        return '%s-%s' % (
-            self.property_att.prefix,
-            self.value,
-        )
+    def __str__(self):
+        return '%s-%s' % (self.property_att.prefix, self.value)
 
     def total_computers(self, version=None):
         from . import Login

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 
+@python_2_unicode_compatible
 class AutoCheckError(models.Model):
     """
     This model is used to autocheck the errors and marked as 'check' when they
@@ -12,7 +14,7 @@ class AutoCheckError(models.Model):
     The origen of this problem is that the package is bad packed.
     """
     message = models.TextField(
-        _("message"),
+        verbose_name=_("message"),
         null=True,
         blank=True,
         help_text = _("Pattern to search . See https://docs.python.org/2/library/re.html#module-re")
@@ -22,7 +24,7 @@ class AutoCheckError(models.Model):
         self.message = self.message.replace("\r\n", "\n")
         super(AutoCheckError, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.message
 
     class Meta:

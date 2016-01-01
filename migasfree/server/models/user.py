@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import MigasLink
@@ -8,14 +9,15 @@ from . import MigasLink
 
 class UserManager(models.Manager):
     def create(self, name, fullname=''):
-        user = User()
-        user.name = name
-        user.fullname = fullname
-        user.save()
+        obj = User()
+        obj.name = name
+        obj.fullname = fullname
+        obj.save()
 
-        return user
+        return obj
 
 
+@python_2_unicode_compatible
 class User(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
@@ -30,8 +32,8 @@ class User(models.Model, MigasLink):
 
     objects = UserManager()
 
-    def __unicode__(self):
-        return '%s - %s' % (self.name, self.fullname)
+    def __str__(self):
+        return '%s (%s)' % (self.name, self.fullname)
 
     class Meta:
         app_label = 'server'

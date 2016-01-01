@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 
+@python_2_unicode_compatible
 class MessageServer(models.Model):
     text = models.TextField(
-        _("text"),
+        verbose_name=_("text"),
         null=True,
         blank=True
     )
 
     date = models.DateTimeField(
-        _("date"),
+        verbose_name=_("date"),
         default=0
     )
 
-    def __unicode__(self):
+    def __str__(self):
         return self.text
 
     class Meta:

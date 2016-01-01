@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import (
-    DeviceType, DeviceManufacturer, DeviceConnection, MigasLink
-)
+from . import DeviceType, DeviceManufacturer, DeviceConnection, MigasLink
 
 
+@python_2_unicode_compatible
 class DeviceModel(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
@@ -32,8 +32,8 @@ class DeviceModel(models.Model, MigasLink):
         verbose_name=_("connections")
     )
 
-    def __unicode__(self):
-        return u'%s-%s' % (str(self.manufacturer), str(self.name))
+    def __str__(self):
+        return '%s-%s' % (self.manufacturer, self.name)
 
     def save(self, *args, **kwargs):
         self.name = self.name.replace(" ", "_")

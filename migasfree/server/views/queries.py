@@ -199,7 +199,7 @@ def computer_messages(request):
                 icon,
                 "-",
                 item.computer.id,
-                item.computer.__unicode__(),
+                item.computer.__str__(),
                 loginid,
                 user,
                 item.computer.version.name,

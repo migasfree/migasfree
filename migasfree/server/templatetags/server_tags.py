@@ -4,7 +4,7 @@ from django import template
 from django.contrib.auth.models import User as UserSystem
 from django.conf import settings
 
-from migasfree.server.models import UserProfile
+from ..models import UserProfile
 
 register = template.Library()
 
@@ -24,9 +24,8 @@ def organization(parser, token):
 
 class TemplateVersion(template.Node):
     def render(self, context):
-        user_id = context["user"].id
         try:
-            obj = UserProfile.objects.get(id=user_id).version.name
+            obj = UserProfile.objects.get(id=context["user"].id).version.name
         except:
             obj = ""
 
@@ -47,7 +46,7 @@ class TemplateLink(template.Node):
             obj = context["original"].link()
         except:
             try:
-                obj = context["original"].__unicode__()
+                obj = context["original"].__str__()
             except:
                 obj = ""
 

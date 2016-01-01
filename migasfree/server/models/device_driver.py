@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import Version, DeviceModel, DeviceFeature
+from . import Version, DeviceModel, DeviceFeature
 
 
+@python_2_unicode_compatible
 class DeviceDriver(models.Model):
     name = models.CharField(
+        verbose_name=_('name'),
         max_length=100,
         null=True,
         blank=True,
@@ -29,7 +32,7 @@ class DeviceDriver(models.Model):
     )
 
     install = models.TextField(
-        _("packages to install"),
+        verbose_name=_("packages to install"),
         null=True,
         blank=True
     )
@@ -49,8 +52,8 @@ class DeviceDriver(models.Model):
         self.install = self.install.replace("\r\n", "\n")
         super(DeviceDriver, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return u'%s' % (str(self.name).split("/")[-1])
+    def __str__(self):
+        return self.name.split("/")[-1]
 
     class Meta:
         app_label = 'server'
