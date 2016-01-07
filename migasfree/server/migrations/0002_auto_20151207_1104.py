@@ -6,6 +6,23 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def insert_initial_status_log(apps, schema_editor):
+    Computer = apps.get_model('server', 'Computer')
+    StatusLog = apps.get_model('server', 'StatusLog')
+    db_alias = schema_editor.connection.alias
+
+    for computer in Computer.objects.using(db_alias).all():
+        obj = StatusLog.objects.using(db_alias).create(computer)
+        obj.created_at = computer.dateinput
+        obj.save()
+
+
+def delete_all_status_log(apps, schema_editor):
+    StatusLog = apps.get_model('server', 'StatusLog')
+    db_alias = schema_editor.connection.alias
+    StatusLog.objects.using(db_alias).delete()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -203,4 +220,5 @@ class Migration(migrations.Migration):
             )],
             migrations.RunSQL.noop
         ),
+        migrations.RunPython(insert_initial_status_log, delete_all_status_log),
     ]
