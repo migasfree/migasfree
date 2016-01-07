@@ -12,7 +12,8 @@ def insert_initial_status_log(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for computer in Computer.objects.using(db_alias).all():
-        obj = StatusLog.objects.using(db_alias).create(computer)
+        obj = StatusLog()
+        obj.computer = computer
         obj.created_at = computer.dateinput
         obj.save()
 
