@@ -151,11 +151,17 @@ class Migration(migrations.Migration):
                 ["from migasfree.server.models import Package\nfrom django.db.models import Q\nquery = Package.objects.version(0).filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link')\ntitles = ('version', 'store', 'package/set')\n"]
             )]
         ),
-        migrations.RunSQL([(
-            "UPDATE server_query SET code=%s, name=%s, parameters=%s WHERE id=7;",
-            ["from datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.productives.filter(dateinput__gte=n, dateinput__lt=date.today() + delta).order_by('-dateinput')\nfields = ('link', 'version', 'dateinput', 'ip')\ntitles = ('link', 'version', 'dateinput', 'ip')", "Incoming Production Computers...", "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        last_days = forms.CharField()\n    return myForm"]
-        )]),
-        migrations.RunSQL("DELETE FROM server_query WHERE id=8 OR id=9;"),
+        migrations.RunSQL(
+            [(
+                "UPDATE server_query SET code=%s, name=%s, parameters=%s WHERE id=7;",
+                ["from datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.productives.filter(dateinput__gte=n, dateinput__lt=date.today() + delta).order_by('-dateinput')\nfields = ('link', 'version', 'dateinput', 'ip')\ntitles = ('link', 'version', 'dateinput', 'ip')", "Incoming Production Computers...", "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        last_days = forms.CharField()\n    return myForm"]
+            )],
+            [(
+                "UPDATE server_query SET code=%s, name=%s, parameters=%s WHERE id=7;",
+                ["from datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.objects.filter(dateinput__gte=n, dateinput__lt=date.today() + delta).order_by('-dateinput')\nfields = ('link', 'version', 'dateinput', 'ip')\ntitles = ('link', 'version', 'dateinput', 'ip')", "Incoming Production Computers...", "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        last_days = forms.CharField()\n    return myForm"]
+            )]
+        ),
+        migrations.RunSQL("DELETE FROM server_query WHERE id=8 OR id=9;", migrations.RunSQL.noop),
         migrations.RunSQL(
             [(
                 "UPDATE server_checking SET code=%s WHERE id=2;",
@@ -176,16 +182,25 @@ class Migration(migrations.Migration):
                 ["from migasfree.server.models import Package\nfrom django.db.models import Q\nresult = Package.objects.version(0).filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n"]
             )]
         ),
-        migrations.RunSQL([(
-            "UPDATE server_checking SET code=%s WHERE id=10;",
-            ["import os\nfrom migasfree.settings import MIGASFREE_REPO_DIR\nurl = '/server_messages/'\nalert = 'info'\ntarget = 'server'\nresult=0\nmsg=''\nif os.path.exists(MIGASFREE_REPO_DIR):\n    for _version in os.listdir(MIGASFREE_REPO_DIR):\n        _repos = os.path.join(MIGASFREE_REPO_DIR, _version, 'TMP/REPOSITORIES/dists')\n        if os.path.exists(_repos):\n            for _repo in os.listdir(_repos):\n                result=result+1\n                msg=msg+'%s en %s.' % (_repo, _version)\nmsg = 'Creating %s repositories:%s' % ( result, msg)"]
-        )]),
-        migrations.RunSQL([(
-            "UPDATE server_property SET code=%s WHERE id=8;",
-            ["import subprocess\nimport platform\nimport os\n\n_platform = platform.system()\nif _platform == 'Linux' :\n    if os.path.exists('/proc/bus/pci'):\n        cmd_linux=\"\"\"r=''\n      if [ `lspci -n |sed -n 1p|awk '{print $2}'` = 'Class' ]; then\n        dev=`lspci -n |awk '{print $4}'`\n      else\n        dev=`lspci -n |awk '{print $3}'`\n      fi\n      for l in $dev\n      do\n        n=`lspci -d $l|awk '{for (i = 2; i <=NF;++i) print $i}'|tr \"\\n\" \" \"|sed 's/,//g'`\n        r=\"$r$l~$n,\"\n      done\n      echo $r\"\"\"\n        (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n        print out,\n    else:\n        print 'none',\nelif _platform == 'Windows' :\n    print 'none',\n\nelse:\n    print 'none',"]
-        )]),
-        migrations.RunSQL([(
-            "UPDATE server_pms SET createrepo=%s WHERE name='apt-get';",
-            ["cd %PATH%\ncd ..\nDIST=%REPONAME%\nKEYS=%KEYS%\nARCHS=\"i386 amd64 source\"\nmkdir .cache\nmkdir -p dists/$DIST/PKGS/binary-amd64\nmkdir -p dists/$DIST/PKGS/binary-i386\nmkdir -p dists/$DIST/PKGS/source\ncat > apt-ftparchive.conf <<EOF\nDir {\n ArchiveDir \".\";\n CacheDir \"./.cache\";\n};\nDefault {\n Packages::Compress \". gzip bzip2\";\n Contents::Compress \". gzip bzip2\";\n};\nTreeDefault {\n BinCacheDB \"packages-\\$(SECTION)-\\$(ARCH).db\";\n Directory \"dists/$DIST/\\$(SECTION)\";\n SrcDirectory \"dists/$DIST/\\$(SECTION)\";\n Packages \"\\$(DIST)/\\$(SECTION)/binary-\\$(ARCH)/Packages\";\n Contents \"\\$(DIST)/Contents-\\$(ARCH)\";\n};\nTree \"dists/$DIST\" {\n Sections \"PKGS\";\n Architectures \"i386 amd64 source\";\n}\nEOF\napt-ftparchive generate apt-ftparchive.conf 2> ./err\nif [ $? != 0 ] ; then\n  cat ./err >&2\nfi\nrm ./err\ncat > apt-release.conf <<EOF\nAPT::FTPArchive::Release::Codename \"$DIST\";\nAPT::FTPArchive::Release::Origin \"migasfree\";\nAPT::FTPArchive::Release::Components \"PKGS\";\nAPT::FTPArchive::Release::Label \"migasfree $DISTRO Repository\";\nAPT::FTPArchive::Release::Architectures \"$ARCHS\";\nAPT::FTPArchive::Release::Suite \"$DIST\";\nEOF\napt-ftparchive -c apt-release.conf release dists/$DIST > dists/$DIST/Release\ngpg -u migasfree-repository --homedir $KEYS/.gnupg -abs -o dists/$DIST/Release.gpg dists/$DIST/Release\ngpg -u migasfree-repository --homedir $KEYS/.gnupg --clearsign -o dists/$DIST/InRelease dists/$DIST/Release\nrm -rf apt-release.conf apt-ftparchive.conf\n"]
-        )]),
+        migrations.RunSQL(
+            [(
+                "UPDATE server_checking SET code=%s WHERE id=10;",
+                ["import os\nfrom migasfree.settings import MIGASFREE_REPO_DIR\nurl = '/server_messages/'\nalert = 'info'\ntarget = 'server'\nresult=0\nmsg=''\nif os.path.exists(MIGASFREE_REPO_DIR):\n    for _version in os.listdir(MIGASFREE_REPO_DIR):\n        _repos = os.path.join(MIGASFREE_REPO_DIR, _version, 'TMP/REPOSITORIES/dists')\n        if os.path.exists(_repos):\n            for _repo in os.listdir(_repos):\n                result=result+1\n                msg=msg+'%s en %s.' % (_repo, _version)\nmsg = 'Creating %s repositories:%s' % ( result, msg)"]
+            )],
+            migrations.RunSQL.noop
+        ),
+        migrations.RunSQL(
+            [(
+                "UPDATE server_property SET code=%s WHERE id=8;",
+                ["import subprocess\nimport platform\nimport os\n\n_platform = platform.system()\nif _platform == 'Linux' :\n    if os.path.exists('/proc/bus/pci'):\n        cmd_linux=\"\"\"r=''\n      if [ `lspci -n |sed -n 1p|awk '{print $2}'` = 'Class' ]; then\n        dev=`lspci -n |awk '{print $4}'`\n      else\n        dev=`lspci -n |awk '{print $3}'`\n      fi\n      for l in $dev\n      do\n        n=`lspci -d $l|awk '{for (i = 2; i <=NF;++i) print $i}'|tr \"\\n\" \" \"|sed 's/,//g'`\n        r=\"$r$l~$n,\"\n      done\n      echo $r\"\"\"\n        (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n        print out,\n    else:\n        print 'none',\nelif _platform == 'Windows' :\n    print 'none',\n\nelse:\n    print 'none',"]
+            )],
+            migrations.RunSQL.noop
+        ),
+        migrations.RunSQL(
+            [(
+                "UPDATE server_pms SET createrepo=%s WHERE name='apt-get';",
+                ["cd %PATH%\ncd ..\nDIST=%REPONAME%\nKEYS=%KEYS%\nARCHS=\"i386 amd64 source\"\nmkdir .cache\nmkdir -p dists/$DIST/PKGS/binary-amd64\nmkdir -p dists/$DIST/PKGS/binary-i386\nmkdir -p dists/$DIST/PKGS/source\ncat > apt-ftparchive.conf <<EOF\nDir {\n ArchiveDir \".\";\n CacheDir \"./.cache\";\n};\nDefault {\n Packages::Compress \". gzip bzip2\";\n Contents::Compress \". gzip bzip2\";\n};\nTreeDefault {\n BinCacheDB \"packages-\\$(SECTION)-\\$(ARCH).db\";\n Directory \"dists/$DIST/\\$(SECTION)\";\n SrcDirectory \"dists/$DIST/\\$(SECTION)\";\n Packages \"\\$(DIST)/\\$(SECTION)/binary-\\$(ARCH)/Packages\";\n Contents \"\\$(DIST)/Contents-\\$(ARCH)\";\n};\nTree \"dists/$DIST\" {\n Sections \"PKGS\";\n Architectures \"i386 amd64 source\";\n}\nEOF\napt-ftparchive generate apt-ftparchive.conf 2> ./err\nif [ $? != 0 ] ; then\n  cat ./err >&2\nfi\nrm ./err\ncat > apt-release.conf <<EOF\nAPT::FTPArchive::Release::Codename \"$DIST\";\nAPT::FTPArchive::Release::Origin \"migasfree\";\nAPT::FTPArchive::Release::Components \"PKGS\";\nAPT::FTPArchive::Release::Label \"migasfree $DISTRO Repository\";\nAPT::FTPArchive::Release::Architectures \"$ARCHS\";\nAPT::FTPArchive::Release::Suite \"$DIST\";\nEOF\napt-ftparchive -c apt-release.conf release dists/$DIST > dists/$DIST/Release\ngpg -u migasfree-repository --homedir $KEYS/.gnupg -abs -o dists/$DIST/Release.gpg dists/$DIST/Release\ngpg -u migasfree-repository --homedir $KEYS/.gnupg --clearsign -o dists/$DIST/InRelease dists/$DIST/Release\nrm -rf apt-release.conf apt-ftparchive.conf\n"]
+            )],
+            migrations.RunSQL.noop
+        ),
     ]
