@@ -24,7 +24,8 @@ class ComputerAutocomplete(al.AutocompleteModelBase):
         try:
             from django.db import connection
             table_names = connection.introspection.table_names()
-            if 'server_computer' in table_names:
+            if 'server_computer' in table_names \
+            and 'server_statuslog' in table_names:
                 self.choices = Computer.objects.all()
             else:
                 self.choices = Computer.objects.none()
