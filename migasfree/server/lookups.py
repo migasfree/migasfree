@@ -6,7 +6,7 @@ from django.conf import settings
 
 from ajax_select import register, LookupChannel
 
-from migasfree.server.models import (
+from .models import (
     Attribute,
     Package,
     Property,
@@ -34,24 +34,27 @@ class AttributeLookup(LookupChannel):
                 | Q(property_att__prefix__icontains=q)
             ).filter(Q(property_att__active=True)).order_by('value')
 
-    def get_result(self, obj):
-        return unicode(obj)
-
     def format_match(self, obj):
         return self.format_item_display(obj)
-
-    def format_item_display(self, obj):
-        return "%s-%s %s" % (
-            escape(obj.property_att.prefix),
-            escape(obj.value),
-            escape(obj.description)
-        )
 
     def can_add(self, user, model):
         return False
 
     def get_objects(self, ids):
-        return self.model.objects.filter(pk__in=ids).order_by(
+        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
+            return self.model.objects.filter(
+                pk__in=ids).filter(
+                    ~Q(property_att__prefix='CID')).order_by(
+                        'property_att',
+                        'value'
+            ) | self.model.objects.filter(
+                pk__in=ids).filter(
+                    Q(property_att__prefix='CID')).order_by(
+                        'description'
+            )
+
+        else:
+            return self.model.objects.filter(pk__in=ids).order_by(
             'property_att',
             'value'
         )
@@ -75,17 +78,12 @@ class AttributeComputersLookup(LookupChannel):
                 | Q(property_att__prefix__icontains=q)
             ).filter(Q(property_att__active=True)).order_by('value')
 
-    def get_result(self, obj):
-        return unicode(obj)
-
     def format_match(self, obj):
         return self.format_item_display(obj)
 
     def format_item_display(self, obj):
-        return "%s-%s %s (%s)" % (
-            escape(obj.property_att.prefix),
-            escape(obj.value),
-            escape(obj.description),
+        return "%s (total %s)" % (
+            escape(obj.__str__()),
             escape(obj.total_computers(UserProfile.get_logged_version()))
         )
 
@@ -93,7 +91,20 @@ class AttributeComputersLookup(LookupChannel):
         return False
 
     def get_objects(self, ids):
-        return self.model.objects.filter(pk__in=ids).order_by(
+        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
+            return self.model.objects.filter(
+                pk__in=ids).filter(
+                    ~Q(property_att__prefix='CID')).order_by(
+                        'property_att',
+                        'value'
+            ) | self.model.objects.filter(
+                pk__in=ids).filter(
+                    Q(property_att__prefix='CID')).order_by(
+                        'description'
+            )
+
+        else:
+            return self.model.objects.filter(pk__in=ids).order_by(
             'property_att',
             'value'
         )
@@ -107,9 +118,6 @@ class PackageLookup(LookupChannel):
         return self.model.objects.by_version(
             request.user.userprofile.version_id
         ).filter(name__icontains=q).order_by('name')
-
-    def get_result(self, obj):
-        return unicode(obj)
 
     def format_match(self, obj):
         return self.format_item_display(obj)
@@ -135,9 +143,6 @@ class TagLookup(LookupChannel):
             Q(value__icontains=q) | Q(description__icontains=q)
             | Q(property_att__prefix__icontains=q)
         ).order_by('value')
-
-    def get_result(self, obj):
-        return unicode(obj)
 
     def format_match(self, obj):
         return self.format_item_display(obj)
@@ -166,9 +171,6 @@ class DeviceLogicalLookup(LookupChannel):
     def get_query(self, q, request):
         return self.model.objects.filter(Q(device__name__icontains=q))
 
-    def get_result(self, obj):
-        return unicode(obj)
-
     def format_match(self, obj):
         return self.format_item_display(obj)
 
@@ -189,9 +191,6 @@ class ComputerLookup(LookupChannel):
         else:
             return self.model.objects.filter(Q(name__icontains=q))
 
-    def get_result(self, obj):
-        return unicode(obj)
-
     def format_match(self, obj):
         return self.format_item_display(obj)
 
@@ -200,6 +199,11 @@ class ComputerLookup(LookupChannel):
 
     def can_add(self, user, model):
         return False
+
+    def reorder(self, mylist):
+            return [row.id for row in Computer.objects.filter(
+                pk__in=mylist
+            ).order_by(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0])]
 
     def get_objects(self, ids):
         """
@@ -218,5 +222,9 @@ class ComputerLookup(LookupChannel):
                 lst.append(int(id))
 
         things = self.model.objects.in_bulk(lst)
+        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
+            return [things[aid] for aid in lst if aid in things]
+        else:
+            return [things[aid] for aid in self.reorder(lst) if aid in things]
 
-        return [things[aid] for aid in lst if aid in things]
+

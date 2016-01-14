@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -55,7 +56,7 @@ class Attribute(models.Model, MigasLink):
         blank=True
     )
 
-    _exclude_links = ["computer - tags",]
+    _exclude_links = ["computer - tags"]
 
     objects = AttributeManager()
 
@@ -71,7 +72,12 @@ class Attribute(models.Model, MigasLink):
     property_link.allow_tags = True
 
     def __str__(self):
-        return '%s-%s' % (self.property_att.prefix, self.value)
+        if self.property_att.prefix == "CID" and \
+            settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
+
+            return '%s (CID-%s)' % (self.description, self.value)
+        else:
+            return '%s-%s' % (self.property_att.prefix, self.value)
 
     def total_computers(self, version=None):
         from . import Login
@@ -149,7 +155,7 @@ class TagManager(AttributeManager):
 
 
 class Tag(Attribute):
-    _include_links = ["computer - tags",]
+    _include_links = ["computer - tags"]
 
     objects = TagManager()
 

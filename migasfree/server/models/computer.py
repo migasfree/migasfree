@@ -331,10 +331,13 @@ class Computer(models.Model, MigasLink):
         if 'id' in _desc:
             _desc.remove('id')
 
-        return '(%s)' % ', '.join(str(self.__getattribute__(x)) for x in _desc)
+        return str(self.__getattribute__(_desc[0]))
 
     def display(self):
-        return "CID-%d %s" % (self.id, self.get_cid_description())
+        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
+            return "CID-%d" % self.id
+        else:
+            return "%s (CID-%d)" % (self.get_cid_description(), self.id)
 
     def get_replacement_info(self):
         cid = self.get_cid_attribute()
