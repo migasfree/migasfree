@@ -205,7 +205,10 @@ class Computer(models.Model, MigasLink):
 
     def update_software_history(self, history):
         if history:
-            self.history_sw = self.history_sw + '\n\n' + history
+            if self.history_sw:
+                self.history_sw += '\n\n' + history
+            else:
+                self.history_sw = history
             self.save()
 
     def update_software_inventory(self, pkgs):
