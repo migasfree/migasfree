@@ -235,6 +235,8 @@ class Repository(models.Model, MigasLink):
             version__id=computer.version.id
         ).filter(
             attributes__id__in=attributes
+        ).filter(
+            date__lte=datetime.datetime.now().date()
         ).values_list('id', flat=True)
         lst = list(attributed)
 
