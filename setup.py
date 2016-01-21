@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011-2015 Jose Antonio Chavarría
+# Copyright (c) 2011-2016 Jose Antonio Chavarría
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -168,6 +168,7 @@ setup(
             'server/static/fonts/*',
             'server/templates/*.html',
             'server/templates/*/*.html',
+            'server/templates/*/*/*.html',
         ],
     },
     data_files=[
