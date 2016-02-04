@@ -16,8 +16,8 @@ from django.contrib import messages
 
 from .migasfree import BASE_DIR, MIGASFREE_TMP_DIR
 
-if django.VERSION < (1, 9, 1, 'final'):
-    print('Migasfree requires Django 1.9.1. Please, update it.')
+if django.VERSION < (1, 9, 2, 'final'):
+    print('Migasfree requires Django 1.9.2. Please, update it.')
     exit(1)
 
 ADMINS = (
