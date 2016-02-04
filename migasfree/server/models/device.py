@@ -36,6 +36,13 @@ class Device(models.Model, MigasLink):
         default="{}"
     )
 
+    def location(self):
+        data = json.loads(self.data)
+        if 'LOCATION' in data:
+            return data['LOCATION']
+        else:
+            return ""
+
     def model_link(self):
         return self.model.link()
 

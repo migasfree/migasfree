@@ -95,13 +95,14 @@ class DeviceLogicalInline(admin.TabularInline):
 
 @admin.register(Device)
 class DeviceAdmin(MigasAdmin):
-    list_display = ('name', 'model_link', 'connection')
+    list_display = ('name', 'location', 'model_link', 'connection')
     list_display_links = ('name',)
     list_filter = ('model',)
     search_fields = (
         'name',
         'model__name',
-        'model__manufacturer__name'
+        'model__manufacturer__name',
+        'data'
     )
     fields = ('name', 'model', 'connection', 'data')
     ordering = ('name',)
