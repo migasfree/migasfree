@@ -16,7 +16,6 @@ from . import (
 
 from ..functions import (
     s2l,
-    l2s,
     swap_m2m,
     remove_empty_elements_from_dict
 )
@@ -52,14 +51,14 @@ class UnsubscribedManager(models.Manager):
 
 class ComputerManager(models.Manager):
     def create(self, name, version, uuid, ip=None):
-        comp = Computer()
-        comp.name = name
-        comp.version = version
-        comp.uuid = uuid
-        comp.ip = ip
-        comp.save()
+        obj = Computer()
+        obj.name = name
+        obj.version = version
+        obj.uuid = uuid
+        obj.ip = ip
+        obj.save()
 
-        return comp
+        return obj
 
 
 @python_2_unicode_compatible
@@ -225,7 +224,7 @@ class Computer(models.Model, MigasLink):
             lst = s2l(self.devices_copy)
             if devicelogical_id in lst:
                 lst.remove(devicelogical_id)
-                self.devices_copy = l2s(lst)
+                self.devices_copy = lst.__str__()
                 self.save()
         except:
             pass
@@ -235,7 +234,7 @@ class Computer(models.Model, MigasLink):
             lst = s2l(self.devices_copy)
             if devicelogical_id not in lst:
                 lst.append(devicelogical_id)
-                self.devices_copy = l2s(lst)
+                self.devices_copy = lst.__str__()
                 self.save()
         except:
             pass
