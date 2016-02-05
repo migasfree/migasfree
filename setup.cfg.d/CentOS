@@ -2,16 +2,15 @@
 release = 1
 packager = Alberto Gacías Mateo <alberto@migasfree.org>
 doc_files = AUTHORS COPYING INSTALL MANIFEST.in README
-requires = python >= 2.6
+requires = python >= 2.7
            wget
            httpd
            mod_wsgi
-           Django < 1.7.0
+           Django >= 1.9.2
            dpkg-devel
            createrepo
-           django-ajax-selects >= 1.3.3
+           django-ajax-selects >= 1.4.2
            python-docutils
-           Django-south >= 0.7.4
            postgresql-server
            postgresql
            python-psycopg2
