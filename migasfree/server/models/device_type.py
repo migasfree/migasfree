@@ -20,6 +20,6 @@ class DeviceType(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Device (Type)")
-        verbose_name_plural = _("Device (Types)")
+        verbose_name = _("Type")
+        verbose_name_plural = _("Types")
         permissions = (("can_save_devicetype", "Can save Device Type"),)

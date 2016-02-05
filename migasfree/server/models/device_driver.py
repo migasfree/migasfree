@@ -57,7 +57,7 @@ class DeviceDriver(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Device (Driver)")
-        verbose_name_plural = _("Device (Driver)")
+        verbose_name = _("Driver")
+        verbose_name_plural = _("Drivers")
         permissions = (("can_save_devicedriver", "Can save Device Driver"),)
         unique_together = (("model", "version", "feature"),)

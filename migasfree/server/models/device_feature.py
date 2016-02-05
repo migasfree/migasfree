@@ -20,6 +20,6 @@ class DeviceFeature(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Device (Feature)")
-        verbose_name_plural = _("Device (Feature)")
+        verbose_name = _("Feature")
+        verbose_name_plural = _("Features")
         permissions = (("can_save_devicefeature", "Can save Device Feature"),)

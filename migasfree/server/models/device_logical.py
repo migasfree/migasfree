@@ -80,7 +80,7 @@ class DeviceLogical(models.Model, MigasLink):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Device (Logical)")
-        verbose_name_plural = _("Device (Logical)")
+        verbose_name = _("Device Logical")
+        verbose_name_plural = _("Devices Logical")
         permissions = (("can_save_devicelogical", "Can save Device Logical"),)
         unique_together = (("device", "feature"),)

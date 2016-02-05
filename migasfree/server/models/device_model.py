@@ -41,7 +41,7 @@ class DeviceModel(models.Model, MigasLink):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Device (Model)")
-        verbose_name_plural = _("Device (Models)")
+        verbose_name = _("Model")
+        verbose_name_plural = _("Models")
         unique_together = (("devicetype", "manufacturer", "name"),)
         permissions = (("can_save_devicemodel", "Can save Device Model"),)

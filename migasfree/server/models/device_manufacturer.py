@@ -20,8 +20,8 @@ class DeviceManufacturer(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Device (Manufacturer)")
-        verbose_name_plural = _("Device (Manufacturers)")
+        verbose_name = _("Manufacturer")
+        verbose_name_plural = _("Manufacturers")
         permissions = (
             ("can_save_devicemanufacturer", "Can save Device Manufacturer"),
         )

@@ -34,8 +34,8 @@ class DeviceConnection(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Device (Connection)")
-        verbose_name_plural = _("Device (Connections)")
+        verbose_name = _("Connection")
+        verbose_name_plural = _("Connections")
         unique_together = (("devicetype", "name"),)
         permissions = (
             ("can_save_deviceconnection", "Can save Device Connection"),
