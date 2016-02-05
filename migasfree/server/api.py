@@ -785,10 +785,8 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         lst_computer_id.append(all_id)
 
         retdata = ok()
-        (old_tags_id, new_tags_id) = old_new_elements(
-            lst_computer_id,
-            lst_tags_id
-        )
+        old_tags_id = list_difference(lst_computer_id, lst_tags_id)
+        new_tags_id = list_difference(lst_tags_id, lst_computer_id)
         com_tags_id = list_common(lst_computer_id, lst_tags_id)
 
         lst_pkg_remove = []
