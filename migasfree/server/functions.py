@@ -178,13 +178,6 @@ def remove_empty_elements_from_dict(dic):
     return dic
 
 
-def l2s(lst):
-    """
-    list to string
-    """
-    return lst.__str__()
-
-
 def s2l(cad):
     """
     string to list
@@ -275,15 +268,6 @@ def list_common(list1, list2):
     return diff_list
 
 
-def old_new_elements(list1, list2):
-    """Given two lists returns a list with the old elements
-    and other list with the new elements"""
-    return (
-        list_difference(list1, list2),
-        list_difference(list2, list1)
-    )
-
-
 def run_in_server(code_bash):
     _, tmp_file = tempfile.mkstemp()
     writefile(tmp_file, code_bash)
@@ -344,4 +328,5 @@ def uuid_change_format(uuid):
                 uuid[14:16],
                 uuid[19:23],
                 uuid[24:36])
+
     return uuid
