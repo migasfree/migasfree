@@ -139,6 +139,72 @@ class Migration(migrations.Migration):
             name='computer',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='server.Computer', verbose_name='computer'),
         ),
+        migrations.DeleteModel(
+            name='Att',
+        ),
+        migrations.CreateModel(
+            name='ClientProperty',
+            fields=[
+            ],
+            options={
+                'verbose_name': 'Property',
+                'proxy': True,
+                'verbose_name_plural': 'Properties',
+            },
+            bases=('server.property',),
+        ),
+        migrations.CreateModel(
+            name='Feature',
+            fields=[
+            ],
+            options={
+                'verbose_name': 'Attribute',
+                'proxy': True,
+                'verbose_name_plural': 'Attributes',
+            },
+            bases=('server.attribute',),
+        ),
+        migrations.AlterModelOptions(
+            name='attribute',
+            options={'permissions': (('can_save_attribute', 'Can save Attribute'),), 'verbose_name': 'Attribute/Tag', 'verbose_name_plural': 'Attributes/Tags'},
+        ),
+        migrations.AlterModelOptions(
+            name='deviceconnection',
+            options={'permissions': (('can_save_deviceconnection', 'Can save Device Connection'),), 'verbose_name': 'Connection', 'verbose_name_plural': 'Connections'},
+        ),
+        migrations.AlterModelOptions(
+            name='devicedriver',
+            options={'permissions': (('can_save_devicedriver', 'Can save Device Driver'),), 'verbose_name': 'Driver', 'verbose_name_plural': 'Drivers'},
+        ),
+        migrations.AlterModelOptions(
+            name='devicefeature',
+            options={'permissions': (('can_save_devicefeature', 'Can save Device Feature'),), 'verbose_name': 'Feature', 'verbose_name_plural': 'Features'},
+        ),
+        migrations.AlterModelOptions(
+            name='devicelogical',
+            options={'permissions': (('can_save_devicelogical', 'Can save Device Logical'),), 'verbose_name': 'Device Logical', 'verbose_name_plural': 'Devices Logical'},
+        ),
+        migrations.AlterModelOptions(
+            name='devicemanufacturer',
+            options={'permissions': (('can_save_devicemanufacturer', 'Can save Device Manufacturer'),), 'verbose_name': 'Manufacturer', 'verbose_name_plural': 'Manufacturers'},
+        ),
+        migrations.AlterModelOptions(
+            name='devicemodel',
+            options={'permissions': (('can_save_devicemodel', 'Can save Device Model'),), 'verbose_name': 'Model', 'verbose_name_plural': 'Models'},
+        ),
+        migrations.AlterModelOptions(
+            name='devicetype',
+            options={'permissions': (('can_save_devicetype', 'Can save Device Type'),), 'verbose_name': 'Type', 'verbose_name_plural': 'Types'},
+        ),
+        migrations.AlterModelOptions(
+            name='property',
+            options={'permissions': (('can_save_property', 'Can save Property'),), 'verbose_name': 'Property/TagType', 'verbose_name_plural': 'Properties/TagTypes'},
+        ),
+        migrations.AlterField(
+            model_name='devicedriver',
+            name='name',
+            field=models.CharField(blank=True, max_length=100, null=True, verbose_name='name'),
+        ),
         migrations.RunSQL(
             [(
                 "UPDATE server_query SET code=%s, name=%s, parameters=%s WHERE id=3;",
