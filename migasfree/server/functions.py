@@ -219,12 +219,10 @@ def swap_m2m(source_field, target_field):
     target_m2m = list(target_field.all())
 
     source_field.clear()
-    for item in target_m2m:
-        source_field.add(item)
+    source_field.add(*target_m2m)
 
     target_field.clear()
-    for item in source_m2m:
-        target_field.add(item)
+    target_field.add(*source_m2m)
 
 
 def horizon(mydate, delay):
