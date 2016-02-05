@@ -33,11 +33,8 @@ case "$1" in
         # Config, create user and database (posgresql)
         python -c "from migasfree.server.functions_pg import pg_config ;pg_config()" || :
 
-        # migrate DB with south
-        cd /
-        cd $(python -c "import migasfree;print migasfree.__path__[0]")
-        python manage.py schemamigration server --auto --settings=migasfree.settings.production || :
-        python manage.py migrate server --settings=migasfree.settings.production || :
+        # migrate DB
+        cat <(echo "yes") - | django-admin.py migrate --fake-initial
 
         migasfree-server-config-webserver
     ;;
