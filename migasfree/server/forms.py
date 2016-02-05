@@ -30,6 +30,17 @@ class ComputerReplacementForm(forms.Form):
     )
 
 
+class AppendDevicesFromComputerForm(forms.Form):
+    source = autocomplete_light.fields.ChoiceField(
+        'ComputerAutocomplete',
+        label=_('Source')
+    )
+    target = autocomplete_light.fields.MultipleChoiceField(
+        'AttributeAutocomplete',
+        label=_('Target')
+    )
+
+
 class RepositoryForm(forms.ModelForm):
     attributes = make_ajax_field(Repository, 'attributes', 'attribute')
     packages = make_ajax_field(Repository, 'packages', 'package')

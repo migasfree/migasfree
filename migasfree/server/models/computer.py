@@ -371,6 +371,13 @@ class Computer(models.Model, MigasLink):
             ),
         })
 
+    def append_devices(self, computer_id):
+        try:
+            target = Computer.objects.get(pk=computer_id)
+            target.devices_logical.add(*self.devices_logical.all())
+        except:
+            pass
+
     def __str__(self):
         return str(self.__getattribute__(
             settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]

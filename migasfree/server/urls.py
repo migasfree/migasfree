@@ -151,6 +151,12 @@ urlpatterns = patterns('',
         name='computer_replacement'
     ),
 
+    url(
+        r'^append_devices_from_computer/$',
+        append_devices_from_computer,
+        name='append_devices_from_computer'
+    ),
+
     # backwards compatibility
     url(
         r'^migasfree/$',
