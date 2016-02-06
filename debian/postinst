@@ -34,7 +34,7 @@ case "$1" in
         python -c "from migasfree.server.functions_pg import pg_config ;pg_config()" || :
 
         # migrate DB
-        cat <(echo "yes") - | django-admin.py migrate --fake-initial
+        echo yes|cat -| django-admin.py migrate --fake-initial
 
         migasfree-server-config-webserver
     ;;
