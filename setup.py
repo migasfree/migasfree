@@ -179,12 +179,12 @@ setup(
             'MANIFEST.in',
             'README',
         ]),
-    ],
-    scripts=[
-        'bin/migasfree-server-functions',
-        'bin/migasfree-server-create-database',
-        'bin/migasfree-server-from-scratch',
-        'bin/migasfree-server-config-webserver',
+        ('/usr/share/migasfree-server/setup', [
+            'setup/common.sh',
+            'setup/db_server.sh',
+            'setup/web_server.sh',
+            'setup/from_scratch.sh',
+        ]),
     ],
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
