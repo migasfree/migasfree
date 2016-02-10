@@ -97,6 +97,8 @@ def gpg_get_key(name):
         with open(_file, 'wb') as handle:
             handle.write(_key)
 
+        os.chmod(_file, 0o600)
+
     with open(_file, 'rb') as handle:
         _key = handle.read()
 
