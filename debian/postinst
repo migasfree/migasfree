@@ -17,11 +17,11 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+. /usr/share/migasfree-server/setup/web_server.sh
+. /usr/share/migasfree-server/setup/db_server.sh
 
 case "$1" in
     configure)
-        export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
-
         if which update-python-modules > /dev/null 2>&1
         then
             if [ -f /usr/share/python-support/migasfree-server.public ]
@@ -30,13 +30,8 @@ case "$1" in
             fi
         fi
 
-        # Config, create user and database (posgresql)
-        python -c "from migasfree.server.functions_pg import pg_config ;pg_config()" || :
-
-        # migrate DB
-        echo yes|cat -| django-admin.py migrate --fake-initial
-
-        migasfree-server-config-webserver
+        db_server_init
+        web_server_init
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
