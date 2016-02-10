@@ -2,7 +2,6 @@
 
 import os
 import sys
-import errno
 import tempfile
 
 import django
@@ -10,131 +9,6 @@ import django
 from datetime import timedelta
 
 from django.conf import settings
-
-
-def is_db_sqlite():
-    return settings.DATABASES['default']['ENGINE'] == 'django.db.backends.sqlite3'
-
-
-def config_apache():
-    _apache_path = ''
-    if os.path.exists('/etc/apache/conf.d'):
-        _apache_path = '/etc/apache/conf.d'
-    elif os.path.exists('/etc/apache2/conf.d'):
-        _apache_path = '/etc/apache2/conf.d'
-    elif os.path.exists('/etc/httpd/conf.d'):
-        _apache_path = '/etc/httpd/conf.d'
-    elif os.path.exists('/etc/apache2/sites-enabled'):
-        _apache_path = '/etc/apache2/sites-enabled'
-
-    if not _apache_path:
-        print('Apache path not found.')
-        sys.exit(errno.ENOTDIR)
-
-    # FIXME VirtualHost
-    _config = \
-"""
-Alias /static/ajax_select %(migasfree_app_dir)s/../ajax_select/static/ajax_select
-Alias /static/autocomplete_light %(migasfree_app_dir)s/../autocomplete_light/static/autocomplete_light
-Alias /static/admin/css/admin-inlines.css %(migasfree_app_dir)s/admin_bootstrapped/static/admin/css/admin-inlines.css
-Alias /static/admin/css/overrides.css %(migasfree_app_dir)s/admin_bootstrapped/static/admin/css/overrides.css
-Alias /static/admin/js/generic-lookup.js %(migasfree_app_dir)s/admin_bootstrapped/static/admin/js/generic-lookup.js
-Alias /static/admin/js/jquery.sortable.js %(migasfree_app_dir)s/admin_bootstrapped/static/admin/js/jquery.sortable.js
-Alias /static/js/jquery.min.js %(migasfree_app_dir)s/admin_bootstrapped/static/js/jquery.min.js
-Alias /static/js/jquery-ui.min.js %(migasfree_app_dir)s/admin_bootstrapped/static/js/jquery-ui.min.js
-Alias /static/admin %(django_dir)s/contrib/admin/static/admin
-Alias /static/bootstrap %(migasfree_app_dir)s/admin_bootstrapped/static/bootstrap
-Alias /static/flot %(migasfree_app_dir)s/flot/static/flot
-Alias /static %(migasfree_app_dir)s/server/static
-Alias /repo %(migasfree_repo_dir)s
-
-<Directory %(migasfree_app_dir)s>
-%(require)s
-    Options FollowSymLinks
-</Directory>
-
-<Directory %(migasfree_app_dir)s/../ajax_select/static/ajax_select>
-%(require)s
-    Options FollowSymLinks
-</Directory>
-
-<Directory %(migasfree_app_dir)s/../autocomplete_light/static/autocomplete_light>
-%(require)s
-    Options FollowSymLinks
-</Directory>
-
-<Directory %(migasfree_app_dir)s/admin_bootstrapped/static>
-%(require)s
-    Options FollowSymLinks
-</Directory>
-
-<Directory %(django_dir)s/contrib/admin/static/admin>
-%(require)s
-    Options FollowSymLinks
-</Directory>
-
-<Directory %(migasfree_app_dir)s/server/static>
-%(require)s
-    Options FollowSymLinks
-</Directory>
-
-<Directory %(migasfree_repo_dir)s>
-%(require)s
-    Options Indexes FollowSymlinks
-    IndexOptions FancyIndexing
-</Directory>
-
-<Directory %(migasfree_repo_dir)s/errors>
-    Order deny, allow
-    Deny from all
-    Allow from 127.0.0.1
-
-    Options Indexes FollowSymlinks
-    IndexOptions FancyIndexing
-</Directory>
-
-WSGIScriptAlias / %(migasfree_app_dir)s/wsgi.py
-"""
-
-    _filename = os.path.join(_apache_path, 'migasfree.conf')
-    _write_web_config(_filename, _config)
-
-
-def _apache_name():
-    if os.system("which apache2 1>/dev/null 2>/dev/null") == 0:
-        return "apache2"
-    elif os.system("which httpd 1>/dev/null 2>/dev/null") == 0:
-        return "httpd"
-    else:
-        return ""
-
-
-def _apache_version():
-    _name = _apache_name()
-    if _name:
-        return run_in_server(
-            "%s -v | grep '^Server version' | cut -d ' ' -f 3 " % _name
-        )["out"].split("/")[1].replace("\n", "")
-
-
-def _write_web_config(filename, config):
-    if _apache_version() < "2.4.":  # issue 112
-        _require = """    Order allow,deny
-    Allow from all
-"""
-    else:
-        _require = "    Require all granted"
-
-    _content = config % {
-        'django_dir': os.path.dirname(os.path.abspath(django.__file__)),
-        'migasfree_repo_dir': settings.MIGASFREE_REPO_DIR,
-        'migasfree_app_dir': settings.MIGASFREE_APP_DIR,
-        'require': _require
-    }
-
-    if not writefile(filename, _content):
-        print('Problem found creating web server configuration file.')
-        sys.exit(errno.EINPROGRESS)
 
 
 def writefile(filename, content):
