@@ -22,3 +22,6 @@ requires = python >= 2.7
            python-psycopg2
            django-autocomplete-light
            python-six
+           python-django-bootstrap3
+           python-django-admin-bootstrapped
+           python-django-import-export
