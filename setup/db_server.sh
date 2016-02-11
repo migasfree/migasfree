@@ -86,11 +86,6 @@ function get_pg_major_version()
     echo -n $(psql --version | head -1 | cut -d ' ' -f 3 | cut -d '.' -f1,2)
 }
 
-function pg_create_cluster()
-{
-    pg_createcluster --locale en_US.UTF-8 --start $(get_pg_major_version) main &> /dev/null || :
-}
-
 function set_pg_config()
 {
     _NAME=$(get_migasfree_setting "DATABASES['default']['NAME']")
@@ -101,7 +96,8 @@ function set_pg_config()
 
 function db_server_init()
 {
-    pg_create_cluster
+
+    export DJANGO_SETTINGS_MODULE=migasfree.settings.production
 
     service postgresql start || :
 
