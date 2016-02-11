@@ -8,4 +8,4 @@ Package: migasfree-server
 Maintainer: Alberto Gacías <alberto@migasfree.org>
 Debian-Version = 1
 Build-Depends = python (>=2.7)
-Depends = python-django (>=1.9.2), apache2, libapache2-mod-wsgi, curl, rpm, dpkg-dev, createrepo, python-django-ajax-selects (>= 1.4.2), python-docutils, python-dateutil, gnupg, haveged, python-gpgme, postgresql, python-psycopg2, python-django-autocomplete-light, python-six, python-django-bootstrap3, python-django-admin-bootstrapped, python-django-import-export
+Depends = python-django (>=1.9.2), apache2, libapache2-mod-wsgi, curl, rpm, dpkg-dev, createrepo, python-django-ajax-selects (>= 1.4.2), python-docutils, python-dateutil, gnupg, haveged, python-gpgme, postgresql, python-psycopg2, python-django-autocomplete-light, python-six, python-django-bootstrap3, python-django-admin-bootstrapped, python-django-import-export, apt-utils

@@ -25,3 +25,4 @@ requires = python >= 2.7
            python-django-bootstrap3
            python-django-admin-bootstrapped
            python-django-import-export
+           apt-utils
