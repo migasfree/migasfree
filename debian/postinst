@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # postinst script for migasfree-server
 #
 # see: dh_installdeb(1)
