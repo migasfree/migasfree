@@ -4,20 +4,20 @@
 
 function get_web_service
 {
-    which apache2 &>/dev/null && (
+    which apache2 &>/dev/null && {
         echo -e "apache2"
         return
-    ) || :
+    } || :
 
-    which httpd &>/dev/null && (
+    which httpd &>/dev/null && {
         echo -e "httpd"
         return
-    ) || :
+    } || :
 
-    which nginx &>/dev/null && (
+    which nginx &>/dev/null && {
         echo -e "nginx"
         return
-    ) || :
+    } || :
 }
 
 function get_user_web_service
@@ -32,10 +32,10 @@ function web_service
 
 function get_apache_name()
 {
-    if [ $(which apache2 1>/dev/null 2>/dev/null) -eq 0 ]
+    if which apache2 1>/dev/null 2>/dev/null
     then
         echo "apache2"
-    elif [ $(which httpd 1>/dev/null 2>/dev/null) -eq 0 ]
+    elif which httpd 1>/dev/null 2>/dev/null
     then
         echo "httpd"
     else
@@ -82,10 +82,15 @@ function create_apache_config()
         exit 1
     fi
 
-    _REQUIRE="Require all granted"
-    version_gt "2.3" get_apache_version && (
-        _REQUIRE="Order allow,deny\n    Allow from all"
-    ) || :
+    _ALLOW_ALL="Require all granted"
+    _ALLOW_FROM="Require host 127.0.0.1"
+    version_gt "2.3" $(get_apache_version) && {
+        _ALLOW_ALL="Order allow,deny
+    Allow from all"
+        _ALLOW_FROM="Order deny,allow
+    Deny from all
+    Allow from 127.0.0.1"
+    } || :
 
     _STATIC_ROOT=$(get_migasfree_setting STATIC_ROOT)
     _MIGASFREE_REPO_DIR=$(get_migasfree_setting MIGASFREE_REPO_DIR)
@@ -95,23 +100,20 @@ function create_apache_config()
     cat > $_CONF_FILE << EOF
 Alias /static $_STATIC_ROOT
 <Directory $_STATIC_ROOT>
-    $_REQUIRE
+    $_ALLOW_ALL
     Options Indexes FollowSymlinks
     IndexOptions FancyIndexing
 </Directory>
 
 Alias /repo $_MIGASFREE_REPO_DIR
 <Directory $_MIGASFREE_REPO_DIR>
-    $_REQUIRE
+    $_ALLOW_ALL
     Options Indexes FollowSymlinks
     IndexOptions FancyIndexing
 </Directory>
 
 <Directory $_MIGASFREE_REPO_DIR/errors>
-    Order deny,allow
-    Deny from all
-    Allow from 127.0.0.1
-
+    $_ALLOW_FROM
     Options Indexes FollowSymlinks
     IndexOptions FancyIndexing
 </Directory>
@@ -119,7 +121,7 @@ Alias /repo $_MIGASFREE_REPO_DIR
 WSGIScriptAlias / $_MIGASFREE_APP_DIR/wsgi.py
 <Directory $_MIGASFREE_APP_DIR>
     <Files wsgi.py>
-        Require all granted
+        $_ALLOW_ALL
     </Files>
 </Directory>
 EOF
