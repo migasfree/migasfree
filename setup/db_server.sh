@@ -96,11 +96,10 @@ function set_pg_config()
 
 function db_server_init()
 {
-
     export DJANGO_SETTINGS_MODULE=migasfree.settings.production
 
-    service postgresql start || :
-
+    boot_at_start postgresql
+    service_action postgresql start
     is_pg_user_exists || pg_create_user
 
     is_pg_hba_configured || (

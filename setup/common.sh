@@ -24,3 +24,26 @@ function owner()
         chown -R $2:$2 "$1"
     fi
 }
+
+# service_action service action
+function service_action()
+{
+    _SERVICE=$1
+    _ACTION=$2
+
+    /etc/init.d/$1 $2
+}
+
+# boot_at_start service
+function boot_at_start()
+{
+    _SERVICE=$1
+
+    if which update-rc.d &> /dev/null
+    then
+        update-rc.d $_SERVICE defaults || :
+    elif which chkconfig &> /dev/null
+    then
+        chkconfig --add $_SERVICE || :
+    fi
+}

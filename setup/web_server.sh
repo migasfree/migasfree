@@ -25,11 +25,6 @@ function get_user_web_service
     echo -n $(ps axho user,comm | grep -E $(get_web_service) | uniq | grep -v "root" | cut -d " " -f 1 | uniq)
 }
 
-function web_service
-{
-    service $(get_web_service) "$1"
-}
-
 function get_apache_name()
 {
     if which apache2 1>/dev/null 2>/dev/null
@@ -150,9 +145,12 @@ function web_server_init()
     export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
     django-admin.py collectstatic --noinput
 
+    service_action haveged start
+
     create_apache_config
-    web_service start
-    service haveged start || :
+    boot_at_start $(get_apache_name)
+    service_action $(get_apache_name) start
+
     python -c "import django; django.setup(); from migasfree.server.security import create_keys_server; create_keys_server()"
     set_web_server_permissions
 }
