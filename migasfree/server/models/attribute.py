@@ -17,7 +17,7 @@ class AttributeManager(models.Manager):
         if '~' in value:
             value, description = value.split('~')
 
-        value = value.replace('\n', '')  # clean field
+        value = value.strip()  # clean field
 
         queryset = Attribute.objects.filter(
             property_att=property_att, value=value
@@ -29,13 +29,13 @@ class AttributeManager(models.Manager):
             raise ValidationError(_('The attribute can not be created because'
             ' it prevents property'))
 
-        attribute = Attribute()
-        attribute.property_att = property_att
-        attribute.value = value
-        attribute.description = description
-        attribute.save()
+        obj = Attribute()
+        obj.property_att = property_att
+        obj.value = value
+        obj.description = description
+        obj.save()
 
-        return attribute
+        return obj
 
 
 @python_2_unicode_compatible
