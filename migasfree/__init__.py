@@ -1,6 +1,9 @@
 # -*- coding: UTF-8 -*-
 
-__version__ = "4.9"
-__author__ = "Alberto Gacías & Jose Antonio Chavarría"
+__version__ = "4.10"
+__author__ = [
+    'Alberto Gacías <alberto@migasfree.org>',
+    'Jose Antonio Chavarría <jachavar@gmail.com>'
+]
 __contact__ = "fun.with@migasfree.org"
 __homepage__ = "https://github.com/migasfree/migasfree/"
