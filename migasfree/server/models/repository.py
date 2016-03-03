@@ -249,7 +249,7 @@ class Repository(models.Model, MigasLink):
             schedule__scheduledelay__attributes__id__in=attributes
         ).extra(
             select={
-                'delay': "server_scheduledelay.delay",
+                "delay": "server_scheduledelay.delay",
                 "duration": "server_scheduledelay.duration"
             }
         )
@@ -266,7 +266,9 @@ class Repository(models.Model, MigasLink):
         # 3.- excluded attributtes
         repositories = Repository.objects.filter(
             id__in=lst
-        ).filter(~models.Q(excludes__id__in=attributes))
+        ).filter(
+            ~models.Q(excludes__id__in=attributes)
+        ).order_by('name')
 
         return repositories
 
