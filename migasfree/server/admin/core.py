@@ -18,7 +18,7 @@ from ..models import (
 )
 from ..forms import PropertyForm, RepositoryForm, TagForm
 from ..filters import FeatureFilter, TagFilter
-from ..functions import compare_values
+from ..functions import compare_list_values
 from ..tasks import (
     create_physical_repository,
     remove_physical_repository
@@ -286,17 +286,17 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def save_model(self, request, obj, form, change):
         is_new = (obj.pk is None)
-        packages_after = form.cleaned_data['packages']
+        packages_after = list(map(int, form.cleaned_data.get('packages')))
         super(type(self), self).save_model(request, obj, form, change)
 
-        name_old = "%s" % form.initial.get('name')
-        name_new = "%s" % obj.name
+        name_old = form.initial.get('name')
+        name_new = obj.name
 
         # create physical repository when packages has been changed
         # or repository not have packages at first time
         # or name is changed (to avoid client errors)
         if ((is_new and len(packages_after) == 0)
-                or compare_values(
+                or compare_list_values(
                     obj.packages.values_list('id', flat=True),  # pkgs before
                     packages_after
                 ) is False) or (name_new != name_old):
