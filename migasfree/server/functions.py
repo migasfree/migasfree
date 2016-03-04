@@ -59,6 +59,7 @@ def s2l(cad):
     lst = []
     if str(cad) == "None":
         return lst
+
     try:
         lst = eval(cad)
         return lst
@@ -109,35 +110,24 @@ def horizon(mydate, delay):
     return mydate + timedelta(days=idelta)
 
 
-def compare_values(val1, val2):
-    if len(val1) != len(val2):
+def compare_list_values(l1, l2):
+    """ returns True if both list are equal """
+    if len(l1) != len(l2):
         return False
 
-    for x in val1:
-        if not x in val2:
-            return False
+    l1_set = set(l1)
 
-    return True
+    return l1_set & set(l2) == l1_set
 
 
-def list_difference(list1, list2):
-    """uses list1 as the reference, returns list of items not in list2"""
-    diff_list = []
-    for item in list1:
-        if not item in list2:
-            diff_list.append(item)
-
-    return diff_list
+def list_difference(l1, l2):
+    """ uses l1 as reference, returns list of items not in l2 """
+    return list(set(l1).difference(l2))
 
 
-def list_common(list1, list2):
-    """uses list1 as the reference, returns list of items in list2"""
-    diff_list = []
-    for item in list1:
-        if item in list2:
-            diff_list.append(item)
-
-    return diff_list
+def list_common(l1, l2):
+    """ uses l1 as reference, returns list of items in l2 """
+    return list(set(l1).intersection(l2))
 
 
 def run_in_server(code_bash):
