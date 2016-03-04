@@ -64,8 +64,8 @@ def execute_query(request, parameters, form_param):
         for x in form_param:
             if not (x.name == "id_query" or x.name == "user_version"):
                 filters.append('%s: %s' % (
-                    str(x.label),
-                    parameters["%s_display" % x.name]
+                    x.label,
+                    str(parameters["%s_display" % x.name])
                 ))
 
         return render(
