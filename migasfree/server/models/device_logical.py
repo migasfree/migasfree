@@ -12,6 +12,14 @@ from . import (
 )
 
 
+class DeviceLogicalManager(models.Manager):
+    def create(self, device, feature):
+        obj = DeviceLogical(device=device, feature=feature)
+        obj.save()
+
+        return obj
+
+
 @python_2_unicode_compatible
 class DeviceLogical(models.Model, MigasLink):
     device = models.ForeignKey(
@@ -23,6 +31,8 @@ class DeviceLogical(models.Model, MigasLink):
         DeviceFeature,
         verbose_name=_("feature")
     )
+
+    objects = DeviceLogicalManager()
 
     def datadict(self, version):
         dictdevice = self.device.datadict()
