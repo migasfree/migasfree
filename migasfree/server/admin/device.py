@@ -2,7 +2,6 @@
 
 from django.contrib import admin
 from django.db import models
-from django.db.models import Q
 
 from .migasfree import MigasAdmin
 
@@ -114,19 +113,19 @@ class DeviceAdmin(MigasAdmin):
 
     def save_related(self, request, form, formsets, change):
         super(type(self), self).save_related(request, form, formsets, change)
-        device = form.instance
 
+        device = form.instance
         for feature in DeviceFeature.objects.filter(
             devicedriver__model__id=device.model.id
         ).distinct():
             if DeviceLogical.objects.filter(
-                Q(device__id=device.id) & Q(feature=feature)
+                device__id=device.id,
+                feature=feature
             ).count() == 0:
-                logical = device.devicelogical_set.create(
+                device.devicelogical_set.create(
                     device=device,
                     feature=feature
                 )
-                logical.save()
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(type(self), self).get_form(request, obj, **kwargs)
