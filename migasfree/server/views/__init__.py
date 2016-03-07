@@ -18,7 +18,6 @@ from .public_api import (
 )
 from .packages import change_version, info
 from .dashboard import alerts
-from .admin import connections_model
 from .login import login
 from .computer import (
     ComputerDelete,
@@ -27,4 +26,4 @@ from .computer import (
 )
 from .version import VersionDelete
 from .platform import PlatformDelete, platform_delete_selected
-from .devices import append_devices_from_computer
+from .devices import append_devices_from_computer, connections_model
