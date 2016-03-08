@@ -27,3 +27,4 @@ from .computer import (
 from .version import VersionDelete
 from .platform import PlatformDelete, platform_delete_selected
 from .devices import append_devices_from_computer, connections_model
+from .autocomplete import ComputerAutocomplete, AttributeAutocomplete
