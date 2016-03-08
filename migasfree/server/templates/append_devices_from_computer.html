@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block extrahead %}
-    {% include 'autocomplete_light/static.html' %}
-{% endblock extrahead %}
-
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>{% trans 'Devices' %}</li>
@@ -21,4 +17,6 @@
 
         <p><input type="submit" class="btn btn-primary" value="{% trans 'Append' %}" /></p>
     </form>
+
+    {{ form.media }}
 {% endblock content %}
