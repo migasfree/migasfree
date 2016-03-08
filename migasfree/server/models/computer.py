@@ -390,12 +390,11 @@ class Computer(models.Model, MigasLink):
         permissions = (("can_save_computer", "Can save Computer"),)
 
 
+@receiver(m2m_changed, sender=Computer.devices_logical.through)
 def computers_changed(sender, **kwargs):
     if kwargs['action'] == 'post_add':
         for computer in Computer.objects.filter(pk__in=kwargs['pk_set']):
             computer.remove_device_copy(kwargs['instance'].id)
-
-m2m_changed.connect(computers_changed, sender=Computer.devices_logical.through)
 
 
 from .status_log import StatusLog
