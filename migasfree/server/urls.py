@@ -157,6 +157,18 @@ urlpatterns = patterns('',
         name='append_devices_from_computer'
     ),
 
+    url(
+        r'^computer_autocomplete/$',
+        ComputerAutocomplete.as_view(),
+        name='computer_autocomplete',
+    ),
+
+    url(
+        r'^attribute_autocomplete/$',
+        AttributeAutocomplete.as_view(),
+        name='attribute_autocomplete',
+    ),
+
     # backwards compatibility
     url(
         r'^migasfree/$',
