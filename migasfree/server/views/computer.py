@@ -54,10 +54,10 @@ def computer_replacement(request):
         form = ComputerReplacementForm(request.POST)
         if form.is_valid():
             source = get_object_or_404(
-                Computer, pk=form.cleaned_data.get('source')
+                Computer, pk=form.cleaned_data.get('source').pk
             )
             target = get_object_or_404(
-                Computer, pk=form.cleaned_data.get('target')
+                Computer, pk=form.cleaned_data.get('target').pk
             )
             Computer.replacement(source, target)
 
