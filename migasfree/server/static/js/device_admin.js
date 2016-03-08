@@ -1,6 +1,6 @@
 function change_data()
 {
-    if ($("#id_model").val() != "")
+    if ($("#id_model").val() !== "")
     {
         $.getJSON("/connections_model/?id=" + $("#id_model").val(), function(connection_list)
         {
@@ -9,10 +9,10 @@ function change_data()
             {
                 if (connection_list[i].pk == $("#id_connection").val())
                 {
-                    if (connection_list[i].fields['fields'] != '')
+                    if (connection_list[i].fields.fields !== '')
                     {
                         html += '<div class="row join">';
-                        var fields = connection_list[i].fields['fields'].split(',');
+                        var fields = connection_list[i].fields.fields.split(',');
                         var data = eval("(" + $("#id_data").val() + ")");
                         for (var j = 0; j < fields.length; j++)
                         {
@@ -47,7 +47,7 @@ function change_model(default_value)
 {
     default_value = default_value || '';
 
-    if ($("#id_model").val() == '')
+    if ($("#id_model").val() === '')
     {
         $("#id_connection").attr('disabled', true);
     }
@@ -56,12 +56,12 @@ function change_model(default_value)
         $.getJSON("/connections_model/?id="+$("#id_model").val(), function(j) {
             var options = '';
             for (var i = 0; i < j.length; i++) {
-                options += '<option value="' + parseInt(j[i].pk) + '">' + j[i].fields['name'] + '</option>';
+                options += '<option value="' + parseInt(j[i].pk) + '">' + j[i].fields.name + '</option>';
             }
             $("#id_connection").html(options);
             $("#id_connection").attr('disabled', false);
 
-            if (default_value != '')
+            if (typeof default_value === 'string' && default_value !== '')
             {
                 $('#id_connection option[value=' + default_value + ']').attr('selected', true);
             }
@@ -78,7 +78,7 @@ $(function() {
         $("#id_data").closest("div").hide();
         $("#id_data").attr("hidden", "hidden");
 
-        if ($("#id_model").val() == '')
+        if ($("#id_model").val() === '')
         {
             $("#id_connection").attr('disabled', true);
         }
@@ -91,9 +91,9 @@ $(function() {
         $('#device_form').submit(function(event) {
             var data = '';
             $('.join_field').each(function(i) {
-                data += '"' + $(this).attr('id').substring('join_'.length) + '"'
-                data += ':'
-                data += '"' + $(this).val() + '",'
+                data += '"' + $(this).attr('id').substring('join_'.length) + '"';
+                data += ':';
+                data += '"' + $(this).val() + '",';
             });
             $('#id_data').val('{' + data.substring(0, data.length - 1) + '}');
 
