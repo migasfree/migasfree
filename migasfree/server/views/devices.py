@@ -20,7 +20,7 @@ def append_devices_from_computer(request):
         form = AppendDevicesFromComputerForm(request.POST)
         if form.is_valid():
             source = get_object_or_404(
-                Computer, pk=form.cleaned_data.get('source')
+                Computer, pk=form.cleaned_data.get('source').pk
             )
             attributes = form.cleaned_data.get('target')
             computers = Login.objects.filter(
