@@ -25,14 +25,18 @@ class AttributeLookup(LookupChannel):
         if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
         and len(q) > (Property.PREFIX_LEN + 1):
             return self.model.objects.filter(
-                Q(property_att__prefix__icontains=q[0:Property.PREFIX_LEN])
-            ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])).filter(
-                Q(property_att__active=True)).order_by('value')
+                property_att__prefix__icontains=q[0:Property.PREFIX_LEN]
+            ).filter(
+                value__icontains=q[Property.PREFIX_LEN + 1:]
+            ).filter(
+                property_att__active=True
+            ).order_by('value')
         else:
             return self.model.objects.filter(
-                Q(value__icontains=q) | Q(description__icontains=q)
+                Q(value__icontains=q)
+                | Q(description__icontains=q)
                 | Q(property_att__prefix__icontains=q)
-            ).filter(Q(property_att__active=True)).order_by('value')
+            ).filter(property_att__active=True).order_by('value')
 
     def format_match(self, obj):
         return self.format_item_display(obj)
@@ -49,15 +53,16 @@ class AttributeLookup(LookupChannel):
                         'value'
             ) | self.model.objects.filter(
                 pk__in=ids).filter(
-                    Q(property_att__prefix='CID')).order_by(
-                        'description'
+                    property_att__prefix='CID'
+                ).order_by(
+                    'description'
             )
 
         else:
             return self.model.objects.filter(pk__in=ids).order_by(
-            'property_att',
-            'value'
-        )
+                'property_att',
+                'value'
+            )
 
 
 @register('attribute_computers')
@@ -69,14 +74,20 @@ class AttributeComputersLookup(LookupChannel):
         if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
         and len(q) > (Property.PREFIX_LEN + 1):
             return self.model.objects.filter(
-                Q(property_att__prefix__icontains=q[0:Property.PREFIX_LEN])
-            ).filter(Q(value__icontains=q[Property.PREFIX_LEN + 1:])
-            ).filter(Q(property_att__active=True)).order_by('value')
+                property_att__prefix__icontains=q[0:Property.PREFIX_LEN]
+            ).filter(
+                value__icontains=q[Property.PREFIX_LEN + 1:]
+            ).filter(
+                property_att__active=True
+            ).order_by('value')
         else:
             return self.model.objects.filter(
-                Q(value__icontains=q) | Q(description__icontains=q)
+                Q(value__icontains=q)
+                | Q(description__icontains=q)
                 | Q(property_att__prefix__icontains=q)
-            ).filter(Q(property_att__active=True)).order_by('value')
+            ).filter(
+                property_att__active=True
+            ).order_by('value')
 
     def format_match(self, obj):
         return self.format_item_display(obj)
@@ -99,15 +110,16 @@ class AttributeComputersLookup(LookupChannel):
                         'value'
             ) | self.model.objects.filter(
                 pk__in=ids).filter(
-                    Q(property_att__prefix='CID')).order_by(
-                        'description'
+                    property_att__prefix='CID'
+                ).order_by(
+                    'description'
             )
 
         else:
             return self.model.objects.filter(pk__in=ids).order_by(
-            'property_att',
-            'value'
-        )
+                'property_att',
+                'value'
+            )
 
 
 @register('package')
@@ -138,9 +150,12 @@ class TagLookup(LookupChannel):
 
     def get_query(self, q, request):
         return self.model.objects.filter(
-            property_att__active=True).filter(
-            property_att__tag=True).filter(
-            Q(value__icontains=q) | Q(description__icontains=q)
+            property_att__active=True
+        ).filter(
+            property_att__tag=True
+        ).filter(
+            Q(value__icontains=q)
+            | Q(description__icontains=q)
             | Q(property_att__prefix__icontains=q)
         ).order_by('value')
 
@@ -169,7 +184,7 @@ class DeviceLogicalLookup(LookupChannel):
     model = DeviceLogical
 
     def get_query(self, q, request):
-        return self.model.objects.filter(Q(device__name__icontains=q))
+        return self.model.objects.filter(device__name__icontains=q)
 
     def format_match(self, obj):
         return self.format_item_display(obj)
@@ -187,9 +202,9 @@ class ComputerLookup(LookupChannel):
 
     def get_query(self, q, request):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
-            return self.model.objects.filter(Q(id__exact=q))
+            return self.model.objects.filter(id__exact=q)
         else:
-            return self.model.objects.filter(Q(name__icontains=q))
+            return self.model.objects.filter(name__icontains=q)
 
     def format_match(self, obj):
         return self.format_item_display(obj)
@@ -201,9 +216,9 @@ class ComputerLookup(LookupChannel):
         return False
 
     def reorder(self, mylist):
-            return [row.id for row in Computer.objects.filter(
-                pk__in=mylist
-            ).order_by(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0])]
+        return [row.id for row in Computer.objects.filter(
+            pk__in=mylist
+        ).order_by(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0])]
 
     def get_objects(self, ids):
         """
@@ -226,5 +241,3 @@ class ComputerLookup(LookupChannel):
             return [things[aid] for aid in lst if aid in things]
         else:
             return [things[aid] for aid in self.reorder(lst) if aid in things]
-
-
