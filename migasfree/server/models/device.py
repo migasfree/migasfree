@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from . import DeviceConnection, DeviceModel, MigasLink
 
@@ -37,6 +37,26 @@ class Device(models.Model, MigasLink):
         blank=False,
         default="{}"
     )
+
+    def __init__(self, *args, **kwargs):
+        super(Device, self).__init__(*args, **kwargs)
+
+        if self.id:
+            data = json.loads(self.data)
+            ip = data.get('IP', None)
+            if ip:
+                address = 'http://%s' % ip
+            else:
+                try:
+                    address = 'http://%s:631' % \
+                        self.devicelogical_set.all()[0].computer_set.all()[0].ip
+                except:
+                    address = ''
+
+            if address:
+                self._actions = [
+                    [ugettext('Go to %s' % self.model), address]
+                ]
 
     def location(self):
         data = json.loads(self.data)
@@ -80,6 +100,5 @@ def pre_save_device(sender, instance, **kwargs):
         old_obj = Device.objects.get(pk=instance.id)
         if old_obj.data != instance.data:
             for logical_device in instance.devicelogical_set.all():
-                print logical_device.id
                 for computer in logical_device.computer_set.all():
                     computer.remove_device_copy(logical_device.id)
