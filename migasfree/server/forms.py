@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 
-import autocomplete_light
-
 from django import forms
 from django.contrib.admin import widgets
 from django.utils.translation import ugettext_lazy as _
 
+from dal import autocomplete
 from ajax_select import make_ajax_form, make_ajax_field
 
 from .models import (
     Repository, UserProfile, Computer, DeviceLogical,
-    Property, Tag, TagType
+    Property, Tag, TagType, Attribute
 )
 
 
@@ -20,23 +19,26 @@ class ParametersForm(forms.Form):
 
 
 class ComputerReplacementForm(forms.Form):
-    source = autocomplete_light.fields.ChoiceField(
-        'ComputerAutocomplete',
+    source = forms.ModelChoiceField(
+        queryset=Computer.objects.all(),
+        widget=autocomplete.ModelSelect2('computer_autocomplete'),
         label=_('Source')
     )
-    target = autocomplete_light.fields.ChoiceField(
-        'ComputerAutocomplete',
+    target = forms.ModelChoiceField(
+        queryset=Computer.objects.all(),
+        widget=autocomplete.ModelSelect2('computer_autocomplete'),
         label=_('Target')
     )
 
-
 class AppendDevicesFromComputerForm(forms.Form):
-    source = autocomplete_light.fields.ChoiceField(
-        'ComputerAutocomplete',
+    source = forms.ModelChoiceField(
+        queryset=Computer.objects.all(),
+        widget=autocomplete.ModelSelect2('computer_autocomplete'),
         label=_('Source')
     )
-    target = autocomplete_light.fields.MultipleChoiceField(
-        'AttributeAutocomplete',
+    target = forms.ModelMultipleChoiceField(
+        queryset=Attribute.objects.all(),
+        widget=autocomplete.ModelSelect2Multiple('attribute_autocomplete'),
         label=_('Target')
     )
 
