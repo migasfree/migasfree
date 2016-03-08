@@ -13,8 +13,8 @@ from . import (
 
 
 class DeviceLogicalManager(models.Manager):
-    def create(self, device, feature):
-        obj = DeviceLogical(device=device, feature=feature)
+    def create(self, device, feature, name=None):
+        obj = DeviceLogical(device=device, feature=feature, name=name)
         obj.save()
 
         return obj
@@ -32,7 +32,18 @@ class DeviceLogical(models.Model, MigasLink):
         verbose_name=_("feature")
     )
 
+    name = models.CharField(
+        verbose_name=_('name'),
+        max_length=50,
+        null=True,
+        blank=True,
+        unique=False
+    )
+
     objects = DeviceLogicalManager()
+
+    def get_name(self):
+        return self.name if self.name else self.feature.name
 
     def datadict(self, version):
         dictdevice = self.device.datadict()
@@ -49,14 +60,14 @@ class DeviceLogical(models.Model, MigasLink):
 
         ret = {
             self.device.connection.devicetype.name: {
-                'feature': self.feature.name,
+                'feature': self.get_name(),
                 'id': self.id,
                 'manufacturer': self.device.model.manufacturer.name
             }
         }
-        for key, value in dictdevice.items():
+        for key, value in list(dictdevice.items()):
             ret[self.device.connection.devicetype.name][key] = value
-        for key, value in dictdriver.items():
+        for key, value in list(dictdriver.items()):
             ret[self.device.connection.devicetype.name][key] = value
 
         return ret
@@ -76,6 +87,9 @@ class DeviceLogical(models.Model, MigasLink):
     computers_link.short_description = _("Computers")
 
     def save(self, *args, **kwargs):
+        if isinstance(self.name, basestring):
+            self.name = self.name.replace(" ", "_")
+
         super(DeviceLogical, self).save(*args, **kwargs)
 
     def __str__(self):

@@ -65,7 +65,7 @@ class DeviceDriverAdmin(MigasAdmin):
 @admin.register(DeviceLogical)
 class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
-    fields = ('device', 'feature', 'computers')
+    fields = ('device', 'feature', 'name', 'computers')
     list_select_related = ('device', 'feature')
     list_display = ('link', 'device_link', 'feature')
     ordering = ('device__name', 'feature__name')
@@ -88,7 +88,7 @@ class DeviceLogicalAdmin(MigasAdmin):
 class DeviceLogicalInline(admin.TabularInline):
     model = DeviceLogical
     form = DeviceLogicalForm
-    fields = ('feature', 'computers')
+    fields = ('feature', 'name', 'computers')
     extra = 0
 
 
