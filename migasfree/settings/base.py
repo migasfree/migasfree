@@ -115,7 +115,7 @@ INSTALLED_APPS = (
     'bootstrap3',
     'migasfree.server',  # before admin apps to override
     'django_admin_bootstrapped',  # before django.contrib.admin to override
-    'autocomplete_light',  # before django.contrib.admin
+    'dal', 'dal_select2',  # before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.admindocs',
