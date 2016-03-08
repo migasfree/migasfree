@@ -87,7 +87,6 @@ class DeviceLogical(models.Model, MigasLink):
             self.id
         )
 
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Device Logical")
