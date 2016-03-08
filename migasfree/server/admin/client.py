@@ -87,7 +87,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     )
 
     resource_class = ComputerResource
-    actions = ['delete_selected']
+    actions = ['delete_selected', 'reinstall_devices']
 
     def my_link(self, object):
         return object.link()
@@ -108,6 +108,16 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     delete_selected.short_description = _("Delete selected "
         "%(verbose_name_plural)s")
+
+    def reinstall_devices(self, request, objects):
+        for item in objects:
+            item.remove_device_copy()
+
+        messages.success(request, _('Ready computers to reinstall devices'))
+
+        return redirect(request.get_full_path())
+
+    reinstall_devices.short_description = _("Reinstall devices")
 
     def formfield_for_manytomany(self, db_field, request, **kwargs):
         if db_field.name == "devices_logical":

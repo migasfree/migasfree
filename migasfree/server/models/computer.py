@@ -219,15 +219,19 @@ class Computer(models.Model, MigasLink):
         self.datehardware = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         self.save()
 
-    def remove_device_copy(self, devicelogical_id):
-        try:
-            lst = s2l(self.devices_copy)
-            if devicelogical_id in lst:
-                lst.remove(devicelogical_id)
-                self.devices_copy = lst.__str__()
-                self.save()
-        except:
-            pass
+    def remove_device_copy(self, devicelogical_id=None):
+        if devicelogical_id:
+            try:
+                lst = s2l(self.devices_copy)
+                if devicelogical_id in lst:
+                    lst.remove(devicelogical_id)
+                    self.devices_copy = lst.__str__()
+                    self.save()
+            except:
+                pass
+        else:
+            self.devices_copy = None
+            self.save()
 
     def append_device_copy(self, devicelogical_id):
         try:
