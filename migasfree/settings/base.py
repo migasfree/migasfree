@@ -113,13 +113,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
+    'ajax_select',  # before dal!!!
     'migasfree.server',  # before admin apps to override
     'django_admin_bootstrapped',  # before django.contrib.admin to override
     'dal', 'dal_select2',  # before django.contrib.admin
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.admindocs',
-    'ajax_select',
     'migasfree.flot',
     'import_export',
 )
