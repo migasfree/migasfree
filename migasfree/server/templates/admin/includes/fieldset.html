@@ -1,4 +1,4 @@
-{% load bootstrapped_goodies_tags %}
+{% load bootstrapped_goodies_tags mac_address_list %}
 <fieldset class="_module _aligned" id="fieldset-{% if stacked_prefix %}{{ stacked_prefix }}-{% endif %}{{ forloop.counter }}" style="background:transparent">
     {% if fieldset.name %}
     <legend>
@@ -32,7 +32,15 @@
                         {% else %}
                         <div class="controls col-md-9">
                             {% if field.is_readonly %}
-                                <p>{{ field.contents|linebreaksbr }}</p>
+                                <p>
+                                {% if field.field.name == 'ram' or field.field.name == 'storage' %}
+                                    {{ field.contents|filesizeformat }}
+                                {% elif field.field.name == 'mac_address' %}
+                                    {{ field.contents|mac_address_list }}
+                                {% else %}
+                                    {{ field.contents|linebreaksbr }}
+                                {% endif %}
+                                </p>
                             {% else %}
                                 {% dab_field_rendering field.field %}
                             {% endif %}
