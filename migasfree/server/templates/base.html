@@ -1,7 +1,6 @@
 {% spaceless %}
 <!doctype html>
 {% load i18n admin_static bootstrapped_goodies_tags server_tags %}
-{% load current_option from navigation %}
 <html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
     <head>
         <meta charset="utf-8" />
@@ -122,7 +121,7 @@
                                 <ul id="queries" class="dropdown-menu">
                                 {% for item in query_names %}
                                     <li>
-                                        <a class="{% current_option 'query' query_id=item.0 %}" href="{% url 'query' item.0 %}">{{ item.1|title }}</a>
+                                        <a href="{% url 'query' item.0 %}">{{ item.1|title }}</a>
                                     </li>
                                 {% endfor %}
                                 </ul>
