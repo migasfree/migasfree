@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n sizify %}
+{% load i18n %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
@@ -28,7 +28,7 @@
                             {% if value and field != 'parent' and field != 'claimed' and field != 'computer' and field != 'product' and field != 'description' and field != 'level' and field != 'icon' and field != 'physid' %}
                                 {{ field|capfirst }}:
                                 {% if field == 'size' or field == 'capacity' %}
-                                    {{ value|sizify }}
+                                    {{ value|filesizeformat }}
                                 {% else %}
                                     {{ value }}
                                 {% endif %}
