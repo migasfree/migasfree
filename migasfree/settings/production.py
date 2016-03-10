@@ -2,7 +2,6 @@
 
 from .migasfree import *
 from .base import *
-from .ajax_select_config import *
 from .functions import secret_key
 
 # production environment
