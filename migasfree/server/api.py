@@ -100,6 +100,7 @@ def upload_computer_hardware(request, name, uuid, computer, data):
         HwNode.objects.filter(computer=computer).delete()
         load_hw(computer, data[cmd], None, 1)
         computer.update_last_hardware_capture()
+        computer.update_hardware_resume()
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))

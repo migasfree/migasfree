@@ -9,10 +9,7 @@ from django.template import Context, Template
 from django.conf import settings
 from django.utils import timezone, dateformat
 
-from . import (
-    Version,
-    Attribute, Property, MigasLink
-)
+from . import Version, Attribute, Property, MigasLink
 
 from ..functions import (
     s2l,
@@ -73,6 +70,11 @@ class Computer(models.Model, MigasLink):
     )
 
     PRODUCTIVE_STATUS = ['intended', 'reserved', 'unknown']
+
+    MACHINE_CHOICES = (
+        ('P', _('Physical')),
+        ('V', _('Virtual')),
+    )
 
     name = models.CharField(
         verbose_name=_("name"),
@@ -162,6 +164,56 @@ class Computer(models.Model, MigasLink):
         verbose_name=_("tags")
     )
 
+    product = models.CharField(
+        verbose_name=_("product"),
+        max_length=80,
+        null=True,
+        blank=True,
+        unique=False
+    )
+
+    machine = models.CharField(
+        verbose_name=_("machine"),
+        max_length=1,
+        null=False,
+        choices=MACHINE_CHOICES,
+        default='P'
+    )
+
+    cpu = models.CharField(
+        verbose_name=_("CPU"),
+        max_length=50,
+        null=True,
+        blank=True,
+        unique=False
+    )
+
+    ram = models.BigIntegerField(
+        verbose_name=_("RAM"),
+        null=True,
+        blank=True
+    )
+
+    storage = models.BigIntegerField(
+        verbose_name=_("storage"),
+        null=True,
+        blank=True
+    )
+
+    disks = models.SmallIntegerField(
+        verbose_name=_("disks"),
+        null=True,
+        blank=True
+    )
+
+    mac_address = models.CharField(
+        verbose_name=_("MAC address"),
+        max_length=60,  # size for 5
+        null=True,
+        blank=True,
+        unique=False
+    )
+
     objects = ComputerManager()
     productives = ProductiveManager()
     unproductives = UnproductiveManager()
@@ -217,6 +269,24 @@ class Computer(models.Model, MigasLink):
 
     def update_last_hardware_capture(self):
         self.datehardware = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+        self.save()
+
+    def update_hardware_resume(self):
+        from . import HwNode
+
+        try:
+            self.product = HwNode.objects.get(
+                computer=self.id, parent=None
+            ).get_product()
+        except:
+            self.product = None
+
+        self.machine = 'V' if HwNode.get_is_vm(self.id) else 'P'
+        self.cpu = HwNode.get_cpu(self.id)
+        self.ram = HwNode.get_ram(self.id)
+        self.disks, self.storage = HwNode.get_storage(self.id)
+        self.mac_address = HwNode.get_mac_address(self.id)
+
         self.save()
 
     def remove_device_copy(self, devicelogical_id=None):
@@ -276,7 +346,7 @@ class Computer(models.Model, MigasLink):
             return ''
 
     hw_link.allow_tags = True
-    hw_link.short_description = _("Hardware")
+    hw_link.short_description = _("Product")
 
     def devices_link(self):
         return ' '.join(dev.link() for dev in self.devices_logical.all())

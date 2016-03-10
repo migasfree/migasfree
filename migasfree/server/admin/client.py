@@ -58,20 +58,36 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'software',
         'history_sw',
         'hw_link',
+        'machine',
+        'cpu',
+        'ram',
+        'storage',
+        'disks',
+        'mac_address',
     )
 
     fieldsets = (
         (_('General'), {
             'fields': (
-                'uuid',
+                'status',
                 'name',
                 'version',
-                'status',
                 'dateinput',
                 'datelastupdate',
                 'ip',
+            )
+        }),
+        (_('Hardware'), {
+            'fields': (
                 'datehardware',
                 'hw_link',
+                'uuid',
+                'machine',
+                'cpu',
+                'ram',
+                'storage',
+                'disks',
+                'mac_address',
             )
         }),
         (_('Software'), {
