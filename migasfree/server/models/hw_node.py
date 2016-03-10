@@ -9,10 +9,12 @@ from django.utils.translation import ugettext_lazy as _
 
 from . import Computer, MigasLink
 
+import re
 
 def validate_mac(mac):
-    import re
-    return  len(mac) == 17 and len(re.findall(r':', mac)) == 5
+    return isinstance(mac, basestring) and \
+        len(mac) == 17 and \
+        len(re.findall(r':', mac)) == 5
 
 
 class HwNodeManager(models.Manager):
