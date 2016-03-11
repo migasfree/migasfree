@@ -33,7 +33,7 @@ class User(models.Model, MigasLink):
     objects = UserManager()
 
     def __str__(self):
-        return '%s (%s)' % (self.name, self.fullname)
+        return u'%s (%s)' % (self.name, self.fullname.strip())
 
     class Meta:
         app_label = 'server'
