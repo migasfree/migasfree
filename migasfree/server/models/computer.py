@@ -413,7 +413,7 @@ class Computer(models.Model, MigasLink):
         cid = self.get_cid_attribute()
 
         return remove_empty_elements_from_dict({
-            ugettext("Computer"): self.display(),
+            ugettext("Computer"): self.__str__(),
             ugettext("Status"): ugettext(self.status),
             ugettext("Tags"): ', '.join(str(x) for x in self.tags.all()),
             ugettext("Devices"): ', '.join(
