@@ -409,12 +409,6 @@ class Computer(models.Model, MigasLink):
 
         return str(self.__getattribute__(_desc[0]))
 
-    def display(self):
-        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
-            return "CID-%d" % self.id
-        else:
-            return "%s (CID-%d)" % (self.get_cid_description(), self.id)
-
     def get_replacement_info(self):
         cid = self.get_cid_attribute()
 
@@ -453,9 +447,10 @@ class Computer(models.Model, MigasLink):
             pass
 
     def __str__(self):
-        return str(self.__getattribute__(
-            settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]
-        ))
+        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
+            return "CID-%d" % self.id
+        else:
+            return "%s (CID-%d)" % (self.get_cid_description(), self.id)
 
     class Meta:
         app_label = 'server'
