@@ -137,7 +137,7 @@ class Computer(models.Model, MigasLink):
         # http://python.6.x6.nabble.com/many-to-many-between-apps-td5026629.html
         'server.DeviceLogical',
         blank=True,
-        verbose_name=_("devices"),
+        verbose_name=_("logical devices"),
     )
 
     devices_copy = models.TextField(
