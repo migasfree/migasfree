@@ -60,7 +60,7 @@ class ComputerAutocomplete(AutocompleteModelBase):
         return qs
 
     def get_result_label(self, result):
-        return result.display()
+        return result.__str__()
 
 
 class AttributeAutocomplete(AutocompleteModelBase):
