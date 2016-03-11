@@ -42,6 +42,8 @@ class DeviceLogical(models.Model, MigasLink):
 
     objects = DeviceLogicalManager()
 
+    _include_links = ["device - devicelogical", ]
+
     def get_name(self):
         return self.name if self.name else self.feature.name
 
