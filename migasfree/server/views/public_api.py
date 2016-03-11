@@ -40,7 +40,7 @@ def get_computer_info(request):
     result = {
         'id': computer.id,
         'uuid': computer.uuid,
-        'name': computer.name,
+        'name': computer.__str__(),
         'helpdesk': settings.MIGASFREE_HELP_DESK,
         'server': request.META.get('HTTP_HOST'),
     }
