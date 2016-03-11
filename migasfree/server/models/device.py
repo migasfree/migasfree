@@ -98,7 +98,10 @@ class Device(models.Model, MigasLink):
 def pre_save_device(sender, instance, **kwargs):
     if instance.id:
         old_obj = Device.objects.get(pk=instance.id)
-        if old_obj.data != instance.data:
+        if old_obj.data != instance.data or \
+        old_obj.name != instance.name or \
+        old_obj.connection.id != instance.connection.id or \
+        old_obj.model.id != instance.model.id:
             for logical_device in instance.devicelogical_set.all():
                 for computer in logical_device.computer_set.all():
                     computer.remove_device_copy(logical_device.id)
