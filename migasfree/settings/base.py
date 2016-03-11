@@ -81,10 +81,11 @@ MIDDLEWARE_CLASSES = (
     'migasfree.middleware.threadlocals.ThreadLocalMiddleware',
 )
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS
             + [

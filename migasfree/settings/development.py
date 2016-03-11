@@ -10,6 +10,8 @@ from .functions import secret_key
 DEBUG = True
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 
+TEMPLATES[0]['APP_DIRS'] = True
+
 MIGASFREE_DB_DIR = os.path.dirname(MIGASFREE_PROJECT_DIR)
 MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')

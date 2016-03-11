@@ -5,7 +5,15 @@ from .base import *
 from .functions import secret_key
 
 # production environment
-TEMPLATE_DEBUG = DEBUG = False
+DEBUG = False
+TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
+
+TEMPLATES[0]['OPTIONS']['loaders'] = [
+    ('django.template.loaders.cached.Loader', (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )),
+]
 
 ALLOWED_HOSTS = ['*']
 
