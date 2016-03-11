@@ -24,6 +24,8 @@ from ..tasks import (
     remove_physical_repository
 )
 
+admin.site.register(Attribute)
+
 
 @admin.register(AttributeSet)
 class AttributeSetAdmin(MigasAdmin):

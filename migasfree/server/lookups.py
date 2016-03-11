@@ -8,6 +8,8 @@ from ajax_select import register, LookupChannel
 
 from .models import (
     Attribute,
+    Feature,
+    Tag,
     Package,
     Property,
     DeviceLogical,
@@ -39,7 +41,10 @@ class AttributeLookup(LookupChannel):
             ).filter(property_att__active=True).order_by('value')
 
     def format_match(self, obj):
-        return self.format_item_display(obj)
+        return escape(obj.__str__())
+
+    def format_item_display(self, obj):
+        return obj.link()
 
     def can_add(self, user, model):
         return False
@@ -57,7 +62,6 @@ class AttributeLookup(LookupChannel):
                 ).order_by(
                     'description'
             )
-
         else:
             return self.model.objects.filter(pk__in=ids).order_by(
                 'property_att',
@@ -90,11 +94,14 @@ class AttributeComputersLookup(LookupChannel):
             ).order_by('value')
 
     def format_match(self, obj):
-        return self.format_item_display(obj)
+        return "%s (total %s)" % (
+            escape(obj.__str__()),
+            escape(obj.total_computers(UserProfile.get_logged_version()))
+        )
 
     def format_item_display(self, obj):
         return "%s (total %s)" % (
-            escape(obj.__str__()),
+            obj.link(),
             escape(obj.total_computers(UserProfile.get_logged_version()))
         )
 
@@ -114,7 +121,6 @@ class AttributeComputersLookup(LookupChannel):
                 ).order_by(
                     'description'
             )
-
         else:
             return self.model.objects.filter(pk__in=ids).order_by(
                 'property_att',
@@ -132,10 +138,10 @@ class PackageLookup(LookupChannel):
         ).filter(name__icontains=q).order_by('name')
 
     def format_match(self, obj):
-        return self.format_item_display(obj)
+        return escape(obj.name)
 
     def format_item_display(self, obj):
-        return "%s" % escape(obj.name)
+        return obj.link()
 
     def can_add(self, user, model):
         return False
@@ -146,7 +152,7 @@ class PackageLookup(LookupChannel):
 
 @register('tag')
 class TagLookup(LookupChannel):
-    model = Attribute
+    model = Tag
 
     def get_query(self, q, request):
         return self.model.objects.filter(
@@ -160,14 +166,14 @@ class TagLookup(LookupChannel):
         ).order_by('value')
 
     def format_match(self, obj):
-        return self.format_item_display(obj)
-
-    def format_item_display(self, obj):
         return "%s-%s %s" % (
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description)
         )
+
+    def format_item_display(self, obj):
+        return obj.link()
 
     def can_add(self, user, model):
         return False
@@ -187,10 +193,10 @@ class DeviceLogicalLookup(LookupChannel):
         return self.model.objects.filter(device__name__icontains=q)
 
     def format_match(self, obj):
-        return self.format_item_display(obj)
+        return escape(obj.__str__())
 
     def format_item_display(self, obj):
-        return "%s" % escape(obj.__str__())
+        return obj.link()
 
     def can_add(self, user, model):
         return False
@@ -204,13 +210,17 @@ class ComputerLookup(LookupChannel):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
             return self.model.objects.filter(id__exact=q)
         else:
-            return self.model.objects.filter(name__icontains=q)
+            return self.model.objects.filter(
+                Q(id__exact=q)
+                | Q(**{'%s__icontains' % \
+                    settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: q})
+            )
 
     def format_match(self, obj):
-        return self.format_item_display(obj)
+        return obj.__str__()
 
     def format_item_display(self, obj):
-        return obj.display()
+        return obj.link()
 
     def can_add(self, user, model):
         return False
