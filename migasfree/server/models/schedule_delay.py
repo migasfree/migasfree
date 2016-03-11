@@ -43,7 +43,7 @@ class ScheduleDelay(models.Model):
             ).annotate(total=Count('id')).order_by('id').count()
 
     def __str__(self):
-        return '%s - %d' % (self.schedule.name, self.delay)
+        return '%s - %s' % (self.schedule.name, str(self.delay))
 
     def list_attributes(self):
         return ', '.join(
