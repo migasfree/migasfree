@@ -60,7 +60,7 @@ class Login(models.Model, MigasLink):
     user_link.short_description = _("User")
 
     def __str__(self):
-        return '%s@%s' % (self.user.name, self.computer)
+        return u'%s (%s)' % (self.user.name, self.user.fullname.strip())
 
     class Meta:
         app_label = 'server'
