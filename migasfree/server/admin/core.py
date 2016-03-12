@@ -128,6 +128,7 @@ class PackageAdmin(MigasAdmin):
     list_display = ('my_link', 'store')
     list_filter = ('store',)
     list_per_page = 25
+    list_select_related = ('version',)
     search_fields = ('name', 'store__name')
     ordering = ('name',)
 
