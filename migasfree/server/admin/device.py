@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 from .migasfree import MigasAdmin
 
@@ -49,9 +50,9 @@ class DeviceConnectionAdmin(admin.ModelAdmin):
 
 @admin.register(DeviceDriver)
 class DeviceDriverAdmin(MigasAdmin):
-    list_display = ('model', 'version', 'feature', 'name')
-    list_display_links = ('model',)
-    fields = ('model', 'version', 'feature', 'name', 'install')
+    list_display = ('name', 'model', 'version', 'feature')
+    list_display_links = ('name',)
+    fields = ('name', 'model', 'version', 'feature', 'install')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(type(self), self).get_form(request, obj, **kwargs)
@@ -67,7 +68,7 @@ class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
     fields = ('device', 'feature', 'name', 'computers')
     list_select_related = ('device', 'feature')
-    list_display = ('link', 'device_link', 'feature')
+    list_display = ('my_link', 'device_link', 'feature')
     ordering = ('device__name', 'feature__name')
     search_fields = (
         'id',
@@ -76,6 +77,11 @@ class DeviceLogicalAdmin(MigasAdmin):
         'device__model__manufacturer__name',
         'feature__name',
     )
+
+    def my_link(self, object):
+        return object.link()
+
+    my_link.short_description = _('Device Logical')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(type(self), self).get_form(request, obj, **kwargs)
@@ -94,7 +100,7 @@ class DeviceLogicalInline(admin.TabularInline):
 
 @admin.register(Device)
 class DeviceAdmin(MigasAdmin):
-    list_display = ('link', 'location', 'model_link', 'connection')
+    list_display = ('my_link', 'location', 'model_link', 'connection')
     list_filter = ('model',)
     search_fields = (
         'name',
@@ -106,6 +112,11 @@ class DeviceAdmin(MigasAdmin):
     ordering = ('name',)
 
     inlines = [DeviceLogicalInline]
+
+    def my_link(self, object):
+        return object.link()
+
+    my_link.short_description = _('Device')
 
     class Media:
         js = ('js/device_admin.js',)
