@@ -3,7 +3,7 @@
         "pk": 1,
         "model": "server.query",
         "fields": {
-            "code": "from migasfree.server.models import Query\nif parameters['id'] == '':\n    query = Query.objects.all()\nelse:\n    query = Query.objects.filter(id=parameters['id'])\n    fields = ('id', 'name', 'description', 'code', 'parameters')\n",
+            "code": "from django.utils.translation import ugettext_lazy as _\nfrom migasfree.server.models import Query\nif parameters['id'] == '':\n    query = Query.objects.all()\nelse:\n    query = Query.objects.filter(id=parameters['id'])\n    fields = ('name', 'description', 'code', 'parameters')\n    titles = (_('Name'), _('Description'), _('Code'), _('Parameters'))\n",
             "name": "Queries...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        id = forms.CharField()\n    return myForm\n",
             "description": "Query List"
@@ -13,7 +13,7 @@
         "pk": 2,
         "model": "server.query",
         "fields": {
-            "code": "from migasfree.server.models import Package\nquery = Package.objects.filter(name__contains=parameters['name'])\nfields = ('id', 'link', 'store.name')\ntitles = ('id', 'name', 'store')\n",
+            "code": "from django.utils.translation import ugettext_lazy as _\nfrom migasfree.server.models import Package\nquery = Package.objects.filter(name__contains=parameters['name'])\nfields = ('link', 'store')\ntitles = (_('Name'), _('Store'))\n",
             "name": "Packages/Sets...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        name = forms.CharField()\n    return myForm\n",
             "description": "Package/Set List"
@@ -23,7 +23,7 @@
         "pk": 3,
         "model": "server.query",
         "fields": {
-            "code": "from migasfree.server.models import Login, Computer, Property,Version\nfrom django.db.models import Count\nquery = Login.objects.filter(computer__status__in=Computer.PRODUCTIVE_STATUS)\nif parameters['value'] != '':\n    if str(parameters['exact']) == 'True':\n        query = query.filter(attributes__property_att__id=parameters['property_att'],attributes__value=parameters['value'])\n        fld = 'attributes.filter(property_att__id=parameters[\"property_att\"],value=parameters[\"value\"]).values_list(\"value\",flat=True)'\n    else:\n        query = query.filter(attributes__property_att__id=parameters['property_att'],attributes__value__contains=parameters['value'])\n        fld = 'attributes.filter(property_att__id=parameters[\"property_att\"],value__contains=parameters[\"value\"]).values_list(\"value\",flat=True)'\n    if parameters['version']:\n        query = query.filter(computer__version__id=parameters['version'])\nquery = query.annotate(n=Count('computer'))\nproperty = Property.objects.get(pk=parameters['property_att'])\nfields = ('computer.link', fld, 'computer.version', 'user.link', 'date')\ntitles = ('computer', property.name.lower(), 'version', 'user',  'date of login')",
+            "code": "from migasfree.server.models import Login, Computer, Property,Version\nfrom django.db.models import Count\nquery = Login.objects.select_related('user', 'computer').filter(computer__status__in=Computer.PRODUCTIVE_STATUS)\nif parameters['value'] != '':\n    if str(parameters['exact']) == 'True':\n        query = query.filter(attributes__property_att__id=parameters['property_att'],attributes__value=parameters['value'])\n        fld = 'attributes.filter(property_att__id=parameters[\"property_att\"],value=parameters[\"value\"]).values_list(\"value\",flat=True)'\n    else:\n        query = query.filter(attributes__property_att__id=parameters['property_att'],attributes__value__contains=parameters['value'])\n        fld = 'attributes.filter(property_att__id=parameters[\"property_att\"],value__contains=parameters[\"value\"]).values_list(\"value\",flat=True)'\n    if parameters['version']:\n        query = query.select_related('computer__version').filter(computer__version__id=parameters['version'])\nquery = query.annotate(n=Count('computer'))\nproperty = Property.objects.get(pk=parameters['property_att'])\nfields = ('computer.link', fld, 'computer.version', 'user.link', 'date')\ntitles = ('computer', property.name.lower(), 'version', 'user',  'date of login')",
             "name": "Production Computers by Attributes...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        property_att = forms.ModelChoiceField(Property.objects.all())\n        version = forms.ModelChoiceField(Version.objects.all())\n        value = forms.CharField()\n        exact = forms.ChoiceField( ((False,'No'),(True,'Yes')) )\n    return myForm",
             "description": "Computer list that have a certain attribute"
@@ -43,7 +43,7 @@
         "pk": 5,
         "model": "server.query",
         "fields": {
-            "code": "from migasfree.server.models import Package\nfrom django.db.models import Q\nquery = Package.objects.filter(Q(repository__id__exact=None))\nfields = ('version.name', 'store.name', 'link')\ntitles = ('version', 'store', 'package/set')\n",
+            "code": "from django.utils.translation import ugettext_lazy as _\nfrom migasfree.server.models import Package\nquery = Package.objects.filter(repository__id__exact=None)\nfields = ('version.name', 'store.name', 'link')\ntitles = (_('Version'), _('Store'), _('Package/Set'))\n",
             "name": "Package/Set Orphan",
             "parameters": "",
             "description": "Packages/Sets that have not been assigned to any repository"
@@ -53,7 +53,7 @@
         "pk": 6,
         "model": "server.query",
         "fields": {
-            "code": "from migasfree.server.models import Repository\nfrom django.db.models import Q\nquery = Repository.objects.filter(Q(packages__name__contains=parameters['package'])).distinct()\nfields = ('id', 'link', 'packages_link')\ntitles = ('id', 'Repository', 'Packages')\n",
+            "code": "from django.utils.translation import ugettext_lazy as _\nfrom migasfree.server.models import Repository\nquery = Repository.objects.select_related('version').filter(packages__name__contains=parameters['package']).distinct()\nfields = ('link', 'packages_link')\ntitles = (_('Repository'), _('Packages'))\n",
             "name": "Repositories with a Package/Set...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm\n",
             "description": "Repository list that have assigned a certain Package/Set"
@@ -63,7 +63,7 @@
         "pk": 7,
         "model": "server.query",
         "fields": {
-            "code": "from datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.productives.filter(dateinput__gte=n, dateinput__lt=date.today() + delta).order_by('-dateinput')\nfields = ('link', 'version', 'dateinput', 'ip')\ntitles = ('link', 'version', 'dateinput', 'ip')",
+            "code": "from django.utils.translation import ugettext_lazy as _\nfrom datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.productives.select_related('version').filter(dateinput__gte=n, dateinput__lt=date.today() + delta).order_by('-dateinput')\nfields = ('link', 'version', 'dateinput', 'ip')\ntitles = (_('Computer'), _('Version'), _('date input'), _('ip'))",
             "name": "Incoming Production Computers...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        last_days = forms.CharField()\n    return myForm",
             "description": ""
