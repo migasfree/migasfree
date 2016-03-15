@@ -367,10 +367,13 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         o_login, _ = Login.objects.get_or_create(
             computer=o_computer,
             defaults={
-                'user': User.objects.get(name=dic_computer["user"]),
+                'user': o_user,
                 'date': dateformat.format(timezone.now(), 'Y-m-d H:i:s')
             }
         )
+        o_login.user = o_user
+        o_login.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+        o_login.save()
         o_login.attributes.clear()
 
         # Get version
