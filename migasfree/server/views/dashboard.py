@@ -18,7 +18,7 @@ def execute_active_checkings(request):
     If no results, returns empty list
     """
     alerts = []
-    for check in Checking.objects.filter(active=True):
+    for check in Checking.objects.filter(active=True).order_by('alert'):
         try:
             exec(check.code.replace("\r", ""))
         except:
@@ -37,6 +37,8 @@ def execute_active_checkings(request):
                 'url': vars().get('url', reverse('bootstrap')),
                 'msg': vars().get('msg', check.name),
             })
+
+        vars().clear()
 
     return alerts
 
