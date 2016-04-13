@@ -1,16 +1,9 @@
+Migasfree: Systems Management System (server side)
 ==================================================
-   This software is under continuous development
-==================================================
 
-Welcome to migasfree!
+Migasfree is an application to manage systems. Fundamentally to deploy software to computers in an organization.
 
-First of all, thanks a lot for downloading this software. We hope that this software is useful for you.
-
-
-Description
-===========
-
-Migasfree is a very simple, but effective, systems management system. Actually, it is used in 'Ayuntamiento de Zaragoza' (Spain) by initial authors in the project 'migration to open source software for desktops'. They use AZLinux distribution http://zaragozaciudad.net/azlinux.
+This project was born within the project [migration to open source software for desktops](http://www.zaragoza.es/contenidos/azlinux/migracionescritoriosl.pdf) of [City council of Zaragoza](http://zaragozaciudad.net/azlinux).
 
 You can learn about systems management systems at:
     * http://en.wikipedia.org/wiki/Systems_management
@@ -20,13 +13,13 @@ You can learn about systems management systems at:
 License
 =======
 
-Migasfree is free software, released under GNU GPL v3 (see COPYING file for details)
+Migasfree is free software, released under [GNU GPL v3](https://github.com/migasfree/migasfree/blob/master/COPYING).
 
 
 Authors
 =======
 
-See AUTHORS file
+See [AUTHORS file](https://github.com/migasfree/migasfree/blob/master/AUTHORS)
 
 
 Requirements
@@ -34,14 +27,12 @@ Requirements
 
     * Server:
         + Apache with WSGI
-        + Django 1.6
-        + postgresql
-        + Python libraries:
-            - python-django-south
-            - django-ajax-selects
+        + Python 2.7
+        + Django 1.9.3
+        + PostgreSQL 9.1
 
     * Clients:
-        + a Linux distribution (Fedora, openSUSE, Ubuntu, ...)
+        + a Linux distribution (Debian, Fedora, openSUSE, Ubuntu, ...)
         + Python >= 2.6
             - pycurl >= 7.19
             - python-notify (optional)
@@ -53,14 +44,10 @@ Features
 ========
 
     * Web administration
-    * Multiuser
-    * Multiversion (you can have desktops with differents versions and/or Distributions of GNU/Linux)
+    * Multiuser and multiversion (you can have desktops with differents versions and/or Distributions of GNU/Linux)
     * Automated Data Capture (you do not worry about adding hostnames, users, IPs, devices, etc. to server)
-    * Centralized system errors
-    * Centralized system faults
-    * Hardware inventory
-    * Software inventory
-    * System queries from the admin site
+    * Centralized system of errors and faults
+    * Hardware and software inventories
 
 
 Behaviour
@@ -68,11 +55,11 @@ Behaviour
 
 How can you change the software configuration of machines with migasfree?
 
-When an user opens a graphic session in the machine, migasfree client queries the migasfree Server and it responds with a code survey to execute in the client, created *ad hoc* for this client after consulting the database.
+When migasfree client is running, queries the migasfree Server and it responds with a code survey to execute in the client, created *ad hoc* for this client after consulting the database.
 
 This code survey is executed in the client and basically configures the repositories of packages (rpm or deb). Previously, these repositories have been created for the server when the migasfree's administrator configures a repository.
 
-A repository in migasfree server defines the packages that should be installed, updated or removed in the clients in function of attributes of client computer: **HOSTNAME**, **USER**, **CONTEXT LDAP**, **VIDEO CARD**, ... (the administrator defines the properties that he wants to use in his organization).
+A repository in migasfree server defines the packages that should be installed, updated or removed in the clients in function of attributes of client computer: **HOSTNAME**, **USER**, **LDAP CONTEXT**, **VIDEO CARD**, ... (the administrator defines the properties that he wants to use in his organization).
 
 All changes of configuration in the clients are made through packages. Therefore it is necessary that you know how create packages in order to change the configuration of the machines that you want administrate. You can consider hiring a professional, this is the hard work, you were warned!
 
@@ -88,12 +75,12 @@ For example: You want change the Firefox homepage in all PCs in a range of IPs.
 
     3. You must create a repository in migasfree server. Add your package ``myorg-firefox-1-0`` and define the range of IPs. This is easy!
 
-    4. *Voilà!* When a user opens a graphic session and his IP is in range, migasfree client install the package.
+    4. *Voilà!* When migasfree client is executed and his IP is in range, the package is installed.
 
 
 Documentation
 =============
 
-http://fun-with-migasfree.readthedocs.org/en/master/index.html (spanish)
+[Fun with migasfree](http://fun-with-migasfree.readthedocs.org/en/master/index.html) (spanish)
 
 *That's all folks!!!*
