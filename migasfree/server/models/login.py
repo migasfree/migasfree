@@ -47,6 +47,11 @@ class Login(models.Model, MigasLink):
 
     objects = LoginManager()
 
+    def update_user(self, user):
+        self.user = user
+        self.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+        self.save()
+
     def computer_link(self):
         return self.computer.link()
 

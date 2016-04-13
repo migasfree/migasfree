@@ -357,29 +357,27 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # if not exists the user, we add it
         o_user, _ = User.objects.get_or_create(
-            name=dic_computer["user"],
+            name=dic_computer.get("user"),
             defaults={
                 'fullname': dic_computer.get("user_fullname", "")
             }
         )
 
         # Save Login
-        o_login, _ = Login.objects.get_or_create(
+        o_login, created = Login.objects.get_or_create(
             computer=o_computer,
             defaults={
                 'user': o_user,
                 'date': dateformat.format(timezone.now(), 'Y-m-d H:i:s')
             }
         )
-        o_login.user = o_user
-        o_login.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
-        o_login.save()
+        if not created:
+            o_login.update_user(o_user)
+
         o_login.attributes.clear()
 
         # Get version
-        version = dic_computer.get("version")
-
-        o_version = Version.objects.get(name=version)
+        o_version = Version.objects.get(name=dic_computer.get("version"))
 
         # 2.- PROCESS PROPERTIES
         for e in properties:
@@ -431,7 +429,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         repositories = Repository.available_repos(o_computer, lst_attributes)
 
-        #4.- CREATE JSON
+        # 4.- CREATE JSON
         lst_repos = []
         lst_pkg_remove = []
         lst_pkg_install = []
@@ -445,7 +443,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 if p != "":
                     lst_pkg_install.append(p)
 
-        #DEVICES
+        # DEVICES
         lst_dev_remove = []
         lst_dev_install = []
         chk_devices = Mmcheck(
