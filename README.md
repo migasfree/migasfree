@@ -7,8 +7,8 @@ This project was born within the project [migration to open source software for 
 
 You can learn about systems management systems at:
 
-* http://en.wikipedia.org/wiki/Systems_management
-* http://en.wikipedia.org/wiki/List_of_systems_management_systems
+* [Systems management](http://en.wikipedia.org/wiki/Systems_management)
+* [List of systems management systems](http://en.wikipedia.org/wiki/List_of_systems_management_systems)
 
 
 License
