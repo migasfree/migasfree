@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011-2016 Jose Antonio Chavarría
+# Copyright (c) 2011-2016 Jose Antonio Chavarría <jachavar@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,8 +15,6 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
-#
-# Author: Jose Antonio Chavarría <jachavar@gmail.com>
 
 __author__ = 'Jose Antonio Chavarría'
 __license__ = 'GPLv3'
@@ -39,7 +37,7 @@ if not hasattr(sys, 'version_info') or sys.version_info < (2, 7, 0, 'final'):
 
 import os
 PATH = os.path.dirname(__file__)
-README = open(os.path.join(PATH, 'README')).read()
+README = open(os.path.join(PATH, 'README.md')).read()
 VERSION = __import__('migasfree').__version__
 
 #import glob
@@ -177,7 +175,7 @@ setup(
             'COPYING',
             'INSTALL',
             'MANIFEST.in',
-            'README',
+            'README.md',
         ]),
         ('/usr/share/migasfree-server/setup', [
             'setup/common.sh',

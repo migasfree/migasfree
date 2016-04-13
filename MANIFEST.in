@@ -1,6 +1,6 @@
 # http://docs.python.org/distutils/sourcedist.html#the-manifest-in-template
 
-include AUTHORS INSTALL COPYING README MANIFEST.in
+include AUTHORS INSTALL COPYING README.md MANIFEST.in
 include bin/*
 include migasfree/server/fixtures/*
 recursive-include migasfree *.py
