@@ -95,12 +95,12 @@ class DeviceLogical(models.Model, MigasLink):
         super(DeviceLogical, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '%s__%s__%s__%s__%d' % (
+        return '%s__%s__%s__%s__%s' % (
             self.device.model.manufacturer.name,
             self.device.model.name,
             self.feature.name,
             self.device.name,
-            self.id
+            str(self.id)
         )
 
     class Meta:
