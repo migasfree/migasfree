@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django.db import models
+from django.core.urlresolvers import resolve
 from django.utils.translation import ugettext_lazy as _
 
 from .migasfree import MigasAdmin
@@ -96,6 +97,20 @@ class DeviceLogicalInline(admin.TabularInline):
     form = DeviceLogicalForm
     fields = ('feature', 'name', 'computers')
     extra = 0
+
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        args = resolve(request.path).args
+        if db_field.name == 'feature' and len(args):
+            device = Device.objects.get(pk=args[0])
+            if device.model.pk:
+                kwargs['queryset'] = DeviceFeature.objects.filter(
+                    devicedriver__model__id=device.model.pk,
+                    devicedriver__version=request.user.userprofile.version
+                )
+
+        return super(DeviceLogicalInline, self).formfield_for_foreignkey(
+            db_field, request, **kwargs
+        )
 
 
 @admin.register(Device)
