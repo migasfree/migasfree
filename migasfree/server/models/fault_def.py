@@ -76,8 +76,8 @@ class FaultDef(models.Model, MigasLink):
         return FaultDef.objects.filter(
             models.Q(active=True) &
             models.Q(attributes__id__in=attributes)
-        ).values('language', 'name', 'code')
-        # FIXME .distinct('id') NOT supported in sqlite
+        ).distinct().values('language', 'name', 'code')
+        # NOTE .distinct('id') NOT supported in sqlite
 
     class Meta:
         app_label = 'server'
