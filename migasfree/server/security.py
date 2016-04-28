@@ -84,6 +84,7 @@ def gpg_get_key(name):
   Key-Length: 4096
   Name-Real: %s
   Name-Email: fun.with@migasfree.org
+  Passphrase: ''
   Expire-Date: 0
 </GnupgKeyParms>
 """
