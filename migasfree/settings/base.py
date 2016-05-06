@@ -16,8 +16,8 @@ from django.contrib import messages
 
 from .migasfree import BASE_DIR, MIGASFREE_TMP_DIR
 
-if django.VERSION < (1, 9, 3, 'final'):
-    print('Migasfree requires Django 1.9.3. Please, update it.')
+if django.VERSION < (1, 9, 6, 'final'):
+    print('Migasfree requires Django 1.9.6. Please, update it.')
     exit(1)
 
 ADMINS = (
@@ -123,7 +123,26 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'migasfree.flot',
     'import_export',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_filters',
+    'rest_framework_swagger',
 )
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework_filters.backends.DjangoFilterBackend',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100,
+}
 
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
