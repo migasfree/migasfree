@@ -1,4 +1,4 @@
-Django==1.9.3
+Django==1.9.6
 pycrypto==2.6.1
 pygpgme==0.3
 django-ajax-selects==1.4.2
@@ -9,3 +9,7 @@ docutils==0.12
 django-admin-bootstrapped==2.5.7
 django-bootstrap3==6.2.2
 django-import-export==0.4.0
+djangorestframework==3.3.3
+django-filter==0.13.0
+djangorestframework-filters==0.8.0
+django-rest-swagger==0.3.6

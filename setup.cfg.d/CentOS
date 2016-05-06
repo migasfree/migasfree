@@ -6,7 +6,7 @@ requires = python >= 2.7
            wget
            httpd
            mod_wsgi
-           Django >= 1.9.2
+           Django >= 1.9.6
            dpkg-devel
            createrepo
            django-ajax-selects >= 1.4.2
@@ -26,3 +26,7 @@ requires = python >= 2.7
            python-django-admin-bootstrapped
            python-django-import-export
            apt-utils
+           python-django-filter >= 0.13.0
+           python-djangorestframework >= 3.3.3
+           python-djangorestframework-filters >= 0.8.0
+           python-django-rest-swagger >= 0.3.6
