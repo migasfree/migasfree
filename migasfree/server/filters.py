@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import django_filters
+
 from django.contrib.admin.filters import ChoicesFieldListFilter
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Q
 from django.utils.translation import ugettext as _
+from rest_framework import filters
 
-from .models import ClientProperty, TagType
+from .models import ClientProperty, TagType, Computer
 
 
 class ProductiveFilterSpec(ChoicesFieldListFilter):
@@ -150,3 +153,17 @@ class UserFaultFilter(SimpleListFilter):
             ).exclude(faultdef__users=None)
         elif self.value() == 'no_assign':
             return queryset.filter(Q(faultdef__users=None))
+
+
+class ComputerFilter(filters.FilterSet):
+    platform = django_filters.CharFilter(name='version__platform__id')
+    created_at = django_filters.DateFilter(name='dateinput', lookup_type='gte')
+    mac_address = django_filters.CharFilter(
+        name='mac_address', lookup_type='icontains'
+    )
+
+    class Meta:
+        model = Computer
+        fields = [
+            'version__id', 'status', 'name',
+        ]

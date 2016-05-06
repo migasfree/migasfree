@@ -9,7 +9,13 @@ from ajax_select import urls as ajax_select_urls
 from django.conf import settings
 from django.conf.urls.static import static
 
+from server.routers import router
+
 urlpatterns = patterns('',
+    url(r'^docs/', include('rest_framework_swagger.urls')),
+    url(r'^token-auth/$', 'rest_framework.authtoken.views.obtain_auth_token'),
+    url(r'^api/v1/token/', include(router.urls)),
+
     url(r'', include('migasfree.server.urls')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
