@@ -75,22 +75,21 @@ def gpg_get_key(name):
 
             os.chmod(gpg_conf, 0o600)
 
-        # create a context
-        ctx = gpgme.Context()
-
-        key_params = """
-<GnupgKeyParms format="internal">
-  Key-Type: RSA
-  Key-Length: 4096
-  Name-Real: %s
-  Name-Email: fun.with@migasfree.org
-  Passphrase: ''
-  Expire-Date: 0
-</GnupgKeyParms>
+        _file_params = os.path.join(gpg_home, '%s.txt' % name)
+        with open(_file_params, 'wb') as handle:
+            key_params = """
+Key-Type: RSA
+Key-Length: 4096
+Name-Real: %s
+Name-Email: fun.with@migasfree.org
+Expire-Date: 0
 """
-        result = ctx.genkey(key_params % name)
+            handle.write(key_params % name)
+
+        os.system("echo '' | $(which gpg) --batch --passphrase-fd 0 --gen-key %(file)s; rm %(file)s" % {"file": _file_params})
 
         # export and save
+        ctx = gpgme.Context()
         ctx.armor = True
         keydata = BytesIO()
         ctx.export(name, keydata)
