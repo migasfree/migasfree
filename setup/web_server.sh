@@ -119,6 +119,8 @@ WSGIScriptAlias / $_MIGASFREE_APP_DIR/wsgi.py
         $_ALLOW_ALL
     </Files>
 </Directory>
+
+WSGIPassAuthorization On
 EOF
 }
 
