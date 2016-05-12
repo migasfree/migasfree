@@ -173,41 +173,48 @@ def query(request, query_id):
 
 @login_required
 def computer_messages(request):
+    delayed_time = datetime.now() - timedelta(
+        0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT
+    )
+
+    data = Message.objects.raw("""
+        SELECT server_message.id, server_message.computer_id,
+        server_message.text, server_message.date,
+        server_computer.name AS computer_name, server_computer.ip,
+        server_user.name, server_user.fullname,
+        server_version.name AS version_name,
+        server_login.id AS login_id
+        FROM server_message INNER JOIN server_computer
+            ON (server_message.computer_id = server_computer.id)
+        INNER JOIN server_login
+            ON (server_computer.id = server_login.computer_id)
+        INNER JOIN server_version
+            ON (server_computer.version_id = server_version.id)
+        INNER JOIN server_user
+            ON (server_login.user_id = server_user.id)
+        ORDER BY server_message.date DESC
+    """)
+
+    result = []
+    for item in data:
+        result.append(
+            {
+                'delayed': True if item.date < delayed_time else False,
+                'computer_id': item.computer_id,
+                'computer_name': item.computer_name,
+                'login_id': item.login_id,
+                'user_name': item.name,
+                'user_fullname': item.fullname,
+                'version': item.version_name,
+                'ip': item.ip,
+                'date': str(item.date),
+                'text': item.text
+            }
+        )
+
     template = 'computer_messages.html'
     if request.is_ajax():
         template = 'includes/computer_messages_result.html'
-
-    t = datetime.now() - timedelta(0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT)
-
-    result = []
-    for item in Message.objects.all().order_by("-date"):
-        if item.date < t:
-            icon = 'warning'
-        else:
-            icon = 'refresh fa-spin'
-
-        try:
-            login = Login.objects.get(computer=item.computer)
-            user = '%s-%s' % (login.user.name, login.user.fullname)
-            loginid = login.id
-        except:
-            user = "None"
-            loginid = 0
-
-        result.append(
-            [
-                icon,
-                "-",
-                item.computer.id,
-                item.computer.__str__(),
-                loginid,
-                user,
-                item.computer.version.name,
-                item.computer.ip,
-                item.date,
-                item.text
-            ]
-        )
 
     return render(
         request,
