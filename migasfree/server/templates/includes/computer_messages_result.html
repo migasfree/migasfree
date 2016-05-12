@@ -20,17 +20,30 @@
             <tr class="{% cycle '' 'even' %}">
                 <td class="ordinal">{{ forloop.counter }}.</td>
 
-                <td>{{ item.8 }}</td>
+                <td>{{ item.date }}</td>
 
-                <td><a href="{% url 'admin:server_computer_change' item.2 %}"><span class="fa fa-{{ item.0 }}"></span> {{ item.3 }}</a></td>
+                <td>
+                    {% if item.delayed %}
+                        <span class="fa fa-warning"></span>
+                    {% else %}
+                        <span class="fa fa-refresh fa-spin"></span>
+                    {% endif %}
+                    <a href="{% url 'admin:server_computer_change' item.computer_id %}">
+                        {{ item.computer_name }} (CID-{{ item.computer_id }})
+                    </a>
+                </td>
 
-                <td>{{ item.6 }}</td>
+                <td>{{ item.version }}</td>
 
-                <td>{{ item.7 }}</td>
+                <td>{{ item.ip }}</td>
 
-                <td><a href="{% url 'admin:server_login_change' item.4 %}">{{ item.5 }}</a></td>
+                <td>
+                    <a href="{% url 'admin:server_login_change' item.login_id %}">
+                        {{ item.user_name }} ({{ item.user_fullname }})
+                    </a>
+                </td>
 
-                <td>{{ item.9 }}</td>
+                <td>{{ item.text }}</td>
             </tr>
         {% endfor %}
         </tbody>
