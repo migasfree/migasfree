@@ -8,7 +8,13 @@ from django.db.models import Q
 from django.utils.translation import ugettext as _
 from rest_framework import filters
 
-from .models import ClientProperty, TagType, Computer
+from .models import (
+    ClientProperty, TagType, Computer,
+    Store, Property, Version, Attribute,
+    Package, Repository, Error, FaultDef,
+    Fault, Notification, Migration,
+    HwNode, Checking,
+)
 
 
 class ProductiveFilterSpec(ChoicesFieldListFilter):
@@ -155,6 +161,18 @@ class UserFaultFilter(SimpleListFilter):
             return queryset.filter(Q(faultdef__users=None))
 
 
+class AttributeFilter(filters.FilterSet):
+    class Meta:
+        model = Attribute
+        fields = ['property_att']
+
+
+class CheckingFilter(filters.FilterSet):
+    class Meta:
+        model = Checking
+        fields = ['active', 'alert']
+
+
 class ComputerFilter(filters.FilterSet):
     platform = django_filters.CharFilter(name='version__platform__id')
     created_at = django_filters.DateFilter(name='dateinput', lookup_type='gte')
@@ -164,6 +182,95 @@ class ComputerFilter(filters.FilterSet):
 
     class Meta:
         model = Computer
+        fields = ['version__id', 'status', 'name']
+
+
+class ErrorFilter(filters.FilterSet):
+    date = django_filters.DateFilter(name='date', lookup_type='gte')
+
+    class Meta:
+        model = Error
+        fields = ['version__id', 'checked', 'computer__id']
+
+
+class FaultDefinitionFilter(filters.FilterSet):
+    class Meta:
+        model = FaultDef
+        fields = ['attributes__id', 'active']
+
+
+class FaultFilter(filters.FilterSet):
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+
+    class Meta:
+        model = Fault
         fields = [
-            'version__id', 'status', 'name',
+            'version__id', 'checked', 'faultdef__id', 'computer__id'
         ]
+
+
+class MigrationFilter(filters.FilterSet):
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+
+    class Meta:
+        model = Migration
+        fields = ['version__id', 'computer__id']
+
+
+class NodeFilter(filters.FilterSet):
+    class Meta:
+        model = HwNode
+        fields = [
+            'computer__id', 'id', 'parent', 'product', 'level',
+            'width', 'name', 'classname', 'enabled', 'claimed',
+            'description', 'vendor', 'serial', 'businfo', 'physid',
+            'slot', 'size', 'capacity', 'clock', 'dev'
+        ]
+
+
+class NotificationFilter(filters.FilterSet):
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+
+    class Meta:
+        model = Notification
+        fields = ['checked']
+
+
+class PackageFilter(filters.FilterSet):
+    class Meta:
+        model = Package
+        fields = ['version__id', 'store__id']
+
+
+class PropertyFilter(filters.FilterSet):
+    class Meta:
+        model = Property
+        fields = ['active', 'tag']
+
+
+class RepositoryFilter(filters.FilterSet):
+    included_attributes = django_filters.CharFilter(
+        name='attributes__value', lookup_type='icontains'
+    )
+    excluded_attributes = django_filters.CharFilter(
+        name='excludes__value', lookup_type='icontains'
+    )
+    available_packages = django_filters.CharFilter(
+        name='packages__name', lookup_type='icontains'
+    )
+
+    class Meta:
+        model = Repository
+        fields = ['version__id', 'active', 'schedule__id']
+
+
+class StoreFilter(filters.FilterSet):
+    class Meta:
+        model = Store
+        fields = ['version__id']
+
+
+class VersionFilter(filters.FilterSet):
+    class Meta:
+        model = Version
+        fields = ['platform__id']
