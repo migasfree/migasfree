@@ -3,7 +3,7 @@
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
-from . import models
+from . import models, tasks
 
 
 class AttributeInfoSerializer(serializers.ModelSerializer):
@@ -188,6 +188,55 @@ class RepositorySerializer(serializers.ModelSerializer):
     packages = PackageInfoSerializer(many=True, read_only=True)
     attributes = AttributeInfoSerializer(many=True, read_only=True)
     excludes = AttributeInfoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Repository
+        fields = '__all__'
+
+
+class RepositoryWriteSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        deploy = super(RepositoryWriteSerializer, self).create(validated_data)
+        tasks.create_physical_repository(
+            {}, deploy, deploy.packages.values_list('id', flat=True)
+        )
+        return deploy
+
+    def update(self, instance, validated_data):
+        old_obj = self.Meta.model.objects.get(id=instance.id)
+        old_pkgs = sorted(
+            old_obj.packages.values_list('id', flat=True)
+        )
+        old_name = old_obj.name
+
+        #https://github.com/tomchristie/django-rest-framework/issues/2442
+        instance = super(RepositoryWriteSerializer, self).update(
+            instance, validated_data
+        )
+        new_pkgs = sorted(
+            instance.packages.values_list('id', flat=True)
+        )
+
+        if cmp(old_pkgs, new_pkgs) != 0 or old_name != validated_data['name']:
+            tasks.create_physical_repository({}, instance, new_pkgs)
+
+            if old_name != validated_data['name']:
+                tasks.remove_physical_repository(
+                    {}, instance, old_name
+                )
+
+        return instance
+
+    def validate(self, data):
+        for item in data.get('packages'):
+            if item.version.id != data['version'].id:
+                raise serializers.ValidationError(
+                    _('Package %s must belong to the version %s') % (
+                        item, data['version']
+                    )
+                )
+
+        return data
 
     class Meta:
         model = models.Repository
