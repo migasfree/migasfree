@@ -219,7 +219,7 @@ class RepositoryViewSet(viewsets.ModelViewSet):
     permission_classes=[IsAdminOrIsSelf]
 
     def get_serializer_class(self):
-        if self.action == 'create':
+        if self.action == 'create' or self.action == 'update':
             return serializers.RepositoryWriteSerializer
 
         return serializers.RepositorySerializer
