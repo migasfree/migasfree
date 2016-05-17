@@ -218,13 +218,19 @@ class RepositoryViewSet(viewsets.ModelViewSet):
     ordering = ('-date',)
     permission_classes=[IsAdminOrIsSelf]
 
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return serializers.RepositoryWriteSerializer
+
+        return serializers.RepositorySerializer
+
 
 class ScheduleViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
     queryset = models.Schedule.objects.all()
     serializer_class = serializers.ScheduleSerializer
-    permission_classes = (PublicPermission,)  # DEBUG
+
 
 class StoreViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
