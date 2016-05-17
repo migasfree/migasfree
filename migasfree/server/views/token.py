@@ -216,7 +216,7 @@ class RepositoryViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('-date',)
-    permission_classes=[IsAdminOrIsSelf]
+    permission_classes = [IsAdminOrIsSelf]
 
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update':
