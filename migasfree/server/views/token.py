@@ -190,12 +190,16 @@ class PackageViewSet(
         )
 
 
-class PlatformViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class PlatformViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
     queryset = models.Platform.objects.all()
     serializer_class = serializers.PlatformSerializer
 
 
-class PmsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+class PmsViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
     queryset = models.Pms.objects.all()
     serializer_class = serializers.PmsSerializer
 
