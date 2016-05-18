@@ -174,7 +174,7 @@ class CheckingFilter(filters.FilterSet):
 
 
 class ComputerFilter(filters.FilterSet):
-    platform = django_filters.CharFilter(name='version__platform__id')
+    platform = django_filters.NumberFilter(name='version__platform__id')
     created_at = django_filters.DateFilter(name='dateinput', lookup_type='gte')
     mac_address = django_filters.CharFilter(
         name='mac_address', lookup_type='icontains'
@@ -187,6 +187,7 @@ class ComputerFilter(filters.FilterSet):
 
 class ErrorFilter(filters.FilterSet):
     date = django_filters.DateFilter(name='date', lookup_type='gte')
+    platform = django_filters.NumberFilter(name='version__platform__id')
 
     class Meta:
         model = Error
