@@ -3,8 +3,6 @@
 # http://docs.djangoproject.com/en/dev/topics/testing/
 # http://okkum.wordpress.com/2009/02/16/testing-con-django-mas-alla-de-unittest/
 
-import os
-import settings
 from datetime import datetime
 
 from django.test import TransactionTestCase
@@ -33,7 +31,7 @@ class RepositoryTestCase(TransactionTestCase):
         self.test1.date = datetime.now().date()
         self.test1.toinstall = "bluefish"
         self.test1.toremove = ""
-        self.test1.save()
+        self.test1.save()  # FIXME remove
 
     def test_repository_name(self):
         self.assertEqual(self.test1.name, 'test-1-2')
@@ -49,9 +47,3 @@ class RepositoryTestCase(TransactionTestCase):
             reverse('admin:server_repository_changelist')
         )
         self.assertEqual(response.status_code, 200)
-
-        # Check that the rendered context contains 1 repository.
-        self.assertEqual(
-            response.context['selection_note_all'],
-            "1 selected"
-        )
