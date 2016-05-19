@@ -6,9 +6,9 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.conf import settings
 
-from ..models import Platform, Version, Repository, Computer
+from ..models import Platform, Version, Repository
 from ..api import get_computer
-from ..functions import uuid_validate, d2s
+from ..functions import uuid_validate
 from ..security import gpg_get_key
 
 
