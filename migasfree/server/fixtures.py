@@ -15,8 +15,12 @@ from migasfree.server.models import UserProfile
 
 
 def run(cmd_linux):
-    (out, err) = subprocess.Popen(cmd_linux,
-        stdout=subprocess.PIPE, shell=True).communicate()
+    (out, err) = subprocess.Popen(
+        cmd_linux,
+        stdout=subprocess.PIPE,
+        shell=True
+    ).communicate()
+
     return (out, err)
 
 
@@ -36,24 +40,39 @@ def create_user(name, groups=[]):
 def add_read_perms(group, tables=[]):
     for table in tables:
         group.permissions.add(
-            Permission.objects.get(codename="change_%s" % table,
-            content_type__app_label="server").id)
+            Permission.objects.get(
+                codename="change_%s" % table,
+                content_type__app_label="server"
+            ).id
+        )
 
 
 def add_all_perms(group, tables=[]):
     for table in tables:
         group.permissions.add(
-            Permission.objects.get(codename="add_%s" % table,
-            content_type__app_label="server").id)
+            Permission.objects.get(
+                codename="add_%s" % table,
+                content_type__app_label="server"
+            ).id
+        )
         group.permissions.add(
-            Permission.objects.get(codename="change_%s" % table,
-            content_type__app_label="server").id)
+            Permission.objects.get(
+                codename="change_%s" % table,
+                content_type__app_label="server"
+            ).id
+        )
         group.permissions.add(
-            Permission.objects.get(codename="delete_%s" % table,
-            content_type__app_label="server").id)
+            Permission.objects.get(
+                codename="delete_%s" % table,
+                content_type__app_label="server"
+            ).id
+        )
         group.permissions.add(
-            Permission.objects.get(codename="can_save_%s" % table,
-            content_type__app_label="server").id)
+            Permission.objects.get(
+                codename="can_save_%s" % table,
+                content_type__app_label="server"
+            ).id
+        )
 
 
 def create_users():
@@ -65,12 +84,14 @@ def create_users():
     oGroupRead = Group()
     oGroupRead.name = "Reader"
     oGroupRead.save()
-    tables = ["computer", "device", "user", "login", "attribute", "error",
-            "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
-            "devicetype", "schedule", "scheduledelay", "autocheckerror",
-            "faultdef", "property", "checking", "version", "pms", "query",
-            "package", "repository", "store", "message", "update",
-            "platform", "messageserver", "migration", "notification"]
+    tables = [
+        "computer", "device", "user", "login", "attribute", "error",
+        "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
+        "devicetype", "schedule", "scheduledelay", "autocheckerror",
+        "faultdef", "property", "checking", "version", "pms", "query",
+        "package", "repository", "store", "message", "update",
+        "platform", "messageserver", "migration", "notification"
+    ]
     add_read_perms(oGroupRead, tables)
     oGroupRead.save()
 
@@ -102,8 +123,9 @@ def create_users():
     oGroupDev = Group()
     oGroupDev.name = "Device installer"
     oGroupDev.save()
-    tables = ["deviceconnection", "devicemanufacturer", "devicemodel",
-            "devicetype"]
+    tables = [
+        "deviceconnection", "devicemanufacturer", "devicemodel", "devicetype"
+    ]
     add_all_perms(oGroupDev, tables)
     oGroupDev.save()
 
@@ -119,9 +141,11 @@ def create_users():
     oGroupSys = Group()
     oGroupSys.name = "Configurator"
     oGroupSys.save()
-    tables = ["checking", "faultdef", "property", "pms", "version",
-            "message", "update", "platform", "messageserver", "migration",
-            "notification"]
+    tables = [
+        "checking", "faultdef", "property", "pms", "version",
+        "message", "update", "platform", "messageserver", "migration",
+        "notification"
+    ]
     add_all_perms(oGroupSys, tables)
     oGroupSys.save()
 
