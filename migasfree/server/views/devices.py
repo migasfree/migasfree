@@ -11,7 +11,7 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from ..forms import AppendDevicesFromComputerForm
-from ..models import Computer, Attribute, Login, DeviceModel, DeviceConnection
+from ..models import Computer, Login, DeviceModel, DeviceConnection
 
 
 @login_required

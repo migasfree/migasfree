@@ -1,6 +1,5 @@
 # -*- coding: UTF-8 -*-
 
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import DeleteView

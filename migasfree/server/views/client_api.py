@@ -3,8 +3,6 @@
 import os
 import json
 
-from datetime import datetime
-
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings

@@ -1,10 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 import os
-import sys
 import tempfile
-
-import django
 
 from datetime import timedelta
 

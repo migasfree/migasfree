@@ -8,7 +8,6 @@ from ajax_select import register, LookupChannel
 
 from .models import (
     Attribute,
-    Feature,
     Tag,
     Package,
     Property,

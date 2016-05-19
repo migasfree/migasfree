@@ -3,11 +3,8 @@
 import json
 
 from django.http import HttpResponse, JsonResponse
-from django.utils.translation import ugettext_lazy as _
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.conf import settings
-from django.contrib import messages
-from django.core.urlresolvers import reverse
 
 from ..models import Platform, Version, Repository, Computer
 from ..api import get_computer

@@ -5,7 +5,6 @@ import datetime
 import shutil
 
 from django.db import models
-from django.utils.html import format_html
 from django.template.defaultfilters import slugify
 from django.template.loader import render_to_string
 from django.utils.encoding import python_2_unicode_compatible

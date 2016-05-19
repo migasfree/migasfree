@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import json
-import time
 
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q
 from django.core import serializers
 
 from ..models import (

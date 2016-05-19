@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.core.urlresolvers import reverse
-from django.utils.html import format_html
 from django.utils.translation import ugettext
 from django.template.loader import render_to_string
 
@@ -50,7 +49,7 @@ class MigasLink(object):
                     self.__getattribute__(obj.related.field.name)
                 ).replace("[", "").replace("]", "")
                 if values:
-                    realted_data.append({
+                    related_data.append({
                         'url': '%s?id__in=%s' % (related_link, values),
                         'text': ugettext(obj.related.field.name)
                     })

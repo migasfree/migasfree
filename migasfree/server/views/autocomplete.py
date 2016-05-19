@@ -2,7 +2,6 @@
 
 from django.conf import settings
 from django.db.models import Q
-from django.utils.translation import ugettext_lazy as _
 
 from dal import autocomplete
 
