@@ -15,7 +15,7 @@ from ..filters import (
     FaultFilter, NotificationFilter, MigrationFilter,
     NodeFilter, CheckingFilter,
 )
-from ..permissions import PublicPermission, IsAdminOrIsSelf
+# from ..permissions import PublicPermission, IsAdminOrIsSelf
 
 
 class AttributeViewSet(
@@ -45,7 +45,7 @@ class ComputerViewSet(
     filter_class = ComputerFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
 
-    @detail_route(methods=['post'], permission_classes=[IsAdminOrIsSelf])
+    @detail_route(methods=['post'])
     def status(self, request, pk=None):
         """
         Input: {
@@ -71,7 +71,7 @@ class ComputerViewSet(
             status=status.HTTP_200_OK
         )
 
-    @detail_route(methods=['post'], permission_classes=[IsAdminOrIsSelf])
+    @detail_route(methods=['post'])
     def replacement(self, request, pk=None):
         """
         Input: {
@@ -220,7 +220,6 @@ class RepositoryViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('-date',)
-    permission_classes = [IsAdminOrIsSelf]
 
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update':
