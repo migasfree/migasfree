@@ -340,7 +340,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         properties = data.get("upload_computer_info").get("attributes")
 
         # 1.- PROCESS COMPUTER
-        #registration of ip, version an Migration of computer
+        # registration of ip, version an Migration of computer
         o_computer = check_computer(
             o_computer,
             name,
@@ -500,7 +500,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         }
         retdata["base"] = (o_version.computerbase == o_computer.__str__())
 
-        #HARDWARE CAPTURE
+        # HARDWARE CAPTURE
         hwcapture = True
         if o_computer.datehardware:
             hwcapture = (datetime.now() > (
@@ -545,7 +545,7 @@ def upload_computer_faults(request, name, uuid, computer, data):
     return ret
 
 
-#DEVICES CHANGES
+# DEVICES CHANGES
 def upload_devices_changes(request, name, uuid, computer, data):
     logger.debug('upload_devices_changes data: %s' % data)
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -750,11 +750,11 @@ def get_computer_tags(request, name, uuid, computer, data):
         for tag in rps.attributes.all().filter(
             property_att__tag=True
         ).filter(property_att__active=True):
-            if not tag.property_att.name in retdata["available"]:
+            if tag.property_att.name not in retdata["available"]:
                 retdata["available"][tag.property_att.name] = []
 
             value = "%s-%s" % (tag.property_att.prefix, tag.value)
-            if not value in retdata["available"][tag.property_att.name]:
+            if value not in retdata["available"][tag.property_att.name]:
                 retdata["available"][tag.property_att.name].append(value)
 
     return return_message(cmd, retdata)

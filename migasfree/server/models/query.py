@@ -36,7 +36,6 @@ class Query(models.Model):
         help_text=_("Django Code")
     )
 
-
     @staticmethod
     def get_query_names():
         return Query.objects.all().order_by("-id").values_list('id', 'name')

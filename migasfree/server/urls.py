@@ -14,7 +14,7 @@ urlpatterns = patterns('',
         r'^$',
         RedirectView.as_view(
             # cannot use reverse_lazy resolver with query string
-            #url=reverse_lazy('admin:server_repository_changelist'),
+            # url=reverse_lazy('admin:server_repository_changelist'),
             url='/admin/server/repository/?active__exact=1',
             query_string=True
         ),

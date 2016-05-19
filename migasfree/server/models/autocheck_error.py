@@ -17,7 +17,8 @@ class AutoCheckError(models.Model):
         verbose_name=_("message"),
         null=True,
         blank=True,
-        help_text = _("Pattern to search . See https://docs.python.org/2/library/re.html#module-re")
+        help_text=_("Pattern to search. "
+            "See https://docs.python.org/2/library/re.html#module-re")
     )
 
     def save(self, *args, **kwargs):
@@ -31,4 +32,6 @@ class AutoCheckError(models.Model):
         app_label = 'server'
         verbose_name = _("Auto Check Error")
         verbose_name_plural = _("Auto Check Errors")
-        permissions = (("can_save_autocheckerror", "Can save Auto Check Error"),)
+        permissions = (
+            ("can_save_autocheckerror", "Can save Auto Check Error"),
+        )

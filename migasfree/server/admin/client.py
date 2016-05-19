@@ -165,7 +165,7 @@ class ErrorAdmin(MigasAdmin):
     )
     list_display_links = ('id',)
     list_filter = ('checked', 'date', 'version__platform', 'version')
-    #list_editable = ('checked',)  # TODO
+    # list_editable = ('checked',)  # TODO
     ordering = ('-date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'error'])
     readonly_fields = ('computer_link', 'version', 'date', 'error')
@@ -203,7 +203,7 @@ class FaultAdmin(MigasAdmin):
         'date',
         'text',
         'faultdef',
-        #'list_users'  # performance improvement
+        # 'list_users'  # performance improvement
     )
     list_display_links = ('id',)
     list_filter = (

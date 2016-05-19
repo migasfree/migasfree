@@ -11,6 +11,7 @@ from . import Computer, MigasLink
 
 import re
 
+
 def validate_mac(mac):
     return isinstance(mac, basestring) and \
         len(mac) == 17 and \

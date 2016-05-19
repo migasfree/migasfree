@@ -209,7 +209,7 @@ class RepositoryWriteSerializer(serializers.ModelSerializer):
         )
         old_name = old_obj.name
 
-        #https://github.com/tomchristie/django-rest-framework/issues/2442
+        # https://github.com/tomchristie/django-rest-framework/issues/2442
         instance = super(RepositoryWriteSerializer, self).update(
             instance, validated_data
         )

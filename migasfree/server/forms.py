@@ -29,6 +29,7 @@ class ComputerReplacementForm(forms.Form):
         label=_('Target')
     )
 
+
 class AppendDevicesFromComputerForm(forms.Form):
     source = forms.ModelChoiceField(
         queryset=Computer.objects.all(),
@@ -159,7 +160,9 @@ class ComputerForm(forms.ModelForm):
             if self.cleaned_data.get('tags') != []:
                 errors.append(_("Status available can not have tags"))
             if self.cleaned_data.get('devices_logical') != []:
-                errors.append(_("Status available can not have devices logical"))
+                errors.append(
+                    _("Status available can not have devices logical")
+                )
 
         if errors:
             raise forms.ValidationError(errors)

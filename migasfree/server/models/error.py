@@ -67,7 +67,7 @@ class Error(models.Model):
     def auto_check(self):
         for ace in AutoCheckError.objects.all():
             if re.search(ace.message, self.error):
-                self.checked =True
+                self.checked = True
                 return
 
     def computer_link(self):

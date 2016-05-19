@@ -22,11 +22,13 @@ def execute_active_checkings(request):
         try:
             exec(check.code.replace("\r", ""))
         except:
-            return {'error': {
-                'description': _("Error in field 'code' of Checking: %s")
-                    % check.name,
-                'contentpage': '%s\n%s' % (check.code, str(sys.exc_info()))
-            }}
+            return {
+                'error': {
+                    'description': _("Error in field 'code' of Checking: %s")
+                        % check.name,
+                    'contentpage': '%s\n%s' % (check.code, str(sys.exc_info()))
+                }
+            }
 
         result = vars().get('result', 0)
         if result > 0:

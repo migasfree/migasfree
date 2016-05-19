@@ -16,14 +16,14 @@ from ..forms import DeviceLogicalForm, ExtraThinTextarea
 
 @admin.register(DeviceType)
 class DeviceTypeAdmin(MigasAdmin):
-    list_display= ('name',)
+    list_display = ('name',)
     list_display_links = ('name',)
     ordering = ('name',)
 
 
 @admin.register(DeviceFeature)
 class DeviceFeatureAdmin(MigasAdmin):
-    list_display= ('name',)
+    list_display = ('name',)
     list_display_links = ('name',)
     ordering = ('name',)
 

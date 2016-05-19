@@ -55,11 +55,11 @@ def get_computer_info(request):
         for tag in rps.attributes.all().filter(
             property_att__tag=True
         ).filter(property_att__active=True):
-            if not tag.property_att.name in result["available_tags"]:
+            if tag.property_att.name not in result["available_tags"]:
                 result["available_tags"][tag.property_att.name] = []
 
             value = "%s-%s" % (tag.property_att.prefix, tag.value)
-            if not value in result["available_tags"][tag.property_att.name]:
+            if value not in result["available_tags"][tag.property_att.name]:
                 result["available_tags"][tag.property_att.name].append(value)
 
     return JsonResponse(result)
