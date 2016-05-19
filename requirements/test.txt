@@ -1,0 +1,6 @@
+-r development.txt # includes the development.txt requirements file
+
+django-jenkins==0.18.1
+pep8==1.7.0
+pyflakes==1.2.3
+pylint==1.5.5
