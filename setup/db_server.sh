@@ -107,9 +107,9 @@ function db_server_init()
         service postgresql restart || :
     )
 
-    is_pg_db_exists && echo yes | cat - | django-admin.py migrate --fake-initial || (
+    is_pg_db_exists && echo yes | cat - | django-admin migrate --fake-initial || (
         pg_create_database
-        django-admin.py migrate
+        django-admin migrate
 
         python - << EOF
 import django

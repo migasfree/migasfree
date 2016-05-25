@@ -145,7 +145,7 @@ function set_web_server_permissions()
 function web_server_init()
 {
     export DJANGO_SETTINGS_MODULE="migasfree.settings.production"
-    django-admin.py collectstatic --noinput
+    django-admin collectstatic --noinput
 
     service_action haveged start
 
