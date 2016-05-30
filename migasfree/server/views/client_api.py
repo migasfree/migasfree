@@ -23,7 +23,7 @@ def api(request):
     if request.method != 'POST':
         return HttpResponse(
             return_message(
-                command,
+                'unexpected_get_method',
                 errmfs.error(errmfs.GET_METHOD_NOT_ALLOWED)
             ),
             content_type='text/plain'
