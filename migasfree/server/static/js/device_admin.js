@@ -7,7 +7,7 @@ function change_data()
             var html = '';
             for (var i = 0; i < connection_list.length; i++)
             {
-                if (connection_list[i].pk == $("#id_connection").val())
+                if (connection_list[i].pk === $("#id_connection").val())
                 {
                     if (connection_list[i].fields.fields !== '')
                     {
