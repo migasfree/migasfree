@@ -239,11 +239,11 @@ class ComputerLookup(LookupChannel):
         # they were in when you last edited
         # see OrdredManyToMany.md
         lst = []
-        for id in ids:
-            if id.__class__.__name__ == "Computer":
-                lst.append(int(id.pk))
+        for item in ids:
+            if item.__class__.__name__ == "Computer":
+                lst.append(int(item.pk))
             else:
-                lst.append(int(id))
+                lst.append(int(item))
 
         things = self.model.objects.in_bulk(lst)
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
