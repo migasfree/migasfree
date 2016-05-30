@@ -415,8 +415,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         # ADD AttributeSets
         lst_set = AttributeSet.process(lst_attributes)
         if lst_set:
-            for set in lst_set:
-                o_login.attributes.add(set)
+            for item in lst_set:
+                o_login.attributes.add(item)
 
         # 3 FaultsDef
         lst_faultsdef = []
@@ -674,7 +674,7 @@ def upload_server_package(request, name, uuid, o_computer, data):
 
     # we add the package
     if not data['source']:
-        o_package, _ = Package.objects.get_or_create(
+        Package.objects.get_or_create(
             name=f.name,
             version=o_version,
             defaults={'store': o_store}
