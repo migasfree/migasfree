@@ -394,7 +394,7 @@ class Computer(models.Model, MigasLink):
 
     def get_cid_attribute(self):
         o_property = Property.objects.get(prefix="CID", active=True)
-        cid_att, created = Attribute.objects.get_or_create(
+        cid_att, _ = Attribute.objects.get_or_create(
             property_att=o_property,
             value=str(self.id),
             defaults={'description': self.get_cid_description()}
