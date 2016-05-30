@@ -30,7 +30,7 @@ def get_computer_info(request):
     _uuid = uuid_validate(request.GET.get('uuid', ''))
     _name = request.GET.get('name', '')
     if _uuid == "":
-        _uuid == _name
+        _uuid = _name
 
     computer = get_computer(_name, _uuid)
 
