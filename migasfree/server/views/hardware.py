@@ -102,7 +102,7 @@ def load_hw(computer, node, parent, level):
             for x in node[e]:
                 HwConfiguration.objects.create(node=n, name=x, value=node[e][x])
         elif e == "logicalname":
-            if type(node[e]) == unicode:
+            if isinstance(node[e], unicode):
                 HwLogicalName.objects.create(node=n, name=node[e])
             else:
                 for x in node[e]:
