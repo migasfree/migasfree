@@ -24,7 +24,10 @@ def run(cmd_linux):
     return (out, err)
 
 
-def create_user(name, groups=[]):
+def create_user(name, groups=None):
+    if groups is None:
+        groups = []
+
     oUser = UserProfile()
     oUser.username = name
     oUser.is_staff = True
@@ -37,7 +40,10 @@ def create_user(name, groups=[]):
     oUser.save()
 
 
-def add_read_perms(group, tables=[]):
+def add_read_perms(group, tables=None):
+    if tables is None:
+        tables = []
+
     for table in tables:
         group.permissions.add(
             Permission.objects.get(
@@ -47,7 +53,10 @@ def add_read_perms(group, tables=[]):
         )
 
 
-def add_all_perms(group, tables=[]):
+def add_all_perms(group, tables=None):
+    if tables is None:
+        tables = []
+
     for table in tables:
         group.permissions.add(
             Permission.objects.get(
@@ -177,7 +186,7 @@ def sequence_reset():
             ofile.write(commands.getvalue())
             ofile.flush()
             cmd_linux = "su postgres -c 'psql migasfree -f " + cfile + "' -"
-            (out, err) = run(cmd_linux)
+            run(cmd_linux)
 
         os.remove(cfile)
 
