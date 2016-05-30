@@ -69,8 +69,8 @@ class ClientPropertyAdmin(MigasAdmin):
     )
     actions = None
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Property")
 
@@ -99,8 +99,8 @@ class FeatureAdmin(MigasAdmin):
     search_fields = ('value', 'description')
     readonly_fields = ('property_att', 'value')
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Attribute")
 
@@ -132,8 +132,8 @@ class PackageAdmin(MigasAdmin):
     search_fields = ('name', 'store__name')
     ordering = ('name',)
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Package/Set")
 
@@ -143,7 +143,7 @@ class PackageAdmin(MigasAdmin):
         )
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(PackageAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
         form.base_fields['store'].widget.can_add_related = False
 
@@ -156,8 +156,8 @@ class PlatformAdmin(MigasAdmin):
 
     actions = ['delete_selected']
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Platform")
 
@@ -181,8 +181,8 @@ class PlatformAdmin(MigasAdmin):
 class PmsAdmin(MigasAdmin):
     list_display = ('my_link',)
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Package Management System")
 
@@ -249,8 +249,8 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         }),
     )
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Repository")
 
@@ -281,7 +281,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
 
             return db_field.formfield(**kwargs)
 
-        return super(type(self), self).formfield_for_manytomany(
+        return super(RepositoryAdmin, self).formfield_for_manytomany(
             db_field,
             request,
             **kwargs
@@ -290,7 +290,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     def save_model(self, request, obj, form, change):
         is_new = (obj.pk is None)
         packages_after = list(map(int, form.cleaned_data.get('packages')))
-        super(type(self), self).save_model(request, obj, form, change)
+        super(RepositoryAdmin, self).save_model(request, obj, form, change)
 
         name_old = form.initial.get('name')
         name_new = obj.name
@@ -319,7 +319,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         )
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(RepositoryAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
         form.base_fields['schedule'].widget.can_add_related = False
         form.current_user = request.user
@@ -342,8 +342,8 @@ class ScheduleAdmin(MigasAdmin):
     inlines = [ScheduleDelayline]
     extra = 0
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Schedule")
 
@@ -353,8 +353,8 @@ class StoreAdmin(MigasAdmin):
     list_display = ('my_link',)
     search_fields = ('name',)
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Store")
 
@@ -364,7 +364,7 @@ class StoreAdmin(MigasAdmin):
         )
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(StoreAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
 
         return form
@@ -375,8 +375,8 @@ class TagTypeAdmin(MigasAdmin):
     list_display = ('my_link', 'prefix', 'my_active')
     fields = ('prefix', 'name', 'kind', 'active')
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Tag Type")
 
@@ -396,8 +396,8 @@ class TagAdmin(MigasAdmin):
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Tag")
 
@@ -407,7 +407,7 @@ class TagAdmin(MigasAdmin):
         )
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(TagAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['property_att'].widget.can_add_related = False
 
         return form
@@ -417,13 +417,13 @@ class TagAdmin(MigasAdmin):
 class UserProfileAdmin(MigasAdmin):
     list_display = ('my_link',)
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("User Profile")
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(UserProfileAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
         form.base_fields['groups'].widget.can_add_related = False
 
@@ -442,8 +442,8 @@ class VersionAdmin(MigasAdmin):
     fields = ('name', 'platform', 'pms', 'computerbase', 'autoregister', 'base')
     actions = None
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Version")
 
@@ -454,7 +454,7 @@ class VersionAdmin(MigasAdmin):
     my_autoregister.short_description = _('autoregister')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(VersionAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['pms'].widget.can_add_related = False
         form.base_fields['platform'].widget.can_add_related = False
 

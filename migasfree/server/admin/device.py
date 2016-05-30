@@ -43,7 +43,7 @@ class DeviceConnectionAdmin(admin.ModelAdmin):
     fields = ('devicetype', 'name', 'fields')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(DeviceConnectionAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['devicetype'].widget.can_add_related = False
 
         return form
@@ -56,7 +56,7 @@ class DeviceDriverAdmin(MigasAdmin):
     fields = ('name', 'model', 'version', 'feature', 'install')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(DeviceDriverAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['model'].widget.can_add_related = False
         form.base_fields['version'].widget.can_add_related = False
         form.base_fields['feature'].widget.can_add_related = False
@@ -79,13 +79,13 @@ class DeviceLogicalAdmin(MigasAdmin):
         'feature__name',
     )
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _('Device Logical')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(DeviceLogicalAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['device'].widget.can_add_related = False
         form.base_fields['feature'].widget.can_add_related = False
 
@@ -128,8 +128,8 @@ class DeviceAdmin(MigasAdmin):
 
     inlines = [DeviceLogicalInline]
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _('Device')
 
@@ -137,7 +137,7 @@ class DeviceAdmin(MigasAdmin):
         js = ('js/device_admin.js',)
 
     def save_related(self, request, form, formsets, change):
-        super(type(self), self).save_related(request, form, formsets, change)
+        super(DeviceAdmin, self).save_related(request, form, formsets, change)
 
         device = form.instance
         for feature in DeviceFeature.objects.filter(
@@ -153,7 +153,7 @@ class DeviceAdmin(MigasAdmin):
                 )
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(DeviceAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['model'].widget.can_add_related = False
         form.base_fields['connection'].widget.can_add_related = False
 
@@ -182,7 +182,7 @@ class DeviceModelAdmin(MigasAdmin):
     inlines = [DeviceDriverInline]
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(DeviceModelAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['manufacturer'].widget.can_add_related = False
         form.base_fields['devicetype'].widget.can_add_related = False
         form.base_fields['connections'].widget.can_add_related = False

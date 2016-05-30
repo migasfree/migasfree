@@ -105,8 +105,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     resource_class = ComputerResource
     actions = ['delete_selected', 'reinstall_devices']
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _('Computer')
 
@@ -143,7 +143,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             )
             return db_field.formfield(**kwargs)
 
-        return super(type(self), self).formfield_for_manytomany(
+        return super(ComputerAdmin, self).formfield_for_manytomany(
             db_field,
             request,
             **kwargs
@@ -258,8 +258,8 @@ class FaultDefAdmin(MigasAdmin):
         }),
     )
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Fault Definition")
 
@@ -270,7 +270,7 @@ class FaultDefAdmin(MigasAdmin):
     my_active.short_description = _('active')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(type(self), self).get_form(request, obj, **kwargs)
+        form = super(FaultDefAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['users'].widget.can_add_related = False
 
         return form
@@ -288,8 +288,8 @@ class LoginAdmin(MigasAdmin):
     fields = ('date', 'user', 'computer_link', 'attributes')
     readonly_fields = ('date', 'user', 'computer_link', 'attributes')
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("Login")
 
@@ -394,8 +394,8 @@ class UserAdmin(MigasAdmin):
     search_fields = ('name', 'fullname')
     readonly_fields = ('name', 'fullname')
 
-    def my_link(self, object):
-        return object.link()
+    def my_link(self, obj):
+        return obj.link()
 
     my_link.short_description = _("User")
 
