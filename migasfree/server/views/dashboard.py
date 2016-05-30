@@ -54,7 +54,7 @@ def alerts(request):
     template = 'includes/alerts.html'
 
     alerts = execute_active_checkings(request)
-    if type(alerts) is dict and alerts.get('error').get('description'):
+    if isinstance(alerts, dict) and alerts.get('error').get('description'):
         return render(
             request,
             'error.html',
