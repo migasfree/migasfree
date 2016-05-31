@@ -45,7 +45,7 @@ def execute_active_checkings(request):
     return alerts
 
 
-@permission_required('server.can_change_checking', raise_exception=True)
+@permission_required('server.change_checking', raise_exception=True)
 @login_required
 def alerts(request):
     """
