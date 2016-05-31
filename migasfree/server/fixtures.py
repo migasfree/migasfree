@@ -124,7 +124,10 @@ def create_users():
     oGroupCheck = Group()
     oGroupCheck.name = "Computer Checker"
     oGroupCheck.save()
-    tables = ["autocheckerror", "error", "fault", "message", "update"]
+    tables = [
+        "autocheckerror", "error", "fault",
+        "message", "update", "checking"
+    ]
     add_all_perms(oGroupCheck, tables)
     oGroupCheck.save()
 
