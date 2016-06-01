@@ -73,7 +73,7 @@ function changeModel(defaultValue)
 
 
 $(function() {
-    if ($('#device_form').length) {
+    if ($("#device_form").length) {
         $(".field-data label").addClass("sr-only");
         $("#id_data").closest("div").hide();
         $("#id_data").attr("hidden", "hidden");
