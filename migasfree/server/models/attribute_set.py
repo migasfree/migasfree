@@ -54,12 +54,12 @@ class AttributeSet(models.Model, MigasLink):
     def item_at_index(lst, item, before=-1):
         try:
             id_before = lst.index(before)
-        except:
+        except ValueError:
             id_before = -1
 
         try:
             id_item = lst.index(item)
-        except:
+        except ValueError:
             id_item = -1
 
         if id_item == -1:
