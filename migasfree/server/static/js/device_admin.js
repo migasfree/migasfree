@@ -88,14 +88,14 @@ $(function() {
         $("#id_model").change(changeModel);
         $("#id_connection").change(changeData);
 
-        $('#device_form').submit(function(event) {
+        $("#device_form").submit(function(event) {
             var data = "";
             $(".join_field").each(function(i) {
                 data += "'" + $(this).attr("id").substring("join_".length) + "'";
                 data += ":";
                 data += "'" + $(this).val() + "',";
             });
-            $('#id_data').val("{" + data.substring(0, data.length - 1) + "}");
+            $("#id_data").val("{" + data.substring(0, data.length - 1) + "}");
 
             return;
         });
