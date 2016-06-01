@@ -85,7 +85,10 @@ def get_computer(name, uuid):
                 logger.debug(message)
 
                 return computer
-            except Computer.DoesNotExist, Computer.MultipleObjectsReturned:
+            except (
+                Computer.DoesNotExist,
+                Computer.MultipleObjectsReturned
+            ):
                 pass
 
     if computer is None:
