@@ -12,7 +12,6 @@ from . import (
     DeviceDriver,
     MigasLink
 )
-from .computer import Computer
 
 
 class DeviceLogicalManager(models.Manager):
