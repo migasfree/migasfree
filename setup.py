@@ -40,25 +40,15 @@ PATH = os.path.dirname(__file__)
 README = open(os.path.join(PATH, 'README.md')).read()
 VERSION = __import__('migasfree').__version__
 
-#import glob
-#import subprocess
 from distutils.core import setup
 from distutils.command.install_data import install_data
-#from distutils.log import warn, info, error, fatal
-#from distutils.dep_util import newer
 
 
 class InstallData(install_data):
-    def run(self):
-        self.data_files.extend(self._find_repo_files())
-        self.data_files.extend(self._find_other_files())
-        self.data_files.extend(self._find_doc_files())
-        install_data.run(self)
-
     def _find_repo_files(self):
         data_files = []
 
-        for root, dirs, files in os.walk('repo'):
+        for root, _, files in os.walk('repo'):
             if 'source' in root:
                 continue  # exclude SVG files
             final_files = []
@@ -76,7 +66,7 @@ class InstallData(install_data):
         data_files = []
 
         for directory in ['packages']:
-            for root, dirs, files in os.walk(directory):
+            for root, _, files in os.walk(directory):
                 final_files = []
                 for archive in files:
                     final_files.append(os.path.join(root, archive))
@@ -91,7 +81,7 @@ class InstallData(install_data):
     def _find_doc_files(self):
         data_files = []
 
-        for root, dirs, files in os.walk('doc'):
+        for root, _, files in os.walk('doc'):
             # first level does not matter
             if root == 'doc':
                 continue
@@ -114,6 +104,12 @@ class InstallData(install_data):
             )
 
         return data_files
+
+    def run(self):
+        self.data_files.extend(self._find_repo_files())
+        self.data_files.extend(self._find_other_files())
+        self.data_files.extend(self._find_doc_files())
+        install_data.run(self)
 
 setup(
     name='migasfree-server',
