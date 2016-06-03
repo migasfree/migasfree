@@ -3,6 +3,8 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 from . import (
     Device,
@@ -10,6 +12,7 @@ from . import (
     DeviceDriver,
     MigasLink
 )
+from .computer import Computer
 
 
 class DeviceLogicalManager(models.Manager):
@@ -109,3 +112,12 @@ class DeviceLogical(models.Model, MigasLink):
         verbose_name_plural = _("Devices Logical")
         permissions = (("can_save_devicelogical", "Can save Device Logical"),)
         unique_together = (("device", "feature"),)
+
+
+@receiver(pre_save, sender=DeviceLogical)
+def pre_save_device_logical(sender, instance, **kwargs):
+    if instance.id:
+        old_obj = DeviceLogical.objects.get(pk=instance.id)
+        if old_obj.name != instance.name:
+            for computer in old_obj.computer_set.all():
+                computer.remove_device_copy(instance.id)
