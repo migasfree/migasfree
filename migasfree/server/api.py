@@ -4,6 +4,7 @@ import os
 import inspect
 from datetime import datetime, timedelta
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.conf import settings
 from django.utils import timezone, dateformat
@@ -40,9 +41,9 @@ def add_notification_version(version, pms, computer):
 
 
 def get_computer(name, uuid):
-    '''
+    """
     Returns a computer object (or None if not found)
-    '''
+    """
     logger.debug('name: %s, uuid: %s' % (name, uuid))
     computer = None
 
@@ -62,7 +63,7 @@ def get_computer(name, uuid):
     except Computer.DoesNotExist:
         pass
 
-    # DEPRECATED This Block. Only for compatibilty with client <= 2
+    # DEPRECATED This Block. Only for compatibility with client <= 2
     message = 'computer found by name. compatibility mode'
     if len(uuid.split("-")) == 5:  # search for uuid (client >= 3)
         try:
@@ -181,7 +182,7 @@ def upload_computer_message(request, name, uuid, computer, data):
         _message = Message.objects.get(computer=computer)
         if data[cmd] == "":
             _message.delete()
-    except:
+    except ObjectDoesNotExist:
         _message = Message(computer=computer)
 
     try:
@@ -468,9 +469,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                     lst_dev_remove.append({
                         dev_logical.device.connection.devicetype.name: item_id
                     })
-                except:
+                except ObjectDoesNotExist:
                     # maybe device_logical has been deleted
-                    # FIXME harcoded values
+                    # FIXME hardcoded values
                     lst_dev_remove.append({'PRINTER': item_id})
 
             # install devices
@@ -484,7 +485,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                     lst_dev_install.append(
                         device_logical.datadict(o_computer.version)
                     )
-                except:
+                except ObjectDoesNotExist:
                     pass
 
         logger.debug('install devices: %s' % lst_dev_install)
@@ -666,7 +667,7 @@ def upload_server_package(request, name, uuid, o_computer, data):
 
     try:
         o_version = Version.objects.get(name=data['version'])
-    except:
+    except ObjectDoesNotExist:
         return return_message(cmd, error(VERSION_NOT_FOUND))
 
     o_store, _ = Store.objects.get_or_create(
@@ -701,7 +702,7 @@ def upload_server_set(request, name, uuid, o_computer, data):
 
     try:
         o_version = Version.objects.get(name=data['version'])
-    except:
+    except ObjectDoesNotExist:
         return return_message(cmd, error(VERSION_NOT_FOUND))
 
     o_store, _ = Store.objects.get_or_create(
@@ -731,7 +732,7 @@ def upload_server_set(request, name, uuid, o_computer, data):
         )
         try:
             os.makedirs(os.path.dirname(dst))
-        except:
+        except OSError:
             pass
         os.rename(filename, dst)
 
@@ -900,7 +901,7 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
         )
 
     if settings.MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip != ip):
-        if (o_computer.ip and ip):
+        if o_computer.ip and ip:
             Notification.objects.create(
                 _("Computer id=[%s]: IP [%s] changed by [%s]") % (
                     o_computer.id,
@@ -964,5 +965,5 @@ def save_request_file(requestfile, filename):
         # called something like /tmp/tmpzfp6I6.upload.
         # We remove it
         os.remove(requestfile.temporary_file_path)
-    except:
+    except OSError:
         pass
