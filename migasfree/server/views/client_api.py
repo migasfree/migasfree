@@ -49,7 +49,7 @@ def api(request):
     if not os.path.exists(settings.MIGASFREE_TMP_DIR):
         try:
             os.makedirs(settings.MIGASFREE_TMP_DIR, 0o700)
-        except:
+        except OSError:
             pass  # FIXME
 
     # USING USERNAME AND PASSWORD ONLY (WITHOUT KEYS PAIR)
