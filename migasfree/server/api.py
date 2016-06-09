@@ -950,12 +950,12 @@ def create_repositories_of_packageset(request, name, uuid, computer, data):
     return ret
 
 
-def save_request_file(requestfile, filename):
+def save_request_file(archive, target):
     """
     SAVE THE REQUEST FILE IN THE SERVER IN "FILENAME"
     """
-    fp = open(filename, 'wb+')
-    for chunk in requestfile.chunks():
+    fp = open(target, 'wb+')
+    for chunk in archive.chunks():
         fp.write(chunk)
     fp.close()
 
@@ -964,6 +964,6 @@ def save_request_file(requestfile, filename):
         # Files with: Size > FILE_UPLOAD_MAX_MEMORY_SIZE  -> generate a file
         # called something like /tmp/tmpzfp6I6.upload.
         # We remove it
-        os.remove(requestfile.temporary_file_path)
-    except OSError:
+        os.remove(archive.temporary_file_path)
+    except (OSError, AttributeError):
         pass
