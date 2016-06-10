@@ -53,7 +53,14 @@ class Property(models.Model, MigasLink):
         verbose_name=_("Code"),
         null=False,
         blank=True,
-        help_text=_("This code will execute in the client computer, and it must put in the standard output the value of the attribute correspondent to this property.<br>The format of this value is 'name~description', where 'description' is optional.<br><b>Example of code:</b><br>#Create a attribute with the name of computer from bash<br> echo $HOSTNAME")
+        help_text=_("This code will execute in the client computer, "
+                    "and it must put in the standard output the value of the "
+                    "attribute correspondent to this property.<br>"
+                    "The format of this value is 'name~description', "
+                    "where 'description' is optional.<br>"
+                    "<b>Example of code:</b><br>"
+                    "#Create a attribute with the name of computer from bash"
+                    "<br> echo $HOSTNAME")
     )
 
     active = models.BooleanField(
