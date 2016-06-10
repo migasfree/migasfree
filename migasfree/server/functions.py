@@ -9,9 +9,9 @@ from django.conf import settings
 
 
 def writefile(filename, content):
-    '''
+    """
     bool writefile(string filename, string content)
-    '''
+    """
 
     _file = None
     try:
@@ -37,7 +37,7 @@ def readfile(filename):
 
 
 def d2s(dic):
-    '''Dictionary to String'''
+    """Dictionary to String"""
     return ['%s: %s' % (k, v) for (k, v) in list(dic.items())]
 
 
@@ -177,15 +177,16 @@ def uuid_change_format(uuid):
     """
     if len(uuid) == 36:
         return "%s%s%s%s-%s%s-%s%s-%s-%s" % (
-                uuid[6:8],
-                uuid[4:6],
-                uuid[2:4],
-                uuid[0:2],
-                uuid[11:13],
-                uuid[9:11],
-                uuid[16:18],
-                uuid[14:16],
-                uuid[19:23],
-                uuid[24:36])
+            uuid[6:8],
+            uuid[4:6],
+            uuid[2:4],
+            uuid[0:2],
+            uuid[11:13],
+            uuid[9:11],
+            uuid[16:18],
+            uuid[14:16],
+            uuid[19:23],
+            uuid[24:36]
+        )
 
     return uuid
