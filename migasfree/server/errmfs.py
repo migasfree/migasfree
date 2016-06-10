@@ -38,9 +38,9 @@ ERROR_INFO = {
 
 
 def error_info(number):
-    '''
+    """
     string error_info(int number)
-    '''
+    """
     return ERROR_INFO.get(number, '')
 
 
@@ -88,7 +88,6 @@ def print_exc_plus(etype, evalue):
     Print the usual traceback information, followed by a listing of all the
     local variables in each frame.
     """
-    ret = ""
     tb = sys.exc_info()[2]
     while 1:
         if not tb.tb_next:
@@ -106,10 +105,11 @@ def print_exc_plus(etype, evalue):
 
     ret = []
     for frame in stack:
-        fr = {}
-        fr["filename"] = frame.f_code.co_filename
-        fr["name"] = frame.f_code.co_name
-        fr["line"] = frame.f_lineno
+        fr = {
+            'filename': frame.f_code.co_filename,
+            'name': frame.f_code.co_name,
+            'line': frame.f_lineno
+        }
 
         variables = []
         for key, value in frame.f_locals.items():
