@@ -157,9 +157,9 @@ class ComputerForm(forms.ModelForm):
         super(ComputerForm, self).clean()
         errors = []
         if self.cleaned_data.get('status') == 'available':
-            if self.cleaned_data.get('tags') != []:
+            if self.cleaned_data.get('tags'):
                 errors.append(_("Status available can not have tags"))
-            if self.cleaned_data.get('devices_logical') != []:
+            if self.cleaned_data.get('devices_logical'):
                 errors.append(
                     _("Status available can not have devices logical")
                 )
