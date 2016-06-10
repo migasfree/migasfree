@@ -8,10 +8,10 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
 from ..models import Error
-from ..api import *
-from ..errmfs import *
-from ..security import *
+from ..api import return_message, get_computer, save_request_file
+from ..security import wrap, unwrap
 from ..functions import get_client_ip, uuid_validate
+from .. import errmfs
 
 
 @csrf_exempt
