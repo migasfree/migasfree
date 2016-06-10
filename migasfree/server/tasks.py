@@ -11,11 +11,8 @@ from .models import Package
 from .functions import run_in_server
 
 
-def remove_physical_repository(request, repo, oldname=""):
-    if oldname:
-        name = oldname
-    else:
-        name = repo.name
+def remove_physical_repository(request, repo, old_name=""):
+    name = old_name if old_name else repo.name
     _destination = os.path.join(
         settings.MIGASFREE_REPO_DIR,
         repo.version.name,
@@ -23,7 +20,7 @@ def remove_physical_repository(request, repo, oldname=""):
         name
     )
     shutil.rmtree(_destination, ignore_errors=True)
-    _msg = ("Deleted repository: %s " % name)
+    _msg = ("Deleted repository: %s" % name)
     if hasattr(request, 'META'):
         return messages.add_message(request, messages.SUCCESS, _msg)
     else:
@@ -75,7 +72,7 @@ def create_physical_repository(request, repo, packages):
                 _dst
             )
             _ret += _('%(package)s in store %(store)s') % \
-            {"package": _pkg.name, "store": _pkg.store.name} + '<br />'
+                {"package": _pkg.name, "store": _pkg.store.name} + '<br />'
 
     # create metadata
     _run_err = run_in_server(
