@@ -223,7 +223,7 @@ class Computer(models.Model, MigasLink):
     def __init__(self, *args, **kwargs):
         super(Computer, self).__init__(*args, **kwargs)
         if settings.MIGASFREE_REMOTE_ADMIN_LINK == '' \
-        or settings.MIGASFREE_REMOTE_ADMIN_LINK is None:
+                or settings.MIGASFREE_REMOTE_ADMIN_LINK is None:
             self._actions = None
             return
 
