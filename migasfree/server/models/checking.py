@@ -30,7 +30,13 @@ class Checking(models.Model):
         verbose_name=_("code"),
         null=False,
         blank=True,
-        help_text=_("Code django. <br><b>VARIABLES TO SETTINGS:</b><br><b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br><b>alert</b>: type of alert. Default is 'info'. Enumeration value: {'info' | 'warning' | 'danger'}<br><b>url</b>: link. Default is '/'<br><b>msg</b>: The text to show. Default is the field name.<br><b>target</b>: Enumeration value: {'computer' | 'server'}")
+        help_text=_("Code django. <br><b>VARIABLES TO SETTINGS:</b><br>"
+                    "<b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br>"
+                    "<b>alert</b>: type of alert. Default is 'info'. "
+                    "Enumeration value: {'info' | 'warning' | 'danger'}<br>"
+                    "<b>url</b>: link. Default is '/'<br>"
+                    "<b>msg</b>: The text to show. Default is the field name.<br>"
+                    "<b>target</b>: Enumeration value: {'computer' | 'server'}")
     )
 
     active = models.BooleanField(
