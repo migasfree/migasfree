@@ -52,7 +52,7 @@ def get_updates_time_range(
     count = 0
     for update in updates:
         if update['date'].strftime(compare_timeformat) == \
-        next_date.strftime(compare_timeformat):
+                next_date.strftime(compare_timeformat):
             if update['computer'] not in distinct_computers:
                 count += 1
                 distinct_computers.append(update['computer'])
@@ -65,7 +65,7 @@ def get_updates_time_range(
             next_date += delta
             distinct_computers = []
             if update['date'].strftime(compare_timeformat) == \
-            next_date.strftime(compare_timeformat):
+                    next_date.strftime(compare_timeformat):
                 count = 1
                 distinct_computers.append(update['computer'])
             else:
@@ -348,7 +348,7 @@ def delay_schedule(request):
             for i in range(d, delay.delay):
 
                 line.append([i, value])
-                d = d + 1
+                d += 1
 
             for duration in range(0, delay.duration):
 
@@ -356,10 +356,13 @@ def delay_schedule(request):
                 for att in delay.attributes.all():
                     lst_att_delay.append(att.id)
 
-                value = value + Login.objects.extra(
+                value += Login.objects.extra(
                     select={'deployment': 'computer_id'},
-                    where=["computer_id %%%% %s = %s" %
-                        (delay.duration, duration)]).filter(
+                    where=[
+                        "computer_id %%%% %s = %s" %
+                        (delay.duration, duration)
+                    ]
+                ).filter(
                     ~ Q(attributes__id__in=lst_attributes)
                     & Q(attributes__id__in=lst_att_delay)
                     & Q(computer__version=current_version.id)
@@ -368,7 +371,7 @@ def delay_schedule(request):
 
                 line.append([d, value])
 
-                d = d + 1
+                d += 1
 
             for att in delay.attributes.all():
                 lst_attributes.append(att.id)
@@ -391,7 +394,7 @@ def delay_schedule(request):
 
     x_axis = []
     for i in range(0, maximum_delay + 1):
-        x_axis.append([i, _('%d days') % (i)])
+        x_axis.append([i, _('%d days') % i])
 
     options = {
         'series': {
