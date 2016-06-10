@@ -26,8 +26,10 @@ class AttributeManager(models.Manager):
             return queryset[0]
 
         if property_att.auto is False:
-            raise ValidationError(_('The attribute can not be created because'
-            ' it prevents property'))
+            raise ValidationError(
+                _('The attribute can not be created because'
+                    ' it prevents property')
+        )
 
         obj = Attribute()
         obj.property_att = property_att
@@ -73,7 +75,7 @@ class Attribute(models.Model, MigasLink):
 
     def __str__(self):
         if self.property_att.prefix == "CID" and \
-            settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
+                settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
 
             return '%s (CID-%s)' % (self.description, self.value)
         else:
