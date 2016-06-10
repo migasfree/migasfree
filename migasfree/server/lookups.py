@@ -24,7 +24,7 @@ class AttributeLookup(LookupChannel):
     def get_query(self, q, request):
         prps = Property.objects.all().values_list('prefix', flat=True)
         if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
-        and len(q) > (Property.PREFIX_LEN + 1):
+                and len(q) > (Property.PREFIX_LEN + 1):
             return self.model.objects.filter(
                 property_att__prefix__icontains=q[0:Property.PREFIX_LEN]
             ).filter(
@@ -75,7 +75,7 @@ class AttributeComputersLookup(LookupChannel):
     def get_query(self, q, request):
         prps = Property.objects.all().values_list('prefix', flat=True)
         if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
-        and len(q) > (Property.PREFIX_LEN + 1):
+                and len(q) > (Property.PREFIX_LEN + 1):
             return self.model.objects.filter(
                 property_att__prefix__icontains=q[0:Property.PREFIX_LEN]
             ).filter(
@@ -211,7 +211,7 @@ class ComputerLookup(LookupChannel):
         else:
             return self.model.objects.filter(
                 Q(id__exact=q)
-                | Q(**{'%s__icontains' % \
+                | Q(**{'%s__icontains' %
                     settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: q})
             )
 
