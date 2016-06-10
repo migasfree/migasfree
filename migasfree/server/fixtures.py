@@ -21,23 +21,23 @@ def run(cmd_linux):
         shell=True
     ).communicate()
 
-    return (out, err)
+    return out, err
 
 
 def create_user(name, groups=None):
     if groups is None:
         groups = []
 
-    oUser = UserProfile()
-    oUser.username = name
-    oUser.is_staff = True
-    oUser.is_active = True
-    oUser.is_superuser = (name == "admin")
-    oUser.save()
-    oUser.password = name
+    user = UserProfile()
+    user.username = name
+    user.is_staff = True
+    user.is_active = True
+    user.is_superuser = (name == "admin")
+    user.save()
+    user.password = name
     for group in groups:
-        oUser.groups.add(group.id)
-    oUser.save()
+        user.groups.add(group.id)
+    user.save()
 
 
 def add_read_perms(group, tables=None):
@@ -89,10 +89,9 @@ def create_users():
     Create default Groups and Users
     """
 
-    # GROUP READER
-    oGroupRead = Group()
-    oGroupRead.name = "Reader"
-    oGroupRead.save()
+    read_group = Group()
+    read_group.name = "Reader"
+    read_group.save()
     tables = [
         "computer", "device", "user", "login", "attribute", "error",
         "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
@@ -101,75 +100,69 @@ def create_users():
         "package", "repository", "store", "message", "update",
         "platform", "messageserver", "migration", "notification"
     ]
-    add_read_perms(oGroupRead, tables)
-    oGroupRead.save()
+    add_read_perms(read_group, tables)
+    read_group.save()
 
-    # GROUP LIBERATOR
-    oGroupRepo = Group()
-    oGroupRepo.name = "Liberator"
-    oGroupRepo.save()
+    deploy_group = Group()
+    deploy_group.name = "Liberator"
+    deploy_group.save()
     tables = ["repository", "schedule", "scheduledelay"]
-    add_all_perms(oGroupRepo, tables)
-    oGroupRepo.save()
+    add_all_perms(deploy_group, tables)
+    deploy_group.save()
 
-    # GROUP PACKAGER
-    oGroupPackager = Group()
-    oGroupPackager.name = "Packager"
-    oGroupPackager.save()
+    packager_group = Group()
+    packager_group.name = "Packager"
+    packager_group.save()
     tables = ["package", "store"]
-    add_all_perms(oGroupPackager, tables)
-    oGroupPackager.save()
+    add_all_perms(packager_group, tables)
+    packager_group.save()
 
-    # GROUP COMPUTER CHECKER
-    oGroupCheck = Group()
-    oGroupCheck.name = "Computer Checker"
-    oGroupCheck.save()
+    checker_group = Group()
+    checker_group.name = "Computer Checker"
+    checker_group.save()
     tables = [
         "autocheckerror", "error", "fault",
         "message", "update", "checking"
     ]
-    add_all_perms(oGroupCheck, tables)
-    oGroupCheck.save()
+    add_all_perms(checker_group, tables)
+    checker_group.save()
 
-    # GROUP DEVICE INSTALLER
-    oGroupDev = Group()
-    oGroupDev.name = "Device installer"
-    oGroupDev.save()
+    device_installer_group = Group()
+    device_installer_group.name = "Device installer"
+    device_installer_group.save()
     tables = [
         "deviceconnection", "devicemanufacturer", "devicemodel", "devicetype"
     ]
-    add_all_perms(oGroupDev, tables)
-    oGroupDev.save()
+    add_all_perms(device_installer_group, tables)
+    device_installer_group.save()
 
-    # GROUP QUERY
-    oGroupQuery = Group()
-    oGroupQuery.name = "Query"
-    oGroupQuery.save()
+    query_group = Group()
+    query_group.name = "Query"
+    query_group.save()
     tables = ["query"]
-    add_all_perms(oGroupQuery, tables)
-    oGroupQuery.save()
+    add_all_perms(query_group, tables)
+    query_group.save()
 
-    # GROUP CONFIGURATOR
-    oGroupSys = Group()
-    oGroupSys.name = "Configurator"
-    oGroupSys.save()
+    configurator_group = Group()
+    configurator_group.name = "Configurator"
+    configurator_group.save()
     tables = [
         "checking", "faultdef", "property", "pms", "version",
         "message", "update", "platform", "messageserver", "migration",
         "notification"
     ]
-    add_all_perms(oGroupSys, tables)
-    oGroupSys.save()
+    add_all_perms(configurator_group, tables)
+    configurator_group.save()
 
     # CREATE DEFAULT USERS
     create_user("admin")
-    create_user("packager", [oGroupRead, oGroupPackager])
-    create_user("configurator", [oGroupRead, oGroupSys])
-    create_user("installer", [oGroupRead, oGroupDev])
-    create_user("query", [oGroupRead, oGroupQuery])
-    create_user("liberator", [oGroupRead, oGroupRepo])
-    create_user("checker", [oGroupRead, oGroupCheck])
-    create_user("reader", [oGroupRead])
+    create_user("packager", [read_group, packager_group])
+    create_user("configurator", [read_group, configurator_group])
+    create_user("installer", [read_group, device_installer_group])
+    create_user("query", [read_group, query_group])
+    create_user("liberator", [read_group, deploy_group])
+    create_user("checker", [read_group, checker_group])
+    create_user("reader", [read_group])
 
 
 def sequence_reset():
@@ -183,12 +176,12 @@ def sequence_reset():
     )
 
     if settings.DATABASES.get('default').get('ENGINE') == \
-    'django.db.backends.postgresql_psycopg2':
+            'django.db.backends.postgresql_psycopg2':
         cfile = "/tmp/migasfree.sequencereset.sql"  # FIXME tmpfile
         with open(cfile, "w") as ofile:
             ofile.write(commands.getvalue())
             ofile.flush()
-            cmd_linux = "su postgres -c 'psql migasfree -f " + cfile + "' -"
+            cmd_linux = "su postgres -c 'psql migasfree -f %s' -" % cfile
             run(cmd_linux)
 
         os.remove(cfile)
