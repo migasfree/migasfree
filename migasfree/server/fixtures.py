@@ -57,31 +57,15 @@ def add_all_perms(group, tables=None):
     if tables is None:
         tables = []
 
+    perms = ['add_%s', 'change_%s', 'delete_%s', 'can_save_%s']
     for table in tables:
-        group.permissions.add(
-            Permission.objects.get(
-                codename="add_%s" % table,
-                content_type__app_label="server"
-            ).id
-        )
-        group.permissions.add(
-            Permission.objects.get(
-                codename="change_%s" % table,
-                content_type__app_label="server"
-            ).id
-        )
-        group.permissions.add(
-            Permission.objects.get(
-                codename="delete_%s" % table,
-                content_type__app_label="server"
-            ).id
-        )
-        group.permissions.add(
-            Permission.objects.get(
-                codename="can_save_%s" % table,
-                content_type__app_label="server"
-            ).id
-        )
+        for pattern in perms:
+            group.permissions.add(
+                Permission.objects.get(
+                    codename=pattern % table,
+                    content_type__app_label='server'
+                ).id
+            )
 
 
 def create_users():
@@ -154,7 +138,7 @@ def create_users():
     add_all_perms(configurator_group, tables)
     configurator_group.save()
 
-    # CREATE DEFAULT USERS
+    # default users
     create_user("admin")
     create_user("packager", [read_group, packager_group])
     create_user("configurator", [read_group, configurator_group])
@@ -181,8 +165,9 @@ def sequence_reset():
         with open(cfile, "w") as ofile:
             ofile.write(commands.getvalue())
             ofile.flush()
-            cmd_linux = "su postgres -c 'psql migasfree -f %s' -" % cfile
-            run(cmd_linux)
+
+        cmd_linux = "su postgres -c 'psql migasfree -f %s' -" % cfile
+        run(cmd_linux)
 
         os.remove(cfile)
 
