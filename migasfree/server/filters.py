@@ -32,77 +32,25 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
             'display': _('All')
         }
 
-        yield {
-            'selected': self.lookup_val == 'intended,reserved,unknown,available,in repair',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'intended,reserved,unknown,available,in repair'}
-            ),
-            'display': _("Subscribed")
-        }
-
-        yield {
-            'selected': self.lookup_val == 'intended,reserved,unknown',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'intended,reserved,unknown'}
-            ),
-            'display': "* " + _("Productive")
-        }
-
-        yield {
-            'selected': self.lookup_val == 'intended',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'intended'}
-            ),
-            'display': "--- " + _("intended")
-        }
-
-        yield {
-            'selected': self.lookup_val == 'reserved',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'reserved'}
-            ),
-            'display': "--- " + _("reserved")
-        }
-
-        yield {
-            'selected': self.lookup_val == 'unknown',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'unknown'}
-            ),
-            'display': "--- " + _("unknown")
-        }
-
-        yield {
-            'selected': self.lookup_val == 'available,in repair',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'available,in repair'}
-            ),
-            'display': "* " + _("Unproductive")
-        }
-
-        yield {
-            'selected': self.lookup_val == 'in repair',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'in repair'}
-            ),
-            'display': "--- " + _("in repair")
-        }
-
-        yield {
-            'selected': self.lookup_val == 'available',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'available'}
-            ),
-            'display': "--- " + _("available")
-        }
-
-        yield {
-            'selected': self.lookup_val == 'unsubscribed',
-            'query_string': cl.get_query_string(
-                {self.lookup_kwarg: 'unsubscribed'}
-            ),
-            'display': _("unsubscribed")
-        }
+        status = [
+            ('intended,reserved,unknown,available,in repair', _("Subscribed")),
+            ('intended,reserved,unknown', "* " + _("Productive")),
+            ('intended', "--- " + _("intended")),
+            ('reserved', "--- " + _("reserved")),
+            ('unknown', "--- " + _("unknown")),
+            ('available,in repair', "* " + _("Unproductive")),
+            ('in repair', "--- " + _("in repair")),
+            ('available', "--- " + _("available")),
+            ('unsubscribed', _('unsubscribed'))
+        ]
+        for item in status:
+            yield {
+                'selected': self.lookup_val == item[0],
+                'query_string': cl.get_query_string(
+                    {self.lookup_kwarg: item[0]}
+                ),
+                'display': item[1]
+            }
 
 
 class TagFilter(SimpleListFilter):
