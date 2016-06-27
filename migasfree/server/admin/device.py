@@ -104,9 +104,8 @@ class DeviceLogicalInline(admin.TabularInline):
             device = Device.objects.get(pk=args[0])
             if device.model.pk:
                 kwargs['queryset'] = DeviceFeature.objects.filter(
-                    devicedriver__model__id=device.model.pk,
-                    devicedriver__version=request.user.userprofile.version
-                )
+                    devicedriver__model__id=device.model.pk
+                ).distinct()
 
         return super(DeviceLogicalInline, self).formfield_for_foreignkey(
             db_field, request, **kwargs
