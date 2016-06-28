@@ -55,7 +55,6 @@ class ComputerViewSet(
         Changes computer status
         """
         computer = get_object_or_404(models.Computer, pk=pk)
-        print request.auth
 
         ret = computer.change_status(request.data.get('status'))
         if not ret:
@@ -87,6 +86,66 @@ class ComputerViewSet(
         models.Computer.replacement(source, target)
 
         return Response(status=status.HTTP_200_OK)
+
+    @detail_route(methods=['get', 'put', 'patch'], url_path='logical-devices')
+    def logical_devices(self, request, pk=None):
+        """
+        GET
+            returns: [
+                {
+                    "id": 112,
+                    "device": {
+                        "id": 6,
+                        "name": "19940"
+                    },
+                    "feature": {
+                        "id": 2,
+                        "name": "Color"
+                    },
+                    "name": ""
+                },
+                {
+                    "id": 7,
+                    "device": {
+                        "id": 6,
+                        "name": "19940"
+                    },
+                    "feature": {
+                        "id": 1,
+                        "name": "BN"
+                    },
+                    "name": ""
+                }
+            ]
+
+        PUT, PATCH
+            input: [id1, id2, idN]
+
+            returns: status code 201
+        """
+
+        computer = get_object_or_404(models.Computer, pk=pk)
+
+        if request.method == 'GET':
+            serializer = serializers.LogicalSerializer(
+                computer.devices_logical.all(),
+                many=True
+            )
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        if request.method == 'PATCH':  # append logical devices to computer
+            for device_id in request.data:
+                computer.devices_logical.add(device_id)
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        if request.method == 'PUT':  # replace logical devices in computer
+            computer.devices_logical.clear()
+            for device_id in request.data:
+                computer.devices_logical.add(device_id)
+
+            return Response(status=status.HTTP_201_CREATED)
 
 
 class ErrorViewSet(

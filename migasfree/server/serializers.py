@@ -284,3 +284,24 @@ class VersionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Version
         fields = '__all__'
+
+
+class DeviceInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Device
+        fields = ('id', 'name')
+
+
+class FeatureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceFeature
+        fields = '__all__'
+
+
+class LogicalSerializer(serializers.ModelSerializer):
+    device = DeviceInfoSerializer(many=False, read_only=True)
+    feature = FeatureSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.DeviceLogical
+        fields = '__all__'
