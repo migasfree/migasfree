@@ -265,7 +265,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
             request.user.userprofile.version_id
         )
 
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
+    def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == 'packages':
             # Packages filter by user version
             kwargs['queryset'] = Package.objects.filter(
