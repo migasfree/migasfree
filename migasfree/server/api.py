@@ -325,8 +325,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         if not settings.MIGASFREE_AUTOREGISTER:
             return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
-        # if all ok we add the version
-        o_version = Version.objects.create(
+        # if all ok, we add the version
+        Version.objects.create(
             version,
             Pms.objects.get(name=pms),
             Platform.objects.get(name=platform),
@@ -951,9 +951,6 @@ def create_repositories_of_packageset(request, name, uuid, computer, data):
 
 
 def save_request_file(archive, target):
-    """
-    SAVE THE REQUEST FILE IN THE SERVER IN "FILENAME"
-    """
     fp = open(target, 'wb+')
     for chunk in archive.chunks():
         fp.write(chunk)
@@ -964,6 +961,6 @@ def save_request_file(archive, target):
         # Files with: Size > FILE_UPLOAD_MAX_MEMORY_SIZE  -> generate a file
         # called something like /tmp/tmpzfp6I6.upload.
         # We remove it
-        os.remove(archive.temporary_file_path)
+        os.remove(archive.temporary_file_path())
     except (OSError, AttributeError):
         pass
