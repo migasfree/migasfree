@@ -15,9 +15,10 @@ from ..security import gpg_get_key
 def get_versions(request):
     result = []
     for plat in Platform.objects.all():
-        element = {}
-        element["platform"] = plat.name
-        element["versions"] = []
+        element = {
+            "platform": plat.name,
+            "versions": []
+        }
         for ver in Version.objects.filter(platform=plat):
             element["versions"].append({"name": ver.name})
 
