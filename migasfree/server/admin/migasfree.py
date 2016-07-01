@@ -10,11 +10,12 @@ class MigasAdmin(ExportActionModelAdmin):
 
     @staticmethod
     def boolean_field(field):
-        if field:
-            ret = '<span class="fa fa-check boolean-yes">' \
-                + '<span class="sr-only">%s</span></span>' % ugettext('Yes')
-        else:
-            ret = '<span class="fa fa-times boolean-no">' \
-                + '<span class="sr-only">%s</span></span>' % ugettext('No')
+        style = 'fa-check boolean-yes'
+        text = ugettext('Yes')
+        if not field:
+            style = 'fa-times boolean-no'
+            text = ugettext('No')
 
-        return ret
+        return '<span class="fa %s"><span class="sr-only">%s</span></span>' % (
+            style, text
+        )
