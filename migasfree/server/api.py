@@ -920,12 +920,12 @@ def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
         )
 
 
-def create_repositories_package(packagename, versionname):
-    o_version = Version.objects.get(name=versionname)
+def create_repositories_package(package_name, version_name):
     try:
-        package = Package.objects.get(name=packagename, version=o_version)
-        qset = Repository.objects.filter(packages__id=package.id)
-        for repo in qset:
+        version = Version.objects.get(name=version_name)
+        package = Package.objects.get(name=package_name, version=version)
+        repos = Repository.objects.filter(packages__id=package.id)
+        for repo in repos:
             create_physical_repository(
                 {},  # without request object
                 repo,
