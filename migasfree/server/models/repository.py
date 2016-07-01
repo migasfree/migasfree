@@ -88,7 +88,7 @@ class Repository(models.Model, MigasLink):
         verbose_name=_("active"),
         default=True,
         help_text=_("if you uncheck this field, the repository is hidden for"
-            " all computers.")
+                    " all computers.")
     )
 
     date = models.DateField(
