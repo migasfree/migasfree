@@ -86,7 +86,12 @@ Expire-Date: 0
 """
             handle.write(key_params % name)
 
-        os.system("echo '' | $(which gpg) --batch --passphrase-fd 0 --gen-key %(file)s; rm %(file)s" % {"file": _file_params})
+        os.system(
+            "echo '' | $(which gpg) --batch "
+            "--passphrase-fd 0 --gen-key %(file)s; rm %(file)s" % {
+                "file": _file_params
+            }
+        )
 
         # export and save
         ctx = gpgme.Context()
