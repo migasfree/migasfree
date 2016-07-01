@@ -11,14 +11,14 @@ class AutoCheckError(models.Model):
     This model is used to autocheck the errors and marked as 'check' when they
     are introducing in the system (Sometimes the Package Management System, in
     the clients, return a string error when in reliaty it is only a warning)
-    The origen of this problem is that the package is bad packed.
+    The origin of this problem is that the package is bad packed.
     """
     message = models.TextField(
         verbose_name=_("message"),
         null=True,
         blank=True,
         help_text=_("Pattern to search. "
-            "See https://docs.python.org/2/library/re.html#module-re")
+                    "See https://docs.python.org/2/library/re.html#module-re")
     )
 
     def save(self, *args, **kwargs):
