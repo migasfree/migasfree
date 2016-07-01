@@ -123,7 +123,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         )
 
     delete_selected.short_description = _("Delete selected "
-        "%(verbose_name_plural)s")
+                                          "%(verbose_name_plural)s")
 
     def reinstall_devices(self, request, objects):
         for item in objects:
@@ -135,7 +135,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     reinstall_devices.short_description = _("Reinstall devices")
 
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
+    def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == "devices_logical":
             kwargs['widget'] = FilteredSelectMultiple(
                 db_field.verbose_name,
