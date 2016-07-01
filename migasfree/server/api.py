@@ -179,17 +179,17 @@ def upload_computer_message(request, name, uuid, computer, data):
         return return_message(cmd, error(COMPUTER_NOT_FOUND))
 
     try:
-        _message = Message.objects.get(computer=computer)
+        message = Message.objects.get(computer=computer)
         if data[cmd] == "":
-            _message.delete()
+            message.delete()
     except ObjectDoesNotExist:
-        _message = Message(computer=computer)
+        message = Message(computer=computer)
 
     try:
         if data[cmd] == "":
             Update.objects.create(computer)
         else:
-            _message.update_message(data[cmd])
+            message.update_message(data[cmd])
         ret = return_message(cmd, ok())
     except:
         ret = return_message(cmd, error(GENERIC))
@@ -336,8 +336,6 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         notify_version = True
 
     lst_attributes = []  # List of attributes of computer
-
-    ret = ""
 
     try:
         dic_computer = data.get("upload_computer_info").get("computer")
@@ -491,31 +489,30 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         logger.debug('install devices: %s' % lst_dev_install)
         logger.debug('remove devices: %s' % lst_dev_remove)
 
-        retdata = {}
-        retdata["faultsdef"] = lst_faultsdef
-        retdata["repositories"] = lst_repos
-        retdata["packages"] = {
-            "remove": lst_pkg_remove,
-            "install": lst_pkg_install
-        }
-        retdata["devices"] = {
-            "remove": lst_dev_remove,
-            "install": lst_dev_install
-        }
-        retdata["base"] = (o_version.computerbase == o_computer.__str__())
-
-        # HARDWARE CAPTURE
-        hwcapture = True
+        capture_hardware = True
         if o_computer.datehardware:
-            hwcapture = (datetime.now() > (
+            capture_hardware = (datetime.now() > (
                 o_computer.datehardware + timedelta(
                     days=settings.MIGASFREE_HW_PERIOD
                 ))
             )
 
-        retdata["hardware_capture"] = hwcapture
+        data = {
+            "faultsdef": lst_faultsdef,
+            "repositories": lst_repos,
+            "packages": {
+                "remove": lst_pkg_remove,
+                "install": lst_pkg_install
+            },
+            "devices": {
+                "remove": lst_dev_remove,
+                "install": lst_dev_install
+            },
+            "base": o_version.computerbase == o_computer.__str__(),
+            "hardware_capture": capture_hardware
+        }
 
-        ret = return_message(cmd, retdata)
+        ret = return_message(cmd, data)
     except:
         ret = return_message(cmd, error(GENERIC))
 
@@ -525,7 +522,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 def upload_computer_faults(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     faults = data.get(cmd).get("faults")
-    _version = Version.objects.get(id=computer.version_id)
+    version = Version.objects.get(id=computer.version_id)
 
     try:
         # PROCESS FAULTS
@@ -535,7 +532,7 @@ def upload_computer_faults(request, name, uuid, computer, data):
                 if msg != "":
                     Fault.objects.create(
                         computer,
-                        _version,
+                        version,
                         FaultDef.objects.get(name=f),
                         msg
                     )
@@ -546,6 +543,7 @@ def upload_computer_faults(request, name, uuid, computer, data):
     except:
         ret = return_message(cmd, error(GENERIC))
 
+    logger.debug('upload_computer_faults ret: %s' % ret)
     return ret
 
 
@@ -553,12 +551,13 @@ def upload_computer_faults(request, name, uuid, computer, data):
 def upload_devices_changes(request, name, uuid, computer, data):
     logger.debug('upload_devices_changes data: %s' % data)
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    try:
-        for devicelogical_id in data.get(cmd).get("installed", []):
-            computer.append_device_copy(devicelogical_id)
 
-        for devicelogical_id in data.get(cmd).get("removed", []):
-            computer.remove_device_copy(devicelogical_id)
+    try:
+        for logical_device_id in data.get(cmd).get("installed", []):
+            computer.append_device_copy(logical_device_id)
+
+        for logical_device_id in data.get(cmd).get("removed", []):
+            computer.remove_device_copy(logical_device_id)
 
         ret = return_message(cmd, ok())
     except:
@@ -601,7 +600,7 @@ def register_computer(request, name, uuid, computer, data):
                 return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
 
         # if all ok we add the version
-        version = Version.objects.create(
+        Version.objects.create(
             version_name,
             Pms.objects.get(name=pms_name),
             Platform.objects.get(name=platform_name),
@@ -653,7 +652,7 @@ def get_key_packager(request, name, uuid, computer, data):
     return return_message(cmd, get_keys_to_packager())
 
 
-def upload_server_package(request, name, uuid, o_computer, data):
+def upload_server_package(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     f = request.FILES["package"]
@@ -666,12 +665,12 @@ def upload_server_package(request, name, uuid, o_computer, data):
     )
 
     try:
-        o_version = Version.objects.get(name=data['version'])
+        version = Version.objects.get(name=data['version'])
     except ObjectDoesNotExist:
         return return_message(cmd, error(VERSION_NOT_FOUND))
 
-    o_store, _ = Store.objects.get_or_create(
-        name=data['store'], version=o_version
+    store, _ = Store.objects.get_or_create(
+        name=data['store'], version=version
     )
 
     save_request_file(f, filename)
@@ -680,14 +679,14 @@ def upload_server_package(request, name, uuid, o_computer, data):
     if not data['source']:
         Package.objects.get_or_create(
             name=f.name,
-            version=o_version,
-            defaults={'store': o_store}
+            version=version,
+            defaults={'store': store}
         )
 
     return return_message(cmd, ok())
 
 
-def upload_server_set(request, name, uuid, o_computer, data):
+def upload_server_set(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     f = request.FILES["package"]
@@ -701,26 +700,26 @@ def upload_server_set(request, name, uuid, o_computer, data):
     )
 
     try:
-        o_version = Version.objects.get(name=data['version'])
+        version = Version.objects.get(name=data['version'])
     except ObjectDoesNotExist:
         return return_message(cmd, error(VERSION_NOT_FOUND))
 
-    o_store, _ = Store.objects.get_or_create(
-        name=data['store'], version=o_version
+    store, _ = Store.objects.get_or_create(
+        name=data['store'], version=version
     )
 
-    # we add the packageset and create the directory
+    # we add the package set and create the directory
     o_package, _ = Package.objects.get_or_create(
         name=data['packageset'],
-        version=o_version,
-        defaults={'store': o_store}
+        version=version,
+        defaults={'store': store}
     )
     o_package.create_dir()
 
     save_request_file(f, filename)
 
     # if exists path move it
-    if ("path" in data) and (data["path"] != ""):
+    if "path" in data and data["path"] != "":
         dst = os.path.join(
             settings.MIGASFREE_REPO_DIR,
             data['version'],
@@ -862,59 +861,59 @@ def set_computer_tags(request, name, uuid, o_computer, data):
     return ret
 
 
-def check_computer(o_computer, name, version, ip, uuid):
+def check_computer(computer, name, version_name, ip, uuid):
     # registration of ip, version, uuid and Migration of computer
-    o_version = Version.objects.get(name=version)
+    version = Version.objects.get(name=version_name)
 
-    if not o_computer:
-        o_computer = Computer.objects.create(name, o_version, uuid)
-        Migration.objects.create(o_computer, o_version)
+    if not computer:
+        computer = Computer.objects.create(name, version, uuid)
+        Migration.objects.create(computer, version)
 
         if settings.MIGASFREE_NOTIFY_NEW_COMPUTER:
             Notification.objects.create(
                 _("New Computer added id=[%s]: NAME=[%s] UUID=[%s]") % (
-                    o_computer.id,
-                    o_computer.__str__(),
-                    o_computer.uuid
+                    computer.id,
+                    computer.__str__(),
+                    computer.uuid
                 )
             )
 
     # Check Migration
-    if o_computer.version != o_version:
-        Migration.objects.create(o_computer, o_version)
+    if computer.version != version:
+        Migration.objects.create(computer, version)
 
-    notify_change_data_computer(o_computer, name, o_version, ip, uuid)
+    notify_change_data_computer(computer, name, version, ip, uuid)
 
-    o_computer.update_identification(name, o_version, uuid, ip)
+    computer.update_identification(name, version, uuid, ip)
 
-    return o_computer
+    return computer
 
 
-def notify_change_data_computer(o_computer, name, o_version, ip, uuid):
-    if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (o_computer.name != name):
+def notify_change_data_computer(computer, name, version, ip, uuid):
+    if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (computer.name != name):
         Notification.objects.create(
             _("Computer id=[%s]: NAME [%s] changed by [%s]") % (
-                o_computer.id,
-                o_computer.__str__(),
+                computer.id,
+                computer.__str__(),
                 name
             )
         )
 
-    if settings.MIGASFREE_NOTIFY_CHANGE_IP and (o_computer.ip != ip):
-        if o_computer.ip and ip:
+    if settings.MIGASFREE_NOTIFY_CHANGE_IP and computer.ip != ip:
+        if computer.ip and ip:
             Notification.objects.create(
                 _("Computer id=[%s]: IP [%s] changed by [%s]") % (
-                    o_computer.id,
-                    o_computer.ip,
+                    computer.id,
+                    computer.ip,
                     ip
                 )
             )
 
-    if settings.MIGASFREE_NOTIFY_CHANGE_UUID and (o_computer.uuid != uuid):
+    if settings.MIGASFREE_NOTIFY_CHANGE_UUID and computer.uuid != uuid:
         Notification.objects.create(
             _("Computer id=[%s]: UUID [%s] changed by [%s]") % (
-                o_computer.id,
-                o_computer.uuid,
+                computer.id,
+                computer.uuid,
                 uuid
             )
         )
