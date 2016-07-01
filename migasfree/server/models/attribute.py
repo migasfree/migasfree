@@ -28,8 +28,8 @@ class AttributeManager(models.Manager):
         if property_att.auto is False:
             raise ValidationError(
                 _('The attribute can not be created because'
-                    ' it prevents property')
-        )
+                  ' it prevents property')
+            )
 
         obj = Attribute()
         obj.property_att = property_att
@@ -99,7 +99,7 @@ class Attribute(models.Model, MigasLink):
             self.save()
 
     def delete(self, *args, **kwargs):
-        # Not allowed delete atributte 'SET-ALL SYSTEM' or CID Property.prefix
+        # Not allowed delete attribute 'SET-ALL SYSTEM' or CID Property.prefix
         if not (self.property_att.prefix in ["CID", ] or self.id == 1):
             super(Attribute, self).delete(*args, **kwargs)
 
