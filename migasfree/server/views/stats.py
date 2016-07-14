@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import os
 import json
+import pygal
 
+from pygal.style import Style
 from datetime import timedelta, datetime, date
 from dateutil.relativedelta import *
 
+from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
@@ -18,7 +22,24 @@ from migasfree.server.models import (
     Schedule,
     ScheduleDelay,
     Login,
-    UserProfile
+    UserProfile,
+)
+
+JS_FILE = 'file://' + os.path.join(
+    settings.MIGASFREE_APP_DIR,
+    'server',
+    'static',
+    'js',
+    'pygal-tooltips.min.js'
+)
+BAR_STYLE = Style(
+    font_family='Average Sans',
+    background='transparent',
+    colors=('#edc240',),
+)
+DEFAULT_STYLE = Style(
+    font_family='Average Sans',
+    background='transparent',
 )
 
 
@@ -93,48 +114,23 @@ def hourly_updated(request):
         compare_timeformat, xaxis_timeformat
     )
 
-    if len(updates_time_range['data']) == 0:
-        return render(
-            request,
-            'info.html',
-            {
-                'title': title,
-                'contentpage': _('There are no updates')
-            }
-        )
-
-    options = {
-        'series': {
-            'bars': {
-                'show': True,
-                'barWidth': 0.6,
-                'align': 'center'
-            }
-        },
-        'grid': {
-            'hoverable': True
-        },
-        'legend': {
-            'show': False,
-        },
-        'xaxis': {
-            'tickLength': 5,
-            'ticks': updates_time_range['x_axis'],
-            'labelWidth': 80,
-            'minTickSize': 4,
-        },
-    }
+    line_chart = pygal.Bar(
+        no_data_text=_('There are no updates'),
+        show_legend=False,
+        x_label_rotation=45,
+        style=BAR_STYLE,
+        js=[JS_FILE],
+    )
+    line_chart.x_labels = [row[1] for row in updates_time_range['x_axis']]
+    line_chart.add(_('Computers'), [row[1] for row in updates_time_range['data']])
 
     return render(
         request,
         'lines.html',
         {
-            "title": title,
-            "options": json.dumps(options),
-            "data": json.dumps([{
-                'data': updates_time_range['data'],
-                'label': _("Computers")
-            }]),
+            'title': title,
+            'chart': line_chart.render_data_uri(),
+            'tabular_data': line_chart.render_table(),
         }
     )
 
@@ -154,47 +150,23 @@ def daily_updated(request):
         compare_timeformat, xaxis_timeformat
     )
 
-    if len(updates_time_range['data']) == 0:
-        return render(
-            request,
-            'info.html',
-            {
-                'title': title,
-                'contentpage': _('There are no updates')
-            }
-        )
-
-    options = {
-        'series': {
-            'bars': {
-                'show': True,
-                'barWidth': 0.6,
-                'align': 'center'
-            }
-        },
-        'grid': {
-            'hoverable': True
-        },
-        'legend': {
-            'show': False,
-        },
-        'xaxis': {
-            'tickLength': 5,
-            'ticks': updates_time_range['x_axis'],
-            'labelWidth': 80
-        }
-    }
+    line_chart = pygal.Bar(
+        no_data_text=_('There are no updates'),
+        show_legend=False,
+        x_label_rotation=45,
+        style=BAR_STYLE,
+        js=[JS_FILE],
+    )
+    line_chart.x_labels = [row[1] for row in updates_time_range['x_axis']]
+    line_chart.add(_('Computers'), [row[1] for row in updates_time_range['data']])
 
     return render(
         request,
         'lines.html',
         {
-            "title": title,
-            "options": json.dumps(options),
-            "data": json.dumps([{
-                'data': updates_time_range['data'],
-                'label': _("Computers")
-            }]),
+            'title': title,
+            'chart': line_chart.render_data_uri(),
+            'tabular_data': line_chart.render_table(),
         }
     )
 
@@ -213,6 +185,7 @@ def index_containing_substring(the_list, substring):
     for i, s in enumerate(the_list):
         if substring in s:
             return i
+
     return -1
 
 
@@ -222,6 +195,13 @@ def monthly_updated(request):
     data = {}
     new_data = {}
     x_axis = {}
+
+    line_chart = pygal.Line(
+        no_data_text=_('There are no updates'),
+        x_label_rotation=45,
+        style=DEFAULT_STYLE,
+        js=[JS_FILE],
+    )
 
     platforms = Platform.objects.only("id", "name")
     for platform in platforms:
@@ -270,48 +250,19 @@ def monthly_updated(request):
         total.append([i, total_month])
         i += 1
 
-    options = {
-        'series': {
-            'lines': {
-                'show': True
-            },
-            'points': {
-                'show': True
-            }
-        },
-        'grid': {
-            'hoverable': True
-        },
-        'legend': {
-            'show': True,
-            'position': 'nw'
-        },
-        'xaxis': {
-            'tickLength': 5,
-            'ticks': x_axe,
-            'labelWidth': 80
-        }
-    }
+    line_chart.x_labels = [row[1] for row in x_axe]
 
-    output_data = []
+    line_chart.add(labels['total'], [row[1] for row in total])
     for item in new_data:
-        output_data.append({
-            'data': new_data[item],
-            'label': labels[item],
-        })
-
-    output_data.append({
-        'data': total,
-        'label': labels['total'],
-    })
+        line_chart.add(labels[item], [row[1] for row in new_data[item]])
 
     return render(
         request,
         'lines.html',
         {
-            "title": _("Updated Computers / Month"),
-            "options": json.dumps(options),
-            "data": json.dumps(output_data),
+            'title': _("Updated Computers / Month"),
+            'chart': line_chart.render_data_uri(),
+            'tabular_data': line_chart.render_table(),
         }
     )
 
@@ -333,25 +284,30 @@ def delay_schedule(request):
 
     title += ' [%s]' % current_version.name
 
-    data = []
+    line_chart = pygal.Line(
+        no_data_text=_('There are no updates'),
+        x_label_rotation=45,
+        legend_at_bottom=True,
+        style=DEFAULT_STYLE,
+        js=[JS_FILE],
+    )
+
     maximum_delay = 0
     for sched in Schedule.objects.all():
         lst_attributes = []
         d = 1
         value = 0
         line = []
+
         delays = ScheduleDelay.objects.filter(
             schedule__name=sched.name
         ).order_by("delay")
         for delay in delays:
-
             for i in range(d, delay.delay):
-
                 line.append([i, value])
                 d += 1
 
             for duration in range(0, delay.duration):
-
                 lst_att_delay = []
                 for att in delay.attributes.all():
                     lst_att_delay.append(att.id)
@@ -377,132 +333,74 @@ def delay_schedule(request):
                 lst_attributes.append(att.id)
 
         maximum_delay = max(maximum_delay, d)
-        data.append({
-            'data': line,
-            'label': sched.name,
-        })
-
-    if len(data) == 0:
-        return render(
-            request,
-            'info.html',
-            {
-                'title': title,
-                'contentpage': _('There are no defined schedules')
-            }
-        )
+        line_chart.add(sched.name, [row[1] for row in line])
 
     x_axis = []
     for i in range(0, maximum_delay + 1):
         x_axis.append([i, _('%d days') % i])
 
-    options = {
-        'series': {
-            'lines': {
-                'show': True
-            },
-            'points': {
-                'show': True
-            }
-        },
-        'grid': {
-            'hoverable': True
-        },
-        'legend': {
-            'show': True,
-            'position': 'se'
-        },
-        'xaxis': {
-            'tickLength': 5,
-            'ticks': x_axis,
-            'labelWidth': 80,
-            'minTickSize': 5
-        }
-    }
+    line_chart.x_labels = [row[1] for row in x_axis]
 
     return render(
         request,
         'lines.html',
         {
-            "title": title,
-            "options": json.dumps(options),
-            "data": json.dumps(data),
+            'title': title,
+            'chart': line_chart.render_data_uri(),
+            'tabular_data': line_chart.render_table(),
         }
     )
 
 
 @login_required
 def version_computer(request):
-    data = []
-    total = 0
+    pie = pygal.Pie(
+        no_data_text=_('There are no computers'),
+        style=DEFAULT_STYLE,
+        js=[JS_FILE],
+        inner_radius=.4,
+    )
+    total = Computer.productives.count()
+
     for version in Computer.productives.values(
         "version__name",
         "version__id"
     ).annotate(
         count=Count("id")
-    ):
-        data.append(
-            {
-                "data": version.get("count"),
-                "label": version.get("version__name"),
-                'url': '%s?version__id__exact=%s' % (
-                    reverse('admin:server_computer_changelist'),
-                    version.get('version__id')
-                )
-            }
+    ).order_by('version__platform__id', '-count'):
+        percent = float(version.get('count')) / total * 100
+        link = '%s://%s%s?version__id__exact=%s' % (
+            request.META.get('wsgi.url_scheme'),
+            request.META.get('HTTP_HOST'),
+            reverse('admin:server_computer_changelist'),
+            version.get('version__id')
         )
-        total += version.get("count")
 
-    options = {
-        'series': {
-            'pie': {
-                'show': True,
-                'radius': 4.0 / 5,
-                'label': {
-                    'show': True,
-                    'radius': 1,
-                    'background': {
-                        'opacity': 0.5,
-                        'color': '#000'
-                    }
+        pie.add(
+            {
+                'title': '{} ({})'.format(
+                    version.get("version__name"),
+                    version.get('count')
+                ),
+                'xlink': {
+                    'href': link,
+                    'target': '_top'
                 }
-            }
-        },
-        'legend': {
-            'show': True,
-            'sorted': "ascending",
-        },
-        'grid': {
-            'hoverable': True,
-            'clickable': True,
-        },
-        'tooltip': True,
-        'tooltipOpts': {
-            'content': "%s (%y.0 / " + str(total) + ")"
-        }
-    }
+            },
+            [{
+                'value': version.get("count"),
+                'label': '{:.2f}%'.format(percent)
+            }]
+        )
 
     title = _("Productives Computers / Version")
-
-    if len(data) == 0:
-        return render(
-            request,
-            'info.html',
-            {
-                'title': title,
-                'contentpage': _('There are no computers')
-            }
-        )
 
     return render(
         request,
         'pie.html',
         {
             'title': title,
-            'options': json.dumps(options),
-            'data': json.dumps(data),
             'total': total,
-            'formatter': 'labelFormatter',
-            'labelFormatter': 'labelLegend',
+            'chart': pie.render_data_uri(),
         }
     )
