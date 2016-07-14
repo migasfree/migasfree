@@ -121,7 +121,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.humanize',
     'django.contrib.admindocs',
-    'migasfree.flot',
     'import_export',
     'rest_framework',
     'rest_framework.authtoken',
