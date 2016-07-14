@@ -30,3 +30,5 @@ requires = python >= 2.7
            python-djangorestframework >= 3.3.3
            python-djangorestframework-filters >= 0.8.0
            python-django-rest-swagger >= 0.3.6
+           python-pygal
+           python-lxml
