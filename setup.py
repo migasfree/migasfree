@@ -131,7 +131,6 @@ setup(
         'migasfree.server.templatetags',
         'migasfree.server.views',
         'migasfree.settings',
-        'migasfree.flot',
     ],
     package_dir={
         'migasfree': 'migasfree',
@@ -148,10 +147,6 @@ setup(
     },
     package_data={
         'migasfree': [
-            'flot/*.md',
-            'flot/*.txt',
-            'flot/static/flot/*.js',
-            'flot/static/flot/plugins/*.js',
             'locale/*/LC_MESSAGES/*.mo',
             'server/fixtures/*',
             'server/static/ajax-select/*.css',
