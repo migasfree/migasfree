@@ -101,6 +101,11 @@ td.nowrap {
     color: #f00;
 }
 
+.stat-container {
+    width: 80vw;
+    margin: auto;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
