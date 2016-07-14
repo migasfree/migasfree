@@ -63,12 +63,13 @@ def get_updates_time_range(
             date__lt=end_date
         ).values('date', 'computer').order_by('date')
 
-    step = 0
     if len(updates):
         next_date = updates[0]['date']
     else:
         next_date = begin_date
+
     distinct_computers = []
+    step = 0
     count = 0
     for update in updates:
         if update['date'].strftime(compare_timeformat) == \
@@ -100,8 +101,6 @@ def get_updates_time_range(
 
 @login_required
 def hourly_updated(request):
-    title = _("Updated Computers / Hour")
-
     delta = timedelta(hours=1)
     end_date = datetime.now() + delta
     begin_date = end_date - timedelta(days=3)
@@ -127,7 +126,7 @@ def hourly_updated(request):
         request,
         'lines.html',
         {
-            'title': title,
+            'title': _("Updated Computers / Hour"),
             'chart': line_chart.render_data_uri(),
             'tabular_data': line_chart.render_table(),
         }
@@ -136,8 +135,6 @@ def hourly_updated(request):
 
 @login_required
 def daily_updated(request):
-    title = _("Updated Computers / Day")
-
     delta = timedelta(days=1)
     end_date = date.today() + delta
     begin_date = end_date - timedelta(days=35)
@@ -163,7 +160,7 @@ def daily_updated(request):
         request,
         'lines.html',
         {
-            'title': title,
+            'title': _("Updated Computers / Day"),
             'chart': line_chart.render_data_uri(),
             'tabular_data': line_chart.render_table(),
         }
@@ -190,11 +187,6 @@ def index_containing_substring(the_list, substring):
 
 @login_required
 def monthly_updated(request):
-    labels = {}
-    data = {}
-    new_data = {}
-    x_axis = {}
-
     line_chart = pygal.Line(
         no_data_text=_('There are no updates'),
         x_label_rotation=45,
@@ -202,15 +194,13 @@ def monthly_updated(request):
         js=[JS_FILE],
     )
 
-    platforms = Platform.objects.only("id", "name")
-    for platform in platforms:
-        data[platform.id] = None
-        new_data[platform.id] = []
-        x_axis[platform.id] = None
-        labels[platform.id] = platform.name
-
+    labels = {
+        'total': _("Totals")
+    }
+    data = {}
+    new_data = {}
+    x_axis = {}
     total = []
-    labels['total'] = _("Totals")
 
     delta = relativedelta(months=+1)
     end_date = date.today() + delta
@@ -218,7 +208,11 @@ def monthly_updated(request):
     compare_timeformat = '%Y-%m'
     xaxis_timeformat = '%Y-%m'
 
+    platforms = Platform.objects.only("id", "name")
     for platform in platforms:
+        new_data[platform.id] = []
+        labels[platform.id] = platform.name
+
         updates_time_range = get_updates_time_range(
             begin_date, end_date, delta,
             compare_timeformat, xaxis_timeformat,
@@ -392,13 +386,11 @@ def version_computer(request):
             }]
         )
 
-    title = _("Productives Computers / Version")
-
     return render(
         request,
         'pie.html',
         {
-            'title': title,
+            'title': _("Productives Computers / Version"),
             'total': total,
             'chart': pie.render_data_uri(),
         }
