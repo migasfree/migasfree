@@ -45,23 +45,6 @@ from distutils.command.install_data import install_data
 
 
 class InstallData(install_data):
-    def _find_repo_files(self):
-        data_files = []
-
-        for root, _, files in os.walk('repo'):
-            if 'source' in root:
-                continue  # exclude SVG files
-            final_files = []
-            for archive in files:
-                final_files.append(os.path.join(root, archive))
-
-            data_files.append(
-                ('/var/%s' % os.path.join('migasfree', root),
-                final_files)
-            )
-
-        return data_files
-
     def _find_other_files(self):
         data_files = []
 
@@ -106,7 +89,6 @@ class InstallData(install_data):
         return data_files
 
     def run(self):
-        self.data_files.extend(self._find_repo_files())
         self.data_files.extend(self._find_other_files())
         self.data_files.extend(self._find_doc_files())
         install_data.run(self)
