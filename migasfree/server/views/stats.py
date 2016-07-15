@@ -101,12 +101,12 @@ def get_updates_time_range(
 
 @login_required
 def hourly_updated(request):
+    delta = timedelta(hours=1)
     end_date = datetime.now() + delta
     begin_date = end_date - timedelta(days=3)
 
     updates_time_range = get_updates_time_range(
-        begin_date, end_date,
-        delta=timedelta(hours=1),
+        begin_date, end_date, delta,
         compare_timeformat='%Y-%m-%d %H',
         xaxis_timeformat='%H h. %b %d'
     )
@@ -134,12 +134,12 @@ def hourly_updated(request):
 
 @login_required
 def daily_updated(request):
+    delta = timedelta(days=1)
     end_date = date.today() + delta
     begin_date = end_date - timedelta(days=35)
 
     updates_time_range = get_updates_time_range(
-        begin_date, end_date,
-        delta=timedelta(days=1),
+        begin_date, end_date, delta,
         compare_timeformat='%Y-%m-%d',
         xaxis_timeformat='%b %d'
     )
@@ -200,6 +200,7 @@ def monthly_updated(request):
     x_axis = {}
     total = []
 
+    delta = relativedelta(months=+1)
     end_date = date.today() + delta
     begin_date = end_date - relativedelta(months=+18)
 
@@ -209,8 +210,7 @@ def monthly_updated(request):
         labels[platform.id] = platform.name
 
         updates_time_range = get_updates_time_range(
-            begin_date, end_date,
-            delta=relativedelta(months=+1),
+            begin_date, end_date, delta,
             compare_timeformat='%Y-%m',
             xaxis_timeformat='%Y-%m',
             by_platform=platform.id
