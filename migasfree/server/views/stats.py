@@ -359,11 +359,12 @@ def version_computer(request):
         count=Count("id")
     ).order_by('version__platform__id', '-count'):
         percent = float(version.get('count')) / total * 100
-        link = '%s://%s%s?version__id__exact=%s' % (
+        link = '%s://%s%s?version__id__exact=%s&status__in=%s' % (
             request.META.get('wsgi.url_scheme'),
             request.META.get('HTTP_HOST'),
             reverse('admin:server_computer_changelist'),
-            version.get('version__id')
+            version.get('version__id'),
+            'intended,reserved,unknown'
         )
 
         pie.add(
