@@ -309,10 +309,10 @@ def delay_schedule(request):
                         (delay.duration, duration)
                     ]
                 ).filter(
-                    ~ Q(attributes__id__in=lst_attributes)
-                    & Q(attributes__id__in=lst_att_delay)
-                    & Q(computer__version=current_version.id)
-                    & Q(computer__status__in=Computer.PRODUCTIVE_STATUS)
+                    ~ Q(attributes__id__in=lst_attributes) &
+                    Q(attributes__id__in=lst_att_delay) &
+                    Q(computer__version=current_version.id) &
+                    Q(computer__status__in=Computer.PRODUCTIVE_STATUS)
                 ).values('computer_id').annotate(lastdate=Max('date')).count()
 
                 line.append([d, value])
