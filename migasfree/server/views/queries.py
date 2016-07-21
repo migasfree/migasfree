@@ -18,29 +18,28 @@ from ..models import *
 def option_description(field, value):
     try:
         return field.split(
-            '<option value="%s">' % value
+            '<option value="{}">'.format(value)
         )[1].split("</option>")[0]
     except:
         return value
 
 
-def execute_query(request, parameters, form_param):
-    o_query = get_object_or_404(Query, id=parameters.get('id_query', ''))
+def execute_query(request, parameters, form_param=None):
+    o_query = get_object_or_404(Query, id=parameters.get('id_query'))
 
     try:
         exec(o_query.code.replace("\r", ""))
         # after exec, new available variables are: query, fields, titles
 
-        if 'fields' not in vars():
+        if 'fields' not in locals():
             fields = []
             for key in query.values()[0].iterkeys():
                 fields.append(key)
 
-        if 'titles' not in vars():
+        if 'titles' not in locals():
             titles = fields
 
         results = []
-
         for obj in query:
             cols = []
             for field in fields:
@@ -56,16 +55,16 @@ def execute_query(request, parameters, form_param):
                     else:
                         cols.append(value)
                 except AttributeError:
-                    cols.append(eval("obj.%s" % field))
+                    cols.append(eval('obj.{}'.format(field)))
 
             results.append(cols)
 
         filters = []
-        for x in form_param:
-            if not (x.name == "id_query" or x.name == "user_version"):
-                filters.append('%s: %s' % (
-                    x.label,
-                    str(parameters["%s_display" % x.name])
+        for item in form_param:
+            if item.name not in ['id_query', 'user_version']:
+                filters.append('{}: {}'.format(
+                    item.label,
+                    parameters['{}_display'.format(item.name)]
                 ))
 
         return render(
@@ -92,71 +91,50 @@ def execute_query(request, parameters, form_param):
 
 
 @login_required
-def query(request, query_id):
-    if request.method == 'POST':
-        parameters = {}
-        for p in request.POST:
-            parameters[p] = request.POST.get(p)
+def get_query(request, query_id):
+    query = get_object_or_404(Query, id=query_id)
 
-        query = get_object_or_404(Query, id=request.POST.get('id_query', ''))
-        dic_initial = {
-            'id_query': request.POST.get('id_query', ''),
-            'user_version': request.user.userprofile.version_id
-        }
-        dic_initial.update(parameters)
-        if query.parameters == "":
-            return execute_query(request, dic_initial, {})
-
-        try:
-            def form_params():
-                pass
-
-            exec(query.parameters.replace("\r", ""))
-            g_form_param = form_params()(initial=dic_initial)
-
-            for x in g_form_param:
-                parameters[x.name + "_display"] = option_description(
-                    str(x), parameters[x.name]
-                )
-
-            return execute_query(request, parameters, g_form_param)
-        except:
-            return render(
-                request,
-                'error.html',
-                {
-                    'description': _("Error in field 'parameters' of query:"),
-                    'contentpage': str(sys.exc_info()[1])
-                }
-            )
-
-    # show parameters form
     version = get_object_or_404(UserProfile, id=request.user.id).version
     if not version:
-        # The user not have a version. We assign to user the first version found
+        # The user does not have a version
+        # We assign to user the first version found
         version = Version.objects.all().order_by("id")[0]
         user = UserProfile.objects.get(id=request.user.id)
         user.update_version(version)
 
-    query = get_object_or_404(Query, id=query_id)
-    dic_initial = {
+    default_parameters = {
         'id_query': query_id,
         'user_version': version.id
     }
-    if query.parameters == "":
-        return execute_query(request, dic_initial, {})
+
+    if request.method == 'POST':
+        default_parameters.update(dict(request.POST.iteritems()))
+
+    if not query.parameters:
+        return execute_query(request, default_parameters)
 
     try:
+        # this function will be override after exec query.parameters
+        # only declared to avoid unresolved reference
         def form_params():
             pass
 
         exec(query.parameters.replace("\r", ""))
+        form = form_params()(initial=default_parameters)
+
+        if request.method == 'POST':
+            for item in form:
+                default_parameters['{}_display'.format(item.name)] = option_description(
+                    str(item), default_parameters[item.name]
+                )
+
+            return execute_query(request, default_parameters, form)
 
         return render(
             request,
             'query.html',
             {
-                'form': form_params()(initial=dic_initial),
+                'form': form,
                 'title': query.name,
             }
         )
@@ -235,10 +213,10 @@ def server_messages(request):
     result = []
     for item in MessageServer.objects.all().order_by("-date"):
         result.append(
-            [
-                item.date,
-                item.text
-            ]
+            {
+                'date': item.date,
+                'text': item.text
+            }
         )
 
     return render(

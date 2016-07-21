@@ -29,7 +29,7 @@ urlpatterns = patterns('',
     ),
 
     url(r'^alerts/$', alerts, name='alerts'),
-    url(r'^query/(?P<query_id>\d+)/$', query, name='query'),
+    url(r'^query/(?P<query_id>\d+)/$', get_query, name='query'),
     url(
         r'^computer_messages/$',
         computer_messages,
