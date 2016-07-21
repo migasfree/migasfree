@@ -416,6 +416,7 @@ class TagAdmin(MigasAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
     list_display = ('my_link',)
+    ordering = ('username',)
 
     def my_link(self, obj):
         return obj.link()
