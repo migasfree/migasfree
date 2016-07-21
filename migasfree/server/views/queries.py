@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q
-from django import forms
+from django.db.models import Q  # for execute_query function
+from django import forms  # for execute_query function
 from django.conf import settings
 
 from ..models import *
@@ -45,7 +45,9 @@ def execute_query(request, parameters, form_param=None):
             for field in fields:
                 try:
                     value = getattr(obj, field)
-
+                except AttributeError:
+                    cols.append(eval('obj.{}'.format(field)))
+                else:
                     # to allow calls to model methods (as link)
                     if obj._deferred and inspect.ismethod(value):
                         meta_model = obj._meta.proxy_for_model.objects.get(
@@ -54,8 +56,6 @@ def execute_query(request, parameters, form_param=None):
                         cols.append(getattr(meta_model, field)())
                     else:
                         cols.append(value)
-                except AttributeError:
-                    cols.append(eval('obj.{}'.format(field)))
 
             results.append(cols)
 
