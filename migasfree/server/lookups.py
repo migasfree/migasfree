@@ -34,9 +34,9 @@ class AttributeLookup(LookupChannel):
             ).order_by('value')
         else:
             return self.model.objects.filter(
-                Q(value__icontains=q)
-                | Q(description__icontains=q)
-                | Q(property_att__prefix__icontains=q)
+                Q(value__icontains=q) |
+                Q(description__icontains=q) |
+                Q(property_att__prefix__icontains=q)
             ).filter(property_att__active=True).order_by('value')
 
     def format_match(self, obj):
@@ -85,9 +85,9 @@ class AttributeComputersLookup(LookupChannel):
             ).order_by('value')
         else:
             return self.model.objects.filter(
-                Q(value__icontains=q)
-                | Q(description__icontains=q)
-                | Q(property_att__prefix__icontains=q)
+                Q(value__icontains=q) |
+                Q(description__icontains=q) |
+                Q(property_att__prefix__icontains=q)
             ).filter(
                 property_att__active=True
             ).order_by('value')
@@ -159,9 +159,9 @@ class TagLookup(LookupChannel):
         ).filter(
             property_att__tag=True
         ).filter(
-            Q(value__icontains=q)
-            | Q(description__icontains=q)
-            | Q(property_att__prefix__icontains=q)
+            Q(value__icontains=q) |
+            Q(description__icontains=q) |
+            Q(property_att__prefix__icontains=q)
         ).order_by('value')
 
     def format_match(self, obj):
@@ -210,9 +210,11 @@ class ComputerLookup(LookupChannel):
             return self.model.objects.filter(id__exact=q)
         else:
             return self.model.objects.filter(
-                Q(id__exact=q)
-                | Q(**{'%s__icontains' %
-                    settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: q})
+                Q(id__exact=q) |
+                Q(**{
+                    '%s__icontains' %
+                    settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: q
+                })
             )
 
     def format_match(self, obj):
