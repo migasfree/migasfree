@@ -10,12 +10,21 @@ from django.conf import settings
 from django.utils import timezone, dateformat
 from django.utils.translation import ugettext as _
 
-from .models import *
-from .errmfs import *
-from .functions import *
-from .security import *
+from .models import (
+    LANGUAGES_CHOICES, Attribute, AttributeSet, ClientProperty, Computer,
+    DeviceLogical, Error, Fault, FaultDef, Feature, HwNode, Message,
+    Migration, Notification, Login, Package, Pms, Platform, Property,
+    Repository, Store, Tag, Update, User, Version,
+)
+from .security import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
 from .tasks import create_physical_repository
+from .functions import (
+    uuid_change_format,
+    Mmcheck, s2l, vl2s,
+    list_difference, list_common,
+)
+from . import errmfs
 
 import logging
 logger = logging.getLogger('migasfree')
@@ -105,9 +114,9 @@ def upload_computer_hardware(request, name, uuid, computer, data):
         load_hw(computer, data[cmd], None, 1)
         computer.update_last_hardware_capture()
         computer.update_hardware_resume()
-        ret = return_message(cmd, ok())
+        ret = return_message(cmd, errmfs.ok())
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
@@ -116,9 +125,9 @@ def upload_computer_software_base_diff(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         computer.update_software_inventory(data[cmd])
-        ret = return_message(cmd, ok())
+        ret = return_message(cmd, errmfs.ok())
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
@@ -129,9 +138,9 @@ def upload_computer_software_base(request, name, uuid, computer, data):
         version = Version.objects.get(pk=computer.version_id)
         version.update_base(data[cmd])
 
-        ret = return_message(cmd, ok())
+        ret = return_message(cmd, errmfs.ok())
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
@@ -140,9 +149,9 @@ def upload_computer_software_history(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
         computer.update_software_history(data[cmd])
-        ret = return_message(cmd, ok())
+        ret = return_message(cmd, errmfs.ok())
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
@@ -155,7 +164,7 @@ def get_computer_software(request, name, uuid, computer, data):
             computer.version.base
         )
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
@@ -165,9 +174,9 @@ def upload_computer_errors(request, name, uuid, computer, data):
     try:
         Error.objects.create(computer, computer.version, data[cmd])
 
-        ret = return_message(cmd, ok())
+        ret = return_message(cmd, errmfs.ok())
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
@@ -176,7 +185,7 @@ def upload_computer_message(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
     if not computer:
-        return return_message(cmd, error(COMPUTER_NOT_FOUND))
+        return return_message(cmd, errmfs.error(errmfs.COMPUTER_NOT_FOUND))
 
     try:
         message = Message.objects.get(computer=computer)
@@ -190,21 +199,21 @@ def upload_computer_message(request, name, uuid, computer, data):
             Update.objects.create(computer)
         else:
             message.update_message(data[cmd])
-        ret = return_message(cmd, ok())
+        ret = return_message(cmd, errmfs.ok())
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
 
 def return_message(cmd, data):
-    return {'%s.return' % cmd: data}
+    return {'{}.return'.format(cmd): data}
 
 
 def get_properties(request, name, uuid, computer, data):
     """
-    First call of client requesting to server what he must do.
-    The server responds with a string json with structure:
+    First call of client requesting to server what it must do.
+    The server responds a json:
 
         OUTPUT:
         ======
@@ -237,19 +246,19 @@ def get_properties(request, name, uuid, computer, data):
 
         ret = return_message(cmd, {"properties": properties})
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
 
 def upload_computer_info(request, name, uuid, o_computer, data):
     """
-    Process the file request.json and return a string json with the faultsdef,
+    Process the file request.json and return a json with the faultsdef,
     repositories, packages and devices
         INPUT:
         =====
         A file "request.json" with the result of evaluate the request obtained
-        by "get_regest"
+        by "get_request"
 
             {
               "computer":
@@ -266,8 +275,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         OUTPUT:
         ======
-        After of process this file the server respond to client with
-        a string json with:
+        After of process this file the server responds to client a json:
 
             {
                 "faultsdef": [
@@ -277,7 +285,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                         "language": "LANGUAGE"
                     },
                     ...] ,
-                "repositories" : [ {"name": "REPONAME" }, ...] ,
+                "repositories": [ {"name": "REPONAME" }, ...],
                 "packages":
                     {
                         "install": ["pck1","pck2","pck3",...],
@@ -287,8 +295,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 "hardware_capture": true|false,
                 "devices":
                     {
-                        "install": bashcode ,
-                        "remove": bashcode
+                        "install": [id1, id2, ...],
+                        "remove": [id1, id2, ...]
                     } #TODO move code to client
     """
 
@@ -313,7 +321,10 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     # Autoregister Platform
     if not Platform.objects.filter(name=platform):
         if not settings.MIGASFREE_AUTOREGISTER:
-            return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
+            return return_message(
+                cmd,
+                errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
+            )
 
         # if all ok we add the platform
         Platform.objects.create(platform)
@@ -323,7 +334,10 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     # Autoregister Version
     if not Version.objects.filter(name=version):
         if not settings.MIGASFREE_AUTOREGISTER:
-            return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
+            return return_message(
+                cmd,
+                errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
+            )
 
         # if all ok, we add the version
         Version.objects.create(
@@ -514,7 +528,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         ret = return_message(cmd, data)
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
@@ -541,13 +555,12 @@ def upload_computer_faults(request, name, uuid, computer, data):
 
         ret = return_message(cmd, {})
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     logger.debug('upload_computer_faults ret: %s' % ret)
     return ret
 
 
-# DEVICES CHANGES
 def upload_devices_changes(request, name, uuid, computer, data):
     logger.debug('upload_devices_changes data: %s' % data)
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -559,9 +572,9 @@ def upload_devices_changes(request, name, uuid, computer, data):
         for logical_device_id in data.get(cmd).get("removed", []):
             computer.remove_device_copy(logical_device_id)
 
-        ret = return_message(cmd, ok())
+        ret = return_message(cmd, errmfs.ok())
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     logger.debug('upload_devices_changes ret: %s' % ret)
     return ret
@@ -586,7 +599,10 @@ def register_computer(request, name, uuid, computer, data):
     if not Platform.objects.filter(name=platform_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_platform"):
-                return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
+                return return_message(
+                    cmd,
+                    errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
+                )
 
         # if all ok we add the platform
         Platform.objects.create(platform_name)
@@ -597,7 +613,10 @@ def register_computer(request, name, uuid, computer, data):
     if not Version.objects.filter(name=version_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_version"):
-                return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
+                return return_message(
+                    cmd,
+                    errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
+                )
 
         # if all ok we add the version
         Version.objects.create(
@@ -616,7 +635,10 @@ def register_computer(request, name, uuid, computer, data):
         # if not autoregister, check that the user can save computer
         if not version.autoregister:
             if not user or not user.has_perm("server.can_save_computer"):
-                return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
+                return return_message(
+                    cmd,
+                    errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
+                )
 
         # ALL IS OK
         # 1.- Add Computer
@@ -637,7 +659,10 @@ def register_computer(request, name, uuid, computer, data):
         # 2.- returns keys to client
         return return_message(cmd, get_keys_to_client(version_name))
     except:
-        return return_message(cmd, error(USER_DOES_NOT_HAVE_PERMISSION))
+        return return_message(
+            cmd,
+            errmfs.error(errmfs.USER_DOES_NOT_HAVE_PERMISSION)
+        )
 
 
 def get_key_packager(request, name, uuid, computer, data):
@@ -647,7 +672,10 @@ def get_key_packager(request, name, uuid, computer, data):
         password=data['password']
     )
     if not user.has_perm("server.can_save_package"):
-        return return_message(cmd, error(CAN_NOT_REGISTER_COMPUTER))
+        return return_message(
+            cmd,
+            errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
+        )
 
     return return_message(cmd, get_keys_to_packager())
 
@@ -667,7 +695,7 @@ def upload_server_package(request, name, uuid, computer, data):
     try:
         version = Version.objects.get(name=data['version'])
     except ObjectDoesNotExist:
-        return return_message(cmd, error(VERSION_NOT_FOUND))
+        return return_message(cmd, errmfs.error(errmfs.VERSION_NOT_FOUND))
 
     store, _ = Store.objects.get_or_create(
         name=data['store'], version=version
@@ -683,7 +711,7 @@ def upload_server_package(request, name, uuid, computer, data):
             defaults={'store': store}
         )
 
-    return return_message(cmd, ok())
+    return return_message(cmd, errmfs.ok())
 
 
 def upload_server_set(request, name, uuid, computer, data):
@@ -702,7 +730,7 @@ def upload_server_set(request, name, uuid, computer, data):
     try:
         version = Version.objects.get(name=data['version'])
     except ObjectDoesNotExist:
-        return return_message(cmd, error(VERSION_NOT_FOUND))
+        return return_message(cmd, errmfs.error(errmfs.VERSION_NOT_FOUND))
 
     store, _ = Store.objects.get_or_create(
         name=data['store'], version=version
@@ -735,12 +763,12 @@ def upload_server_set(request, name, uuid, computer, data):
             pass
         os.rename(filename, dst)
 
-    return return_message(cmd, ok())
+    return return_message(cmd, errmfs.ok())
 
 
 def get_computer_tags(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    retdata = ok()
+    retdata = errmfs.ok()
     element = []
     for tag in computer.tags.all():
         element.append("%s-%s" % (tag.property_att.prefix, tag.value))
@@ -789,7 +817,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
             lst_computer_id.append(tag.id)
         lst_computer_id.append(all_id)
 
-        retdata = ok()
+        retdata = errmfs.ok()
         old_tags_id = list_difference(lst_computer_id, lst_tags_id)
         new_tags_id = list_difference(lst_tags_id, lst_computer_id)
         com_tags_id = list_common(lst_computer_id, lst_tags_id)
@@ -856,7 +884,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
 
         ret = return_message(cmd, retdata)
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
@@ -942,9 +970,9 @@ def create_repositories_of_packageset(request, name, uuid, computer, data):
             os.path.basename(data['packageset']),
             data['version']
         )
-        ret = return_message(cmd, ok())
+        ret = return_message(cmd, errmfs.ok())
     except:
-        ret = return_message(cmd, error(GENERIC))
+        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
 
