@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.views.generic import RedirectView
 from django.core.urlresolvers import reverse_lazy
 from django.conf import settings
 
 from .views import *
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^accounts/login/$', login, name='login'),
 
     url(
@@ -180,4 +180,4 @@ urlpatterns = patterns('',
     ),
     url(r'^status/$', RedirectView.as_view(url=reverse_lazy('bootstrap')),),
     url(r'^migasfree/api/$', api),  # for 2.x clients
-)
+]

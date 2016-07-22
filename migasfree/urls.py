@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import patterns, include, url
-from django.contrib import admin
-admin.autodiscover()
+from django.conf import settings
+from django.conf.urls import include, url
+from django.conf.urls.static import static
 
 from ajax_select import urls as ajax_select_urls
 
-from django.conf import settings
-from django.conf.urls.static import static
-
 from server.routers import router
 
-urlpatterns = patterns('',
+from django.contrib import admin
+admin.autodiscover()
+
+urlpatterns = [
     url(r'^docs/', include('rest_framework_swagger.urls')),
     url(r'^token-auth/$', 'rest_framework.authtoken.views.obtain_auth_token'),
     url(r'^api/v1/token/', include(router.urls)),
@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^admin/lookups/', include(ajax_select_urls)),
-)
+]
 
 if settings.DEBUG and settings.STATIC_ROOT is not None:
     urlpatterns += static(
