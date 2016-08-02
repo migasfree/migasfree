@@ -5,19 +5,19 @@
     <ul class="breadcrumb">
         <!--li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li-->
 
-        {% if opts.object_name.lower = 'computer' or opts.object_name.lower = 'user' or opts.object_name.lower = 'login' or opts.object_name.lower = 'error' or opts.object_name.lower = 'fault' or opts.object_name.lower = 'attribute' or opts.object_name.lower = 'migration' or opts.object_name.lower = 'notification' or opts.object_name.lower = 'tag' %}
+        {% if opts.object_name.lower == 'computer' or opts.object_name.lower == 'user' or opts.object_name.lower == 'login' or opts.object_name.lower == 'error' or opts.object_name.lower == 'fault' or opts.object_name.lower == 'attribute' or opts.object_name.lower == 'migration' or opts.object_name.lower == 'notification' or opts.object_name.lower == 'tag' %}
             <li>{% trans 'Datum' %}</li>
         {% endif %}
 
-        {% if opts.object_name.lower = 'property' or opts.object_name.lower = 'tagtype' or opts.object_name.lower = 'version' or opts.object_name.lower = 'pms' or opts.object_name.lower = 'platform' or opts.object_name.lower = 'query' or opts.object_name.lower = 'userprofile' or opts.object_name.lower = 'group' or opts.object_name.lower = 'checking' or opts.object_name.lower = 'faultdef' or opts.object_name.lower = 'autocheckerror' %}
+        {% if opts.object_name.lower == 'property' or opts.object_name.lower == 'tagtype' or opts.object_name.lower == 'version' or opts.object_name.lower == 'pms' or opts.object_name.lower == 'platform' or opts.object_name.lower == 'query' or opts.object_name.lower == 'userprofile' or opts.object_name.lower == 'group' or opts.object_name.lower == 'checking' or opts.object_name.lower == 'faultdef' or opts.object_name.lower == 'autocheckerror' or opts.object_name.lower == 'clientproperty' or opts.object_name.lower == 'application' %}
             <li>{% trans 'Settings' %}</li>
         {% endif %}
 
-        {% if opts.object_name.lower = 'device' or opts.object_name.lower = 'devicelogical' or opts.object_name.lower = 'devicefeature' or opts.object_name.lower = 'devicedriver' or opts.object_name.lower = 'devicemodel' or opts.object_name.lower = 'devicemanufacturer' or opts.object_name.lower = 'deviceconnection' or opts.object_name.lower = 'devicetype' %}
+        {% if opts.object_name.lower == 'device' or opts.object_name.lower == 'devicelogical' or opts.object_name.lower == 'devicefeature' or opts.object_name.lower == 'devicedriver' or opts.object_name.lower == 'devicemodel' or opts.object_name.lower == 'devicemanufacturer' or opts.object_name.lower == 'deviceconnection' or opts.object_name.lower == 'devicetype' %}
             <li>{% trans 'Devices' %}</li>
         {% endif %}
 
-        {% if opts.object_name.lower = 'repository' or opts.object_name.lower = 'schedule' or opts.object_name.lower = 'package' or opts.object_name.lower = 'store' %}
+        {% if opts.object_name.lower == 'repository' or opts.object_name.lower == 'schedule' or opts.object_name.lower == 'package' or opts.object_name.lower == 'store' %}
             <li>{% trans 'Liberation' %}</li>
         {% endif %}
 
