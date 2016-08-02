@@ -6,7 +6,7 @@ from django.template.loader import render_to_string
 
 from ..functions import vl2s
 
-# Programming Languages for Properties and FaultDefs
+# Programming Languages for Properties and Fault Definitions
 LANGUAGES_CHOICES = (
     (0, 'bash'),
     (1, 'python'),
@@ -23,10 +23,22 @@ class MigasLink(object):
     _include_links = []
 
     def link(self):
-        related_objects = self._meta.get_all_related_objects_with_model() \
-            + self._meta.get_all_related_m2m_objects_with_model()
+        related_objects = [
+            (f, f.model if f.model != self else None)
+            for f in self._meta.get_fields()
+            if (f.one_to_many or f.one_to_one)
+            and f.auto_created and not f.concrete
+        ] + [
+            (f, f.model if f.model != self else None)
+            for f in self._meta.get_fields(include_hidden=True)
+            if f.many_to_many and f.auto_created
+        ]
 
-        objs = self._meta.get_m2m_with_model()
+        objs = [
+            (f, f.model if f.model != self else None)
+            for f in self._meta.get_fields()
+            if f.many_to_many and not f.auto_created
+        ]
 
         action_data = []
         if self._actions is not None and any(self._actions):
@@ -84,7 +96,7 @@ class MigasLink(object):
 
         for _include in self._include_links:
             try:
-                (_modelname, _fieldname) = _include.split(" - ")
+                _modelname, _fieldname = _include.split(" - ")
                 related_link = reverse(
                     'admin:server_%s_changelist'
                     % _modelname
