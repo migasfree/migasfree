@@ -112,6 +112,7 @@ setup(
         'migasfree.server.models',
         'migasfree.server.templatetags',
         'migasfree.server.views',
+        'migasfree.catalog',
         'migasfree.settings',
     ],
     package_dir={
@@ -123,6 +124,8 @@ setup(
         'migasfree.server.models': 'migasfree/server/models',
         'migasfree.server.templatetags': 'migasfree/server/templatetags',
         'migasfree.server.views': 'migasfree/server/views',
+        'migasfree.catalog': 'migasfree/catalog',
+        'migasfree.catalog.migrations': 'migasfree/catalog/migrations',
     },
     cmdclass={
         'install_data': InstallData,
@@ -140,6 +143,10 @@ setup(
             'server/templates/*.html',
             'server/templates/*/*.html',
             'server/templates/*/*/*.html',
+            'catalog/static/css/*',
+            'catalog/static/img/*',
+            'catalog/static/js/*',
+            'catalog/static/js/locales/*',
         ],
     },
     data_files=[
