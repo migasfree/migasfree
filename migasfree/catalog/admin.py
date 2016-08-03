@@ -12,8 +12,8 @@ class ApplicationAdmin(admin.ModelAdmin):
     formfield_overrides = {
         models.ImageField: {'widget': ImageWidget}
     }
-    list_display = ('name', 'version', 'score', 'level', 'description',)
-    list_filter = ('version', 'level')
+    list_display = ('name', 'version', 'score', 'level', 'category',)
+    list_filter = ('version', 'level', 'category')
     ordering = ('name',)
     fields = (
         'name', 'version', 'category', 'level', 'score', 'icon',
