@@ -9,4 +9,4 @@ recursive-include migasfree/server/static *
 recursive-include migasfree/server/templates *
 recursive-include migasfree/admin_bootstrapped/static *
 recursive-include migasfree/admin_bootstrapped/templates *
-recursive-include migasfree/flot *
+recursive-include migasfree/catalog/static *
