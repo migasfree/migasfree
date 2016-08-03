@@ -29,7 +29,7 @@ Requirements
 * Server:
     + Apache with WSGI
     + Python 2.7
-    + Django 1.9.3
+    + Django 1.9
     + PostgreSQL 9.1
 
 * Clients:
