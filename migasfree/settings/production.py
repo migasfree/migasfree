@@ -17,11 +17,12 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 ALLOWED_HOSTS = ['*']
 
-STATIC_ROOT = '/var/migasfree/static'
-
 MIGASFREE_DB_DIR = '/usr/share/migasfree-server'
 MIGASFREE_REPO_DIR = '/var/migasfree/repo'
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_DB_DIR, 'keys')
+
+STATIC_ROOT = '/var/migasfree/static'
+MEDIA_ROOT = MIGASFREE_REPO_DIR
 
 SECRET_KEY = secret_key(MIGASFREE_KEYS_DIR)
 
@@ -38,11 +39,12 @@ DATABASES = {
 
 ###########################################################################
 
-#  STANDARD CONFIG SETTINGS ###############################################
 
-# import local settings if exists
-# http://stackoverflow.com/a/1527240
 def _load_settings(path):
+    """
+    import local settings if exists
+    http://stackoverflow.com/a/1527240
+    """
     if os.path.exists(path):
         # Loading configuration from path
         settings = {}
