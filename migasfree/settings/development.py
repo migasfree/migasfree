@@ -9,8 +9,8 @@ from .functions import secret_key
 # development environment
 DEBUG = True
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
-
 TEMPLATES[0]['APP_DIRS'] = True
+LOGGING['loggers']['migasfree']['level'] = 'DEBUG'
 
 MIGASFREE_DB_DIR = os.path.dirname(MIGASFREE_PROJECT_DIR)
 MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
