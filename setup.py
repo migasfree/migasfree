@@ -145,8 +145,8 @@ setup(
             'server/templates/*/*/*.html',
             'catalog/static/css/*',
             'catalog/static/img/*',
-            'catalog/static/js/*',
-            'catalog/static/js/locales/*',
+            'catalog/static/js/*.js',
+            'catalog/static/js/locales/*.js',
         ],
     },
     data_files=[
