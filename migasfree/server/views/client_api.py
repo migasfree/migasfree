@@ -96,7 +96,7 @@ def api(request):
     filename = os.path.join(settings.MIGASFREE_TMP_DIR, msg.name)
     filename_return = "{}.return".format(filename)
 
-    command, uuid, name = get_msg_info(filename)
+    command, uuid, name = get_msg_info(msg.name)
     computer = get_computer(name, uuid)
 
     # COMPUTERS
