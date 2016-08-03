@@ -113,6 +113,7 @@ setup(
         'migasfree.server.templatetags',
         'migasfree.server.views',
         'migasfree.catalog',
+        'migasfree.catalog.migrations',
         'migasfree.settings',
     ],
     package_dir={
