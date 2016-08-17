@@ -13,7 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 from ..forms import AppendDevicesFromComputerForm
 from ..forms import DeviceReplacementForm
 from ..models import Computer, Login, Device, DeviceModel, DeviceConnection
-from ..functions import d2s, compare_list_values
+from ..functions import d2s
+
 
 @login_required
 def append_devices_from_computer(request):
@@ -70,15 +71,16 @@ def append_devices_from_computer(request):
 def connections_model(request):
     response = {}
     model_id = request.GET.get('id', '')
+
     if model_id != '':
-        connections_model = DeviceConnection.objects.filter(
+        connections = DeviceConnection.objects.filter(
             id__in=DeviceModel.objects.get(
                 id=model_id
             ).connections.values_list(
                 'id', flat=True
             )
         )
-        response = serializers.serialize("json", connections_model)
+        response = serializers.serialize("json", connections)
 
     return JsonResponse(json.loads(response), safe=False)
 
@@ -112,7 +114,8 @@ def device_replacement(request):
             else:
                 messages.error(
                     request,
-                    'Is not posible the replacement. Please, deallocated all computers in [%s].' % ",".join(incompatibles))
+                    'Is not possible the replacement. Please, deallocated all computers in [%s].'
+                    % ",".join(incompatibles))
                 messages.error(
                     request,
                     '<br/>'.join(sorted(d2s(source.get_replacement_info()))))
