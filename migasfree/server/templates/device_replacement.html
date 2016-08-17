@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Datum' %}</li>
+        <li><a href="{% url 'device_replacement' %}">{% trans 'Devices Replacement' %}</a></li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <p>{% trans 'This procedure replaces two devices.' %}</p>
+
+    <form action="." method="post" class="controls" role="form">
+        {% csrf_token %}
+        {% include 'includes/custom_form.html' %}
+
+        <p><input type="submit" class="btn btn-primary" value="{% trans 'Replace' %}" /></p>
+    </form>
+
+    {{ form.media }}
+{% endblock content %}

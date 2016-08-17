@@ -5,7 +5,7 @@ from django.db.models import Q
 
 from dal import autocomplete
 
-from ..models import Computer, Attribute
+from ..models import Computer, Attribute, Device
 
 
 class AutocompleteModelBase(autocomplete.Select2QuerySetView):
@@ -78,3 +78,25 @@ class AttributeAutocomplete(AutocompleteModelBase):
             qs = qs.filter(conditions)
 
         return qs
+
+
+class DeviceAutocomplete(AutocompleteModelBase):
+    search_fields = ['name','data']
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return Device.objects.none()
+
+        qs = Device.objects.all()
+
+        if self.q:
+            conditions = self.choices_for_request_conditions(
+                self.q, self.search_fields
+            )
+            qs = qs.filter(conditions)
+
+        return qs
+
+    def get_result_label(self, result):
+        return result.__str__() + " " + result.model.name + \
+            " @ " + result.location()

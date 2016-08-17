@@ -7,7 +7,7 @@ from dal import autocomplete
 from ajax_select import make_ajax_form, make_ajax_field
 
 from .models import (
-    Repository, UserProfile, Computer, DeviceLogical,
+    Repository, UserProfile, Computer, Device, DeviceLogical,
     Property, Tag, TagType, Attribute
 )
 
@@ -15,6 +15,19 @@ from .models import (
 class ParametersForm(forms.Form):
     id_query = forms.CharField(required=True, widget=forms.HiddenInput())
     user_version = forms.CharField(required=True, widget=forms.HiddenInput())
+
+
+class DeviceReplacementForm(forms.Form):
+    source = forms.ModelChoiceField(
+        queryset=Device.objects.all(),
+        widget=autocomplete.ModelSelect2('device_autocomplete'),
+        label=_('Source')
+    )
+    target = forms.ModelChoiceField(
+        queryset=Device.objects.all(),
+        widget=autocomplete.ModelSelect2('device_autocomplete'),
+        label=_('Target')
+    )
 
 
 class ComputerReplacementForm(forms.Form):

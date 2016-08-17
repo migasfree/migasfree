@@ -11,8 +11,9 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from ..forms import AppendDevicesFromComputerForm
-from ..models import Computer, Login, DeviceModel, DeviceConnection
-
+from ..forms import DeviceReplacementForm
+from ..models import Computer, Login, Device, DeviceModel, DeviceConnection
+from ..functions import d2s, compare_list_values
 
 @login_required
 def append_devices_from_computer(request):
@@ -80,3 +81,55 @@ def connections_model(request):
         response = serializers.serialize("json", connections_model)
 
     return JsonResponse(json.loads(response), safe=False)
+
+
+@login_required
+def device_replacement(request):
+    if request.method == 'POST':
+        form = DeviceReplacementForm(request.POST)
+        if form.is_valid():
+            source = get_object_or_404(
+                Device, pk=form.cleaned_data.get('source').pk
+            )
+            target = get_object_or_404(
+                Device, pk=form.cleaned_data.get('target').pk
+            )
+
+            incompatibles = source.features_incompatible(target)
+            if not incompatibles:
+
+                Device.replacement(source, target)
+
+                messages.success(request, _('Replacement done.'))
+                messages.info(
+                    request,
+                    '<br/>'.join(sorted(d2s(source.get_replacement_info())))
+                )
+                messages.info(
+                    request,
+                    '<br/>'.join(sorted(d2s(target.get_replacement_info())))
+                )
+            else:
+                messages.error(
+                    request,
+                    'Is not posible the replacement. Please, deallocated all computers in [%s].' % ",".join(incompatibles))
+                messages.error(
+                    request,
+                    '<br/>'.join(sorted(d2s(source.get_replacement_info()))))
+                messages.error(
+                    request,
+                    '<br/>'.join(sorted(d2s(target.get_replacement_info())))
+                )
+
+            return HttpResponseRedirect(reverse('device_replacement'))
+    else:
+        form = DeviceReplacementForm()
+
+    return render(
+        request,
+        'device_replacement.html',
+        {
+            'title': _('Devices Replacement'),
+            'form': form
+        }
+    )

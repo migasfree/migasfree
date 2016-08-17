@@ -152,6 +152,12 @@ urlpatterns = [
     ),
 
     url(
+        r'^device_replacement/$',
+        device_replacement,
+        name='device_replacement'
+    ),
+
+    url(
         r'^append_devices_from_computer/$',
         append_devices_from_computer,
         name='append_devices_from_computer'
@@ -167,6 +173,12 @@ urlpatterns = [
         r'^attribute_autocomplete/$',
         AttributeAutocomplete.as_view(),
         name='attribute_autocomplete',
+    ),
+
+    url(
+        r'^device_autocomplete/$',
+        DeviceAutocomplete.as_view(),
+        name='device_autocomplete',
     ),
 
     # backwards compatibility
