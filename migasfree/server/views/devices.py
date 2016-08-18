@@ -114,7 +114,7 @@ def device_replacement(request):
             else:
                 messages.error(
                     request,
-                    'Is not possible the replacement. Please, deallocated all computers in [%s].'
+                    'Is not possible the replacement. Please, deallocate all computers in [%s].'
                     % ",".join(incompatibles))
                 messages.error(
                     request,
