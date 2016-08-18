@@ -97,9 +97,8 @@ def device_replacement(request):
                 Device, pk=form.cleaned_data.get('target').pk
             )
 
-            incompatibles = source.features_incompatible(target)
+            incompatibles = source.incompatible_features(target)
             if not incompatibles:
-
                 Device.replacement(source, target)
 
                 messages.success(request, _('Replacement done.'))
@@ -114,7 +113,7 @@ def device_replacement(request):
             else:
                 messages.error(
                     request,
-                    'Is not possible the replacement. Please, deallocate all computers in [%s].'
+                    _('Replacement is not possible. Please, deallocate all computers in [%s].')
                     % ",".join(incompatibles))
                 messages.error(
                     request,
