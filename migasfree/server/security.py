@@ -71,7 +71,7 @@ def gpg_get_key(name):
             os.mkdir(gpg_home, 0o700)
             # create a blank configuration file
             with open(gpg_conf, 'wb') as handle:
-                handle.write('')
+                handle.write('cert-digest-algo SHA256\ndigest-algo SHA256')
 
             os.chmod(gpg_conf, 0o600)
 
