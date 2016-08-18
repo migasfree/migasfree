@@ -15,6 +15,7 @@ from ..functions import (
     remove_empty_elements_from_dict
 )
 
+
 @python_2_unicode_compatible
 class Device(models.Model, MigasLink):
     name = models.CharField(
@@ -90,47 +91,53 @@ class Device(models.Model, MigasLink):
 
         super(Device, self).save(*args, **kwargs)
 
-    def features_incompatible(self, target):
+    def incompatible_features(self, target):
         features = []
-        for x in self.devicelocical_allocated():
+        for x in self.logical_devices_allocated():
             if target.devicelogical_set.filter(feature=x.feature).count() == 0:
                 features.append(str(x.feature))
-        for x in target.devicelocical_allocated():
+
+        for x in target.logical_devices_allocated():
             if self.devicelogical_set.filter(feature=x.feature).count() == 0:
                 features.append(str(x.feature))
+
         return features
 
     def common_features_allocated(self, target):
         features = []
-        for x in self.devicelocical_allocated():
+        for x in self.logical_devices_allocated():
             if target.devicelogical_set.filter(feature=x.feature).count() > 0:
                 features.append(x.feature)
-        for x in target.devicelocical_allocated():
+
+        for x in target.logical_devices_allocated():
             if self.devicelogical_set.filter(feature=x.feature).count() > 0:
                 if x.feature not in features:
                     features.append(x.feature)
+
         return features
 
-    def devicelocical_allocated(self):
-        """
-        Logical devices with computers allocated
-        """
+    def logical_devices_allocated(self):
         return self.devicelogical_set.all().exclude(computer=None)
 
     @staticmethod
     def replacement(source, target):
-        # Moves computers from devicelogical
+        # Moves computers from logical device
         for feature in source.common_features_allocated(target):
-            swap_m2m(source.devicelogical_set.get(feature=feature).computer_set,
-                target.devicelogical_set.get(feature=feature).computer_set)
+            swap_m2m(
+                source.devicelogical_set.get(feature=feature).computer_set,
+                target.devicelogical_set.get(feature=feature).computer_set
+            )
 
     def get_replacement_info(self):
         return remove_empty_elements_from_dict({
-            ugettext("Device"): "%s - %s" % (self.__str__(), self.location()),
-            ugettext("Logical devices"): '<br>' +
-            '<br>'.join(str(x.feature) + ' --- ' + ' '.join(c.__str__()
-            for c in x.computer_set.all())
-            for x in self.devicelogical_set.all().order_by('feature')),
+            ugettext("Device"): "%s - %s" % (self.link(), self.location()),
+            ugettext("Logical devices"): '<br />' +
+            '<br />'.join(
+                str(x.feature) + ': ' + ', '.join(
+                    c.link() for c in x.computer_set.all()
+                )
+                for x in self.devicelogical_set.all().order_by('feature')
+            ),
         })
 
     class Meta:
