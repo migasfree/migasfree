@@ -3,6 +3,7 @@
 import os
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -77,6 +78,20 @@ class Package(models.Model, MigasLink):
         )
         if not os.path.exists(_path):
             os.makedirs(_path)
+
+    def clean(self):
+        super(Package, self).clean()
+
+        if self.store.version.id != self.version.id:
+            raise ValidationError(_('Store must belong to the version'))
+
+        queryset = Package.objects.filter(
+            name=self.name
+        ).filter(
+            version__id=self.version.id
+        ).filter(~models.Q(id=self.id))
+        if queryset.exists():
+            raise ValidationError(_('Duplicated name at version'))
 
     def __str__(self):
         return self.name

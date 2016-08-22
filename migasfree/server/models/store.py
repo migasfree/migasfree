@@ -91,7 +91,7 @@ class Store(models.Model, MigasLink):
         super(Store, self).delete(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return _('%s at version %s') % (self.name, self.version.name)
 
     class Meta():
         app_label = 'server'
