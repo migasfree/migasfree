@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 08:35+0200\n"
-"PO-Revision-Date: 2016-08-18 08:36+0200\n"
+"POT-Creation-Date: 2016-08-22 08:34+0200\n"
+"PO-Revision-Date: 2016-08-22 08:35+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -90,7 +90,7 @@ msgstr "Acceso universal"
 #: migasfree/server/models/error.py:50 migasfree/server/models/fault.py:54
 #: migasfree/server/models/hw_node.py:116
 #: migasfree/server/models/migration.py:31
-#: migasfree/server/models/package.py:37
+#: migasfree/server/models/package.py:38
 #: migasfree/server/models/repository.py:55 migasfree/server/models/store.py:40
 #: migasfree/server/models/update.py:37 migasfree/server/models/version.py:134
 msgid "version"
@@ -110,7 +110,7 @@ msgstr "versión"
 #: migasfree/server/models/hw_capability.py:30
 #: migasfree/server/models/hw_configuration.py:30
 #: migasfree/server/models/hw_logical_name.py:29
-#: migasfree/server/models/package.py:31 migasfree/server/models/platform.py:26
+#: migasfree/server/models/package.py:32 migasfree/server/models/platform.py:26
 #: migasfree/server/models/pms.py:27 migasfree/server/models/property.py:42
 #: migasfree/server/models/query.py:11 migasfree/server/models/repository.py:49
 #: migasfree/server/models/schedule.py:13 migasfree/server/models/store.py:34
@@ -309,7 +309,7 @@ msgstr "automático"
 msgid "Attribute"
 msgstr "Atributo"
 
-#: migasfree/server/admin/core.py:138 migasfree/server/models/package.py:86
+#: migasfree/server/admin/core.py:138 migasfree/server/models/package.py:101
 msgid "Package/Set"
 msgstr "Paquete/Conjunto"
 
@@ -1166,21 +1166,29 @@ msgstr "Migraciones"
 msgid "Notification"
 msgstr "Notificación"
 
-#: migasfree/server/models/package.py:42
+#: migasfree/server/models/package.py:43
 msgid "store"
 msgstr "almacén"
 
-#: migasfree/server/models/package.py:66 migasfree/server/models/store.py:61
+#: migasfree/server/models/package.py:67 migasfree/server/models/store.py:61
 #: migasfree/server/views/packages.py:33 migasfree/server/views/packages.py:56
 #: migasfree/server/views/packages.py:86
 msgid "Package Information"
 msgstr "Información del paquete"
 
-#: migasfree/server/models/package.py:67 migasfree/server/models/store.py:62
+#: migasfree/server/models/package.py:68 migasfree/server/models/store.py:62
 msgid "Download"
 msgstr "Descargar"
 
-#: migasfree/server/models/package.py:87
+#: migasfree/server/models/package.py:86
+msgid "Store must belong to the version"
+msgstr "El almacén debe pertenecer a la versión"
+
+#: migasfree/server/models/package.py:94
+msgid "Duplicated name at version"
+msgstr "Nombre duplicado en la versión"
+
+#: migasfree/server/models/package.py:102
 #: migasfree/server/templates/includes/software_menu.html:14
 msgid "Packages/Sets"
 msgstr "Paquetes/Conjuntos"
@@ -1393,6 +1401,11 @@ msgstr "Registro de Estados"
 #: migasfree/server/models/status_log.py:54
 msgid "Status Logs"
 msgstr "Registros de Estados"
+
+#: migasfree/server/models/store.py:94
+#, python-format
+msgid "%s at version %s"
+msgstr "%s en la versión %s"
 
 #: migasfree/server/models/store.py:99
 #: migasfree/server/templates/includes/software_menu.html:11
