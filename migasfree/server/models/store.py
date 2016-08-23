@@ -93,7 +93,7 @@ class Store(models.Model, MigasLink):
     def __str__(self):
         return _('%s at version %s') % (self.name, self.version.name)
 
-    class Meta():
+    class Meta:
         app_label = 'server'
         verbose_name = _("Store")
         verbose_name_plural = _("Stores")
