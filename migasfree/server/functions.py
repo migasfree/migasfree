@@ -3,7 +3,7 @@
 import os
 import tempfile
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.conf import settings
 
@@ -190,3 +190,26 @@ def uuid_change_format(uuid):
         )
 
     return uuid
+
+
+def diff_month(d1, d2):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
+
+
+def to_timestamp(dt, epoch=datetime(1970, 1, 1)):
+    td = dt - epoch
+    return td.total_seconds()
+    # return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
+
+
+def to_heatmap(db_results):
+    """
+    :param db_results: [{"day": datetime, "count": int}, ...]
+    :return: {"timestamp": int, ...}
+    """
+
+    heatmap = dict()
+    for tuple in db_results:
+        heatmap[str(to_timestamp(tuple['day']))] = tuple['count']
+
+    return heatmap
