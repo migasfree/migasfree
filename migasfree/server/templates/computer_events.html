@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/cal-heatmap.css' %}" />
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Datum' %}</li>
+        <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
+        <li><a href="{% url 'admin:server_computer_change' computer.id %}">{{ computer }}</a></li>
+        <li>{% trans 'Events' %}</li>
+    </ul>
+{% endblock %}
+
+{% block content_title %}
+    <h1>{% trans 'Events' %}: {{ computer.link }}</h1>
+{% endblock content_title %}
+
+{% block content %}
+    <div id="select-data" class="btn-group" role="group">
+        <button id="display-sync" type="button" class="btn btn-default active">{% trans 'Updates' %} ({{ updates|length }})</button>
+
+        <button id="display-error" type="button" class="btn btn-default">{% trans 'Errors' %} ({{ errors|length }})</button>
+
+        <button id="display-fault" type="button" class="btn btn-default">{% trans 'Faults' %} ({{ faults|length }})</button>
+
+        <button id="display-status" type="button" class="btn btn-default">{% trans 'Status Logs' %} ({{ status|length }})</button>
+
+        <button id="display-migration" type="button" class="btn btn-default">{% trans 'Migrations' %} ({{ migrations|length }})</button>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="cal-heatmap"></div>
+
+            <div id="heatmap-controls" class="btn-group" role="group">
+                <button id="input-date" class="btn btn-default" title="{% trans 'Input date' %}">
+                    <span class="glyphicon glyphicon-step-backward"></span>
+                    <span class="sr-only">{% trans 'Input date' %}</span>
+                </button>
+
+                <button id="domain-previous" class="btn btn-default" title="{% trans 'Previous' %}">
+                    <span class="glyphicon glyphicon-triangle-left"></span>
+                    <span class="sr-only">{% trans 'Previous' %}</span>
+                </button>
+
+                <button id="domain-next" class="btn btn-default" title="{% trans 'Next' %}">
+                    <span class="glyphicon glyphicon-triangle-right"></span>
+                    <span class="sr-only">{% trans 'Next' %}</span>
+                </button>
+
+                <button id="rewind" class="btn btn-default" title="{% trans 'Today' %}">
+                    <span class="glyphicon glyphicon-step-forward"></span>
+                    <span class="sr-only">{% trans 'Today' %}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="results"></div>
+{% endblock content %}
+
+{% block extrabody %}
+    <script src="{% static 'js/d3/d3.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/cal-heatmap.min.js' %}" type="text/javascript"></script>
+    <script type="text/javascript">
+        var syncData = {{ updates|safe|escape }};
+        var errorData = {{ errors|safe|escape }};
+        var faultData = {{ faults|safe|escape }};
+        var statusData = {{ status|safe|escape }};
+        var migrationData = {{ migrations|safe|escape }};
+
+        var now = new Date();
+        var tzOffset = now.getTimezoneOffset() * 60000;  //offset in milliseconds
+        var inputDate = new Date("{{ computer.dateinput.isoformat }}");
+        var startDate = new Date();
+        startDate.setFullYear(now.getFullYear() - 1);
+
+        var computerId = {{ computer.id }};
+        var dataset = "updates";  // initial dataset
+
+        var cal = new CalHeatMap();
+        cal.init({
+            domain: "month",
+            subDomain: "day",
+            tooltip: true,
+            cellSize: 15,
+            nextSelector: "#domain-next",
+            previousSelector: "#domain-previous",
+            start: startDate,
+            minDate: inputDate,
+            maxDate: now,
+            legend: [2, 3, 4, 5],
+            onClick: function(date, nb) {
+                if (nb > 0) {
+                    var dateStart = new Date(date - tzOffset);
+                    var dateEnd = new Date(date - tzOffset);
+                    dateEnd.setDate(dateEnd.getDate() + 1);
+
+                    var dayStart = dateStart.toISOString().slice(0, 10);
+                    var dayEnd = dateEnd.toISOString().slice(0, 10);
+
+                    var url = "/api/v1/token/" + dataset + "/?computer__id=" + computerId;
+                    switch(dataset) {
+                        case "status-logs":
+                            url += "&create_at=" + dayStart + "&create_at__lt=" + dayEnd;
+                            break;
+                        default:
+                            url += "&date=" + dayStart + "&date__lt=" + dayEnd;
+                    };
+
+                    $.getJSON(url, function(data) {
+                        if (data.count > 0) {
+                            var html = "<h2>" + dayStart + ": " + nb;
+                            switch(dataset) {
+                                case "updates":
+                                    html += " {% trans 'updates' %}";
+                                    break;
+                                case "errors":
+                                    html += " {% trans 'errors' %}";
+                                    break;
+                                case "faults":
+                                    html += " {% trans 'faults' %}";
+                                    break;
+                                case "status-logs":
+                                    html += " {% trans 'status logs' %}";
+                                    break;
+                                case "migrations":
+                                    html += " {% trans 'migrations' %}";
+                                    break;
+                            };
+                            html += "</h2>";
+
+                            html += "<ul class='list-group'>";
+                            data.results.forEach(function(item) {
+                                console.log(item);
+                                var formatedDate = new Date(item.date || item.created_at);
+                                formatedDate = "<strong>" + formatedDate.toLocaleTimeString() + "</strong>";
+                                html += "<li class='list-group-item'>";
+                                switch(dataset) {
+                                    case "updates":
+                                        html += formatedDate + " (" + item.version.name + "): " + item.user.fullname;
+                                        break;
+                                    case "errors":
+                                        html += formatedDate + " (" + item.version.name + "): " + item.error.replace(new RegExp("\n", 'g'), "<br />");
+                                        break;
+                                    case "faults":
+                                        html += formatedDate + " (" + item.version.name + "): " + item.text.replace(new RegExp("\n", 'g'), "<br />");
+                                        break;
+                                    case "status-logs":
+                                        html += formatedDate + ": " + item.status;
+                                        break;
+                                    case "migrations":
+                                        html += formatedDate + ": " + item.version.name;
+                                        break;
+                                };
+                                html += "</li>";
+                            });
+                            html += "</ul>";
+                            $("#results *").remove();
+                            $("#results").append(html);
+                        }
+                    });
+                }
+            },
+            subDomainTextFormat: function(date, value) {
+                if (value) {
+                  output = new Date(date);
+                  return output.getDate();
+                }
+                return '';
+            },
+            subDomainDateFormat: "%Y-%m-%d",
+            subDomainTitleFormat: {filled: "{date}: {count} {name}"},
+            domainLabelFormat: "%Y-%m",
+            itemName: ["{% trans 'event' %}", "{% trans 'events' %}"],
+            data: syncData,
+            legendColors: {
+                empty: "#ededed",
+            },
+            legendTitleFormat: {
+                lower: "{% trans 'less than {min} {name}' %}",
+                inner: "{% trans 'between {down} and {up} {name}' %}",
+                upper: "{% trans 'more than {max} {name}' %}",
+            },
+            highlight: [inputDate, now],
+        });
+
+        $("#input-date").on("click", function(event) {
+            cal.jumpTo(inputDate);
+        });
+
+        $("#rewind").on("click", function(event) {
+            cal.rewind();
+        });
+
+        var activeButton = function(button) {
+            $("#select-data .btn").removeClass("active");
+            button.addClass("active");
+        }
+
+        $("#display-sync").on("click", function() {
+            cal.update(syncData);
+            cal.options.data = syncData;
+            activeButton($(this));
+            dataset = "updates";
+        });
+
+        $("#display-error").on("click", function() {
+            cal.update(errorData);
+            cal.options.data = errorData;
+            activeButton($(this));
+            dataset = "errors";
+        });
+
+        $("#display-fault").on("click", function() {
+            cal.update(faultData);
+            cal.options.data = faultData;
+            activeButton($(this));
+            dataset = "faults";
+        });
+
+        $("#display-status").on("click", function() {
+            cal.update(statusData);
+            cal.options.data = statusData;
+            activeButton($(this));
+            dataset = "status-logs";
+        });
+
+        $("#display-migration").on("click", function() {
+            cal.update(migrationData);
+            cal.options.data = migrationData;
+            activeButton($(this));
+            dataset = "migrations";
+        });
+    </script>
+{% endblock extrabody %}
