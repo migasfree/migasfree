@@ -305,3 +305,18 @@ class LogicalSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DeviceLogical
         fields = '__all__'
+
+
+class UpdateSerializer(serializers.ModelSerializer):
+    version = VersionInfoSerializer(many=False, read_only=True)
+    user = UserSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.Update
+        fields = '__all__'
+
+
+class StatusLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.StatusLog
+        fields = '__all__'
