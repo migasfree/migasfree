@@ -13,14 +13,15 @@ from .models import (
     Store, Property, Version, Attribute,
     Package, Repository, Error, FaultDef,
     Fault, Notification, Migration,
-    HwNode, Checking,
+    HwNode, Checking, Update, StatusLog,
 )
 
 
 class ProductiveFilterSpec(ChoicesFieldListFilter):
     def __init__(self, field, request, params, model, model_admin, field_path):
-        super(ProductiveFilterSpec, self).__init__(field, request, params,
-            model, model_admin, field_path)
+        super(ProductiveFilterSpec, self).__init__(
+            field, request, params, model, model_admin, field_path
+        )
         self.lookup_kwarg = '%s__in' % field_path
         self.lookup_val = request.GET.get(self.lookup_kwarg)
         self.title = _('Status')
@@ -135,6 +136,7 @@ class ComputerFilter(filters.FilterSet):
 
 class ErrorFilter(filters.FilterSet):
     date = django_filters.DateFilter(name='date', lookup_type='gte')
+    date__lt = django_filters.DateFilter(name='date', lookup_expr='date__lt')
     platform = django_filters.NumberFilter(name='version__platform__id')
 
     class Meta:
@@ -149,7 +151,8 @@ class FaultDefinitionFilter(filters.FilterSet):
 
 
 class FaultFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    date = django_filters.DateFilter(name='date', lookup_type='gte')
+    date__lt = django_filters.DateFilter(name='date', lookup_expr='date__lt')
 
     class Meta:
         model = Fault
@@ -159,7 +162,8 @@ class FaultFilter(filters.FilterSet):
 
 
 class MigrationFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    date = django_filters.DateFilter(name='date', lookup_type='gte')
+    date__lt = django_filters.DateFilter(name='date', lookup_expr='date__lt')
 
     class Meta:
         model = Migration
@@ -178,7 +182,7 @@ class NodeFilter(filters.FilterSet):
 
 
 class NotificationFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    date = django_filters.DateFilter(name='date', lookup_type='gte')
 
     class Meta:
         model = Notification
@@ -213,10 +217,28 @@ class RepositoryFilter(filters.FilterSet):
         fields = ['version__id', 'active', 'schedule__id']
 
 
+class StatusLogFilter(filters.FilterSet):
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
+
+    class Meta:
+        model = StatusLog
+        fields = ['computer__id']
+
+
 class StoreFilter(filters.FilterSet):
     class Meta:
         model = Store
         fields = ['version__id']
+
+
+class UpdateFilter(filters.FilterSet):
+    date = django_filters.DateFilter(name='date', lookup_type='gte')
+    date__lt = django_filters.DateFilter(name='date', lookup_expr='date__lt')
+
+    class Meta:
+        model = Update
+        fields = ['version__id', 'computer__id']
 
 
 class VersionFilter(filters.FilterSet):
