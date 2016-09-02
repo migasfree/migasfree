@@ -115,6 +115,15 @@ class MigasLink(object):
             except:
                 pass
 
+        if self._meta.model_name == 'computer':
+            related_data.append({
+                'url': reverse('computer_events', args=(self.id,)),
+                'text': '%s [%s]' % (
+                    ugettext('Events'),
+                    ugettext(self._meta.model_name)
+                )
+            })
+
         return render_to_string(
             'includes/migas_link.html',
             {
