@@ -13,7 +13,7 @@ from ..filters import (
     VersionFilter, AttributeFilter, PackageFilter,
     RepositoryFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
-    NodeFilter, CheckingFilter,
+    NodeFilter, CheckingFilter, UpdateFilter, StatusLogFilter,
 )
 # from ..permissions import PublicPermission, IsAdminOrIsSelf
 
@@ -294,6 +294,17 @@ class ScheduleViewSet(
     serializer_class = serializers.ScheduleSerializer
 
 
+class StatusLogViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
+    queryset = models.StatusLog.objects.all()
+    serializer_class = serializers.StatusLogSerializer
+    filter_class = StatusLogFilter
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    ordering_fields = '__all__'
+    ordering = ('-created_at',)
+
+
 class StoreViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
@@ -301,6 +312,17 @@ class StoreViewSet(
     serializer_class = serializers.StoreSerializer
     filter_class = StoreFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+
+
+class UpdateViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
+    queryset = models.Update.objects.all()
+    serializer_class = serializers.UpdateSerializer
+    filter_class = UpdateFilter
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    ordering_fields = '__all__'
+    ordering = ('-date',)
 
 
 class UserViewSet(
