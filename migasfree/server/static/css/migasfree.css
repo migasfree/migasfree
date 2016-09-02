@@ -195,3 +195,11 @@ span[data-value] {
 .change-list .filtered .results {
     margin-right: 0 !important;
 }
+
+.subdomain-text {
+    fill: #000 !important;
+}
+
+#select-data, #heatmap-controls {
+    margin: 20px 0 10px;
+}
