@@ -22,7 +22,8 @@ from .login import login
 from .computer import (
     ComputerDelete,
     computer_delete_selected,
-    computer_replacement
+    computer_replacement,
+    computer_events,
 )
 from .version import VersionDelete
 from .platform import PlatformDelete, platform_delete_selected
@@ -35,5 +36,5 @@ from .token import (
     RepositoryViewSet, ErrorViewSet, FaultDefinitionViewSet,
     FaultViewSet, NotificationViewSet, MigrationViewSet,
     HardwareComputerViewSet, HardwareViewSet, CheckingViewSet,
-    UserViewSet,
+    UserViewSet, UpdateViewSet, StatusLogViewSet,
 )

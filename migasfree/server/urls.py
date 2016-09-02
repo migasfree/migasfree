@@ -152,6 +152,12 @@ urlpatterns = [
     ),
 
     url(
+        r'^computer/(?P<pk>\d+)/events/$',
+        computer_events,
+        name='computer_events',
+    ),
+
+    url(
         r'^device_replacement/$',
         device_replacement,
         name='device_replacement'

@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
@@ -11,9 +13,9 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from ..forms import ComputerReplacementForm
-from ..models import Computer
+from ..models import Computer, Update, Error, Fault, StatusLog, Migration
 from ..mixins import LoginRequiredMixin
-from ..functions import d2s
+from ..functions import d2s, to_heatmap
 
 
 class ComputerDelete(LoginRequiredMixin, DeleteView):
@@ -81,5 +83,41 @@ def computer_replacement(request):
         {
             'title': _('Computers Replacement'),
             'form': form
+        }
+    )
+
+
+@login_required
+def computer_events(request, pk):
+    computer = get_object_or_404(Computer, pk=pk)
+    now = datetime.now()
+
+    updates = to_heatmap(
+        Update.by_day(computer.pk, computer.dateinput, now)
+    )
+    errors = to_heatmap(
+        Error.by_day(computer.pk, computer.dateinput, now)
+    )
+    faults = to_heatmap(
+        Fault.by_day(computer.pk, computer.dateinput, now)
+    )
+    status = to_heatmap(
+        StatusLog.by_day(computer.pk, computer.dateinput, now)
+    )
+    migrations = to_heatmap(
+        Migration.by_day(computer.pk, computer.dateinput, now)
+    )
+
+    return render(
+        request,
+        'computer_events.html',
+        {
+            'title': '{}: {}'.format(_('Events'), computer.__str__()),
+            'computer': computer,
+            'updates': updates,
+            'errors': errors,
+            'faults': faults,
+            'status': status,
+            'migrations': migrations,
         }
     )
