@@ -1,6 +1,7 @@
 # -*- coding: utf-8 *-*
 
 from django.db import models
+from django.db.models.aggregates import Count
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
@@ -38,6 +39,15 @@ class StatusLog(models.Model):
     )
 
     objects = StatusLogManager()
+
+    @staticmethod
+    def by_day(computer_id, start_date, end_date):
+        return StatusLog.objects.filter(
+            computer__id=computer_id,
+            created_at__range=(start_date, end_date)
+        ).extra(
+            {"day": "date_trunc('day', created_at)"}
+        ).values("day").annotate(count=Count("id")).order_by('-day')
 
     def __str__(self):
         return '%s (%s)' % (self.computer, self.status)

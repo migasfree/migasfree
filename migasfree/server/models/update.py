@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models.aggregates import Count
 from django.utils import timezone, dateformat
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -50,6 +51,15 @@ class Update(models.Model, MigasLink):
 
         self.computer.datelastupdate = self.date
         self.computer.save()
+
+    @staticmethod
+    def by_day(computer_id, start_date, end_date):
+        return Update.objects.filter(
+            computer__id=computer_id,
+            date__range=(start_date, end_date)
+        ).extra(
+            {"day": "date_trunc('day', date)"}
+        ).values("day").annotate(count=Count("id")).order_by('-day')
 
     def __str__(self):
         return '%s (%s)' % (self.computer, self.date)
