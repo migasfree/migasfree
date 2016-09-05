@@ -117,6 +117,8 @@ def hourly_updated(request):
         x_label_rotation=45,
         style=BAR_STYLE,
         js=[JS_FILE],
+        width=800,
+        height=400,
     )
     line_chart.x_labels = [row[1] for row in updates_time_range['x_axis']]
     line_chart.add(_('Computers'), [row[1] for row in updates_time_range['data']])
@@ -150,6 +152,8 @@ def daily_updated(request):
         x_label_rotation=45,
         style=BAR_STYLE,
         js=[JS_FILE],
+        width=800,
+        height=400,
     )
     line_chart.x_labels = [row[1] for row in updates_time_range['x_axis']]
     line_chart.add(_('Computers'), [row[1] for row in updates_time_range['data']])
@@ -190,6 +194,8 @@ def monthly_updated(request):
         x_label_rotation=45,
         style=DEFAULT_STYLE,
         js=[JS_FILE],
+        width=800,
+        height=400,
     )
 
     labels = {
@@ -280,6 +286,8 @@ def delay_schedule(request):
         legend_at_bottom=True,
         style=DEFAULT_STYLE,
         js=[JS_FILE],
+        width=800,
+        height=400,
     )
 
     maximum_delay = 0
@@ -349,6 +357,8 @@ def version_computer(request):
         style=DEFAULT_STYLE,
         js=[JS_FILE],
         inner_radius=.4,
+        width=800,
+        height=400,
     )
     total = Computer.productives.count()
 
