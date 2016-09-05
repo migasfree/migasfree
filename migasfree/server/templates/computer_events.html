@@ -20,15 +20,15 @@
 
 {% block content %}
     <div id="select-data" class="btn-group" role="group">
-        <button id="display-sync" type="button" class="btn btn-default active">{% trans 'Updates' %} ({{ updates|length }})</button>
+        <button id="display-sync" type="button" class="btn btn-default active">{% trans 'Updates' %} ({{ updates_count }})</button>
 
-        <button id="display-error" type="button" class="btn btn-default">{% trans 'Errors' %} ({{ errors|length }})</button>
+        <button id="display-error" type="button" class="btn btn-default">{% trans 'Errors' %} ({{ errors_count }})</button>
 
-        <button id="display-fault" type="button" class="btn btn-default">{% trans 'Faults' %} ({{ faults|length }})</button>
+        <button id="display-fault" type="button" class="btn btn-default">{% trans 'Faults' %} ({{ faults_count }})</button>
 
-        <button id="display-status" type="button" class="btn btn-default">{% trans 'Status Logs' %} ({{ status|length }})</button>
+        <button id="display-status" type="button" class="btn btn-default">{% trans 'Status Logs' %} ({{ status_count }})</button>
 
-        <button id="display-migration" type="button" class="btn btn-default">{% trans 'Migrations' %} ({{ migrations|length }})</button>
+        <button id="display-migration" type="button" class="btn btn-default">{% trans 'Migrations' %} ({{ migrations_count }})</button>
     </div>
 
     <div class="panel panel-default">
@@ -76,7 +76,7 @@
         var tzOffset = now.getTimezoneOffset() * 60000;  //offset in milliseconds
         var inputDate = new Date("{{ computer.dateinput.isoformat }}");
         var startDate = new Date();
-        startDate.setFullYear(now.getFullYear() - 1);
+        startDate.setMonth(now.getMonth() - 11);
 
         var computerId = {{ computer.id }};
         var dataset = "updates";  // initial dataset
@@ -116,19 +116,19 @@
                             var html = "<h2>" + dayStart + ": " + nb;
                             switch(dataset) {
                                 case "updates":
-                                    html += " {% trans 'updates' %}";
+                                    html += (nb > 1 ? " {% trans 'updates' %}" : " {% trans 'update' %}");
                                     break;
                                 case "errors":
-                                    html += " {% trans 'errors' %}";
+                                    html += (nb > 1 ? " {% trans 'errors' %}" : " {% trans 'error' %}");
                                     break;
                                 case "faults":
-                                    html += " {% trans 'faults' %}";
+                                    html += (nb > 1 ? " {% trans 'faults' %}" : " {% trans 'fault' %}");
                                     break;
                                 case "status-logs":
-                                    html += " {% trans 'status logs' %}";
+                                    html += (nb > 1 ? " {% trans 'status logs' %}" : " {% trans 'status log' %}");
                                     break;
                                 case "migrations":
-                                    html += " {% trans 'migrations' %}";
+                                    html += (nb > 1 ? " {% trans 'migrations' %}" : " {% trans 'migration' %}");
                                     break;
                             };
                             html += "</h2>";
