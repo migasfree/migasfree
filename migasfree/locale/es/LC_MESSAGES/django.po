@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-02 13:56+0200\n"
-"PO-Revision-Date: 2016-09-02 13:58+0200\n"
+"POT-Creation-Date: 2016-09-05 08:30+0200\n"
+"PO-Revision-Date: 2016-09-05 08:31+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -701,7 +701,7 @@ msgstr "Comprobaciones"
 #: migasfree/server/models/common.py:122
 #: migasfree/server/templates/computer_events.html:13
 #: migasfree/server/templates/computer_events.html:18
-#: migasfree/server/views/computer.py:115
+#: migasfree/server/views/computer.py:124
 msgid "Events"
 msgstr "Sucesos"
 
@@ -996,6 +996,7 @@ msgid "date"
 msgstr "fecha"
 
 #: migasfree/server/models/error.py:39 migasfree/server/models/hw_node.py:254
+#: migasfree/server/templates/computer_events.html:122
 msgid "error"
 msgstr "error"
 
@@ -1766,6 +1767,10 @@ msgstr "Hoy"
 msgid "updates"
 msgstr "actualizaciones"
 
+#: migasfree/server/templates/computer_events.html:119
+msgid "update"
+msgstr "actualización"
+
 #: migasfree/server/templates/computer_events.html:122
 msgid "errors"
 msgstr "errores"
@@ -1774,13 +1779,25 @@ msgstr "errores"
 msgid "faults"
 msgstr "fallas"
 
+#: migasfree/server/templates/computer_events.html:125
+msgid "fault"
+msgstr "falla"
+
 #: migasfree/server/templates/computer_events.html:128
 msgid "status logs"
 msgstr "registros de estados"
 
+#: migasfree/server/templates/computer_events.html:128
+msgid "status log"
+msgstr "registro de estados"
+
 #: migasfree/server/templates/computer_events.html:131
 msgid "migrations"
 msgstr "migraciones"
+
+#: migasfree/server/templates/computer_events.html:131
+msgid "migration"
+msgstr "migración"
 
 #: migasfree/server/templates/computer_events.html:178
 msgid "event"
