@@ -8,7 +8,7 @@ six==1.10.0
 docutils==0.12
 django-admin-bootstrapped==2.5.7
 django-bootstrap3==6.2.2
-django-import-export==0.4.5
+django-import-export==0.4.2
 djangorestframework==3.4.0
 django-filter==0.13.0
 djangorestframework-filters==0.8.0
