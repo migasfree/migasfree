@@ -95,18 +95,27 @@ def computer_events(request, pk):
     updates = to_heatmap(
         Update.by_day(computer.pk, computer.dateinput, now)
     )
+    updates_count = sum(updates.values())
+
     errors = to_heatmap(
         Error.by_day(computer.pk, computer.dateinput, now)
     )
+    errors_count = sum(errors.values())
+
     faults = to_heatmap(
         Fault.by_day(computer.pk, computer.dateinput, now)
     )
+    faults_count = sum(faults.values())
+
     status = to_heatmap(
         StatusLog.by_day(computer.pk, computer.dateinput, now)
     )
+    status_count = sum(status.values())
+
     migrations = to_heatmap(
         Migration.by_day(computer.pk, computer.dateinput, now)
     )
+    migrations_count = sum(migrations.values())
 
     return render(
         request,
@@ -115,9 +124,14 @@ def computer_events(request, pk):
             'title': '{}: {}'.format(_('Events'), computer.__str__()),
             'computer': computer,
             'updates': updates,
+            'updates_count': updates_count,
             'errors': errors,
+            'errors_count': errors_count,
             'faults': faults,
+            'faults_count': faults_count,
             'status': status,
+            'status_count': status_count,
             'migrations': migrations,
+            'migrations_count': migrations_count,
         }
     )
