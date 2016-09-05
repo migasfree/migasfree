@@ -398,7 +398,7 @@ def version_computer(request):
         request,
         'pie.html',
         {
-            'title': _("Productives Computers / Version"),
+            'title': _("Productive Computers / Version"),
             'total': total,
             'chart': pie.render_data_uri(),
         }
