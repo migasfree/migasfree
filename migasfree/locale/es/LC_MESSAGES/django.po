@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-05 08:30+0200\n"
-"PO-Revision-Date: 2016-09-05 08:31+0200\n"
+"POT-Creation-Date: 2016-09-06 08:48+0200\n"
+"PO-Revision-Date: 2016-09-06 08:48+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -583,7 +583,7 @@ msgstr "Destino"
 #: migasfree/server/templates/computer_hardware_extract.html:7
 #: migasfree/server/templates/computer_hardware_resume.html:7
 #: migasfree/server/templates/includes/mining_menu.html:12
-#: migasfree/server/views/stats.py:122 migasfree/server/views/stats.py:155
+#: migasfree/server/views/stats.py:142 migasfree/server/views/stats.py:177
 msgid "Computers"
 msgstr "Ordenadores"
 
@@ -1977,27 +1977,26 @@ msgid "Packages information"
 msgstr "Información de paquetes"
 
 #: migasfree/server/templates/includes/stats_menu.html:4
-#: migasfree/server/views/stats.py:128
+#: migasfree/server/views/stats.py:148
 msgid "Updated Computers / Hour"
 msgstr "Ordenadores actualizados/hora"
 
 #: migasfree/server/templates/includes/stats_menu.html:5
-#: migasfree/server/views/stats.py:161
+#: migasfree/server/views/stats.py:183
 msgid "Updated Computers / Day"
 msgstr "Ordenadores actualizados/día"
 
 #: migasfree/server/templates/includes/stats_menu.html:6
-#: migasfree/server/views/stats.py:253
+#: migasfree/server/views/stats.py:296
 msgid "Updated Computers / Month"
 msgstr "Ordenadores actualizados/mes"
 
 #: migasfree/server/templates/includes/stats_menu.html:7
-#: migasfree/server/views/stats.py:262
+#: migasfree/server/views/stats.py:305
 msgid "Provided Computers / Delay"
 msgstr "Ordenadores previstos/demora"
 
 #: migasfree/server/templates/includes/stats_menu.html:8
-#: migasfree/server/views/stats.py:391
 msgid "Productives Computers / Version"
 msgstr "Ordenadores Productivos / Versión"
 
@@ -2136,7 +2135,7 @@ msgstr ""
 msgid "Credentials not valid"
 msgstr "Los credenciales no son válidos"
 
-#: migasfree/server/views/packages.py:34 migasfree/server/views/stats.py:271
+#: migasfree/server/views/packages.py:34 migasfree/server/views/stats.py:314
 msgid "Choose a version before continue"
 msgstr "Selecciona una versión antes de continuar"
 
@@ -2170,23 +2169,27 @@ msgstr "Mensajes de ordenadores"
 msgid "Server Messages"
 msgstr "Mensajes del servidor"
 
-#: migasfree/server/views/stats.py:115 migasfree/server/views/stats.py:148
-#: migasfree/server/views/stats.py:189 migasfree/server/views/stats.py:278
+#: migasfree/server/views/stats.py:133 migasfree/server/views/stats.py:168
+#: migasfree/server/views/stats.py:211 migasfree/server/views/stats.py:321
 msgid "There are no updates"
 msgstr "No hay actualizaciones"
 
-#: migasfree/server/views/stats.py:196
+#: migasfree/server/views/stats.py:220
 msgid "Totals"
 msgstr "Totales"
 
-#: migasfree/server/views/stats.py:330
+#: migasfree/server/views/stats.py:375
 #, python-format
 msgid "%d days"
 msgstr "%d días"
 
-#: migasfree/server/views/stats.py:348
+#: migasfree/server/views/stats.py:393
 msgid "There are no computers"
 msgstr "No hay ordenadores"
+
+#: migasfree/server/views/stats.py:438
+msgid "Productive Computers / Version"
+msgstr "Ordenadores Productivos/Versión"
 
 #: migasfree/server/views/token.py:62
 #, python-format
