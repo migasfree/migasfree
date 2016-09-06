@@ -44,7 +44,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     )
     list_per_page = 25
     ordering = ('name',)
-    list_filter = ('version', ('status', ProductiveFilterSpec))
+    list_filter = ('version', ('status', ProductiveFilterSpec), 'machine')
     search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
     list_select_related = False
 
