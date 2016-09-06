@@ -202,14 +202,15 @@ def to_timestamp(dt, epoch=datetime(1970, 1, 1)):
     # return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
 
-def to_heatmap(db_results):
+def to_heatmap(results, range_name='day'):
     """
     :param db_results: [{"day": datetime, "count": int}, ...]
+    :param range_name
     :return: {"timestamp": int, ...}
     """
 
     heatmap = dict()
-    for tuple in db_results:
-        heatmap[str(to_timestamp(tuple['day']))] = tuple['count']
+    for item in results:
+        heatmap[str(to_timestamp(item[range_name]))] = item['count']
 
     return heatmap
