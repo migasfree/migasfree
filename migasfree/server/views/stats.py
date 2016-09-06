@@ -4,7 +4,7 @@ import os
 import pygal
 
 from pygal.style import Style
-from datetime import timedelta, datetime, date
+from datetime import timedelta, datetime, date, time
 from dateutil.relativedelta import *
 
 from django.conf import settings
@@ -14,7 +14,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.db.models import Max, Count, Q
 
-from migasfree.server.models import (
+from ..models import (
     Update,
     Platform,
     Computer,
@@ -23,6 +23,7 @@ from migasfree.server.models import (
     Login,
     UserProfile,
 )
+from ..functions import to_heatmap, to_timestamp
 
 JS_FILE = 'file://' + os.path.join(
     settings.MIGASFREE_APP_DIR,
@@ -40,76 +41,60 @@ DEFAULT_STYLE = Style(
     font_family='Average Sans',
     background='transparent',
 )
+WIDTH = 800
+HEIGHT = 400
+LABEL_ROTATION = 45
+
+HOURLY_RANGE = 3  # days
+DAILY_RANGE = 35  # days
+MONTHLY_RANGE = 18  # months
 
 
-def get_updates_time_range(
-    begin_date, end_date, delta,
-    compare_timeformat, xaxis_timeformat,
-    by_platform=0
-):
-    data = []
-    x_axis = []
+def get_updates_time_range(start_date, end_date, platform=0, range_name='month'):
+    updates = Update.objects.filter(
+        date__range=(start_date, end_date)
+    ).extra(
+        {range_name: "date_trunc('" + range_name + "', date)"}
+    ).values(range_name).annotate(
+        count=Count("computer_id", distinct=True)
+    ).order_by('-' + range_name)
 
-    if by_platform == 0:
-        updates = Update.objects.filter(
-            date__gte=begin_date,
-            date__lt=end_date
-        ).values('date', 'computer').order_by('date')
-    else:
-        updates = Update.objects.filter(
-            version__platform=by_platform
-        ).filter(
-            date__gte=begin_date,
-            date__lt=end_date
-        ).values('date', 'computer').order_by('date')
+    if platform:
+        updates = updates.filter(version__platform=platform)
 
-    if len(updates):
-        next_date = updates[0]['date']
-    else:
-        next_date = begin_date
+    return updates
 
-    distinct_computers = []
-    step = 0
-    count = 0
-    for update in updates:
-        if update['date'].strftime(compare_timeformat) == \
-                next_date.strftime(compare_timeformat):
-            if update['computer'] not in distinct_computers:
-                count += 1
-                distinct_computers.append(update['computer'])
-        else:
-            data.append([step, count])
-            x_axis.append([step, next_date.strftime(xaxis_timeformat)])
 
-            # reset counters
-            step += 1
-            next_date += delta
-            distinct_computers = []
-            if update['date'].strftime(compare_timeformat) == \
-                    next_date.strftime(compare_timeformat):
-                count = 1
-                distinct_computers.append(update['computer'])
-            else:
-                count = 0
-
-    # append last value
-    data.append([step, count])
-    x_axis.append([step, next_date.strftime(xaxis_timeformat)])
-
-    return {'data': data, 'x_axis': x_axis}
+def datetime_iterator(from_date=None, to_date=None, delta=timedelta(minutes=1)):
+    # from https://www.ianlewis.org/en/python-date-range-iterator
+    from_date = from_date or datetime.now()
+    while to_date is None or from_date <= to_date:
+        yield from_date
+        from_date = from_date + delta
 
 
 @login_required
 def hourly_updated(request):
     delta = timedelta(hours=1)
-    end_date = datetime.now() + delta
-    begin_date = end_date - timedelta(days=3)
+    now = datetime.now()
+    end_date = datetime(now.year, now.month, now.day, now.hour)
+    begin_date = end_date - timedelta(days=HOURLY_RANGE)
+    range_name = 'hour'
 
-    updates_time_range = get_updates_time_range(
-        begin_date, end_date, delta,
-        compare_timeformat='%Y-%m-%d %H',
-        xaxis_timeformat='%H h. %b %d'
+    updates_time_range = to_heatmap(
+        get_updates_time_range(
+            begin_date, end_date, range_name=range_name
+        ),
+        range_name
     )
+
+    # filling the gaps (zeros)
+    data = []
+    labels = []
+    for item in datetime_iterator(begin_date, end_date, delta):
+        labels.append(item.strftime('%H h. %b %d'))
+        index = str(to_timestamp(item))
+        data.append(updates_time_range[index] if index in updates_time_range else 0)
 
     line_chart = pygal.Bar(
         no_data_text=_('There are no updates'),
@@ -117,11 +102,11 @@ def hourly_updated(request):
         x_label_rotation=45,
         style=BAR_STYLE,
         js=[JS_FILE],
-        width=800,
-        height=400,
+        width=WIDTH,
+        height=HEIGHT,
     )
-    line_chart.x_labels = [row[1] for row in updates_time_range['x_axis']]
-    line_chart.add(_('Computers'), [row[1] for row in updates_time_range['data']])
+    line_chart.x_labels = labels
+    line_chart.add(_('Computers'), data)
 
     return render(
         request,
@@ -137,26 +122,37 @@ def hourly_updated(request):
 @login_required
 def daily_updated(request):
     delta = timedelta(days=1)
-    end_date = date.today() + delta
-    begin_date = end_date - timedelta(days=35)
+    end_date = date.today()
+    begin_date = end_date - timedelta(days=DAILY_RANGE)
+    range_name = 'day'
 
-    updates_time_range = get_updates_time_range(
-        begin_date, end_date, delta,
-        compare_timeformat='%Y-%m-%d',
-        xaxis_timeformat='%b %d'
+    updates_time_range = to_heatmap(
+        get_updates_time_range(
+            begin_date, end_date, range_name=range_name
+        ),
+        range_name
     )
+
+    # filling the gaps (zeros)
+    data = []
+    labels = []
+    for item in datetime_iterator(begin_date, end_date, delta):
+        labels.append(item.strftime('%b %d'))
+        index = str(to_timestamp(datetime.combine(item, time.min)))
+        data.append(updates_time_range[index] if index in updates_time_range else 0)
 
     line_chart = pygal.Bar(
         no_data_text=_('There are no updates'),
         show_legend=False,
-        x_label_rotation=45,
+        x_label_rotation=LABEL_ROTATION,
         style=BAR_STYLE,
         js=[JS_FILE],
-        width=800,
-        height=400,
+        width=WIDTH,
+        height=HEIGHT,
     )
-    line_chart.x_labels = [row[1] for row in updates_time_range['x_axis']]
-    line_chart.add(_('Computers'), [row[1] for row in updates_time_range['data']])
+
+    line_chart.x_labels = labels
+    line_chart.add(_('Computers'), data)
 
     return render(
         request,
@@ -178,24 +174,15 @@ def month_year_iter(start_month, start_year, end_month, end_year):
         yield y, m + 1
 
 
-# http://stackoverflow.com/questions/2170900/get-first-list-index-containing-sub-string-in-python
-def index_containing_substring(the_list, substring):
-    for i, s in enumerate(the_list):
-        if substring in s:
-            return i
-
-    return -1
-
-
 @login_required
 def monthly_updated(request):
     line_chart = pygal.Line(
         no_data_text=_('There are no updates'),
-        x_label_rotation=45,
+        x_label_rotation=LABEL_ROTATION,
         style=DEFAULT_STYLE,
         js=[JS_FILE],
-        width=800,
-        height=400,
+        width=WIDTH,
+        height=HEIGHT,
     )
 
     labels = {
@@ -203,54 +190,47 @@ def monthly_updated(request):
     }
     data = {}
     new_data = {}
-    x_axis = {}
     total = []
+    range_name = 'month'
 
     delta = relativedelta(months=+1)
     end_date = date.today() + delta
-    begin_date = end_date - relativedelta(months=+18)
+    begin_date = end_date - relativedelta(months=+MONTHLY_RANGE)
 
     platforms = Platform.objects.only("id", "name")
     for platform in platforms:
         new_data[platform.id] = []
         labels[platform.id] = platform.name
 
-        updates_time_range = get_updates_time_range(
-            begin_date, end_date, delta,
-            compare_timeformat='%Y-%m',
-            xaxis_timeformat='%Y-%m',
-            by_platform=platform.id
+        data[platform.id] = to_heatmap(
+            get_updates_time_range(
+                begin_date, end_date, platform.id, range_name
+            ),
+            range_name
         )
-        data[platform.id] = updates_time_range['data']
-        x_axis[platform.id] = updates_time_range['x_axis']
 
     # shuffle data series
-    i = 0
     x_axe = []
     for monthly in month_year_iter(
         begin_date.month, begin_date.year,
         end_date.month, end_date.year
     ):
         key = '%d-%02d' % (monthly[0], monthly[1])
-        x_axe.append([i, key])
+        x_axe.append(key)
         total_month = 0
         for serie in data:
-            index = index_containing_substring(x_axis[serie], key)
-            if index >= 0:
-                new_data[serie].append([i, data[serie][index][1]])
-            else:
-                new_data[serie].append([i, 0])
+            index = str(to_timestamp(datetime(monthly[0], monthly[1], 1)))
+            new_data[serie].append(data[serie][index] if index in data[serie] else 0)
 
-            total_month += new_data[serie][i][1]
+            total_month += new_data[serie][-1]
 
-        total.append([i, total_month])
-        i += 1
+        total.append(total_month)
 
-    line_chart.x_labels = [row[1] for row in x_axe]
+    line_chart.x_labels = x_axe
 
-    line_chart.add(labels['total'], [row[1] for row in total])
+    line_chart.add(labels['total'], total)
     for item in new_data:
-        line_chart.add(labels[item], [row[1] for row in new_data[item]])
+        line_chart.add(labels[item], new_data[item])
 
     return render(
         request,
@@ -282,12 +262,12 @@ def delay_schedule(request):
 
     line_chart = pygal.Line(
         no_data_text=_('There are no updates'),
-        x_label_rotation=45,
+        x_label_rotation=LABEL_ROTATION,
         legend_at_bottom=True,
         style=DEFAULT_STYLE,
         js=[JS_FILE],
-        width=800,
-        height=400,
+        width=WIDTH,
+        height=HEIGHT,
     )
 
     maximum_delay = 0
@@ -333,11 +313,11 @@ def delay_schedule(request):
         maximum_delay = max(maximum_delay, d)
         line_chart.add(sched.name, [row[1] for row in line])
 
-    x_axis = []
+    labels = []
     for i in range(0, maximum_delay + 1):
-        x_axis.append([i, _('%d days') % i])
+        labels.append(_('%d days') % i)
 
-    line_chart.x_labels = [row[1] for row in x_axis]
+    line_chart.x_labels = labels
 
     return render(
         request,
@@ -357,8 +337,8 @@ def version_computer(request):
         style=DEFAULT_STYLE,
         js=[JS_FILE],
         inner_radius=.4,
-        width=800,
-        height=400,
+        width=WIDTH,
+        height=HEIGHT,
     )
     total = Computer.productives.count()
 
