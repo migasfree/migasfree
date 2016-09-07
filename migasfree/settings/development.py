@@ -12,7 +12,6 @@ TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 TEMPLATES[0]['APP_DIRS'] = True
 LOGGING['loggers']['migasfree']['level'] = 'DEBUG'
 
-MIGASFREE_DB_DIR = os.path.dirname(MIGASFREE_PROJECT_DIR)
 MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
 
@@ -23,8 +22,12 @@ MEDIA_ROOT = MIGASFREE_REPO_DIR
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(MIGASFREE_DB_DIR, 'migasfree.db'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'migasfree',
+        'USER': 'migasfree',
+        'PASSWORD': 'migasfree',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
