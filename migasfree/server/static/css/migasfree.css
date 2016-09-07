@@ -203,3 +203,8 @@ span[data-value] {
 #select-data, #heatmap-controls {
     margin: 20px 0 10px;
 }
+
+#cal-heatmap {
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
