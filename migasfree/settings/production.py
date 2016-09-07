@@ -17,9 +17,8 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 ALLOWED_HOSTS = ['*']
 
-MIGASFREE_DB_DIR = '/usr/share/migasfree-server'
 MIGASFREE_REPO_DIR = '/var/migasfree/repo'
-MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_DB_DIR, 'keys')
+MIGASFREE_KEYS_DIR = '/usr/share/migasfree-server/keys'
 
 STATIC_ROOT = '/var/migasfree/static'
 MEDIA_ROOT = MIGASFREE_REPO_DIR
@@ -36,8 +35,6 @@ DATABASES = {
         'PORT': '',
     }
 }
-
-###########################################################################
 
 
 def _load_settings(path):
