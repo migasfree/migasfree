@@ -197,14 +197,14 @@ def diff_month(d1, d2):
 
 
 def to_timestamp(dt, epoch=datetime(1970, 1, 1)):
-    td = dt - epoch
+    td = dt.replace(tzinfo=None) - epoch
     return td.total_seconds()
     # return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
 
 def to_heatmap(results, range_name='day'):
     """
-    :param db_results: [{"day": datetime, "count": int}, ...]
+    :param results: [{"day": datetime, "count": int}, ...]
     :param range_name
     :return: {"timestamp": int, ...}
     """

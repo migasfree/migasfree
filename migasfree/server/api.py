@@ -506,7 +506,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         capture_hardware = True
         if o_computer.datehardware:
             capture_hardware = (datetime.now() > (
-                o_computer.datehardware + timedelta(
+                o_computer.datehardware.replace(tzinfo=None) + timedelta(
                     days=settings.MIGASFREE_HW_PERIOD
                 ))
             )
