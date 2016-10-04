@@ -83,7 +83,7 @@ def hourly_updated(request):
 
     updates_time_range = to_heatmap(
         get_updates_time_range(
-            begin_date, end_date, range_name=range_name
+            begin_date, end_date + delta, range_name=range_name
         ),
         range_name
     )
@@ -128,7 +128,7 @@ def daily_updated(request):
 
     updates_time_range = to_heatmap(
         get_updates_time_range(
-            begin_date, end_date, range_name=range_name
+            begin_date, end_date + delta, range_name=range_name
         ),
         range_name
     )
