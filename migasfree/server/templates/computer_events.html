@@ -135,7 +135,6 @@
 
                             html += "<ul class='list-group'>";
                             data.results.forEach(function(item) {
-                                console.log(item);
                                 var formatedDate = new Date(item.date || item.created_at);
                                 formatedDate = "<strong>" + formatedDate.toLocaleTimeString() + "</strong>";
                                 html += "<li class='list-group-item'>";
