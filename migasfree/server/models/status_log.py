@@ -40,9 +40,9 @@ class StatusLog(models.Model):
 
     objects = StatusLogManager()
 
-    @staticmethod
-    def by_day(computer_id, start_date, end_date):
-        return StatusLog.objects.filter(
+    @classmethod
+    def by_day(cls, computer_id, start_date, end_date):
+        return cls.objects.filter(
             computer__id=computer_id,
             created_at__range=(start_date, end_date)
         ).extra(
@@ -50,7 +50,7 @@ class StatusLog(models.Model):
         ).values("day").annotate(count=Count("id")).order_by('-day')
 
     def __str__(self):
-        return '%s (%s)' % (self.computer, self.status)
+        return '{} ({})'.format(self.computer, self.status)
 
     def computer_link(self):
         return self.computer.link()
