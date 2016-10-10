@@ -70,9 +70,9 @@ class Fault(models.Model):
     def list_users(self):
         return self.faultdef.list_users()
 
-    @staticmethod
-    def by_day(computer_id, start_date, end_date):
-        return Fault.objects.filter(
+    @classmethod
+    def by_day(cls, computer_id, start_date, end_date):
+        return cls.objects.filter(
             computer__id=computer_id,
             date__range=(start_date, end_date)
         ).extra(
@@ -80,7 +80,7 @@ class Fault(models.Model):
         ).values("day").annotate(count=Count("id")).order_by('-day')
 
     def __str__(self):
-        return '%s (%s)' % (self.computer, self.date)
+        return '{} ({})'.format(self.computer, self.date)
 
     class Meta:
         app_label = 'server'

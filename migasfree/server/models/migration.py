@@ -39,9 +39,9 @@ class Migration(models.Model):
 
     objects = MigrationManager()
 
-    @staticmethod
-    def by_day(computer_id, start_date, end_date):
-        return Migration.objects.filter(
+    @classmethod
+    def by_day(cls, computer_id, start_date, end_date):
+        return cls.objects.filter(
             computer__id=computer_id,
             date__range=(start_date, end_date)
         ).extra(
@@ -49,7 +49,7 @@ class Migration(models.Model):
         ).values("day").annotate(count=Count("id")).order_by('-day')
 
     def __str__(self):
-        return '%s (%s) %s' % (self.computer, self.date, self.version)
+        return '{} ({}) {}'.format(self.computer, self.date, self.version)
 
     def computer_link(self):
         return self.computer.link()

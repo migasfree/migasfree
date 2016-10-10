@@ -52,9 +52,9 @@ class Update(models.Model, MigasLink):
         self.computer.datelastupdate = self.date
         self.computer.save()
 
-    @staticmethod
-    def by_day(computer_id, start_date, end_date):
-        return Update.objects.filter(
+    @classmethod
+    def by_day(cls, computer_id, start_date, end_date):
+        return cls.objects.filter(
             computer__id=computer_id,
             date__range=(start_date, end_date)
         ).extra(
@@ -62,7 +62,7 @@ class Update(models.Model, MigasLink):
         ).values("day").annotate(count=Count("id")).order_by('-day')
 
     def __str__(self):
-        return '%s (%s)' % (self.computer, self.date)
+        return '{} ({})'.format(self.computer, self.date)
 
     def computer_link(self):
         return self.computer.link()
