@@ -317,13 +317,10 @@ class UpdateSerializer(serializers.ModelSerializer):
 
 
 class StatusLogSerializer(serializers.ModelSerializer):
-    def to_representation(self, obj):
-        return {
-            'id': obj.id,
-            'computer': obj.computer.id,
-            'created_at': obj.created_at,
-            'status': obj.get_status_display(),
-        }
+    status = serializers.SerializerMethodField()
+
+    def get_status(self, obj):
+        return obj.get_status_display()
 
     class Meta:
         model = models.StatusLog
