@@ -105,7 +105,7 @@
                     var url = "/api/v1/token/" + dataset + "/?computer__id=" + computerId;
                     switch(dataset) {
                         case "status-logs":
-                            url += "&create_at=" + dayStart + "&create_at__lt=" + dayEnd;
+                            url += "&created_at=" + dayStart + "&created_at__lt=" + dayEnd;
                             break;
                         default:
                             url += "&date=" + dayStart + "&date__lt=" + dayEnd;
