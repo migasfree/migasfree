@@ -45,3 +45,4 @@ class DeviceModel(models.Model, MigasLink):
         verbose_name_plural = _("Models")
         unique_together = (("devicetype", "manufacturer", "name"),)
         permissions = (("can_save_devicemodel", "Can save Device Model"),)
+        ordering = ['manufacturer', 'name']

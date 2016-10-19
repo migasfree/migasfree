@@ -61,3 +61,4 @@ class DeviceDriver(models.Model):
         verbose_name_plural = _("Drivers")
         permissions = (("can_save_devicedriver", "Can save Device Driver"),)
         unique_together = (("model", "version", "feature"),)
+        ordering = ['model', 'name']

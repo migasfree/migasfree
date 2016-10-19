@@ -25,3 +25,4 @@ class DeviceManufacturer(models.Model):
         permissions = (
             ("can_save_devicemanufacturer", "Can save Device Manufacturer"),
         )
+        ordering = ['name']
