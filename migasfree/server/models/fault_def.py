@@ -82,5 +82,6 @@ class FaultDef(models.Model, MigasLink):
     class Meta:
         app_label = 'server'
         verbose_name = _("Fault Definition")
-        verbose_name_plural = _("Faults Definition")
+        verbose_name_plural = _("Fault Definitions")
         permissions = (("can_save_faultdef", "Can save Fault Definition"),)
+        ordering = ['name']
