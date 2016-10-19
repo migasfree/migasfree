@@ -60,12 +60,13 @@ def execute_query(request, parameters, form_param=None):
             results.append(cols)
 
         filters = []
-        for item in form_param:
-            if item.name not in ['id_query', 'user_version']:
-                filters.append('{}: {}'.format(
-                    item.label,
-                    parameters['{}_display'.format(item.name)]
-                ))
+        if form_param:
+            for item in form_param:
+                if item.name not in ['id_query', 'user_version']:
+                    filters.append('{}: {}'.format(
+                        item.label,
+                        parameters['{}_display'.format(item.name)]
+                    ))
 
         return render(
             request,
