@@ -242,7 +242,6 @@ class FaultDefAdmin(MigasAdmin):
     form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
     list_display = ('my_link', 'my_active', 'list_attributes', 'list_users')
     list_filter = ('active',)
-    ordering = ('name',)
     search_fields = ('name',)
     filter_horizontal = ('attributes',)
 
