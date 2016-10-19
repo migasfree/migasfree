@@ -64,6 +64,9 @@ def hardware_extract(request, node):
 
 def load_hw(computer, node, parent, level):
     size = node.get('size')
+    if size:
+        size = int(size)
+
     n = HwNode.objects.create({
         'parent': parent,
         'computer': Computer.objects.get(id=computer.id),
