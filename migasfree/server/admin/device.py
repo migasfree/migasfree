@@ -51,8 +51,9 @@ class DeviceConnectionAdmin(admin.ModelAdmin):
 
 @admin.register(DeviceDriver)
 class DeviceDriverAdmin(MigasAdmin):
-    list_display = ('name', 'model', 'version', 'feature')
-    list_display_links = ('name',)
+    list_display = ('__str__', 'model', 'version', 'feature')
+    list_display_links = ('__str__',)
+    list_filter = ('version', 'model')
     fields = ('name', 'model', 'version', 'feature', 'install')
 
     def get_form(self, request, obj=None, **kwargs):
