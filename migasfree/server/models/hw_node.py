@@ -223,8 +223,7 @@ class HwNode(models.Model, MigasLink):
         else:
             size = HwNode.objects.filter(
                 computer=computer_id,
-                classname='memory'
-            ).filter(
+                classname='memory',
                 name__startswith='bank:'
             ).aggregate(
                 Sum('size')
