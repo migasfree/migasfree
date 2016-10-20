@@ -93,6 +93,12 @@ class Package(models.Model, MigasLink):
         if queryset.exists():
             raise ValidationError(_('Duplicated name at version'))
 
+    def repos_link(self):
+        return ' '.join([repo.link() for repo in self.repository_set.all()])
+
+    repos_link.allow_tags = True
+    repos_link.short_description = _("Repositories")
+
     def __str__(self):
         return self.name
 
