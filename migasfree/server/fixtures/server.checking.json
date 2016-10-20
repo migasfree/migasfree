@@ -4,7 +4,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "import os\nfrom migasfree.settings import MIGASFREE_REPO_DIR\nurl = '/server_messages/'\nalert = 'info'\ntarget = 'server'\nresult=0\nmsg=''\nif os.path.exists(MIGASFREE_REPO_DIR):\n    for _version in os.listdir(MIGASFREE_REPO_DIR):\n        _repos = os.path.join(MIGASFREE_REPO_DIR, _version, 'TMP/REPOSITORIES/dists')\n        if os.path.exists(_repos):\n            for _repo in os.listdir(_repos):\n                result=result+1\n                msg=msg+'%s en %s.' % (_repo, _version)\nmsg = 'Creating %s repositories:%s' % ( result, msg)",
+            "code": "import os\nfrom migasfree.settings import MIGASFREE_REPO_DIR\nurl = '#'\nalert = 'info'\ntarget = 'server'\nresult = 0\nmsg = ''\nif os.path.exists(MIGASFREE_REPO_DIR):\n    for _version in os.listdir(MIGASFREE_REPO_DIR):\n        _repos = os.path.join(MIGASFREE_REPO_DIR, _version, 'TMP/REPOSITORIES/dists')\n        if os.path.exists(_repos):\n            for _repo in os.listdir(_repos):\n                result += 1\n                msg += '%s en %s.' % (_repo, _version)\nmsg = 'Creating %s repositories: %s' % (result, msg)",
             "name": "Creating Repositories",
             "alert": true,
             "description": ""
@@ -48,8 +48,8 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Package\nfrom django.db.models import Q\nresult = Package.objects.filter(Q(repository__id__exact=None)).count()\nurl = '/query/5/'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
-            "name": "Package/Set orphan",
+            "code": "from migasfree.server.models import Package\nresult = Package.objects.filter(repository__id__exact=None).count()\nurl = '/admin/server/package/?repository__isnull=True'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
+            "name": "Orphaned Package/Set",
             "alert": true,
             "description": "Packages that have not been assigned to any repository"
         }
