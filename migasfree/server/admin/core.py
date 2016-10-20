@@ -125,8 +125,8 @@ class MessageServerAdmin(MigasAdmin):
 
 @admin.register(Package)
 class PackageAdmin(MigasAdmin):
-    list_display = ('my_link', 'store')
-    list_filter = ('store',)
+    list_display = ('my_link', 'store', 'repos_link')
+    list_filter = ('version', 'store', 'repository')
     list_per_page = 25
     list_select_related = ('version',)
     search_fields = ('name', 'store__name')
@@ -136,11 +136,6 @@ class PackageAdmin(MigasAdmin):
         return obj.link()
 
     my_link.short_description = _("Package/Set")
-
-    def get_queryset(self, request):
-        return self.model._default_manager.by_version(
-            request.user.userprofile.version_id
-        )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(PackageAdmin, self).get_form(request, obj, **kwargs)
