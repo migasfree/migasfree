@@ -40,26 +40,6 @@
         }
     },
     {
-        "pk": 5,
-        "model": "server.query",
-        "fields": {
-            "code": "from django.utils.translation import ugettext_lazy as _\nfrom migasfree.server.models import Package\nquery = Package.objects.filter(repository__id__exact=None)\nfields = ('version.name', 'store.name', 'link')\ntitles = (_('Version'), _('Store'), _('Package/Set'))\n",
-            "name": "Package/Set Orphan",
-            "parameters": "",
-            "description": "Packages/Sets that have not been assigned to any repository"
-        }
-    },
-    {
-        "pk": 6,
-        "model": "server.query",
-        "fields": {
-            "code": "from django.utils.translation import ugettext_lazy as _\nfrom migasfree.server.models import Repository\nquery = Repository.objects.select_related('version').filter(packages__name__contains=parameters['package']).distinct()\nfields = ('link', 'packages_link')\ntitles = (_('Repository'), _('Packages'))\n",
-            "name": "Repositories with a Package/Set...",
-            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm\n",
-            "description": "Repository list that have assigned a certain Package/Set"
-        }
-    },
-    {
         "pk": 7,
         "model": "server.query",
         "fields": {
