@@ -2,6 +2,7 @@
 
 import os
 import inspect
+
 from datetime import datetime, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -768,27 +769,32 @@ def upload_server_set(request, name, uuid, computer, data):
 
 def get_computer_tags(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    retdata = errmfs.ok()
-    element = []
+
+    selected_tags = []
     for tag in computer.tags.all():
-        element.append("%s-%s" % (tag.property_att.prefix, tag.value))
-    retdata["selected"] = element
+        selected_tags.append(tag.__str__())
 
-    retdata["available"] = {}
+    available_tags = {}
     for rps in Repository.objects.all().filter(
-        version=computer.version
-    ).filter(active=True):
+        version=computer.version,
+        active=True
+    ):
         for tag in rps.attributes.all().filter(
-            property_att__tag=True
-        ).filter(property_att__active=True):
-            if tag.property_att.name not in retdata["available"]:
-                retdata["available"][tag.property_att.name] = []
+            property_att__tag=True,
+            property_att__active=True
+        ):
+            if tag.property_att.name not in available_tags:
+                available_tags[tag.property_att.name] = []
 
-            value = "%s-%s" % (tag.property_att.prefix, tag.value)
-            if value not in retdata["available"][tag.property_att.name]:
-                retdata["available"][tag.property_att.name].append(value)
+            value = tag.__str__()
+            if value not in available_tags[tag.property_att.name]:
+                available_tags[tag.property_att.name].append(value)
 
-    return return_message(cmd, retdata)
+    ret = errmfs.ok()
+    ret['available'] = available_tags
+    ret['selected'] = selected_tags
+
+    return return_message(cmd, ret)
 
 
 def set_computer_tags(request, name, uuid, o_computer, data):
