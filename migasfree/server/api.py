@@ -810,12 +810,13 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         lst_tags_id = []
         for tag in tags:
             ltag = tag.split("-", 1)
-            o_attribute = Tag.objects.get(
-                property_att__prefix=ltag[0],
-                value=ltag[1]
-            )
-            lst_tags_obj.append(o_attribute)
-            lst_tags_id.append(o_attribute.id)
+            if len(ltag) > 1:
+                o_attribute = Tag.objects.get(
+                    property_att__prefix=ltag[0],
+                    value=ltag[1]
+                )
+                lst_tags_obj.append(o_attribute)
+                lst_tags_id.append(o_attribute.id)
         lst_tags_id.append(all_id)
 
         lst_computer_id = []
