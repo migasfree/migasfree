@@ -334,6 +334,7 @@ class ScheduleDelayline(admin.TabularInline):
 @admin.register(Schedule)
 class ScheduleAdmin(MigasAdmin):
     list_display = ('my_link', 'description')
+    ordering = ('name',)
     inlines = [ScheduleDelayline]
     extra = 0
 
