@@ -147,6 +147,7 @@ class Attribute(models.Model, MigasLink):
         verbose_name_plural = _("Attributes/Tags")
         unique_together = (("property_att", "value"),)
         permissions = (("can_save_attribute", "Can save Attribute"),)
+        ordering = ['property_att__prefix', 'value']
 
 
 class TagManager(AttributeManager):

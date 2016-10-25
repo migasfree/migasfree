@@ -121,6 +121,7 @@ class Version(models.Model, MigasLink):
         verbose_name = _("Version")
         verbose_name_plural = _("Versions")
         permissions = (("can_save_version", "Can save Version"),)
+        ordering = ['name']
 
 
 class UserProfile(UserSystem, MigasLink):

@@ -28,6 +28,18 @@ class Migration(migrations.Migration):
             name='faultdef',
             options={'ordering': ['name'], 'permissions': (('can_save_faultdef', 'Can save Fault Definition'),), 'verbose_name': 'Fault Definition', 'verbose_name_plural': 'Fault Definitions'},
         ),
+        migrations.AlterModelOptions(
+            name='attribute',
+            options={'ordering': ['property_att__prefix', 'value'], 'permissions': (('can_save_attribute', 'Can save Attribute'),), 'verbose_name': 'Attribute/Tag', 'verbose_name_plural': 'Attributes/Tags'},
+        ),
+        migrations.AlterModelOptions(
+            name='property',
+            options={'ordering': ['name'], 'permissions': (('can_save_property', 'Can save Property'),), 'verbose_name': 'Property/TagType', 'verbose_name_plural': 'Properties/TagTypes'},
+        ),
+        migrations.AlterModelOptions(
+            name='version',
+            options={'ordering': ['name'], 'permissions': (('can_save_version', 'Can save Version'),), 'verbose_name': 'Version', 'verbose_name_plural': 'Versions'},
+        ),
         migrations.RunSQL(
             [(
                 "UPDATE server_checking SET code=%s WHERE id=10;",

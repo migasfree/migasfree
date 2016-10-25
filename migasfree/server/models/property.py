@@ -113,6 +113,7 @@ class Property(models.Model, MigasLink):
         verbose_name = _("Property/TagType")
         verbose_name_plural = _("Properties/TagTypes")
         permissions = (("can_save_property", "Can save Property"),)
+        ordering = ['name']
 
 
 class ClientProperty(Property):
