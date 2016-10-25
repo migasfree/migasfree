@@ -348,16 +348,13 @@ class ScheduleAdmin(MigasAdmin):
 class StoreAdmin(MigasAdmin):
     list_display = ('my_link',)
     search_fields = ('name',)
+    list_filter = ('version',)
+    ordering = ('name',)
 
     def my_link(self, obj):
         return obj.link()
 
     my_link.short_description = _("Store")
-
-    def get_queryset(self, request):
-        return self.model._default_manager.by_version(
-            request.user.userprofile.version_id
-        )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(StoreAdmin, self).get_form(request, obj, **kwargs)
