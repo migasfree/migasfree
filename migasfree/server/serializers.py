@@ -12,8 +12,15 @@ class AttributeInfoSerializer(serializers.ModelSerializer):
         fields = ('id', 'value')
 
 
+class PropertyInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Property
+        fields = ('id', 'prefix')
+
+
 class AttributeSerializer(serializers.ModelSerializer):
     total_computers = serializers.SerializerMethodField()
+    property_att = PropertyInfoSerializer(many=False, read_only=True)
 
     def get_total_computers(self, obj):
         return obj.total_computers()
@@ -325,3 +332,12 @@ class StatusLogSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.StatusLog
         fields = '__all__'
+
+
+class ComputerSyncSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False, read_only=True)
+    attributes = AttributeSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Login
+        fields = ('date', 'user', 'attributes')
