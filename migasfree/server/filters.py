@@ -113,7 +113,7 @@ class UserFaultFilter(SimpleListFilter):
 class AttributeFilter(filters.FilterSet):
     class Meta:
         model = Attribute
-        fields = ['property_att']
+        fields = ['property_att__id', 'property_att__prefix', 'value']
 
 
 class CheckingFilter(filters.FilterSet):
