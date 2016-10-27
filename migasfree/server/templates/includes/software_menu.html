@@ -2,7 +2,7 @@
 
 <ul class="dropdown-menu">
     <li>
-        <a href="{% url 'admin:server_repository_changelist' %}?active__exact=1">{% trans 'Repositories' %}</a>
+        <a href="{% url 'admin:server_repository_changelist' %}?active__exact=1&version__id__exact={{ current_version.id }}">{% trans 'Repositories' %}</a>
     </li>
     <li>
         <a href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a>

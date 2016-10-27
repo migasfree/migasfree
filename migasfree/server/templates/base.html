@@ -152,19 +152,6 @@
                     </div>
 
                     <ul class="nav navbar-nav navbar-right navbar-user">
-                        {% if version_names %}
-                            <li class="dropdown version-dropdown">
-                                <a href="#" title="{% trans 'Change Version' %}" class="dropdown-toggle" data-toggle="dropdown">{{ current_version }} <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    {% for item in version_names %}
-                                        <li>
-                                            <a href="{% url 'change_version' %}?version={{ item.0 }}">{{ item.1 }}</a>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            </li>
-                        {% endif %}
-
                         {% if user.is_staff %}
                             <li class="dropdown alerts-dropdown" id="alerts">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Alerts' %}"><i class="fa fa-bell"></i> <span class="sr-only">{% trans 'Alerts' %}</span> <span class="badge">0</span></a>
@@ -174,7 +161,8 @@
                         <li class="dropdown user-dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="{% url 'admin:password_change' %}"><i class="fa fa-gear"></i> {% trans 'Password change' %}</a></li>
+                                <li><a href="{% url 'admin:password_change' %}"><i class="fa fa-key"></i> {% trans 'Password change' %}</a></li>
+                                <li><a href="{% url 'preferences' %}"><i class="fa fa-gear"></i> {% trans 'Preferences' %}</a></li>
                                 <li class="divider"></li>
                                 <li><a href="{% url 'admin:logout' %}"><i class="fa fa-power-off"></i> {% trans 'Logout' %}</a></li>
                             </ul>
