@@ -262,7 +262,7 @@ class Repository(models.Model, MigasLink):
                         lst.append(r.id)
                         break
 
-        # 3.- excluded attributtes
+        # 3.- excluded attributes
         repositories = Repository.objects.filter(
             id__in=lst
         ).filter(
@@ -277,3 +277,4 @@ class Repository(models.Model, MigasLink):
         verbose_name_plural = _("Repositories")
         unique_together = (("name", "version"),)
         permissions = (("can_save_repository", "Can save Repository"),)
+        ordering = ['version__name', 'name']
