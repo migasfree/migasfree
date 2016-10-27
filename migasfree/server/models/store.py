@@ -48,7 +48,7 @@ class Store(models.Model, MigasLink):
         if self.id:
             info_link = reverse(
                 'package_info',
-                args=('STORES/%s/' % self.name,)
+                args=('%s/STORES/%s/' % (self.version.name, self.name),)
             )
 
             download_link = '%s%s/STORES/%s/' % (

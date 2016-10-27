@@ -17,74 +17,71 @@ logger = logging.getLogger('migasfree')
 
 
 @login_required
-def info(request, package):
-    logger.debug('request:' + str(request))
+def info(request, path=None):
+    version_name = ''
+    package = ''
 
-    if request.GET.get('version'):
-        version = get_object_or_404(Version, name=request.GET.get('version'))
-    else:
-        version = get_object_or_404(UserProfile, id=request.user.id).version
-
-    if version is None:
-        return render(
-            request,
-            'info.html',
-            {
-                'title': _("Package Information"),
-                'contentpage': _('Choose a version before continue')
-            }
-        )
-
-    logger.debug('version: ' + version.name)
-
-    if package.endswith('/'):
-        package = package[:-1]  # remove trailing slash
+    if path:
+        try:
+            version_name, package = path.split('/', 1)
+        except ValueError:
+            version_name = path
 
     logger.debug('package: ' + package)
 
-    path = os.path.join(settings.MIGASFREE_REPO_DIR, version.name, package)
-    if os.path.isfile(path):
-        cmd = 'PACKAGE=%s\n' % path
-        cmd += version.pms.info
+    absolute_path = os.path.join(settings.MIGASFREE_REPO_DIR, path)
+    logger.debug('absolute path:' + absolute_path)
 
-        ret = run_in_server(cmd)["out"]
+    if os.path.isfile(absolute_path):
+        version = get_object_or_404(Version, name=version_name)
+        logger.debug('version: ' + version_name)
+
+        cmd = 'PACKAGE={}\n'.format(absolute_path)
+        cmd += version.pms.info
+        package_info = run_in_server(cmd)["out"]
 
         return render(
             request,
             'package_info.html',
             {
-                "title": '%s: %s' % (_("Package Information"), package),
-                "contentpage": ret,
+                'title': '%s: %s' % (_("Package Information"), package.split('/')[-1]),
+                'package_info': package_info,
             }
         )
 
-    logger.debug('path:' + path)
-    if os.path.isdir(path):
-        # folders navigation
-        vl_fields = []
-        if package > "/":
-            vl_fields.append(["folder", ".."])
+    if os.path.isdir(absolute_path):
+        file_selection = []
+        if path:
+            file_selection.append({
+                'icon': 'folder', 'path': path + '..', 'text': '..'
+            })
 
-        elements = os.listdir(path)
+        elements = os.listdir(absolute_path)
         elements.sort()
-        for e in elements:
-            try:
-                if os.path.isdir(os.path.join(path, e)):
-                    # relative navigation, folders always with trailing slash!!
-                    vl_fields.append(["folder", e + '/'])
-                else:
-                    vl_fields.append(["archive", e])
-            except:
-                pass
+        for item in elements:
+            icon = 'archive'
+            relative_path = os.path.join(path, item)
 
-        logger.debug('content:' + str(vl_fields))
+            if os.path.isdir(os.path.join(absolute_path, item)):
+                icon = 'folder'
+                relative_path += '/'  # navigation: folders always with trailing slash!!
+
+                if not package:  # first level of navigation
+                    if item in ['errors']:  # no navigation in several folders
+                        continue
+
+            file_selection.append({
+                'icon': icon, 'path': relative_path, 'text': item
+            })
+
+        logger.debug('content:' + str(file_selection))
 
         return render(
             request,
             'package_info.html',
             {
-                "title": '%s: %s' % (_("Package Information"), package),
-                "query": vl_fields,
+                'title': _("Package Information"),
+                'file_selection': file_selection,
             }
         )
 
@@ -93,7 +90,7 @@ def info(request, package):
         'error.html',
         {
             'description': _('Error'),
-            'contentpage': _('No package information exists')
+            'contentpage': '%s: %s' % (_('No package information exists'), package),
         }
     )
 

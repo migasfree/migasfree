@@ -10,19 +10,19 @@
 {% block bodyclass %}package-info{% endblock %}
 
 {% block content %}
-    {% if contentpage %}
+    {% if package_info %}
         <pre>
-        {{ contentpage }}
+        {{ package_info }}
         </pre>
     {% endif %}
 
-    {% if query %}
+    {% if file_selection %}
         <ul class="list-group">
-        {% for item in query %}
+        {% for item in file_selection %}
             <li class="list-group-item">
-                <a href="{{ item.1 }}"><span class="fa fa-{{ item.0 }}"></span> {{ item.1 }}</a>
+                <a href="{% url 'package_info' item.path %}"><span class="fa fa-{{ item.icon }}"></span> {{ item.text }}</a>
             </li>
         {% endfor %}
         </ul>
     {% endif %}
-{% endblock %}
+{% endblock content %}

@@ -49,11 +49,13 @@ class Package(models.Model, MigasLink):
         super(Package, self).__init__(*args, **kwargs)
 
         if self.id:
-            info_link = "%sSTORES/%s/%s/?version=%s" % (
-                reverse('package_info', args=('', )),
-                self.store.name,
-                self.name,
-                self.version.name
+            info_link = reverse(
+                'package_info',
+                args=(
+                    '%s/STORES/%s/%s' % (
+                        self.version.name, self.store.name, self.name
+                    ),
+                )
             )
 
             download_link = '%s%s/STORES/%s/%s' % (
