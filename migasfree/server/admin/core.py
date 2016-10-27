@@ -213,10 +213,9 @@ class QueryAdmin(MigasAdmin):
 @admin.register(Repository)
 class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     form = RepositoryForm
-    list_display = ('my_link', 'my_active', 'date', 'timeline')
+    list_display = ('version', 'my_link', 'my_active', 'date', 'timeline')
     list_select_related = ('schedule',)
-    list_filter = ('active',)
-    ordering = ('name',)
+    list_filter = ('active', 'version')
     search_fields = ('name', 'packages__name')
     actions = None
 
@@ -236,7 +235,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
                 'defaultexclude',
             )
         }),
-        (_('Atributtes'), {
+        (_('Attributes'), {
             'fields': ('attributes', 'excludes')
         }),
         (_('Schedule'), {
@@ -255,10 +254,12 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     my_active.allow_tags = True
     my_active.short_description = _('active')
 
+    '''
     def get_queryset(self, request):
         return self.model._default_manager.by_version(
             request.user.userprofile.version_id
         )
+    '''
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == 'packages':
