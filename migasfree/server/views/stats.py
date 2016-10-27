@@ -21,7 +21,6 @@ from ..models import (
     Schedule,
     ScheduleDelay,
     Login,
-    UserProfile,
     Version,
 )
 from ..functions import to_heatmap, to_timestamp
