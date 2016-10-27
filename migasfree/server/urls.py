@@ -70,6 +70,11 @@ urlpatterns = [
         name='chart_delay_schedule'
     ),
     url(
+        r'^chart/delay_schedule/(?P<version_name>.+)/$',
+        delay_schedule,
+        name='chart_delay_schedule'
+    ),
+    url(
         r'^chart/version_computer/$',
         version_computer,
         name='chart_version_computer'

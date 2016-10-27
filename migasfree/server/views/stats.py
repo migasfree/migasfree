@@ -10,7 +10,7 @@ from dateutil.relativedelta import *
 from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.db.models import Max, Count, Q
 
@@ -22,6 +22,7 @@ from ..models import (
     ScheduleDelay,
     Login,
     UserProfile,
+    Version,
 )
 from ..functions import to_heatmap, to_timestamp
 
@@ -244,21 +245,22 @@ def monthly_updated(request):
 
 
 @login_required
-def delay_schedule(request):
+def delay_schedule(request, version_name=None):
     title = _("Provided Computers / Delay")
-    current_version = UserProfile.objects.get(id=request.user.id).version
+    version_selection = Version.get_version_names()
 
-    if current_version is None:
+    if version_name is None:
         return render(
             request,
-            'info.html',
+            'lines.html',
             {
                 'title': title,
-                'contentpage': _('Choose a version before continue')
+                'version_selection': version_selection,
             }
         )
 
-    title += ' [%s]' % current_version.name
+    version = get_object_or_404(Version, name=version_name)
+    title += ' [%s]' % version.name
 
     line_chart = pygal.Line(
         no_data_text=_('There are no updates'),
@@ -271,14 +273,14 @@ def delay_schedule(request):
     )
 
     maximum_delay = 0
-    for sched in Schedule.objects.all():
+    for schedule in Schedule.objects.all():
         lst_attributes = []
         d = 1
         value = 0
         line = []
 
         delays = ScheduleDelay.objects.filter(
-            schedule__name=sched.name
+            schedule__name=schedule.name
         ).order_by("delay")
         for delay in delays:
             for i in range(d, delay.delay):
@@ -299,7 +301,7 @@ def delay_schedule(request):
                 ).filter(
                     ~ Q(attributes__id__in=lst_attributes) &
                     Q(attributes__id__in=lst_att_delay) &
-                    Q(computer__version=current_version.id) &
+                    Q(computer__version=version.id) &
                     Q(computer__status__in=Computer.PRODUCTIVE_STATUS)
                 ).values('computer_id').annotate(lastdate=Max('date')).count()
 
@@ -311,7 +313,7 @@ def delay_schedule(request):
                 lst_attributes.append(att.id)
 
         maximum_delay = max(maximum_delay, d)
-        line_chart.add(sched.name, [row[1] for row in line])
+        line_chart.add(schedule.name, [row[1] for row in line])
 
     labels = []
     for i in range(0, maximum_delay + 1):
@@ -324,6 +326,8 @@ def delay_schedule(request):
         'lines.html',
         {
             'title': title,
+            'version_selection': version_selection,
+            'current_version': version.name,
             'chart': line_chart.render_data_uri(),
             'tabular_data': line_chart.render_table(),
         }
