@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'Preferences' %}{% endblock %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li>
+    </ul>
+{% endblock %}
+
+{% block documentation %}{% endblock %}
+
+{% block content %}
+    <h1>{% trans 'Preferences' %}</h1>
+
+    <form action="{% url 'preferences' %}" method="post" class="form-horizontal">
+        {% csrf_token %}
+        <div class="col-md-12 form-group">
+            <fieldset>
+                {% if version_names %}
+                <div class="row">
+                    <div class="control-label col-md-3">
+                        <label class="required" for="version">{% trans 'Filter version repositories' %}:</label>
+                    </div>
+
+                    <div class="controls col-md-9">
+                        <select id="version" name="version" class="form-control form-control-inline">
+                        {% for item in version_names %}
+                            <option value="{{ item.0 }}" {% if item.0 == current_version.id %} selected="selected"{% endif %}>{{ item.1 }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% endif %}
+            </fieldset>
+
+            <div class="form-actions col-sm-offset-2 col-sm-10">
+                <button class="btn btn-primary default" type="submit">{% trans 'Save' %}</button>
+            </div>
+        </div>
+    </form>
+{% endblock content %}
