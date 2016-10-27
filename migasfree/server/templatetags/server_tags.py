@@ -25,7 +25,7 @@ def organization(parser, token):
 class TemplateVersion(template.Node):
     def render(self, context):
         try:
-            obj = UserProfile.objects.get(id=context["user"].id).version.name
+            obj = UserProfile.objects.get(id=context["user"].id).version
         except:
             obj = ""
 
