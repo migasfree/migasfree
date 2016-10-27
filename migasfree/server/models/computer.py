@@ -98,7 +98,7 @@ class Computer(models.Model, MigasLink):
         max_length=20,
         null=False,
         choices=STATUS_CHOICES,
-        default='intended'
+        default=settings.MIGASFREE_DEFAULT_COMPUTER_STATUS
     )
 
     version = models.ForeignKey(
