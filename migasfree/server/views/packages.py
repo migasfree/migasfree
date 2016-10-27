@@ -5,11 +5,9 @@ import os
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
 from django.conf import settings
 
-from ..models import Version, UserProfile
+from ..models import Version
 from ..functions import run_in_server
 
 import logging
@@ -93,19 +91,3 @@ def info(request, path=None):
             'contentpage': '%s: %s' % (_('No package information exists'), package),
         }
     )
-
-
-@login_required
-def change_version(request):
-    if request.method == 'GET':
-        version = get_object_or_404(Version, pk=request.GET.get('version'))
-
-        user_profile = UserProfile.objects.get(id=request.user.id)
-        user_profile.update_version(version)
-
-    next_page = request.META.get('HTTP_REFERER', reverse('bootstrap'))
-    if next_page.find(reverse('admin:server_repository_changelist')) > 0:
-        next_page = '%s?active__exact=1' \
-            % reverse('admin:server_repository_changelist')
-
-    return HttpResponseRedirect(next_page)
