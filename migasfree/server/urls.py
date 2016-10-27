@@ -44,12 +44,6 @@ urlpatterns = [
     url(r'^info/(.*)', info, name='package_info'),
 
     url(
-        r'^change_version/$',
-        change_version,
-        name='change_version'
-    ),
-
-    url(
         r'^chart/hourly_updated/$',
         hourly_updated,
         name='chart_hourly_updated'
@@ -119,6 +113,12 @@ urlpatterns = [
         r'^admin/server/version/(?P<pk>\d+)/delete/$',
         VersionDelete.as_view(),
         name='version_delete'
+    ),
+
+    url(
+        r'^admin/preferences/$',
+        preferences,
+        name='preferences'
     ),
 
     url(r'^api/$', api, name='api'),
