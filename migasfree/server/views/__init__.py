@@ -16,9 +16,9 @@ from .public_api import (
     get_versions, get_computer_info, computer_label,
     get_key_repositories
 )
-from .packages import change_version, info
+from .packages import info
 from .dashboard import alerts
-from .login import login
+from .login import login, preferences
 from .computer import (
     ComputerDelete,
     computer_delete_selected,
