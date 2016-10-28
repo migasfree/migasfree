@@ -106,12 +106,12 @@ def api(request):
             "{} - {} - {}".format(
                 get_client_ip(request),
                 command,
-                errmfs.error_info(errmfs.COMPUTER_UNSUBSCRIBED)
+                errmfs.error_info(errmfs.UNSUBSCRIBED_COMPUTER)
             )
         )
         ret = return_message(
             command,
-            errmfs.error(errmfs.COMPUTER_UNSUBSCRIBED)
+            errmfs.error(errmfs.UNSUBSCRIBED_COMPUTER)
         )
         return HttpResponse(
             wrap_command_result(filename_return, ret),
