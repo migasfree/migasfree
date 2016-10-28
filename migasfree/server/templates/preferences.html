@@ -14,11 +14,11 @@
 {% block content %}
     <h1>{% trans 'Preferences' %}</h1>
 
+    {% if version_names %}
     <form action="{% url 'preferences' %}" method="post" class="form-horizontal">
         {% csrf_token %}
         <div class="col-md-12 form-group">
             <fieldset>
-                {% if version_names %}
                 <div class="row">
                     <div class="control-label col-md-3">
                         <label class="required" for="version">{% trans 'Filter version repositories' %}:</label>
@@ -32,7 +32,6 @@
                         </select>
                     </div>
                 </div>
-                {% endif %}
             </fieldset>
 
             <div class="form-actions col-sm-offset-2 col-sm-10">
@@ -40,4 +39,7 @@
             </div>
         </div>
     </form>
+    {% else %}
+        <p class="alert alert-warning" role="alert">{% trans 'Before selecting a version, you must create at least one.' %}</p>
+    {% endif %}
 {% endblock content %}
