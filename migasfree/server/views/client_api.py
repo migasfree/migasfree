@@ -99,7 +99,7 @@ def api(request):
     command, uuid, name = get_msg_info(msg.name)
     computer = get_computer(name, uuid)
 
-    if computer.status == 'unsubscribed':
+    if computer and computer.status == 'unsubscribed':
         Error.objects.create(
             computer,
             computer.version,
