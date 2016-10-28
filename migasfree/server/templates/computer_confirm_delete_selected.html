@@ -13,10 +13,17 @@
 {% block content %}
     <h1 class="">{% trans 'Are you sure?' %}</h1>
 
+    <p>{% trans 'Are you sure you want to delete these computers?' %}</p>
+
+    <ul>
+        {% for item in objects %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+
     <form action="{% url 'computer_delete_selected' %}" method="post">
         {% csrf_token %}
-        <p>{% trans 'Are you sure you want to delete these computers?' %} {{ object_list }}</p>
-        <input type="hidden" name="selected" value="{{ object_list }}" />
+        <input type="hidden" name="selected" value="{{ ids }}" />
         <div class="form-actions">
             <button class="btn btn-large btn-danger" type="submit">{% trans "Yes, I'm sure" %}</button> {% trans 'or' %}
             <a href="{% url 'admin:server_computer_changelist' %}" class="btn btn-default">{% trans 'cancel' %}</a>

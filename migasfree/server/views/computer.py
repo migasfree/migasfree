@@ -4,9 +4,9 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.urlresolvers import reverse_lazy
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render, get_object_or_404
-from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import DeleteView
 from django.conf import settings
@@ -35,17 +35,20 @@ def computer_delete_selected(request):
 
     selected = request.POST.get('selected', None)
     if selected:
-        objects = selected.split(', ')
-        for item in objects:
+        computer_ids = selected.split(', ')
+        deleted = []
+        for item in computer_ids:
             try:
-                computer = Computer.objects.get(
-                    **{settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: item}
-                )
+                computer = Computer.objects.get(pk=int(item))
+                deleted.append(computer.__str__())
                 computer.delete()
-            except:
+            except ObjectDoesNotExist:
                 pass
 
-        messages.success(request, _("Computers %s deleted!") % selected)
+        messages.success(
+            request,
+            _("Computers %s, deleted!") % ', '.join([x for x in deleted])
+        )
 
     return redirect(success_url)
 

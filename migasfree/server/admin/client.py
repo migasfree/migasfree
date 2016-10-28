@@ -118,7 +118,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             request,
             'computer_confirm_delete_selected.html',
             {
-                'object_list': ', '.join([x.__str__() for x in objects])
+                'objects': [x.__str__() for x in objects],
+                'ids': ', '.join([str(x.id) for x in objects])
             }
         )
 
