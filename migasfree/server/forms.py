@@ -71,7 +71,7 @@ class RepositoryForm(forms.ModelForm):
             self.fields['version'].initial = UserProfile.objects.get(
                 pk=self.current_user.id
             ).version.id
-        except UserProfile.DoesNotExist:
+        except (UserProfile.DoesNotExist, AttributeError):
             pass
 
 
