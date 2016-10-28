@@ -20,6 +20,7 @@ COMPUTER_NOT_FOUND = 6
 DEVICE_NOT_FOUND = 7
 VERSION_NOT_FOUND = 8
 USER_DOES_NOT_HAVE_PERMISSION = 9
+COMPUTER_UNSUBSCRIBED = 10
 GENERIC = 100
 
 ERROR_INFO = {
@@ -33,6 +34,7 @@ ERROR_INFO = {
     DEVICE_NOT_FOUND: _("Device not found"),
     VERSION_NOT_FOUND: _("Version not found"),
     USER_DOES_NOT_HAVE_PERMISSION: _("User does not have permission"),
+    COMPUTER_UNSUBSCRIBED: _("Computer is unsubscribed"),
     GENERIC: _("Generic error")
 }
 

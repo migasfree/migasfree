@@ -99,6 +99,25 @@ def api(request):
     command, uuid, name = get_msg_info(msg.name)
     computer = get_computer(name, uuid)
 
+    if computer.status == 'unsubscribed':
+        Error.objects.create(
+            computer,
+            computer.version,
+            "{} - {} - {}".format(
+                get_client_ip(request),
+                command,
+                errmfs.error_info(errmfs.COMPUTER_UNSUBSCRIBED)
+            )
+        )
+        ret = return_message(
+            command,
+            errmfs.error(errmfs.COMPUTER_UNSUBSCRIBED)
+        )
+        return HttpResponse(
+            wrap_command_result(filename_return, ret),
+            content_type='text/plain'
+        )
+
     # COMPUTERS
     if command in API_VERSION:  # IF COMMAND IS BY VERSION
         if computer:
