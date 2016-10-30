@@ -37,6 +37,7 @@
         <h1 {% if has_add_permission %}class="change-list-title"{% endif %}>
             {% trans cl.opts.verbose_name_plural|capfirst %}
         </h1>
+        <h4> {{ cl.filter_description }} </h4>
     {% endif %}
 {% endblock content_title %}
 
