@@ -129,7 +129,8 @@ class MigasLink(object):
             {
                 'lnk': {
                     'url': reverse(
-                        'admin:server_%s_change' % self._meta.model_name,
+                        'admin:%s_%s_change' % (self._meta.app_label,
+                            self._meta.model_name),
                         args=(self.id,)
                     ),
                     'text': self.__str__(),

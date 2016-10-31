@@ -6,11 +6,11 @@ from django.utils.translation import ugettext_lazy as _
 
 from markdownx.models import MarkdownxField
 
-from migasfree.server.models import Version
+from migasfree.server.models import Version, MigasLink
 
 
 @python_2_unicode_compatible
-class Application(models.Model):
+class Application(models.Model, MigasLink):
     LEVELS = (
         ('U', _('User')),
         ('A', _('Admin')),

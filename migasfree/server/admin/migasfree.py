@@ -5,7 +5,7 @@ from django.utils.translation import ugettext
 from import_export.admin import ExportActionModelAdmin
 from django.contrib.admin.views.main import ChangeList
 from django.utils.translation import ugettext_lazy as _
-from django.db.models.fields import BooleanField
+from django.db.models.fields import BooleanField, IntegerField
 
 
 class MigasAdmin(ExportActionModelAdmin):
@@ -64,6 +64,11 @@ class MigasChangeList(ChangeList):
                         filters.append(u"%s:%s" % (x.title, _("No")))
                     else:
                         filters.append(u"%s:%s" % (x.title, _("Yes")))
+                elif isinstance(x.field, IntegerField):
+                    elements = []
+                    for element in x.lookup_val.split(','):
+                        elements.append(unicode(dict(x.field.choices)[int(element)]))
+                    filters.append(u"%s:%s" % (x.title, "-".join(elements)))
                 else:
                     elements = []
                     for element in x.lookup_val.split(','):
