@@ -44,6 +44,10 @@ class Migration(migrations.Migration):
             name='repository',
             options={'ordering': ['version__name', 'name'], 'permissions': (('can_save_repository', 'Can save Repository'),), 'verbose_name': 'Repository', 'verbose_name_plural': 'Repositories'},
         ),
+        migrations.AlterModelOptions(
+            name='store',
+            options={'ordering': ['name', 'version'], 'permissions': (('can_save_store', 'Can save Store'),), 'verbose_name': 'Store', 'verbose_name_plural': 'Stores'},
+        ),
         migrations.RunSQL(
             [(
                 "UPDATE server_checking SET code=%s WHERE id=10;",

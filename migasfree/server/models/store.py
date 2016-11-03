@@ -99,3 +99,4 @@ class Store(models.Model, MigasLink):
         verbose_name_plural = _("Stores")
         unique_together = (("name", "version"),)
         permissions = (("can_save_store", "Can save Store"),)
+        ordering = ['name', 'version']
