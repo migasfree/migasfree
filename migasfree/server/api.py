@@ -13,7 +13,7 @@ from django.utils.translation import ugettext as _
 
 from .models import (
     LANGUAGES_CHOICES, Attribute, AttributeSet, ClientProperty, Computer,
-    DeviceLogical, Error, Fault, FaultDef, Feature, HwNode, Message,
+    Error, Fault, FaultDef, Feature, HwNode, Message,
     Migration, Notification, Login, Package, Pms, Platform, Property,
     Repository, Store, Tag, Update, User, Version,
 )
@@ -22,7 +22,6 @@ from .views import load_hw
 from .tasks import create_physical_repository
 from .functions import (
     uuid_change_format,
-    Mmcheck, s2l, vl2s,
     list_difference, list_common,
 )
 from . import errmfs
@@ -285,20 +284,20 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                         "function":"CODE",
                         "language": "LANGUAGE"
                     },
-                    ...] ,
+                    ...
+                ],
                 "repositories": [ {"name": "REPONAME" }, ...],
-                "packages":
-                    {
-                        "install": ["pck1","pck2","pck3",...],
-                        "remove": ["pck1","pck2","pck3",...]
-                    } ,
+                "packages": {
+                    "install": ["pkg1","pkg2","pkg3", ...],
+                    "remove": ["pkg1","pkg2","pkg3", ...]
+                } ,
                 "base": true|false,
                 "hardware_capture": true|false,
-                "devices":
-                    {
-                        "install": [id1, id2, ...],
-                        "remove": [id1, id2, ...]
-                    } #TODO move code to client
+                "devices": {
+                    "logical": [object1, object2, ...],
+                    "default": int
+                }
+            }
     """
 
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
@@ -461,49 +460,16 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                     lst_pkg_install.append(p)
 
         # DEVICES
-        lst_dev_remove = []
-        lst_dev_install = []
-        chk_devices = Mmcheck(
-            o_computer.devices_logical,
-            o_computer.devices_copy
-        )
-        logger.debug('devices_logical %s' % vl2s(o_computer.devices_logical))
-        logger.debug('devices_copy %s' % o_computer.devices_copy)
-        if chk_devices.changed():
-            # remove devices
-            lst_diff = list_difference(
-                s2l(o_computer.devices_copy),
-                s2l(chk_devices.mms())
-            )
-            logger.debug('list diff: %s' % lst_diff)
-            for item_id in lst_diff:
-                try:
-                    dev_logical = DeviceLogical.objects.get(id=item_id)
-                    lst_dev_remove.append({
-                        dev_logical.device.connection.devicetype.name: item_id
-                    })
-                except ObjectDoesNotExist:
-                    # maybe device_logical has been deleted
-                    # FIXME hardcoded values
-                    lst_dev_remove.append({'PRINTER': item_id})
+        logical_devices = []
+        for device in o_computer.logical_devices(lst_attributes):
+            logical_devices.append(device.datadict(o_computer.version))
 
-            # install devices
-            lst_diff = list_difference(
-                s2l(chk_devices.mms()),
-                s2l(o_computer.devices_copy)
-            )
-            for item_id in lst_diff:
-                try:
-                    device_logical = DeviceLogical.objects.get(id=item_id)
-                    lst_dev_install.append(
-                        device_logical.datadict(o_computer.version)
-                    )
-                except ObjectDoesNotExist:
-                    pass
+        if o_computer.default_logical_device:
+            default_logical_device = o_computer.default_logical_device.id
+        else:
+            default_logical_device = 0
 
-        logger.debug('install devices: %s' % lst_dev_install)
-        logger.debug('remove devices: %s' % lst_dev_remove)
-
+        # Hardware
         capture_hardware = True
         if o_computer.datehardware:
             capture_hardware = (datetime.now() > (
@@ -520,8 +486,8 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 "install": lst_pkg_install
             },
             "devices": {
-                "remove": lst_dev_remove,
-                "install": lst_dev_install
+                "logical": logical_devices,
+                "default": default_logical_device,
             },
             "base": o_version.computerbase == o_computer.__str__(),
             "hardware_capture": capture_hardware
@@ -563,22 +529,11 @@ def upload_computer_faults(request, name, uuid, computer, data):
 
 
 def upload_devices_changes(request, name, uuid, computer, data):
+    """ DEPRECATED endpoint for migasfree-client >= 4.13 """
     logger.debug('upload_devices_changes data: %s' % data)
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
-    try:
-        for logical_device_id in data.get(cmd).get("installed", []):
-            computer.append_device_copy(logical_device_id)
-
-        for logical_device_id in data.get(cmd).get("removed", []):
-            computer.remove_device_copy(logical_device_id)
-
-        ret = return_message(cmd, errmfs.ok())
-    except:
-        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
-
-    logger.debug('upload_devices_changes ret: %s' % ret)
-    return ret
+    return return_message(cmd, errmfs.ok())
 
 
 def register_computer(request, name, uuid, computer, data):

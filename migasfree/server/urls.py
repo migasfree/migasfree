@@ -169,12 +169,6 @@ urlpatterns = [
     ),
 
     url(
-        r'^append_devices_from_computer/$',
-        append_devices_from_computer,
-        name='append_devices_from_computer'
-    ),
-
-    url(
         r'^computer_autocomplete/$',
         ComputerAutocomplete.as_view(),
         name='computer_autocomplete',

@@ -68,7 +68,7 @@ class DeviceDriverAdmin(MigasAdmin):
 @admin.register(DeviceLogical)
 class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
-    fields = ('device', 'feature', 'name', 'computers')
+    fields = ('device', 'feature', 'name', 'attributes')
     list_select_related = ('device', 'feature')
     list_display = ('my_link', 'device_link', 'feature')
     ordering = ('device__name', 'feature__name')
@@ -96,7 +96,7 @@ class DeviceLogicalAdmin(MigasAdmin):
 class DeviceLogicalInline(admin.TabularInline):
     model = DeviceLogical
     form = DeviceLogicalForm
-    fields = ('feature', 'name', 'computers')
+    fields = ('feature', 'name', 'attributes')
     extra = 0
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):

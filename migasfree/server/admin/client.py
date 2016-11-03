@@ -2,6 +2,7 @@
 
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import resolve
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
@@ -17,7 +18,7 @@ from ..forms import ComputerForm
 from ..resources import ComputerResource
 from ..models import (
     AutoCheckError, Computer, Error, Fault, FaultDef, Login, Message,
-    Migration, Notification, StatusLog, Update, User
+    Migration, Notification, StatusLog, Update, User, DeviceLogical
 )
 
 admin.site.register(AutoCheckError)
@@ -64,6 +65,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'storage',
         'disks',
         'mac_address',
+        'my_logical_devices',
     )
 
     fieldsets = (
@@ -95,20 +97,26 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': ('software', 'history_sw',)
         }),
         (_('Devices'), {
-            'fields': ('devices_logical', )
+            'fields': ('my_logical_devices', 'default_logical_device',)
         }),
         (_('Tags'), {
-            'fields': ('tags', )
+            'fields': ('tags',)
         }),
     )
 
     resource_class = ComputerResource
-    actions = ['delete_selected', 'reinstall_devices']
+    actions = ['delete_selected']
 
     def my_link(self, obj):
         return obj.link()
 
     my_link.short_description = _('Computer')
+
+    def my_logical_devices(self, obj):
+        return ' '.join([item.link() for item in obj.logical_devices()])
+
+    my_logical_devices.allow_tags = True
+    my_logical_devices.short_description = _('Logical Devices')
 
     def delete_selected(self, request, objects):
         if not self.has_delete_permission(request):
@@ -126,16 +134,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     delete_selected.short_description = _("Delete selected "
                                           "%(verbose_name_plural)s")
 
-    def reinstall_devices(self, request, objects):
-        for item in objects:
-            item.remove_device_copy()
-
-        messages.success(request, _('Ready computers to reinstall devices'))
-
-        return redirect(request.get_full_path())
-
-    reinstall_devices.short_description = _("Reinstall devices")
-
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == "devices_logical":
             kwargs['widget'] = FilteredSelectMultiple(
@@ -145,6 +143,19 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             return db_field.formfield(**kwargs)
 
         return super(ComputerAdmin, self).formfield_for_manytomany(
+            db_field,
+            request,
+            **kwargs
+        )
+
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        if db_field.name == "default_logical_device":
+            args = resolve(request.path).args
+            computer = Computer.objects.get(pk=args[0])
+            kwargs['queryset'] = DeviceLogical.objects.filter(
+                pk__in=[x.id for x in computer.logical_devices()]
+            )
+        return super(ComputerAdmin, self).formfield_for_foreignkey(
             db_field,
             request,
             **kwargs

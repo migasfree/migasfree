@@ -26,6 +26,73 @@ class AttributeViewSet(
     filter_class = AttributeFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
 
+    @detail_route(methods=['get', 'put', 'patch'], url_path='logical-devices')
+    def logical_devices(self, request, pk=None):
+        """
+        GET
+            returns: [
+                {
+                    "id": 112,
+                    "device": {
+                        "id": 6,
+                        "name": "19940"
+                    },
+                    "feature": {
+                        "id": 2,
+                        "name": "Color"
+                    },
+                    "name": ""
+                },
+                {
+                    "id": 7,
+                    "device": {
+                        "id": 6,
+                        "name": "19940"
+                    },
+                    "feature": {
+                        "id": 1,
+                        "name": "BN"
+                    },
+                    "name": ""
+                }
+            ]
+
+        PUT, PATCH
+            input: [id1, id2, idN]
+
+            returns: status code 201
+        """
+
+        attribute = get_object_or_404(models.Attribute, pk=pk)
+        logical_devices = attribute.devicelogical_set.all()
+
+        if request.method == 'GET':
+            serializer = serializers.LogicalSerializer(
+                logical_devices,
+                many=True
+            )
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        if request.method == 'PATCH':  # append cid attribute to logical devices
+            for device_id in request.data:
+                device = get_object_or_404(models.DeviceLogical, pk=device_id)
+                if not device in logical_devices:
+                    device.attributes.add(pk)
+
+            return Response(status=status.HTTP_201_CREATED)
+
+        if request.method == 'PUT':  # replace cid attribute in logical devices
+            for device in logical_devices:
+                if device in logical_devices:
+                    device.attributes.remove(pk)
+
+            for device_id in request.data:
+                device = get_object_or_404(models.DeviceLogical, pk=device_id)
+                device.attributes.add(pk)
+
+            return Response(status=status.HTTP_201_CREATED)
+
 
 class CheckingViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
@@ -86,66 +153,6 @@ class ComputerViewSet(
         models.Computer.replacement(source, target)
 
         return Response(status=status.HTTP_200_OK)
-
-    @detail_route(methods=['get', 'put', 'patch'], url_path='logical-devices')
-    def logical_devices(self, request, pk=None):
-        """
-        GET
-            returns: [
-                {
-                    "id": 112,
-                    "device": {
-                        "id": 6,
-                        "name": "19940"
-                    },
-                    "feature": {
-                        "id": 2,
-                        "name": "Color"
-                    },
-                    "name": ""
-                },
-                {
-                    "id": 7,
-                    "device": {
-                        "id": 6,
-                        "name": "19940"
-                    },
-                    "feature": {
-                        "id": 1,
-                        "name": "BN"
-                    },
-                    "name": ""
-                }
-            ]
-
-        PUT, PATCH
-            input: [id1, id2, idN]
-
-            returns: status code 201
-        """
-
-        computer = get_object_or_404(models.Computer, pk=pk)
-
-        if request.method == 'GET':
-            serializer = serializers.LogicalSerializer(
-                computer.devices_logical.all(),
-                many=True
-            )
-
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        if request.method == 'PATCH':  # append logical devices to computer
-            for device_id in request.data:
-                computer.devices_logical.add(device_id)
-
-            return Response(status=status.HTTP_201_CREATED)
-
-        if request.method == 'PUT':  # replace logical devices in computer
-            computer.devices_logical.clear()
-            for device_id in request.data:
-                computer.devices_logical.add(device_id)
-
-            return Response(status=status.HTTP_201_CREATED)
 
     @detail_route(methods=['get'])
     def sync(self, request, pk=None):

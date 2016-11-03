@@ -76,10 +76,7 @@ class RepositoryForm(forms.ModelForm):
 
 
 class DeviceLogicalForm(forms.ModelForm):
-    x = make_ajax_form(Computer, {'devices_logical': 'computer'})
-
-    computers = x.declared_fields['devices_logical']
-    computers.label = _('Computers')
+    attributes = make_ajax_field(DeviceLogical, 'attributes', 'attribute')
 
     class Meta:
         model = DeviceLogical
@@ -88,8 +85,8 @@ class DeviceLogicalForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DeviceLogicalForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
-            self.fields['computers'].initial = \
-                self.instance.computer_set.all().values_list('id', flat=True)
+            self.fields['attributes'].initial = \
+                self.instance.attributes.all().values_list('id', flat=True)
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
@@ -97,9 +94,9 @@ class DeviceLogicalForm(forms.ModelForm):
 
         def save_m2m():
             old_save_m2m()
-            instance.computer_set.clear()
-            for computer in self.cleaned_data['computers']:
-                instance.computer_set.add(computer)
+            instance.attributes.clear()
+            for attribute in self.cleaned_data['attributes']:
+                instance.attributes.add(attribute)
 
         self.save_m2m = save_m2m
         if commit:
@@ -157,9 +154,6 @@ class TagForm(forms.ModelForm):
 
 
 class ComputerForm(forms.ModelForm):
-    devices_logical = make_ajax_field(
-        Computer, 'devices_logical', 'devicelogical'
-    )
     tags = make_ajax_field(Computer, 'tags', 'tag')
 
     class Meta:

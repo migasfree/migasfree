@@ -3,13 +3,12 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
 
 from . import (
     Device,
     DeviceFeature,
     DeviceDriver,
+    Attribute,
     MigasLink
 )
 
@@ -40,6 +39,13 @@ class DeviceLogical(models.Model, MigasLink):
         null=True,
         blank=True,
         unique=False
+    )
+
+    attributes = models.ManyToManyField(
+        Attribute,
+        blank=True,
+        verbose_name=_("attributes"),
+        help_text=_("Assigned Attributes")
     )
 
     objects = DeviceLogicalManager()
@@ -82,14 +88,6 @@ class DeviceLogical(models.Model, MigasLink):
     device_link.short_description = _("Device")
     device_link.allow_tags = True
 
-    def computers_link(self):
-        return ' '.join(
-            [computer.link() for computer in self.computer_set.all()]
-        )
-
-    computers_link.allow_tags = True
-    computers_link.short_description = _("Computers")
-
     def save(self, *args, **kwargs):
         if isinstance(self.name, basestring):
             self.name = self.name.replace(" ", "_")
@@ -111,12 +109,3 @@ class DeviceLogical(models.Model, MigasLink):
         verbose_name_plural = _("Devices Logical")
         permissions = (("can_save_devicelogical", "Can save Device Logical"),)
         unique_together = (("device", "feature"),)
-
-
-@receiver(pre_save, sender=DeviceLogical)
-def pre_save_device_logical(sender, instance, **kwargs):
-    if instance.id:
-        old_obj = DeviceLogical.objects.get(pk=instance.id)
-        if old_obj.name != instance.name:
-            for computer in old_obj.computer_set.all():
-                computer.remove_device_copy(instance.id)

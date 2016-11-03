@@ -9,10 +9,9 @@ from django.template import Context, Template
 from django.conf import settings
 from django.utils import timezone, dateformat
 
-from . import Version, Attribute, Property, MigasLink
+from . import Version, Attribute, Property, MigasLink, DeviceLogical
 
 from ..functions import (
-    s2l,
     swap_m2m,
     remove_empty_elements_from_dict
 )
@@ -133,18 +132,11 @@ class Computer(models.Model, MigasLink):
         blank=True
     )
 
-    devices_logical = models.ManyToManyField(
-        # http://python.6.x6.nabble.com/many-to-many-between-apps-td5026629.html
-        'server.DeviceLogical',
-        blank=True,
-        verbose_name=_("logical devices"),
-    )
-
-    devices_copy = models.TextField(
-        verbose_name=_("devices copy"),
+    default_logical_device = models.ForeignKey(
+        DeviceLogical,
         null=True,
-        blank=False,
-        editable=False
+        blank=True,
+        verbose_name=_("default logical device")
     )
 
     datelastupdate = models.DateTimeField(
@@ -289,29 +281,25 @@ class Computer(models.Model, MigasLink):
 
         self.save()
 
-    def remove_device_copy(self, devicelogical_id=None):
-        if devicelogical_id:
-            try:
-                lst = s2l(self.devices_copy)
-                if devicelogical_id in lst:
-                    lst.remove(devicelogical_id)
-                    self.devices_copy = lst.__str__()
-                    self.save()
-            except:
-                pass
-        else:
-            self.devices_copy = None
-            self.save()
+    def logical_devices(self, attributes=None):
+        if not attributes:
+            from .login import Login
 
-    def append_device_copy(self, devicelogical_id):
-        try:
-            lst = s2l(self.devices_copy)
-            if devicelogical_id not in lst:
-                lst.append(devicelogical_id)
-                self.devices_copy = lst.__str__()
-                self.save()
-        except:
-            pass
+            attributes = Login.objects.get(
+                computer__id=self.id
+            ).attributes.all().values_list('id', flat=True)
+
+        devices = []
+        for att in attributes:
+            for logical_device in DeviceLogical.objects.filter(
+                attributes__id=att
+            ):
+                devices.append(logical_device)
+
+        return devices
+
+    logical_devices.allow_tags = True
+    logical_devices.short_description = _('Logical Devices')
 
     def last_update(self):
         return self.update_set.filter(
@@ -348,12 +336,6 @@ class Computer(models.Model, MigasLink):
     hw_link.allow_tags = True
     hw_link.short_description = _("Product")
 
-    def devices_link(self):
-        return ' '.join(dev.link() for dev in self.devices_logical.all())
-
-    devices_link.allow_tags = True
-    devices_link.short_description = _("Devices")
-
     def version_link(self):
         return self.version.link()
 
@@ -372,11 +354,14 @@ class Computer(models.Model, MigasLink):
     @staticmethod
     def replacement(source, target):
         swap_m2m(source.tags, target.tags)
-        swap_m2m(source.devices_logical, target.devices_logical)
+        source.default_logical_device, target.default_logical_device = (
+            target.default_logical_device, source.default_logical_device)
 
         # SWAP CID
         source_cid = source.get_cid_attribute()
         target_cid = target.get_cid_attribute()
+        swap_m2m(source_cid.devicelogical_set, target_cid.devicelogical_set)
+        swap_m2m(source_cid.faultdef_set, target_cid.faultdef_set)
         swap_m2m(source_cid.faultdef_set, target_cid.faultdef_set)
         swap_m2m(source_cid.repository_set, target_cid.repository_set)
         swap_m2m(source_cid.ExcludeAttribute, target_cid.ExcludeAttribute)
@@ -416,9 +401,11 @@ class Computer(models.Model, MigasLink):
             ugettext("Computer"): self.__str__(),
             ugettext("Status"): ugettext(self.status),
             ugettext("Tags"): ', '.join(str(x) for x in self.tags.all()),
-            ugettext("Devices"): ', '.join(
-                str(x) for x in self.devices_logical.all()
+            ugettext("Logical devices"): ', '.join(
+                str(x) for x in self.logical_devices()
             ),
+            ugettext("Default logical device"):
+                self.default_logical_device.__str__(),
             ugettext("Faults"): ', '.join(
                 str(x) for x in cid.faultdef_set.all()
             ),
@@ -477,9 +464,10 @@ def post_save_computer(sender, instance, created, **kwargs):
 
     if instance.status in ['available', 'unsubscribed']:
         instance.tags.clear()
-        instance.devices_logical.clear()
+        #instance.devices_logical.clear()
 
         cid = instance.get_cid_attribute()
+        cid.devicelogical_set.clear()
         cid.faultdef_set.clear()
         cid.repository_set.clear()
         cid.ExcludeAttribute.clear()

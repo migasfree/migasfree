@@ -3,8 +3,6 @@
 import json
 
 from django.db import models
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 
@@ -54,7 +52,7 @@ class Device(models.Model, MigasLink):
             else:
                 try:
                     address = 'http://%s:631' % \
-                        self.devicelogical_set.all()[0].computer_set.all()[0].ip
+                        self.devicelogical_set.all()[0].attributes.all()[0].ip
                 except:
                     address = ''
 
@@ -117,15 +115,15 @@ class Device(models.Model, MigasLink):
         return features
 
     def logical_devices_allocated(self):
-        return self.devicelogical_set.all().exclude(computer=None)
+        return self.devicelogical_set.all().exclude(attributes=None)
 
     @staticmethod
     def replacement(source, target):
         # Moves computers from logical device
         for feature in source.common_features_allocated(target):
             swap_m2m(
-                source.devicelogical_set.get(feature=feature).computer_set,
-                target.devicelogical_set.get(feature=feature).computer_set
+                source.devicelogical_set.get(feature=feature).attributes,
+                target.devicelogical_set.get(feature=feature).attributes
             )
 
     def get_replacement_info(self):
@@ -134,7 +132,7 @@ class Device(models.Model, MigasLink):
             ugettext("Logical devices"): '<br />' +
             '<br />'.join(
                 str(x.feature) + ': ' + ', '.join(
-                    c.link() for c in x.computer_set.all()
+                    c.link() for c in x.attributes.all()
                 )
                 for x in self.devicelogical_set.all().order_by('feature')
             ),
@@ -146,16 +144,3 @@ class Device(models.Model, MigasLink):
         verbose_name_plural = _("Devices")
         unique_together = (("connection", "name"),)
         permissions = (("can_save_device", "Can save Device"),)
-
-
-@receiver(pre_save, sender=Device)
-def pre_save_device(sender, instance, **kwargs):
-    if instance.id:
-        old_obj = Device.objects.get(pk=instance.id)
-        if old_obj.data != instance.data or \
-                old_obj.name != instance.name or \
-                old_obj.connection.id != instance.connection.id or \
-                old_obj.model.id != instance.model.id:
-            for logical_device in instance.devicelogical_set.all():
-                for computer in logical_device.computer_set.all():
-                    computer.remove_device_copy(logical_device.id)
