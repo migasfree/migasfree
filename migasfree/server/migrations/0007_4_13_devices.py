@@ -5,6 +5,14 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 
+from migasfree.server.models import Computer
+
+def insert_initial_hardware_resume(apps, schema_editor):
+    db_alias = schema_editor.connection.alias
+
+    for computer in Computer.objects.using(db_alias).all():
+        computer.update_hardware_resume()
+
 
 def logical_device_by_attributes(apps, schema_editor):
     Computer = apps.get_model('server', 'Computer')
@@ -74,4 +82,5 @@ class Migration(migrations.Migration):
             model_name='computer',
             name='devices_logical',
         ),
+        migrations.RunPython(insert_initial_hardware_resume, migrations.RunPython.noop),
     ]

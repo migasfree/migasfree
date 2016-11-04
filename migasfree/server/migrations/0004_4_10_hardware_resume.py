@@ -4,15 +4,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
-from migasfree.server.models import Computer
-
-
-def insert_initial_hardware_resume(apps, schema_editor):
-    db_alias = schema_editor.connection.alias
-
-    for computer in Computer.objects.using(db_alias).all():
-        computer.update_hardware_resume()
-
 
 class Migration(migrations.Migration):
 
@@ -56,5 +47,4 @@ class Migration(migrations.Migration):
             name='storage',
             field=models.BigIntegerField(blank=True, null=True, verbose_name='storage'),
         ),
-        migrations.RunPython(insert_initial_hardware_resume, migrations.RunPython.noop),
     ]
