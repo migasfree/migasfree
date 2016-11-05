@@ -76,7 +76,7 @@ function pg_create_user()
 {
     _USER=$(get_migasfree_setting "DATABASES['default']['USER']")
     _PWD=$(get_migasfree_setting "DATABASES['default']['PASSWORD']")
-    _CMD="psql postgres -tAc \"CREATE USER $_USER WITH CREATEDB NOCREATEUSER ENCRYPTED PASSWORD '$_PWD';\""
+    _CMD="psql postgres -tAc \"CREATE USER $_USER WITH CREATEDB ENCRYPTED PASSWORD '$_PWD';\""
     su postgres -l -c "$_CMD"
     test $? -eq 0
 }
