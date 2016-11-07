@@ -10,9 +10,8 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from ..forms import AppendDevicesFromComputerForm
 from ..forms import DeviceReplacementForm
-from ..models import Computer, Login, Device, DeviceModel, DeviceConnection
+from ..models import Device, DeviceModel, DeviceConnection
 from ..functions import d2s
 
 
