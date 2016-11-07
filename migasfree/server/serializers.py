@@ -235,7 +235,7 @@ class RepositoryWriteSerializer(serializers.ModelSerializer):
         return instance
 
     def validate(self, data):
-        for item in data.get('packages'):
+        for item in data.get('packages', []):
             if item.version.id != data['version'].id:
                 raise serializers.ValidationError(
                     _('Package %s must belong to the version %s') % (
