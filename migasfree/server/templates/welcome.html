@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block title %}{% trans 'What is migasfree?' %}{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mf-jumbotron">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-8">
+            <h1>{%trans 'What is migasfree?' %}</h1>
+            <p class="lead">{% trans 'An administration tool computer.' %}</p>
+
+            <h2>{% trans 'How does this administration?' %}</h2>
+            <p class="lead">{% blocktrans %}Managing dynamic software repositories. Distributes this software to clients, depending on characteristics of the computer (attributes) and in time (calendars).{% endblocktrans %}</p>
+            <p class="lead">{% blocktrans %}Clients are those systems with a package management system that ensures system integrity.{% endblocktrans %}</p>
+        </div>
+        <div class="col-xs-6 col-md-4">
+            <div id="mf-logo">
+                <img src="{% static 'img/migasfree.svg' %}" alt="" class="img-thumbnail img-responsive" width="200" />
+                <p class="text-center">{% trans 'Version' %}: {{ migasfree_version }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <h2>{% trans 'Why it is essential?' %}</h2>
+    <p class="lead">{% blocktrans %}80% of the time used in ICT is for maintenance. This consists of software updates, security patches, audits (software and hardware) and configuration changes.{% endblocktrans %}</p>
+
+    <h2>{% trans 'Why not to use others?' %}</h2>
+    <p class="lead">{% blocktrans %}Because none is based directly on the packaging system. And the package works because, every day, millions of computers are updated in this way.{% endblocktrans %}</p>
+    <p class="lead">{% blocktrans %}Migasfree also provides a controlled and customized for each client distribution (not all have to be the same, but you need them all checked).{% endblocktrans %}</p>
+</div>
+
+<div class="row text-center shortcuts">
+    <div class="col-md-3">
+        <p><a href="http://migasfree.org/" title="{% trans 'Blog' %}"><span class="fa fa-5x fa-wordpress"></span> <span class="sr-only">{% trans 'Blog' %}</span></a></p>
+        <p><strong>{% trans 'News about the project' %}</strong></p>
+    </div>
+
+    <div class="col-md-3">
+        <p><a href="http://fun-with-migasfree.readthedocs.org/" title="{% trans 'Fun with migasfree' %}"><span class="fa fa-5x fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></p>
+        <p><strong>{% trans 'See the documentation' %}</strong></p>
+    </div>
+
+    <div class="col-md-3">
+        <p><a href="https://github.com/migasfree/migasfree/" title="{% trans 'Source code' %}"><span class="fa fa-5x fa-github"></span> <span class="sr-only">{% trans 'Source code' %}</span></a></p>
+        <p><strong>{% trans 'Explore source code project' %}</strong></p>
+    </div>
+
+    <div class="col-md-3">
+        <p><a href="http://www.gnu.org/licenses/gpl.html" title="{% trans 'License' %} GPLv3"><span class="fa fa-5x fa-balance-scale"></span> <span class="sr-only">{% trans 'License' %} GPLv3</span></a></p>
+        <p><strong>{% trans 'Use Rights' %}</strong></p>
+    </div>
+</div>
+{% endblock content %}

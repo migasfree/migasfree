@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import url
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 from django.core.urlresolvers import reverse_lazy
 from django.conf import settings
 
@@ -12,12 +12,7 @@ urlpatterns = [
 
     url(
         r'^$',
-        RedirectView.as_view(
-            # cannot use reverse_lazy resolver with query string
-            # url=reverse_lazy('admin:server_repository_changelist'),
-            url='/admin/server/repository/?active__exact=1',
-            query_string=True
-        ),
+        TemplateView.as_view(template_name='welcome.html'),
         name='bootstrap'
     ),
 

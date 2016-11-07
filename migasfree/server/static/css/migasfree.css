@@ -208,3 +208,18 @@ span[data-value] {
     overflow-x: auto;
     padding-bottom: 5px;
 }
+
+.mf-jumbotron {
+    background: #854e91;
+    color: #fff;
+}
+
+#mf-logo {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.shortcuts {
+    margin-top: 48px;
+}
