@@ -132,15 +132,18 @@ class PackageLookup(LookupChannel):
     model = Package
 
     def get_query(self, q, request):
-        return self.model.objects.by_version(
-            request.user.userprofile.version_id
-        ).filter(name__icontains=q).order_by('name')
+        version_id = request.GET.get('version_id', None)
+        queryset = self.model.objects.filter(name__icontains=q).order_by('name')
+        if version_id:
+            queryset = queryset.filter(version__id=version_id)
+
+        return queryset
 
     def format_match(self, obj):
-        return escape(obj.name)
+        return '{} ({})'.format(escape(obj.name), escape(obj.version.name))
 
     def format_item_display(self, obj):
-        return obj.link()
+        return '%s (%s)' % (obj.link(), escape(obj.version.name))
 
     def can_add(self, user, model):
         return False
@@ -155,8 +158,7 @@ class TagLookup(LookupChannel):
 
     def get_query(self, q, request):
         return self.model.objects.filter(
-            property_att__active=True
-        ).filter(
+            property_att__active=True,
             property_att__tag=True
         ).filter(
             Q(value__icontains=q) |
@@ -239,7 +241,7 @@ class ComputerLookup(LookupChannel):
         # this will be however the related objects Manager returns them
         # which is not guaranteed to be the same order
         # they were in when you last edited
-        # see OrdredManyToMany.md
+        # see OrderedManyToMany.md
         lst = []
         for item in ids:
             if item.__class__.__name__ == "Computer":
