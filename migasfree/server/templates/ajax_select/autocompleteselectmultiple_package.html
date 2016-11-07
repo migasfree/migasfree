@@ -1,0 +1,28 @@
+{% extends "ajax_select/autocompleteselectmultiple.html" %}
+
+{% block extra_script %}
+<script type="text/javascript">
+function makeLink(link, versionId) {
+    var newLink = link;
+    var last = link.lastIndexOf("?");
+    if (last != -1)
+        newLink = newLink.substring(0, last);
+    if (versionId)
+        newLink = newLink + "?version_id=" + versionId;
+    return newLink;
+}
+
+function changeSource() {
+    var versionId = $("#id_version").val();
+    oldLink = $("#id_packages_text").autocomplete("option", "source");
+    newLink = makeLink(oldLink, versionId);
+    $("#id_packages_text").autocomplete("option", "source", newLink);
+}
+
+$(document).ready(function() {
+    changeSource();
+    $("#id_version").bind("change", changeSource);
+    $("#id_packages_on_deck").bind("added", changeSource);
+});
+</script>
+{% endblock extra_script %}
