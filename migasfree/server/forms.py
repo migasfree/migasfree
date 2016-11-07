@@ -1,14 +1,18 @@
 # -*- coding: utf-8 -*-
 
+import datetime
+
 from django import forms
+from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from dal import autocomplete
-from ajax_select import make_ajax_form, make_ajax_field
+from ajax_select import make_ajax_form
+from ajax_select.fields import AutoCompleteSelectMultipleField
 
 from .models import (
     Repository, UserProfile, Computer, Device, DeviceLogical,
-    Property, Tag, TagType, Attribute
+    Property, Tag, TagType, Attribute, Package,
 )
 
 
@@ -57,9 +61,9 @@ class AppendDevicesFromComputerForm(forms.Form):
 
 
 class RepositoryForm(forms.ModelForm):
-    attributes = make_ajax_field(Repository, 'attributes', 'attribute')
-    packages = make_ajax_field(Repository, 'packages', 'package')
-    excludes = make_ajax_field(Repository, 'excludes', 'attribute')
+    attributes = AutoCompleteSelectMultipleField('attribute', required=False)
+    packages = AutoCompleteSelectMultipleField('package', required=False)
+    excludes = AutoCompleteSelectMultipleField('attribute', required=False)
 
     class Meta:
         model = Repository
@@ -68,15 +72,28 @@ class RepositoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(RepositoryForm, self).__init__(*args, **kwargs)
         try:
+            self.fields['date'].initial = datetime.date.today()
             self.fields['version'].initial = UserProfile.objects.get(
                 pk=self.current_user.id
             ).version.id
         except (UserProfile.DoesNotExist, AttributeError):
             pass
 
+    def clean(self):
+        # http://stackoverflow.com/questions/7986510/django-manytomany-model-validation
+        cleaned_data = super(RepositoryForm, self).clean()
+
+        for pkg_id in cleaned_data.get('packages', []):
+            pkg = Package.objects.get(pk=pkg_id)
+            if pkg.version.id != cleaned_data['version'].id:
+                raise ValidationError(
+                    _('Package %s must belong to the version %s') % (
+                        pkg, cleaned_data['version']
+                    )
+                )
 
 class DeviceLogicalForm(forms.ModelForm):
-    attributes = make_ajax_field(DeviceLogical, 'attributes', 'attribute')
+    attributes = AutoCompleteSelectMultipleField('attribute', required=False)
 
     class Meta:
         model = DeviceLogical
@@ -154,7 +171,7 @@ class TagForm(forms.ModelForm):
 
 
 class ComputerForm(forms.ModelForm):
-    tags = make_ajax_field(Computer, 'tags', 'tag')
+    tags = AutoCompleteSelectMultipleField('tag', required=False)
 
     class Meta:
         model = Computer
