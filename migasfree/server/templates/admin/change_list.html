@@ -37,8 +37,15 @@
         <h1 {% if has_add_permission %}class="change-list-title"{% endif %}>
             {% trans cl.opts.verbose_name_plural|capfirst %}
         </h1>
-        <h4> {{ cl.filter_description }} </h4>
     {% endif %}
+
+    {% for row in cl.filter_description %}
+        <div class="filter-content">
+            <span class="filter-field"><span class="glyphicon glyphicon-filter"></span> {{ row.name|capfirst }}</span>
+            <span class="filter-value">{{ row.value }}</span>
+        </div>
+    {% endfor %}
+
 {% endblock content_title %}
 
 {% block coltype %}flex{% endblock %}

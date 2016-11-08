@@ -223,3 +223,22 @@ span[data-value] {
 .shortcuts {
     margin-top: 48px;
 }
+
+.filter-content {
+    display: inline;
+    margin: 0 5px;
+}
+
+.filter-field {
+    border-radius: 5px 0 0 5px;
+    background: #f5f5f5;
+    color: #777;
+    padding: 3px;
+}
+
+.filter-value {
+    border-radius: 0 5px 5px 0;
+    background: #337ab7;
+    color: #fff;
+    padding: 3px;
+}

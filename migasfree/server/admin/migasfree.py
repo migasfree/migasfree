@@ -31,54 +31,66 @@ class MigasAdmin(ExportActionModelAdmin):
 class MigasChangeList(ChangeList):
     def __init__(self, *args, **kwargs):
         super(MigasChangeList, self).__init__(*args, **kwargs)
-        filters = []
+        self.filter_description = []
         for x in self.filter_specs:
-            if hasattr(x, 'lookup_choices') and hasattr(x, 'used_parameters') and x.used_parameters:
-
+            if hasattr(x, 'lookup_choices') \
+                    and hasattr(x, 'used_parameters') and x.used_parameters:
                 if isinstance(x.lookup_choices[0][0], int):
-                    element = dict(x.lookup_choices)[int(x.used_parameters.values()[0])]
+                    try:
+                        element = dict(
+                            x.lookup_choices
+                        )[int(x.used_parameters.values()[0])]
+                    except:
+                        element = ""
+                        for key, value in x.used_parameters.iteritems():
+                            element += "%s=%s " % (key.split("__")[1], value)
                 else:
-                    element = dict(x.lookup_choices)[x.used_parameters.values()[0]]
+                    element = dict(
+                        x.lookup_choices
+                    )[x.used_parameters.values()[0]]
 
-                filters.append(u"%s:%s" % (x.title, element))
-
-            elif (hasattr(x, 'lookup_choices')
-                and hasattr(x, "lookup_val")
-                and x.lookup_val):
-
+                self.append(x.title, element)
+            elif hasattr(x, 'lookup_choices') and hasattr(x, "lookup_val") \
+                    and x.lookup_val:
                 if isinstance(x.lookup_choices[0][0], int):
-                    filters.append( u"%s:%s" % ( x.lookup_title, dict(x.lookup_choices)[int(x.lookup_val)]))
+                    self.append(
+                        x.lookup_title,
+                        dict(x.lookup_choices)[int(x.lookup_val)]
+                    )
                 else:
-                    filters.append( u"%s:%s" % ( x.lookup_title, dict(x.lookup_choices)[x.lookup_val] ))
-
+                    self.append(
+                        x.lookup_title,
+                        dict(x.lookup_choices)[x.lookup_val]
+                    )
             elif hasattr(x, 'links'):
                 for l in x.links:
                     if l[1] == x.used_parameters:
-                        filters.append(u"%s:%s" % (x.title, unicode(l[0])))
+                        self.append(x.title, unicode(l[0]))
                         break
-
-            elif hasattr(x,'field') and hasattr(x.field,'choices') and hasattr(x,'lookup_val') and x.lookup_val:
-
+            elif hasattr(x, 'field') and hasattr(x.field, 'choices') \
+                    and hasattr(x, 'lookup_val') and x.lookup_val:
                 if isinstance(x.field, BooleanField):
                     if x.lookup_val == "0":
-                        filters.append(u"%s:%s" % (x.title, _("No")))
+                        self.append(x.title, _("No"))
                     else:
-                        filters.append(u"%s:%s" % (x.title, _("Yes")))
+                        self.append(x.title, _("Yes"))
                 elif isinstance(x.field, IntegerField):
                     elements = []
                     for element in x.lookup_val.split(','):
-                        elements.append(unicode(dict(x.field.choices)[int(element)]))
-                    filters.append(u"%s:%s" % (x.title, "-".join(elements)))
+                        elements.append(
+                            unicode(dict(x.field.choices)[int(element)])
+                        )
+                    self.append(x.title, ", ".join(elements))
                 else:
                     elements = []
                     for element in x.lookup_val.split(','):
                         elements.append(unicode(dict(x.field.choices)[element]))
-                    filters.append(u"%s:%s" % (x.title, "-".join(elements)))
+                    self.append(x.title, ", ".join(elements))
 
-        filter_description = u', '.join(filters)
-        self.title = u"%s %s" % (
+        self.title = u"%s (%s)" % (
            self.model._meta.verbose_name_plural,
-           filter_description
+           unicode(self.filter_description)
         )
 
-        self.filter_description = filter_description
+    def append(self, name, val):
+        self.filter_description.append({"name": unicode(name), "value": val})
