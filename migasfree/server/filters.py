@@ -131,7 +131,7 @@ class ComputerFilter(filters.FilterSet):
 
     class Meta:
         model = Computer
-        fields = ['version__id', 'status', 'name']
+        fields = ['version__id', 'status', 'name', 'uuid']
 
 
 class ErrorFilter(filters.FilterSet):
@@ -244,4 +244,4 @@ class UpdateFilter(filters.FilterSet):
 class VersionFilter(filters.FilterSet):
     class Meta:
         model = Version
-        fields = ['platform__id']
+        fields = ['platform__id', 'name']

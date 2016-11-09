@@ -34,63 +34,65 @@
 
 {% block content_title %}
     {% if title %}
-        <h1 {% if has_add_permission %}class="change-list-title"{% endif %}>
+        <h1 {% if has_add_permission %}class="change-list-title pull-left"{% endif %}>
             {% trans cl.opts.verbose_name_plural|capfirst %}
         </h1>
     {% endif %}
-
-    {% for row in cl.filter_description %}
-        <div class="filter-content">
-            <span class="filter-field"><span class="glyphicon glyphicon-filter"></span> {{ row.name|capfirst }}</span>
-            <span class="filter-value">{{ row.value }}</span>
-        </div>
-    {% endfor %}
-
 {% endblock content_title %}
 
 {% block coltype %}flex{% endblock %}
 
 {% block object-tools %}
-<div id="content-navbar-collapse" class="navbar-collapse collapse">
-    <ul class="object-tools nav navbar-nav">
-        {% block object-tools-items %}
+    {% block object-tools-items %}
         {% if has_add_permission %}
-        <li>
-        {% url cl.opts|admin_urlname:'add' as add_url %}
-        <a role="button" href="{% add_preserved_filters add_url is_popup %}" class="btn btn-primary">
-            <span class="glyphicon glyphicon-plus"></span> {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
-        </a>
-        </li>
+            <div id="add-button" class="pull-left">
+                {% url cl.opts|admin_urlname:'add' as add_url %}
+                <a role="button" href="{% add_preserved_filters add_url is_popup %}" class="btn btn-primary" title="{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </a>
+            </div>
         {% endif %}
-        {% endblock %}
-    </ul>
+    {% endblock %}
 
     {% if cl.has_filters %}
-    <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Filter' %} <span class="caret"></span></a>
-            <ul class="dropdown-menu pull-right scrollable-dropdown-menu">
-                {% for spec in cl.filter_specs %}
-                    {% admin_list_filter cl spec %}
-                {% endfor %}
+        <div class="navbar-collapse collapse clearfix">
+            <ul class="nav navbar-nav navbar-left">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Filter' %} <span class="caret"></span></a>
+                    <ul class="dropdown-menu pull-left scrollable-dropdown-menu">
+                        {% for spec in cl.filter_specs %}
+                            {% admin_list_filter cl spec %}
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li>
+                    {% if cl.filter_description %}
+                    <ul class="filter-container">
+                        {% for row in cl.filter_description %}
+                            <li class="filter-content">
+                                <span class="filter-field"><span class="glyphicon glyphicon-filter"></span> {{ row.name|capfirst }}</span>
+                                <span class="filter-value">{{ row.value }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </li>
             </ul>
-        </li>
-    </ul>
+        </div>
     {% endif %}
-    {% block search %}{% search_form cl %}{% endblock %}
-</div>
 {% endblock %}
 
 {% block content %}
-<form class="" id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
+<div class="clearfix"></div>
+<form class="navbar-form" id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
 
 {% if cl.formset.errors %}
-<div class="alert alert-danger">
-    <p class="errornote">
-        {% if cl.formset.errors|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
-    </p>
-    {{ cl.formset.non_form_errors }}
-</div>
+    <div class="alert alert-danger">
+        <p class="errornote">
+            {% if cl.formset.errors|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+        </p>
+        {{ cl.formset.non_form_errors }}
+    </div>
 {% endif %}
 
 
@@ -98,8 +100,10 @@
     {% render_with_template_if_exist cl.opts.app_label|lower|add:"/admin_app_"|add:app_name|add:"_description.html" "" %}
 {% endwith %}
 
+<div class="pull-left">{% block search %}{% search_form cl %}{% endblock %}</div>
+
 {% if action_form and actions_on_top and cl.show_admin_actions %}
-<div class='pull-left'>{% admin_actions %}</div>
+    <div class="pull-right">{% admin_actions %}</div>
 {% endif %}
 
 <div id="content-main">
