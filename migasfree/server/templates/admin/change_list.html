@@ -54,6 +54,8 @@
         {% endif %}
     {% endblock %}
 
+    <div class="clearfix"></div>
+
     {% if cl.has_filters %}
         <div class="navbar-collapse collapse clearfix">
             <ul class="nav navbar-nav navbar-left">
@@ -80,10 +82,11 @@
             </ul>
         </div>
     {% endif %}
+
+    <div class="pull-left">{% block search %}{% search_form cl %}{% endblock %}</div>
 {% endblock %}
 
 {% block content %}
-<div class="clearfix"></div>
 <form class="navbar-form" id="changelist-form" action="" method="post"{% if cl.formset.is_multipart %} enctype="multipart/form-data"{% endif %} novalidate>{% csrf_token %}
 
 {% if cl.formset.errors %}
@@ -99,8 +102,6 @@
 {% with app_name=cl.opts.model_name|lower|slugify %}
     {% render_with_template_if_exist cl.opts.app_label|lower|add:"/admin_app_"|add:app_name|add:"_description.html" "" %}
 {% endwith %}
-
-<div class="pull-left">{% block search %}{% search_form cl %}{% endblock %}</div>
 
 {% if action_form and actions_on_top and cl.show_admin_actions %}
     <div class="pull-right">{% admin_actions %}</div>
