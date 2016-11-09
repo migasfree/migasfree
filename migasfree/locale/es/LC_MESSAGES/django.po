@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-07 08:48+0100\n"
-"PO-Revision-Date: 2016-11-07 09:01+0100\n"
+"POT-Creation-Date: 2016-11-09 08:48+0100\n"
+"PO-Revision-Date: 2016-11-09 08:48+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -342,7 +342,7 @@ msgstr "Atributos"
 msgid "Schedule"
 msgstr "Calendario"
 
-#: migasfree/server/admin/core.py:249 migasfree/server/models/repository.py:276
+#: migasfree/server/admin/core.py:249 migasfree/server/models/repository.py:282
 msgid "Repository"
 msgstr "Repositorio"
 
@@ -359,7 +359,7 @@ msgid "Store"
 msgstr "Almacén"
 
 #: migasfree/server/admin/core.py:375 migasfree/server/filters.py:58
-#: migasfree/server/forms.py:136 migasfree/server/models/attribute.py:166
+#: migasfree/server/forms.py:153 migasfree/server/models/attribute.py:166
 #: migasfree/server/models/property.py:145
 msgid "Tag Type"
 msgstr "Tipo de etiqueta"
@@ -568,17 +568,22 @@ msgstr "Asignado a otros"
 msgid "Not assigned"
 msgstr "No asignado"
 
-#: migasfree/server/forms.py:24 migasfree/server/forms.py:37
-#: migasfree/server/forms.py:50
+#: migasfree/server/forms.py:28 migasfree/server/forms.py:41
+#: migasfree/server/forms.py:54
 msgid "Source"
 msgstr "Origen"
 
-#: migasfree/server/forms.py:29 migasfree/server/forms.py:42
-#: migasfree/server/forms.py:55
+#: migasfree/server/forms.py:33 migasfree/server/forms.py:46
+#: migasfree/server/forms.py:59
 msgid "Target"
 msgstr "Destino"
 
-#: migasfree/server/forms.py:123 migasfree/server/models/computer.py:445
+#: migasfree/server/forms.py:90 migasfree/server/serializers.py:241
+#, python-format
+msgid "Package %s must belong to the version %s"
+msgstr "El paquete %s debe pertenecer a la versión %s"
+
+#: migasfree/server/forms.py:140 migasfree/server/models/computer.py:445
 #: migasfree/server/templates/computer_confirm_delete.html:9
 #: migasfree/server/templates/computer_confirm_delete_selected.html:9
 #: migasfree/server/templates/computer_events.html:11
@@ -589,11 +594,11 @@ msgstr "Destino"
 msgid "Computers"
 msgstr "Ordenadores"
 
-#: migasfree/server/forms.py:168
+#: migasfree/server/forms.py:185
 msgid "Status available can not have tags"
 msgstr "Estado disponible no puede tener etiquetas"
 
-#: migasfree/server/forms.py:171
+#: migasfree/server/forms.py:188
 msgid "Status available can not have devices logical"
 msgstr "Estado disponible no puede tener dispositivos logicos"
 
@@ -837,7 +842,7 @@ msgstr "Dispositivo lógico por defecto"
 
 #: migasfree/server/models/computer.py:412
 #: migasfree/server/models/package.py:102
-#: migasfree/server/models/repository.py:277
+#: migasfree/server/models/repository.py:283
 #: migasfree/server/templates/includes/software_menu.html:5
 msgid "Repositories"
 msgstr "Repositorios"
@@ -1367,16 +1372,16 @@ msgstr "paquetes incluidos por defecto"
 msgid "default exclude packages"
 msgstr "paquetes excluidos por defecto"
 
-#: migasfree/server/models/repository.py:167
+#: migasfree/server/models/repository.py:173
 msgid "Without schedule"
 msgstr "Sin calendario"
 
-#: migasfree/server/models/repository.py:174
+#: migasfree/server/models/repository.py:180
 #, python-format
 msgid "%s (without delays)"
 msgstr "%s (sin demoras)"
 
-#: migasfree/server/models/repository.py:223
+#: migasfree/server/models/repository.py:229
 msgid "timeline"
 msgstr "línea temporal"
 
@@ -1475,11 +1480,6 @@ msgstr "Versiones"
 #: migasfree/server/templates/includes/config_menu.html:16
 msgid "User Profiles"
 msgstr "Perfiles de usuario"
-
-#: migasfree/server/serializers.py:241
-#, python-format
-msgid "Package %s must belong to the version %s"
-msgstr "El paquete %s debe pertenecer a la versión %s"
 
 #: migasfree/server/tasks.py:74
 #, python-format
@@ -1580,6 +1580,7 @@ msgstr "Quitar"
 #: migasfree/server/templates/admin/login.html:4
 #: migasfree/server/templates/admin/login.html:24
 #: migasfree/server/templates/admin/login.html:62
+#: migasfree/server/templates/base.html:174
 msgid "Log in"
 msgstr "Iniciar sesión"
 
@@ -1677,7 +1678,7 @@ msgstr "Preferencias"
 msgid "Logout"
 msgstr "Salir"
 
-#: migasfree/server/templates/base.html:215
+#: migasfree/server/templates/base.html:219
 msgid "Data Model"
 msgstr "Modelo de datos"
 
@@ -1868,7 +1869,7 @@ msgstr "Reemplazar"
 
 #: migasfree/server/templates/device_replacement.html:7
 #: migasfree/server/templates/includes/devices_menu.html:9
-#: migasfree/server/views/devices.py:83
+#: migasfree/server/views/devices.py:82
 msgid "Devices Replacement"
 msgstr "Reemplazo de dispositivos"
 
@@ -2080,16 +2081,16 @@ msgid "What is migasfree?"
 msgstr "¿Qué es migasfree?"
 
 #: migasfree/server/templates/welcome.html:11
-msgid "An administration tool computer."
+msgid "An administration tool computers."
 msgstr "Una herramienta de administración de ordenadores."
 
 #: migasfree/server/templates/welcome.html:13
-msgid "How does this administration?"
+msgid "How does it administrate?"
 msgstr "¿Cómo hace esta administración?"
 
 #: migasfree/server/templates/welcome.html:14
 msgid ""
-"Managing dynamic software repositories. Distributes this software to "
+"It manages dynamic software repositories. It distributes this software to "
 "clients, depending on characteristics of the computer (attributes) and in "
 "time (calendars)."
 msgstr ""
@@ -2106,7 +2107,7 @@ msgstr ""
 "paquetes que asegura la integridad del sistema."
 
 #: migasfree/server/templates/welcome.html:27
-msgid "Why it is essential?"
+msgid "Why is it essential?"
 msgstr "¿Por qué es indispensable?"
 
 #: migasfree/server/templates/welcome.html:28
@@ -2121,7 +2122,7 @@ msgstr ""
 "hardware) y cambios de configuración."
 
 #: migasfree/server/templates/welcome.html:30
-msgid "Why not to use others?"
+msgid "Why not use other options?"
 msgstr "¿Por qué no usar otras soluciones?"
 
 #: migasfree/server/templates/welcome.html:31
@@ -2135,8 +2136,9 @@ msgstr ""
 
 #: migasfree/server/templates/welcome.html:32
 msgid ""
-"Migasfree also provides a controlled and customized for each client "
-"distribution (not all have to be the same, but you need them all checked)."
+"Besides, migasfree also provides a controlled and customized distribution "
+"for each client (not all of them have to be the same, but you need to have "
+"every one of them controlled)."
 msgstr ""
 "Además, migasfree proporciona una distribución controlada y personalizada "
 "para cada cliente (no todos tienen por qué tener lo mismo, pero necesito "
@@ -2202,7 +2204,7 @@ msgstr "¡El ordenador %s ha sido borrado!"
 msgid "Computers %s, deleted!"
 msgstr "¡Los ordenadores %s, han sido borrados!"
 
-#: migasfree/server/views/computer.py:68 migasfree/server/views/devices.py:53
+#: migasfree/server/views/computer.py:68 migasfree/server/views/devices.py:52
 msgid "Replacement done."
 msgstr "Reemplazo realizado."
 
@@ -2211,7 +2213,7 @@ msgstr "Reemplazo realizado."
 msgid "Error in field 'code' of Checking: %s"
 msgstr "Error en el campo 'code' de la comprobación: %s"
 
-#: migasfree/server/views/devices.py:65
+#: migasfree/server/views/devices.py:64
 #, python-format
 msgid ""
 "Replacement is not possible. Please, deallocate all attributes in the "
