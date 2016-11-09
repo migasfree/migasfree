@@ -35,15 +35,18 @@ class MigasChangeList(ChangeList):
         for x in self.filter_specs:
             if hasattr(x, 'lookup_choices') \
                     and hasattr(x, 'used_parameters') and x.used_parameters:
-                if isinstance(x.lookup_choices[0][0], int):
-                    try:
-                        element = dict(
-                            x.lookup_choices
-                        )[int(x.used_parameters.values()[0])]
-                    except:
-                        element = ""
-                        for key, value in x.used_parameters.iteritems():
-                            element += "%s=%s " % (key.split("__")[1], value)
+                if not x.lookup_val:
+                    element = ""
+                    for key, value in x.used_parameters.iteritems():
+                        lookup_type = key.split("__")[1]
+                        if lookup_type == 'isnull':
+                            element += '{} '.format(_('empty'))
+                        else:
+                            element += "%s=%s " % (lookup_type, value)
+                elif isinstance(x.lookup_choices[0][0], int):
+                    element = dict(
+                        x.lookup_choices
+                    )[int(x.used_parameters.values()[0])]
                 else:
                     element = dict(
                         x.lookup_choices
@@ -93,10 +96,11 @@ class MigasChangeList(ChangeList):
                for k in self.filter_description)
         if _filter:
             _filter = "(%s)" % _filter
+
         self.title = u"%s %s" % (
            self.model._meta.verbose_name_plural,
            _filter
         )
 
-    def append(self, name, val):
-        self.filter_description.append({"name": unicode(name), "value": val})
+    def append(self, name, value):
+        self.filter_description.append({"name": unicode(name), "value": value})
