@@ -40,7 +40,7 @@ class MigasChangeList(ChangeList):
                     for key, value in x.used_parameters.iteritems():
                         lookup_type = key.split("__")[1]
                         if lookup_type == 'isnull':
-                            element += '{} '.format(_('empty'))
+                            element += u'{} '.format(_('empty'))
                         else:
                             element += "%s=%s " % (lookup_type, value)
                 elif isinstance(x.lookup_choices[0][0], int):
@@ -103,4 +103,7 @@ class MigasChangeList(ChangeList):
         )
 
     def append(self, name, value):
-        self.filter_description.append({"name": unicode(name), "value": value})
+        self.filter_description.append({
+            "name": unicode(name),
+            "value": value
+        })
