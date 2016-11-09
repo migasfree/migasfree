@@ -22,7 +22,7 @@
         <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
         <link rel="stylesheet" href="{% static 'admin/css/overrides.css' %}" />
 
-        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20161107" />
+        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20161109" />
         <link rel="stylesheet" href="{% static 'css/migasfree_print.css' %}?20151227" media="print" />
 
         <link rel="stylesheet" href="{% static 'css/ajax_select.css' %}" />
@@ -184,10 +184,6 @@
                     {% include 'includes/breadcrumb.html' %}
                 {% endblock breadcrumbs %}
 
-                {% block content_title %}
-                    {% if title %}<h1>{{ title }}</h1>{% endif %}
-                {% endblock content_title %}
-
                 {% block messages %}
                     {% if messages %}
                         <div class="row">
@@ -201,6 +197,10 @@
                         </div>
                     {% endif %}
                 {% endblock messages %}
+
+                {% block content_title %}
+                    {% if title %}<h1>{{ title }}</h1>{% endif %}
+                {% endblock content_title %}
 
                 {% block object-tools %}{% endblock object-tools %}
 
