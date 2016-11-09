@@ -452,12 +452,14 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         for r in repositories:
             lst_repos.append({"name": r.name})
-            for p in r.toremove.replace("\n", " ").split(" "):
-                if p != "":
-                    lst_pkg_remove.append(p)
-            for p in r.toinstall.replace("\n", " ").split(" "):
-                if p != "":
-                    lst_pkg_install.append(p)
+            if r.toremove:
+                for p in r.toremove.replace("\n", " ").split(" "):
+                    if p != "":
+                        lst_pkg_remove.append(p)
+            if r.toinstall:
+                for p in r.toinstall.replace("\n", " ").split(" "):
+                    if p != "":
+                        lst_pkg_install.append(p)
 
         # DEVICES
         logical_devices = []
