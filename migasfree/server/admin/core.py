@@ -215,7 +215,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     form = RepositoryForm
     list_display = ('version', 'my_link', 'my_active', 'date', 'timeline')
     list_select_related = ('schedule',)
-    list_filter = ('active', 'version')
+    list_filter = ('active', 'version', 'schedule')
     search_fields = ('name', 'packages__name')
     actions = None
 
