@@ -81,6 +81,12 @@ urlpatterns = [
     ),
 
     url(
+        r'^admin/server/computer/change_status/$',
+        computer_change_status,
+        name='computer_change_status'
+    ),
+
+    url(
         r'^admin/server/computer/delete_selected/$',
         computer_delete_selected,
         name='computer_delete_selected'

@@ -53,6 +53,31 @@ def computer_delete_selected(request):
 
 
 @login_required
+def computer_change_status(request):
+    success_url = reverse_lazy('admin:server_computer_changelist')
+
+    selected = request.POST.get('selected', None)
+    status = request.POST.get('status', None)
+    if selected and status:
+        computer_ids = selected.split(', ')
+        changed = []
+        for item in computer_ids:
+            try:
+                computer = Computer.objects.get(pk=int(item))
+                computer.change_status(status)
+                changed.append(computer.__str__())
+            except ObjectDoesNotExist:
+                pass
+
+        messages.success(
+            request,
+            _("Computers %s, changed status!") % ', '.join([x for x in changed])
+        )
+
+    return redirect(success_url)
+
+
+@login_required
 def computer_replacement(request):
     if request.method == 'POST':
         form = ComputerReplacementForm(request.POST)

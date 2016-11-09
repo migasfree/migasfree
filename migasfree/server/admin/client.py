@@ -105,7 +105,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     )
 
     resource_class = ComputerResource
-    actions = ['delete_selected']
+    actions = ['delete_selected', 'change_status']
 
     def my_link(self, obj):
         return obj.link()
@@ -133,6 +133,22 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     delete_selected.short_description = _("Delete selected "
                                           "%(verbose_name_plural)s")
+
+    def change_status(self, request, objects):
+        if not self.has_change_permission(request):
+            raise PermissionDenied
+
+        return render(
+            request,
+            'computer_change_status.html',
+            {
+                'objects': [x.__str__() for x in objects],
+                'ids': ', '.join([str(x.id) for x in objects]),
+                'status': Computer.STATUS_CHOICES
+            }
+        )
+
+    change_status.short_description = _("Change status...")
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == "devices_logical":
