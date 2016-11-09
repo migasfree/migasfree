@@ -3,8 +3,6 @@
 
 {% if opts or cl %}
     <ul class="breadcrumb">
-        <!--li><a href="{% url 'admin:index' %}">{% trans 'Home' %}</a></li-->
-
         {% if opts.object_name.lower == 'computer' or opts.object_name.lower == 'user' or opts.object_name.lower == 'login' or opts.object_name.lower == 'error' or opts.object_name.lower == 'fault' or opts.object_name.lower == 'attribute' or opts.object_name.lower == 'migration' or opts.object_name.lower == 'notification' or opts.object_name.lower == 'tag' %}
             <li>{% trans 'Datum' %}</li>
         {% endif %}
