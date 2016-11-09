@@ -59,7 +59,7 @@ class CheckingAdmin(MigasAdmin):
 @admin.register(ClientProperty)
 class ClientPropertyAdmin(MigasAdmin):
     list_display = ('my_link', 'my_active', 'kind', 'my_auto')
-    list_filter = ('active',)
+    list_filter = ('active', 'kind', 'auto')
     ordering = ('name',)
     search_fields = ('name', 'prefix')
     form = PropertyForm
@@ -169,7 +169,7 @@ class PlatformAdmin(MigasAdmin):
         )
 
     delete_selected.short_description = _("Delete selected "
-        "%(verbose_name_plural)s")
+                                          "%(verbose_name_plural)s")
 
 
 @admin.register(Pms)
