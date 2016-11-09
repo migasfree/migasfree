@@ -87,9 +87,15 @@ class MigasChangeList(ChangeList):
                         elements.append(unicode(dict(x.field.choices)[element]))
                     self.append(x.title, ", ".join(elements))
 
-        self.title = u"%s (%s)" % (
+        _filter = ",".join(u"%s:%s" % (
+               k["name"].capitalize(),
+               unicode(k["value"]))
+               for k in self.filter_description)
+        if _filter:
+            _filter = "(%s)" % _filter
+        self.title = u"%s %s" % (
            self.model._meta.verbose_name_plural,
-           unicode(self.filter_description)
+           _filter
         )
 
     def append(self, name, val):
