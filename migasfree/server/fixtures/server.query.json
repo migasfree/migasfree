@@ -10,16 +10,6 @@
         }
     },
     {
-        "pk": 2,
-        "model": "server.query",
-        "fields": {
-            "code": "from django.utils.translation import ugettext_lazy as _\nfrom migasfree.server.models import Package\nquery = Package.objects.filter(name__contains=parameters['name'])\nfields = ('link', 'store')\ntitles = (_('Name'), _('Store'))\n",
-            "name": "Packages/Sets...",
-            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        name = forms.CharField()\n    return myForm\n",
-            "description": "Package/Set List"
-        }
-    },
-    {
         "pk": 3,
         "model": "server.query",
         "fields": {

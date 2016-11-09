@@ -69,6 +69,19 @@ class Migration(migrations.Migration):
             )]
         ),
         migrations.RunSQL(
+            "DELETE FROM server_query WHERE id=2;",
+            [(
+                "INSERT INTO server_query (id, code, name, parameters, description) VALUES (%d, %s, %s, %s, %s);",
+                [
+                    2,
+                    "from django.utils.translation import ugettext_lazy as _\nfrom migasfree.server.models import Package\nquery = Package.objects.filter(name__contains=parameters['name'])\nfields = ('link', 'store')\ntitles = (_('Name'), _('Store'))\n",
+                    "Packages/Sets...",
+                    "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        name = forms.CharField()\n    return myForm\n",
+                    "Package/Set List"
+                ]
+            )]
+        ),
+        migrations.RunSQL(
             "DELETE FROM server_query WHERE id=5;",
             [(
                 "INSERT INTO server_query (id, code, name, parameters, description) VALUES (%d, %s, %s, %s, %s);",
