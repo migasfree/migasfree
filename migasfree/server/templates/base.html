@@ -169,6 +169,10 @@
                         </li>
                     </ul>
                 </nav>
+                {% else %}
+                    <div class="nav navbar-nav navbar-right navbar-brand">
+                        <a href="{% url 'admin:login' %}">{%trans 'Log in' %}</a>
+                    </div>
                 {% endif %}
             </nav>
         </header>
