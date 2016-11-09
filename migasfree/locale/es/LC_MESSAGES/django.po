@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-09 14:29+0100\n"
-"PO-Revision-Date: 2016-11-09 14:30+0100\n"
+"POT-Creation-Date: 2016-11-09 18:14+0100\n"
+"PO-Revision-Date: 2016-11-09 18:15+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -400,14 +400,18 @@ msgid "Device"
 msgstr "Dispositivo"
 
 #: migasfree/server/admin/migasfree.py:18
-#: migasfree/server/admin/migasfree.py:76
+#: migasfree/server/admin/migasfree.py:79
 msgid "Yes"
 msgstr "Sí"
 
 #: migasfree/server/admin/migasfree.py:21
-#: migasfree/server/admin/migasfree.py:74
+#: migasfree/server/admin/migasfree.py:77
 msgid "No"
 msgstr "No"
+
+#: migasfree/server/admin/migasfree.py:43
+msgid "empty"
+msgstr "vacío"
 
 #: migasfree/server/api.py:35
 #, python-format
@@ -494,22 +498,6 @@ msgstr "Pila de la traza de ejecución"
 #: migasfree/server/errmfs.py:130
 msgid "Generic error in server"
 msgstr "Error genérico en el servidor"
-
-#: migasfree/server/fields.py:31
-#, python-format
-msgid ""
-"Ensure at least %(min_num)s files are uploaded (received %(num_files)s)."
-msgstr ""
-
-#: migasfree/server/fields.py:32
-#, python-format
-msgid "Ensure at most %(max_num)s files are uploaded (received %(num_files)s)."
-msgstr ""
-
-#: migasfree/server/fields.py:33
-#, python-format
-msgid "File: %(uploaded_file_name)s, exceeded maximum upload size."
-msgstr "Fichero: %(uploaded_file_name)s, excede el tamaño máximo permitido."
 
 #: migasfree/server/filters.py:27 migasfree/server/models/computer.py:402
 #: migasfree/server/views/dashboard.py:70
@@ -2198,24 +2186,6 @@ msgstr "Licencia"
 msgid "Use Rights"
 msgstr "Derechos de uso"
 
-#: migasfree/server/validators.py:61
-#, python-format
-msgid "%s is not an acceptable file type"
-msgstr "%s no es un tipo de archivo aceptable"
-
-#: migasfree/server/validators.py:65
-msgid "This value could not be validated for file type"
-msgstr "Este valor no puede ser validado para el tipo de archivo"
-
-#: migasfree/server/validators.py:72
-msgid "When more than one file is uploaded, name is required"
-msgstr "Cuando más de un fichero es subido, el nombre es necesario"
-
-#: migasfree/server/validators.py:80
-#, python-format
-msgid "PMS must be one of %s"
-msgstr "PMS debe ser uno de estos: %s"
-
 #: migasfree/server/views/computer.py:27
 #, python-format
 msgid "Computer %s deleted!"
@@ -2324,6 +2294,21 @@ msgstr "El estado debe tener uno de los siguientes valores: %s"
 #, python-format
 msgid "Version %s deleted!"
 msgstr "¡Versión %s borrada!"
+
+#~ msgid "File: %(uploaded_file_name)s, exceeded maximum upload size."
+#~ msgstr "Fichero: %(uploaded_file_name)s, excede el tamaño máximo permitido."
+
+#~ msgid "%s is not an acceptable file type"
+#~ msgstr "%s no es un tipo de archivo aceptable"
+
+#~ msgid "This value could not be validated for file type"
+#~ msgstr "Este valor no puede ser validado para el tipo de archivo"
+
+#~ msgid "When more than one file is uploaded, name is required"
+#~ msgstr "Cuando más de un fichero es subido, el nombre es necesario"
+
+#~ msgid "PMS must be one of %s"
+#~ msgstr "PMS debe ser uno de estos: %s"
 
 #~ msgid "Ready computers to reinstall devices"
 #~ msgstr "Ordenadores preparados para reinstalar dispositivos"
