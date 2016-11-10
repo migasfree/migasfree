@@ -255,3 +255,7 @@ h1.change-list-title {
 .clearfix {
     clear: both;
 }
+
+#changelist-search button {
+    display: none;
+}
