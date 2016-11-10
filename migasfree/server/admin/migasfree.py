@@ -35,7 +35,7 @@ class MigasChangeList(ChangeList):
         for x in self.filter_specs:
             if hasattr(x, 'lookup_choices') \
                     and hasattr(x, 'used_parameters') and x.used_parameters:
-                if not x.lookup_val:
+                if hasattr(x, 'lookup_val') and not x.lookup_val:
                     element = ""
                     for key, value in x.used_parameters.iteritems():
                         lookup_type = key.split("__")[1]
@@ -43,7 +43,10 @@ class MigasChangeList(ChangeList):
                             element += u'{} '.format(_('empty'))
                         else:
                             element += "%s=%s " % (lookup_type, value)
-                elif isinstance(x.lookup_choices[0][0], int):
+                    self.append(x.title, element)
+                    break
+
+                if isinstance(x.lookup_choices[0][0], int):
                     element = dict(
                         x.lookup_choices
                     )[int(x.used_parameters.values()[0])]
