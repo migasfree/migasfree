@@ -132,7 +132,8 @@ class ComputerFilter(filters.FilterSet):
     class Meta:
         model = Computer
         fields = [
-            'version__id', 'status', 'name', 'uuid', 'login__attributes__id'
+            'version__id', 'status', 'name', 'uuid',
+            'login__attributes__id', 'tags__id'
         ]
 
 
