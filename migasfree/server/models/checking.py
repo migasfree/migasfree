@@ -28,7 +28,6 @@ class Checking(models.Model):
 
     code = models.TextField(
         verbose_name=_("code"),
-        null=False,
         blank=True,
         help_text=_("Code django. <br><b>VARIABLES TO SETTINGS:</b><br>"
                     "<b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br>"
@@ -41,11 +40,6 @@ class Checking(models.Model):
 
     active = models.BooleanField(
         verbose_name=_("active"),
-        default=True,
-    )
-
-    alert = models.BooleanField(
-        verbose_name=_("alert"),
         default=True,
     )
 

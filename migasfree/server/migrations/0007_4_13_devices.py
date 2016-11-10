@@ -82,5 +82,9 @@ class Migration(migrations.Migration):
             model_name='computer',
             name='devices_logical',
         ),
+        migrations.RemoveField(
+            model_name='checking',
+            name='alert',
+        ),
         migrations.RunPython(insert_initial_hardware_resume, migrations.RunPython.noop),
     ]

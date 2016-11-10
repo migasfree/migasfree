@@ -20,7 +20,7 @@ def execute_active_checkings(request):
     request parameter maybe used in exec code call (not unused!!!)
     """
     checkings = []
-    for check in Checking.objects.filter(active=True).order_by('alert'):
+    for check in Checking.objects.filter(active=True):
         try:
             exec(check.code.replace("\r", ""))
         except:

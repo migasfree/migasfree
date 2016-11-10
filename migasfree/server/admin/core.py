@@ -39,7 +39,7 @@ class AttributeSetAdmin(MigasAdmin):
 
 @admin.register(Checking)
 class CheckingAdmin(MigasAdmin):
-    list_display = ('name', 'my_active', 'my_alert')
+    list_display = ('name', 'my_active')
     list_display_links = ('name',)
     list_filter = ('active',)
 
@@ -48,12 +48,6 @@ class CheckingAdmin(MigasAdmin):
 
     my_active.allow_tags = True
     my_active.short_description = _('active')
-
-    def my_alert(self, obj):
-        return self.boolean_field(obj.alert)
-
-    my_alert.allow_tags = True
-    my_alert.short_description = _('alert')
 
 
 @admin.register(ClientProperty)
