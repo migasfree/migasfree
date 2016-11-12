@@ -73,7 +73,7 @@
         var migrationData = {{ migrations|safe|escape }};
 
         var now = new Date();
-        var tzOffset = now.getTimezoneOffset() * 60000;  //offset in milliseconds
+        var tzOffset = now.getTimezoneOffset() * 60000;  // offset in milliseconds
         var inputDate = new Date("{{ computer.dateinput.isoformat }}");
         var startDate = new Date();
         startDate.setMonth(now.getMonth() - 11);
@@ -99,8 +99,8 @@
                     var dateEnd = new Date(date - tzOffset);
                     dateEnd.setDate(dateEnd.getDate() + 1);
 
-                    var dayStart = dateStart.toISOString().slice(0, 10);
-                    var dayEnd = dateEnd.toISOString().slice(0, 10);
+                    var dayStart = new Date(dateStart - tzOffset).toISOString().slice(0, 10);
+                    var dayEnd = new Date(dateEnd - tzOffset).toISOString().slice(0, 10);
 
                     var url = "/api/v1/token/" + dataset + "/?computer__id=" + computerId;
                     switch(dataset) {
