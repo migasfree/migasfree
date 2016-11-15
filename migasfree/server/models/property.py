@@ -131,9 +131,6 @@ class ClientProperty(Property):
 
 
 class TagType(Property):
-    _exclude_links = ["attribute - property_att", ]
-    _include_links = ["tag - property_att", ]
-
     objects = TagTypeManager()
 
     def save(self, *args, **kwargs):

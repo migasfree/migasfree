@@ -12,7 +12,7 @@ from ajax_select.fields import AutoCompleteSelectMultipleField
 
 from .models import (
     Repository, UserProfile, Computer, Device, DeviceLogical,
-    Property, Tag, TagType, Attribute, Package,
+    Property, Tag, TagType, Attribute, Store, Package
 )
 
 
@@ -91,6 +91,41 @@ class RepositoryForm(forms.ModelForm):
                         pkg, cleaned_data['version']
                     )
                 )
+
+
+class StoreForm(forms.ModelForm):
+
+    class Meta:
+        model = Store
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(StoreForm, self).__init__(*args, **kwargs)
+        try:
+            self.fields['version'].initial = UserProfile.objects.get(
+                pk=self.current_user.id
+            ).version.id
+            self.fields['version'].empty_label = None
+        except (UserProfile.DoesNotExist, AttributeError):
+            pass
+
+
+class PackageForm(forms.ModelForm):
+
+    class Meta:
+        model = Package
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super(PackageForm, self).__init__(*args, **kwargs)
+        try:
+            self.fields['version'].initial = UserProfile.objects.get(
+                pk=self.current_user.id
+            ).version.id
+            self.fields['version'].empty_label = None
+        except (UserProfile.DoesNotExist, AttributeError):
+            pass
+
 
 class DeviceLogicalForm(forms.ModelForm):
     attributes = AutoCompleteSelectMultipleField('attribute', required=False)

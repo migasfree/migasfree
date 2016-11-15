@@ -8,10 +8,10 @@
         <a href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a>
     </li>
     <li>
-        <a href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a>
+        <a href="{% url 'admin:server_store_changelist' %}?version__id__exact={{ current_version.id }}">{% trans 'Stores' %}</a>
     </li>
     <li>
-        <a href="{% url 'admin:server_package_changelist' %}">{% trans 'Packages/Sets' %}</a>
+        <a href="{% url 'admin:server_package_changelist' %}?version__id__exact={{ current_version.id }}">{% trans 'Packages/Sets' %}</a>
     </li>
     <li>
         <a href="{% url 'package_info' '' %}">{% trans 'Packages information' %}</a>

@@ -16,7 +16,11 @@ from ..models import (
     Notification, Package, Platform, Pms, Property, Query, Repository, Schedule,
     ScheduleDelay, Store, Tag, TagType, UserProfile, Version
 )
-from ..forms import PropertyForm, RepositoryForm, TagForm
+
+from ..forms import (
+    PropertyForm, RepositoryForm, TagForm, StoreForm, PackageForm
+)
+
 from ..filters import FeatureFilter, TagFilter
 from ..functions import compare_list_values
 from ..tasks import (
@@ -24,7 +28,7 @@ from ..tasks import (
     remove_physical_repository
 )
 
-admin.site.register(Attribute)
+#admin.site.register(Attribute)
 
 
 @admin.register(AttributeSet)
@@ -33,8 +37,13 @@ class AttributeSetAdmin(MigasAdmin):
         AttributeSet,
         {'attributes': 'attribute', 'excludes': 'attribute'}
     )
-    list_display = ('name',)
-    list_display_links = ('name',)
+    list_display = ('my_link',)
+    list_filter = ('active',)
+    list_display_links = ('my_link',)
+
+    def my_link(self, obj):
+        return obj.link()
+    my_link.short_description = _("Attribute Set")
 
 
 @admin.register(Checking)
@@ -81,6 +90,32 @@ class ClientPropertyAdmin(MigasAdmin):
     my_auto.short_description = _('auto')
 
 
+@admin.register(Attribute)
+class AttributeAdmin(MigasAdmin):
+    list_display = (
+        'my_link', 'description', 'total_computers', 'property_att'
+    )
+    list_select_related = ('property_att',)
+    list_filter = (FeatureFilter,)
+    fields = ('property_att', 'value', 'description')
+    ordering = ('property_att', 'value')
+    search_fields = ('value', 'description')
+    readonly_fields = ('property_att', 'value')
+
+    def my_link(self, obj):
+        return obj.link()
+
+    my_link.short_description = _("Attribute")
+
+    def get_queryset(self, request):
+        return super(AttributeAdmin, self).get_queryset(request).extra(
+            select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
+        )
+
+    def has_add_permission(self, request):
+        return False
+
+
 @admin.register(Feature)
 class FeatureAdmin(MigasAdmin):
     list_display = (
@@ -119,12 +154,31 @@ class MessageServerAdmin(MigasAdmin):
 
 @admin.register(Package)
 class PackageAdmin(MigasAdmin):
+    form = PackageForm
     list_display = ('my_link', 'store', 'repos_link')
     list_filter = ('version', 'store', 'repository')
     list_per_page = 25
     list_select_related = ('version',)
     search_fields = ('name', 'store__name')
     ordering = ('name',)
+
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        if db_field.name == '++':
+            # Packages filter by user version
+            kwargs['queryset'] = Store.objects.filter(
+                version__id=request.user.userprofile.version_id
+            )
+
+            return db_field.formfield(**kwargs)
+
+        return super(PackageAdmin, self).formfield_for_foreignkey(
+            db_field,
+            request,
+            **kwargs
+        )
+
+    class Media:
+        js = ('js/package_admin.js',)
 
     def my_link(self, obj):
         return obj.link()
@@ -135,7 +189,7 @@ class PackageAdmin(MigasAdmin):
         form = super(PackageAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
         form.base_fields['store'].widget.can_add_related = False
-
+        form.current_user = request.user
         return form
 
 
@@ -341,6 +395,7 @@ class ScheduleAdmin(MigasAdmin):
 
 @admin.register(Store)
 class StoreAdmin(MigasAdmin):
+    form = StoreForm
     list_display = ('my_link',)
     search_fields = ('name',)
     list_filter = ('version',)
@@ -354,7 +409,7 @@ class StoreAdmin(MigasAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super(StoreAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
-
+        form.current_user = request.user
         return form
 
 
@@ -404,6 +459,7 @@ class TagAdmin(MigasAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
     list_display = ('my_link',)
+    list_filter = ('version',)
     ordering = ('username',)
 
     def my_link(self, obj):
@@ -429,6 +485,7 @@ class VersionAdmin(MigasAdmin):
         'my_autoregister'
     )
     fields = ('name', 'platform', 'pms', 'computerbase', 'autoregister', 'base')
+    list_filter = ('platform', 'pms')
     actions = None
 
     def my_link(self, obj):

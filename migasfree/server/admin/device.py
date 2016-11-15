@@ -43,7 +43,11 @@ class DeviceConnectionAdmin(admin.ModelAdmin):
     fields = ('devicetype', 'name', 'fields')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(DeviceConnectionAdmin, self).get_form(request, obj, **kwargs)
+        form = super(DeviceConnectionAdmin, self).get_form(
+            request,
+            obj,
+            **kwargs
+        )
         form.base_fields['devicetype'].widget.can_add_related = False
 
         return form
@@ -71,6 +75,7 @@ class DeviceLogicalAdmin(MigasAdmin):
     fields = ('device', 'feature', 'name', 'attributes')
     list_select_related = ('device', 'feature')
     list_display = ('my_link', 'device_link', 'feature')
+    list_filter = ('device__model', 'feature')
     ordering = ('device__name', 'feature__name')
     search_fields = (
         'id',
@@ -170,8 +175,8 @@ class DeviceDriverInline(admin.TabularInline):
 
 @admin.register(DeviceModel)
 class DeviceModelAdmin(MigasAdmin):
-    list_display = ('name', 'manufacturer', 'devicetype')
-    list_display_links = ('name',)
+    list_display = ('my_link', 'manufacturer', 'devicetype')
+    list_display_links = ('my_link',)
     list_filter = ('devicetype', 'manufacturer')
     ordering = ('devicetype__name', 'manufacturer__name', 'name')
     search_fields = (
@@ -180,6 +185,10 @@ class DeviceModelAdmin(MigasAdmin):
         'connections__devicetype__name'
     )
     inlines = [DeviceDriverInline]
+
+    def my_link(self, obj):
+        return obj.link()
+    my_link.short_description = _('Device')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeviceModelAdmin, self).get_form(request, obj, **kwargs)

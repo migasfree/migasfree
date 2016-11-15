@@ -6,6 +6,7 @@ from import_export.admin import ExportActionModelAdmin
 from django.contrib.admin.views.main import ChangeList
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.fields import BooleanField, IntegerField
+from django.apps import apps
 
 
 class MigasAdmin(ExportActionModelAdmin):
@@ -32,6 +33,8 @@ class MigasChangeList(ChangeList):
     def __init__(self, *args, **kwargs):
         super(MigasChangeList, self).__init__(*args, **kwargs)
         self.filter_description = []
+        params = dict(self.params)
+
         for x in self.filter_specs:
             if hasattr(x, 'lookup_choices') \
                     and hasattr(x, 'used_parameters') and x.used_parameters:
@@ -43,6 +46,7 @@ class MigasChangeList(ChangeList):
                             element += u'{} '.format(_('empty'))
                         else:
                             element += "%s=%s " % (lookup_type, value)
+                        params.pop(key, None)
                     self.append(x.title, element)
                     break
 
@@ -54,8 +58,9 @@ class MigasChangeList(ChangeList):
                     element = dict(
                         x.lookup_choices
                     )[x.used_parameters.values()[0]]
-
                 self.append(x.title, element)
+                for element in x.used_parameters:
+                    params.pop(element, None)
             elif hasattr(x, 'lookup_choices') and hasattr(x, "lookup_val") \
                     and x.lookup_val:
                 if isinstance(x.lookup_choices[0][0], int):
@@ -63,11 +68,13 @@ class MigasChangeList(ChangeList):
                         x.lookup_title,
                         dict(x.lookup_choices)[int(x.lookup_val)]
                     )
+                    params.pop(x.lookup_kwarg, None)
                 else:
                     self.append(
                         x.lookup_title,
                         dict(x.lookup_choices)[x.lookup_val]
                     )
+                    params.pop(x.lookup_kwarg, None)
             elif hasattr(x, 'links'):
                 for l in x.links:
                     if l[1] == x.used_parameters:
@@ -78,8 +85,10 @@ class MigasChangeList(ChangeList):
                 if isinstance(x.field, BooleanField):
                     if x.lookup_val == "0":
                         self.append(x.title, _("No"))
+                        params.pop(x.lookup_kwarg, None)
                     else:
                         self.append(x.title, _("Yes"))
+                        params.pop(x.lookup_kwarg, None)
                 elif isinstance(x.field, IntegerField):
                     elements = []
                     for element in x.lookup_val.split(','):
@@ -87,11 +96,56 @@ class MigasChangeList(ChangeList):
                             unicode(dict(x.field.choices)[int(element)])
                         )
                     self.append(x.title, ", ".join(elements))
+                    params.pop(x.lookup_kwarg, None)
                 else:
                     elements = []
                     for element in x.lookup_val.split(','):
                         elements.append(unicode(dict(x.field.choices)[element]))
+                        params.pop(x.lookup_kwarg, None)
                     self.append(x.title, ", ".join(elements))
+                    params.pop(x.lookup_kwarg, None)
+
+        # filters no standards
+        params.pop("date__gte", None)
+        params.pop("date__lt", None)
+        for k in params:
+            if k.endswith("__id__exact"):
+                _classname = k.split("__")[0]
+                _name = _classname
+
+                if _classname == "ExcludeAttribute":
+                    _classname = "repository"
+                    _name = "excluded"
+                if _classname == "ExcludeAttributeGroup":
+                    _classname = "attributeset"
+                    _name = "excluded"
+
+                if not hasattr(self.model, _classname):
+                    mymodel = apps.get_model('server', _classname)
+                    self.append(_name, mymodel.objects.get(pk=params[k]))
+                else:
+                    mymodel = getattr(self.model, _classname)
+                    _classname = mymodel.field.related_model.__name__
+                    mymodel = apps.get_model('server', _classname)
+                    self.append(_name, mymodel.objects.get(pk=params[k]))
+
+            elif k == "id__in":
+                _classname = self.model.__name__
+                mymodel = apps.get_model('server', _classname)
+                _list = []
+                for _id in params[k].split(",")[0:10]:  # limit to 10 elements
+                    _list.append(
+                        apps.get_model('server', _classname).objects.get(
+                            pk=int(_id)
+                        ).__str__()
+                    )
+                if len(_list) == 10:
+                    self.append(_classname, ", ".join(_list) + " . . .")
+                else:
+                    self.append(_classname, ", ".join(_list))
+
+            else:
+                self.append(k, params[k])
 
         _filter = ", ".join(u"%s: %s" % (
                k["name"].capitalize(),
@@ -107,6 +161,6 @@ class MigasChangeList(ChangeList):
 
     def append(self, name, value):
         self.filter_description.append({
-            "name": unicode(name),
+            "name": _(unicode(name)),
             "value": value
         })

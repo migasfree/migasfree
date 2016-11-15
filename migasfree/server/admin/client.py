@@ -269,7 +269,7 @@ class FaultAdmin(MigasAdmin):
 class FaultDefAdmin(MigasAdmin):
     form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
     list_display = ('my_link', 'my_active', 'list_attributes', 'list_users')
-    list_filter = ('active',)
+    list_filter = ('active', 'users')
     search_fields = ('name',)
     filter_horizontal = ('attributes',)
 
@@ -340,7 +340,7 @@ class MigrationAdmin(MigasAdmin):
     list_display = ('id', 'computer_link', 'version', 'date')
     list_display_links = ('id',)
     list_select_related = ('computer', 'version')
-    list_filter = ('date', 'version__platform')
+    list_filter = ('date', 'version__platform', 'version')
     search_fields = add_computer_search_fields(['date'])
     readonly_fields = ('computer_link', 'version', 'date')
     exclude = ('computer',)

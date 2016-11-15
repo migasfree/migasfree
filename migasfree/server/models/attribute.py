@@ -158,8 +158,6 @@ class TagManager(AttributeManager):
 
 
 class Tag(Attribute):
-    _include_links = ["computer - tags"]
-
     objects = TagManager()
 
     def __init__(self, *args, **kwargs):
