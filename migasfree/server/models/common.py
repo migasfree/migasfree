@@ -151,13 +151,24 @@ class MigasLink(object):
     link.short_description = ''
 
     def transmodel(self, obj):
-
-        from migasfree.server.models import Feature, Tag
+        from migasfree.server.models import Property, Feature, Tag, Computer
         if obj.related_model._meta.label_lower == "server.attribute":
             if self.tag:
                 return Tag, "Tag"
             else:
                 return Feature, "Attribute"
+
+        elif obj.related_model._meta.label_lower == "server.computer":
+            if self.__class__.__name__=="Tag":
+                return Computer, "tags__id__exact"
+            elif self.__class__.__name__=="Attribute":
+                print vars(self)
+                if Property.objects.get(pk=self.property_att_id).tag:
+                    return Computer, "tags__id__exact"
+                else:
+                    return "", ""
+            else:
+                return "", ""
 
         elif obj.related_model._meta.label_lower in [
             "admin.logentry",
