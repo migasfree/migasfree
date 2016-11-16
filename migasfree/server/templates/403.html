@@ -1,0 +1,12 @@
+{% extends "base_full.html" %}
+{% load i18n %}
+
+{% block title %}{% trans 'forbidden' %}{% endblock title %}
+
+{% block content %}
+    <h1>{% trans 'forbidden' %}</h1>
+
+    <div class="alert alert-warning">
+        {% trans "We're sorry, but the requested page is forbidden." %}
+    </div>
+{% endblock content %}
