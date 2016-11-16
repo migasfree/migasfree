@@ -164,6 +164,12 @@ urlpatterns = [
     ),
 
     url(
+        r'^computer/(?P<pk>\d+)/simulate/$',
+        computer_simulate,
+        name='computer_simulate',
+    ),
+
+    url(
         r'^device_replacement/$',
         device_replacement,
         name='device_replacement'

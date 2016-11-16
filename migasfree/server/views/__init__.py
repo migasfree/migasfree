@@ -25,6 +25,7 @@ from .computer import (
     computer_replacement,
     computer_events,
     computer_change_status,
+    computer_simulate,
 )
 from .version import VersionDelete
 from .platform import PlatformDelete, platform_delete_selected

@@ -12,7 +12,7 @@ from django.views.generic import DeleteView
 from django.utils.translation import ugettext_lazy as _
 
 from ..forms import ComputerReplacementForm
-from ..models import Computer, Update, Error, Fault, StatusLog, Migration
+from ..models import Computer, Update, Error, Fault, StatusLog, Migration, Login, Version
 from ..mixins import LoginRequiredMixin
 from ..functions import d2s, to_heatmap
 
@@ -162,3 +162,48 @@ def computer_events(request, pk):
             'migrations_count': migrations_count,
         }
     )
+
+@login_required
+def computer_simulate(request, pk):
+    from migasfree.server.api import upload_computer_info
+    computer=Computer.objects.get(pk=pk)
+
+    attributes = {}
+    login = Login.objects.get(computer_id=computer.id)
+    version = Version.objects.get(id=computer.version.id)
+    for att in login.attributes.all():
+        attributes[att.property_att.prefix]=att.value
+
+    data = {
+        "upload_computer_info":
+              {
+                "attributes": attributes,
+                "computer": { "user_fullname": login.user.fullname,
+                              "pms": version.pms.name,
+                              "ip": computer.ip,
+                              "hostname": computer.name,
+                              "platform": version.platform.name,
+                              "version": version.name,
+                              "user": login.user.name
+                              }
+              }
+
+    }
+
+    from django.db import transaction
+    transaction.set_autocommit(False)
+    try:
+        result=upload_computer_info(request, computer.name, computer.uuid, computer, data)['upload_computer_info.return']
+    except:
+        pass
+    transaction.rollback()
+    transaction.set_autocommit(True)
+    result["computer"] = computer
+    result["attributes"] = attributes
+    result["login"] = login
+    result["version"] = version
+
+    return render( request,
+                  'computer_simulate.html',
+                  result
+                )

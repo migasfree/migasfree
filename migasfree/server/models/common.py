@@ -130,6 +130,13 @@ class MigasLink(object):
                     ugettext(self._meta.model_name)
                 )
             })
+            related_data.append({
+                'url': reverse('computer_simulate', args=(self.id,)),
+                'text': '%s [%s]' % (
+                    ugettext('Simulate'),
+                    ugettext(self._meta.model_name)
+                )
+            })
 
         return render_to_string(
             'includes/migas_link.html',
