@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrastyle %}
+    <link rel="stylesheet" href="{% static 'css/cal-heatmap.css' %}" />
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Datum' %}</li>
+        <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
+        <li><a href="{% url 'admin:server_computer_change' computer.id %}">{{ computer }}</a></li>
+        <li>{% trans 'Simulate' %}</li>
+    </ul>
+{% endblock %}
+
+{% block content_title %}
+    <h1>{% trans 'Simulate sync' %}: {{ computer.link }} </h1>
+{% endblock content_title %}
+
+{% block content %}
+<h2>{% trans 'Input (from computer)' %}</h2>
+
+<h3>{% trans 'Login' %}</h3>
+<ul class="list-group">
+    <li class="list-group-item">{% trans 'Date' %}: {{ login.date }}</li>
+    <li class="list-group-item">{% trans 'uuid' %}: {{ computer.uuid }}</li>
+    <li class="list-group-item">{% trans 'Version' %}: {{ version.name }} ({{ version.platform.name }})</li>
+    <li class="list-group-item">{% trans 'User' %}: {{ login.user.name }} ({{ login.user.fullname }})</li>
+</ul>
+
+<h3>{% trans 'Attributes' %}</h3>
+<ul class="list-group">
+{% for key, value  in attributes.items %}
+    <li class="list-group-item">{{ key }}-{{ value }} </li>
+{% endfor %}
+</ul>
+
+<h3>{% trans 'Tags' %}</h3>
+<ul class="list-group">
+{% for item in computer.tags.all %}
+    <li class="list-group-item">{{ item.property_att.prefix }}-{{ item.value }}</li>
+{% endfor %}
+</ul>
+
+<h2>{% trans 'Output (from server)' %}</h2>
+
+<h3>{% trans 'Packages to install' %}</h3>
+<ul class="list-group">
+{% for item in packages.install %}
+    <li class="list-group-item">{{ item }} </li>
+{% endfor %}
+</ul>
+
+<h3>{% trans 'Packages to remove' %}</h3>
+<ul class="list-group">
+{% for item in packages.remove %}
+    <li class="list-group-item">{{ item }} </li>
+{% endfor %}
+</ul>
+
+<h3>{% trans 'Repositories' %}</h3>
+<ul class="list-group">
+{% for item in repositories %}
+    <li class="list-group-item">{{ item.name }}</li>
+{% endfor %}
+</ul>
+
+<h3>{% trans 'Fault Definitions' %}</h3>
+<ul class="list-group">
+{% for item in faultsdef %}
+    <li class="list-group-item">{{ item.name }} ({{ item.language }})</li>
+{% endfor %}
+</ul>
+
+<h3>{% trans 'Devices' %}</h3>
+<ul class="list-group">
+{% for item in devices.logical %}
+    <li class="list-group-item">
+        {{ item.PRINTER.manufacturer }}__{{ item.PRINTER.model }}__{{ item.PRINTER.feature }}__{{ item.PRINTER.name }}__{{ item.PRINTER.id }}
+        {% if item.PRINTER.id == devices.default %}
+            <span class="sr-only">(</span><span class="label label-default">default</span><span class="sr-only">)</span>
+        {% endif %}
+    </li>
+{% endfor %}
+</ul>
+
+<h3>{% trans 'Hardware Capture' %}:
+    <span class="label label-{% if hardware_capture %}success{% else %}info{% endif %}">{{ hardware_capture }}</span>
+</h3>
+{% endblock content %}

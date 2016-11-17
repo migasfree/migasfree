@@ -131,7 +131,7 @@ class MigasLink(object):
                 )
             })
             related_data.append({
-                'url': reverse('computer_simulate', args=(self.id,)),
+                'url': reverse('computer_simulate_sync', args=(self.id,)),
                 'text': '%s [%s]' % (
                     ugettext('Simulate'),
                     ugettext(self._meta.model_name)
@@ -166,9 +166,9 @@ class MigasLink(object):
                 return Feature, "Attribute"
 
         elif obj.related_model._meta.label_lower == "server.computer":
-            if self.__class__.__name__=="Tag":
+            if self.__class__.__name__ == "Tag":
                 return Computer, "tags__id__exact"
-            elif self.__class__.__name__=="Attribute":
+            elif self.__class__.__name__ == "Attribute":
                 print vars(self)
                 if Property.objects.get(pk=self.property_att_id).tag:
                     return Computer, "tags__id__exact"
@@ -196,4 +196,4 @@ class MigasLink(object):
             return obj.related_model, "%s__%s__exact" % (
                 obj.field.name,
                 obj.field.m2m_reverse_target_field_name()
-                )
+            )

@@ -294,7 +294,8 @@ class Computer(models.Model, MigasLink):
             for logical_device in DeviceLogical.objects.filter(
                 attributes__id=att
             ):
-                devices.append(logical_device)
+                if logical_device not in devices:
+                    devices.append(logical_device)
 
         return devices
 

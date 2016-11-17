@@ -2,6 +2,7 @@
 
 from datetime import datetime
 
+from django.db import transaction
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
@@ -12,9 +13,13 @@ from django.views.generic import DeleteView
 from django.utils.translation import ugettext_lazy as _
 
 from ..forms import ComputerReplacementForm
-from ..models import Computer, Update, Error, Fault, StatusLog, Migration, Login, Version
+from ..models import (
+    Computer, Update, Error, Fault,
+    StatusLog, Migration, Login, Version
+)
 from ..mixins import LoginRequiredMixin
 from ..functions import d2s, to_heatmap
+from ..api import upload_computer_info
 
 
 class ComputerDelete(LoginRequiredMixin, DeleteView):
@@ -163,47 +168,55 @@ def computer_events(request, pk):
         }
     )
 
+
 @login_required
-def computer_simulate(request, pk):
-    from migasfree.server.api import upload_computer_info
-    computer=Computer.objects.get(pk=pk)
+def computer_simulate_sync(request, pk):
+    computer = Computer.objects.get(pk=pk)
 
     attributes = {}
     login = Login.objects.get(computer_id=computer.id)
     version = Version.objects.get(id=computer.version.id)
-    for att in login.attributes.all():
-        attributes[att.property_att.prefix]=att.value
+    for att in login.attributes.filter(property_att__tag=False):
+        attributes[att.property_att.prefix] = att.value
 
     data = {
-        "upload_computer_info":
-              {
-                "attributes": attributes,
-                "computer": { "user_fullname": login.user.fullname,
-                              "pms": version.pms.name,
-                              "ip": computer.ip,
-                              "hostname": computer.name,
-                              "platform": version.platform.name,
-                              "version": version.name,
-                              "user": login.user.name
-                              }
-              }
-
+        "upload_computer_info": {
+            "attributes": attributes,
+            "computer": {
+                "user_fullname": login.user.fullname,
+                "pms": version.pms.name,
+                "ip": computer.ip,
+                "hostname": computer.name,
+                "platform": version.platform.name,
+                "version": version.name,
+                "user": login.user.name
+            }
+        }
     }
 
-    from django.db import transaction
     transaction.set_autocommit(False)
     try:
-        result=upload_computer_info(request, computer.name, computer.uuid, computer, data)['upload_computer_info.return']
+        result = upload_computer_info(
+            request,
+            computer.name,
+            computer.uuid,
+            computer,
+            data
+        )['upload_computer_info.return']
     except:
-        pass
-    transaction.rollback()
+        result = {}
+
+    transaction.rollback()  # only simulate sync... not real sync!
     transaction.set_autocommit(True)
+
+    result['title'] = _('Simulate sync: %s') % computer.__str__()
     result["computer"] = computer
     result["attributes"] = attributes
     result["login"] = login
     result["version"] = version
 
-    return render( request,
-                  'computer_simulate.html',
-                  result
-                )
+    return render(
+        request,
+        'computer_simulate_sync.html',
+        result
+    )

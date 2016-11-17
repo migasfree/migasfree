@@ -165,8 +165,8 @@ urlpatterns = [
 
     url(
         r'^computer/(?P<pk>\d+)/simulate/$',
-        computer_simulate,
-        name='computer_simulate',
+        computer_simulate_sync,
+        name='computer_simulate_sync',
     ),
 
     url(
