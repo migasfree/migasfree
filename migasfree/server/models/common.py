@@ -169,7 +169,6 @@ class MigasLink(object):
             if self.__class__.__name__ == "Tag":
                 return Computer, "tags__id__exact"
             elif self.__class__.__name__ == "Attribute":
-                print vars(self)
                 if Property.objects.get(pk=self.property_att_id).tag:
                     return Computer, "tags__id__exact"
                 else:
