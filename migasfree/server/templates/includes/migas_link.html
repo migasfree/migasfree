@@ -4,30 +4,36 @@
 {% if lnk.actions or lnk.related %}
     <div class="btn-group btn-group-xs">
 {% endif %}
-        <a href="{{ lnk.url }}" class="btn btn-xs">{{ lnk.text }}</a>
+<div  style="display: flex;flex-direction:row; align-items:center">
         {% if lnk.actions or lnk.related %}
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                <span class="caret"></span>
-                <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                {% if lnk.actions %}
-                    <li role="presentation" class="dropdown-header">{% trans 'Actions' %}</li>
-                    {% for item in lnk.actions %}
-                        <li><a href="{{ item.url }}">{{ item.text }}</a></li>
-                    {% endfor %}
-                {% endif %}
-                {% if lnk.actions and lnk.related %}
-                    <li role="presentation" class="divider"></li>
-                {% endif %}
-                {% if lnk.related %}
-                    <li role="presentation" class="dropdown-header">{% trans 'Related data' %}</li>
-                    {% for item in lnk.related %}
-                        <li><a href="{{ item.url }}">{{ item.text }}</a></li>
-                    {% endfor %}
-                {% endif %}
-            </ul>
+            <div>
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" style="border: none;background-color: Transparent;padding: 0px 0px;font-size: 100%;padding-right:4px">
+                    <i class="fa fa-caret-down " style="color: #337ab7"></i>
+                    <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    {% if lnk.actions %}
+                        <li role="presentation" class="dropdown-header">{% trans 'Actions' %}</li>
+                        {% for item in lnk.actions %}
+                            <li><a href="{{ item.url }}">{{ item.text }}</a></li>
+                        {% endfor %}
+                    {% endif %}
+                    {% if lnk.actions and lnk.related %}
+                        <li role="presentation" class="divider"></li>
+                    {% endif %}
+                    {% if lnk.related %}
+                        <li role="presentation" class="dropdown-header">{% trans 'Related data' %}</li>
+                        {% for item in lnk.related %}
+                            <li><a href="{{ item.url }}">{{ item.text }}</a></li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+             </div>
         {% endif %}
+        <div>
+            <a href="{{ lnk.url }}" style="text-decoration:none">{{ lnk.text }}</a>
+        </div>
+</div>
 {% if lnk.actions or lnk.related %}
     </div>
 {% endif %}
