@@ -25,21 +25,22 @@
 <ul class="list-group">
     <li class="list-group-item">{% trans 'Date' %}: {{ login.date }}</li>
     <li class="list-group-item">{% trans 'uuid' %}: {{ computer.uuid }}</li>
-    <li class="list-group-item">{% trans 'Version' %}: {{ version.name }} ({{ version.platform.name }})</li>
-    <li class="list-group-item">{% trans 'User' %}: {{ login.user.name }} ({{ login.user.fullname }})</li>
+    <li class="list-group-item">{% trans 'Platform' %}: {{ version.platform.link }}</li>
+    <li class="list-group-item">{% trans 'Version' %}: {{ version.link }}</li>
+    <li class="list-group-item">{% trans 'User' %}: {{ login.link }}</li>
 </ul>
 
 <h3>{% trans 'Attributes' %}</h3>
 <ul class="list-group">
-{% for key, value  in attributes.items %}
-    <li class="list-group-item">{{ key }}-{{ value }} </li>
+{% for item  in attributes %}
+    <li class="list-group-item">{{ item.link }} </li>
 {% endfor %}
 </ul>
 
 <h3>{% trans 'Tags' %}</h3>
 <ul class="list-group">
 {% for item in computer.tags.all %}
-    <li class="list-group-item">{{ item.property_att.prefix }}-{{ item.value }}</li>
+    <li class="list-group-item">{{ item.link }}</li>
 {% endfor %}
 </ul>
 
@@ -62,28 +63,29 @@
 <h3>{% trans 'Repositories' %}</h3>
 <ul class="list-group">
 {% for item in repositories %}
-    <li class="list-group-item">{{ item.name }}</li>
+    <li class="list-group-item">{{ item.link }}</li>
 {% endfor %}
 </ul>
 
 <h3>{% trans 'Fault Definitions' %}</h3>
 <ul class="list-group">
 {% for item in faultsdef %}
-    <li class="list-group-item">{{ item.name }} ({{ item.language }})</li>
+    <li class="list-group-item">{{ item.link }}</li>
 {% endfor %}
 </ul>
 
 <h3>{% trans 'Devices' %}</h3>
 <ul class="list-group">
-{% for item in devices.logical %}
+{% for item in devices %}
     <li class="list-group-item">
-        {{ item.PRINTER.manufacturer }}__{{ item.PRINTER.model }}__{{ item.PRINTER.feature }}__{{ item.PRINTER.name }}__{{ item.PRINTER.id }}
-        {% if item.PRINTER.id == devices.default %}
-            <span class="sr-only">(</span><span class="label label-default">default</span><span class="sr-only">)</span>
+        {{ item.link }}
+        {% if item.id == default_device %}
+           &nbsp; <span class="label label-default">default</span>
         {% endif %}
     </li>
-{% endfor %}
+    {% endfor %}
 </ul>
+
 
 <h3>{% trans 'Hardware Capture' %}:
     <span class="label label-{% if hardware_capture %}success{% else %}info{% endif %}">{{ hardware_capture }}</span>

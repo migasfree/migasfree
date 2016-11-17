@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from ..forms import ComputerReplacementForm
 from ..models import (
     Computer, Update, Error, Fault,
-    StatusLog, Migration, Login, Version
+    StatusLog, Migration, Login, Version, Repository, FaultDef, DeviceLogical
 )
 from ..mixins import LoginRequiredMixin
 from ..functions import d2s, to_heatmap
@@ -218,7 +218,24 @@ def computer_simulate_sync(request, pk):
         result["computer"] = computer
         result["version"] = version
         result["login"] = login
-        result["attributes"] = attributes
+        result["attributes"] = login.attributes.filter(property_att__tag=False)
+
+        repositories = []
+        for repo in result["repositories"]:
+            repositories.append(Repository.objects.get(version__id=version.id,name=repo['name']))
+        result["repositories"] = repositories
+
+        faultsdef = []
+        for fault in result["faultsdef"]:
+            faultsdef.append(FaultDef.objects.get(name=fault['name']))
+        result["faultsdef"] = faultsdef
+
+        result["default_device"] = result["devices"]["default"]
+        devices = []
+        for device in result["devices"]["logical"]:
+            devices.append(DeviceLogical.objects.get(pk=device['PRINTER']['id']))
+        result["devices"] = devices
+
     else:
         result = {}
         result['title'] = _('Simulate sync: %s') % computer.__str__()
