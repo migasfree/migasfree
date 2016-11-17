@@ -172,48 +172,63 @@ def computer_events(request, pk):
 @login_required
 def computer_simulate_sync(request, pk):
     computer = Computer.objects.get(pk=pk)
-
-    attributes = {}
-    login = Login.objects.get(computer_id=computer.id)
     version = Version.objects.get(id=computer.version.id)
-    for att in login.attributes.filter(property_att__tag=False):
-        attributes[att.property_att.prefix] = att.value
 
-    data = {
-        "upload_computer_info": {
-            "attributes": attributes,
-            "computer": {
-                "user_fullname": login.user.fullname,
-                "pms": version.pms.name,
-                "ip": computer.ip,
-                "hostname": computer.name,
-                "platform": version.platform.name,
-                "version": version.name,
-                "user": login.user.name
+    try:
+        login = Login.objects.get(computer_id=computer.id)
+    except:
+        login = None
+
+    if login:
+        attributes = {}
+        for att in login.attributes.filter(property_att__tag=False):
+            attributes[att.property_att.prefix] = att.value
+
+        data = {
+            "upload_computer_info": {
+                "attributes": attributes,
+                "computer": {
+                    "user_fullname": login.user.fullname,
+                    "pms": version.pms.name,
+                    "ip": computer.ip,
+                    "hostname": computer.name,
+                    "platform": version.platform.name,
+                    "version": version.name,
+                    "user": login.user.name
+                }
             }
         }
-    }
 
-    transaction.set_autocommit(False)
-    try:
-        result = upload_computer_info(
-            request,
-            computer.name,
-            computer.uuid,
-            computer,
-            data
-        )['upload_computer_info.return']
-    except:
+        transaction.set_autocommit(False)
+        try:
+            result = upload_computer_info(
+                request,
+                computer.name,
+                computer.uuid,
+                computer,
+                data
+            )['upload_computer_info.return']
+        except:
+            result = {}
+
+        transaction.rollback()  # only simulate sync... not real sync!
+        transaction.set_autocommit(True)
+
+        result['title'] = _('Simulate sync: %s') % computer.__str__()
+        result["computer"] = computer
+        result["version"] = version
+        result["login"] = login
+        result["attributes"] = attributes
+    else:
         result = {}
+        result['title'] = _('Simulate sync: %s') % computer.__str__()
+        result["computer"] = computer
+        result["version"] = version
 
-    transaction.rollback()  # only simulate sync... not real sync!
-    transaction.set_autocommit(True)
-
-    result['title'] = _('Simulate sync: %s') % computer.__str__()
-    result["computer"] = computer
-    result["attributes"] = attributes
-    result["login"] = login
-    result["version"] = version
+        messages.error(
+            request,
+            _('Error: This computer does not have a login !.')
+        )
 
     return render(
         request,
