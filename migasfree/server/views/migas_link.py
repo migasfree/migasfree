@@ -15,7 +15,7 @@ def link(request):
     _pk=request.GET.get('pk', None)
 
     try:
-        obj_link=apps.get_model(_app, _model).objects.get(pk=_pk).relations()
+        obj_link=apps.get_model(_app, _model).objects.get(pk=_pk).menu_link()
     except:
         obj_link=None
 

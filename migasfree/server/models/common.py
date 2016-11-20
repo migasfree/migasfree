@@ -20,7 +20,7 @@ class MigasLink(object):
     _exclude_links = []
     _include_links = []
 
-    def relations(self):
+    def get_relations(self):
         related_objects = [
             (f, f.model if f.model != self else None)
             for f in self._meta.get_fields()
@@ -122,21 +122,52 @@ class MigasLink(object):
             except:
                 pass
 
-        if self._meta.model_name == 'computer':
+        return  action_data, related_data
+
+    def relations(self):
+        if self._meta.model_name == 'computer' or (
+                (self._meta.model_name == 'attribute' or self._meta.model_name == 'feature')
+                        and self.property_att.prefix == 'CID'):
+
+            if self._meta.model_name == 'computer':
+                from migasfree.server.models import Attribute
+                computer = self
+                cid = Attribute.objects.get(value=str(self.id), property_att__prefix='CID')
+            else:
+                from migasfree.server.models import Computer
+                cid=self
+                computer = Computer.objects.get(pk=int(self.value))
+
+            computer_action_data, computer_related_data = computer.get_relations()
+            cid_action_data, cid_related_data = cid.get_relations()
+            action_data = computer_action_data + cid_action_data
+            related_data = computer_related_data + cid_related_data
+
             related_data.append({
-                'url': reverse('computer_events', args=(self.id,)),
+                'url': reverse('computer_events', args=(computer.id,)),
                 'text': '%s [%s]' % (
                     ugettext('Events'),
-                    ugettext(self._meta.model_name)
+                    ugettext(computer._meta.model_name)
                 )
             })
             related_data.append({
-                'url': reverse('computer_simulate_sync', args=(self.id,)),
+                'url': reverse('computer_simulate_sync', args=(computer.id,)),
                 'text': '%s [%s]' % (
                     ugettext('Simulate'),
-                    ugettext(self._meta.model_name)
+                    ugettext(computer._meta.model_name)
                 )
             })
+
+            return action_data, related_data
+
+        else:
+            return self.get_relations()
+
+
+
+    def menu_link(self):
+
+        action_data, related_data = self.relations()
 
         return render_to_string(
             'includes/migas_link_menu.html',
@@ -176,11 +207,19 @@ class MigasLink(object):
 
     def transmodel(self, obj):
         from migasfree.server.models import Property, Feature, Tag, Computer
+
+        if obj.related_model._meta.label_lower == "server.login" and \
+                self.__class__.__name__ in ["Feature", "Attribute"]:
+            return "", ""
+
         if obj.related_model._meta.label_lower == "server.attribute":
             if self.tag:
                 return Tag, "Tag"
             else:
                 return Feature, "Attribute"
+
+        elif obj.related_model._meta.label_lower == "server.feature":
+            print vars(self)
 
         elif obj.related_model._meta.label_lower == "server.computer":
             if self.__class__.__name__ == "Tag":
