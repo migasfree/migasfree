@@ -209,7 +209,8 @@ class MigasLink(object):
         from migasfree.server.models import Property, Feature, Tag, Computer
 
         if obj.related_model._meta.label_lower == "server.login" and \
-                self.__class__.__name__ in ["Feature", "Attribute"]:
+                self.__class__.__name__ in ["Feature", "Attribute"] and \
+                self.property_att.prefix == "CID":
             return "", ""
 
         if obj.related_model._meta.label_lower == "server.attribute":
