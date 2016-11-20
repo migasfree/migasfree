@@ -20,7 +20,7 @@ class MigasLink(object):
     _exclude_links = []
     _include_links = []
 
-    def link(self):
+    def relations(self):
         related_objects = [
             (f, f.model if f.model != self else None)
             for f in self._meta.get_fields()
@@ -139,7 +139,7 @@ class MigasLink(object):
             })
 
         return render_to_string(
-            'includes/migas_link.html',
+            'includes/migas_link_menu.html',
             {
                 'lnk': {
                     'url': reverse(
@@ -154,6 +154,23 @@ class MigasLink(object):
             }
         )
 
+    def link(self):
+        return render_to_string(
+            'includes/migas_link.html',
+            {
+                'lnk': {
+                    'url': reverse(
+                        'admin:%s_%s_change' % (self._meta.app_label,
+                            self._meta.model_name),
+                        args=(self.id,)
+                    ),
+                    'text': self.__str__(),
+                    'app': self._meta.app_label,
+                    'class':self._meta.model_name,
+                    'pk': self.id
+            }
+            }
+        )
     link.allow_tags = True
     link.short_description = ''
 

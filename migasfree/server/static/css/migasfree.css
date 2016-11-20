@@ -259,3 +259,19 @@ h1.change-list-title {
 #changelist-search button {
     display: none;
 }
+
+.btn-migas:hover {
+    color: #333;
+    background-color: #ddd;
+    border-color: #adadad;
+}
+
+.btn-migas {
+    color: #333;
+    background-color: #eee;
+    border-color: #ccc;
+    padding: 0;
+    padding-left:6px; 
+    border-radius: 6px 6px 6px 6px;
+}
+

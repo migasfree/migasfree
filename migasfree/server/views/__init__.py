@@ -27,6 +27,8 @@ from .computer import (
     computer_change_status,
     computer_simulate_sync,
 )
+from .migas_link import link
+
 from .version import VersionDelete
 from .platform import PlatformDelete, platform_delete_selected
 from .devices import connections_model, device_replacement

@@ -170,6 +170,12 @@ urlpatterns = [
     ),
 
     url(
+        r'^link/$',
+        link,
+        name='link',
+    ),
+
+    url(
         r'^device_replacement/$',
         device_replacement,
         name='device_replacement'
