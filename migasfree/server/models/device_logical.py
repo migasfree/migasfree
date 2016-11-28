@@ -82,12 +82,6 @@ class DeviceLogical(models.Model, MigasLink):
 
         return ret
 
-    def device_link(self):
-        return self.device.link()
-
-    device_link.short_description = _("Device")
-    device_link.allow_tags = True
-
     def save(self, *args, **kwargs):
         if isinstance(self.name, basestring):
             self.name = self.name.replace(" ", "_")

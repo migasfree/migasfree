@@ -52,20 +52,8 @@ class Login(models.Model, MigasLink):
         self.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         self.save()
 
-    def computer_link(self):
-        return self.computer.link()
-
-    computer_link.allow_tags = True
-    computer_link.short_description = _("Computer")
-
-    def user_link(self):
-        return self.user.link()
-
-    user_link.allow_tags = True
-    user_link.short_description = _("User")
-
     def __str__(self):
-        return u'%s (%s)' % (self.user.name, self.user.fullname.strip())
+        return '{}'.format(self.date)
 
     class Meta:
         app_label = 'server'

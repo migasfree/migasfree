@@ -9,7 +9,8 @@ article button.dropdown-toggle,
 article input.action-select,
 #action-toggle,
 #result_list .sortoptions,
-#result_list th.sortable a:after {
+#result_list th.sortable a:after,
+.form-actions {
     display: none !important;
 }
 

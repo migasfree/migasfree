@@ -17,6 +17,10 @@ function changeSource() {
     oldLink = $("#id_packages_text").autocomplete("option", "source");
     newLink = makeLink(oldLink, versionId);
     $("#id_packages_text").autocomplete("option", "source", newLink);
+
+    if (typeof addMigasEvents === "function") {
+        addMigasEvents();
+    }
 }
 
 $(document).ready(function() {

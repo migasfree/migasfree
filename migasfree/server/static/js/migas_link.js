@@ -1,6 +1,17 @@
-function dropdown_migas_link(app, model, pk) {
-    $.get( "/link/?app="+app+"&model="+model+"&pk="+pk, function( data ) {
-        $("#"+app+"-"+model+"-"+pk).html(data);
-        $('ul[name='+app+'-'+model+'-'+pk).html(data);
+function addMigasEvents() {
+    $(".btn-migas").click(function () {
+        var app = $(this).data("app");
+        var model = $(this).data("model");
+        var pk = $(this).data("pk");
+        var that = $(this);
+        $.get("/link/?app=" + app + "&model=" + model + "&pk=" + pk, function(data) {
+            that.parent().children("ul").html(data);
+        });
     });
 }
+
+$(document).ready(function () {
+    addMigasEvents();
+});
+
+

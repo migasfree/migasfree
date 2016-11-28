@@ -260,18 +260,38 @@ h1.change-list-title {
     display: none;
 }
 
-.btn-migas:hover {
-    color: #333;
-    background-color: #ddd;
-    border-color: #adadad;
+a.btn-role {
+    color: #337ab7;
+    text-decoration: none;
 }
 
-.btn-migas {
-    color: #333;
-    background-color: #eee;
-    border-color: #ccc;
+a.btn-role:focus, a.btn-role:hover {
+    color: #23527c;
+    text-decoration: underline;
+}
+
+.simulation ul, td ul {
+    list-style-type: none;
+}
+
+.li-point-none {
+    list-style-type: none;
+}
+
+td ul {
+    margin: 0;
     padding: 0;
-    padding-left:6px; 
-    border-radius: 6px 6px 6px 6px;
 }
 
+td .btn-group {
+    display: flex;
+    class: btn-group-xs;
+}
+
+h1 .btn-group {
+   class: btn-group-lg;
+}
+
+li .btn-group {
+    margin: 3px 0;
+}

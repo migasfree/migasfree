@@ -33,7 +33,7 @@ class DeviceModel(models.Model, MigasLink):
     )
 
     def __str__(self):
-        return '%s-%s' % (self.manufacturer, self.name)
+        return self.name
 
     def save(self, *args, **kwargs):
         self.name = self.name.replace(" ", "_")

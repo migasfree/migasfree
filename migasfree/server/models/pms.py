@@ -41,14 +41,15 @@ class Pms(models.Model, MigasLink):
         verbose_name=_("create repository"),
         null=True,
         blank=True,
-        help_text=_("Code bash. Define how create the metadata of repositories in the migasfree server.")
+        help_text=_("Bash code. Define how create the metadata of "
+                    "repositories in the migasfree server.")
     )
 
     info = models.TextField(
         verbose_name=_("package information"),
         null=True,
         blank=True,
-        help_text=_("Code bash. Define how get info of packages in the server")
+        help_text=_("Bash code. Define how get info of packages in the server")
     )
 
     def __str__(self):

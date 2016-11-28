@@ -137,7 +137,6 @@ class UserProfile(UserSystem, MigasLink):
         on_delete=models.SET_NULL
     )
 
-    # Use UserManager to get the create_user method, etc.
     objects = UserManager()
 
     @staticmethod

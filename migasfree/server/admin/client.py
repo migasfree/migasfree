@@ -7,18 +7,19 @@ from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Prefetch
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
-from .migasfree import MigasAdmin
+from .migasfree import MigasAdmin, MigasFields
 
 from ..filters import ProductiveFilterSpec, UserFaultFilter
 from ..forms import ComputerForm
 from ..resources import ComputerResource
 from ..models import (
     AutoCheckError, Computer, Error, Fault, FaultDef, Login, Message,
-    Migration, Notification, StatusLog, Update, User, DeviceLogical
+    Migration, Notification, StatusLog, Update, User, DeviceLogical, HwNode
 )
 
 admin.site.register(AutoCheckError)
@@ -35,19 +36,17 @@ def add_computer_search_fields(fields_list):
 class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     form = ComputerForm
     list_display = (
-        'my_link',
-        'version',
+        'name_link',
+        'version_link',
         'status',
         'ip',
         'login_link',
         'datelastupdate',
         'hw_link',
     )
-    list_per_page = 25
     ordering = ('name',)
     list_filter = ('version', ('status', ProductiveFilterSpec), 'machine')
     search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
-    list_select_related = False
 
     readonly_fields = (
         'name',
@@ -65,7 +64,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'storage',
         'disks',
         'mac_address',
-        'my_logical_devices',
+        'logical_devices_link',
     )
 
     fieldsets = (
@@ -97,7 +96,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': ('software', 'history_sw',)
         }),
         (_('Devices'), {
-            'fields': ('my_logical_devices', 'default_logical_device',)
+            'fields': ('logical_devices_link', 'default_logical_device',)
+#            'fields': ('default_logical_device',)
         }),
         (_('Tags'), {
             'fields': ('tags',)
@@ -107,16 +107,17 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     resource_class = ComputerResource
     actions = ['delete_selected', 'change_status']
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _('Computer')
-
-    def my_logical_devices(self, obj):
-        return ' '.join([item.link() for item in obj.logical_devices()])
-
-    my_logical_devices.allow_tags = True
-    my_logical_devices.short_description = _('Logical Devices')
+    name_link = MigasFields.link(model=Computer, name="name")
+    version_link = MigasFields.link(
+        model=Computer, name='version', order='version__name'
+    )
+    hw_link = MigasFields.objects_link(
+        model=Computer, name='hwnode_set', description=_('Product')
+    )
+    login_link = MigasFields.objects_link(model=Computer, name='login_set')
+    logical_devices_link = MigasFields.objects_link(
+        model=Computer, name='logical_devices'
+    )
 
     def delete_selected(self, request, objects):
         if not self.has_delete_permission(request):
@@ -180,32 +181,46 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     def has_add_permission(self, request):
         return False
 
+    def get_queryset(self, request):
+        return super(ComputerAdmin, self).get_queryset(
+            request
+        ).select_related("version",
+                         "default_logical_device",
+                         "default_logical_device__feature",
+                         "default_logical_device__device",
+                         ).prefetch_related(
+            "login_set",
+            "login_set__user",
+            Prefetch('hwnode_set', queryset=HwNode.objects.filter(parent=None)),
+
+        )
+
 
 @admin.register(Error)
 class ErrorAdmin(MigasAdmin):
     list_display = (
         'id',
         'computer_link',
-        'version',
+        'version_link',
         'my_checked',
         'date',
         'truncated_error',
     )
     list_display_links = ('id',)
     list_filter = ('checked', 'date', 'version__platform', 'version')
-    # list_editable = ('checked',)  # TODO
     ordering = ('-date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'error'])
-    readonly_fields = ('computer_link', 'version', 'date', 'error')
-    exclude = ('computer',)
-
-    def my_checked(self, obj):
-        return self.boolean_field(obj.checked)
-
-    my_checked.allow_tags = True
-    my_checked.short_description = _('checked')
-
+    readonly_fields = ('computer_link', 'version_link', 'date', 'error')
+    exclude = ('computer', 'version')
     actions = ['checked_ok']
+
+    my_checked = MigasFields.boolean(model=Error, name='checked')
+    computer_link = MigasFields.link(
+        model=Error, name='computer', order='computer__name'
+    )
+    version_link = MigasFields.link(
+        model=Error, name="version", order='version__name'
+    )
 
     def checked_ok(self, request, queryset):
         for item in queryset:
@@ -220,18 +235,25 @@ class ErrorAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
+    def get_queryset(self, request):
+        return super(ErrorAdmin, self).get_queryset(
+            request
+        ).select_related(
+            'version',
+            'computer',
+        )
+
 
 @admin.register(Fault)
 class FaultAdmin(MigasAdmin):
     list_display = (
         'id',
         'computer_link',
-        'version',
+        'version_link',
         'my_checked',
         'date',
         'text',
-        'faultdef',
-        # 'list_users'  # performance improvement
+        'fault_definition_link',
     )
     list_display_links = ('id',)
     list_filter = (
@@ -240,16 +262,23 @@ class FaultAdmin(MigasAdmin):
     )
     ordering = ('-date', 'computer',)
     search_fields = add_computer_search_fields(['date', 'faultdef__name'])
-    readonly_fields = ('computer_link', 'faultdef', 'version', 'date', 'text')
-    exclude = ('computer',)
-
-    def my_checked(self, obj):
-        return self.boolean_field(obj.checked)
-
-    my_checked.allow_tags = True
-    my_checked.short_description = _('checked')
-
+    readonly_fields = (
+        'computer_link', 'fault_definition_link',
+        'version_link', 'date', 'text'
+    )
+    exclude = ('computer', 'version', 'faultdef')
     actions = ['checked_ok']
+
+    my_checked = MigasFields.boolean(model=Fault, name='checked')
+    computer_link = MigasFields.link(
+        model=Fault, name='computer', order='computer__name'
+    )
+    version_link = MigasFields.link(
+        model=Fault, name='version', order='version__name'
+    )
+    fault_definition_link = MigasFields.link(
+        model=Fault, name='faultdef', order='faultdef__name'
+    )
 
     def checked_ok(self, request, queryset):
         for item in queryset:
@@ -264,11 +293,20 @@ class FaultAdmin(MigasAdmin):
     def has_add_permission(self, request):
         return False
 
+    def get_queryset(self, request):
+        return super(FaultAdmin, self).get_queryset(
+            request
+        ).select_related(
+            'version',
+            'faultdef',
+            'computer',
+        )
+
 
 @admin.register(FaultDef)
 class FaultDefAdmin(MigasAdmin):
     form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
-    list_display = ('my_link', 'my_active', 'list_attributes', 'list_users')
+    list_display = ('name_link', 'my_active', 'attributes_link', 'users_link')
     list_filter = ('active', 'users')
     search_fields = ('name',)
     filter_horizontal = ('attributes',)
@@ -285,16 +323,12 @@ class FaultDefAdmin(MigasAdmin):
         }),
     )
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Fault Definition")
-
-    def my_active(self, obj):
-        return self.boolean_field(obj.active)
-
-    my_active.allow_tags = True
-    my_active.short_description = _('active')
+    name_link = MigasFields.link(model=FaultDef, name='name')
+    my_active = MigasFields.boolean(model=FaultDef, name='active')
+    attributes_link = MigasFields.objects_link(
+        model=FaultDef, name='attributes'
+    )
+    users_link = MigasFields.objects_link(model=FaultDef, name='users')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(FaultDefAdmin, self).get_form(request, obj, **kwargs)
@@ -302,23 +336,37 @@ class FaultDefAdmin(MigasAdmin):
 
         return form
 
+    def get_queryset(self, request):
+        return super(FaultDefAdmin, self).get_queryset(
+            request
+            ).prefetch_related(
+                'attributes',
+                'attributes__property_att',
+                'users',
+            )
+
 
 @admin.register(Login)
 class LoginAdmin(MigasAdmin):
-    list_display = ('my_link', 'user_link', 'computer_link', 'date',)
+    list_display = ('login_link', 'user_link', 'computer_link')
     list_select_related = ('computer', 'user',)
     list_filter = ('date',)
     ordering = ('user', 'computer',)
     search_fields = add_computer_search_fields(
         ['user__name', 'user__fullname']
     )
-    fields = ('date', 'user', 'computer_link', 'attributes')
-    readonly_fields = ('date', 'user', 'computer_link', 'attributes')
+    fields = ('date', 'user_link', 'computer_link', 'attributes_link')
+    readonly_fields = ('date', 'user_link', 'computer_link', 'attributes_link')
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Login")
+    login_link = MigasFields.link(model=Login, name='date')
+    computer_link = MigasFields.link(
+        model=Login, name='computer', order="computer__name"
+    )
+    computer_link = MigasFields.link(
+        model=Login, name='computer', order="computer__name"
+    )
+    user_link = MigasFields.link(model=Login, name='user', order="user__name")
+    attributes_link = MigasFields.objects_link(model=Login, name='attributes')
 
     def has_add_permission(self, request):
         return False
@@ -337,14 +385,22 @@ class MessageAdmin(MigasAdmin):
 
 @admin.register(Migration)
 class MigrationAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'version', 'date')
+    list_display = ('id', 'computer_link', 'version_link', 'date')
     list_display_links = ('id',)
     list_select_related = ('computer', 'version')
     list_filter = ('date', 'version__platform', 'version')
     search_fields = add_computer_search_fields(['date'])
-    readonly_fields = ('computer_link', 'version', 'date')
+    fields = ('computer_link', 'version_link', 'date')
+    readonly_fields = ('computer_link', 'version_link', 'date')
     exclude = ('computer',)
     actions = None
+
+    computer_link = MigasFields.link(
+        model=Migration, name='computer', order='computer__name'
+    )
+    version_link = MigasFields.link(
+        model=Migration, name='version', order="version__name"
+    )
 
     def has_add_permission(self, request):
         return False
@@ -359,20 +415,10 @@ class NotificationAdmin(MigasAdmin):
     search_fields = ('date', 'notification')
     readonly_fields = ('date', 'my_notification')
     exclude = ('notification',)
-
-    def my_checked(self, obj):
-        return self.boolean_field(obj.checked)
-
-    my_checked.allow_tags = True
-    my_checked.short_description = _('checked')
-
-    def my_notification(self, obj):
-        return obj.notification
-
-    my_notification.allow_tags = True
-    my_notification.short_description = _('notification')
-
     actions = ['checked_ok']
+
+    my_checked = MigasFields.boolean(model=Notification, name='checked')
+    my_notification = MigasFields.text(model=Notification, name='notification')
 
     def checked_ok(self, request, queryset):
         for item in queryset:
@@ -399,13 +445,17 @@ class StatusLogAdmin(MigasAdmin):
     exclude = ('computer',)
     actions = None
 
+    computer_link = MigasFields.link(
+        model=StatusLog, name='computer', order='computer__name'
+    )
+
     def has_add_permission(self, request):
         return False
 
 
 @admin.register(Update)
 class UpdateAdmin(MigasAdmin):
-    list_display = ('__str__', 'user', 'computer_link', 'version')
+    list_display = ('__str__', 'user_link', 'computer_link', 'version_link')
     list_display_links = ('__str__',)
     list_filter = ('date',)
     search_fields = add_computer_search_fields(['date', 'user__name'])
@@ -413,18 +463,39 @@ class UpdateAdmin(MigasAdmin):
     exclude = ('computer',)
     actions = None
 
+    computer_link = MigasFields.link(
+        model=Update, name='computer', order='computer__name'
+    )
+    version_link = MigasFields.link(
+        model=Update, name='version', order='version__name'
+    )
+    user_link = MigasFields.link(model=Update, name='user', order='user__name')
+
+    def get_queryset(self, request):
+        return super(UpdateAdmin, self).get_queryset(
+            request
+        ).select_related(
+            'computer',
+            'version',
+            'user',
+        )
+
 
 @admin.register(User)
 class UserAdmin(MigasAdmin):
-    list_display = ('my_link', 'fullname')
+    list_display = ('name_link', 'fullname')
     ordering = ('name',)
     search_fields = ('name', 'fullname')
     readonly_fields = ('name', 'fullname')
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("User")
+    name_link = MigasFields.link(model=User, name="name")
 
     def has_add_permission(self, request):
         return False
+
+
+@admin.register(HwNode)
+class HwNodeAdmin(MigasAdmin):  # TODO to hardware.py
+    list_display = ('name_link',)
+
+    name_link = MigasFields.link(model=HwNode, name='name')

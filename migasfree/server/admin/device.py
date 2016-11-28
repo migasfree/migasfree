@@ -3,9 +3,8 @@
 from django.contrib import admin
 from django.db import models
 from django.core.urlresolvers import resolve
-from django.utils.translation import ugettext_lazy as _
 
-from .migasfree import MigasAdmin
+from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
     DeviceType, DeviceFeature, DeviceManufacturer, DeviceConnection,
@@ -23,24 +22,30 @@ class DeviceTypeAdmin(MigasAdmin):
 
 @admin.register(DeviceFeature)
 class DeviceFeatureAdmin(MigasAdmin):
-    list_display = ('name',)
-    list_display_links = ('name',)
+    list_display = ('name_link',)
+    list_display_links = ('name_link',)
     ordering = ('name',)
+
+    name_link = MigasFields.link(model=DeviceFeature, name='name')
 
 
 @admin.register(DeviceManufacturer)
 class DeviceManufacturerAdmin(MigasAdmin):
-    list_display = ('name',)
-    list_display_links = ('name',)
+    list_display = ('name_link',)
+    list_display_links = ('name_link',)
     ordering = ('name',)
+
+    name_link = MigasFields.link(model=DeviceManufacturer, name='name')
 
 
 @admin.register(DeviceConnection)
-class DeviceConnectionAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'fields')
+class DeviceConnectionAdmin(MigasAdmin):
+    list_display = ('name_link', 'devicetype', 'fields')
     list_select_related = ('devicetype',)
     ordering = ('devicetype__name', 'name')
     fields = ('devicetype', 'name', 'fields')
+
+    name_link = MigasFields.link(model=DeviceConnection, name='name')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeviceConnectionAdmin, self).get_form(
@@ -74,7 +79,7 @@ class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
     fields = ('device', 'feature', 'name', 'attributes')
     list_select_related = ('device', 'feature')
-    list_display = ('my_link', 'device_link', 'feature')
+    list_display = ('name_link', 'device_link', 'feature_link')
     list_filter = ('device__model', 'feature')
     ordering = ('device__name', 'feature__name')
     search_fields = (
@@ -85,10 +90,13 @@ class DeviceLogicalAdmin(MigasAdmin):
         'feature__name',
     )
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _('Device Logical')
+    name_link = MigasFields.link(model=DeviceLogical, name='name')
+    device_link = MigasFields.link(
+        model=DeviceLogical, name='device', order="device__name"
+    )
+    feature_link = MigasFields.link(
+        model=DeviceLogical, name='feature', order="feature__name"
+    )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeviceLogicalAdmin, self).get_form(request, obj, **kwargs)
@@ -120,7 +128,7 @@ class DeviceLogicalInline(admin.TabularInline):
 
 @admin.register(Device)
 class DeviceAdmin(MigasAdmin):
-    list_display = ('my_link', 'location', 'model_link', 'connection')
+    list_display = ('name_link', 'location', 'model_link', 'connection')
     list_filter = ('model',)
     search_fields = (
         'name',
@@ -130,13 +138,12 @@ class DeviceAdmin(MigasAdmin):
     )
     fields = ('name', 'model', 'connection', 'data')
     ordering = ('name',)
-
     inlines = [DeviceLogicalInline]
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _('Device')
+    name_link = MigasFields.link(model=Device, name='name')
+    model_link = MigasFields.link(
+        model=Device, name='model', order="model__name"
+    )
 
     class Media:
         js = ('js/device_admin.js',)
@@ -164,6 +171,16 @@ class DeviceAdmin(MigasAdmin):
 
         return form
 
+    def get_queryset(self, request):
+        return super(DeviceAdmin, self).get_queryset(
+            request
+        ).select_related(
+            'connection', 'connection__devicetype',
+            'model', 'model__manufacturer', 'model__devicetype',
+        ).prefetch_related(
+            "devicelogical_set"
+        )
+
 
 class DeviceDriverInline(admin.TabularInline):
     model = DeviceDriver
@@ -175,8 +192,8 @@ class DeviceDriverInline(admin.TabularInline):
 
 @admin.register(DeviceModel)
 class DeviceModelAdmin(MigasAdmin):
-    list_display = ('my_link', 'manufacturer', 'devicetype')
-    list_display_links = ('my_link',)
+    list_display = ('name_link', 'manufacturer_link', 'devicetype')
+    list_display_links = ('name_link',)
     list_filter = ('devicetype', 'manufacturer')
     ordering = ('devicetype__name', 'manufacturer__name', 'name')
     search_fields = (
@@ -186,9 +203,10 @@ class DeviceModelAdmin(MigasAdmin):
     )
     inlines = [DeviceDriverInline]
 
-    def my_link(self, obj):
-        return obj.link()
-    my_link.short_description = _('Device')
+    name_link = MigasFields.link(model=DeviceModel, name='name')
+    manufacturer_link = MigasFields.link(
+        model=DeviceModel, name='manufacturer', order="manufacturer__name"
+    )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeviceModelAdmin, self).get_form(request, obj, **kwargs)

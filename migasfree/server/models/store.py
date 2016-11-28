@@ -42,9 +42,7 @@ class Store(models.Model, MigasLink):
 
     objects = StoreManager()
 
-    def __init__(self, *args, **kwargs):
-        super(Store, self).__init__(*args, **kwargs)
-
+    def menu_link(self):
         if self.id:
             info_link = reverse(
                 'package_info',
@@ -61,6 +59,8 @@ class Store(models.Model, MigasLink):
                 [ugettext('Package Information'), info_link],
                 [ugettext('Download'), download_link]
             ]
+
+        return super(Store, self).menu_link()
 
     def create_dir(self):
         _path = os.path.join(
@@ -91,7 +91,7 @@ class Store(models.Model, MigasLink):
         super(Store, self).delete(*args, **kwargs)
 
     def __str__(self):
-        return _('%s at version %s') % (self.name, self.version.name)
+        return self.name
 
     class Meta:
         app_label = 'server'

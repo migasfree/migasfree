@@ -22,6 +22,7 @@ class AttributeManager(models.Manager):
         queryset = Attribute.objects.filter(
             property_att=property_att, value=value
         )
+
         if queryset.exists():
             return queryset[0]
 
@@ -65,7 +66,7 @@ class Attribute(models.Model, MigasLink):
     TOTAL_COMPUTER_QUERY = "SELECT COUNT(server_login.id) \
         FROM server_login,server_login_attributes  \
         WHERE server_attribute.id=server_login_attributes.attribute_id \
-        and server_login_attributes.login_id=server_login.id"
+        AND server_login_attributes.login_id=server_login.id"
 
     def property_link(self):
         return self.property_att.link()
@@ -76,7 +77,6 @@ class Attribute(models.Model, MigasLink):
     def __str__(self):
         if self.property_att.prefix == "CID" and \
                 settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
-
             return '%s (CID-%s)' % (self.description, self.value)
         else:
             return '%s-%s' % (self.property_att.prefix, self.value)

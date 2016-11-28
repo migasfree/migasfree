@@ -10,6 +10,10 @@
     </ol>
 {% endblock breadcrumbs %}
 
+{% block content_title %}
+    <h1>{% trans 'Hardware' %}: {{ computer.link }}</h1>
+{% endblock content_title %}
+
 {% block content %}
     <h2>{% trans 'Capability' %}</h2>
     {% if capability %}

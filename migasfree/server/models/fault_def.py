@@ -50,16 +50,6 @@ class FaultDef(models.Model, MigasLink):
         verbose_name=_("users")
     )
 
-    def list_attributes(self):
-        return ', '.join(self.attributes.all().values_list('value', flat=True))
-
-    list_attributes.short_description = _("attributes")
-
-    def list_users(self):
-        return ', '.join(self.users.all().values_list('username', flat=True))
-
-    list_users.short_description = _("users")
-
     def save(self, *args, **kwargs):
         self.code = self.code.replace("\r\n", "\n")
         self.name = self.name.replace(" ", "_")

@@ -1,20 +1,15 @@
-{% load i18n %}
-
 {% spaceless %}
-
-<div class="btn-group"  style="display: flex;flex-direction: row;">
-
-  <a  href="{{ lnk.url }}" class="btn btn-migas" role="button" style="flex: 2 1 100px;" ><span class="pull-left">{{ lnk.text }}</span></a>
-
-  <button type="button" class="btn btn-migas dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" onclick=" dropdown_migas_link('{{lnk.app}}','{{lnk.class}}','{{lnk.pk}}')">
-   <i class="fa fa-caret-down" aria-hidden="true"></i>
-    <span class="sr-only">Toggle Dropdown</span>
+{% load i18n %}
+<div class="btn-group btn-group-xs nowrap">
+  <a href="{{ lnk.url }}" class="btn btn-default btn-role" role="button">{{ lnk.text }}</a>
+  <button type="button" class="btn btn-default btn-migas dropdown-toggle-split"
+          data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+          data-app="{{ lnk.app }}" data-model="{{ lnk.class }}" data-pk="{{ lnk.pk }}">
+      <span class="caret"> </span>
+      <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
   </button>
-  <ul class="dropdown-menu" name="{{lnk.app}}-{{lnk.class}}-{{lnk.pk}}" role="menu">
-      <div align="center">
-      <span class="fa fa-refresh fa-spin" ></span>
-      </div>
+  <ul class="dropdown-menu" role="menu">
+      <li class="text-center"><span class="fa fa-refresh fa-spin"></span></li>
   </ul>
 </div>
-
 {% endspaceless %}

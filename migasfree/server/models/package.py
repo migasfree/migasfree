@@ -45,9 +45,7 @@ class Package(models.Model, MigasLink):
 
     objects = PackageManager()
 
-    def __init__(self, *args, **kwargs):
-        super(Package, self).__init__(*args, **kwargs)
-
+    def menu_link(self):
         if self.id:
             info_link = reverse(
                 'package_info',
@@ -69,6 +67,7 @@ class Package(models.Model, MigasLink):
                 [ugettext('Package Information'), info_link],
                 [ugettext('Download'), download_link]
             ]
+        return super(Package, self).menu_link()
 
     def create_dir(self):
         _path = os.path.join(
@@ -94,12 +93,6 @@ class Package(models.Model, MigasLink):
         ).filter(~models.Q(id=self.id))
         if queryset.exists():
             raise ValidationError(_('Duplicated name at version'))
-
-    def repos_link(self):
-        return ' '.join([repo.link() for repo in self.repository_set.all()])
-
-    repos_link.allow_tags = True
-    repos_link.short_description = _("Repositories")
 
     def __str__(self):
         return self.name

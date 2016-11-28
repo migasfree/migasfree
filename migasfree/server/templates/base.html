@@ -19,8 +19,8 @@
         <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
         <link rel="stylesheet" href="{% static 'admin/css/overrides.css' %}" />
 
-        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20161109" />
-        <link rel="stylesheet" href="{% static 'css/migasfree_print.css' %}?20151227" media="print" />
+        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20161128" />
+        <link rel="stylesheet" href="{% static 'css/migasfree_print.css' %}?20161128" media="print" />
 
         <link rel="stylesheet" href="{% static 'css/ajax_select.css' %}" />
         <link rel="stylesheet" href="{% static 'ajax-select/jquery-ui.css' %}" />
@@ -65,6 +65,9 @@
                     .on('click', function() {
                       $(window).trigger('init-autocomplete');
                     });
+                  if (typeof addMigasEvents === "function") {
+                      addMigasEvents();
+                  }
                 }, 100);
 
                 $("article input:text:visible:first").focus();

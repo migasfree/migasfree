@@ -39,7 +39,7 @@
                                 {% elif field.field.name == 'mac_address' %}
                                     {{ field.contents|mac_address_list }}
                                 {% else %}
-                                    {{ field.contents|linebreaksbr }}
+                                    {{ field.contents }}
                                 {% endif %}
                                 </p>
                             {% else %}

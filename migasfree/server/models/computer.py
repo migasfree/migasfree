@@ -289,15 +289,9 @@ class Computer(models.Model, MigasLink):
                 computer__id=self.id
             ).attributes.all().values_list('id', flat=True)
 
-        devices = []
-        for att in attributes:
-            for logical_device in DeviceLogical.objects.filter(
-                attributes__id=att
-            ):
-                if logical_device not in devices:
-                    devices.append(logical_device)
-
-        return devices
+        return DeviceLogical.objects.filter(
+                attributes__in=attributes
+            ).distinct()
 
     logical_devices.allow_tags = True
     logical_devices.short_description = _('Logical Devices')
@@ -307,41 +301,8 @@ class Computer(models.Model, MigasLink):
             computer__id__exact=self.id
         ).order_by('-date')[0]
 
-    def update_link(self):
-        try:
-            return self.last_update().link()
-        except:
-            return ''
-
-    update_link.allow_tags = True
-    update_link.short_description = _("Last update")
-
-    def login_link(self):
-        try:
-            return self.login().link()
-        except:
-            return ''
-
-    login_link.allow_tags = True
-    login_link.short_description = _("login")
-
     def login(self):
         return self.login_set.get(computer=self.id)
-
-    def hw_link(self):
-        try:
-            return self.hwnode_set.get(computer=self.id, parent=None).link()
-        except:
-            return ''
-
-    hw_link.allow_tags = True
-    hw_link.short_description = _("Product")
-
-    def version_link(self):
-        return self.version.link()
-
-    version_link.allow_tags = True
-    version_link.short_description = _("Version")
 
     def change_status(self, status):
         if status not in list(dict(self.STATUS_CHOICES).keys()):

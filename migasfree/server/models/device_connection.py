@@ -4,11 +4,11 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from . import DeviceType
+from . import DeviceType, MigasLink
 
 
 @python_2_unicode_compatible
-class DeviceConnection(models.Model):
+class DeviceConnection(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
         max_length=50,
@@ -30,7 +30,7 @@ class DeviceConnection(models.Model):
     )
 
     def __str__(self):
-        return '(%s) %s' % (self.devicetype.name, self.name)
+        return self.name
 
     class Meta:
         app_label = 'server'

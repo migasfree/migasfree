@@ -71,12 +71,6 @@ class Error(models.Model):
                 self.checked = True
                 return
 
-    def computer_link(self):
-        return self.computer.link()
-
-    computer_link.allow_tags = True
-    computer_link.short_description = _("Computer")
-
     def save(self, *args, **kwargs):
         self.error = self.error.replace("\r\n", "\n")
         self.auto_check()

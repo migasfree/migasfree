@@ -3,9 +3,9 @@
 from django.db import models
 from django.db.models import Sum, Q
 from django.core.urlresolvers import reverse
-from django.utils.html import format_html
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.template.loader import render_to_string
 
 from . import Computer, MigasLink
 
@@ -182,24 +182,38 @@ class HwNode(models.Model, MigasLink):
         'VMware, Inc.': 'vmware'
     }
 
-    def __str__(self):
-        return self.product if self.description and 'lshw' in self.description \
-            else '%s: %s' % (self.description, self.product)
-
-    def link(self):
-        try:
-            return format_html('<a href="%s">%s</a>' % (
-                reverse('hardware_resume', args=(self.computer.id,)),
-                self.get_product()
-            ))
-        except:
-            return 'error'
-
-    link.allow_tags = True
-    link.short_description = _("Hardware")
-
     def get_product(self):
         return self.VIRTUAL_MACHINES.get(self.vendor, self.product)
+
+    def __str__(self):
+        text = self.VIRTUAL_MACHINES.get(self.vendor, self.product)
+        if text:
+            return text
+        else:
+            return ""
+
+    def menu_link(self):
+        if self.id:
+            self._exclude_links = ["hwnode - parent__id__exact",
+                                 "hwcapability - node__id__exact",
+                                 "hwconfiguration - node__id__exact",
+                                 "hwlogicalname - node__id__exact"]
+            self._include_links = ["computer - product"]
+        return super(HwNode, self).menu_link()
+
+    def link(self):
+        return render_to_string(
+            'includes/migas_link.html',
+            {
+                'lnk': {
+                    'url': reverse('hardware_resume', args=(self.computer.id,)),
+                    'text': self.__str__(),
+                    'app': self._meta.app_label,
+                    'class': self._meta.model_name,
+                    'pk': self.id
+                }
+            }
+        )
 
     @staticmethod
     def get_is_vm(computer_id):

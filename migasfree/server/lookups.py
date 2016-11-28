@@ -140,10 +140,10 @@ class PackageLookup(LookupChannel):
         return queryset
 
     def format_match(self, obj):
-        return '{} ({})'.format(escape(obj.name), escape(obj.version.name))
+        return escape(obj.name)
 
     def format_item_display(self, obj):
-        return '%s (%s)' % (obj.link(), escape(obj.version.name))
+        return obj.link()
 
     def can_add(self, user, model):
         return False

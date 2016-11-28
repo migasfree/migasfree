@@ -16,9 +16,11 @@ LANGUAGES_CHOICES = (
 
 
 class MigasLink(object):
-    _actions = None
-    _exclude_links = []
-    _include_links = []
+
+    def __init__(self):
+        self._actions = None
+        self._exclude_links = []
+        self._include_links = []
 
     def get_relations(self):
         related_objects = [
@@ -122,23 +124,47 @@ class MigasLink(object):
             except:
                 pass
 
-        return  action_data, related_data
+        return action_data, related_data
 
     def relations(self):
+        action_data = []
+        related_data = []
+
+        if self._meta.model_name == 'hwnode':
+            related_data.append({
+                'url': '%s?%s=%s' % (
+                    reverse('admin:server_computer_changelist'),
+                    "product",
+                    self.computer.product,
+                    ),
+                'text': '%s [%s]' % (
+                    ugettext('computer'),
+                    ugettext('product')
+                )
+            })
+
+            return action_data, related_data
+
         if self._meta.model_name == 'computer' or (
-                (self._meta.model_name == 'attribute' or self._meta.model_name == 'feature')
-                        and self.property_att.prefix == 'CID'):
+                (self._meta.model_name == 'attribute' or
+                        self._meta.model_name == 'feature') and
+                        self.property_att.prefix == 'CID'):
 
             if self._meta.model_name == 'computer':
                 from migasfree.server.models import Attribute
                 computer = self
-                cid = Attribute.objects.get(value=str(self.id), property_att__prefix='CID')
+                cid = Attribute.objects.get(
+                    value=str(self.id),
+                    property_att__prefix='CID'
+                )
             else:
                 from migasfree.server.models import Computer
-                cid=self
+                cid = self
                 computer = Computer.objects.get(pk=int(self.value))
 
-            computer_action_data, computer_related_data = computer.get_relations()
+            computer_action_data, \
+                computer_related_data = computer.get_relations()
+
             cid_action_data, cid_related_data = cid.get_relations()
             action_data = computer_action_data + cid_action_data
             related_data = computer_related_data + cid_related_data
@@ -158,15 +184,20 @@ class MigasLink(object):
                 )
             })
 
+            related_data.append({
+                'url': reverse('hardware_resume', args=(computer.id,)),
+                'text': '%s [%s]' % (
+                    ugettext('Hardware'),
+                    ugettext(computer._meta.model_name)
+                )
+            })
+
             return action_data, related_data
 
         else:
             return self.get_relations()
 
-
-
     def menu_link(self):
-
         action_data, related_data = self.relations()
 
         return render_to_string(
@@ -191,19 +222,22 @@ class MigasLink(object):
             {
                 'lnk': {
                     'url': reverse(
-                        'admin:%s_%s_change' % (self._meta.app_label,
-                            self._meta.model_name),
+                        'admin:%s_%s_change' % (
+                            self._meta.app_label,
+                            self._meta.model_name
+                        ),
                         args=(self.id,)
                     ),
                     'text': self.__str__(),
                     'app': self._meta.app_label,
-                    'class':self._meta.model_name,
+                    'class': self._meta.model_name,
                     'pk': self.id
-            }
+                }
             }
         )
+
     link.allow_tags = True
-    link.short_description = ''
+    link.short_description = '...'
 
     def transmodel(self, obj):
         from migasfree.server.models import Property, Feature, Tag, Computer
@@ -219,9 +253,6 @@ class MigasLink(object):
             else:
                 return Feature, "Attribute"
 
-        elif obj.related_model._meta.label_lower == "server.feature":
-            print vars(self)
-
         elif obj.related_model._meta.label_lower == "server.computer":
             if self.__class__.__name__ == "Tag":
                 return Computer, "tags__id__exact"
@@ -234,9 +265,9 @@ class MigasLink(object):
                 return "", ""
 
         elif obj.related_model._meta.label_lower in [
-            "admin.logentry",
-            "server.scheduledelay",
-            "server.hwnode"]:  # Excluded
+                "admin.logentry",
+                "server.scheduledelay",
+                "server.hwnode"]:  # Excluded
             return "", ""
 
         elif obj.field.__class__.__name__ == 'ManyRelatedManager':

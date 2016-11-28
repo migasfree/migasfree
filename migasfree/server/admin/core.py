@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
-from .migasfree import MigasAdmin
+from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
     Attribute, AttributeSet, Checking, ClientProperty, Feature, MessageServer,
@@ -28,8 +28,6 @@ from ..tasks import (
     remove_physical_repository
 )
 
-#admin.site.register(Attribute)
-
 
 @admin.register(AttributeSet)
 class AttributeSetAdmin(MigasAdmin):
@@ -37,13 +35,25 @@ class AttributeSetAdmin(MigasAdmin):
         AttributeSet,
         {'attributes': 'attribute', 'excludes': 'attribute'}
     )
-    list_display = ('my_link',)
+    list_display = ('name_link', 'attributes_link', 'excludes_link')
     list_filter = ('active',)
-    list_display_links = ('my_link',)
+    list_display_links = ('name_link',)
 
-    def my_link(self, obj):
-        return obj.link()
-    my_link.short_description = _("Attribute Set")
+    name_link = MigasFields.link(model=AttributeSet, name='name')
+    attributes_link = MigasFields.objects_link(model=AttributeSet,
+        name="attributes")
+    excludes_link = MigasFields.objects_link(model=AttributeSet,
+        name='excludes')
+
+    def get_queryset(self, request):
+        return super(AttributeSetAdmin, self).get_queryset(
+            request
+            ).prefetch_related(
+                'attributes',
+                'attributes__property_att',
+                'excludes',
+                'excludes__property_att'
+            )
 
 
 @admin.register(Checking)
@@ -52,16 +62,12 @@ class CheckingAdmin(MigasAdmin):
     list_display_links = ('name',)
     list_filter = ('active',)
 
-    def my_active(self, obj):
-        return self.boolean_field(obj.active)
-
-    my_active.allow_tags = True
-    my_active.short_description = _('active')
+    my_active = MigasFields.boolean(model=Checking, name='active')
 
 
 @admin.register(ClientProperty)
 class ClientPropertyAdmin(MigasAdmin):
-    list_display = ('my_link', 'my_active', 'kind', 'my_auto')
+    list_display = ('name_link', 'my_active', 'kind', 'my_auto')
     list_filter = ('active', 'kind', 'auto')
     ordering = ('name',)
     search_fields = ('name', 'prefix')
@@ -72,40 +78,26 @@ class ClientPropertyAdmin(MigasAdmin):
     )
     actions = None
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Property")
-
-    def my_active(self, obj):
-        return self.boolean_field(obj.active)
-
-    my_active.allow_tags = True
-    my_active.short_description = _('active')
-
-    def my_auto(self, obj):
-        return self.boolean_field(obj.auto)
-
-    my_auto.allow_tags = True
-    my_auto.short_description = _('auto')
+    name_link = MigasFields.link(model=ClientProperty, name='name')
+    my_active = MigasFields.boolean(model=ClientProperty, name='active')
+    my_auto = MigasFields.boolean(model=ClientProperty, name='auto')
 
 
 @admin.register(Attribute)
 class AttributeAdmin(MigasAdmin):
     list_display = (
-        'my_link', 'description', 'total_computers', 'property_att'
+        'value_link', 'description', 'total_computers', 'property_link'
     )
     list_select_related = ('property_att',)
     list_filter = (FeatureFilter,)
-    fields = ('property_att', 'value', 'description')
+    fields = ('property_link', 'value', 'description')
     ordering = ('property_att', 'value')
     search_fields = ('value', 'description')
-    readonly_fields = ('property_att', 'value')
+    readonly_fields = ('property_link', 'value')
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Attribute")
+    value_link = MigasFields.link(model=Attribute, name='value')
+    property_link = MigasFields.link(model=Attribute,
+        name='property_att', order='property_att__name')
 
     def get_queryset(self, request):
         return super(AttributeAdmin, self).get_queryset(request).extra(
@@ -119,19 +111,18 @@ class AttributeAdmin(MigasAdmin):
 @admin.register(Feature)
 class FeatureAdmin(MigasAdmin):
     list_display = (
-        'my_link', 'description', 'total_computers', 'property_att'
+        'value_link', 'description', 'total_computers', 'property_link'
     )
     list_select_related = ('property_att',)
     list_filter = (FeatureFilter,)
-    fields = ('property_att', 'value', 'description')
+    fields = ('property_link', 'value', 'description')
     ordering = ('property_att', 'value')
     search_fields = ('value', 'description')
-    readonly_fields = ('property_att', 'value')
+    readonly_fields = ('property_link', 'value')
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Attribute")
+    value_link = MigasFields.link(model=Feature, name='value')
+    property_link = MigasFields.link(model=Feature, name='property_att',
+        order='property_att__name')
 
     def get_queryset(self, request):
         return super(FeatureAdmin, self).get_queryset(request).extra(
@@ -155,12 +146,21 @@ class MessageServerAdmin(MigasAdmin):
 @admin.register(Package)
 class PackageAdmin(MigasAdmin):
     form = PackageForm
-    list_display = ('my_link', 'store', 'repos_link')
+    list_display = (
+        'name_link', 'version_link', 'store_link', 'repositories_link'
+    )
     list_filter = ('version', 'store', 'repository')
-    list_per_page = 25
-    list_select_related = ('version',)
+    list_select_related = ('version', 'store')
     search_fields = ('name', 'store__name')
     ordering = ('name',)
+
+    name_link = MigasFields.link(model=Package, name='name')
+    version_link = MigasFields.link(model=Package, name='version',
+        order="version__name")
+    store_link = MigasFields.link(model=Package, name='store',
+        order="store__name")
+    repositories_link = MigasFields.objects_link(model=Package,
+        name='repository_set')
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
         if db_field.name == '++':
@@ -180,11 +180,6 @@ class PackageAdmin(MigasAdmin):
     class Media:
         js = ('js/package_admin.js',)
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Package/Set")
-
     def get_form(self, request, obj=None, **kwargs):
         form = super(PackageAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
@@ -192,17 +187,20 @@ class PackageAdmin(MigasAdmin):
         form.current_user = request.user
         return form
 
+    def get_queryset(self, request):
+        return super(PackageAdmin, self).get_queryset(
+            request
+            ).prefetch_related(
+                'repository_set'
+            )
+
 
 @admin.register(Platform)
 class PlatformAdmin(MigasAdmin):
-    list_display = ('my_link',)
-
+    list_display = ('name_link',)
     actions = ['delete_selected']
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Platform")
+    name_link = MigasFields.link(model=Platform, name='name')
 
     def delete_selected(self, request, objects):
         if not self.has_delete_permission(request):
@@ -222,27 +220,20 @@ class PlatformAdmin(MigasAdmin):
 
 @admin.register(Pms)
 class PmsAdmin(MigasAdmin):
-    list_display = ('my_link',)
+    list_display = ('name_link',)
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Package Management System")
+    name_link = MigasFields.link(model=Pms, name='name')
 
 
 @admin.register(Property)
 class PropertyAdmin(ClientPropertyAdmin):
-    list_display = ('my_link', 'my_active', 'kind', 'my_auto', 'my_tag')
+    list_display = ('name_link', 'my_active', 'kind', 'my_auto', 'my_tag')
     fields = (
         'prefix', 'name', 'active',
         'language', 'code', 'kind', 'auto', 'tag'
     )
 
-    def my_tag(self, obj):
-        return self.boolean_field(obj.tag)
-
-    my_tag.allow_tags = True
-    my_tag.short_description = _('tag')
+    my_tag = MigasFields.boolean(model=Property, name='tag')
 
 
 @admin.register(Query)
@@ -261,10 +252,12 @@ class QueryAdmin(MigasAdmin):
 @admin.register(Repository)
 class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     form = RepositoryForm
-    list_display = ('version', 'my_link', 'my_active', 'date', 'timeline')
-    list_select_related = ('schedule',)
+    list_display = (
+        'name_link', 'version_link', 'my_active', 'date', 'timeline'
+    )
     list_filter = ('active', 'version', 'schedule')
     search_fields = ('name', 'packages__name')
+    list_select_related = ("version",)
     actions = None
 
     fieldsets = (
@@ -291,23 +284,10 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         }),
     )
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Repository")
-
-    def my_active(self, obj):
-        return self.boolean_field(obj.active)
-
-    my_active.allow_tags = True
-    my_active.short_description = _('active')
-
-    '''
-    def get_queryset(self, request):
-        return self.model._default_manager.by_version(
-            request.user.userprofile.version_id
-        )
-    '''
+    name_link = MigasFields.link(model=Repository, name='name')
+    version_link = MigasFields.link(model=Repository,
+        name='version', order="version__name")
+    my_active = MigasFields.boolean(model=Repository, name='active')
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == 'packages':
@@ -382,29 +362,25 @@ class ScheduleDelayline(admin.TabularInline):
 
 @admin.register(Schedule)
 class ScheduleAdmin(MigasAdmin):
-    list_display = ('my_link', 'description')
+    list_display = ('name_link', 'description')
     ordering = ('name',)
     inlines = [ScheduleDelayline]
     extra = 0
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Schedule")
+    name_link = MigasFields.link(model=Schedule, name='name')
 
 
 @admin.register(Store)
 class StoreAdmin(MigasAdmin):
     form = StoreForm
-    list_display = ('my_link',)
+    list_display = ('name_link', 'version_link')
     search_fields = ('name',)
     list_filter = ('version',)
     ordering = ('name',)
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Store")
+    name_link = MigasFields.link(model=Store, name='name')
+    version_link = MigasFields.link(model=Store, name='version',
+        order='version__name')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(StoreAdmin, self).get_form(request, obj, **kwargs)
@@ -412,37 +388,38 @@ class StoreAdmin(MigasAdmin):
         form.current_user = request.user
         return form
 
+    def get_queryset(self, request):
+        return super(StoreAdmin, self).get_queryset(
+            request
+        ).select_related("version")
+
 
 @admin.register(TagType)
 class TagTypeAdmin(MigasAdmin):
-    list_display = ('my_link', 'prefix', 'my_active')
+    list_display = ('name_link', 'prefix', 'my_active')
     fields = ('prefix', 'name', 'kind', 'active')
+    search_fields = ('name', 'prefix')
+    list_filter = ('active',)
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Tag Type")
-
-    def my_active(self, obj):
-        return self.boolean_field(obj.active)
-
-    my_active.allow_tags = True
-    my_active.short_description = _('active')
+    name_link = MigasFields.link(model=TagType, name='name')
+    my_active = MigasFields.boolean(model=TagType, name='active')
 
 
 @admin.register(Tag)
 class TagAdmin(MigasAdmin):
     form = TagForm
-    list_display = ('my_link', 'description', 'total_computers', 'property_att')
+    list_display = (
+        'value_link', 'description', 'total_computers', 'property_link'
+    )
+    list_select_related = ('property_att',)
     fields = ('property_att', 'value', 'description', 'computers')
     list_filter = (TagFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("Tag")
+    property_link = MigasFields.link(model=Tag, name='property_att',
+        order='property_att__name')
+    value_link = MigasFields.link(model=Tag, name='value')
 
     def get_queryset(self, request):
         return super(TagAdmin, self).get_queryset(request).extra(
@@ -458,14 +435,11 @@ class TagAdmin(MigasAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
-    list_display = ('my_link',)
+    list_display = ('name_link',)
     list_filter = ('version',)
     ordering = ('username',)
 
-    def my_link(self, obj):
-        return obj.link()
-
-    my_link.short_description = _("User Profile")
+    name_link = MigasFields.link(model=UserProfile, name='username')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(UserProfileAdmin, self).get_form(request, obj, **kwargs)
@@ -478,26 +452,23 @@ class UserProfileAdmin(MigasAdmin):
 @admin.register(Version)
 class VersionAdmin(MigasAdmin):
     list_display = (
-        'my_link',
-        'platform',
-        'pms',
+        'name_link',
+        'platform_link',
+        'pms_link',
         'computerbase',
         'my_autoregister'
     )
     fields = ('name', 'platform', 'pms', 'computerbase', 'autoregister', 'base')
     list_filter = ('platform', 'pms')
+    list_select_related = ('platform', 'pms')
     actions = None
 
-    def my_link(self, obj):
-        return obj.link()
+    name_link = MigasFields.link(model=Version, name='name')
+    platform_link = MigasFields.link(model=Version, name='platform',
+        order='platform__name')
+    pms_link = MigasFields.link(model=Version, name='pms', order='pms__name')
 
-    my_link.short_description = _("Version")
-
-    def my_autoregister(self, obj):
-        return self.boolean_field(obj.autoregister)
-
-    my_autoregister.allow_tags = True
-    my_autoregister.short_description = _('autoregister')
+    my_autoregister = MigasFields.boolean(model=Version, name='autoregister')
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(VersionAdmin, self).get_form(request, obj, **kwargs)

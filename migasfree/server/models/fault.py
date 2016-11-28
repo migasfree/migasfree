@@ -61,12 +61,6 @@ class Fault(models.Model):
         self.checked = True
         self.save()
 
-    def computer_link(self):
-        return self.computer.link()
-
-    computer_link.allow_tags = True
-    computer_link.short_description = _("Computer")
-
     def list_users(self):
         return self.faultdef.list_users()
 

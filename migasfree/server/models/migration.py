@@ -51,18 +51,6 @@ class Migration(models.Model):
     def __str__(self):
         return '{} ({}) {}'.format(self.computer, self.date, self.version)
 
-    def computer_link(self):
-        return self.computer.link()
-
-    computer_link.allow_tags = True
-    computer_link.short_description = _("Computer")
-
-    def version_link(self):
-        return self.version.link()
-
-    version_link.allow_tags = True
-    version_link.short_description = _("Version")
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Migration")

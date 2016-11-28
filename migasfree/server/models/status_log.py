@@ -52,12 +52,6 @@ class StatusLog(models.Model):
     def __str__(self):
         return '{} ({})'.format(self.computer, self.status)
 
-    def computer_link(self):
-        return self.computer.link()
-
-    computer_link.allow_tags = True
-    computer_link.short_description = _("Computer")
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Status Log")
