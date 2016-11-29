@@ -57,14 +57,6 @@ class Error(models.Model):
         self.checked = True
         super(Error, self).save(*args, **kwargs)
 
-    def truncated_error(self):
-        if len(self.error) <= 250:
-            return self.error
-        else:
-            return self.error[:250] + " ..."
-
-    truncated_error.short_description = _("Truncated error")
-
     def auto_check(self):
         for ace in AutoCheckError.objects.all():
             if re.search(ace.message, self.error):

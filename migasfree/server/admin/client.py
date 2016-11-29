@@ -222,6 +222,15 @@ class ErrorAdmin(MigasAdmin):
         model=Error, name="version", order='version__name'
     )
 
+    def truncated_error(self, obj):
+        if len(obj.error) <= 250:
+            return obj.error
+        else:
+            return obj.error[:250] + " ..."
+
+    truncated_error.short_description = _("Truncated error")
+    truncated_error.admin_order_field = 'error'
+
     def checked_ok(self, request, queryset):
         for item in queryset:
             item.okay()
@@ -359,9 +368,6 @@ class LoginAdmin(MigasAdmin):
     readonly_fields = ('date', 'user_link', 'computer_link', 'attributes_link')
 
     login_link = MigasFields.link(model=Login, name='date')
-    computer_link = MigasFields.link(
-        model=Login, name='computer', order="computer__name"
-    )
     computer_link = MigasFields.link(
         model=Login, name='computer', order="computer__name"
     )
