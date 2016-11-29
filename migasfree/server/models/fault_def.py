@@ -55,9 +55,6 @@ class FaultDef(models.Model, MigasLink):
         self.name = self.name.replace(" ", "_")
         super(FaultDef, self).save(*args, **kwargs)
 
-    def namefunction(self):
-        return "FAULT_%s" % self.name
-
     def __str__(self):
         return self.name
 
