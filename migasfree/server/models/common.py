@@ -16,7 +16,6 @@ LANGUAGES_CHOICES = (
 
 
 class MigasLink(object):
-
     def __init__(self):
         self._actions = None
         self._exclude_links = []
@@ -153,9 +152,9 @@ class MigasLink(object):
 
         if self._meta.model_name == 'computer' or (
                 (self._meta.model_name == 'attribute' or
-                        self._meta.model_name == 'feature') and
-                        self.property_att.prefix == 'CID'):
-
+                    self._meta.model_name == 'feature'
+                ) and self.property_att.prefix == 'CID'
+        ):
             if self._meta.model_name == 'computer':
                 from migasfree.server.models import Attribute
                 computer = self
@@ -211,8 +210,10 @@ class MigasLink(object):
             {
                 'lnk': {
                     'url': reverse(
-                        'admin:%s_%s_change' % (self._meta.app_label,
-                            self._meta.model_name),
+                        'admin:%s_%s_change' % (
+                            self._meta.app_label,
+                            self._meta.model_name
+                        ),
                         args=(self.id,)
                     ),
                     'text': self.__str__(),
