@@ -40,10 +40,12 @@ class AttributeSetAdmin(MigasAdmin):
     list_display_links = ('name_link',)
 
     name_link = MigasFields.link(model=AttributeSet, name='name')
-    attributes_link = MigasFields.objects_link(model=AttributeSet,
-        name="attributes")
-    excludes_link = MigasFields.objects_link(model=AttributeSet,
-        name='excludes')
+    attributes_link = MigasFields.objects_link(
+        model=AttributeSet, name="attributes"
+    )
+    excludes_link = MigasFields.objects_link(
+        model=AttributeSet, name='excludes'
+    )
 
     def get_queryset(self, request):
         return super(AttributeSetAdmin, self).get_queryset(
@@ -96,8 +98,11 @@ class AttributeAdmin(MigasAdmin):
     readonly_fields = ('property_link', 'value')
 
     value_link = MigasFields.link(model=Attribute, name='value')
-    property_link = MigasFields.link(model=Attribute,
-        name='property_att', order='property_att__name')
+    property_link = MigasFields.link(
+        model=Attribute,
+        name='property_att',
+        order='property_att__name'
+    )
 
     def get_queryset(self, request):
         return super(AttributeAdmin, self).get_queryset(request).extra(
@@ -121,8 +126,11 @@ class FeatureAdmin(MigasAdmin):
     readonly_fields = ('property_link', 'value')
 
     value_link = MigasFields.link(model=Feature, name='value')
-    property_link = MigasFields.link(model=Feature, name='property_att',
-        order='property_att__name')
+    property_link = MigasFields.link(
+        model=Feature,
+        name='property_att',
+        order='property_att__name'
+    )
 
     def get_queryset(self, request):
         return super(FeatureAdmin, self).get_queryset(request).extra(
@@ -155,12 +163,15 @@ class PackageAdmin(MigasAdmin):
     ordering = ('name',)
 
     name_link = MigasFields.link(model=Package, name='name')
-    version_link = MigasFields.link(model=Package, name='version',
-        order="version__name")
-    store_link = MigasFields.link(model=Package, name='store',
-        order="store__name")
-    repositories_link = MigasFields.objects_link(model=Package,
-        name='repository_set')
+    version_link = MigasFields.link(
+        model=Package, name='version', order="version__name"
+    )
+    store_link = MigasFields.link(
+        model=Package, name='store', order="store__name"
+    )
+    repositories_link = MigasFields.objects_link(
+        model=Package, name='repository_set'
+    )
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
         if db_field.name == '++':
@@ -285,8 +296,9 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     )
 
     name_link = MigasFields.link(model=Repository, name='name')
-    version_link = MigasFields.link(model=Repository,
-        name='version', order="version__name")
+    version_link = MigasFields.link(
+        model=Repository, name='version', order="version__name"
+    )
     my_active = MigasFields.boolean(model=Repository, name='active')
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
@@ -379,8 +391,9 @@ class StoreAdmin(MigasAdmin):
     ordering = ('name',)
 
     name_link = MigasFields.link(model=Store, name='name')
-    version_link = MigasFields.link(model=Store, name='version',
-        order='version__name')
+    version_link = MigasFields.link(
+        model=Store, name='version', order='version__name'
+    )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(StoreAdmin, self).get_form(request, obj, **kwargs)
@@ -417,8 +430,9 @@ class TagAdmin(MigasAdmin):
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
 
-    property_link = MigasFields.link(model=Tag, name='property_att',
-        order='property_att__name')
+    property_link = MigasFields.link(
+        model=Tag, name='property_att', order='property_att__name'
+    )
     value_link = MigasFields.link(model=Tag, name='value')
 
     def get_queryset(self, request):
@@ -464,10 +478,10 @@ class VersionAdmin(MigasAdmin):
     actions = None
 
     name_link = MigasFields.link(model=Version, name='name')
-    platform_link = MigasFields.link(model=Version, name='platform',
-        order='platform__name')
+    platform_link = MigasFields.link(
+        model=Version, name='platform', order='platform__name'
+    )
     pms_link = MigasFields.link(model=Version, name='pms', order='pms__name')
-
     my_autoregister = MigasFields.boolean(model=Version, name='autoregister')
 
     def get_form(self, request, obj=None, **kwargs):
