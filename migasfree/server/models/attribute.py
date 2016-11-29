@@ -68,12 +68,6 @@ class Attribute(models.Model, MigasLink):
         WHERE server_attribute.id=server_login_attributes.attribute_id \
         AND server_login_attributes.login_id=server_login.id"
 
-    def property_link(self):
-        return self.property_att.link()
-
-    property_link.short_description = _("Property")
-    property_link.allow_tags = True
-
     def __str__(self):
         if self.property_att.prefix == "CID" and \
                 settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
@@ -92,6 +86,7 @@ class Attribute(models.Model, MigasLink):
             return Login.objects.filter(attributes__id=self.id).count()
 
     total_computers.admin_order_field = 'total_computers'
+    total_computers.short_description = _('Total computers')
 
     def update_description(self, new_value):
         if self.description != new_value:
