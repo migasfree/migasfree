@@ -10,7 +10,7 @@
         <li>{% trans 'Datum' %}</li>
         <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
         <li><a href="{% url 'admin:server_computer_change' computer.id %}">{{ computer }}</a></li>
-        <li>{% trans 'Simulate' %}</li>
+        <li>{% trans 'Simulate sync' %}</li>
     </ul>
 {% endblock %}
 

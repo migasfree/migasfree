@@ -248,7 +248,7 @@ def computer_simulate_sync(request, pk):
 
         messages.error(
             request,
-            _('Error: This computer does not have a login !.')
+            _('Error: This computer does not have a login!')
         )
 
     return render(
