@@ -29,8 +29,10 @@ class Checking(models.Model):
     code = models.TextField(
         verbose_name=_("code"),
         blank=True,
-        help_text=_("Code django. <br><b>VARIABLES TO SETTINGS:</b><br>"
-                    "<b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br>"
+        help_text=_("Django code. <br><b>VARIABLES TO SETTINGS:</b><br>"
+                    "<b>result</b>: a number. "
+                    "If result<>0 the checking is show in the section Status. "
+                    "Default is 0<br>"
                     "<b>alert</b>: type of alert. Default is 'info'. "
                     "Enumeration value: {'info' | 'warning' | 'danger'}<br>"
                     "<b>url</b>: link. Default is '/'<br>"
