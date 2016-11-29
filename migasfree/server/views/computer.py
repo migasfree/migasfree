@@ -222,7 +222,11 @@ def computer_simulate_sync(request, pk):
 
         repositories = []
         for repo in result["repositories"]:
-            repositories.append(Repository.objects.get(version__id=version.id,name=repo['name']))
+            repositories.append(
+                Repository.objects.get(
+                    version__id=version.id, name=repo['name']
+                )
+            )
         result["repositories"] = repositories
 
         faultsdef = []
