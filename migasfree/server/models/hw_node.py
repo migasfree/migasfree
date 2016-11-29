@@ -59,7 +59,6 @@ class HwNode(models.Model, MigasLink):
 
     level = models.IntegerField(
         verbose_name=_("level"),
-        null=False
     )
 
     width = models.IntegerField(
@@ -74,13 +73,11 @@ class HwNode(models.Model, MigasLink):
 
     name = models.TextField(
         verbose_name=_("id"),
-        null=False,
         blank=True
     )  # This is the field "id" in lshw
 
     classname = models.TextField(
         verbose_name=_("class"),
-        null=False,
         blank=True
     )  # This is the field "class" in lshw
 
@@ -194,10 +191,12 @@ class HwNode(models.Model, MigasLink):
 
     def menu_link(self):
         if self.id:
-            self._exclude_links = ["hwnode - parent__id__exact",
-                                 "hwcapability - node__id__exact",
-                                 "hwconfiguration - node__id__exact",
-                                 "hwlogicalname - node__id__exact"]
+            self._exclude_links = [
+                "hwnode - parent__id__exact",
+                "hwcapability - node__id__exact",
+                "hwconfiguration - node__id__exact",
+                "hwlogicalname - node__id__exact"
+            ]
             self._include_links = ["computer - product"]
         return super(HwNode, self).menu_link()
 
@@ -290,7 +289,7 @@ class HwNode(models.Model, MigasLink):
 
         capacity = [item.size for item in query]
 
-        return (query.count(), sum(capacity))
+        return query.count(), sum(capacity)
 
     class Meta:
         app_label = 'server'
