@@ -87,9 +87,6 @@ class Property(models.Model, MigasLink):
         help_text=_("tag")
     )
 
-    def namefunction(self):
-        return "PROPERTY_%s" % self.prefix
-
     def __str__(self):
         return self.name
 
