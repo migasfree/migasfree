@@ -15,7 +15,7 @@ class Pms(models.Model, MigasLink):
     Each distribution of linux have a P.M.S. For example Fedora uses yum,
     Ubuntu uses apt, openSUSE zypper, etc.
 
-    By default, migasfree is configured for work whith apt, yum and zypper.
+    By default, migasfree is configured for work with apt, yum and zypper.
 
     This model is used for say to migasfree server how must:
       - create the metadata of the repositories in the server.
