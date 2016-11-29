@@ -57,6 +57,7 @@ class DeviceLogical(models.Model, MigasLink):
 
     def datadict(self, version):
         dictdevice = self.device.datadict()
+        dictdriver = {}
         try:
             device_driver = DeviceDriver.objects.filter(
                 version__id=version.id,
@@ -66,7 +67,7 @@ class DeviceLogical(models.Model, MigasLink):
             if device_driver:
                 dictdriver = device_driver.datadict()
         except:
-            dictdriver = {}
+            pass
 
         ret = {
             self.device.connection.devicetype.name: {
