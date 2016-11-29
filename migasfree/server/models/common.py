@@ -73,7 +73,10 @@ class MigasLink(object):
                     obj.remote_field.name,
                     self.pk
                 ),
-                'text': ugettext(obj.related.field.name)
+                'text': ugettext(obj.related.field.name),
+                'count': obj.related.model.objects.filter(
+                    **{obj.related.name: self.id}
+                ).count()
             })
 
         for related_object, _ in related_objects:
@@ -100,7 +103,10 @@ class MigasLink(object):
                                 related_model._meta.verbose_name_plural
                             ),
                             ugettext(related_object.field.name)
-                        )
+                        ),
+                        'count': related_model.objects.filter(
+                            **{related_object.field.name: self.id}
+                        ).count()
                     })
 
         for _include in self._include_links:
@@ -179,7 +185,7 @@ class MigasLink(object):
             related_data.append({
                 'url': reverse('computer_simulate_sync', args=(computer.id,)),
                 'text': '%s [%s]' % (
-                    ugettext('Simulate'),
+                    ugettext('Simulate sync'),
                     ugettext(computer._meta.model_name)
                 )
             })
