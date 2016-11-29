@@ -42,6 +42,8 @@ class ScheduleDelay(models.Model):
                 attributes__id__in=self.attributes.all().values_list("id")
             ).annotate(total=Count('id')).order_by('id').count()
 
+    total_computers.short_description = _('Total computers')
+
     def __str__(self):
         return '%s - %s' % (self.schedule.name, str(self.delay))
 
