@@ -97,7 +97,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         }),
         (_('Devices'), {
             'fields': ('logical_devices_link', 'default_logical_device',)
-#            'fields': ('default_logical_device',)
         }),
         (_('Tags'), {
             'fields': ('tags',)
@@ -387,6 +386,10 @@ class MessageAdmin(MigasAdmin):
     search_fields = ('computer', 'text', 'date')
     readonly_fields = ('computer_link', 'text', 'date')
     exclude = ('computer',)
+
+    computer_link = MigasFields.link(
+        model=Message, name='computer', order='computer__name'
+    )
 
 
 @admin.register(Migration)

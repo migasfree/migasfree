@@ -48,12 +48,6 @@ class Message(models.Model):
     def __str__(self):
         return '%s (%s)' % (self.computer, self.date)
 
-    def computer_link(self):
-        return self.computer.link()
-
-    computer_link.allow_tags = True
-    computer_link.short_description = _("Computer")
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Message")
