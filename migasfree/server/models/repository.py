@@ -146,11 +146,11 @@ class Repository(models.Model, MigasLink):
     def save(self, *args, **kwargs):
         self.name = slugify(self.name)
 
-        # TODO Remove this condition and asign default value in toinstall field
+        # TODO Remove this condition and assign default value in toinstall field
         if self.toinstall:
             self.toinstall = self.toinstall.replace("\r\n", "\n")
 
-        # TODO Remove this condition and asign default value in toremove field
+        # TODO Remove this condition and assign default value in toremove field
         if self.toremove:
             self.toremove = self.toremove.replace("\r\n", "\n")
 
