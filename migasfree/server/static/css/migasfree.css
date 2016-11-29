@@ -39,8 +39,14 @@ footer {
     font-size: 110%;
 }
 
-footer p {
+footer p, footer, ul {
     margin: 0.7em 1em;
+}
+
+footer li {
+    display: inline;
+    padding: 0 0 0 1em;
+    list-style-type: none;
 }
 
 p#copyright {

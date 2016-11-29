@@ -19,8 +19,8 @@
         <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
         <link rel="stylesheet" href="{% static 'admin/css/overrides.css' %}" />
 
-        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20161128" />
-        <link rel="stylesheet" href="{% static 'css/migasfree_print.css' %}?20161128" media="print" />
+        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20161129" />
+        <link rel="stylesheet" href="{% static 'css/migasfree_print.css' %}?20161129" media="print" />
 
         <link rel="stylesheet" href="{% static 'css/ajax_select.css' %}" />
         <link rel="stylesheet" href="{% static 'ajax-select/jquery-ui.css' %}" />
@@ -212,14 +212,18 @@
         {% if not is_popup %}
             {% block footer %}
                 <footer class="bs-footer container">
-                    <p id="copyright">
+                    <p id="copyright" class="pull-left">
                         &copy; 2010-{% now 'Y' %} <a href="http://www.migasfree.org">migasfree</a>,
                         under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a> <a href="https://github.com/migasfree/migasfree" title="migasfree-server_{{ migasfree_version }}"><span class="fa fa-github"></span> <span class="sr-only">(code project)</span></a>
-
-                        {% block documentation %}
-                            <a class="pull-right" href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="fa fa-info"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a>
-                        {% endblock documentation %}
                     </p>
+
+                    <ul class="pull-right">
+                        {% block documentation %}
+                            <li><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="fa fa-info"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a></li>
+                        {% endblock documentation %}
+
+                        <li><a href="/docs/" title="{% trans 'Experimental REST API' %}"><span class="fa fa-user-secret"></span> <span class="sr-only">{% trans 'Experimental REST API' %}</span></a></li>
+                    </ul>
                 </footer>
             {% endblock footer %}
         {% endif %}{# is_popup #}
