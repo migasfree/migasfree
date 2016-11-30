@@ -150,6 +150,32 @@ class MigasLink(object):
 
             return action_data, related_data
 
+        # ATTRIBUTESET === ATTRIBUTE
+        if self._meta.model_name == 'attributeset' or (
+                (self._meta.model_name == 'attribute' or
+                    self._meta.model_name == 'feature'
+                ) and self.property_att.prefix == 'SET'
+        ):
+            if self._meta.model_name == 'attributeset':
+                from migasfree.server.models import Attribute
+                attributeset = self
+                att = Attribute.objects.get(
+                    value=str(self.name),
+                    property_att__prefix='SET'
+                )
+            else:
+                from migasfree.server.models import AttributeSet
+                att = self
+                attributeset = AttributeSet.objects.get(name=self.value)
+
+            set_action_data, set_related_data = attributeset.get_relations()
+            att_action_data, att_related_data = att.get_relations()
+            action_data = set_action_data + att_action_data
+            related_data = set_related_data +att_related_data
+
+            return action_data, related_data
+
+        # COMPUTER === CID ATTRIBUTE
         if self._meta.model_name == 'computer' or (
                 (self._meta.model_name == 'attribute' or
                     self._meta.model_name == 'feature'
