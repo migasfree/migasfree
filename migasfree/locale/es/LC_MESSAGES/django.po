@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-29 14:17+0100\n"
-"PO-Revision-Date: 2016-11-29 14:18+0100\n"
+"POT-Creation-Date: 2016-11-30 12:43+0100\n"
+"PO-Revision-Date: 2016-11-30 12:44+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -273,7 +273,11 @@ msgstr "Atributos"
 msgid "Schedule"
 msgstr "Calendario"
 
-#: migasfree/server/admin/core.py:349
+#: migasfree/server/admin/core.py:311
+msgid "Regenerate metadata"
+msgstr "Regenerar metadatos"
+
+#: migasfree/server/admin/core.py:358
 #, python-format
 msgid ""
 "Repository [%s] modified by user [%s] (<a href=\"%s\">review changes</a>)"
@@ -480,7 +484,7 @@ msgstr "Origen"
 msgid "Target"
 msgstr "Destino"
 
-#: migasfree/server/forms.py:90 migasfree/server/serializers.py:241
+#: migasfree/server/forms.py:90 migasfree/server/serializers.py:239
 #, python-format
 msgid "Package %s must belong to the version %s"
 msgstr "El paquete %s debe pertenecer a la versión %s"
@@ -1480,12 +1484,12 @@ msgstr "Perfil de usuario"
 msgid "User Profiles"
 msgstr "Perfiles de usuario"
 
-#: migasfree/server/tasks.py:74
+#: migasfree/server/tasks.py:72
 #, python-format
 msgid "%(package)s in store %(store)s"
 msgstr "%(package)s en el almacén %(store)s"
 
-#: migasfree/server/tasks.py:105
+#: migasfree/server/tasks.py:103
 msgid "Added packages:"
 msgstr "Paquetes añadidos:"
 
