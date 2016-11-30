@@ -27,11 +27,10 @@ def remove_physical_repository(request, repo, old_name=""):
         return _msg
 
 
-def create_physical_repository(request, repo, packages):
+def create_physical_repository(repo, request=None):
     """
     Creates the repository metadata.
     repo = a Repository object
-    packages = a packages_id list
     """
     _tmp_path = os.path.join(
         settings.MIGASFREE_REPO_DIR,
@@ -63,8 +62,7 @@ def create_physical_repository(request, repo, packages):
         os.makedirs(_pkg_tmp_path)
 
     _ret = ''
-    for _pkg_id in packages:
-        _pkg = Package.objects.get(id=_pkg_id)
+    for _pkg in repo.packages.all():
         _dst = os.path.join(_slug_tmp_path, repo.name, 'PKGS', _pkg.name)
         if not os.path.lexists(_dst):
             os.symlink(
