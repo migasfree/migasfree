@@ -204,9 +204,7 @@ class RepositorySerializer(serializers.ModelSerializer):
 class RepositoryWriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         deploy = super(RepositoryWriteSerializer, self).create(validated_data)
-        tasks.create_physical_repository(
-            {}, deploy, deploy.packages.values_list('id', flat=True)
-        )
+        tasks.create_physical_repository(deploy)
         return deploy
 
     def update(self, instance, validated_data):
@@ -225,7 +223,7 @@ class RepositoryWriteSerializer(serializers.ModelSerializer):
         )
 
         if cmp(old_pkgs, new_pkgs) != 0 or old_name != validated_data['name']:
-            tasks.create_physical_repository({}, instance, new_pkgs)
+            tasks.create_physical_repository(instance)
 
             if old_name != validated_data['name']:
                 tasks.remove_physical_repository(

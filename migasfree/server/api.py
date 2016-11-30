@@ -915,13 +915,8 @@ def create_repositories_package(package_name, version_name):
     try:
         version = Version.objects.get(name=version_name)
         package = Package.objects.get(name=package_name, version=version)
-        repos = Repository.objects.filter(packages__id=package.id)
-        for repo in repos:
-            create_physical_repository(
-                {},  # without request object
-                repo,
-                repo.packages.all().values_list('id', flat=True)
-            )
+        for repo in Repository.objects.filter(packages__id=package.id):
+            create_physical_repository(repo)
     except:
         pass
 
