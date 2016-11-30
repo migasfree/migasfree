@@ -269,7 +269,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     list_filter = ('active', 'version', 'schedule')
     search_fields = ('name', 'packages__name')
     list_select_related = ("version",)
-    actions = None
+    actions = ['regenerate_metadata']
 
     fieldsets = (
         (_('General'), {
@@ -300,6 +300,15 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         model=Repository, name='version', order="version__name"
     )
     my_active = MigasFields.boolean(model=Repository, name='active')
+
+    def regenerate_metadata(self, request, objects):
+        if not self.has_change_permission(request):
+            raise PermissionDenied
+
+        for repo in objects:
+            create_physical_repository(repo, request)
+
+    regenerate_metadata.short_description = _("Regenerate metadata")
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == 'packages':
@@ -339,7 +348,7 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
                     obj.packages.values_list('id', flat=True),  # pkgs before
                     packages_after
                 ) is False) or (name_new != name_old):
-            create_physical_repository(request, obj, packages_after)
+            create_physical_repository(obj, request)
 
             # delete old repository by name changed
             if name_new != name_old and not is_new:
