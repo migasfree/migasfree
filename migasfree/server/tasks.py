@@ -7,7 +7,6 @@ from django.conf import settings
 from django.contrib import messages
 from django.utils.translation import ugettext as _
 
-from .models import Package
 from .functions import run_in_server
 
 
