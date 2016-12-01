@@ -171,7 +171,7 @@ class MigasLink(object):
             set_action_data, set_related_data = attributeset.get_relations()
             att_action_data, att_related_data = att.get_relations()
             action_data = set_action_data + att_action_data
-            related_data = set_related_data +att_related_data
+            related_data = set_related_data + att_related_data
 
             return action_data, related_data
 
