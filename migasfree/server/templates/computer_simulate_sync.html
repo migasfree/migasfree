@@ -15,81 +15,104 @@
 {% endblock %}
 
 {% block content_title %}
-    <h1><div>{% trans 'Simulate sync' %}:</div> {{ computer.link }} </h1>
+    <h1>{% trans 'Simulate sync' %}: {{ computer.link }} </h1>
 {% endblock content_title %}
 
 {% block content %}
 <div class="simulation">
-    <h2>{% trans 'Input (from computer)' %}</h2>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{% trans 'Input (from computer)' %}</h2>
+        </div>
 
-    <h3>{% trans 'Login' %}</h3>
-    <ul>
-        <li>{% trans 'Date' %}: {{ login.date }}</li>
-        <li>{% trans 'uuid' %}: {{ computer.uuid }}</li>
-        <li>{% trans 'Platform' %}: {{ version.platform.link }}</li>
-        <li>{% trans 'Version' %}: {{ version.link }}</li>
-        <li>{% trans 'User' %}: {{ login.link }}</li>
-    </ul>
+        <div class="panel-body">
+            <h3>{% trans 'Login' %}</h3>
+            <ul>
+                <li>{% trans 'Date' %}: {{ login.date }}</li>
+                <li>{% trans 'uuid' %}: {{ computer.uuid }}</li>
+                <li>{% trans 'Platform' %}: {{ version.platform.link }}</li>
+                <li>{% trans 'Version' %}: {{ version.link }}</li>
+                <li>{% trans 'User' %}: {{ login.link }}</li>
+            </ul>
 
-    <h3>{% trans 'Attributes' %}</h3>
-    <ul>
-    {% for item in attributes %}
-        <li>{{ item.link }}</li>
-    {% endfor %}
-    </ul>
+            <h3>{% trans 'Attributes' %}</h3>
+            <ul>
+            {% for item in attributes %}
+                <li>{{ item.link }}</li>
+            {% endfor %}
+            </ul>
 
-    <h3>{% trans 'Tags' %}</h3>
-    <ul>
-    {% for item in computer.tags.all %}
-        <li>{{ item.link }}</li>
-    {% endfor %}
-    </ul>
-
-    <h2>{% trans 'Output (from server)' %}</h2>
-
-    <h3>{% trans 'Packages to install' %}</h3>
-    <ul>
-    {% for item in packages.install %}
-        <li>{{ item }}</li>
-    {% endfor %}
-    </ul>
-
-    <h3>{% trans 'Packages to remove' %}</h3>
-    <ul>
-    {% for item in packages.remove %}
-        <li>{{ item }}</li>
-    {% endfor %}
-    </ul>
-
-    <h3>{% trans 'Repositories' %}</h3>
-    <ul>
-    {% for item in repositories %}
-        <li>{{ item.link }}</li>
-    {% endfor %}
-    </ul>
-
-    <h3>{% trans 'Fault Definitions' %}</h3>
-    <ul>
-    {% for item in faultsdef %}
-        <li>{{ item.link }}</li>
-    {% endfor %}
-    </ul>
-
-    <h3>{% trans 'Devices' %}</h3>
-    <ul>
-    {% for item in devices %}
-        <li>
-            {{ item.link }}
-            {% if item.id == default_device %}
-               <span class="label label-default">default</span>
+            {% if computer.tags.all %}
+                <h3>{% trans 'Tags' %}</h3>
+                <ul>
+                {% for item in computer.tags.all %}
+                    <li>{{ item.link }}</li>
+                {% endfor %}
+                </ul>
             {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
+        </div>
+    </div>
 
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2>{% trans 'Output (from server)' %}</h2>
+        </div>
 
-    <h3>{% trans 'Hardware Capture' %}:
-        <span class="label label-{% if hardware_capture %}success{% else %}info{% endif %}">{{ hardware_capture }}</span>
-    </h3>
+        <div class="panel-body">
+            {% if packages.install %}
+                <h3>{% trans 'Packages to install' %}</h3>
+                <ul>
+                {% for item in packages.install %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if packages.remove %}
+                <h3>{% trans 'Packages to remove' %}</h3>
+                <ul>
+                {% for item in packages.remove %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if repositories %}
+                <h3>{% trans 'Repositories' %}</h3>
+                <ul>
+                {% for item in repositories %}
+                    <li>{{ item.link }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if faultsdef %}
+                <h3>{% trans 'Fault Definitions' %}</h3>
+                <ul>
+                {% for item in faultsdef %}
+                    <li>{{ item.link }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if devices %}
+                <h3>{% trans 'Devices' %}</h3>
+                <ul>
+                {% for item in devices %}
+                    <li>
+                        {{ item.link }}
+                        {% if item.id == default_device %}
+                           <span class="label label-default">default</span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <h3>{% trans 'Hardware Capture' %}:
+                <span class="label label-{% if hardware_capture %}success{% else %}info{% endif %}">{{ hardware_capture }}</span>
+            </h3>
+        </div>
+    </div>
 </div>
 {% endblock content %}
