@@ -22,6 +22,7 @@ class ApplicationAdmin(MigasAdmin):
         'name', 'version', 'category', 'level', 'score', 'icon',
         'description', 'packages_to_install'
     )
+    search_fields = ('name', 'description')
 
     version_link = MigasFields.link(
         model=Application, name='version', order='version__name'

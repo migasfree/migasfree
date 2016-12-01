@@ -38,7 +38,7 @@ class AttributeSetAdmin(MigasAdmin):
     list_display = ('name_link', 'attributes_link', 'excludes_link')
     list_filter = ('active',)
     list_display_links = ('name_link',)
-
+    search_fields = ('name', 'attributes__value', 'excludes__value')
     name_link = MigasFields.link(model=AttributeSet, name='name')
     attributes_link = MigasFields.objects_link(
         model=AttributeSet, name="attributes"
@@ -63,6 +63,7 @@ class CheckingAdmin(MigasAdmin):
     list_display = ('name', 'my_active')
     list_display_links = ('name',)
     list_filter = ('active',)
+    search_fields = ('name',)
 
     my_active = MigasFields.boolean(model=Checking, name='active')
 
@@ -210,6 +211,7 @@ class PackageAdmin(MigasAdmin):
 class PlatformAdmin(MigasAdmin):
     list_display = ('name_link',)
     actions = ['delete_selected']
+    search_fields = ('name',)
 
     name_link = MigasFields.link(model=Platform, name='name')
 
@@ -232,6 +234,7 @@ class PlatformAdmin(MigasAdmin):
 @admin.register(Pms)
 class PmsAdmin(MigasAdmin):
     list_display = ('name_link',)
+    search_fields = ('name',)
 
     name_link = MigasFields.link(model=Pms, name='name')
 
@@ -243,6 +246,7 @@ class PropertyAdmin(ClientPropertyAdmin):
         'prefix', 'name', 'active',
         'language', 'code', 'kind', 'auto', 'tag'
     )
+    search_fields = ('name',)
 
     my_tag = MigasFields.boolean(model=Property, name='tag')
 
@@ -252,6 +256,7 @@ class QueryAdmin(MigasAdmin):
     list_display = ('name', 'description')
     list_display_links = ('name',)
     actions = ['run_query']
+    search_fields = ('name', 'description')
 
     def run_query(self, request, queryset):
         for query in queryset:
@@ -384,6 +389,7 @@ class ScheduleDelayline(admin.TabularInline):
 @admin.register(Schedule)
 class ScheduleAdmin(MigasAdmin):
     list_display = ('name_link', 'description')
+    search_fields = ('name', 'description')
     ordering = ('name',)
     inlines = [ScheduleDelayline]
     extra = 0
@@ -458,9 +464,10 @@ class TagAdmin(MigasAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
-    list_display = ('name_link',)
+    list_display = ('name_link', 'first_name', 'last_name')
     list_filter = ('version',)
     ordering = ('username',)
+    search_fields = ('username', 'first_name', 'last_name')
 
     name_link = MigasFields.link(model=UserProfile, name='username')
 
@@ -478,12 +485,12 @@ class VersionAdmin(MigasAdmin):
         'name_link',
         'platform_link',
         'pms_link',
-        'computerbase',
         'my_autoregister'
     )
     fields = ('name', 'platform', 'pms', 'computerbase', 'autoregister', 'base')
     list_filter = ('platform', 'pms')
     list_select_related = ('platform', 'pms')
+    search_fields = ('name',)
     actions = None
 
     name_link = MigasFields.link(model=Version, name='name')
