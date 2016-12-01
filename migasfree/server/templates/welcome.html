@@ -3,54 +3,91 @@
 
 {% block title %}{% trans 'What is migasfree?' %}{% endblock title %}
 
-{% block content %}
-<div class="container-fluid mf-jumbotron">
-    <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-8">
-            <h1>{%trans 'What is migasfree?' %}</h1>
-            <p class="lead">{% trans 'An administration tool computers.' %}</p>
+{% block extrahead %}
+<script type="text/javascript">
+//<![CDATA[
+    $(document).ready(function() {
+        $('.carousel').carousel({
+            interval: 7000
+        });
+    });
+//]]>
+</script>
+{% endblock extrahead %}
 
-            <h2>{% trans 'How does it administrate?' %}</h2>
-            <p class="lead">{% blocktrans %}It manages dynamic software repositories. It distributes this software to clients, depending on characteristics of the computer (attributes) and in time (calendars).{% endblocktrans %}</p>
-            <p class="lead">{% blocktrans %}Clients are those systems with a package management system that ensures system integrity.{% endblocktrans %}</p>
-        </div>
-        <div class="col-xs-6 col-md-4">
-            <div id="mf-logo">
-                <img src="{% static 'img/migasfree.svg' %}" alt="" class="img-thumbnail img-responsive" width="200" />
-                <p class="text-center">{% trans 'Version' %}: {{ migasfree_version }}</p>
+{% block content %}
+<h1 class="sr-only">{% trans 'What is migasfree?' %}</h1>
+
+<div id="carousel-container" class="row">
+    <div id="migasfree-carousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#migasfree-carousel" data-slide-to="0" class="active"></li>
+            <li data-target="#migasfree-carousel" data-slide-to="1"></li>
+            <li data-target="#migasfree-carousel" data-slide-to="2"></li>
+            <li data-target="#migasfree-carousel" data-slide-to="3"></li>
+        </ol>
+
+        <div class="carousel-inner text-center" role="listbox">
+            <div class="item active">
+                <img src="{% static 'img/carousel1.png' %}">
+                <div class="carousel-caption">
+                    <h2>{% trans 'Administra tus ordenadores con migasfree' %}</h2>
+                </div>
+            </div>
+
+            <div class="item">
+                <img src="{% static 'img/carousel2.png' %}">
+                <div class="carousel-caption">
+                    <h2>{% trans 'Despliega las actualizaciones según calendarios y características de ordenadores y usuarios' %}</h2>
+                </div>
+            </div>
+
+            <div class="item">
+                <img src="{% static 'img/carousel3.png' %}">
+                <div class="carousel-caption">
+                    <h2>{% trans 'Controla y personaliza cada ordenador, manteniendo íntegros tus sistemas' %}</h2>
+                </div>
+            </div>
+
+            <div class="item">
+                <img src="{% static 'img/carousel4.png' %}">
+                <div class="carousel-caption">
+                    <h2>{% trans 'Audita fácilmente hardware y software' %}</h2>
+                </div>
             </div>
         </div>
+
+        <a class="left carousel-control" href="#migasfree-carousel" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">{% trans 'Previous' %}</span>
+        </a>
+
+        <a class="right carousel-control" href="#migasfree-carousel" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">{% trans 'Next' %}</span>
+        </a>
     </div>
-</div>
-
-<div class="container-fluid">
-    <h2>{% trans 'Why is it essential?' %}</h2>
-    <p class="lead">{% blocktrans %}80% of the time used in ICT is for maintenance. This consists of software updates, security patches, audits (software and hardware) and configuration changes.{% endblocktrans %}</p>
-
-    <h2>{% trans 'Why not use other options?' %}</h2>
-    <p class="lead">{% blocktrans %}Because none is based directly on the packaging system. And the package works because, every day, millions of computers are updated in this way.{% endblocktrans %}</p>
-    <p class="lead">{% blocktrans %}Besides, migasfree also provides a controlled and customized distribution for each client (not all of them have to be the same, but you need to have every one of them controlled).{% endblocktrans %}</p>
 </div>
 
 <div class="row text-center shortcuts">
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-3">
         <p><a href="http://migasfree.org/" title="{% trans 'Blog' %}"><span class="fa fa-5x fa-wordpress"></span> <span class="sr-only">{% trans 'Blog' %}</span></a></p>
-        <p><strong>{% trans 'News about the project' %}</strong></p>
+        <p><strong>{% trans 'News' %}</strong></p>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-3">
         <p><a href="http://fun-with-migasfree.readthedocs.org/" title="{% trans 'Fun with migasfree' %}"><span class="fa fa-5x fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></p>
-        <p><strong>{% trans 'See the documentation' %}</strong></p>
+        <p><strong>{% trans 'Documentation' %}</strong></p>
     </div>
 
-    <div class="col-md-3">
-        <p><a href="https://github.com/migasfree/migasfree/" title="{% trans 'Source code' %}"><span class="fa fa-5x fa-github"></span> <span class="sr-only">{% trans 'Source code' %}</span></a></p>
-        <p><strong>{% trans 'Explore source code project' %}</strong></p>
+    <div class="col-md-3 col-xs-3">
+        <p><a href="https://github.com/migasfree/migasfree/" title="{% trans 'Source Code' %}"><span class="fa fa-5x fa-github"></span> <span class="sr-only">{% trans 'Source code' %}</span></a></p>
+        <p><strong>{% trans 'Source Code' %}</strong></p>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-3">
         <p><a href="http://www.gnu.org/licenses/gpl.html" title="{% trans 'License' %} GPLv3"><span class="fa fa-5x fa-balance-scale"></span> <span class="sr-only">{% trans 'License' %} GPLv3</span></a></p>
-        <p><strong>{% trans 'Use Rights' %}</strong></p>
+        <p><strong>{% trans 'Rights' %}</strong></p>
     </div>
 </div>
 {% endblock content %}

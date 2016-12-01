@@ -112,83 +112,6 @@ td.nowrap {
     margin: auto;
 }
 
-/* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
-html, body {height: 92.5%;}
-#wrapper {
-    min-height: 92.5%;
-    margin-bottom: 50px;
-}
-#wrapper:after {
-    content: "";
-    display: block;
-}
-footer {
-    height: 50px;
-}
-
-@media screen and (max-width: 767px) {
-    .navbar-nav a.dropdown-toggle:before {
-        font-size: 3em;
-    }
-
-    .nav>li, .nav>li>a {
-        display: inline !important;
-    }
-
-    .navbar-nav>li>a {
-        line-height: 50px;
-    }
-
-    #wrapper {
-        margin: 0;
-        min-height: 0;
-    }
-
-    .vLargeTextField, .vXMLLargeTextField {
-        max-width: 75vw !important;
-    }
-
-    .form-actions {
-        line-height: 50px !important;
-    }
-
-    .nav.navbar-nav.pull-right {
-        float: none !important;
-    }
-
-}
-
-@media screen and (max-width: 500px) {
-    table, thead, tbody, th, td, tr {
-        display: block;
-    }
-
-    thead tr {
-        position: absolute;
-        top: -9999px;
-        left: -9999px;
-    }
-
-    tr { border: 1px solid #ccc; }
-
-    td {
-        border: none;
-        border-bottom: 1px dashed #eee;
-        position: relative;
-        padding-left: 50%;
-    }
-
-    td:before {
-        position: absolute;
-        top: 6px;
-        left: 6px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        content: attr(data-th);
-    }
-}
-
 span[data-value] {
     display: block !important;
 }
@@ -300,4 +223,112 @@ h1 .btn-group {
 
 li .btn-group {
     margin: 3px 0;
+}
+
+#carousel-container {
+    margin-top: 60px;
+}
+
+.carousel-inner {
+    background: #efefef;
+}
+
+.caurosel-control {
+    color: #23527c !important;
+    background: transparent !important;
+}
+
+.carousel-caption {
+    color: #000;
+    text-shadow: none;
+}
+
+.carousel-caption h2 {
+    font-size: 250%;
+}
+
+.item img {
+    width: 100%;
+}
+
+/* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
+html, body {height: 92.5%;}
+#wrapper {
+    min-height: 92.5%;
+    margin-bottom: 50px;
+}
+#wrapper:after {
+    content: "";
+    display: block;
+}
+footer {
+    height: 50px;
+}
+
+@media screen and (max-width: 960px) {
+    body {
+        font-size: 12px !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .navbar-nav a.dropdown-toggle:before {
+        font-size: 3em;
+    }
+
+    .nav>li, .nav>li>a {
+        display: inline !important;
+    }
+
+    .navbar-nav>li>a {
+        line-height: 50px;
+    }
+
+    #wrapper {
+        margin: 0;
+        min-height: 0;
+    }
+
+    .vLargeTextField, .vXMLLargeTextField {
+        max-width: 75vw !important;
+    }
+
+    .form-actions {
+        line-height: 50px !important;
+    }
+
+    .nav.navbar-nav.pull-right {
+        float: none !important;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    tr { border: 1px solid #ccc; }
+
+    td {
+        border: none;
+        border-bottom: 1px dashed #eee;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    td:before {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        content: attr(data-th);
+    }
 }
