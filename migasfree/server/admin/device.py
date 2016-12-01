@@ -18,13 +18,14 @@ class DeviceTypeAdmin(MigasAdmin):
     list_display = ('name',)
     list_display_links = ('name',)
     ordering = ('name',)
-
+    search_fields = ('name',)
 
 @admin.register(DeviceFeature)
 class DeviceFeatureAdmin(MigasAdmin):
     list_display = ('name_link',)
     list_display_links = ('name_link',)
     ordering = ('name',)
+    search_fields = ('name',)
 
     name_link = MigasFields.link(model=DeviceFeature, name='name')
 
@@ -34,6 +35,7 @@ class DeviceManufacturerAdmin(MigasAdmin):
     list_display = ('name_link',)
     list_display_links = ('name_link',)
     ordering = ('name',)
+    search_fields = ('name',)
 
     name_link = MigasFields.link(model=DeviceManufacturer, name='name')
 
@@ -44,6 +46,7 @@ class DeviceConnectionAdmin(MigasAdmin):
     list_select_related = ('devicetype',)
     ordering = ('devicetype__name', 'name')
     fields = ('devicetype', 'name', 'fields')
+    search_fields = ('name',)
 
     name_link = MigasFields.link(model=DeviceConnection, name='name')
 
@@ -64,6 +67,7 @@ class DeviceDriverAdmin(MigasAdmin):
     list_display_links = ('__str__',)
     list_filter = ('version', 'model')
     fields = ('name', 'model', 'version', 'feature', 'install')
+    search_fields = ('name',)
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeviceDriverAdmin, self).get_form(request, obj, **kwargs)
