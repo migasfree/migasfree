@@ -3,6 +3,7 @@
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext
 from django.template.loader import render_to_string
+from django.core.exceptions import ObjectDoesNotExist
 
 # Programming Languages for Properties and Fault Definitions
 LANGUAGES_CHOICES = (
@@ -157,19 +158,27 @@ class MigasLink(object):
                 ) and self.property_att.prefix == 'SET'
         ):
             if self._meta.model_name == 'attributeset':
-                from migasfree.server.models import Attribute
+                from . import Attribute
                 attributeset = self
-                att = Attribute.objects.get(
-                    value=str(self.name),
-                    property_att__prefix='SET'
-                )
+                try:
+                    att = Attribute.objects.get(
+                        value=str(self.name),
+                        property_att__prefix='SET'
+                    )
+                except ObjectDoesNotExist:
+                    att = None
             else:
-                from migasfree.server.models import AttributeSet
+                from . import AttributeSet
                 att = self
                 attributeset = AttributeSet.objects.get(name=self.value)
 
+            if att:
+                att_action_data, att_related_data = att.get_relations()
+            else:
+                att_action_data = []
+                att_related_data = []
+
             set_action_data, set_related_data = attributeset.get_relations()
-            att_action_data, att_related_data = att.get_relations()
             action_data = set_action_data + att_action_data
             related_data = set_related_data + att_related_data
 
@@ -182,21 +191,29 @@ class MigasLink(object):
                 ) and self.property_att.prefix == 'CID'
         ):
             if self._meta.model_name == 'computer':
-                from migasfree.server.models import Attribute
+                from . import Attribute
                 computer = self
-                cid = Attribute.objects.get(
-                    value=str(self.id),
-                    property_att__prefix='CID'
-                )
+                try:
+                    cid = Attribute.objects.get(
+                        value=str(self.id),
+                        property_att__prefix='CID'
+                    )
+                except ObjectDoesNotExist:
+                    cid = None
             else:
-                from migasfree.server.models import Computer
+                from . import Computer
                 cid = self
                 computer = Computer.objects.get(pk=int(self.value))
 
             computer_action_data, \
                 computer_related_data = computer.get_relations()
 
-            cid_action_data, cid_related_data = cid.get_relations()
+            if cid:
+                cid_action_data, cid_related_data = cid.get_relations()
+            else:
+                cid_action_data = []
+                cid_related_data = []
+
             action_data = computer_action_data + cid_action_data
             related_data = computer_related_data + cid_related_data
 
@@ -224,7 +241,6 @@ class MigasLink(object):
             })
 
             return action_data, related_data
-
         else:
             return self.get_relations()
 
@@ -273,7 +289,7 @@ class MigasLink(object):
     link.short_description = '...'
 
     def transmodel(self, obj):
-        from migasfree.server.models import Property, Feature, Tag, Computer
+        from . import Property, Feature, Tag, Computer
 
         if obj.related_model._meta.label_lower == "server.login" and \
                 self.__class__.__name__ in ["Feature", "Attribute"] and \
