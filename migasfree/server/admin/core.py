@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.core.urlresolvers import reverse
+from django.db.models import Prefetch
 from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import make_ajax_form
@@ -269,7 +270,7 @@ class QueryAdmin(MigasAdmin):
 class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     form = RepositoryForm
     list_display = (
-        'name_link', 'version_link', 'my_active', 'date', 'timeline'
+        'name_link', 'version_link', 'my_active', 'date', 'schedule_link', 'timeline'
     )
     list_filter = ('active', 'version', 'schedule')
     search_fields = ('name', 'packages__name')
@@ -304,7 +305,11 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
     version_link = MigasFields.link(
         model=Repository, name='version', order="version__name"
     )
+    schedule_link = MigasFields.link(
+        model=Repository, name='schedule', order="schedule__name"
+    )
     my_active = MigasFields.boolean(model=Repository, name='active')
+    timeline = MigasFields.timeline(model=Repository)
 
     def regenerate_metadata(self, request, objects):
         if not self.has_change_permission(request):
@@ -375,6 +380,17 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         form.current_user = request.user
 
         return form
+
+
+    def get_queryset(self, request):
+        return super(RepositoryAdmin, self).get_queryset(
+            request
+        ).extra(
+            select={
+                'schedule_begin': '(SELECT delay FROM server_scheduledelay WHERE server_repository.schedule_id = server_scheduledelay.schedule_id ORDER BY server_scheduledelay.delay LIMIT 1)',
+                'schedule_end': '(SELECT delay+duration FROM server_scheduledelay WHERE server_repository.schedule_id = server_scheduledelay.schedule_id ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
+            }
+                ).select_related("version","schedule")
 
 
 class ScheduleDelayline(admin.TabularInline):

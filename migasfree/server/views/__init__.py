@@ -28,6 +28,7 @@ from .computer import (
     computer_simulate_sync,
 )
 from .migas_link import link
+from .timeline import timeline
 
 from .version import VersionDelete
 from .platform import PlatformDelete, platform_delete_selected

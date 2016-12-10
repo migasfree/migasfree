@@ -65,6 +65,9 @@ class MigasFields(object):
                     or target is None
                 ):
                     obj = target
+            else:
+                if target is None:
+                    return ""
 
             return obj.link()
 
@@ -145,6 +148,42 @@ class MigasFields(object):
                     getter.short_description = description \
                         or _(field._meta.verbose_name_plural.title())
 
+        getter.allow_tags = True
+
+        return getter
+
+    @staticmethod
+    def timeline(name="", description='', model=None):
+        from ..functions import horizon, percent_horizon
+
+        def getter(self, obj):
+            if obj.schedule:
+                date_format = "%Y-%m-%d"
+                begin_date = datetime.datetime.strptime(
+                    str(horizon(obj.date, obj.schedule_begin)),
+                    date_format
+                )
+                end_date = datetime.datetime.strptime(
+                    str(horizon(
+                        obj.date,
+                        obj.schedule_end
+                    )),
+                    date_format
+                )
+                return render_to_string(
+                    'includes/deployment_timeline.html',
+                    {
+                        'timeline': {
+                            'repository_id': obj.pk,
+                            'percent': int(percent_horizon(begin_date, end_date)),
+                            'schedule': obj.schedule,
+                        }
+                    }
+                )
+            else:
+                return ""
+
+        getter.short_description = _("time line")
         getter.allow_tags = True
 
         return getter

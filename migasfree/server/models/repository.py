@@ -23,21 +23,6 @@ from . import (
 )
 
 
-def percent_horizon(begin_date, end_date):
-    delta = end_date - begin_date
-    progress = datetime.datetime.now().date() - begin_date.date()
-    if delta.days > 0:
-        percent = float(progress.days + 1) / delta.days * 100
-    else:
-        percent = 100
-    if percent < 0:
-        percent = 0
-    if percent > 100:
-        percent = 100
-
-    return percent
-
-
 class RepositoryManager(models.Manager):
     def by_version(self, version_id):
         return self.get_queryset().filter(version__id=version_id)
@@ -168,65 +153,6 @@ class Repository(models.Model, MigasLink):
 
         super(Repository, self).delete(*args, **kwargs)
 
-    def timeline(self):
-        if self.schedule is None or self.schedule.id is None:
-            return _('Without schedule')
-
-        delays = ScheduleDelay.objects.filter(
-            schedule__id=self.schedule.id
-        ).order_by('delay')
-
-        if len(delays) == 0:
-            return _('%s (without delays)') % self.schedule
-
-        date_format = "%Y-%m-%d"
-        begin_date = datetime.datetime.strptime(
-            str(horizon(self.date, delays[0].delay)),
-            date_format
-        )
-        end_date = datetime.datetime.strptime(
-            str(horizon(
-                self.date,
-                delays.reverse()[0].delay + delays.reverse()[0].duration
-            )),
-            date_format
-        )
-
-        timeline_delays = []
-        for item in delays:
-            hori = datetime.datetime.strptime(
-                str(horizon(self.date, item.delay)),
-                date_format
-            )
-            horf = datetime.datetime.strptime(
-                str(horizon(self.date, item.delay + item.duration)),
-                date_format
-            )
-
-            deploy = 'default'
-            if hori <= datetime.datetime.now():
-                deploy = 'success'
-
-            timeline_delays.append({
-                'deploy': deploy,
-                'date': hori.strftime("%a-%b-%d"),
-                'percent': int(percent_horizon(hori, horf)),
-                'attributes': item.attributes.values_list("value", flat=True)
-            })
-
-        return render_to_string(
-            'includes/deployment_timeline.html',
-            {
-                'timeline': {
-                    'percent': int(percent_horizon(begin_date, end_date)),
-                    'schedule': self.schedule,
-                    'delays': timeline_delays
-                }
-            }
-        )
-
-    timeline.allow_tags = True
-    timeline.short_description = _('timeline')
 
     @staticmethod
     def available_repos(computer, attributes):

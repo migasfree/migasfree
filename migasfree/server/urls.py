@@ -144,7 +144,11 @@ urlpatterns = [
         get_key_repositories,
         name='get_key_repositories'
     ),
-
+    url(
+        r'^timeline/$',
+        timeline,
+        name='timeline',
+    ),
     url(
         r'^connections_model/$',
         connections_model,
