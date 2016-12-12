@@ -1,17 +1,21 @@
 {% load i18n %}
 {% spaceless %}
 {% if timeline %}
-    <div class="btn-group btn-group-xs" >
-        <button type="button" class="btn btn-default btn-timeline dropdown-toggle" data-toggle="dropdown" data-repository="{{ timeline.repository_id }}" aria-haspopup="true" aria-expanded="false" style="width:150px" >
-            <span class="progress" title="{{ timeline.percent }}%"  >
-                <span class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ timeline.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ timeline.percent }}%">
-                    <span>{{ timeline.percent }}%</span>
-                    <span class="sr-only">{% blocktrans with percent=timeline.percent %}{{ percent }}% completed{% endblocktrans %}</span>
-                </span>
+    <div class="btn-group btn-group-xs nowrap">
+        <span class="timeline progress" title="{{ timeline.percent }}%">
+            <span class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ timeline.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ timeline.percent }}%">
+                <span>{{ timeline.percent }}%</span>
+                <span class="sr-only">{% blocktrans with percent=timeline.percent %}{{ percent }}% completed{% endblocktrans %}</span>
             </span>
+        </span>
+
+        <button type="button" class="btn btn-default btn-timeline dropdown-toggle" data-toggle="dropdown" data-repository="{{ timeline.repository_id }}" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"> </span>
+            <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
         </button>
+
         <ul class="dropdown-menu" role="menu">
-              <li class="text-center"><span class="fa fa-refresh fa-spin"></span></li>
+            <li class="text-center"><span class="fa fa-refresh fa-spin"></span></li>
         </ul>
     </div>
 {% endif %}

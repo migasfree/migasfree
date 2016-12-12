@@ -251,6 +251,11 @@ li .btn-group {
     width: 100%;
 }
 
+.timeline {
+    margin: 0;
+    width: 150px;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
