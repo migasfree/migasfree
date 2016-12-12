@@ -1,25 +1,18 @@
 # -*- coding: UTF-8 -*-
+
 import datetime
 
 from django.contrib.auth.decorators import login_required
-from django.template.loader import render_to_string
-from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
 from ..functions import horizon, percent_horizon
-from ..models.repository import Repository
-from ..models.schedule_delay import ScheduleDelay
+from ..models import Repository, ScheduleDelay
+
 
 @login_required
 def timeline(request):
-    id = request.GET.get('id', 0)
-    return HttpResponse(
-        time_line(id)
-    )
-
-def time_line(id):
-
-    repository = Repository.objects.get(pk=id)
+    repository = get_object_or_404(Repository, pk=request.GET.get('id'))
 
     if repository.schedule is None or repository.schedule.id is None:
         return _('Without schedule')
@@ -66,7 +59,8 @@ def time_line(id):
             'attributes': item.attributes.values_list("value", flat=True)
         })
 
-    return render_to_string(
+    return render(
+        request,
         'includes/deployment_timeline_detail.html',
         {
             'timeline': {
@@ -77,5 +71,4 @@ def time_line(id):
         }
     )
 
-time_line.allow_tags = True
-time_line.short_description = _('timeline')
+timeline.short_description = _('timeline')
