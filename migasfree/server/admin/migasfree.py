@@ -65,9 +65,9 @@ class MigasFields(object):
                     or target is None
                 ):
                     obj = target
-            else:
-                if target is None:
-                    return ""
+                else:
+                    if target is None:
+                        return ""
 
             return obj.link()
 
