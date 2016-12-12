@@ -380,16 +380,19 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
 
         return form
 
-
     def get_queryset(self, request):
         return super(RepositoryAdmin, self).get_queryset(
             request
         ).extra(
             select={
-                'schedule_begin': '(SELECT delay FROM server_scheduledelay WHERE server_repository.schedule_id = server_scheduledelay.schedule_id ORDER BY server_scheduledelay.delay LIMIT 1)',
-                'schedule_end': '(SELECT delay+duration FROM server_scheduledelay WHERE server_repository.schedule_id = server_scheduledelay.schedule_id ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
+                'schedule_begin': '(SELECT delay FROM server_scheduledelay '
+                                  'WHERE server_repository.schedule_id = server_scheduledelay.schedule_id '
+                                  'ORDER BY server_scheduledelay.delay LIMIT 1)',
+                'schedule_end': '(SELECT delay+duration FROM server_scheduledelay '
+                                'WHERE server_repository.schedule_id = server_scheduledelay.schedule_id '
+                                'ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
             }
-                ).select_related("version","schedule")
+        ).select_related("version", "schedule")
 
 
 class ScheduleDelayline(admin.TabularInline):
