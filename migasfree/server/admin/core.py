@@ -4,7 +4,6 @@ from django.contrib import admin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
 from django.core.urlresolvers import reverse
-from django.db.models import Prefetch
 from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import make_ajax_form
