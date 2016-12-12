@@ -174,6 +174,10 @@ class MigasFields(object):
                     'includes/deployment_timeline.html',
                     {
                         'timeline': {
+                            "begin_date": begin_date.strftime(date_format),
+                            "end_date": end_date.strftime(date_format),
+                            "days": ( datetime.datetime.today() - begin_date ).days + 1,
+                            "total_days": (end_date - begin_date).days,
                             'repository_id': obj.pk,
                             'percent': int(percent_horizon(begin_date, end_date)),
                             'schedule': obj.schedule,
