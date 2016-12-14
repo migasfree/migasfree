@@ -4,7 +4,6 @@ from django.utils.translation import ugettext as _
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
 from ..models import Version, UserProfile
@@ -28,13 +27,9 @@ def login(request):
             {'error_message': _('Credentials not valid')}
         )
 
-    # Correct password, and the user is marked "active"
     auth.login(request, user)
 
-    # Redirect to a success page
-    return HttpResponseRedirect(
-        request.GET.get('next', reverse('bootstrap'))
-    )
+    return redirect(request.GET.get('next', reverse('bootstrap')))
 
 
 @login_required
