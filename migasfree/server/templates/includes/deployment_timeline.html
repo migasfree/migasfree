@@ -2,7 +2,7 @@
 {% spaceless %}
 {% if timeline %}
     <div class="btn-group btn-group-xs nowrap">
-        <span class="timeline progress" title="{{ timeline.days }} / {{ timeline.total_days }} days, from {{ timeline.begin_date }} to {{ timeline.end_date }}">
+        <span class="timeline progress" title="{{ timeline.info }}">
             <span class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ timeline.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ timeline.percent }}%">
                 <span>{{ timeline.percent }}%</span>
                 <span class="sr-only">{% blocktrans with percent=timeline.percent %}{{ percent }}% completed{% endblocktrans %}</span>
