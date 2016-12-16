@@ -113,13 +113,13 @@ class UserFaultFilter(SimpleListFilter):
 class AttributeFilter(filters.FilterSet):
     class Meta:
         model = Attribute
-        fields = ['property_att__id', 'property_att__prefix', 'value']
+        fields = ['id', 'property_att__id', 'property_att__prefix', 'value']
 
 
 class CheckingFilter(filters.FilterSet):
     class Meta:
         model = Checking
-        fields = ['active']
+        fields = ['id', 'active']
 
 
 class ComputerFilter(filters.FilterSet):
@@ -132,7 +132,7 @@ class ComputerFilter(filters.FilterSet):
     class Meta:
         model = Computer
         fields = [
-            'version__id', 'status', 'name', 'uuid',
+            'id', 'version__id', 'status', 'name', 'uuid',
             'login__attributes__id', 'tags__id'
         ]
 
@@ -144,13 +144,13 @@ class ErrorFilter(filters.FilterSet):
 
     class Meta:
         model = Error
-        fields = ['version__id', 'checked', 'computer__id']
+        fields = ['id', 'version__id', 'checked', 'computer__id']
 
 
 class FaultDefinitionFilter(filters.FilterSet):
     class Meta:
         model = FaultDef
-        fields = ['attributes__id', 'active']
+        fields = ['id', 'attributes__id', 'active']
 
 
 class FaultFilter(filters.FilterSet):
@@ -160,7 +160,7 @@ class FaultFilter(filters.FilterSet):
     class Meta:
         model = Fault
         fields = [
-            'version__id', 'checked', 'faultdef__id', 'computer__id'
+            'id', 'version__id', 'checked', 'faultdef__id', 'computer__id'
         ]
 
 
@@ -170,7 +170,7 @@ class MigrationFilter(filters.FilterSet):
 
     class Meta:
         model = Migration
-        fields = ['version__id', 'computer__id']
+        fields = ['id', 'version__id', 'computer__id']
 
 
 class NodeFilter(filters.FilterSet):
@@ -189,19 +189,19 @@ class NotificationFilter(filters.FilterSet):
 
     class Meta:
         model = Notification
-        fields = ['checked']
+        fields = ['id', 'checked']
 
 
 class PackageFilter(filters.FilterSet):
     class Meta:
         model = Package
-        fields = ['version__id', 'store__id']
+        fields = ['id', 'version__id', 'store__id']
 
 
 class PropertyFilter(filters.FilterSet):
     class Meta:
         model = Property
-        fields = ['active', 'tag']
+        fields = ['id', 'active', 'tag']
 
 
 class RepositoryFilter(filters.FilterSet):
@@ -217,7 +217,7 @@ class RepositoryFilter(filters.FilterSet):
 
     class Meta:
         model = Repository
-        fields = ['version__id', 'active', 'schedule__id']
+        fields = ['id', 'version__id', 'active', 'schedule__id']
 
 
 class StatusLogFilter(filters.FilterSet):
@@ -226,13 +226,13 @@ class StatusLogFilter(filters.FilterSet):
 
     class Meta:
         model = StatusLog
-        fields = ['computer__id']
+        fields = ['id', 'computer__id']
 
 
 class StoreFilter(filters.FilterSet):
     class Meta:
         model = Store
-        fields = ['version__id']
+        fields = ['id', 'version__id']
 
 
 class UpdateFilter(filters.FilterSet):
@@ -241,10 +241,10 @@ class UpdateFilter(filters.FilterSet):
 
     class Meta:
         model = Update
-        fields = ['version__id', 'computer__id']
+        fields = ['id', 'version__id', 'computer__id']
 
 
 class VersionFilter(filters.FilterSet):
     class Meta:
         model = Version
-        fields = ['platform__id', 'name']
+        fields = ['id', 'platform__id', 'name']
