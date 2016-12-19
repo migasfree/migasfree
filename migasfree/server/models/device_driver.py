@@ -37,7 +37,7 @@ class DeviceDriver(models.Model):
         blank=True
     )
 
-    def datadict(self):
+    def as_dict(self):
         lst_install = []
         for p in self.install.replace("\r", " ").replace("\n", " ").split(" "):
             if p != '' and p != 'None':

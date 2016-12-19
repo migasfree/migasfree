@@ -64,7 +64,7 @@ class Device(models.Model, MigasLink):
         data = json.loads(self.data)
         return data.get('LOCATION', '')
 
-    def datadict(self):
+    def as_dict(self):
         return {
             'name': self.name,
             'model': self.model.name,

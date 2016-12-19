@@ -55,9 +55,9 @@ class DeviceLogical(models.Model, MigasLink):
     def get_name(self):
         return self.name if self.name else self.feature.name
 
-    def datadict(self, version):
-        dictdevice = self.device.datadict()
-        dictdriver = {}
+    def as_dict(self, version):
+        device_as_dict = self.device.as_dict()
+        driver_as_dict = {}
         try:
             device_driver = DeviceDriver.objects.filter(
                 version__id=version.id,
@@ -65,7 +65,7 @@ class DeviceLogical(models.Model, MigasLink):
                 feature__id=self.feature.id
             )[0]
             if device_driver:
-                dictdriver = device_driver.datadict()
+                driver_as_dict = device_driver.as_dict()
         except:
             pass
 
@@ -76,9 +76,9 @@ class DeviceLogical(models.Model, MigasLink):
                 'manufacturer': self.device.model.manufacturer.name
             }
         }
-        for key, value in list(dictdevice.items()):
+        for key, value in list(device_as_dict.items()):
             ret[self.device.connection.devicetype.name][key] = value
-        for key, value in list(dictdriver.items()):
+        for key, value in list(driver_as_dict.items()):
             ret[self.device.connection.devicetype.name][key] = value
 
         return ret

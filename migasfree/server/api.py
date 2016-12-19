@@ -464,7 +464,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         # DEVICES
         logical_devices = []
         for device in o_computer.logical_devices(lst_attributes):
-            logical_devices.append(device.datadict(o_computer.version))
+            logical_devices.append(device.as_dict(o_computer.version))
 
         if o_computer.default_logical_device:
             default_logical_device = o_computer.default_logical_device.id
