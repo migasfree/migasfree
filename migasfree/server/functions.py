@@ -142,11 +142,11 @@ def list_common(l1, l2):
     return list(set(l1).intersection(l2))
 
 
-def run_in_server(code_bash):
+def run_in_server(bash_code):
     _, tmp_file = tempfile.mkstemp()
-    writefile(tmp_file, code_bash)
+    writefile(tmp_file, bash_code)
 
-    os.system("bash %(file)s 1> %(file)s.out 2> %(file)s.err" % {
+    os.system("ionice -c 3 bash %(file)s 1> %(file)s.out 2> %(file)s.err" % {
         'file': tmp_file
     })
 
