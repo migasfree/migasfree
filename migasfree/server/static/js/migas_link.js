@@ -9,9 +9,3 @@ function addMigasEvents() {
         });
     });
 }
-
-$(document).ready(function () {
-    addMigasEvents();
-});
-
-
