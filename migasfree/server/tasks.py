@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 
 from .functions import run_in_server
+from .models import Package
 
 
 def remove_physical_repository(request, repo, old_name=""):
@@ -26,10 +27,11 @@ def remove_physical_repository(request, repo, old_name=""):
         return _msg
 
 
-def create_physical_repository(repo, request=None):
+def create_physical_repository(repo, packages=None, request=None):
     """
     Creates the repository metadata.
     repo = a Repository object
+    packages = a id's list of packages
     """
     _tmp_path = os.path.join(
         settings.MIGASFREE_REPO_DIR,
@@ -61,7 +63,11 @@ def create_physical_repository(repo, request=None):
         os.makedirs(_pkg_tmp_path)
 
     _ret = ''
-    for _pkg in repo.packages.all():
+    if not packages and not isinstance(packages, list):
+        packages = repo.packages.all()
+    for _pkg in packages:
+        if isinstance(_pkg, int):
+            _pkg = Package.objects.get(pk=_pkg)
         _dst = os.path.join(_slug_tmp_path, repo.name, 'PKGS', _pkg.name)
         if not os.path.lexists(_dst):
             os.symlink(
