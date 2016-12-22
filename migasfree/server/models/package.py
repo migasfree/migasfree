@@ -94,6 +94,10 @@ class Package(models.Model, MigasLink):
         if queryset.exists():
             raise ValidationError(_('Duplicated name at version'))
 
+    def save(self, *args, **kwargs):
+        self.create_dir()
+        super(Package, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.name
 
