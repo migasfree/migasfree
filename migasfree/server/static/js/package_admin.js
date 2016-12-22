@@ -17,18 +17,21 @@ function getOptions(url, key, value)
 
 function changeVersion(defaultValue)
 {
-    defaultValue = defaultValue || "";
-    $("#id_store").html(getOptions(
-        "/api/v1/token/stores/?version__id=" + $("#id_version").val(),
-        "id",
-        "name"
-    ));
-    $("#id_store").attr("disabled", false);
-    if (typeof defaultValue === "string" && defaultValue !== "")
+    if (typeof $("#id_version").val() !== "undefined")
     {
-        $("#id_store option[value=" + defaultValue + "]").attr("selected", true);
+        defaultValue = defaultValue || "";
+        $("#id_store").html(getOptions(
+            "/api/v1/token/stores/?version__id=" + $("#id_version").val(),
+            "id",
+            "name"
+        ));
+        $("#id_store").attr("disabled", false);
+        if (typeof defaultValue === "string" && defaultValue !== "")
+        {
+            $("#id_store option[value=" + defaultValue + "]").attr("selected", true);
+        }
+        $("#id_version").attr("selected", "selected");
     }
-    $("#id_version").attr("selected", "selected");
 }
 
 $(function() {
