@@ -6,6 +6,7 @@ import json
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 from ..api import *
 from ..models import Error
@@ -116,6 +117,13 @@ def api(request):
         return HttpResponse(
             wrap_command_result(filename_return, ret),
             content_type='text/plain'
+        )
+
+    if computer and computer.status == 'available' \
+            and command == 'upload_computer_info':
+        Notification.create(
+            _('Computer [%s] with available status, has been synchronized')
+            % computer.__str__()
         )
 
     # COMPUTERS
