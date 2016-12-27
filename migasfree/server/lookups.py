@@ -22,22 +22,32 @@ class AttributeLookup(LookupChannel):
     model = Attribute
 
     def get_query(self, q, request):
-        prps = Property.objects.all().values_list('prefix', flat=True)
-        if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
+        properties = Property.objects.all().values_list('prefix', flat=True)
+        if q[0:Property.PREFIX_LEN].upper() \
+                in (item.upper() for item in properties) \
                 and len(q) > (Property.PREFIX_LEN + 1):
-            return self.model.objects.filter(
-                property_att__prefix__icontains=q[0:Property.PREFIX_LEN]
-            ).filter(
-                value__icontains=q[Property.PREFIX_LEN + 1:]
-            ).filter(
+            queryset = self.model.objects.filter(
+                property_att__prefix__icontains=q[0:Property.PREFIX_LEN],
+                value__icontains=q[Property.PREFIX_LEN + 1:],
                 property_att__active=True
-            ).order_by('value')
+            )
         else:
-            return self.model.objects.filter(
+            queryset = self.model.objects.filter(
                 Q(value__icontains=q) |
                 Q(description__icontains=q) |
                 Q(property_att__prefix__icontains=q)
-            ).filter(property_att__active=True).order_by('value')
+            ).filter(property_att__active=True)
+
+        # exclude available and unsubscribed computers (inactive)
+        inactive_computers = [
+            str(x) for x in Computer.inactive.values_list('id', flat=True)
+        ]
+        queryset = queryset.exclude(
+            property_att__prefix='CID',
+            value__in=inactive_computers
+        ).order_by('value')
+
+        return queryset
 
     def format_match(self, obj):
         return escape(obj.__str__())
@@ -51,15 +61,18 @@ class AttributeLookup(LookupChannel):
     def get_objects(self, ids):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
             return self.model.objects.filter(
-                pk__in=ids).filter(
-                    ~Q(property_att__prefix='CID')).order_by(
-                        'property_att',
-                        'value'
+                pk__in=ids
+            ).filter(
+                ~Q(property_att__prefix='CID')
+            ).order_by(
+                'property_att',
+                'value'
             ) | self.model.objects.filter(
-                pk__in=ids).filter(
-                    property_att__prefix='CID'
-                ).order_by(
-                    'description'
+                pk__in=ids
+            ).filter(
+                property_att__prefix='CID'
+            ).order_by(
+                'description'
             )
         else:
             return self.model.objects.filter(pk__in=ids).order_by(
@@ -73,14 +86,12 @@ class AttributeComputersLookup(LookupChannel):
     model = Attribute
 
     def get_query(self, q, request):
-        prps = Property.objects.all().values_list('prefix', flat=True)
-        if q[0:Property.PREFIX_LEN].upper() in (prop.upper() for prop in prps) \
+        properties = Property.objects.all().values_list('prefix', flat=True)
+        if q[0:Property.PREFIX_LEN].upper() in (item.upper() for item in properties) \
                 and len(q) > (Property.PREFIX_LEN + 1):
             return self.model.objects.filter(
-                property_att__prefix__icontains=q[0:Property.PREFIX_LEN]
-            ).filter(
-                value__icontains=q[Property.PREFIX_LEN + 1:]
-            ).filter(
+                property_att__prefix__icontains=q[0:Property.PREFIX_LEN],
+                value__icontains=q[Property.PREFIX_LEN + 1:],
                 property_att__active=True
             ).order_by('value')
         else:
@@ -110,15 +121,18 @@ class AttributeComputersLookup(LookupChannel):
     def get_objects(self, ids):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
             return self.model.objects.filter(
-                pk__in=ids).filter(
-                    ~Q(property_att__prefix='CID')).order_by(
-                        'property_att',
-                        'value'
+                pk__in=ids
+            ).filter(
+                ~Q(property_att__prefix='CID')
+            ).order_by(
+                'property_att',
+                'value'
             ) | self.model.objects.filter(
-                pk__in=ids).filter(
-                    property_att__prefix='CID'
-                ).order_by(
-                    'description'
+                pk__in=ids
+            ).filter(
+                property_att__prefix='CID'
+            ).order_by(
+                'description'
             )
         else:
             return self.model.objects.filter(pk__in=ids).order_by(
@@ -217,7 +231,7 @@ class ComputerLookup(LookupChannel):
                     '%s__icontains' %
                     settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: q
                 })
-            )
+            ).filter(~Q(status__in=['available', 'unsubscribed']))
 
     def format_match(self, obj):
         return obj.__str__()
