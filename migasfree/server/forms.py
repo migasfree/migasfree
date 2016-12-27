@@ -79,6 +79,17 @@ class RepositoryForm(forms.ModelForm):
         except (UserProfile.DoesNotExist, AttributeError):
             pass
 
+    def _validate_active_computers(self, att_list):
+        for att_id in att_list:
+            attribute = Attribute.objects.get(pk=att_id)
+            if attribute.property_att.prefix == 'CID':
+                computer = Computer.objects.get(pk=int(attribute.value))
+                if computer.status not in Computer.ACTIVE_STATUS:
+                    raise ValidationError(
+                        _('It is not possible to assign an inactive computer (%s) as an attribute')
+                        % computer.__str__()
+                    )
+
     def clean(self):
         # http://stackoverflow.com/questions/7986510/django-manytomany-model-validation
         cleaned_data = super(RepositoryForm, self).clean()
@@ -91,6 +102,9 @@ class RepositoryForm(forms.ModelForm):
                         pkg, cleaned_data['version']
                     )
                 )
+
+        self._validate_active_computers(cleaned_data.get('attributes', []))
+        self._validate_active_computers(cleaned_data.get('excludes', []))
 
 
 class StoreForm(forms.ModelForm):

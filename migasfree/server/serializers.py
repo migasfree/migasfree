@@ -232,6 +232,17 @@ class RepositoryWriteSerializer(serializers.ModelSerializer):
 
         return instance
 
+    def _validate_active_computers(self, att_list):
+        for att_id in att_list:
+            attribute = models.Attribute.objects.get(pk=att_id)
+            if attribute.property_att.prefix == 'CID':
+                computer = models.Computer.objects.get(pk=int(attribute.value))
+                if computer.status not in models.Computer.ACTIVE_STATUS:
+                    raise serializers.ValidationError(
+                        _('It is not possible to assign an inactive computer (%s) as an attribute')
+                        % computer.__str__()
+                    )
+
     def validate(self, data):
         for item in data.get('packages', []):
             if item.version.id != data['version'].id:
@@ -240,6 +251,9 @@ class RepositoryWriteSerializer(serializers.ModelSerializer):
                         item, data['version']
                     )
                 )
+
+        self._validate_active_computers(data.get('attributes', []))
+        self._validate_active_computers(data.get('excludes', []))
 
         return data
 
