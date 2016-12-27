@@ -215,13 +215,15 @@
                 <footer class="bs-footer container">
                     <p id="copyright" class="pull-left">
                         &copy; 2010-{% now 'Y' %} <a href="http://www.migasfree.org">migasfree</a>,
-                        under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a> <a href="https://github.com/migasfree/migasfree" title="migasfree-server_{{ migasfree_version }}"><span class="fa fa-github"></span> <span class="sr-only">(code project)</span></a>
+                        under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>, <a href="https://github.com/migasfree/migasfree" title="migasfree-server_{{ migasfree_version }}"><span class="fa fa-github"></span> <span class="sr-only">(code project)</span></a>
                     </p>
 
                     <ul class="pull-right">
                         {% block documentation %}
                             <li><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="fa fa-info"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a></li>
                         {% endblock documentation %}
+
+                        <li><a href="http://fun-with-migasfree.readthedocs.io/" title="{% trans 'Fun with migasfree' %}"><span class="fa fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></li>
 
                         <li><a href="/docs/" title="{% trans 'Experimental REST API' %}"><span class="fa fa-user-secret"></span> <span class="sr-only">{% trans 'Experimental REST API' %}</span></a></li>
                     </ul>
