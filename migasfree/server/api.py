@@ -756,7 +756,6 @@ def get_computer_tags(request, name, uuid, computer, data):
 
 def set_computer_tags(request, name, uuid, o_computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    tags = data["set_computer_tags"]["tags"]
     all_id = Attribute.objects.get(
         property_att__prefix="SET",
         value="ALL SYSTEMS"
@@ -765,7 +764,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
     try:
         lst_tags_obj = []
         lst_tags_id = []
-        for tag in tags:
+        for tag in data["set_computer_tags"]["tags"]:
             ltag = tag.split("-", 1)
             if len(ltag) > 1:
                 o_attribute = Tag.objects.get(
@@ -776,12 +775,9 @@ def set_computer_tags(request, name, uuid, o_computer, data):
                 lst_tags_id.append(o_attribute.id)
         lst_tags_id.append(all_id)
 
-        lst_computer_id = []
-        for tag in o_computer.tags.all():
-            lst_computer_id.append(tag.id)
+        lst_computer_id = o_computer.tags.values_list('id', flat=True)
         lst_computer_id.append(all_id)
 
-        retdata = errmfs.ok()
         old_tags_id = list_difference(lst_computer_id, lst_tags_id)
         new_tags_id = list_difference(lst_tags_id, lst_computer_id)
         com_tags_id = list_common(lst_computer_id, lst_tags_id)
@@ -790,63 +786,62 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         lst_pkg_install = []
         lst_pkg_preinstall = []
 
-        # Repositories old
-        repositories = Repository.available_repos(o_computer, old_tags_id)
-        for r in repositories:
+        # old repositories
+        for r in Repository.available_repos(o_computer, old_tags_id):
             # INVERSE !!!!
-            pkgs = "%s %s %s" % (
+            pkgs = "{} {} {}".format(
                 r.toinstall,
                 r.defaultinclude,
                 r.defaultpreinclude
-            )
-            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+            ).replace("\r", " ").replace("\n", " ")
+            for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_remove.append(p)
-            pkgs = "%s %s" % (
+
+            pkgs = "{} {}".format(
                 r.toremove,
                 r.defaultexclude
-            )
-            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+            ).replace("\r", " ").replace("\n", " ")
+            for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_install.append(p)
 
-        # Repositories new
-        repositories = Repository.available_repos(
+        # new repositories
+        for r in Repository.available_repos(
             o_computer,
             new_tags_id + com_tags_id
-        )
-        for r in repositories:
-            pkgs = "%s %s" % (
+        ):
+            pkgs = "{} {}".format(
                 r.toremove,
                 r.defaultexclude
-            )
-            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+            ).replace("\r", " ").replace("\n", " ")
+            for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_remove.append(p)
-            pkgs = "%s %s" % (
+
+            pkgs = "{} {}".format(
                 r.toinstall,
                 r.defaultinclude
-            )
-            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+            ).replace("\r", " ").replace("\n", " ")
+            for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_install.append(p)
-            pkgs = "%s" % (
-                r.defaultpreinclude,
-            )
-            for p in pkgs.replace("\r", " ").replace("\n", " ").split(" "):
+
+            pkgs = r.defaultpreinclude.replace("\r", " ").replace("\n", " ")
+            for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_preinstall.append(p)
 
-        retdata["packages"] = {
+        ret_data = errmfs.ok()
+        ret_data["packages"] = {
             "preinstall": lst_pkg_preinstall,
             "install": lst_pkg_install,
             "remove": lst_pkg_remove,
         }
 
-        # Modify computer tags
         o_computer.tags = lst_tags_obj
 
-        ret = return_message(cmd, retdata)
+        ret = return_message(cmd, ret_data)
     except:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
@@ -854,7 +849,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
 
 
 def check_computer(computer, name, version_name, ip, uuid):
-    # registration of ip, version, uuid and Migration of computer
+    # registration of ip, version, uuid and Migration of a computer
     version = Version.objects.get(name=version_name)
 
     if not computer:
@@ -870,7 +865,6 @@ def check_computer(computer, name, version_name, ip, uuid):
                 )
             )
 
-    # Check Migration
     if computer.version != version:
         Migration.objects.create(computer, version)
 
