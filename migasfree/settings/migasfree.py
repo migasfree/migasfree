@@ -38,6 +38,6 @@ MIGASFREE_NOTIFY_CHANGE_IP = False
 # PERIOD HARDWARE CAPTURE (DAYS)
 MIGASFREE_HW_PERIOD = 30
 
-#DEFAULT COMPUTER STATUS
-# Values: 'intended', 'reserved', ''unknown', 'in repair', 'available' or 'unsubscribed'
+# DEFAULT COMPUTER STATUS
+# Values: 'intended', 'reserved', 'unknown', 'in repair', 'available' or 'unsubscribed'
 MIGASFREE_DEFAULT_COMPUTER_STATUS = 'intended'
