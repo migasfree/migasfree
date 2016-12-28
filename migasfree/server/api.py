@@ -732,11 +732,11 @@ def get_computer_tags(request, name, uuid, computer, data):
         selected_tags.append(tag.__str__())
 
     available_tags = {}
-    for rps in Repository.objects.all().filter(
+    for rps in Repository.objects.filter(
         version=computer.version,
         active=True
     ):
-        for tag in rps.attributes.all().filter(
+        for tag in rps.attributes.filter(
             property_att__tag=True,
             property_att__active=True
         ):
@@ -754,7 +754,7 @@ def get_computer_tags(request, name, uuid, computer, data):
     return return_message(cmd, ret)
 
 
-def set_computer_tags(request, name, uuid, o_computer, data):
+def set_computer_tags(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     all_id = Attribute.objects.get(
         property_att__prefix="SET",
@@ -775,7 +775,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
                 lst_tags_id.append(o_attribute.id)
         lst_tags_id.append(all_id)
 
-        lst_computer_id = o_computer.tags.values_list('id', flat=True)
+        lst_computer_id = computer.tags.values_list('id', flat=True)
         lst_computer_id.append(all_id)
 
         old_tags_id = list_difference(lst_computer_id, lst_tags_id)
@@ -787,7 +787,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
         lst_pkg_preinstall = []
 
         # old repositories
-        for r in Repository.available_repos(o_computer, old_tags_id):
+        for r in Repository.available_repos(computer, old_tags_id):
             # INVERSE !!!!
             pkgs = "{} {} {}".format(
                 r.toinstall,
@@ -808,7 +808,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
 
         # new repositories
         for r in Repository.available_repos(
-            o_computer,
+            computer,
             new_tags_id + com_tags_id
         ):
             pkgs = "{} {}".format(
@@ -839,7 +839,7 @@ def set_computer_tags(request, name, uuid, o_computer, data):
             "remove": lst_pkg_remove,
         }
 
-        o_computer.tags = lst_tags_obj
+        computer.tags = lst_tags_obj
 
         ret = return_message(cmd, ret_data)
     except:
