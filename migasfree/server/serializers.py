@@ -233,8 +233,7 @@ class RepositoryWriteSerializer(serializers.ModelSerializer):
         return instance
 
     def _validate_active_computers(self, att_list):
-        for att_id in att_list:
-            attribute = models.Attribute.objects.get(pk=att_id)
+        for attribute in att_list:
             if attribute.property_att.prefix == 'CID':
                 computer = models.Computer.objects.get(pk=int(attribute.value))
                 if computer.status not in models.Computer.ACTIVE_STATUS:
