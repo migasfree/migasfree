@@ -240,6 +240,14 @@ class MigasLink(object):
                 )
             })
 
+            related_data.append({
+                'url': reverse('computer_label') + '?uuid=' + computer.uuid,
+                'text': '%s [%s]' % (
+                    ugettext('Label'),
+                    ugettext(computer._meta.model_name)
+                )
+            })
+
             return action_data, related_data
         else:
             return self.get_relations()
