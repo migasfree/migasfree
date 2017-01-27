@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-27 11:43+0100\n"
-"PO-Revision-Date: 2016-12-27 11:36+0100\n"
+"POT-Creation-Date: 2017-01-27 08:29+0100\n"
+"PO-Revision-Date: 2017-01-27 08:31+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -318,22 +318,22 @@ msgstr "Plataforma [%s] registrada por el ordenador [%s]."
 msgid "Version [%s] with P.M.S. [%s] registered by computer [%s]."
 msgstr "Versión [%s] con PMS [%s] registrada por el ordenador [%s]."
 
-#: migasfree/server/api.py:866
+#: migasfree/server/api.py:861
 #, python-format
 msgid "New Computer added id=[%s]: NAME=[%s] UUID=[%s]"
 msgstr "Se ha añadido un ordenador con id=[%s]: Nombre=[%s] UUID=[%s]"
 
-#: migasfree/server/api.py:887
+#: migasfree/server/api.py:881
 #, python-format
 msgid "Computer id=[%s]: NAME [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: Nombre [%s] cambiado por [%s]"
 
-#: migasfree/server/api.py:897
+#: migasfree/server/api.py:891
 #, python-format
 msgid "Computer id=[%s]: IP [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: IP [%s] cambiado por [%s]"
 
-#: migasfree/server/api.py:906
+#: migasfree/server/api.py:900
 #, python-format
 msgid "Computer id=[%s]: UUID [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: UUID [%s] cambiado por [%s]"
@@ -493,12 +493,12 @@ msgstr "Origen"
 msgid "Target"
 msgstr "Destino"
 
-#: migasfree/server/forms.py:89 migasfree/server/serializers.py:242
+#: migasfree/server/forms.py:89 migasfree/server/serializers.py:241
 #, python-format
 msgid "It is not possible to assign an inactive computer (%s) as an attribute"
 msgstr "No es posible asignar un ordenador inactivo (%s) como atributo"
 
-#: migasfree/server/forms.py:101 migasfree/server/serializers.py:250
+#: migasfree/server/forms.py:101 migasfree/server/serializers.py:249
 #, python-format
 msgid "Package %s must belong to the version %s"
 msgstr "El paquete %s debe pertenecer a la versión %s"
@@ -672,6 +672,10 @@ msgstr "Sucesos"
 msgid "Simulate sync"
 msgstr "Simular sincronización"
 
+#: migasfree/server/models/common.py:246
+msgid "Label"
+msgstr "Etiqueta"
+
 #: migasfree/server/models/computer.py:77
 msgid "Intended"
 msgstr "Asignado"
@@ -772,7 +776,7 @@ msgstr "RAM"
 
 #: migasfree/server/models/computer.py:205
 msgid "storage"
-msgstr "almacén"
+msgstr "almacenamiento"
 
 #: migasfree/server/models/computer.py:211
 msgid "disks"
@@ -1896,7 +1900,7 @@ msgstr "Máquina"
 
 #: migasfree/server/templates/computer_hardware_resume.html:29
 msgid "Storage"
-msgstr "Almacén"
+msgstr "Almacenamiento"
 
 #: migasfree/server/templates/computer_hardware_resume.html:30
 msgid "Disks"
