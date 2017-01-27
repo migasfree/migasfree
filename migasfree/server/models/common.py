@@ -274,22 +274,36 @@ class MigasLink(object):
         )
 
     def link(self):
+        lnk = {
+            'url': reverse(
+                'admin:%s_%s_change' % (
+                    self._meta.app_label,
+                    self._meta.model_name
+                ),
+                args=(self.id,)
+            ),
+            'text': self.__str__(),
+            'app': self._meta.app_label,
+            'class': self._meta.model_name,
+            'pk': self.id
+        }
+        if self._meta.model_name == 'computer':
+            lnk['status'] = self.status
+            lnk['trans_status'] = ugettext(self.status)
+
+        if self._meta.model_name == 'attribute' and self.property_att.prefix == 'CID':
+            from . import Computer
+            try:
+                computer = Computer.objects.get(pk=int(self.value))
+                lnk['status'] = computer.status
+                lnk['trans_status'] = ugettext(computer.status)
+            except ObjectDoesNotExist:
+                pass
+
         return render_to_string(
             'includes/migas_link.html',
             {
-                'lnk': {
-                    'url': reverse(
-                        'admin:%s_%s_change' % (
-                            self._meta.app_label,
-                            self._meta.model_name
-                        ),
-                        args=(self.id,)
-                    ),
-                    'text': self.__str__(),
-                    'app': self._meta.app_label,
-                    'class': self._meta.model_name,
-                    'pk': self.id
-                }
+                'lnk': lnk
             }
         )
 

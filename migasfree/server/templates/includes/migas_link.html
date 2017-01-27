@@ -1,7 +1,19 @@
 {% spaceless %}
 {% load i18n %}
 <div class="btn-group btn-group-xs nowrap">
-  <a href="{{ lnk.url }}" class="btn btn-default btn-role" role="button">{{ lnk.text }}</a>
+  <a href="{{ lnk.url }}" class="btn btn-default btn-role" role="button">
+      {% if lnk.status %}
+        <span class="fa
+        {% if lnk.status = 'intended' %}fa-heartbeat{% endif %}
+        {% if lnk.status = 'in repair' %}fa-wrench{% endif %}
+        {% if lnk.status = 'available' %}fa-shopping-cart{% endif %}
+        {% if lnk.status = 'reserved' %}fa-lock{% endif %}
+        {% if lnk.status = 'unknown' %}fa-question{% endif %}
+        {% if lnk.status = 'unsubscribed' %}fa-recycle{% endif %}
+        " title="{{ lnk.trans_status }}"></span>
+      {% endif %}
+      {{ lnk.text }}
+  </a>
   <button type="button" class="btn btn-default btn-migas dropdown-toggle-split"
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
           data-app="{{ lnk.app }}" data-model="{{ lnk.class }}" data-pk="{{ lnk.pk }}">
