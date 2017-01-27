@@ -11,6 +11,7 @@ article input.action-select,
 #action-toggle,
 #result_list .sortoptions,
 #result_list th.sortable a:after,
+#changelist-search,
 .form-actions {
     display: none !important;
 }
