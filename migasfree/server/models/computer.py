@@ -2,6 +2,7 @@
 
 from django.db import models
 from django.db.models.signals import pre_save, post_save
+from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
@@ -300,11 +301,14 @@ class Computer(models.Model, MigasLink):
 
     def logical_devices(self, attributes=None):
         if not attributes:
-            from .login import Login
+            try:
+                from .login import Login
 
-            attributes = Login.objects.get(
-                computer__id=self.id
-            ).attributes.all().values_list('id', flat=True)
+                attributes = Login.objects.get(
+                    computer__id=self.id
+                ).attributes.all().values_list('id', flat=True)
+            except ObjectDoesNotExist:
+                return []
 
         return DeviceLogical.objects.filter(
                 attributes__in=attributes
