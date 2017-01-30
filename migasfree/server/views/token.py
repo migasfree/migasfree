@@ -77,7 +77,7 @@ class AttributeViewSet(
         if request.method == 'PATCH':  # append cid attribute to logical devices
             for device_id in request.data:
                 device = get_object_or_404(models.DeviceLogical, pk=device_id)
-                if not device in logical_devices:
+                if device not in logical_devices:
                     device.attributes.add(pk)
 
             return Response(status=status.HTTP_201_CREATED)
