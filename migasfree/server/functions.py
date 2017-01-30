@@ -49,43 +49,6 @@ def remove_empty_elements_from_dict(dic):
     return dic
 
 
-def s2l(cad):
-    """
-    string to list
-    """
-    lst = []
-    if str(cad) == "None":
-        return lst
-
-    try:
-        lst = eval(cad)
-        return lst
-    except:
-        return lst
-
-
-def vl2s(field):
-    """
-    value_list("id") to string
-    """
-    return str(list(field.values_list("id"))).replace("(", "").replace(",)", "")
-
-
-class Mmcheck():
-    field = None  # is a ManyToManyField
-    field_copy = None  # is a Text Field
-
-    def __init__(self, field, field_copy):
-        self.field = field
-        self.field_copy = field_copy
-
-    def mms(self):
-        return vl2s(self.field)
-
-    def changed(self):
-        return self.mms() != str(self.field_copy)
-
-
 def swap_m2m(source_field, target_field):
     source_m2m = list(source_field.all())
     target_m2m = list(target_field.all())
@@ -213,8 +176,8 @@ def diff_month(d1, d2):
 
 def to_timestamp(dt, epoch=datetime(1970, 1, 1)):
     td = dt.replace(tzinfo=None) - epoch
+
     return td.total_seconds()
-    # return (td.microseconds + (td.seconds + td.days * 86400) * 10**6) / 10**6
 
 
 def to_heatmap(results, range_name='day'):
