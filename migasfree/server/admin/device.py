@@ -20,6 +20,7 @@ class DeviceTypeAdmin(MigasAdmin):
     ordering = ('name',)
     search_fields = ('name',)
 
+
 @admin.register(DeviceFeature)
 class DeviceFeatureAdmin(MigasAdmin):
     list_display = ('name_link',)
