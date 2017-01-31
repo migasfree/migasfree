@@ -22,6 +22,13 @@ class FaultManager(models.Manager):
         return obj
 
 
+class UncheckedManager(models.Manager):
+    def get_queryset(self):
+        return super(UncheckedManager, self).get_queryset().filter(
+            checked=False
+        )
+
+
 @python_2_unicode_compatible
 class Fault(models.Model):
     computer = models.ForeignKey(
@@ -56,6 +63,7 @@ class Fault(models.Model):
     )
 
     objects = FaultManager()
+    unchecked = UncheckedManager()
 
     def okay(self):
         self.checked = True

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from datetime import datetime, timedelta
+
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import resolve
+from django.core.urlresolvers import resolve, reverse
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
@@ -37,11 +39,10 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     form = ComputerForm
     list_display = (
         'name_link',
-        'version_link',
         'status',
-        'ip',
+        'version_link',
         'login_link',
-        'datelastupdate',
+        'user_login',
         'hw_link',
     )
     ordering = ('name',)
@@ -65,17 +66,29 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'disks',
         'mac_address',
         'logical_devices_link',
+        'user_login',
+        'unchecked_errors',
+        'unchecked_faults',
+        'last_update_time',
     )
 
     fieldsets = (
         (_('General'), {
             'fields': (
-                'status',
                 'name',
                 'version',
                 'dateinput',
-                'datelastupdate',
                 'ip',
+            )
+        }),
+        (_('Current Situation'), {
+            'fields': (
+                'status',
+                'datelastupdate',
+                'last_update_time',
+                'user_login',
+                'unchecked_errors',
+                'unchecked_faults',
             )
         }),
         (_('Hardware'), {
@@ -105,6 +118,69 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     resource_class = ComputerResource
     actions = ['delete_selected', 'change_status']
+
+    def user_login(self, obj):
+        return obj.login().user
+
+    user_login.short_description = _('User')
+    user_login.admin_order_field = 'login_set__user'
+
+    def unchecked_errors(self, obj):
+        count = Error.unchecked.filter(computer__pk=obj.pk).count()
+        if not count:
+            return '<span class="label label-default">{}</span>'.format(count)
+
+        return '<a class="label label-danger" ' \
+        'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
+            reverse('admin:server_error_changelist'),
+            obj.pk,
+            0,
+            count
+        )
+
+    unchecked_errors.short_description = _('Unchecked Errors')
+    unchecked_errors.allow_tags = True
+
+    def unchecked_faults(self, obj):
+        count = Fault.unchecked.filter(computer__pk=obj.pk).count()
+        if not count:
+            return '<span class="label label-default">{}</span>'.format(count)
+
+        return '<a class="label label-danger" ' \
+        'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
+            reverse('admin:server_fault_changelist'),
+            obj.pk,
+            0,
+            count
+        )
+
+    unchecked_faults.short_description = _('Unchecked Faults')
+    unchecked_faults.allow_tags = True
+
+    def last_update_time(self, obj):
+        is_updating = Message.objects.filter(computer__id=obj.pk).count()
+        diff = obj.datelastupdate - obj.login().date
+
+        if is_updating:
+            delayed_time = datetime.now() - timedelta(
+                0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT
+            )
+            if obj.login().date < delayed_time:
+                return '<span class="label label-warning" title="{}">' \
+                '<i class="fa fa-warning"></i> {}</span>'.format(
+                    _('Delayed Computer'),
+                    diff
+                )
+            else:
+                return '<span class="label label-info">' \
+                '<i class="fa fa-refresh"></i> {}</span>'.format(
+                    _('Updating...'),
+                )
+
+        return diff
+
+    last_update_time.short_description = _('Last Update Time')
+    last_update_time.allow_tags = True
 
     name_link = MigasFields.link(model=Computer, name="name")
     version_link = MigasFields.link(
@@ -183,15 +259,15 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     def get_queryset(self, request):
         return super(ComputerAdmin, self).get_queryset(
             request
-        ).select_related("version",
-                         "default_logical_device",
-                         "default_logical_device__feature",
-                         "default_logical_device__device",
-                         ).prefetch_related(
+        ).select_related(
+            "version",
+             "default_logical_device",
+             "default_logical_device__feature",
+             "default_logical_device__device",
+        ).prefetch_related(
             "login_set",
             "login_set__user",
             Prefetch('hwnode_set', queryset=HwNode.objects.filter(parent=None)),
-
         )
 
 

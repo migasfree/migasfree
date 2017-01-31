@@ -23,6 +23,13 @@ class ErrorManager(models.Manager):
         return obj
 
 
+class UncheckedManager(models.Manager):
+    def get_queryset(self):
+        return super(UncheckedManager, self).get_queryset().filter(
+            checked=False
+        )
+
+
 @python_2_unicode_compatible
 class Error(models.Model):
     computer = models.ForeignKey(
@@ -52,6 +59,7 @@ class Error(models.Model):
     )
 
     objects = ErrorManager()
+    unchecked = UncheckedManager()
 
     def okay(self, *args, **kwargs):
         self.checked = True
