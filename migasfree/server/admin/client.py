@@ -42,7 +42,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'status',
         'version_link',
         'login_link',
-        'user_login',
+        'user_link',
         'hw_link',
     )
     ordering = ('name',)
@@ -66,7 +66,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'disks',
         'mac_address',
         'logical_devices_link',
-        'user_login',
+        'user_link',
+        'login_link',
         'unchecked_errors',
         'unchecked_faults',
         'last_update_time',
@@ -84,9 +85,10 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         (_('Current Situation'), {
             'fields': (
                 'status',
+                'login_link',
                 'datelastupdate',
                 'last_update_time',
-                'user_login',
+                'user_link',
                 'unchecked_errors',
                 'unchecked_faults',
             )
@@ -118,12 +120,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     resource_class = ComputerResource
     actions = ['delete_selected', 'change_status']
-
-    def user_login(self, obj):
-        return obj.login().user
-
-    user_login.short_description = _('User')
-    user_login.admin_order_field = 'login_set__user'
 
     def unchecked_errors(self, obj):
         count = Error.unchecked.filter(computer__pk=obj.pk).count()
@@ -189,10 +185,11 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     hw_link = MigasFields.objects_link(
         model=Computer, name='hwnode_set', description=_('Product')
     )
-    login_link = MigasFields.objects_link(model=Computer, name='login_set')
+    login_link = MigasFields.link(model=Computer, name='login', description=_('Login'),order="login__date")
     logical_devices_link = MigasFields.objects_link(
         model=Computer, name='logical_devices'
     )
+    user_link = MigasFields.link(model=Computer, name='login__user', description=_('User'), order="login__user__name")
 
     def delete_selected(self, request, objects):
         if not self.has_delete_permission(request):
@@ -265,8 +262,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             "default_logical_device__feature",
             "default_logical_device__device",
         ).prefetch_related(
-            "login_set",
-            "login_set__user",
             Prefetch('hwnode_set', queryset=HwNode.objects.filter(parent=None)),
         )
 
