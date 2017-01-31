@@ -5,6 +5,7 @@ import json
 
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.utils.translation import ugettext as _
 
@@ -121,9 +122,12 @@ def api(request):
 
     if computer and computer.status == 'available' \
             and command == 'upload_computer_info':
-        Notification.create(
+        Notification.objects.create(
             _('Computer [%s] with available status, has been synchronized')
-            % computer.__str__()
+            % '<a href="{}">{}</a>'.format(
+                reverse('admin:server_computer_change', args=(computer.pk,)),
+                computer.__str__()
+            )
         )
 
     # COMPUTERS
