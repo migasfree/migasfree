@@ -261,9 +261,9 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             request
         ).select_related(
             "version",
-             "default_logical_device",
-             "default_logical_device__feature",
-             "default_logical_device__device",
+            "default_logical_device",
+            "default_logical_device__feature",
+            "default_logical_device__device",
         ).prefetch_related(
             "login_set",
             "login_set__user",
