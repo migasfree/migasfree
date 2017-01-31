@@ -58,6 +58,7 @@ p#copyright {
 form .form-group p {
     max-height: 15em;
     overflow: auto;
+    line-height: 1.8em;
 }
 
 form.form-horizontal .alert-warning {
