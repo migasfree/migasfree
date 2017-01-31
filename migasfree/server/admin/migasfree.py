@@ -69,6 +69,9 @@ class MigasFields(object):
                     if target is None:
                         return ""
 
+                if inspect.ismethod(obj):  # Is a method
+                    obj = obj()
+
             return obj.link()
 
         getter.admin_order_field = order or name
