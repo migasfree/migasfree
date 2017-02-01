@@ -86,9 +86,9 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': (
                 'status',
                 'login_link',
+                'user_link',
                 'datelastupdate',
                 'last_update_time',
-                'user_link',
                 'unchecked_errors',
                 'unchecked_faults',
             )
@@ -107,7 +107,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         }),
         (_('Software'), {
-            'classes': ('collapse',),
             'fields': ('software', 'history_sw',)
         }),
         (_('Devices'), {
@@ -185,11 +184,15 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     hw_link = MigasFields.objects_link(
         model=Computer, name='hwnode_set', description=_('Product')
     )
-    login_link = MigasFields.link(model=Computer, name='login', description=_('Login'),order="login__date")
+    login_link = MigasFields.link(
+        model=Computer, name='login', description=_('Login'), order="login__date"
+    )
     logical_devices_link = MigasFields.objects_link(
         model=Computer, name='logical_devices'
     )
-    user_link = MigasFields.link(model=Computer, name='login__user', description=_('User'), order="login__user__name")
+    user_link = MigasFields.link(
+        model=Computer, name='login__user', description=_('User'), order="login__user__name"
+    )
 
     def delete_selected(self, request, objects):
         if not self.has_delete_permission(request):
