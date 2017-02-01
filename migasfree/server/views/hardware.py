@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.core import serializers
+from django.core.urlresolvers import reverse
 
 from ..models import (
     HwNode,
@@ -125,7 +126,10 @@ def process_hw(computer, jsonfile):
         except:
             Notification.objects.create(
                 _("Error: Hardware dictionary is not valid in computer [%s].") % (
-                    computer.__str__()
+                    '<a href="{}">{}</a>'.format(
+                        reverse('admin:server_computer_change', args=(computer.id,)),
+                        computer
+                    )
                 )
             )
             return

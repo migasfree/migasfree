@@ -6,6 +6,7 @@ import inspect
 from datetime import datetime, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse
 from django.contrib import auth
 from django.conf import settings
 from django.utils import timezone, dateformat
@@ -33,8 +34,14 @@ logger = logging.getLogger('migasfree')
 def add_notification_platform(platform, computer):
     Notification.objects.create(
         _("Platform [%s] registered by computer [%s].") % (
-            platform,
-            computer.__str__()
+            '<a href="{}">{}</a>'.format(
+                reverse('admin:server_platform_change', args=(platform.id,)),
+                platform
+            ),
+            '<a href="{}">{}</a>'.format(
+                reverse('admin:server_computer_change', args=(computer.id,)),
+                computer
+            )
         )
     )
 
@@ -42,9 +49,18 @@ def add_notification_platform(platform, computer):
 def add_notification_version(version, pms, computer):
     Notification.objects.create(
         _("Version [%s] with P.M.S. [%s] registered by computer [%s].") % (
-            version,
-            pms,
-            computer.__str__()
+            '<a href="{}">{}</a>'.format(
+                reverse('admin:server_version_change', args=(version.id,)),
+                version
+            ),
+            '<a href="{}">{}</a>'.format(
+                reverse('admin:server_pms_change', args=(pms.id,)),
+                pms
+            ),
+            '<a href="{}">{}</a>'.format(
+                reverse('admin:server_computer_change', args=(computer.id,)),
+                computer
+            )
         )
     )
 
@@ -860,7 +876,10 @@ def check_computer(computer, name, version_name, ip, uuid):
             Notification.objects.create(
                 _("New Computer added id=[%s]: NAME=[%s] UUID=[%s]") % (
                     computer.id,
-                    computer.__str__(),
+                    '<a href="{}">{}</a>'.format(
+                        reverse('admin:server_computer_change', args=(computer.id,)),
+                        computer
+                    ),
                     computer.uuid
                 )
             )
@@ -879,8 +898,11 @@ def notify_change_data_computer(computer, name, version, ip, uuid):
     if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (computer.name != name):
         Notification.objects.create(
             _("Computer id=[%s]: NAME [%s] changed by [%s]") % (
-                computer.id,
-                computer.__str__(),
+                '<a href="{}">{}</a>'.format(
+                    reverse('admin:server_computer_change', args=(computer.id,)),
+                    computer.id
+                ),
+                computer,
                 name
             )
         )
@@ -889,7 +911,10 @@ def notify_change_data_computer(computer, name, version, ip, uuid):
         if computer.ip and ip:
             Notification.objects.create(
                 _("Computer id=[%s]: IP [%s] changed by [%s]") % (
-                    computer.id,
+                    '<a href="{}">{}</a>'.format(
+                        reverse('admin:server_computer_change', args=(computer.id,)),
+                        computer.id
+                    ),
                     computer.ip,
                     ip
                 )
@@ -898,7 +923,10 @@ def notify_change_data_computer(computer, name, version, ip, uuid):
     if settings.MIGASFREE_NOTIFY_CHANGE_UUID and computer.uuid != uuid:
         Notification.objects.create(
             _("Computer id=[%s]: UUID [%s] changed by [%s]") % (
-                computer.id,
+                '<a href="{}">{}</a>'.format(
+                    reverse('admin:server_computer_change', args=(computer.id,)),
+                    computer.id
+                ),
                 computer.uuid,
                 uuid
             )
@@ -911,7 +939,7 @@ def create_repositories_package(package_name, version_name):
         package = Package.objects.get(name=package_name, version=version)
         for repo in Repository.objects.filter(packages__id=package.id):
             create_physical_repository(repo)
-    except:
+    except ObjectDoesNotExist:
         pass
 
 

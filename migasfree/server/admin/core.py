@@ -366,7 +366,10 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         Notification.objects.create(
             _('Repository [%s] modified by user [%s] '
                 '(<a href="%s">review changes</a>)') % (
-                obj.name,
+                '<a href="{}">{}</a>'.format(
+                    reverse('admin:server_repository_change', args=(obj.id,)),
+                    obj.name
+                ),
                 request.user,
                 reverse('admin:server_repository_history', args=(obj.id,))
             )

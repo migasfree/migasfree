@@ -125,8 +125,8 @@ def api(request):
         Notification.objects.create(
             _('Computer [%s] with available status, has been synchronized')
             % '<a href="{}">{}</a>'.format(
-                reverse('admin:server_computer_change', args=(computer.pk,)),
-                computer.__str__()
+                reverse('admin:server_computer_change', args=(computer.id,)),
+                computer
             )
         )
 
