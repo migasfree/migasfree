@@ -10,7 +10,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 
 from ..api import *
-from ..models import Error
+from ..models import Error, Notification
 from ..security import wrap, unwrap
 from ..functions import get_client_ip, uuid_validate, readfile
 from .. import errmfs
