@@ -288,7 +288,7 @@ class Computer(models.Model, MigasLink):
             self.product = HwNode.objects.get(
                 computer=self.id, parent=None
             ).get_product()
-        except:
+        except ObjectDoesNotExist:
             self.product = None
 
         self.machine = 'V' if HwNode.get_is_vm(self.id) else 'P'
@@ -413,14 +413,14 @@ class Computer(models.Model, MigasLink):
         try:
             target = Computer.objects.get(pk=computer_id)
             target.devices_logical.add(*self.devices_logical.all())
-        except:
+        except ObjectDoesNotExist:
             pass
 
     def __str__(self):
-        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
-            return "CID-%d" % self.id
+        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == 'id':
+            return 'CID-{}'.format(self.id)
         else:
-            return "%s (CID-%d)" % (self.get_cid_description(), self.id)
+            return '{} (CID-{})'.format(self.get_cid_description(), self.id)
 
     class Meta:
         app_label = 'server'
@@ -447,7 +447,6 @@ def post_save_computer(sender, instance, created, **kwargs):
 
     if instance.status in ['available', 'unsubscribed']:
         instance.tags.clear()
-        #instance.devices_logical.clear()
 
         cid = instance.get_cid_attribute()
         cid.devicelogical_set.clear()
