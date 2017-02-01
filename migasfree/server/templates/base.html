@@ -220,12 +220,12 @@
 
                     <ul class="pull-right">
                         {% block documentation %}
-                            <li><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="fa fa-info"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a></li>
+                            <li><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="fa fa-database"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a></li>
                         {% endblock documentation %}
 
-                        <li><a href="http://fun-with-migasfree.readthedocs.io/" title="{% trans 'Fun with migasfree' %}"><span class="fa fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></li>
-
                         <li><a href="/docs/" title="{% trans 'Experimental REST API' %}"><span class="fa fa-user-secret"></span> <span class="sr-only">{% trans 'Experimental REST API' %}</span></a></li>
+
+                        <li><a href="http://fun-with-migasfree.readthedocs.io/" title="{% trans 'Fun with migasfree' %}"><span class="fa fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></li>
                     </ul>
                 </footer>
             {% endblock footer %}
