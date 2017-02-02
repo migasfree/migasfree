@@ -267,7 +267,7 @@ def get_properties(request, name, uuid, computer, data):
     return ret
 
 
-def upload_computer_info(request, name, uuid, o_computer, data):
+def upload_computer_info(request, name, uuid, computer, data):
     """
     Process the file request.json and return a json with the faultsdef,
     repositories, packages and devices
@@ -318,15 +318,15 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
-    platform = data.get("upload_computer_info").get("computer").get(
+    platform_name = data.get("upload_computer_info").get("computer").get(
         'platform',
         'unknown'
     )
-    version = data.get("upload_computer_info").get("computer").get(
+    version_name = data.get("upload_computer_info").get("computer").get(
         'version',
         'unknown'
     )
-    pms = data.get("upload_computer_info").get("computer").get(
+    pms_name = data.get("upload_computer_info").get("computer").get(
         'pms',
         'apt-get'
     )
@@ -335,7 +335,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
     notify_version = False
 
     # Autoregister Platform
-    if not Platform.objects.filter(name=platform):
+    if not Platform.objects.filter(name=platform_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             return return_message(
                 cmd,
@@ -343,12 +343,12 @@ def upload_computer_info(request, name, uuid, o_computer, data):
             )
 
         # if all ok we add the platform
-        Platform.objects.create(platform)
+        Platform.objects.create(platform_name)
 
         notify_platform = True
 
     # Autoregister Version
-    if not Version.objects.filter(name=version):
+    if not Version.objects.filter(name=version_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             return return_message(
                 cmd,
@@ -357,9 +357,9 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # if all ok, we add the version
         Version.objects.create(
-            version,
-            Pms.objects.get(name=pms),
-            Platform.objects.get(name=platform),
+            version_name,
+            Pms.objects.get(name=pms_name),
+            Platform.objects.get(name=platform_name),
             settings.MIGASFREE_AUTOREGISTER
         )
 
@@ -373,22 +373,27 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # 1.- PROCESS COMPUTER
         # registration of ip, version an Migration of computer
-        o_computer = check_computer(
-            o_computer,
+        computer = check_computer(
+            computer,
             name,
-            dic_computer.get("version"),
+            version_name,
             dic_computer.get("ip", ""),
             uuid,
         )
 
+        # Get version
+        version = Version.objects.get(name=version_name)
+
         if notify_platform:
-            add_notification_platform(platform, o_computer)
+            platform = Platform.objects.get(name=platform_name)
+            add_notification_platform(platform, computer)
 
         if notify_version:
-            add_notification_version(version, pms, o_computer)
+            pms = Pms.objects.get(name=pms_name)
+            add_notification_version(version, pms, computer)
 
         # if not exists the user, we add it
-        o_user, _ = User.objects.get_or_create(
+        user, _ = User.objects.get_or_create(
             name=dic_computer.get("user"),
             defaults={
                 'fullname': dic_computer.get("user_fullname", "")
@@ -396,48 +401,45 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         )
 
         # Save Login
-        o_login, created = Login.objects.get_or_create(
-            computer=o_computer,
+        login, created = Login.objects.get_or_create(
+            computer=computer,
             defaults={
-                'user': o_user,
+                'user': user,
                 'date': dateformat.format(timezone.now(), 'Y-m-d H:i:s')
             }
         )
         if not created:
-            o_login.update_user(o_user)
+            login.update_user(user)
 
-        o_login.attributes.clear()
-
-        # Get version
-        o_version = Version.objects.get(name=dic_computer.get("version"))
+        login.attributes.clear()
 
         # 2.- PROCESS PROPERTIES
         for e in properties:
             o_property = ClientProperty.objects.get(prefix=e)
             value = properties.get(e)
             for att in Attribute.process_kind_property(o_property, value):
-                o_login.attributes.add(att)
+                login.attributes.add(att)
                 lst_attributes.append(att)
 
         # ADD Tags (not running on clients!!!)
-        for tag in o_computer.tags.all().filter(property_att__active=True):
+        for tag in computer.tags.all().filter(property_att__active=True):
             for att in Attribute.process_kind_property(
                 tag.property_att,
                 tag.value
             ):
-                o_login.attributes.add(att)
+                login.attributes.add(att)
                 lst_attributes.append(att)
 
         # ADD ATTRIBUTE CID (not running on clients!!!)
         try:
             prp_cid = Property.objects.get(prefix="CID", active=True)
             if prp_cid:
-                cid_description = o_computer.get_cid_description()
+                cid_description = computer.get_cid_description()
                 cid = Feature.objects.create(
                     prp_cid,
-                    "%s~%s" % (str(o_computer.id), cid_description)
+                    "%s~%s" % (str(computer.id), cid_description)
                 )
-                o_login.attributes.add(cid)
+                login.attributes.add(cid)
                 lst_attributes.append(cid.id)
 
                 cid.update_description(cid_description)
@@ -448,7 +450,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
         lst_set = AttributeSet.process(lst_attributes)
         if lst_set:
             for item in lst_set:
-                o_login.attributes.add(item)
+                login.attributes.add(item)
 
         # 3 FaultsDef
         lst_faultsdef = []
@@ -459,7 +461,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 "code": d['code']
             })
 
-        repositories = Repository.available_repos(o_computer, lst_attributes)
+        repositories = Repository.available_repos(computer, lst_attributes)
 
         # 4.- CREATE JSON
         lst_repos = []
@@ -479,19 +481,19 @@ def upload_computer_info(request, name, uuid, o_computer, data):
 
         # DEVICES
         logical_devices = []
-        for device in o_computer.logical_devices(lst_attributes):
-            logical_devices.append(device.as_dict(o_computer.version))
+        for device in computer.logical_devices(lst_attributes):
+            logical_devices.append(device.as_dict(computer.version))
 
-        if o_computer.default_logical_device:
-            default_logical_device = o_computer.default_logical_device.id
+        if computer.default_logical_device:
+            default_logical_device = computer.default_logical_device.id
         else:
             default_logical_device = 0
 
         # Hardware
         capture_hardware = True
-        if o_computer.datehardware:
+        if computer.datehardware:
             capture_hardware = (datetime.now() > (
-                o_computer.datehardware.replace(tzinfo=None) + timedelta(
+                computer.datehardware.replace(tzinfo=None) + timedelta(
                     days=settings.MIGASFREE_HW_PERIOD
                 ))
             )
@@ -507,7 +509,7 @@ def upload_computer_info(request, name, uuid, o_computer, data):
                 "logical": logical_devices,
                 "default": default_logical_device,
             },
-            "base": o_version.computerbase == o_computer.__str__(),
+            "base": version.computerbase == computer.__str__(),
             "hardware_capture": capture_hardware
         }
 
@@ -616,7 +618,7 @@ def register_computer(request, name, uuid, computer, data):
 
         # ALL IS OK
         # 1.- Add Computer
-        o_computer = check_computer(
+        computer = check_computer(
             computer,
             name,
             version_name,
@@ -625,10 +627,12 @@ def register_computer(request, name, uuid, computer, data):
         )
 
         if notify_platform:
-            add_notification_platform(platform_name, o_computer)
+            platform = Platform.objects.get(name=platform_name)
+            add_notification_platform(platform, computer)
 
         if notify_version:
-            add_notification_version(version_name, pms_name, o_computer)
+            pms = Pms.objects.get(name=pms_name)
+            add_notification_version(version, pms, computer)
 
         # 2.- returns keys to client
         return return_message(cmd, get_keys_to_client(version_name))
