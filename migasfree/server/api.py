@@ -415,9 +415,9 @@ def upload_computer_info(request, name, uuid, computer, data):
 
         # 2.- PROCESS PROPERTIES
         for e in properties:
-            o_property = ClientProperty.objects.get(prefix=e)
+            client_property = ClientProperty.objects.get(prefix=e)
             value = properties.get(e)
-            for att in Attribute.process_kind_property(o_property, value):
+            for att in Attribute.process_kind_property(client_property, value):
                 login.attributes.add(att)
                 lst_attributes.append(att)
 
@@ -715,12 +715,12 @@ def upload_server_set(request, name, uuid, computer, data):
     )
 
     # we add the package set and create the directory
-    o_package, _ = Package.objects.get_or_create(
+    package, _ = Package.objects.get_or_create(
         name=data['packageset'],
         version=version,
         defaults={'store': store}
     )
-    o_package.create_dir()
+    package.create_dir()
 
     save_request_file(f, filename)
 
@@ -787,12 +787,12 @@ def set_computer_tags(request, name, uuid, computer, data):
         for tag in data["set_computer_tags"]["tags"]:
             ltag = tag.split("-", 1)
             if len(ltag) > 1:
-                o_attribute = Tag.objects.get(
+                attribute = Tag.objects.get(
                     property_att__prefix=ltag[0],
                     value=ltag[1]
                 )
-                lst_tags_obj.append(o_attribute)
-                lst_tags_id.append(o_attribute.id)
+                lst_tags_obj.append(attribute)
+                lst_tags_id.append(attribute.id)
         lst_tags_id.append(all_id)
 
         lst_computer_id = computer.tags.values_list('id', flat=True)
