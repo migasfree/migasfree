@@ -69,6 +69,10 @@ class Migration(migrations.Migration):
             )]
         ),
         migrations.RunSQL(
+            "DELETE FROM server_query WHERE id=1;",
+            migrations.RunSQL.noop
+        ),
+        migrations.RunSQL(
             "DELETE FROM server_query WHERE id=2;",
             [(
                 "INSERT INTO server_query (id, code, name, parameters, description) VALUES (%d, %s, %s, %s, %s);",
