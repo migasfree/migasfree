@@ -61,23 +61,25 @@ class MigasLink(object):
             if _name == "permission":
                 break
 
-            related_link = reverse(
-                'admin:%s_%s_changelist' % (
-                    obj.related.model._meta.app_label,
-                    _name)
-                )
+            count = obj.related.model.objects.filter(
+                **{obj.related.name: self.id}
+            ).count()
+            if count:
+                related_link = reverse(
+                    'admin:%s_%s_changelist' % (
+                        obj.related.model._meta.app_label,
+                        _name)
+                    )
 
-            related_data.append({
-                'url': '%s?%s__id__exact=%s' % (
-                    related_link,
-                    obj.remote_field.name,
-                    self.pk
-                ),
-                'text': ugettext(obj.related.field.name),
-                'count': obj.related.model.objects.filter(
-                    **{obj.related.name: self.id}
-                ).count()
-            })
+                related_data.append({
+                    'url': '%s?%s__id__exact=%s' % (
+                        related_link,
+                        obj.remote_field.name,
+                        self.pk
+                    ),
+                    'text': ugettext(obj.related.field.name),
+                    'count': count
+                })
 
         for related_object, _ in related_objects:
             related_model, _field = self.transmodel(related_object)
@@ -86,28 +88,30 @@ class MigasLink(object):
                     related_model._meta.model_name,
                     _field
                 ) in self._exclude_links:
-                    related_link = reverse(
-                        'admin:%s_%s_changelist'
-                        % (related_model._meta.app_label,
-                            related_model.__name__.lower()
+                    count = related_model.objects.filter(
+                        **{related_object.field.name: self.id}
+                    ).count()
+                    if count:
+                        related_link = reverse(
+                            'admin:%s_%s_changelist' % (
+                                related_model._meta.app_label,
+                                related_model.__name__.lower()
+                            )
                         )
-                    )
-                    related_data.append({
-                        'url': '%s?%s=%d' % (
-                            related_link,
-                            _field,
-                            self.id
-                        ),
-                        'text': '%s [%s]' % (
-                            ugettext(
-                                related_model._meta.verbose_name_plural
+                        related_data.append({
+                            'url': '%s?%s=%d' % (
+                                related_link,
+                                _field,
+                                self.id
                             ),
-                            ugettext(related_object.field.name)
-                        ),
-                        'count': related_model.objects.filter(
-                            **{related_object.field.name: self.id}
-                        ).count()
-                    })
+                            'text': '%s [%s]' % (
+                                ugettext(
+                                    related_model._meta.verbose_name_plural
+                                ),
+                                ugettext(related_object.field.name)
+                            ),
+                            'count': count
+                        })
 
         for _include in self._include_links:
             try:
@@ -127,7 +131,7 @@ class MigasLink(object):
                         ugettext(_fieldname)
                     )
                 })
-            except:
+            except ValueError:
                 pass
 
         return action_data, related_data
@@ -142,7 +146,7 @@ class MigasLink(object):
                     reverse('admin:server_computer_changelist'),
                     "product",
                     self.computer.product,
-                    ),
+                ),
                 'text': '%s [%s]' % (
                     ugettext('computer'),
                     ugettext('product')
@@ -153,7 +157,8 @@ class MigasLink(object):
 
         # ATTRIBUTESET === ATTRIBUTE
         if self._meta.model_name == 'attributeset' or (
-                (self._meta.model_name == 'attribute' or
+                (
+                    self._meta.model_name == 'attribute' or
                     self._meta.model_name == 'feature'
                 ) and self.property_att.prefix == 'SET'
         ):
@@ -186,7 +191,8 @@ class MigasLink(object):
 
         # COMPUTER === CID ATTRIBUTE
         if self._meta.model_name == 'computer' or (
-                (self._meta.model_name == 'attribute' or
+                (
+                    self._meta.model_name == 'attribute' or
                     self._meta.model_name == 'feature'
                 ) and self.property_att.prefix == 'CID'
         ):
