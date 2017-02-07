@@ -82,6 +82,13 @@ class Migration(migrations.Migration):
             )]
         ),
         migrations.RunSQL(
+            [(
+                "UPDATE server_query SET code=%s WHERE id=4;",
+                ["from migasfree.server.models import Computer\nquery = Computer.productives.select_related('version').filter(software__contains=parameters['package']).order_by('datelastupdate')\nfields = ('link', 'version.link', 'datelastupdate', 'product')\ntitles = ('Computer', 'Version', 'Last Update', 'Product')"]
+            )],
+            migrations.RunSQL.noop
+        ),
+        migrations.RunSQL(
             "DELETE FROM server_query WHERE id=5;",
             [(
                 "INSERT INTO server_query (id, code, name, parameters, description) VALUES (%d, %s, %s, %s, %s);",

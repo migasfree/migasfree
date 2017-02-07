@@ -23,7 +23,7 @@
         "pk": 4,
         "model": "server.query",
         "fields": {
-            "code": "from migasfree.server.models import Computer\nquery = Computer.productives.filter(software__contains=parameters['package']).order_by('datelastupdate')\nfields = ('link', 'ip', 'datelastupdate', 'hw_link')\ntitles = ('Computer', 'ip', 'last update', 'hardware')",
+            "code": "from migasfree.server.models import Computer\nquery = Computer.productives.select_related('version').filter(software__contains=parameters['package']).order_by('datelastupdate')\nfields = ('link', 'version.link', 'datelastupdate', 'product')\ntitles = ('Computer', 'Version', 'Last Update', 'Product')",
             "name": "Production Computers with the Package...",
             "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm\n",
             "description": "Computer list with the specified package"
