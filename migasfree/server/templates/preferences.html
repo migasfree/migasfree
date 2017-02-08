@@ -26,6 +26,7 @@
 
                     <div class="controls col-md-9">
                         <select id="version" name="version" class="form-control form-control-inline">
+                            <option value="0">----</option>
                         {% for item in version_names %}
                             <option value="{{ item.0 }}" {% if item.0 == current_version.id %} selected="selected"{% endif %}>{{ item.1 }}</option>
                         {% endfor %}

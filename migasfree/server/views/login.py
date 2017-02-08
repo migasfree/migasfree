@@ -40,15 +40,17 @@ def preferences(request):
             'preferences.html',
         )
 
-    version = get_object_or_404(Version, pk=request.POST.get('version', 0))
+    version = None
+    success_url = '%s?active__exact=1' % reverse('admin:server_repository_changelist')
+
+    version_id = int(request.POST.get('version', 0))
+    if version_id:
+        version = get_object_or_404(Version, pk=version_id)
+        success_url += '&version__id__exact=%d' % version.id
+
     user_profile = UserProfile.objects.get(id=request.user.id)
     user_profile.update_version(version)
 
     messages.success(request, _("Preferences changed"))
-
-    success_url = '%s?active__exact=1&version__id__exact=%d' % (
-        reverse('admin:server_repository_changelist'),
-        version.id
-    )
 
     return redirect(success_url)
