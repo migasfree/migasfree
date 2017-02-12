@@ -52,7 +52,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     readonly_fields = (
         'name',
         'uuid',
-        'version',
+        'version_link',
         'dateinput',
         'datelastupdate',
         'ip',
@@ -77,7 +77,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         (_('General'), {
             'fields': (
                 'name',
-                'version',
+                'version_link',
                 'dateinput',
                 'ip',
             )
