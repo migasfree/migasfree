@@ -175,10 +175,7 @@ class MigasLink(object):
             else:
                 from . import AttributeSet
                 att = self
-                try:
-                    attributeset = AttributeSet.objects.get(name=self.value)
-                except ObjectDoesNotExist:
-                    attributeset = None
+                attributeset = AttributeSet.objects.get(name=self.value)
 
             if att:
                 att_action_data, att_related_data = att.get_relations()
@@ -186,10 +183,9 @@ class MigasLink(object):
                 att_action_data = []
                 att_related_data = []
 
-            if attributeset:
-                set_action_data, set_related_data = attributeset.get_relations()
-                action_data = set_action_data + att_action_data
-                related_data = set_related_data + att_related_data
+            set_action_data, set_related_data = attributeset.get_relations()
+            action_data = set_action_data + att_action_data
+            related_data = set_related_data + att_related_data
 
             return action_data, related_data
 

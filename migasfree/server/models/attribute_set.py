@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
 
 from . import (
     Property,
@@ -128,11 +125,3 @@ class AttributeSet(models.Model, MigasLink):
         verbose_name = _("Attributes Set")
         verbose_name_plural = _("Attributes Sets")
         permissions = (("can_save_attributteset", "Can save Attributes Set"),)
-
-
-@receiver(pre_delete, sender=AttributeSet)
-def pre_delete_set_of_attributes(sender, instance, **kwargs):
-    try:
-        Attribute.objects.get(property_att=Property(id=1), value=instance.name).delete()
-    except ObjectDoesNotExist:
-        pass

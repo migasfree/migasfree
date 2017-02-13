@@ -9,8 +9,6 @@ from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
 
 from ..functions import horizon
 
@@ -141,6 +139,18 @@ class Repository(models.Model, MigasLink):
 
         super(Repository, self).save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        path = os.path.join(
+            settings.MIGASFREE_REPO_DIR,
+            self.version.name,
+            self.version.pms.slug,
+            self.name
+        )
+        if os.path.exists(path):
+            shutil.rmtree(path)
+
+        super(Repository, self).delete(*args, **kwargs)
+
     @staticmethod
     def available_repos(computer, attributes):
         """
@@ -197,15 +207,3 @@ class Repository(models.Model, MigasLink):
         unique_together = (("name", "version"),)
         permissions = (("can_save_repository", "Can save Repository"),)
         ordering = ['version__name', 'name']
-
-
-@receiver(pre_delete, sender=Repository)
-def pre_delete_deployment(sender, instance, **kwargs):
-    path = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        instance.version.name,
-        instance.version.pms.slug,
-        instance.name
-    )
-    if os.path.exists(path):
-        shutil.rmtree(path)

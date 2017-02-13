@@ -94,9 +94,6 @@ class RepositoryForm(forms.ModelForm):
         # http://stackoverflow.com/questions/7986510/django-manytomany-model-validation
         cleaned_data = super(RepositoryForm, self).clean()
 
-        if 'version' not in cleaned_data:
-            raise ValidationError(_('Version is required'))
-
         for pkg_id in cleaned_data.get('packages', []):
             pkg = Package.objects.get(pk=pkg_id)
             if pkg.version.id != cleaned_data['version'].id:

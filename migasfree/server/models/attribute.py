@@ -93,10 +93,10 @@ class Attribute(models.Model, MigasLink):
             self.description = new_value
             self.save()
 
-    def delete(self, using=None, keep_parents=False):
+    def delete(self, *args, **kwargs):
         # Not allowed delete attribute 'SET-ALL SYSTEM' or CID Property.prefix
         if not (self.property_att.prefix in ["CID", ] or self.id == 1):
-            return super(Attribute, self).delete(using, keep_parents)
+            super(Attribute, self).delete(*args, **kwargs)
 
     @staticmethod
     def process_kind_property(property_att, value):

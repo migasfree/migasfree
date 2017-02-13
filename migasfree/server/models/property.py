@@ -94,10 +94,10 @@ class Property(models.Model, MigasLink):
         self.code = self.code.replace("\r\n", "\n")
         super(Property, self).save(*args, **kwargs)
 
-    def delete(self, using=None, keep_parents=False):
+    def delete(self, *args, **kwargs):
         # Not allowed delete SET and CID Property
         if self.prefix not in ["SET", "CID"]:
-            return super(Property, self).delete(using, keep_parents)
+            super(Property, self).delete(*args, **kwargs)
 
     @staticmethod
     def enabled_client_properties():
