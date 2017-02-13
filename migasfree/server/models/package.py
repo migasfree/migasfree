@@ -83,6 +83,9 @@ class Package(models.Model, MigasLink):
     def clean(self):
         super(Package, self).clean()
 
+        if not hasattr(self, 'version'):
+            return False
+
         if self.store.version.id != self.version.id:
             raise ValidationError(_('Store must belong to the version'))
 

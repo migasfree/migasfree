@@ -8,6 +8,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 from . import Version, MigasLink
 
@@ -77,19 +79,6 @@ class Store(models.Model, MigasLink):
         self.create_dir()
         super(Store, self).save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        # remove the directory of Store
-        path = os.path.join(
-            settings.MIGASFREE_REPO_DIR,
-            self.version.name,
-            "STORES",
-            self.name
-        )
-        if os.path.exists(path):
-            shutil.rmtree(path)
-
-        super(Store, self).delete(*args, **kwargs)
-
     def __str__(self):
         return self.name
 
@@ -100,3 +89,15 @@ class Store(models.Model, MigasLink):
         unique_together = (("name", "version"),)
         permissions = (("can_save_store", "Can save Store"),)
         ordering = ['name', 'version']
+
+
+@receiver(pre_delete, sender=Store)
+def delete_store(sender, instance, **kwargs):
+    path = os.path.join(
+        settings.MIGASFREE_REPO_DIR,
+        instance.version.name,
+        "STORES",
+        instance.name
+    )
+    if os.path.exists(path):
+        shutil.rmtree(path)
