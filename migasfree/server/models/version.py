@@ -11,6 +11,8 @@ from django.contrib.auth.models import (
     UserManager
 )
 from django.conf import settings
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
 
 from migasfree.middleware import threadlocals
 from . import Pms, Platform, MigasLink
@@ -109,13 +111,6 @@ class Version(models.Model, MigasLink):
 
         super(Version, self).save(*args, **kwargs)
 
-    def delete(self, *args, **kwargs):
-        path = os.path.join(settings.MIGASFREE_REPO_DIR, self.name)
-        if os.path.exists(path):
-            shutil.rmtree(path)
-
-        super(Version, self).delete(*args, **kwargs)
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Version")
@@ -170,3 +165,10 @@ class UserProfile(UserSystem, MigasLink):
         verbose_name = _("User Profile")
         verbose_name_plural = _("User Profiles")
         permissions = (("can_save_userprofile", "Can save User Profile"),)
+
+
+@receiver(pre_delete, sender=Version)
+def delete_project(sender, instance, **kwargs):
+    path = os.path.join(settings.MIGASFREE_REPO_DIR, instance.name)
+    if os.path.exists(path):
+        shutil.rmtree(path)
