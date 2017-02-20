@@ -14,16 +14,21 @@ function changeData()
                         html += "<div class='row join'>";
                         var fields = connectionList[i].fields.fields.split(",");
                         var data = eval("(" + $("#id_data").val() + ")");
+
                         for (var j = 0; j < fields.length; j++)
                         {
-                            var value = (typeof data[fields[j]] !== "undefined") ? data[fields[j]] : "";
+                            var f = fields[j].split(":");
+                            var name = f[0];
+                            var placeholder = f[1] || "";
+                            var value = (typeof data[name] !== "undefined") ? data[name] : "";
+
                             html += "<div class='control-group'>";
                             html += "<div class='col-md-12 form-group'>";
                             html += "<div class='control-label col-sm-3'>";
-                            html += "<label for='join_" + fields[j] + "'>" + fields[j] + "</label>";
+                            html += "<label for='join_" + name + "'>" + name + "</label>";
                             html += "</div>";
                             html += "<div class='controls col-sm-9'>";
-                            html += "<input id='join_" + fields[j] + "' type='text' class='form-control join_field' value='" + value + "' />";
+                            html += "<input id='join_" + name + "' type='text' class='form-control join_field' value='" + value + "' placeholder='" + placeholder + "'/>";
                             html += "</div>";
                             html += "</div>";
                             html += "</div>";
