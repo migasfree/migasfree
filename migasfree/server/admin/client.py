@@ -126,12 +126,12 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             return '<span class="label label-default">{}</span>'.format(count)
 
         return '<a class="label label-danger" ' \
-        'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
-            reverse('admin:server_error_changelist'),
-            obj.pk,
-            0,
-            count
-        )
+            'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
+                reverse('admin:server_error_changelist'),
+                obj.pk,
+                0,
+                count
+            )
 
     unchecked_errors.short_description = _('Unchecked Errors')
     unchecked_errors.allow_tags = True
@@ -142,12 +142,12 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             return '<span class="label label-default">{}</span>'.format(count)
 
         return '<a class="label label-danger" ' \
-        'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
-            reverse('admin:server_fault_changelist'),
-            obj.pk,
-            0,
-            count
-        )
+            'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
+                reverse('admin:server_fault_changelist'),
+                obj.pk,
+                0,
+                count
+            )
 
     unchecked_faults.short_description = _('Unchecked Faults')
     unchecked_faults.allow_tags = True
@@ -162,15 +162,15 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             )
             if obj.login().date < delayed_time:
                 return '<span class="label label-warning" title="{}">' \
-                '<i class="fa fa-warning"></i> {}</span>'.format(
-                    _('Delayed Computer'),
-                    diff
-                )
+                    '<i class="fa fa-warning"></i> {}</span>'.format(
+                        _('Delayed Computer'),
+                        diff
+                    )
             else:
                 return '<span class="label label-info">' \
-                '<i class="fa fa-refresh"></i> {}</span>'.format(
-                    _('Updating...'),
-                )
+                    '<i class="fa fa-refresh"></i> {}</span>'.format(
+                        _('Updating...'),
+                    )
 
         return diff
 
