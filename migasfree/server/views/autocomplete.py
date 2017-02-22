@@ -10,12 +10,13 @@ from ..models import Computer, Attribute, Device
 
 class AutocompleteModelBase(autocomplete.Select2QuerySetView):
     """
-    Adaptation from https://github.com/yourlabs/django-autocomplete-light/blob/2.3.3/autocomplete_light/autocomplete/model.py
+    Adaptation from
+    https://github.com/yourlabs/django-autocomplete-light/blob/2.3.3/autocomplete_light/autocomplete/model.py
     """
 
     def _construct_search(self, field_name):
         """
-        Using a field name optionnaly prefixed by `^`, `=`, `@`, return a
+        Using a field name optionally prefixed by `^`, `=`, `@`, return a
         case-insensitive filter condition name usable as a queryset `filter()`
         keyword argument.
         """
@@ -81,7 +82,7 @@ class AttributeAutocomplete(AutocompleteModelBase):
 
 
 class DeviceAutocomplete(AutocompleteModelBase):
-    search_fields = ['name','data']
+    search_fields = ['name', 'data']
 
     def get_queryset(self):
         if not self.request.user.is_authenticated():
