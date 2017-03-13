@@ -88,6 +88,11 @@ class Attribute(models.Model, MigasLink):
     total_computers.admin_order_field = 'total_computers'
     total_computers.short_description = _('Total computers')
 
+    def update_value(self, new_value):
+        if self.value != new_value:
+            self.value = new_value
+            self.save()
+
     def update_description(self, new_value):
         if self.description != new_value:
             self.description = new_value

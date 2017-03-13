@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.db.models.signals import pre_delete
+from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 
 from . import (
@@ -41,14 +41,23 @@ class AttributeSet(models.Model, MigasLink):
         help_text=_("Excluded Attributes")
     )
 
+    def clean(self):
+        super(AttributeSet, self).clean()
+
+        if self.id:
+            soa = AttributeSet.objects.get(pk=self.id)
+            if soa.name != self.name and \
+                    Attribute.objects.filter(property_att=Property(id=1), value=self.name).count() > 0:
+                raise ValidationError(_('Duplicated name'))
+
     def save(self, *args, **kwargs):
+        super(AttributeSet, self).save(*args, **kwargs)
+
         Attribute.objects.get_or_create(
             property_att=Property(id=1),
             value=self.name,
             defaults={'description': ''}
         )
-
-        super(AttributeSet, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -128,6 +137,15 @@ class AttributeSet(models.Model, MigasLink):
         verbose_name = _("Attributes Set")
         verbose_name_plural = _("Attributes Sets")
         permissions = (("can_save_attributteset", "Can save Attributes Set"),)
+
+
+@receiver(pre_save, sender=AttributeSet)
+def pre_save_set_of_attributes(sender, instance, **kwargs):
+    if instance.id:
+        soa = AttributeSet.objects.get(pk=instance.id)
+        if instance.name != soa.name:
+            att = Attribute.objects.get(property_att=Property(id=1), value=soa.name)
+            att.update_value(instance.name)
 
 
 @receiver(pre_delete, sender=AttributeSet)
