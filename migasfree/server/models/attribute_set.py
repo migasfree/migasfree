@@ -136,7 +136,7 @@ class AttributeSet(models.Model, MigasLink):
         app_label = 'server'
         verbose_name = _("Attributes Set")
         verbose_name_plural = _("Attributes Sets")
-        permissions = (("can_save_attributteset", "Can save Attributes Set"),)
+        permissions = (("can_save_attributeset", "Can save Attributes Set"),)
 
 
 @receiver(pre_save, sender=AttributeSet)
