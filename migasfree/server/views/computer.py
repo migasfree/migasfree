@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from ..forms import ComputerReplacementForm
 from ..models import (
     Computer, Update, Error, Fault,
-    StatusLog, Migration, Login, Version, Repository, FaultDef, DeviceLogical
+    StatusLog, Migration, Version, Repository, FaultDef, DeviceLogical
 )
 from ..mixins import LoginRequiredMixin
 from ..functions import d2s, to_heatmap
@@ -125,27 +125,27 @@ def computer_events(request, pk):
     now = datetime.now()
 
     updates = to_heatmap(
-        Update.by_day(computer.pk, computer.dateinput, now)
+        Update.by_day(computer.pk, computer.created_at, now)
     )
     updates_count = sum(updates.values())
 
     errors = to_heatmap(
-        Error.by_day(computer.pk, computer.dateinput, now)
+        Error.by_day(computer.pk, computer.created_at, now)
     )
     errors_count = sum(errors.values())
 
     faults = to_heatmap(
-        Fault.by_day(computer.pk, computer.dateinput, now)
+        Fault.by_day(computer.pk, computer.created_at, now)
     )
     faults_count = sum(faults.values())
 
     status = to_heatmap(
-        StatusLog.by_day(computer.pk, computer.dateinput, now)
+        StatusLog.by_day(computer.pk, computer.created_at, now)
     )
     status_count = sum(status.values())
 
     migrations = to_heatmap(
-        Migration.by_day(computer.pk, computer.dateinput, now)
+        Migration.by_day(computer.pk, computer.created_at, now)
     )
     migrations_count = sum(migrations.values())
 
@@ -174,27 +174,22 @@ def computer_simulate_sync(request, pk):
     computer = Computer.objects.get(pk=pk)
     version = Version.objects.get(id=computer.version.id)
 
-    try:
-        login = Login.objects.get(computer_id=computer.id)
-    except:
-        login = None
-
-    if login:
+    if computer.sync_user:
         attributes = {}
-        for att in login.attributes.filter(property_att__tag=False):
+        for att in computer.sync_attributes.filter(property_att__tag=False):
             attributes[att.property_att.prefix] = att.value
 
         data = {
             "upload_computer_info": {
                 "attributes": attributes,
                 "computer": {
-                    "user_fullname": login.user.fullname,
+                    "user_fullname": computer.sync_user.fullname,
                     "pms": version.pms.name,
-                    "ip": computer.ip,
+                    "ip": computer.ip_address,
                     "hostname": computer.name,
                     "platform": version.platform.name,
                     "version": version.name,
-                    "user": login.user.name
+                    "user": computer.sync_user.name
                 }
             }
         }
@@ -217,8 +212,7 @@ def computer_simulate_sync(request, pk):
         result['title'] = _('Simulate sync: %s') % computer.__str__()
         result["computer"] = computer
         result["version"] = version
-        result["login"] = login
-        result["attributes"] = login.attributes.filter(property_att__tag=False)
+        result["attributes"] = computer.sync_attributes.filter(property_att__tag=False)
 
         repositories = []
         for repo in result["repositories"]:
@@ -242,7 +236,7 @@ def computer_simulate_sync(request, pk):
 
     else:
         result = {}
-        result['title'] = _('Simulate sync: %s') % computer.__str__()
+        result['title'] = _('Simulate sync: %s') % computer
         result["computer"] = computer
         result["version"] = version
 
