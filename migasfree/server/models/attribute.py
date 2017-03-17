@@ -63,27 +63,26 @@ class Attribute(models.Model, MigasLink):
 
     objects = AttributeManager()
 
-    TOTAL_COMPUTER_QUERY = "SELECT COUNT(server_login.id) \
-        FROM server_login,server_login_attributes  \
-        WHERE server_attribute.id=server_login_attributes.attribute_id \
-        AND server_login_attributes.login_id=server_login.id"
+    TOTAL_COMPUTER_QUERY = "SELECT COUNT(server_computer.id) \
+        FROM server_computer, server_computer_sync_attributes \
+        WHERE server_attribute.id=server_computer_sync_attributes.attribute_id \
+        AND server_computer_sync_attributes.computer_id=server_computer.id"
 
     def __str__(self):
         if self.property_att.prefix == "CID" and \
                 settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
-            return '%s (CID-%s)' % (self.description, self.value)
+            return u'{} (CID-{})'.format(self.description, self.value)
         else:
-            return '%s-%s' % (self.property_att.prefix, self.value)
+            return u'{}-{}'.format(self.property_att.prefix, self.value)
 
     def total_computers(self, version=None):
-        from . import Login
+        from . import Computer
+
+        queryset = Computer.objects.filter(sync_attributes__id=self.id)
         if version:
-            return Login.objects.filter(
-                attributes__id=self.id,
-                computer__version_id=version.id
-            ).count()
-        else:
-            return Login.objects.filter(attributes__id=self.id).count()
+            queryset = queryset.filter(version_id=version.id)
+
+        return queryset.count()
 
     total_computers.admin_order_field = 'total_computers'
     total_computers.short_description = _('Total computers')
