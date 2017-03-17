@@ -11,7 +11,7 @@
                 <th>{% trans 'Computer' %}</th>
                 <th>{% trans 'Version' %}</th>
                 <th>{% trans 'IP' %}</th>
-                <th>{% trans 'Login' %}</th>
+                <th>{% trans 'User' %}</th>
                 <th>{% trans 'Message' %}</th>
             </tr>
         </thead>
@@ -35,10 +35,10 @@
 
                 <td>{{ item.version }}</td>
 
-                <td>{{ item.ip }}</td>
+                <td>{{ item.ip_address }}</td>
 
                 <td>
-                    <a href="{% url 'admin:server_login_change' item.login_id %}">
+                    <a href="{% url 'admin:server_user_change' item.user_id %}">
                         {{ item.user_name }} ({{ item.user_fullname }})
                     </a>
                 </td>
