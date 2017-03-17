@@ -20,7 +20,7 @@ from ..filters import ProductiveFilterSpec, UserFaultFilter
 from ..forms import ComputerForm
 from ..resources import ComputerResource
 from ..models import (
-    AutoCheckError, Computer, Error, Fault, FaultDef, Login, Message,
+    AutoCheckError, Computer, Error, Fault, FaultDef, Message,
     Migration, Notification, StatusLog, Update, User, DeviceLogical, HwNode
 )
 
@@ -41,23 +41,28 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'name_link',
         'status',
         'version_link',
-        'login_link',
-        'user_link',
+        'sync_user_link',
+        'sync_end_date',
         'hw_link',
     )
-    ordering = ('name',)
-    list_filter = ('version', ('status', ProductiveFilterSpec), 'machine')
-    search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
+    ordering = (settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0],)
+    list_filter = (
+        'version__name',
+        ('status', ProductiveFilterSpec),
+        'machine',
+    )
+    search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS + (
+        'sync_user__name', 'sync_user__fullname'
+    )
 
     readonly_fields = (
         'name',
         'uuid',
         'version_link',
-        'dateinput',
-        'datelastupdate',
-        'ip',
-        'software',
-        'history_sw',
+        'created_at',
+        'ip_address',
+        'software_inventory',
+        'software_history',
         'hw_link',
         'machine',
         'cpu',
@@ -66,8 +71,10 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'disks',
         'mac_address',
         'logical_devices_link',
-        'user_link',
-        'login_link',
+        'sync_user_link',
+        'sync_attributes_link',
+        'sync_start_date',
+        'sync_end_date',
         'unchecked_errors',
         'unchecked_faults',
         'last_update_time',
@@ -78,16 +85,17 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': (
                 'name',
                 'version_link',
-                'dateinput',
-                'ip',
+                'created_at',
+                'ip_address',
             )
         }),
         (_('Current Situation'), {
             'fields': (
                 'status',
-                'login_link',
-                'user_link',
-                'datelastupdate',
+                'sync_user_link',
+                'sync_attributes_link',
+                'sync_start_date',
+                'sync_end_date',
                 'last_update_time',
                 'unchecked_errors',
                 'unchecked_faults',
@@ -95,7 +103,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         }),
         (_('Hardware'), {
             'fields': (
-                'datehardware',
+                'last_hardware_capture',
                 'hw_link',
                 'uuid',
                 'machine',
@@ -107,7 +115,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         }),
         (_('Software'), {
-            'fields': ('software', 'history_sw',)
+            'fields': ('software_inventory', 'software_history',)
         }),
         (_('Devices'), {
             'fields': ('logical_devices_link', 'default_logical_device',)
@@ -154,13 +162,13 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def last_update_time(self, obj):
         is_updating = Message.objects.filter(computer__id=obj.pk).count()
-        diff = obj.datelastupdate - obj.login().date
+        diff = obj.sync_end_date - obj.sync_start_date
 
         if is_updating:
             delayed_time = datetime.now() - timedelta(
                 0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT
             )
-            if obj.login().date < delayed_time:
+            if obj.sync_start_date < delayed_time:
                 return '<span class="label label-warning" title="{}">' \
                     '<i class="fa fa-warning"></i> {}</span>'.format(
                         _('Delayed Computer'),
@@ -184,15 +192,13 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     hw_link = MigasFields.objects_link(
         model=Computer, name='hwnode_set', description=_('Product')
     )
-    login_link = MigasFields.link(
-        model=Computer, name='login', description=_('Login'), order="login__date"
-    )
     logical_devices_link = MigasFields.objects_link(
         model=Computer, name='logical_devices'
     )
-    user_link = MigasFields.link(
-        model=Computer, name='login__user', description=_('User'), order="login__user__name"
+    sync_user_link = MigasFields.link(
+        model=Computer, name='sync_user__name', description=_('User'), order="sync_user__name"
     )
+    sync_attributes_link = MigasFields.objects_link(model=Computer, name='sync_attributes')
 
     def delete_selected(self, request, objects):
         if not self.has_delete_permission(request):
@@ -261,6 +267,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             request
         ).select_related(
             "version",
+            "sync_user",
             "default_logical_device",
             "default_logical_device__feature",
             "default_logical_device__device",
@@ -426,29 +433,6 @@ class FaultDefAdmin(MigasAdmin):
                 'attributes__property_att',
                 'users',
             )
-
-
-@admin.register(Login)
-class LoginAdmin(MigasAdmin):
-    list_display = ('login_link', 'user_link', 'computer_link')
-    list_select_related = ('computer', 'user',)
-    list_filter = ('date',)
-    ordering = ('user', 'computer',)
-    search_fields = add_computer_search_fields(
-        ['user__name', 'user__fullname']
-    )
-    fields = ('date', 'user_link', 'computer_link', 'attributes_link')
-    readonly_fields = ('date', 'user_link', 'computer_link', 'attributes_link')
-
-    login_link = MigasFields.link(model=Login, name='date')
-    computer_link = MigasFields.link(
-        model=Login, name='computer', order="computer__name"
-    )
-    user_link = MigasFields.link(model=Login, name='user', order="user__name")
-    attributes_link = MigasFields.objects_link(model=Login, name='attributes')
-
-    def has_add_permission(self, request):
-        return False
 
 
 @admin.register(Message)
