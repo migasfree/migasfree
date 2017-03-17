@@ -124,7 +124,7 @@ class CheckingFilter(filters.FilterSet):
 
 class ComputerFilter(filters.FilterSet):
     platform = django_filters.NumberFilter(name='version__platform__id')
-    created_at = django_filters.DateFilter(name='dateinput', lookup_type='gte')
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
     mac_address = django_filters.CharFilter(
         name='mac_address', lookup_type='icontains'
     )
@@ -133,7 +133,7 @@ class ComputerFilter(filters.FilterSet):
         model = Computer
         fields = [
             'id', 'version__id', 'status', 'name', 'uuid',
-            'login__attributes__id', 'tags__id'
+            'sync_attributes__id', 'tags__id'
         ]
 
 
