@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import MinValueValidator
 from django.db.models import Count
 
-from . import Schedule, Attribute, Login, UserProfile
+from . import Schedule, Attribute, Computer, UserProfile
 
 
 @python_2_unicode_compatible
@@ -31,21 +31,20 @@ class ScheduleDelay(models.Model):
     )
 
     def total_computers(self):
+        queryset = Computer.objects.filter(
+            sync_attributes__id__in=self.attributes.all().values_list('id')
+        )
+
         version = UserProfile.get_logged_version()
         if version:
-            return Login.objects.filter(
-                attributes__id__in=self.attributes.all().values_list("id"),
-                computer__version_id=version.id
-            ).annotate(total=Count('id')).order_by('id').count()
-        else:
-            return Login.objects.filter(
-                attributes__id__in=self.attributes.all().values_list("id")
-            ).annotate(total=Count('id')).order_by('id').count()
+            queryset = queryset.filter(version_id=version.id)
+
+        return queryset.annotate(total=Count('id')).order_by('id').count()
 
     total_computers.short_description = _('Total computers')
 
     def __str__(self):
-        return '%s - %s' % (self.schedule.name, str(self.delay))
+        return u'{} ({})'.format(self.schedule.name, self.delay)
 
     def list_attributes(self):
         return ', '.join(
