@@ -53,10 +53,8 @@ class MigasLink(object):
                 _name = obj.related.field.related.model.__name__.lower()
 
             if _name == "attribute":
-                if self._meta.model_name == 'computer':
+                if self._meta.model_name == 'computer' and obj.attname == 'tags':
                     _name = "tag"
-                else:
-                    _name = "attribute"
 
             if _name == "permission":
                 break
@@ -77,7 +75,7 @@ class MigasLink(object):
                         obj.remote_field.name,
                         self.pk
                     ),
-                    'text': ugettext(obj.related.field.name),
+                    'text': ugettext(obj.related.field.verbose_name),
                     'count': count
                 })
 
@@ -323,7 +321,7 @@ class MigasLink(object):
     def transmodel(self, obj):
         from . import Property, Feature, Tag, Computer
 
-        if obj.related_model._meta.label_lower == "server.login" and \
+        if obj.related_model._meta.label_lower == "server.computer" and \
                 self.__class__.__name__ in ["Feature", "Attribute"] and \
                 self.property_att.prefix == "CID":
             return "", ""
