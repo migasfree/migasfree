@@ -14,7 +14,7 @@ class UpdateManager(models.Manager):
         obj = Update()
         obj.computer = computer
         obj.version = computer.version
-        obj.user = computer.login().user
+        obj.user = computer.sync_user
         obj.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         obj.save()
 
@@ -49,7 +49,7 @@ class Update(models.Model, MigasLink):
     def save(self, *args, **kwargs):
         super(Update, self).save(*args, **kwargs)
 
-        self.computer.datelastupdate = self.date
+        self.computer.sync_end_date = self.date
         self.computer.save()
 
     @classmethod
@@ -62,7 +62,7 @@ class Update(models.Model, MigasLink):
         ).values("day").annotate(count=Count("id")).order_by('-day')
 
     def __str__(self):
-        return '{} ({})'.format(self.computer, self.date)
+        return u'{} ({})'.format(self.computer, self.date)
 
     class Meta:
         app_label = 'server'
