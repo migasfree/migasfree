@@ -77,7 +77,7 @@ def create_users():
     read_group.name = "Reader"
     read_group.save()
     tables = [
-        "computer", "device", "user", "login", "attribute", "error",
+        "computer", "device", "user", "attribute", "error",
         "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
         "devicetype", "schedule", "scheduledelay", "autocheckerror",
         "faultdef", "property", "checking", "version", "pms", "query",
