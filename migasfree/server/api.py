@@ -9,13 +9,12 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
 from django.contrib import auth
 from django.conf import settings
-from django.utils import timezone, dateformat
 from django.utils.translation import ugettext as _
 
 from .models import (
     LANGUAGES_CHOICES, Attribute, AttributeSet, ClientProperty, Computer,
     Error, Fault, FaultDef, Feature, HwNode, Message,
-    Migration, Notification, Login, Package, Pms, Platform, Property,
+    Migration, Notification, Package, Pms, Platform, Property,
     Repository, Store, Tag, Update, User, Version,
 )
 from .security import get_keys_to_client, get_keys_to_packager
@@ -401,24 +400,16 @@ def upload_computer_info(request, name, uuid, computer, data):
         )
 
         # Save Login
-        login, created = Login.objects.get_or_create(
-            computer=computer,
-            defaults={
-                'user': user,
-                'date': dateformat.format(timezone.now(), 'Y-m-d H:i:s')
-            }
-        )
-        if not created:
-            login.update_user(user)
+        computer.update_sync_user(user)
 
-        login.attributes.clear()
+        computer.sync_attributes.clear()
 
         # 2.- PROCESS PROPERTIES
         for e in properties:
             client_property = ClientProperty.objects.get(prefix=e)
             value = properties.get(e)
             for att in Attribute.process_kind_property(client_property, value):
-                login.attributes.add(att)
+                computer.sync_attributes.add(att)
                 lst_attributes.append(att)
 
         # ADD Tags (not running on clients!!!)
@@ -427,7 +418,7 @@ def upload_computer_info(request, name, uuid, computer, data):
                 tag.property_att,
                 tag.value
             ):
-                login.attributes.add(att)
+                computer.sync_attributes.add(att)
                 lst_attributes.append(att)
 
         # ADD ATTRIBUTE CID (not running on clients!!!)
@@ -437,9 +428,9 @@ def upload_computer_info(request, name, uuid, computer, data):
                 cid_description = computer.get_cid_description()
                 cid = Feature.objects.create(
                     prp_cid,
-                    "%s~%s" % (str(computer.id), cid_description)
+                    u"{}~{}".format(computer.id, cid_description)
                 )
-                login.attributes.add(cid)
+                computer.sync_attributes.add(cid)
                 lst_attributes.append(cid.id)
 
                 cid.update_description(cid_description)
@@ -450,7 +441,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         lst_set = AttributeSet.process(lst_attributes)
         if lst_set:
             for item in lst_set:
-                login.attributes.add(item)
+                computer.sync_attributes.add(item)
 
         # 3 FaultsDef
         lst_faultsdef = []
@@ -491,9 +482,9 @@ def upload_computer_info(request, name, uuid, computer, data):
 
         # Hardware
         capture_hardware = True
-        if computer.datehardware:
+        if computer.last_hardware_capture:
             capture_hardware = (datetime.now() > (
-                computer.datehardware.replace(tzinfo=None) + timedelta(
+                computer.last_hardware_capture.replace(tzinfo=None) + timedelta(
                     days=settings.MIGASFREE_HW_PERIOD
                 ))
             )
@@ -898,7 +889,7 @@ def check_computer(computer, name, version_name, ip, uuid):
     return computer
 
 
-def notify_change_data_computer(computer, name, version, ip, uuid):
+def notify_change_data_computer(computer, name, version, ip_address, uuid):
     if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (computer.name != name):
         Notification.objects.create(
             _("Computer id=[%s]: NAME [%s] changed by [%s]") % (
@@ -911,16 +902,16 @@ def notify_change_data_computer(computer, name, version, ip, uuid):
             )
         )
 
-    if settings.MIGASFREE_NOTIFY_CHANGE_IP and computer.ip != ip:
-        if computer.ip and ip:
+    if settings.MIGASFREE_NOTIFY_CHANGE_IP and computer.ip_address != ip_address:
+        if computer.ip_address and ip_address:
             Notification.objects.create(
                 _("Computer id=[%s]: IP [%s] changed by [%s]") % (
                     '<a href="{}">{}</a>'.format(
                         reverse('admin:server_computer_change', args=(computer.id,)),
                         computer.id
                     ),
-                    computer.ip,
-                    ip
+                    computer.ip_address,
+                    ip_address
                 )
             )
 
