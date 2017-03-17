@@ -28,11 +28,11 @@
         <div class="panel-body">
             <h3>{% trans 'Login' %}</h3>
             <ul>
-                <li>{% trans 'Date' %}: {{ login.date }}</li>
+                <li>{% trans 'Date' %}: {{ computer.sync_start_date }}</li>
                 <li>{% trans 'uuid' %}: {{ computer.uuid }}</li>
                 <li>{% trans 'Platform' %}: {{ version.platform.link }}</li>
                 <li>{% trans 'Version' %}: {{ version.link }}</li>
-                <li>{% trans 'User' %}: {{ login.user.link }}</li>
+                <li>{% trans 'User' %}: {{ computer.sync_user.link }}</li>
             </ul>
 
             <h3>{% trans 'Attributes' %}</h3>
