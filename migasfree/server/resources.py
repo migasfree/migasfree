@@ -8,4 +8,4 @@ from .models import Computer
 class ComputerResource(resources.ModelResource):
     class Meta:
         model = Computer
-        exclude = ('history_sw', 'software')
+        exclude = ('software_history', 'software_inventory')
