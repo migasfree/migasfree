@@ -20,7 +20,6 @@ from ..models import (
     Computer,
     Schedule,
     ScheduleDelay,
-    Login,
     Version,
 )
 from ..functions import to_heatmap, to_timestamp
@@ -259,7 +258,7 @@ def delay_schedule(request, version_name=None):
         )
 
     version = get_object_or_404(Version, name=version_name)
-    title += ' [%s]' % version.name
+    title += ' [{}]'.format(version.name)
 
     line_chart = pygal.Line(
         no_data_text=_('There are no updates'),
@@ -291,18 +290,17 @@ def delay_schedule(request, version_name=None):
                 for att in delay.attributes.all():
                     lst_att_delay.append(att.id)
 
-                value += Login.objects.extra(
-                    select={'deployment': 'computer_id'},
+                value += Computer.productive.extra(
+                    select={'deployment': 'id'},
                     where=[
                         "computer_id %%%% %s = %s" %
                         (delay.duration, duration)
                     ]
                 ).filter(
-                    ~ Q(attributes__id__in=lst_attributes) &
-                    Q(attributes__id__in=lst_att_delay) &
-                    Q(computer__version=version.id) &
-                    Q(computer__status__in=Computer.PRODUCTIVE_STATUS)
-                ).values('computer_id').annotate(lastdate=Max('date')).count()
+                    ~ Q(sync_attributes__id__in=lst_attributes) &
+                    Q(sync_attributes__id__in=lst_att_delay) &
+                    Q(version=version.id)
+                ).values('id').annotate(lastdate=Max('sync_start_date')).count()
 
                 line.append([d, value])
 
@@ -343,9 +341,9 @@ def version_computer(request):
         width=WIDTH,
         height=HEIGHT,
     )
-    total = Computer.productives.count()
+    total = Computer.productive.count()
 
-    for version in Computer.productives.values(
+    for version in Computer.productive.values(
         "version__name",
         "version__id"
     ).annotate(
