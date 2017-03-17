@@ -11,6 +11,5 @@
     <li role="separator" class="divider"></li>
     <li><a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown,available,in repair">{% trans 'Computers' %}</a></li>
     <li><a href="{% url 'admin:server_user_changelist' %}">{% trans 'Users' %}</a></li>
-    <li><a href="{% url 'admin:server_login_changelist' %}">{% trans 'Logins' %}</a></li>
     <li><a href="{% url 'computer_replacement' %}">{% trans 'Computers Replacement' %}</a></li>
 </ul>
