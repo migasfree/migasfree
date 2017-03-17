@@ -59,10 +59,10 @@ class ComputerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Computer
         fields = (
-            'id', 'uuid', 'name', 'version', 'ip',
+            'id', 'uuid', 'name', 'version', 'ip_address',
             'status', 'product', 'machine',
             'mac_address', 'cpu', 'disks', 'storage', 'ram',
-            'dateinput', 'datehardware', 'datelastupdate',
+            'created_at', 'last_hardware_capture', 'sync_end_date',
         )
 
 
@@ -346,9 +346,9 @@ class StatusLogSerializer(serializers.ModelSerializer):
 
 
 class ComputerSyncSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False, read_only=True)
-    attributes = AttributeSerializer(many=True, read_only=True)
+    sync_user = UserSerializer(many=False, read_only=True)
+    sync_attributes = AttributeSerializer(many=True, read_only=True)
 
     class Meta:
-        model = models.Login
-        fields = ('date', 'user', 'attributes')
+        model = models.Computer
+        fields = ('sync_start_date', 'sync_end_date', 'sync_user', 'sync_attributes')
