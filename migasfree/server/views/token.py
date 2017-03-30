@@ -13,7 +13,7 @@ from ..filters import (
     VersionFilter, AttributeFilter, PackageFilter,
     RepositoryFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
-    NodeFilter, CheckingFilter, UpdateFilter, StatusLogFilter,
+    NodeFilter, CheckingFilter, SynchronizationFilter, StatusLogFilter,
 )
 # from ..permissions import PublicPermission, IsAdminOrIsSelf
 
@@ -353,15 +353,15 @@ class StoreViewSet(
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
 
 
-class UpdateViewSet(
+class SynchronizationViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
-    queryset = models.Update.objects.all()
-    serializer_class = serializers.UpdateSerializer
-    filter_class = UpdateFilter
+    queryset = models.Synchronization.objects.all()
+    serializer_class = serializers.SynchronizationSerializer
+    filter_class = SynchronizationFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('-date',)
+    ordering = ('-created_at',)
 
 
 class UserViewSet(

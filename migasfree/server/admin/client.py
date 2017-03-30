@@ -21,7 +21,7 @@ from ..forms import ComputerForm
 from ..resources import ComputerResource
 from ..models import (
     AutoCheckError, Computer, Error, Fault, FaultDef, Message,
-    Migration, Notification, StatusLog, Update, User, DeviceLogical, HwNode
+    Migration, Notification, StatusLog, Synchronization, User, DeviceLogical, HwNode
 )
 
 admin.site.register(AutoCheckError)
@@ -77,7 +77,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'sync_end_date',
         'unchecked_errors',
         'unchecked_faults',
-        'last_update_time',
+        'last_sync_time',
     )
 
     fieldsets = (
@@ -96,7 +96,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'sync_attributes_link',
                 'sync_start_date',
                 'sync_end_date',
-                'last_update_time',
+                'last_sync_time',
                 'unchecked_errors',
                 'unchecked_faults',
             )
@@ -160,7 +160,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     unchecked_faults.short_description = _('Unchecked Faults')
     unchecked_faults.allow_tags = True
 
-    def last_update_time(self, obj):
+    def last_sync_time(self, obj):
         is_updating = Message.objects.filter(computer__id=obj.pk).count()
         diff = obj.sync_end_date - obj.sync_start_date
 
@@ -182,8 +182,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
         return diff
 
-    last_update_time.short_description = _('Last Update Time')
-    last_update_time.allow_tags = True
+    last_sync_time.short_description = _('Last Update Time')
+    last_sync_time.allow_tags = True
 
     name_link = MigasFields.link(model=Computer, name="name")
     version_link = MigasFields.link(
@@ -520,26 +520,28 @@ class StatusLogAdmin(MigasAdmin):
         return False
 
 
-@admin.register(Update)
-class UpdateAdmin(MigasAdmin):
+@admin.register(Synchronization)
+class SynchronizationAdmin(MigasAdmin):
     list_display = ('__str__', 'user_link', 'computer_link', 'version_link')
     list_display_links = ('__str__',)
-    list_filter = ('date',)
-    search_fields = add_computer_search_fields(['date', 'user__name'])
-    readonly_fields = ('computer_link', 'user', 'version', 'date')
-    exclude = ('computer',)
+    list_filter = ('created_at',)
+    search_fields = add_computer_search_fields(['created_at', 'user__name'])
+    readonly_fields = (
+        'computer_link', 'user_link', 'version_link', 'created_at',
+    )
+    exclude = ('computer', 'user', 'version')
     actions = None
 
     computer_link = MigasFields.link(
-        model=Update, name='computer', order='computer__name'
+        model=Synchronization, name='computer', order='computer__name'
     )
     version_link = MigasFields.link(
-        model=Update, name='version', order='version__name'
+        model=Synchronization, name='version', order='version__name'
     )
-    user_link = MigasFields.link(model=Update, name='user', order='user__name')
+    user_link = MigasFields.link(model=Synchronization, name='user', order='user__name')
 
     def get_queryset(self, request):
-        return super(UpdateAdmin, self).get_queryset(
+        return super(SynchronizationAdmin, self).get_queryset(
             request
         ).select_related(
             'computer',

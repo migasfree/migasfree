@@ -13,7 +13,7 @@ from .models import (
     Store, Property, Version, Attribute,
     Package, Repository, Error, FaultDef,
     Fault, Notification, Migration,
-    HwNode, Checking, Update, StatusLog,
+    HwNode, Checking, Synchronization, StatusLog,
 )
 
 
@@ -235,12 +235,12 @@ class StoreFilter(filters.FilterSet):
         fields = ['id', 'version__id']
 
 
-class UpdateFilter(filters.FilterSet):
-    date = django_filters.DateFilter(name='date', lookup_type='gte')
-    date__lt = django_filters.DateFilter(name='date', lookup_expr='date__lt')
+class SynchronizationFilter(filters.FilterSet):
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
 
     class Meta:
-        model = Update
+        model = Synchronization
         fields = ['id', 'version__id', 'computer__id']
 
 
