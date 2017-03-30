@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
             model_name='computer',
             name='created_at',
             field=models.DateTimeField(
-                auto_now_add=True, default=timezone.now(),
+                auto_now_add=True, default=timezone.now,
                 help_text='Date of entry into the migasfree system'
             ),
             preserve_default=False,
@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='computer',
             name='updated_at',
-            field=models.DateTimeField(auto_now=True, default=timezone.now()),
+            field=models.DateTimeField(auto_now=True, default=timezone.now),
             preserve_default=False,
         ),
         migrations.RenameField(
