@@ -33,7 +33,7 @@ from .device_logical import DeviceLogical
 from .message_server import MessageServer
 from .computer import Computer
 
-from .update import Update
+from .synchronization import Synchronization
 from .hw_node import HwNode
 
 from .notification import Notification
