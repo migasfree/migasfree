@@ -36,8 +36,16 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50, verbose_name='name')),
                 ('active', models.BooleanField(default=True, verbose_name='active')),
-                ('attributes', models.ManyToManyField(help_text='Assigned Attributes', to='server.Attribute', null=True, verbose_name='attributes', blank=True)),
-                ('excludes', models.ManyToManyField(related_name='ExcludeAttributeGroup', to='server.Attribute', blank=True, help_text='Excluded Attributes', null=True, verbose_name='excludes')),
+                ('attributes', models.ManyToManyField(
+                    help_text='Assigned Attributes',
+                    to='server.Attribute',
+                    null=True, verbose_name='attributes', blank=True
+                )),
+                ('excludes', models.ManyToManyField(
+                    related_name='ExcludeAttributeGroup',
+                    to='server.Attribute', blank=True,
+                    help_text='Excluded Attributes', null=True, verbose_name='excludes'
+                )),
             ],
             options={
                 'verbose_name': 'Attributes Set',
@@ -50,7 +58,10 @@ class Migration(migrations.Migration):
             name='AutoCheckError',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('message', models.TextField(help_text='Pattern to search . See https://docs.python.org/2/library/re.html#module-re', null=True, verbose_name='message', blank=True)),
+                ('message', models.TextField(
+                    help_text='Pattern to search . See https://docs.python.org/2/library/re.html#module-re',
+                    null=True, verbose_name='message', blank=True
+                )),
             ],
             options={
                 'verbose_name': 'Auto Check Error',
@@ -64,7 +75,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50, unique=True, null=True, verbose_name='name', blank=True)),
                 ('description', models.TextField(null=True, verbose_name='description', blank=True)),
-                ('code', models.TextField(help_text="Code django. <br><b>VARIABLES TO SETTINGS:</b><br><b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br><b>alert</b>: type of alert. Default is 'info'. Enumeration value: {'info' | 'warning' | 'danger'}<br><b>url</b>: link. Default is '/'<br><b>msg</b>: The text to show. Default is the field name.<br><b>target</b>: Enumeration value: {'computer' | 'server'}", verbose_name='code', blank=True)),
+                ('code', models.TextField(
+                    help_text="Code django. <br><b>VARIABLES TO SETTINGS:</b><br><b>result</b>: a number. If result<>0 the checking is show in the section Status. Default is 0<br><b>alert</b>: type of alert. Default is 'info'. Enumeration value: {'info' | 'warning' | 'danger'}<br><b>url</b>: link. Default is '/'<br><b>msg</b>: The text to show. Default is the field name.<br><b>target</b>: Enumeration value: {'computer' | 'server'}",
+                    verbose_name='code', blank=True
+                )),
                 ('active', models.BooleanField(default=True, verbose_name='active')),
                 ('alert', models.BooleanField(default=True, verbose_name='alert')),
             ],
@@ -79,10 +93,19 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50, null=True, verbose_name='name', blank=True)),
-                ('uuid', models.CharField(null=True, default=b'', max_length=36, blank=True, unique=True, verbose_name='uuid')),
-                ('dateinput', models.DateField(help_text='Date of input of Computer in migasfree system', verbose_name='date input')),
+                ('uuid', models.CharField(
+                    null=True, default=b'', max_length=36,
+                    blank=True, unique=True, verbose_name='uuid'
+                )),
+                ('dateinput', models.DateField(
+                    help_text='Date of input of Computer in migasfree system',
+                    verbose_name='date input'
+                )),
                 ('ip', models.CharField(max_length=50, null=True, verbose_name='ip', blank=True)),
-                ('software', models.TextField(help_text='gap between software base packages and computer ones', null=True, verbose_name='software inventory', blank=True)),
+                ('software', models.TextField(
+                    help_text='gap between software base packages and computer ones',
+                    null=True, verbose_name='software inventory', blank=True
+                )),
                 ('history_sw', models.TextField(default=b'', null=True, verbose_name='software history', blank=True)),
                 ('devices_copy', models.TextField(verbose_name='devices copy', null=True, editable=False)),
                 ('datelastupdate', models.DateTimeField(null=True, verbose_name='last update')),
@@ -114,7 +137,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50, null=True, verbose_name='name', blank=True)),
-                ('fields', models.CharField(help_text='Fields separated by comma', max_length=100, null=True, verbose_name='fields', blank=True)),
+                ('fields', models.CharField(
+                    help_text='Fields separated by comma', max_length=100,
+                    null=True, verbose_name='fields', blank=True
+                )),
             ],
             options={
                 'verbose_name': 'Device (Connection)',
@@ -178,7 +204,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50, null=True, verbose_name='name', blank=True)),
-                ('connections', models.ManyToManyField(to='server.DeviceConnection', null=True, verbose_name='connections', blank=True)),
+                ('connections', models.ManyToManyField(
+                    to='server.DeviceConnection', null=True,
+                    verbose_name='connections', blank=True
+                )),
             ],
             options={
                 'verbose_name': 'Device (Model)',
@@ -236,9 +265,16 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=50, verbose_name='name')),
                 ('description', models.TextField(null=True, verbose_name='description', blank=True)),
                 ('active', models.BooleanField(default=True, verbose_name='active')),
-                ('language', models.IntegerField(default=0, verbose_name='programming language', choices=[(0, b'bash'), (1, b'python'), (2, b'perl'), (3, b'php'), (4, b'ruby'), (5, b'cmd')])),
+                ('language', models.IntegerField(
+                    default=0,
+                    verbose_name='programming language',
+                    choices=[(0, b'bash'), (1, b'python'), (2, b'perl'), (3, b'php'), (4, b'ruby'), (5, b'cmd')]
+                )),
                 ('code', models.TextField(verbose_name='Code', blank=True)),
-                ('attributes', models.ManyToManyField(to='server.Attribute', null=True, verbose_name='attributes', blank=True)),
+                ('attributes', models.ManyToManyField(
+                    to='server.Attribute', null=True,
+                    verbose_name='attributes', blank=True
+                )),
             ],
             options={
                 'verbose_name': 'Fault Definition',
@@ -306,7 +342,10 @@ class Migration(migrations.Migration):
                 ('dev', models.TextField(null=True, verbose_name='dev', blank=True)),
                 ('icon', models.TextField(null=True, verbose_name='icon', blank=True)),
                 ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
-                ('parent', models.ForeignKey(related_name='child', verbose_name='parent', blank=True, to='server.HwNode', null=True)),
+                ('parent', models.ForeignKey(
+                    related_name='child', verbose_name='parent',
+                    blank=True, to='server.HwNode', null=True
+                )),
             ],
             options={
                 'verbose_name': 'Hardware Node',
@@ -319,7 +358,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('date', models.DateTimeField(default=0, verbose_name='date')),
-                ('attributes', models.ManyToManyField(help_text='Sent attributes', to='server.Attribute', null=True, verbose_name='attributes', blank=True)),
+                ('attributes', models.ManyToManyField(
+                    help_text='Sent attributes', to='server.Attribute',
+                    null=True, verbose_name='attributes', blank=True
+                )),
                 ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
             ],
             options={
@@ -414,9 +456,19 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(unique=True, max_length=50, verbose_name='name')),
-                ('slug', models.CharField(default=b'REPOSITORIES', max_length=50, null=True, verbose_name='slug', blank=True)),
-                ('createrepo', models.TextField(help_text='Code bash. Define how create the metadata of repositories in the migasfree server.', null=True, verbose_name='create repository', blank=True)),
-                ('info', models.TextField(help_text='Code bash. Define how get info of packages in the server', null=True, verbose_name='package information', blank=True)),
+                ('slug', models.CharField(
+                    default=b'REPOSITORIES',
+                    max_length=50, null=True,
+                    verbose_name='slug', blank=True
+                )),
+                ('createrepo', models.TextField(
+                    help_text='Code bash. Define how create the metadata of repositories in the migasfree server.',
+                    null=True, verbose_name='create repository', blank=True
+                )),
+                ('info', models.TextField(
+                    help_text='Code bash. Define how get info of packages in the server',
+                    null=True, verbose_name='package information', blank=True
+                )),
             ],
             options={
                 'verbose_name': 'Package Management System',
@@ -431,11 +483,27 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('prefix', models.CharField(unique=True, max_length=3, verbose_name='prefix')),
                 ('name', models.CharField(max_length=50, verbose_name='name')),
-                ('language', models.IntegerField(default=1, verbose_name='programming language', choices=[(0, b'bash'), (1, b'python'), (2, b'perl'), (3, b'php'), (4, b'ruby'), (5, b'cmd')])),
-                ('code', models.TextField(help_text="This code will execute in the client computer, and it must put in the standard output the value of the attribute correspondent to this property.<br>The format of this value is 'name~description', where 'description' is optional.<br><b>Example of code:</b><br>#Create a attribute with the name of computer from bash<br> echo $HOSTNAME", verbose_name='Code', blank=True)),
+                ('language', models.IntegerField(
+                    default=1,
+                    verbose_name='programming language',
+                    choices=[(0, b'bash'), (1, b'python'), (2, b'perl'), (3, b'php'), (4, b'ruby'), (5, b'cmd')]
+                )),
+                ('code', models.TextField(
+                    help_text="This code will execute in the client computer, and it must put in the standard output the value of the attribute correspondent to this property.<br>The format of this value is 'name~description', where 'description' is optional.<br><b>Example of code:</b><br>#Create a attribute with the name of computer from bash<br> echo $HOSTNAME",
+                    verbose_name='Code', blank=True
+                )),
                 ('active', models.BooleanField(default=True, verbose_name='active')),
-                ('kind', models.CharField(default=b'N', max_length=1, verbose_name='kind', choices=[(b'N', 'NORMAL'), (b'-', 'LIST'), (b'L', 'ADDS LEFT'), (b'R', 'ADDS RIGHT')])),
-                ('auto', models.BooleanField(default=True, help_text='automatically add the attribute to database', verbose_name='auto')),
+                ('kind', models.CharField(
+                    default=b'N',
+                    max_length=1,
+                    verbose_name='kind',
+                    choices=[(b'N', 'NORMAL'), (b'-', 'LIST'), (b'L', 'ADDS LEFT'), (b'R', 'ADDS RIGHT')]
+                )),
+                ('auto', models.BooleanField(
+                    default=True,
+                    help_text='automatically add the attribute to database',
+                    verbose_name='auto'
+                )),
                 ('tag', models.BooleanField(default=False, help_text='tag', verbose_name='tag')),
             ],
             options={
@@ -451,8 +519,16 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50, unique=True, null=True, verbose_name='name', blank=True)),
                 ('description', models.TextField(null=True, verbose_name='description', blank=True)),
-                ('code', models.TextField(default=b"query=Package.objects.filter(version=VERSION).filter(Q(repository__id__exact=None))\nfields=('id','name','store__name')\ntitles=('id','name','store')", help_text='Code Django: version=user.version, query=QuerySet, fields=list of QuerySet fields names to show, titles=list of QuerySet fields titles', null=True, verbose_name='code', blank=True)),
-                ('parameters', models.TextField(help_text=b'Code Django: ', null=True, verbose_name='parameters', blank=True)),
+                ('code', models.TextField(
+                    default=b"query=Package.objects.filter(version=VERSION).filter(Q(repository__id__exact=None))\nfields=('id','name','store__name')\ntitles=('id','name','store')",
+                    help_text='Code Django: version=user.version, query=QuerySet, fields=list of QuerySet fields names to show, titles=list of QuerySet fields titles',
+                    null=True, verbose_name='code', blank=True
+                )),
+                ('parameters', models.TextField(
+                    help_text=b'Code Django: ',
+                    null=True,
+                    verbose_name='parameters', blank=True
+                )),
             ],
             options={
                 'verbose_name': 'Query',
@@ -465,17 +541,46 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(max_length=50, verbose_name='name')),
-                ('active', models.BooleanField(default=True, help_text='if you uncheck this field, the repository is hidden for all computers.', verbose_name='active')),
+                ('active', models.BooleanField(
+                    default=True,
+                    help_text='if you uncheck this field, the repository is hidden for all computers.',
+                    verbose_name='active'
+                )),
                 ('date', models.DateField(help_text='Date initial for distribute.', verbose_name='date')),
                 ('comment', models.TextField(null=True, verbose_name='comment', blank=True)),
                 ('toinstall', models.TextField(null=True, verbose_name='packages to install', blank=True)),
                 ('toremove', models.TextField(null=True, verbose_name='packages to remove', blank=True)),
-                ('defaultpreinclude', models.TextField(null=True, verbose_name='default preinclude packages', blank=True)),
-                ('defaultinclude', models.TextField(null=True, verbose_name='default include packages', blank=True)),
-                ('defaultexclude', models.TextField(null=True, verbose_name='default exclude packages', blank=True)),
-                ('attributes', models.ManyToManyField(help_text='Assigned Attributes', to='server.Attribute', null=True, verbose_name='attributes', blank=True)),
-                ('excludes', models.ManyToManyField(related_name='ExcludeAttribute', to='server.Attribute', blank=True, help_text='Excluded Attributes', null=True, verbose_name='excludes')),
-                ('packages', models.ManyToManyField(help_text='Assigned Packages', to='server.Package', null=True, verbose_name='Packages/Set', blank=True)),
+                ('defaultpreinclude', models.TextField(
+                    null=True,
+                    verbose_name='default preinclude packages',
+                    blank=True
+                )),
+                ('defaultinclude', models.TextField(
+                    null=True,
+                    verbose_name='default include packages',
+                    blank=True
+                )),
+                ('defaultexclude', models.TextField(
+                    null=True,
+                    verbose_name='default exclude packages',
+                    blank=True
+                )),
+                ('attributes', models.ManyToManyField(
+                    help_text='Assigned Attributes',
+                    to='server.Attribute',
+                    null=True, verbose_name='attributes', blank=True
+                )),
+                ('excludes', models.ManyToManyField(
+                    related_name='ExcludeAttribute',
+                    to='server.Attribute',
+                    blank=True, help_text='Excluded Attributes',
+                    null=True, verbose_name='excludes'
+                )),
+                ('packages', models.ManyToManyField(
+                    help_text='Assigned Packages',
+                    to='server.Package',
+                    null=True, verbose_name='Packages/Set', blank=True
+                )),
             ],
             options={
                 'verbose_name': 'Repository',
@@ -503,8 +608,14 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('delay', models.IntegerField(verbose_name='delay')),
-                ('duration', models.IntegerField(default=1, verbose_name='duration', validators=[django.core.validators.MinValueValidator(1)])),
-                ('attributes', models.ManyToManyField(to='server.Attribute', null=True, verbose_name='attributes', blank=True)),
+                ('duration', models.IntegerField(
+                    default=1, verbose_name='duration',
+                    validators=[django.core.validators.MinValueValidator(1)]
+                )),
+                ('attributes', models.ManyToManyField(
+                    to='server.Attribute', null=True,
+                    verbose_name='attributes', blank=True
+                )),
                 ('schedule', models.ForeignKey(verbose_name='schedule', to='server.Schedule')),
             ],
             options={
@@ -530,7 +641,7 @@ class Migration(migrations.Migration):
             name='Update',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('date', models.DateTimeField(default=0, verbose_name='date')),
+                ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
                 ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
             ],
             options={
@@ -557,7 +668,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserProfile',
             fields=[
-                ('user_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+                ('user_ptr', models.OneToOneField(
+                    parent_link=True, auto_created=True, primary_key=True,
+                    serialize=False, to=settings.AUTH_USER_MODEL
+                )),
             ],
             options={
                 'verbose_name': 'User Profile',
@@ -574,9 +688,20 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('name', models.CharField(unique=True, max_length=50, verbose_name='name')),
-                ('computerbase', models.CharField(default=b'---', help_text='Computer with the actual line software', max_length=50, verbose_name='Actual line computer')),
-                ('base', models.TextField(help_text='List ordered of packages of actual line computer', verbose_name='Actual line packages', blank=True)),
-                ('autoregister', models.BooleanField(default=False, help_text='Is not neccesary a user for register the computer in                      database and get the keys.', verbose_name='autoregister')),
+                ('computerbase', models.CharField(
+                    default=b'---',
+                    help_text='Computer with the actual line software',
+                    max_length=50, verbose_name='Actual line computer'
+                )),
+                ('base', models.TextField(
+                    help_text='List ordered of packages of actual line computer',
+                    verbose_name='Actual line packages', blank=True
+                )),
+                ('autoregister', models.BooleanField(
+                    default=False,
+                    help_text='Is not neccesary a user for register the computer in database and get the keys.',
+                    verbose_name='autoregister'
+                )),
                 ('platform', models.ForeignKey(verbose_name='platform', to='server.Platform')),
                 ('pms', models.ForeignKey(verbose_name='package management system', to='server.Pms')),
             ],
@@ -590,7 +715,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userprofile',
             name='version',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, verbose_name='version', to='server.Version', null=True),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.SET_NULL,
+                verbose_name='version',
+                to='server.Version',
+                null=True
+            ),
         ),
         migrations.AddField(
             model_name='update',
@@ -767,54 +897,54 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='store',
-            unique_together=set([('name', 'version')]),
+            unique_together={('name', 'version')},
         ),
         migrations.AlterUniqueTogether(
             name='scheduledelay',
-            unique_together=set([('schedule', 'delay')]),
+            unique_together={('schedule', 'delay')},
         ),
         migrations.AlterUniqueTogether(
             name='repository',
-            unique_together=set([('name', 'version')]),
+            unique_together={('name', 'version')},
         ),
         migrations.AlterUniqueTogether(
             name='package',
-            unique_together=set([('name', 'version')]),
+            unique_together={('name', 'version')},
         ),
         migrations.AlterUniqueTogether(
             name='login',
-            unique_together=set([('computer',)]),
+            unique_together={('computer',)},
         ),
         migrations.AlterUniqueTogether(
             name='hwconfiguration',
-            unique_together=set([('name', 'node')]),
+            unique_together={('name', 'node')},
         ),
         migrations.AlterUniqueTogether(
             name='hwcapability',
-            unique_together=set([('name', 'node')]),
+            unique_together={('name', 'node')},
         ),
         migrations.AlterUniqueTogether(
             name='devicemodel',
-            unique_together=set([('devicetype', 'manufacturer', 'name')]),
+            unique_together={('devicetype', 'manufacturer', 'name')},
         ),
         migrations.AlterUniqueTogether(
             name='devicelogical',
-            unique_together=set([('device', 'feature')]),
+            unique_together={('device', 'feature')},
         ),
         migrations.AlterUniqueTogether(
             name='devicedriver',
-            unique_together=set([('model', 'version', 'feature')]),
+            unique_together={('model', 'version', 'feature')},
         ),
         migrations.AlterUniqueTogether(
             name='deviceconnection',
-            unique_together=set([('devicetype', 'name')]),
+            unique_together={('devicetype', 'name')},
         ),
         migrations.AlterUniqueTogether(
             name='device',
-            unique_together=set([('connection', 'name')]),
+            unique_together={('connection', 'name')},
         ),
         migrations.AlterUniqueTogether(
             name='attribute',
-            unique_together=set([('property_att', 'value')]),
+            unique_together={('property_att', 'value')},
         ),
     ]
