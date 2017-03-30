@@ -15,7 +15,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Max, Count, Q
 
 from ..models import (
-    Update,
+    Synchronization,
     Platform,
     Computer,
     Schedule,
@@ -49,9 +49,9 @@ DAILY_RANGE = 35  # days
 MONTHLY_RANGE = 18  # months
 
 
-def get_updates_time_range(start_date, end_date, platform=0, range_name='month'):
-    updates = Update.objects.filter(
-        date__range=(start_date, end_date)
+def get_syncs_time_range(start_date, end_date, platform=0, range_name='month'):
+    syncs = Synchronization.objects.filter(
+        created_at__range=(start_date, end_date)
     ).extra(
         {range_name: "date_trunc('" + range_name + "', date)"}
     ).values(range_name).annotate(
@@ -59,9 +59,9 @@ def get_updates_time_range(start_date, end_date, platform=0, range_name='month')
     ).order_by('-' + range_name)
 
     if platform:
-        updates = updates.filter(version__platform=platform)
+        syncs = syncs.filter(version__platform=platform)
 
-    return updates
+    return syncs
 
 
 def datetime_iterator(from_date=None, to_date=None, delta=timedelta(minutes=1)):
@@ -73,7 +73,7 @@ def datetime_iterator(from_date=None, to_date=None, delta=timedelta(minutes=1)):
 
 
 @login_required
-def hourly_updated(request):
+def synchronized_hourly(request):
     delta = timedelta(hours=1)
     now = datetime.now()
     end_date = datetime(now.year, now.month, now.day, now.hour)
@@ -81,7 +81,7 @@ def hourly_updated(request):
     range_name = 'hour'
 
     updates_time_range = to_heatmap(
-        get_updates_time_range(
+        get_syncs_time_range(
             begin_date, end_date + delta, range_name=range_name
         ),
         range_name
@@ -111,7 +111,7 @@ def hourly_updated(request):
         request,
         'lines.html',
         {
-            'title': _("Updated Computers / Hour"),
+            'title': _("Synchronized Computers / Hour"),
             'chart': line_chart.render_data_uri(),
             'tabular_data': line_chart.render_table(),
         }
@@ -119,14 +119,14 @@ def hourly_updated(request):
 
 
 @login_required
-def daily_updated(request):
+def synchronized_daily(request):
     delta = timedelta(days=1)
     end_date = date.today()
     begin_date = end_date - timedelta(days=DAILY_RANGE)
     range_name = 'day'
 
     updates_time_range = to_heatmap(
-        get_updates_time_range(
+        get_syncs_time_range(
             begin_date, end_date + delta, range_name=range_name
         ),
         range_name
@@ -157,7 +157,7 @@ def daily_updated(request):
         request,
         'lines.html',
         {
-            'title': _("Updated Computers / Day"),
+            'title': _("Synchronized Computers / Day"),
             'chart': line_chart.render_data_uri(),
             'tabular_data': line_chart.render_table(),
         }
@@ -174,7 +174,7 @@ def month_year_iter(start_month, start_year, end_month, end_year):
 
 
 @login_required
-def monthly_updated(request):
+def synchronized_monthly(request):
     line_chart = pygal.Line(
         no_data_text=_('There are no updates'),
         x_label_rotation=LABEL_ROTATION,
@@ -202,7 +202,7 @@ def monthly_updated(request):
         labels[platform.id] = platform.name
 
         data[platform.id] = to_heatmap(
-            get_updates_time_range(
+            get_syncs_time_range(
                 begin_date, end_date, platform.id, range_name
             ),
             range_name
@@ -235,7 +235,7 @@ def monthly_updated(request):
         request,
         'lines.html',
         {
-            'title': _("Updated Computers / Month"),
+            'title': _("Synchronized Computers / Month"),
             'chart': line_chart.render_data_uri(),
             'tabular_data': line_chart.render_table(),
         }

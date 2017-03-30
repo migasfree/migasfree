@@ -3,10 +3,10 @@
 # import order is very important!!!
 
 from .stats import (
-    daily_updated,
     delay_schedule,
-    hourly_updated,
-    monthly_updated,
+    synchronized_daily,
+    synchronized_hourly,
+    synchronized_monthly,
     version_computer
 )
 from .queries import get_query, computer_messages, server_messages
@@ -41,5 +41,5 @@ from .token import (
     RepositoryViewSet, ErrorViewSet, FaultDefinitionViewSet,
     FaultViewSet, NotificationViewSet, MigrationViewSet,
     HardwareComputerViewSet, HardwareViewSet, CheckingViewSet,
-    UserViewSet, UpdateViewSet, StatusLogViewSet,
+    UserViewSet, SynchronizationViewSet, StatusLogViewSet,
 )
