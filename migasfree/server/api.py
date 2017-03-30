@@ -15,7 +15,7 @@ from .models import (
     LANGUAGES_CHOICES, Attribute, AttributeSet, ClientProperty, Computer,
     Error, Fault, FaultDef, Feature, HwNode, Message,
     Migration, Notification, Package, Pms, Platform, Property,
-    Repository, Store, Tag, Update, User, Version,
+    Repository, Store, Tag, Synchronization, User, Version,
 )
 from .security import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
@@ -211,7 +211,7 @@ def upload_computer_message(request, name, uuid, computer, data):
 
     try:
         if data[cmd] == "":
-            Update.objects.create(computer)
+            Synchronization.objects.create(computer)
         else:
             message.update_message(data[cmd])
         ret = return_message(cmd, errmfs.ok())
