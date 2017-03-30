@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ..forms import ComputerReplacementForm
 from ..models import (
-    Computer, Update, Error, Fault,
+    Computer, Synchronization, Error, Fault,
     StatusLog, Migration, Version, Repository, FaultDef, DeviceLogical
 )
 from ..mixins import LoginRequiredMixin
@@ -124,10 +124,10 @@ def computer_events(request, pk):
     computer = get_object_or_404(Computer, pk=pk)
     now = datetime.now()
 
-    updates = to_heatmap(
-        Update.by_day(computer.pk, computer.created_at, now)
+    syncs = to_heatmap(
+        Synchronization.by_day(computer.pk, computer.created_at, now)
     )
-    updates_count = sum(updates.values())
+    syncs_count = sum(syncs.values())
 
     errors = to_heatmap(
         Error.by_day(computer.pk, computer.created_at, now)
@@ -153,10 +153,10 @@ def computer_events(request, pk):
         request,
         'computer_events.html',
         {
-            'title': '{}: {}'.format(_('Events'), computer.__str__()),
+            'title': u'{}: {}'.format(_('Events'), computer),
             'computer': computer,
-            'updates': updates,
-            'updates_count': updates_count,
+            'syncs': syncs,
+            'syncs_count': syncs_count,
             'errors': errors,
             'errors_count': errors_count,
             'faults': faults,
