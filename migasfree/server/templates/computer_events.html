@@ -20,7 +20,7 @@
 
 {% block content %}
     <div id="select-data" class="btn-group" role="group">
-        <button id="display-sync" type="button" class="btn btn-default active">{% trans 'Updates' %} ({{ updates_count }})</button>
+        <button id="display-sync" type="button" class="btn btn-default active">{% trans 'Synchronizations' %} ({{ syncs_count }})</button>
 
         <button id="display-error" type="button" class="btn btn-default">{% trans 'Errors' %} ({{ errors_count }})</button>
 
@@ -66,7 +66,7 @@
     <script src="{% static 'js/d3/d3.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/cal-heatmap.min.js' %}" type="text/javascript"></script>
     <script type="text/javascript">
-        var syncData = {{ updates|safe|escape }};
+        var syncData = {{ syncs|safe|escape }};
         var errorData = {{ errors|safe|escape }};
         var faultData = {{ faults|safe|escape }};
         var statusData = {{ status|safe|escape }};
@@ -105,6 +105,7 @@
                     var url = "/api/v1/token/" + dataset + "/?computer__id=" + computerId;
                     switch(dataset) {
                         case "status-logs":
+                        case "syncs":
                             url += "&created_at=" + dayStart + "&created_at__lt=" + dayEnd;
                             break;
                         default:
@@ -115,8 +116,8 @@
                         if (data.count > 0) {
                             var html = "<h2>" + dayStart + ": " + nb;
                             switch(dataset) {
-                                case "updates":
-                                    html += (nb > 1 ? " {% trans 'updates' %}" : " {% trans 'update' %}");
+                                case "syncs":
+                                    html += (nb > 1 ? " {% trans 'syncs' %}" : " {% trans 'sync' %}");
                                     break;
                                 case "errors":
                                     html += (nb > 1 ? " {% trans 'errors' %}" : " {% trans 'error' %}");
@@ -139,7 +140,7 @@
                                 formatedDate = "<strong>" + formatedDate.toLocaleTimeString() + "</strong>";
                                 html += "<li class='list-group-item'>";
                                 switch(dataset) {
-                                    case "updates":
+                                    case "syncs":
                                         html += formatedDate + " (" + item.version.name + "): " + item.user.fullname;
                                         break;
                                     case "errors":
@@ -204,7 +205,7 @@
             cal.update(syncData);
             cal.options.data = syncData;
             activeButton($(this));
-            dataset = "updates";
+            dataset = "syncs";
         });
 
         $("#display-error").on("click", function() {
