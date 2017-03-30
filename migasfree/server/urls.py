@@ -39,19 +39,19 @@ urlpatterns = [
     url(r'^info/(.*)', info, name='package_info'),
 
     url(
-        r'^chart/hourly_updated/$',
-        hourly_updated,
-        name='chart_hourly_updated'
+        r'^chart/synchronized_hourly/$',
+        synchronized_hourly,
+        name='chart_synchronized_hourly'
     ),
     url(
-        r'^chart/daily_updated/$',
-        daily_updated,
-        name='chart_daily_updated'
+        r'^chart/synchronized_daily/$',
+        synchronized_daily,
+        name='chart_synchronized_daily'
     ),
     url(
-        r'^chart/monthly_updated/$',
-        monthly_updated,
-        name='chart_monthly_updated'
+        r'^chart/synchronized_monthly/$',
+        synchronized_monthly,
+        name='chart_synchronized_monthly'
     ),
     url(
         r'^chart/delay_schedule/$',
