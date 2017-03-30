@@ -325,12 +325,12 @@ class LogicalSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UpdateSerializer(serializers.ModelSerializer):
+class SynchronizationSerializer(serializers.ModelSerializer):
     version = VersionInfoSerializer(many=False, read_only=True)
     user = UserSerializer(many=False, read_only=True)
 
     class Meta:
-        model = models.Update
+        model = models.Synchronization
         fields = '__all__'
 
 
