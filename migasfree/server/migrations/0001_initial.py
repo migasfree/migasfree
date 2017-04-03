@@ -232,7 +232,7 @@ class Migration(migrations.Migration):
             name='Error',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('date', models.DateTimeField(default=0, verbose_name='date')),
+                ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
                 ('error', models.TextField(null=True, verbose_name='error', blank=True)),
                 ('checked', models.BooleanField(default=False, verbose_name='checked')),
                 ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
@@ -247,7 +247,7 @@ class Migration(migrations.Migration):
             name='Fault',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('date', models.DateTimeField(default=0, verbose_name='date')),
+                ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
                 ('text', models.TextField(null=True, verbose_name='text', blank=True)),
                 ('checked', models.BooleanField(default=False, verbose_name='checked')),
                 ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
@@ -402,7 +402,7 @@ class Migration(migrations.Migration):
             name='Migration',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('date', models.DateTimeField(default=0, verbose_name='date')),
+                ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
                 ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
             ],
             options={
