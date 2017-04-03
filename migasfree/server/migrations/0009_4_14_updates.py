@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from django.utils import timezone
 
 
 class Migration(migrations.Migration):
@@ -27,7 +26,7 @@ class Migration(migrations.Migration):
             name='created_at',
             field=models.DateTimeField(
                 auto_now_add=True,
-                default=timezone.now,
+                verbose_name='date',
             ),
             preserve_default=False,
         ),
