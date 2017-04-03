@@ -77,7 +77,7 @@ class ErrorSerializer(serializers.ModelSerializer):
 
 class FaultDefinitionInfoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.FaultDef
+        model = models.FaultDefinition
         fields = ('id', 'name')
 
 
@@ -89,21 +89,22 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
 
 class FaultDefinitionSerializer(serializers.ModelSerializer):
     language = serializers.SerializerMethodField()
-    attributes = AttributeInfoSerializer(many=True, read_only=True)
+    included_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
     users = UserProfileInfoSerializer(many=True, read_only=True)
 
     def get_language(self, obj):
         return obj.get_language_display()
 
     class Meta:
-        model = models.FaultDef
+        model = models.FaultDefinition
         fields = '__all__'
 
 
 class FaultSerializer(serializers.ModelSerializer):
     version = VersionInfoSerializer(many=False, read_only=True)
     computer = ComputerInfoSerializer(many=False, read_only=True)
-    faultdef = FaultDefinitionInfoSerializer(many=False, read_only=True)
+    fault_definition = FaultDefinitionInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = models.Fault
