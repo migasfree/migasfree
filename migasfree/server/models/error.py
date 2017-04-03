@@ -3,47 +3,33 @@
 import re
 
 from django.db import models
-from django.db.models.aggregates import Count
-from django.utils import timezone, dateformat
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from . import Computer, Version, AutoCheckError
-
-
-class ErrorManager(models.Manager):
-    def create(self, computer, version, error):
-        obj = Error()
-        obj.computer = computer
-        obj.version = version
-        obj.error = error
-        obj.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
-        obj.save()
-
-        return obj
+from . import Version, AutoCheckError
+from .event import Event
 
 
 class UncheckedManager(models.Manager):
     def get_queryset(self):
         return super(UncheckedManager, self).get_queryset().filter(
-            checked=False
+            checked=0
         )
 
 
-@python_2_unicode_compatible
-class Error(models.Model):
-    computer = models.ForeignKey(
-        Computer,
-        verbose_name=_("computer")
-    )
+class ErrorManager(models.Manager):
+    def create(self, computer, version, description):
+        obj = Error()
+        obj.computer = computer
+        obj.version = version
+        obj.description = description
+        obj.save()
 
-    date = models.DateTimeField(
-        verbose_name=_("date"),
-        default=0
-    )
+        return obj
 
-    error = models.TextField(
-        verbose_name=_("error"),
+
+class Error(Event):
+    description = models.TextField(
+        verbose_name=_("description"),
         null=True,
         blank=True
     )
@@ -61,32 +47,24 @@ class Error(models.Model):
     objects = ErrorManager()
     unchecked = UncheckedManager()
 
-    def okay(self, *args, **kwargs):
+    @staticmethod
+    def unchecked_count():
+        return Error.objects.filter(checked=0).count()
+
+    def checked_ok(self):
         self.checked = True
-        super(Error, self).save(*args, **kwargs)
+        self.save()
 
     def auto_check(self):
         for ace in AutoCheckError.objects.all():
-            if re.search(ace.message, self.error):
+            if re.search(ace.message, self.description):
                 self.checked = True
                 return
 
     def save(self, *args, **kwargs):
-        self.error = self.error.replace("\r\n", "\n")
+        self.description = self.description.replace("\r\n", "\n")
         self.auto_check()
         super(Error, self).save(*args, **kwargs)
-
-    @classmethod
-    def by_day(cls, computer_id, start_date, end_date):
-        return cls.objects.filter(
-            computer__id=computer_id,
-            date__range=(start_date, end_date)
-        ).extra(
-            {"day": "date_trunc('day', date)"}
-        ).values("day").annotate(count=Count("id")).order_by('-day')
-
-    def __str__(self):
-        return '{} ({})'.format(self.computer, self.date)
 
     class Meta:
         app_label = 'server'
