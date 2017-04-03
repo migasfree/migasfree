@@ -5,16 +5,6 @@ from django.utils.translation import ugettext
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 
-# Programming Languages for Properties and Fault Definitions
-LANGUAGES_CHOICES = (
-    (0, 'bash'),
-    (1, 'python'),
-    (2, 'perl'),
-    (3, 'php'),
-    (4, 'ruby'),
-    (5, 'cmd'),
-)
-
 
 class MigasLink(object):
     def __init__(self):

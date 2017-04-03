@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from . import LANGUAGES_CHOICES, MigasLink
+from . import MigasLink
 
 
 class ClientPropertyManager(models.Manager):
@@ -45,13 +46,12 @@ class Property(models.Model, MigasLink):
 
     language = models.IntegerField(
         verbose_name=_("programming language"),
-        default=1,
-        choices=LANGUAGES_CHOICES
+        default=settings.MIGASFREE_PROGRAMMING_LANGUAGES[0][0],
+        choices=settings.MIGASFREE_PROGRAMMING_LANGUAGES
     )
 
     code = models.TextField(
         verbose_name=_("Code"),
-        null=False,
         blank=True,
         help_text=_("This code will execute in the client computer, "
                     "and it must put in the standard output the value of the "

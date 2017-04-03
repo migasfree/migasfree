@@ -38,6 +38,16 @@ MIGASFREE_NOTIFY_CHANGE_IP = False
 # PERIOD HARDWARE CAPTURE (DAYS)
 MIGASFREE_HW_PERIOD = 30
 
+# Programming Languages for Properties and Fault Definitions
+MIGASFREE_PROGRAMMING_LANGUAGES = (
+    (0, 'bash'),
+    (1, 'python'),
+    (2, 'perl'),
+    (3, 'php'),
+    (4, 'ruby'),
+    (5, 'cmd'),
+)
+
 # DEFAULT COMPUTER STATUS
 # Values: 'intended', 'reserved', 'unknown', 'in repair', 'available' or 'unsubscribed'
 MIGASFREE_DEFAULT_COMPUTER_STATUS = 'intended'
