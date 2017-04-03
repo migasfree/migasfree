@@ -74,7 +74,7 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Fault\nfrom django.db.models import Q\nresult = Fault.objects.filter(checked__exact=0).filter(Q(faultdef__users__id__in=[request.user.id,]) | Q(faultdef__users=None)).count()\nurl = '/admin/server/fault/?checked__exact=0&user=me'\nalert = 'danger'\nmsg = 'Faults to check'\ntarget = 'computer'\n",
+            "code": "from migasfree.server.models import Fault\nfrom django.db.models import Q\nresult = Fault.objects.filter(checked__exact=0).filter(Q(fault_definition__users__id__in=[request.user.id,]) | Q(fault_definition__users=None)).count()\nurl = '/admin/server/fault/?checked__exact=0&user=me'\nalert = 'danger'\nmsg = 'Faults to check'\ntarget = 'computer'\n",
             "name": "Faults to check",
             "description": "Faults not checked. You must check fault when fault is solved"
         }
