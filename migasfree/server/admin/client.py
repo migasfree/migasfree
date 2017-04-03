@@ -20,7 +20,7 @@ from ..filters import ProductiveFilterSpec, UserFaultFilter
 from ..forms import ComputerForm
 from ..resources import ComputerResource
 from ..models import (
-    AutoCheckError, Computer, Error, Fault, FaultDef, Message,
+    AutoCheckError, Computer, Error, Fault, FaultDefinition, Message,
     Migration, Notification, StatusLog, Synchronization, User, DeviceLogical, HwNode
 )
 
@@ -390,45 +390,64 @@ class FaultAdmin(MigasAdmin):
         )
 
 
-@admin.register(FaultDef)
-class FaultDefAdmin(MigasAdmin):
-    form = make_ajax_form(FaultDef, {'attributes': 'attribute'})
-    list_display = ('name_link', 'my_active', 'attributes_link', 'users_link')
-    list_filter = ('active', 'users')
+@admin.register(FaultDefinition)
+class FaultDefinitionAdmin(MigasAdmin):
+    form = make_ajax_form(
+        FaultDefinition, {
+            'included_attributes': 'attribute',
+            'excluded_attributes': 'attribute',
+        }
+    )
+    list_display = (
+        'name_link',
+        'my_enabled',
+        'included_attributes_link',
+        'excluded_attributes_link',
+        'users_link'
+    )
+    list_filter = ('enabled', 'users')
     search_fields = ('name',)
-    filter_horizontal = ('attributes',)
+    filter_horizontal = ('included_attributes', 'excluded_attributes')
 
     fieldsets = (
-        (None, {
-            'fields': ('name', 'description', 'active', 'language', 'code')
+        (_('General'), {
+            'fields': ('name', 'enabled', 'description')
         }),
-        (_('Atributtes'), {
-            'fields': ('attributes',)
+        (_('Code'), {
+            'fields': ('language', 'code')
+        }),
+        (_('Attributes'), {
+            'fields': ('included_attributes', 'excluded_attributes')
         }),
         (_('Users'), {
             'fields': ('users',)
         }),
     )
 
-    name_link = MigasFields.link(model=FaultDef, name='name')
-    my_active = MigasFields.boolean(model=FaultDef, name='active')
-    attributes_link = MigasFields.objects_link(
-        model=FaultDef, name='attributes'
+    name_link = MigasFields.link(model=FaultDefinition, name='name')
+    my_enabled = MigasFields.boolean(model=FaultDefinition, name='enabled')
+    included_attributes_link = MigasFields.objects_link(
+        model=FaultDefinition, name='included_attributes'
     )
-    users_link = MigasFields.objects_link(model=FaultDef, name='users')
+    excluded_attributes_link = MigasFields.objects_link(
+        model=FaultDefinition, name='excluded_attributes'
+    )
+    users_link = MigasFields.objects_link(model=FaultDefinition, name='users')
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(FaultDefAdmin, self).get_form(request, obj, **kwargs)
+        form = super(FaultDefinitionAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['users'].widget.can_add_related = False
 
         return form
 
     def get_queryset(self, request):
-        return super(FaultDefAdmin, self).get_queryset(
+        return super(FaultDefinitionAdmin, self).get_queryset(
             request
             ).prefetch_related(
-                'attributes',
-                'attributes__property_att',
+                'included_attributes',
+                'included_attributes__property_att',
+                'excluded_attributes',
+                'excluded_attributes__property_att',
                 'users',
             )
 
