@@ -185,7 +185,7 @@ class NodeFilter(filters.FilterSet):
 
 
 class NotificationFilter(filters.FilterSet):
-    date = django_filters.DateFilter(name='date', lookup_type='gte')
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
 
     class Meta:
         model = Notification

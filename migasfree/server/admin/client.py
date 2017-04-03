@@ -473,21 +473,21 @@ class MigrationAdmin(MigasAdmin):
 
 @admin.register(Notification)
 class NotificationAdmin(MigasAdmin):
-    list_display = ('id', 'my_checked', 'date', 'my_notification')
+    list_display = ('id', 'my_checked', 'created_at', 'my_message')
     list_display_links = ('id',)
-    list_filter = ('checked', 'date')
-    ordering = ('-date',)
-    search_fields = ('date', 'notification')
-    readonly_fields = ('date', 'my_notification')
-    exclude = ('notification',)
+    list_filter = ('checked', 'created_at')
+    ordering = ('-created_at',)
+    search_fields = ('created_at', 'message')
+    readonly_fields = ('created_at', 'my_message')
+    exclude = ('message',)
     actions = ['checked_ok']
 
     my_checked = MigasFields.boolean(model=Notification, name='checked')
-    my_notification = MigasFields.text(model=Notification, name='notification')
+    my_message = MigasFields.text(model=Notification, name='message')
 
     def checked_ok(self, request, queryset):
         for item in queryset:
-            item.okay()
+            item.checked_ok()
 
         messages.success(request, _('Checked %s') % _('Notifications'))
 

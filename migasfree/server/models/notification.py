@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils import timezone, dateformat
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
 
 class NotificationManager(models.Manager):
-    def create(self, notification):
+    def create(self, message):
         obj = Notification()
-        obj.notification = notification
-        obj.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
+        obj.message = message
         obj.save()
 
         return obj
@@ -18,15 +16,13 @@ class NotificationManager(models.Manager):
 
 @python_2_unicode_compatible
 class Notification(models.Model):
-    date = models.DateTimeField(
+    created_at = models.DateTimeField(
+        auto_now_add=True,
         verbose_name=_("date"),
-        default=0
     )
 
-    notification = models.TextField(
-        verbose_name=_("notification"),
-        null=True,
-        blank=True
+    message = models.TextField(
+        verbose_name=_("message"),
     )
 
     checked = models.BooleanField(
@@ -36,16 +32,20 @@ class Notification(models.Model):
 
     objects = NotificationManager()
 
-    def okay(self):
+    def checked_ok(self):
         self.checked = True
         self.save()
 
+    @staticmethod
+    def unchecked_count():
+        return Notification.objects.filter(checked=0).count()
+
     def save(self, *args, **kwargs):
-        self.notification = self.notification.replace("\r\n", "\n")
+        self.message = self.message.replace("\r\n", "\n")
         super(Notification, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '%d (%s)' % (self.id, self.date)
+        return '{} ({:%Y-%m-%d %H:%M:%S})'.format(self.id, self.created_at)
 
     class Meta:
         app_label = 'server'

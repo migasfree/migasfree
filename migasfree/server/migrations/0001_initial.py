@@ -415,7 +415,7 @@ class Migration(migrations.Migration):
             name='Notification',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('date', models.DateTimeField(default=0, verbose_name='date')),
+                ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
                 ('notification', models.TextField(null=True, verbose_name='notification', blank=True)),
                 ('checked', models.BooleanField(default=False, verbose_name='checked')),
             ],
