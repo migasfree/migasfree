@@ -11,7 +11,7 @@ from rest_framework import filters
 from .models import (
     ClientProperty, TagType, Computer,
     Store, Property, Version, Attribute,
-    Package, Repository, Error, FaultDef,
+    Package, Repository, Error, FaultDefinition,
     Fault, Notification, Migration,
     HwNode, Checking, Synchronization, StatusLog,
 )
@@ -149,8 +149,11 @@ class ErrorFilter(filters.FilterSet):
 
 class FaultDefinitionFilter(filters.FilterSet):
     class Meta:
-        model = FaultDef
-        fields = ['id', 'attributes__id', 'active']
+        model = FaultDefinition
+        fields = [
+            'id', 'enabled',
+            'included_attributes__id', 'excluded_attributes'
+        ]
 
 
 class FaultFilter(filters.FilterSet):
