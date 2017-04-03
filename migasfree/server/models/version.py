@@ -65,8 +65,8 @@ class Version(models.Model, MigasLink):
     autoregister = models.BooleanField(
         verbose_name=_("autoregister"),
         default=False,
-        help_text=_("Is not neccesary a user for register the computer in \
-                     database and get the keys.")
+        help_text=_("Is not neccesary a user for register the computer in "
+                    "database and get the keys.")
     )
 
     platform = models.ForeignKey(
