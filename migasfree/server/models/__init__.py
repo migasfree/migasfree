@@ -2,7 +2,7 @@
 
 # import order is very important!!!
 
-from .common import LANGUAGES_CHOICES, MigasLink
+from .common import MigasLink
 
 from .user import User
 from .query import Query
@@ -39,7 +39,7 @@ from .hw_node import HwNode
 from .notification import Notification
 from .message import Message
 from .error import Error
-from .fault_def import FaultDef
+from .fault_definition import FaultDefinition
 from .fault import Fault
 from .migration import Migration
 from .status_log import StatusLog
