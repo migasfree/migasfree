@@ -181,8 +181,7 @@ class ComputerViewSet(
             }
         """
         computer = get_object_or_404(models.Computer, pk=pk)
-        sync_data = get_object_or_404(models.Login, computer__id=computer.id)
-        serializer = serializers.ComputerSyncSerializer(sync_data)
+        serializer = serializers.ComputerSyncSerializer(computer)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -195,13 +194,13 @@ class ErrorViewSet(
     filter_class = ErrorFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('-date',)
+    ordering = ('-created_at',)
 
 
 class FaultDefinitionViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
-    queryset = models.FaultDef.objects.all()
+    queryset = models.FaultDefinition.objects.all()
     serializer_class = serializers.FaultDefinitionSerializer
     filter_class = FaultDefinitionFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
@@ -215,7 +214,7 @@ class FaultViewSet(
     filter_class = FaultFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('-date',)
+    ordering = ('-created_at',)
 
 
 class HardwareComputerViewSet(viewsets.ViewSet):
@@ -250,7 +249,7 @@ class MigrationViewSet(
     filter_class = MigrationFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('-date',)
+    ordering = ('-created_at',)
 
 
 class NotificationViewSet(
@@ -261,7 +260,7 @@ class NotificationViewSet(
     filter_class = NotificationFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('-date',)
+    ordering = ('-created_at',)
 
 
 class PackageViewSet(
