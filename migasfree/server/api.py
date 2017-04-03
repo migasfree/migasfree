@@ -12,8 +12,8 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 
 from .models import (
-    LANGUAGES_CHOICES, Attribute, AttributeSet, ClientProperty, Computer,
-    Error, Fault, FaultDef, Feature, HwNode, Message,
+    Attribute, AttributeSet, ClientProperty, Computer,
+    Error, Fault, FaultDefinition, Feature, HwNode, Message,
     Migration, Notification, Package, Pms, Platform, Property,
     Repository, Store, Tag, Synchronization, User, Version,
 )
@@ -254,7 +254,7 @@ def get_properties(request, name, uuid, computer, data):
     try:
         for p in Property.enabled_client_properties():
             properties.append({
-                "language": LANGUAGES_CHOICES[p['language']][1],
+                "language": settings.MIGASFREE_PROGRAMMING_LANGUAGES[p['language']][1],
                 "name": p['prefix'],
                 "code": p['code']
             })
@@ -268,29 +268,32 @@ def get_properties(request, name, uuid, computer, data):
 
 def upload_computer_info(request, name, uuid, computer, data):
     """
-    Process the file request.json and return a json with the faultsdef,
-    repositories, packages and devices
+    Process the file request.json and returns a JSON with:
+        * fault definitions
+        * repositories
+        * packages
+        * devices
+
         INPUT:
         =====
         A file "request.json" with the result of evaluate the request obtained
         by "get_request"
 
             {
-              "computer":
-                  {
-                      "hostname": HOSTNAME,
-                      "ip": IP,
-                      "platform": PLATFORM,
-                      "version": VERSION,
-                      "user": USER,
-                      "user_fullname": USER_FULLNAME
-                  },
-              "attributes":[{"name":VALUE},...]
+                "computer": {
+                    "hostname": HOSTNAME,
+                    "ip": IP,
+                    "platform": PLATFORM,
+                    "version": VERSION,
+                    "user": USER,
+                    "user_fullname": USER_FULLNAME
+                },
+                "attributes":[{"name":VALUE},...]
             }
 
         OUTPUT:
         ======
-        After of process this file the server responds to client a json:
+        After of process this file, the server responds to client a JSON:
 
             {
                 "faultsdef": [
@@ -370,8 +373,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         dic_computer = data.get("upload_computer_info").get("computer")
         properties = data.get("upload_computer_info").get("attributes")
 
-        # 1.- PROCESS COMPUTER
-        # registration of ip, version an Migration of computer
+        # IP registration, version and computer Migration
         computer = check_computer(
             computer,
             name,
@@ -380,7 +382,6 @@ def upload_computer_info(request, name, uuid, computer, data):
             uuid,
         )
 
-        # Get version
         version = Version.objects.get(name=version_name)
 
         if notify_platform:
@@ -399,12 +400,10 @@ def upload_computer_info(request, name, uuid, computer, data):
             }
         )
 
-        # Save Login
         computer.update_sync_user(user)
-
         computer.sync_attributes.clear()
 
-        # 2.- PROCESS PROPERTIES
+        # PROCESS PROPERTIES
         for e in properties:
             client_property = ClientProperty.objects.get(prefix=e)
             value = properties.get(e)
@@ -443,18 +442,18 @@ def upload_computer_info(request, name, uuid, computer, data):
             for item in lst_set:
                 computer.sync_attributes.add(item)
 
-        # 3 FaultsDef
-        lst_faultsdef = []
-        for d in FaultDef.enabled_for_attributes(lst_attributes):
-            lst_faultsdef.append({
-                "language": LANGUAGES_CHOICES[d['language']][1],
+        # Fault Definitions
+        fault_definitions = []
+        for d in FaultDefinition.enabled_for_attributes(lst_attributes):
+            fault_definitions.append({
+                "language": settings.MIGASFREE_PROGRAMMING_LANGUAGES[d['language']][1],
                 "name": d['name'],
                 "code": d['code']
             })
 
         repositories = Repository.available_repos(computer, lst_attributes)
 
-        # 4.- CREATE JSON
+        # Finally, JSON creation
         lst_repos = []
         lst_pkg_remove = []
         lst_pkg_install = []
@@ -490,7 +489,7 @@ def upload_computer_info(request, name, uuid, computer, data):
             )
 
         data = {
-            "faultsdef": lst_faultsdef,
+            "faultsdef": fault_definitions,
             "repositories": lst_repos,
             "packages": {
                 "remove": lst_pkg_remove,
@@ -523,7 +522,7 @@ def upload_computer_faults(request, name, uuid, computer, data):
                 if msg != "":
                     Fault.objects.create(
                         computer,
-                        FaultDef.objects.get(name=f),
+                        FaultDefinition.objects.get(name=f),
                         msg
                     )
             except:
@@ -605,8 +604,7 @@ def register_computer(request, name, uuid, computer, data):
                     errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
                 )
 
-        # ALL IS OK
-        # 1.- Add Computer
+        # Add Computer
         computer = check_computer(
             computer,
             name,
@@ -623,7 +621,7 @@ def register_computer(request, name, uuid, computer, data):
             pms = Pms.objects.get(name=pms_name)
             add_notification_version(version, pms, computer)
 
-        # 2.- returns keys to client
+        # returns keys to client
         return return_message(cmd, get_keys_to_client(version_name))
     except:
         return return_message(
