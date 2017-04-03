@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from . import FaultDef, Version
+from . import FaultDefinition, Version
 from .event import Event
 
 
@@ -28,7 +28,7 @@ class FaultManager(models.Manager):
 
 class Fault(Event):
     fault_definition = models.ForeignKey(
-        FaultDef,
+        FaultDefinition,
         verbose_name=_("fault definition")
     )
 
