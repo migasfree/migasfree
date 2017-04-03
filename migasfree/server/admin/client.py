@@ -279,18 +279,17 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 @admin.register(Error)
 class ErrorAdmin(MigasAdmin):
     list_display = (
-        'id',
+        'created_at',
         'computer_link',
         'version_link',
         'my_checked',
-        'date',
-        'truncated_error',
+        'truncated_desc',
     )
-    list_display_links = ('id',)
-    list_filter = ('checked', 'date', 'version__platform', 'version')
-    ordering = ('-date', 'computer',)
-    search_fields = add_computer_search_fields(['date', 'error'])
-    readonly_fields = ('computer_link', 'version_link', 'date', 'error')
+    list_display_links = ('created_at',)
+    list_filter = ('checked', 'created_at', 'version__platform', 'version')
+    ordering = ('-created_at', 'computer',)
+    search_fields = add_computer_search_fields(['created_at', 'description'])
+    readonly_fields = ('computer_link', 'version_link', 'created_at', 'description')
     exclude = ('computer', 'version')
     actions = ['checked_ok']
 
@@ -302,18 +301,18 @@ class ErrorAdmin(MigasAdmin):
         model=Error, name="version", order='version__name'
     )
 
-    def truncated_error(self, obj):
-        if len(obj.error) <= 250:
-            return obj.error
+    def truncated_desc(self, obj):
+        if len(obj.description) <= 250:
+            return obj.description
         else:
-            return obj.error[:250] + " ..."
+            return obj.description[:250] + " ..."
 
-    truncated_error.short_description = _("Truncated error")
-    truncated_error.admin_order_field = 'error'
+    truncated_desc.short_description = _("Truncated error")
+    truncated_desc.admin_order_field = 'error'
 
     def checked_ok(self, request, queryset):
         for item in queryset:
-            item.okay()
+            item.checked_ok()
 
         messages.success(request, _('Checked %s') % _('Errors'))
 
@@ -336,26 +335,25 @@ class ErrorAdmin(MigasAdmin):
 @admin.register(Fault)
 class FaultAdmin(MigasAdmin):
     list_display = (
-        'id',
+        'created_at',
         'computer_link',
         'version_link',
         'my_checked',
-        'date',
-        'text',
+        'result',
         'fault_definition_link',
     )
-    list_display_links = ('id',)
+    list_display_links = ('created_at',)
     list_filter = (
-        UserFaultFilter, 'checked', 'date',
-        'version__platform', 'version', 'faultdef'
+        UserFaultFilter, 'checked', 'created_at',
+        'version__platform', 'version', 'fault_definition'
     )
-    ordering = ('-date', 'computer',)
-    search_fields = add_computer_search_fields(['date', 'faultdef__name'])
+    ordering = ('-created_at', 'computer',)
+    search_fields = add_computer_search_fields(['created_at', 'fault_definition__name'])
     readonly_fields = (
         'computer_link', 'fault_definition_link',
-        'version_link', 'date', 'text'
+        'version_link', 'created_at', 'result'
     )
-    exclude = ('computer', 'version', 'faultdef')
+    exclude = ('computer', 'version', 'fault_definition')
     actions = ['checked_ok']
 
     my_checked = MigasFields.boolean(model=Fault, name='checked')
@@ -366,12 +364,12 @@ class FaultAdmin(MigasAdmin):
         model=Fault, name='version', order='version__name'
     )
     fault_definition_link = MigasFields.link(
-        model=Fault, name='faultdef', order='faultdef__name'
+        model=Fault, name='fault_definition', order='fault_definition__name'
     )
 
     def checked_ok(self, request, queryset):
         for item in queryset:
-            item.okay()
+            item.checked_ok()
 
         messages.success(request, _('Checked %s') % _('Faults'))
 
@@ -387,7 +385,7 @@ class FaultAdmin(MigasAdmin):
             request
         ).select_related(
             'version',
-            'faultdef',
+            'fault_definition',
             'computer',
         )
 
@@ -452,13 +450,13 @@ class MessageAdmin(MigasAdmin):
 
 @admin.register(Migration)
 class MigrationAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'version_link', 'date')
+    list_display = ('id', 'computer_link', 'version_link', 'created_at')
     list_display_links = ('id',)
     list_select_related = ('computer', 'version')
-    list_filter = ('date', 'version__platform', 'version')
-    search_fields = add_computer_search_fields(['date'])
-    fields = ('computer_link', 'version_link', 'date')
-    readonly_fields = ('computer_link', 'version_link', 'date')
+    list_filter = ('created_at', 'version__platform', 'version')
+    search_fields = add_computer_search_fields(['created_at'])
+    fields = ('computer_link', 'version_link', 'created_at')
+    readonly_fields = ('computer_link', 'version_link', 'created_at')
     exclude = ('computer',)
     actions = None
 
