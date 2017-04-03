@@ -514,7 +514,6 @@ def upload_computer_info(request, name, uuid, computer, data):
 def upload_computer_faults(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     faults = data.get(cmd).get("faults")
-    version = Version.objects.get(id=computer.version_id)
 
     try:
         # PROCESS FAULTS
@@ -524,7 +523,6 @@ def upload_computer_faults(request, name, uuid, computer, data):
                 if msg != "":
                     Fault.objects.create(
                         computer,
-                        version,
                         FaultDef.objects.get(name=f),
                         msg
                     )
