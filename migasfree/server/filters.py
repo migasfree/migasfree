@@ -138,8 +138,8 @@ class ComputerFilter(filters.FilterSet):
 
 
 class ErrorFilter(filters.FilterSet):
-    date = django_filters.DateFilter(name='date', lookup_type='gte')
-    date__lt = django_filters.DateFilter(name='date', lookup_expr='date__lt')
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
     platform = django_filters.NumberFilter(name='version__platform__id')
 
     class Meta:
@@ -154,19 +154,19 @@ class FaultDefinitionFilter(filters.FilterSet):
 
 
 class FaultFilter(filters.FilterSet):
-    date = django_filters.DateFilter(name='date', lookup_type='gte')
-    date__lt = django_filters.DateFilter(name='date', lookup_expr='date__lt')
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
 
     class Meta:
         model = Fault
         fields = [
-            'id', 'version__id', 'checked', 'faultdef__id', 'computer__id'
+            'id', 'version__id', 'checked', 'fault_definition__id', 'computer__id'
         ]
 
 
 class MigrationFilter(filters.FilterSet):
-    date = django_filters.DateFilter(name='date', lookup_type='gte')
-    date__lt = django_filters.DateFilter(name='date', lookup_expr='date__lt')
+    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
 
     class Meta:
         model = Migration
