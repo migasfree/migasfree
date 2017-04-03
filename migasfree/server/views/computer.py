@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from ..forms import ComputerReplacementForm
 from ..models import (
     Computer, Synchronization, Error, Fault,
-    StatusLog, Migration, Version, Repository, FaultDef, DeviceLogical
+    StatusLog, Migration, Version, Repository, FaultDefinition, DeviceLogical
 )
 from ..mixins import LoginRequiredMixin
 from ..functions import d2s, to_heatmap
@@ -209,7 +209,7 @@ def computer_simulate_sync(request, pk):
         transaction.rollback()  # only simulate sync... not real sync!
         transaction.set_autocommit(True)
 
-        result['title'] = _('Simulate sync: %s') % computer.__str__()
+        result['title'] = _('Simulate sync: %s') % computer
         result["computer"] = computer
         result["version"] = version
         result["attributes"] = computer.sync_attributes.filter(property_att__tag=False)
@@ -223,10 +223,10 @@ def computer_simulate_sync(request, pk):
             )
         result["repositories"] = repositories
 
-        faultsdef = []
+        fault_definitions = []
         for fault in result["faultsdef"]:
-            faultsdef.append(FaultDef.objects.get(name=fault['name']))
-        result["faultsdef"] = faultsdef
+            fault_definitions.append(FaultDefinition.objects.get(name=fault['name']))
+        result["faultsdef"] = fault_definitions
 
         result["default_device"] = result["devices"]["default"]
         devices = []
@@ -235,10 +235,11 @@ def computer_simulate_sync(request, pk):
         result["devices"] = devices
 
     else:
-        result = {}
-        result['title'] = _('Simulate sync: %s') % computer
-        result["computer"] = computer
-        result["version"] = version
+        result = {
+            'title': _('Simulate sync: %s') % computer,
+            'computer': computer,
+            'version': version
+        }
 
         messages.error(
             request,
