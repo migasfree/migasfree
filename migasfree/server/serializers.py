@@ -285,7 +285,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Schedule
-        fields = ('id', 'name', 'description', 'delays')  # FIXME delays???
+        fields = ('id', 'name', 'description', 'delays')
 
 
 class StoreSerializer(serializers.ModelSerializer):
