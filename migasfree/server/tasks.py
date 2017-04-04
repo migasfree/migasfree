@@ -8,18 +8,13 @@ from django.contrib import messages
 from django.utils.translation import ugettext as _
 
 from .functions import run_in_server
-from .models import Package
+from .models import Package, Store
 
 
 def remove_physical_repository(request, repo, old_name=""):
     name = old_name if old_name else repo.name
-    _destination = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        repo.version.name,
-        repo.version.pms.slug,
-        name
-    )
-    shutil.rmtree(_destination, ignore_errors=True)
+    shutil.rmtree(repo.path(name), ignore_errors=True)
+
     _msg = ("Deleted repository: %s" % name)
     if hasattr(request, 'META'):
         return messages.add_message(request, messages.SUCCESS, _msg)
@@ -33,20 +28,10 @@ def create_physical_repository(repo, packages=None, request=None):
     repo = a Repository object
     packages = a id's list of packages
     """
-    _tmp_path = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        repo.version.name,
-        'TMP'
-    )
-    _stores_path = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        repo.version.name,
-        'STORES'
-    )
+    _tmp_path = repo.path('TMP')
+    _stores_path = Store.path(repo.version.name, '')[:-1]  # remove trailing slash
     _slug_tmp_path = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        repo.version.name,
-        'TMP',
+        _tmp_path,
         repo.version.pms.slug
     )
 
@@ -57,7 +42,7 @@ def create_physical_repository(repo, packages=None, request=None):
     _pkg_tmp_path = os.path.join(
         _slug_tmp_path,
         repo.name,
-        'PKGS'
+        'PKGS'  # FIXME hardcoded path!!!
     )
     if not os.path.exists(_pkg_tmp_path):
         os.makedirs(_pkg_tmp_path)
@@ -68,7 +53,7 @@ def create_physical_repository(repo, packages=None, request=None):
     for _pkg in packages:
         if isinstance(_pkg, int):
             _pkg = Package.objects.get(pk=_pkg)
-        _dst = os.path.join(_slug_tmp_path, repo.name, 'PKGS', _pkg.name)
+        _dst = os.path.join(_pkg_tmp_path, _pkg.name)
         if not os.path.lexists(_dst):
             os.symlink(
                 os.path.join(_stores_path, _pkg.store.name, _pkg.name),
@@ -85,19 +70,12 @@ def create_physical_repository(repo, packages=None, request=None):
             '%KEYS%', settings.MIGASFREE_KEYS_DIR)
     )["err"]
 
-    _source = os.path.join(
-        _tmp_path,
-        repo.version.pms.slug,
-        repo.name
-    )
-    _destination = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        repo.version.name,
-        repo.version.pms.slug,
-        repo.name
-    )
-    shutil.rmtree(_destination, ignore_errors=True)
-    shutil.copytree(_source, _destination, symlinks=True)
+    _source = os.path.join(_slug_tmp_path, repo.name)
+
+    _target = repo.path()
+    shutil.rmtree(_target, ignore_errors=True)
+
+    shutil.copytree(_source, _target, symlinks=True)
     shutil.rmtree(_tmp_path)
 
     if _run_err != '':

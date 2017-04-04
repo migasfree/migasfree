@@ -650,10 +650,7 @@ def upload_server_package(request, name, uuid, computer, data):
 
     f = request.FILES["package"]
     filename = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        data['version'],
-        'STORES',
-        data['store'],
+        Store.path(data['version'], data['store']),
         f.name
     )
 
@@ -684,10 +681,7 @@ def upload_server_set(request, name, uuid, computer, data):
 
     f = request.FILES["package"]
     filename = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        data['version'],
-        "STORES",
-        data['store'],
+        Store.path(data['version'], data['store']),
         data['packageset'],
         f.name
     )
@@ -714,10 +708,7 @@ def upload_server_set(request, name, uuid, computer, data):
     # if exists path move it
     if "path" in data and data["path"] != "":
         dst = os.path.join(
-            settings.MIGASFREE_REPO_DIR,
-            data['version'],
-            "STORES",
-            data['store'],
+            Store.path(data['version'], data['store']),
             data['packageset'],
             data['path'],
             f.name
