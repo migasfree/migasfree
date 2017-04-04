@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import Count
+from django.core.validators import MinValueValidator
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.core.validators import MinValueValidator
-from django.db.models import Count
 
 from . import Schedule, Attribute, Computer, UserProfile
 
 
 @python_2_unicode_compatible
 class ScheduleDelay(models.Model):
-    delay = models.IntegerField(verbose_name=_("delay"))
+    delay = models.IntegerField(
+        verbose_name=_("delay")
+    )
 
     schedule = models.ForeignKey(
         Schedule,
+        related_name='delays',
         verbose_name=_("schedule")
     )
 
@@ -46,12 +49,12 @@ class ScheduleDelay(models.Model):
     def __str__(self):
         return u'{} ({})'.format(self.schedule.name, self.delay)
 
-    def list_attributes(self):
+    def attribute_list(self):
         return ', '.join(
             self.attributes.values_list('value', flat=True).order_by('value')
         )
 
-    list_attributes.short_description = _("attributes")
+    attribute_list.short_description = _("attribute list")
 
     class Meta:
         app_label = 'server'
