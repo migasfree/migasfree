@@ -113,7 +113,7 @@ class UserFaultFilter(SimpleListFilter):
 class AttributeSetFilter(filters.FilterSet):
     class Meta:
         model = AttributeSet
-        fields = ['id', 'enable']
+        fields = ['id', 'enabled']
 
 
 class AttributeFilter(filters.FilterSet):
