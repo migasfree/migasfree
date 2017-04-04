@@ -79,22 +79,34 @@ class Version(models.Model, MigasLink):
     def __str__(self):
         return self.name
 
-    def create_dirs(self):
-        _repos = os.path.join(
+    @staticmethod
+    def path(name):
+        return os.path.join(settings.MIGASFREE_REPO_DIR, name)
+
+    @staticmethod
+    def repositories_path(name):
+        return os.path.join(
             settings.MIGASFREE_REPO_DIR,
-            self.name,
+            name,
             'REPOSITORIES'
         )
-        if not os.path.exists(_repos):
-            os.makedirs(_repos)
 
-        _stores = os.path.join(
+    @staticmethod
+    def stores_path(name):
+        return os.path.join(
             settings.MIGASFREE_REPO_DIR,
-            self.name,
+            name,
             'STORES'
         )
-        if not os.path.exists(_stores):
-            os.makedirs(_stores)
+
+    def _create_dirs(self):
+        repos = self.repositories_path(self.name)
+        if not os.path.exists(repos):
+            os.makedirs(repos)
+
+        stores = self.stores_path(self.name)
+        if not os.path.exists(stores):
+            os.makedirs(stores)
 
     def update_base(self, base):
         self.base = base
@@ -106,7 +118,7 @@ class Version(models.Model, MigasLink):
 
     def save(self, *args, **kwargs):
         self.name = self.name.replace(" ", "-")
-        self.create_dirs()
+        self._create_dirs()
         self.base = self.base.replace("\r\n", "\n")
 
         super(Version, self).save(*args, **kwargs)
@@ -169,6 +181,6 @@ class UserProfile(UserSystem, MigasLink):
 
 @receiver(pre_delete, sender=Version)
 def delete_project(sender, instance, **kwargs):
-    path = os.path.join(settings.MIGASFREE_REPO_DIR, instance.name)
+    path = Version.path(instance.name)
     if os.path.exists(path):
         shutil.rmtree(path)
