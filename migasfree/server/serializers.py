@@ -6,6 +6,12 @@ from rest_framework import serializers
 from . import models, tasks
 
 
+class AttributeSetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AttributeSet
+        fields = '__all__'
+
+
 class AttributeInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Attribute
