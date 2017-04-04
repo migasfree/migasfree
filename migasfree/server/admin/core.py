@@ -33,29 +33,33 @@ from ..tasks import (
 class AttributeSetAdmin(MigasAdmin):
     form = make_ajax_form(
         AttributeSet,
-        {'attributes': 'attribute', 'excludes': 'attribute'}
+        {
+            'included_attributes': 'attribute',
+            'excluded_attributes': 'attribute',
+        }
     )
-    list_display = ('name_link', 'attributes_link', 'excludes_link')
-    list_filter = ('active',)
+    list_display = ('name_link', 'included_attributes_link', 'excluded_attributes_link')
+    list_filter = ('enabled',)
     list_display_links = ('name_link',)
-    search_fields = ('name', 'attributes__value', 'excludes__value')
+    search_fields = ('name', 'included_attributes__value', 'excluded_attributes__value')
+
     name_link = MigasFields.link(model=AttributeSet, name='name')
-    attributes_link = MigasFields.objects_link(
-        model=AttributeSet, name="attributes"
+    included_attributes_link = MigasFields.objects_link(
+        model=AttributeSet, name="included_attributes"
     )
-    excludes_link = MigasFields.objects_link(
-        model=AttributeSet, name='excludes'
+    excluded_attributes_link = MigasFields.objects_link(
+        model=AttributeSet, name='excluded_attributes'
     )
 
     def get_queryset(self, request):
         return super(AttributeSetAdmin, self).get_queryset(
             request
-            ).prefetch_related(
-                'attributes',
-                'attributes__property_att',
-                'excludes',
-                'excludes__property_att'
-            )
+        ).prefetch_related(
+            'included_attributes',
+            'included_attributes__property_att',
+            'excluded_attributes',
+            'excluded_attributes__property_att'
+        )
 
 
 @admin.register(Checking)
