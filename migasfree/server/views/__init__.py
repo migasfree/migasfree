@@ -36,7 +36,7 @@ from .devices import connections_model, device_replacement
 from .autocomplete import ComputerAutocomplete, AttributeAutocomplete, DeviceAutocomplete
 from .token import (
     ComputerViewSet, VersionViewSet, PlatformViewSet,
-    PmsViewSet, StoreViewSet, PropertyViewSet,
+    PmsViewSet, StoreViewSet, PropertyViewSet, AttributeSetViewSet,
     AttributeViewSet, ScheduleViewSet, PackageViewSet,
     RepositoryViewSet, ErrorViewSet, FaultDefinitionViewSet,
     FaultViewSet, NotificationViewSet, MigrationViewSet,

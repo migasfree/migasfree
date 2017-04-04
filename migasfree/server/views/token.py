@@ -10,12 +10,22 @@ from rest_framework_filters import backends
 from .. import models, serializers
 from ..filters import (
     ComputerFilter, StoreFilter, PropertyFilter,
-    VersionFilter, AttributeFilter, PackageFilter,
+    VersionFilter, AttributeSetFilter, AttributeFilter, PackageFilter,
     RepositoryFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
     NodeFilter, CheckingFilter, SynchronizationFilter, StatusLogFilter,
 )
 # from ..permissions import PublicPermission, IsAdminOrIsSelf
+
+
+class AttributeSetViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
+    queryset = models.AttributeSet.objects.all()
+    serializer_class = serializers.AttributeSetSerializer
+    filter_class = AttributeSetFilter
+    ordering_fields = '__all__'
+    ordering = ('name',)
 
 
 class AttributeViewSet(
