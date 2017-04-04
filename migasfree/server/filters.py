@@ -10,7 +10,7 @@ from rest_framework import filters
 
 from .models import (
     ClientProperty, TagType, Computer,
-    Store, Property, Version, Attribute,
+    Store, Property, Version, Attribute, AttributeSet,
     Package, Repository, Error, FaultDefinition,
     Fault, Notification, Migration,
     HwNode, Checking, Synchronization, StatusLog,
@@ -108,6 +108,12 @@ class UserFaultFilter(SimpleListFilter):
             ).exclude(faultdef__users=None)
         elif self.value() == 'no_assign':
             return queryset.filter(Q(faultdef__users=None))
+
+
+class AttributeSetFilter(filters.FilterSet):
+    class Meta:
+        model = AttributeSet
+        fields = ['id', 'enable']
 
 
 class AttributeFilter(filters.FilterSet):
