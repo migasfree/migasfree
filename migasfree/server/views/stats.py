@@ -53,7 +53,7 @@ def get_syncs_time_range(start_date, end_date, platform=0, range_name='month'):
     syncs = Synchronization.objects.filter(
         created_at__range=(start_date, end_date)
     ).extra(
-        {range_name: "date_trunc('" + range_name + "', date)"}
+        {range_name: "date_trunc('" + range_name + "', created_at)"}
     ).values(range_name).annotate(
         count=Count("computer_id", distinct=True)
     ).order_by('-' + range_name)
