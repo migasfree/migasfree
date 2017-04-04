@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 
@@ -21,33 +22,42 @@ class AttributeSet(models.Model, MigasLink):
         max_length=50
     )
 
-    active = models.BooleanField(
-        verbose_name=_("active"),
+    description = models.TextField(
+        verbose_name=_("description"),
+        null=True,
+        blank=True
+    )
+
+    enabled = models.BooleanField(
+        verbose_name=_("enabled"),
         default=True,
     )
 
-    attributes = models.ManyToManyField(
+    included_attributes = models.ManyToManyField(
         Attribute,
         blank=True,
-        verbose_name=_("attributes"),
-        help_text=_("Assigned Attributes")
+        verbose_name=_("included attributes"),
     )
 
-    excludes = models.ManyToManyField(
+    excluded_attributes = models.ManyToManyField(
         Attribute,
-        related_name="ExcludeAttributeGroup",
+        related_name="ExcludedAttributesGroup",
         blank=True,
-        verbose_name=_("excludes"),
-        help_text=_("Excluded Attributes")
+        verbose_name=_("excluded attributes"),
     )
+
+    def __str__(self):
+        return self.name
 
     def clean(self):
         super(AttributeSet, self).clean()
 
         if self.id:
-            soa = AttributeSet.objects.get(pk=self.id)
-            if soa.name != self.name and \
-                    Attribute.objects.filter(property_att=Property(id=1), value=self.name).count() > 0:
+            att_set = AttributeSet.objects.get(pk=self.id)
+            if att_set.name != self.name and \
+                    Attribute.objects.filter(
+                        property_att=Property(id=1), value=self.name
+                    ).count() > 0:
                 raise ValidationError(_('Duplicated name'))
 
     def save(self, *args, **kwargs):
@@ -58,9 +68,6 @@ class AttributeSet(models.Model, MigasLink):
             value=self.name,
             defaults={'description': ''}
         )
-
-    def __str__(self):
-        return self.name
 
     @staticmethod
     def item_at_index(lst, item, before=-1):
@@ -90,14 +97,14 @@ class AttributeSet(models.Model, MigasLink):
     @staticmethod
     def get_sets():
         sets = []
-        for item in AttributeSet.objects.filter(active=True):
+        for item in AttributeSet.objects.filter(enabled=True):
             sets = AttributeSet.item_at_index(sets, item.id)
 
             for subset in item.attributes.filter(
                 id__gt=1
             ).filter(
                 property_att__id=1
-            ).filter(~models.Q(value=item.name)):
+            ).filter(~Q(value=item.name)):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -108,7 +115,7 @@ class AttributeSet(models.Model, MigasLink):
                 id__gt=1
             ).filter(
                 property_att__id=1
-            ).filter(~models.Q(value=item.name)):
+            ).filter(~Q(value=item.name)):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -123,10 +130,10 @@ class AttributeSet(models.Model, MigasLink):
 
         att_id = []
         for item in AttributeSet.get_sets():
-            for soa in AttributeSet.objects.filter(id=item).filter(
-                models.Q(attributes__id__in=attributes)
-            ).filter(~models.Q(excludes__id__in=attributes)):
-                att = Attribute.objects.create(property_set, soa.name)
+            for att_set in AttributeSet.objects.filter(id=item).filter(
+                Q(included_attributes__id__in=attributes)
+            ).filter(~Q(excluded_attributes__id__in=attributes)):
+                att = Attribute.objects.create(property_set, att_set.name)
                 att_id.append(att.id)
                 attributes.append(att.id)
 
@@ -140,16 +147,16 @@ class AttributeSet(models.Model, MigasLink):
 
 
 @receiver(pre_save, sender=AttributeSet)
-def pre_save_set_of_attributes(sender, instance, **kwargs):
+def pre_save_attribute_set(sender, instance, **kwargs):
     if instance.id:
-        soa = AttributeSet.objects.get(pk=instance.id)
-        if instance.name != soa.name:
-            att = Attribute.objects.get(property_att=Property(id=1), value=soa.name)
+        att_set = AttributeSet.objects.get(pk=instance.id)
+        if instance.name != att_set.name:
+            att = Attribute.objects.get(property_att=Property(id=1), value=att_set.name)
             att.update_value(instance.name)
 
 
 @receiver(pre_delete, sender=AttributeSet)
-def pre_delete_set_of_attributes(sender, instance, **kwargs):
+def pre_delete_attribute_set(sender, instance, **kwargs):
     try:
         Attribute.objects.get(property_att=Property(id=1), value=instance.name).delete()
     except ObjectDoesNotExist:
