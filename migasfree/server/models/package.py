@@ -69,16 +69,14 @@ class Package(models.Model, MigasLink):
             ]
         return super(Package, self).menu_link()
 
+    @staticmethod
+    def path(project_name, store_name, name):
+        return os.path.join(Store.path(project_name, store_name), name)
+
     def create_dir(self):
-        _path = os.path.join(
-            settings.MIGASFREE_REPO_DIR,
-            self.version.name,
-            'STORES',
-            self.store.name,
-            self.name
-        )
-        if not os.path.exists(_path):
-            os.makedirs(_path)
+        path = self.path(self.version.name, self.store.name, self.name)
+        if not os.path.exists(path):
+            os.makedirs(path)
 
     def clean(self):
         super(Package, self).clean()
