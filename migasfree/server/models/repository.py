@@ -190,6 +190,13 @@ class Repository(models.Model, MigasLink):
 
         return repositories
 
+    def path(self, name=None):
+        return os.path.join(
+            Version.path(self.version.name),
+            self.version.pms.slug,
+            name
+        )
+
     class Meta:
         app_label = 'server'
         verbose_name = _("Repository")
@@ -201,11 +208,6 @@ class Repository(models.Model, MigasLink):
 
 @receiver(pre_delete, sender=Repository)
 def pre_delete_deployment(sender, instance, **kwargs):
-    path = os.path.join(
-        settings.MIGASFREE_REPO_DIR,
-        instance.version.name,
-        instance.version.pms.slug,
-        instance.name
-    )
+    path = instance.path()
     if os.path.exists(path):
         shutil.rmtree(path)
