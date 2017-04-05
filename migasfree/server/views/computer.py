@@ -15,7 +15,8 @@ from django.utils.translation import ugettext_lazy as _
 from ..forms import ComputerReplacementForm
 from ..models import (
     Computer, Synchronization, Error, Fault,
-    StatusLog, Migration, Version, Repository, FaultDefinition, DeviceLogical
+    StatusLog, Migration, Version, Deployment,
+    FaultDefinition, DeviceLogical,
 )
 from ..mixins import LoginRequiredMixin
 from ..functions import d2s, to_heatmap
@@ -217,7 +218,7 @@ def computer_simulate_sync(request, pk):
         repositories = []
         for repo in result["repositories"]:
             repositories.append(
-                Repository.objects.get(
+                Deployment.objects.get(
                     version__id=version.id, name=repo['name']
                 )
             )
