@@ -38,7 +38,7 @@ from .token import (
     ComputerViewSet, VersionViewSet, PlatformViewSet,
     PmsViewSet, StoreViewSet, PropertyViewSet, AttributeSetViewSet,
     AttributeViewSet, ScheduleViewSet, PackageViewSet,
-    RepositoryViewSet, ErrorViewSet, FaultDefinitionViewSet,
+    DeploymentViewSet, ErrorViewSet, FaultDefinitionViewSet,
     FaultViewSet, NotificationViewSet, MigrationViewSet,
     HardwareComputerViewSet, HardwareViewSet, CheckingViewSet,
     UserViewSet, SynchronizationViewSet, StatusLogViewSet,
