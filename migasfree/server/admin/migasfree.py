@@ -157,22 +157,20 @@ class MigasFields(object):
 
     @staticmethod
     def timeline(name="", description='', model=None):
-        from ..functions import time_horizon, percent_horizon
-
         def getter(self, obj):
             if obj.schedule:
+                timeline = obj.schedule_timeline()
+
                 date_format = "%Y-%m-%d"
                 begin_date = datetime.datetime.strptime(
-                    str(time_horizon(obj.date, obj.schedule_begin)),
+                    timeline['begin_date'],
                     date_format
                 )
                 end_date = datetime.datetime.strptime(
-                    str(time_horizon(
-                        obj.date,
-                        obj.schedule_end
-                    )),
+                    timeline['end_date'],
                     date_format
                 )
+
                 days = (datetime.datetime.today() - begin_date).days + 1
                 total_days = (end_date - begin_date).days
                 return render_to_string(
@@ -180,13 +178,13 @@ class MigasFields(object):
                     {
                         'timeline': {
                             'repository_id': obj.pk,
-                            'percent': int(percent_horizon(begin_date, end_date)),
+                            'percent': timeline['percent'],
                             'schedule': obj.schedule,
                             'info': _('%s/%s days (from %s to %s)') % (
                                 days,
                                 total_days,
-                                begin_date.strftime(date_format),
-                                end_date.strftime(date_format)
+                                timeline['begin_date'],
+                                timeline['end_date']
                             )
                         }
                     }
@@ -293,11 +291,11 @@ class MigasChangeList(ChangeList):
                 _name = _classname
 
                 if _classname == "ExcludeAttribute":
-                    _classname = "repository"
-                    _name = "excluded"
-                if _classname == "ExcludeAttributeGroup":
+                    _classname = "deployment"
+                    _name = "excluded_attributes"
+                if _classname == "ExcludedAttributesGroup":
                     _classname = "attributeset"
-                    _name = "excluded"
+                    _name = "excluded_attributes"
 
                 if not hasattr(self.model, _classname):
                     mymodel = apps.get_model('server', _classname)
