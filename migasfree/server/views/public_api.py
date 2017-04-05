@@ -6,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.conf import settings
 
-from ..models import Platform, Version, Repository
+from ..models import Platform, Version, Deployment
 from ..api import get_computer
 from ..functions import uuid_validate
 from ..security import gpg_get_key
@@ -46,20 +46,20 @@ def get_computer_info(request):
 
     element = []
     for tag in computer.tags.all():
-        element.append("%s-%s" % (tag.property_att.prefix, tag.value))
+        element.append("{}-{}".format(tag.property_att.prefix, tag.value))
     result["tags"] = element
 
     result["available_tags"] = {}
-    for rps in Repository.objects.all().filter(
-        version=computer.version
-    ).filter(active=True):
-        for tag in rps.attributes.all().filter(
-            property_att__tag=True
-        ).filter(property_att__active=True):
+    for deploy in Deployment.objects.all().filter(
+        version=computer.version, enabled=True
+    ):
+        for tag in deploy.included_attributes.all().filter(
+            property_att__tag=True, property_att__active=True
+        ):
             if tag.property_att.name not in result["available_tags"]:
                 result["available_tags"][tag.property_att.name] = []
 
-            value = "%s-%s" % (tag.property_att.prefix, tag.value)
+            value = "{}-{}".format(tag.property_att.prefix, tag.value)
             if value not in result["available_tags"][tag.property_att.name]:
                 result["available_tags"][tag.property_att.name].append(value)
 
