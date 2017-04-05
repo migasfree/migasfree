@@ -442,22 +442,14 @@ def upload_computer_info(request, name, uuid, computer, data):
             for item in lst_set:
                 computer.sync_attributes.add(item)
 
-        # Fault Definitions
-        fault_definitions = []
-        for d in FaultDefinition.enabled_for_attributes(lst_attributes):
-            fault_definitions.append({
-                "language": settings.MIGASFREE_PROGRAMMING_LANGUAGES[d['language']][1],
-                "name": d['name'],
-                "code": d['code']
-            })
+        fault_definitions = FaultDefinition.enabled_for_attributes(lst_attributes)
 
-        deploys = Deployment.available_deployments(computer, lst_attributes)
-
-        # Finally, JSON creation
         lst_deploys = []
         lst_pkg_to_remove = []
         lst_pkg_to_install = []
 
+        # deployments
+        deploys = Deployment.available_deployments(computer, lst_attributes)
         for d in deploys:
             lst_deploys.append({"name": d.name})
             if d.packages_to_remove:
@@ -469,7 +461,7 @@ def upload_computer_info(request, name, uuid, computer, data):
                     if p != "":
                         lst_pkg_to_install.append(p)
 
-        # DEVICES
+        # devices
         logical_devices = []
         for device in computer.logical_devices(lst_attributes):
             logical_devices.append(device.as_dict(computer.version))
@@ -488,6 +480,7 @@ def upload_computer_info(request, name, uuid, computer, data):
                 ))
             )
 
+        # Finally, JSON creation
         data = {
             "faultsdef": fault_definitions,
             "repositories": lst_deploys,
