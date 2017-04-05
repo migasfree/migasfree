@@ -70,21 +70,6 @@ def time_horizon(date, delay):
     return date + timedelta(days=delta)
 
 
-def percent_horizon(begin_date, end_date):
-    delta = end_date - begin_date
-    progress = datetime.now().date() - begin_date.date()
-    if delta.days > 0:
-        percent = float(progress.days + 1) / delta.days * 100
-    else:
-        percent = 100
-    if percent < 0:
-        percent = 0
-    if percent > 100:
-        percent = 100
-
-    return percent
-
-
 def compare_list_values(l1, l2):
     """ returns True if both list are equal """
     if len(l1) != len(l2):
