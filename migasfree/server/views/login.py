@@ -41,7 +41,7 @@ def preferences(request):
         )
 
     version = None
-    success_url = '%s?active__exact=1' % reverse('admin:server_repository_changelist')
+    success_url = '%s?enabled__exact=1' % reverse('admin:server_deployment_changelist')
 
     version_id = int(request.POST.get('version', 0))
     if version_id:
