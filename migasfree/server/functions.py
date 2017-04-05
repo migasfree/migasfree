@@ -60,14 +60,14 @@ def swap_m2m(source_field, target_field):
     target_field.add(*source_m2m)
 
 
-def horizon(mydate, delay):
+def time_horizon(date, delay):
     """
     No weekends
     """
-    iday = int(mydate.strftime("%w"))
-    idelta = delay + (((delay + iday - 1) / 5) * 2)
+    weekday = int(date.strftime("%w"))  # [0(Sunday), 6]
+    delta = delay + (((delay + weekday - 1) / 5) * 2)
 
-    return mydate + timedelta(days=idelta)
+    return date + timedelta(days=delta)
 
 
 def percent_horizon(begin_date, end_date):

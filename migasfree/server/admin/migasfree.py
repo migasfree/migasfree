@@ -157,17 +157,17 @@ class MigasFields(object):
 
     @staticmethod
     def timeline(name="", description='', model=None):
-        from ..functions import horizon, percent_horizon
+        from ..functions import time_horizon, percent_horizon
 
         def getter(self, obj):
             if obj.schedule:
                 date_format = "%Y-%m-%d"
                 begin_date = datetime.datetime.strptime(
-                    str(horizon(obj.date, obj.schedule_begin)),
+                    str(time_horizon(obj.date, obj.schedule_begin)),
                     date_format
                 )
                 end_date = datetime.datetime.strptime(
-                    str(horizon(
+                    str(time_horizon(
                         obj.date,
                         obj.schedule_end
                     )),

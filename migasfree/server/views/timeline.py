@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from ..functions import horizon, percent_horizon
+from ..functions import time_horizon, percent_horizon
 from ..models import Repository, ScheduleDelay
 
 
@@ -26,11 +26,11 @@ def timeline(request):
 
     date_format = "%Y-%m-%d"
     begin_date = datetime.datetime.strptime(
-        str(horizon(repository.date, delays[0].delay)),
+        str(time_horizon(repository.date, delays[0].delay)),
         date_format
     )
     end_date = datetime.datetime.strptime(
-        str(horizon(
+        str(time_horizon(
             repository.date,
             delays.reverse()[0].delay + delays.reverse()[0].duration
         )),
@@ -40,11 +40,11 @@ def timeline(request):
     timeline_delays = []
     for item in delays:
         hori = datetime.datetime.strptime(
-            str(horizon(repository.date, item.delay)),
+            str(time_horizon(repository.date, item.delay)),
             date_format
         )
         horf = datetime.datetime.strptime(
-            str(horizon(repository.date, item.delay + item.duration)),
+            str(time_horizon(repository.date, item.delay + item.duration)),
             date_format
         )
 
