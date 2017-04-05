@@ -11,7 +11,7 @@ from ajax_select import make_ajax_form
 from ajax_select.fields import AutoCompleteSelectMultipleField
 
 from .models import (
-    Repository, UserProfile, Computer, Device, DeviceLogical,
+    Deployment, UserProfile, Computer, Device, DeviceLogical,
     Property, Tag, TagType, Attribute, Store, Package
 )
 
@@ -60,19 +60,25 @@ class AppendDevicesFromComputerForm(forms.Form):
     )
 
 
-class RepositoryForm(forms.ModelForm):
-    attributes = AutoCompleteSelectMultipleField('attribute', required=False)
-    packages = AutoCompleteSelectMultipleField('package', required=False)
-    excludes = AutoCompleteSelectMultipleField('attribute', required=False)
+class DeploymentForm(forms.ModelForm):
+    included_attributes = AutoCompleteSelectMultipleField(
+        'attribute', required=False
+    )
+    excluded_attributes = AutoCompleteSelectMultipleField(
+        'attribute', required=False
+    )
+    available_packages = AutoCompleteSelectMultipleField(
+        'package', required=False
+    )
 
     class Meta:
-        model = Repository
+        model = Deployment
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super(RepositoryForm, self).__init__(*args, **kwargs)
+        super(DeploymentForm, self).__init__(*args, **kwargs)
         try:
-            self.fields['date'].initial = datetime.date.today()
+            self.fields['start_date'].initial = datetime.date.today()
             self.fields['version'].initial = UserProfile.objects.get(
                 pk=self.current_user.id
             ).version.id
@@ -92,12 +98,12 @@ class RepositoryForm(forms.ModelForm):
 
     def clean(self):
         # http://stackoverflow.com/questions/7986510/django-manytomany-model-validation
-        cleaned_data = super(RepositoryForm, self).clean()
+        cleaned_data = super(DeploymentForm, self).clean()
 
         if 'version' not in cleaned_data:
             raise ValidationError(_('Version is required'))
 
-        for pkg_id in cleaned_data.get('packages', []):
+        for pkg_id in cleaned_data.get('available_packages', []):
             pkg = Package.objects.get(pk=pkg_id)
             if pkg.version.id != cleaned_data['version'].id:
                 raise ValidationError(
@@ -106,8 +112,12 @@ class RepositoryForm(forms.ModelForm):
                     )
                 )
 
-        self._validate_active_computers(cleaned_data.get('attributes', []))
-        self._validate_active_computers(cleaned_data.get('excludes', []))
+        self._validate_active_computers(
+            cleaned_data.get('included_attributes', [])
+        )
+        self._validate_active_computers(
+            cleaned_data.get('excluded_attributes', [])
+        )
 
 
 class StoreForm(forms.ModelForm):
