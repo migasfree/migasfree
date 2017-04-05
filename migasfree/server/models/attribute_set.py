@@ -100,7 +100,7 @@ class AttributeSet(models.Model, MigasLink):
         for item in AttributeSet.objects.filter(enabled=True):
             sets = AttributeSet.item_at_index(sets, item.id)
 
-            for subset in item.attributes.filter(
+            for subset in item.included_attributes.filter(
                 id__gt=1
             ).filter(
                 property_att__id=1
@@ -111,7 +111,7 @@ class AttributeSet(models.Model, MigasLink):
                     before=item.id
                 )
 
-            for subset in item.excludes.filter(
+            for subset in item.excluded_attributes.filter(
                 id__gt=1
             ).filter(
                 property_att__id=1
