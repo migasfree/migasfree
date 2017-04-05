@@ -44,9 +44,9 @@
         "model": "server.checking",
         "fields": {
             "active": true,
-            "code": "from migasfree.server.models import Package\nresult = Package.objects.filter(repository__id__exact=None).count()\nurl = '/admin/server/package/?repository__isnull=True'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
+            "code": "from migasfree.server.models import Package\nresult = Package.objects.filter(deployment__id__exact=None).count()\nurl = '/admin/server/package/?deployment__isnull=True'\nalert = 'warning'\nmsg = 'Package/Set orphan'\ntarget = 'server'\n",
             "name": "Orphaned Package/Set",
-            "description": "Packages that have not been assigned to any repository"
+            "description": "Packages that have not been assigned to any deployment"
         }
     },
     {
