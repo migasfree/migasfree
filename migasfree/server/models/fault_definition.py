@@ -75,11 +75,19 @@ class FaultDefinition(models.Model, MigasLink):
 
     @staticmethod
     def enabled_for_attributes(attributes):
-        return list(FaultDefinition.objects.filter(
+        fault_definitions = []
+        for item in FaultDefinition.objects.filter(
             Q(enabled=True) &
             Q(included_attributes__id__in=attributes) &
             ~Q(excluded_attributes__id__in=attributes)
-        ).distinct().values('language', 'name', 'code'))
+        ).distinct():
+            fault_definitions.append({
+                "language": item.get_language_display(),
+                "name": item.name,
+                "code": item.code
+            })
+
+        return fault_definitions
 
     def save(self, *args, **kwargs):
         self.code = self.code.replace("\r\n", "\n")
