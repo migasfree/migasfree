@@ -13,19 +13,19 @@ from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
     Attribute, AttributeSet, Checking, ClientProperty, Feature, MessageServer,
-    Notification, Package, Platform, Pms, Property, Query, Repository, Schedule,
+    Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
     ScheduleDelay, Store, Tag, TagType, UserProfile, Version
 )
 
 from ..forms import (
-    PropertyForm, RepositoryForm, TagForm, StoreForm, PackageForm
+    PropertyForm, DeploymentForm, TagForm, StoreForm, PackageForm
 )
 
 from ..filters import FeatureFilter, TagFilter
 from ..functions import compare_list_values
 from ..tasks import (
-    create_physical_repository,
-    remove_physical_repository
+    create_repository_metadata,
+    remove_repository_metadata
 )
 
 
@@ -160,9 +160,9 @@ class MessageServerAdmin(MigasAdmin):
 class PackageAdmin(MigasAdmin):
     form = PackageForm
     list_display = (
-        'name_link', 'version_link', 'store_link', 'repositories_link'
+        'name_link', 'version_link', 'store_link', 'deployments_link'
     )
-    list_filter = ('version', 'store', 'repository')
+    list_filter = ('version', 'store', 'deployment')
     list_select_related = ('version', 'store')
     search_fields = ('name', 'store__name')
     ordering = ('name',)
@@ -174,8 +174,8 @@ class PackageAdmin(MigasAdmin):
     store_link = MigasFields.link(
         model=Package, name='store', order="store__name"
     )
-    repositories_link = MigasFields.objects_link(
-        model=Package, name='repository_set'
+    deployments_link = MigasFields.objects_link(
+        model=Package, name='deployment_set'
     )
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
@@ -207,7 +207,7 @@ class PackageAdmin(MigasAdmin):
         return super(PackageAdmin, self).get_queryset(
             request
             ).prefetch_related(
-                'repository_set'
+                'deployment_set'
             )
 
 
@@ -269,62 +269,66 @@ class QueryAdmin(MigasAdmin):
     run_query.short_description = _("Run Query")
 
 
-@admin.register(Repository)
-class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
-    form = RepositoryForm
+@admin.register(Deployment)
+class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
+    form = DeploymentForm
     list_display = (
-        'name_link', 'version_link', 'my_active', 'date', 'schedule_link', 'timeline'
+        'name_link', 'version_link', 'my_enabled', 'start_date', 'schedule_link', 'timeline'
     )
-    list_filter = ('active', 'version', 'schedule')
+    list_filter = ('enabled', 'version', 'schedule')
     search_fields = ('name', 'packages__name')
     list_select_related = ("version",)
     actions = ['regenerate_metadata']
 
     fieldsets = (
         (_('General'), {
-            'fields': ('name', 'version', 'active', 'comment',)
+            'fields': ('name', 'version', 'enabled', 'comment',)
         }),
         (_('Packages'), {
             'classes': ('collapse',),
-            'fields': ('packages', 'toinstall', 'toremove',)
+            'fields': (
+                'available_packages',
+                'packages_to_install',
+                'packages_to_remove',
+            )
         }),
         (_('Default'), {
             'classes': ('collapse',),
             'fields': (
-                'defaultpreinclude',
-                'defaultinclude',
-                'defaultexclude',
+                'default_preincluded_packages',
+                'default_included_packages',
+                'default_excluded_packages',
             )
         }),
         (_('Attributes'), {
-            'fields': ('attributes', 'excludes')
+            'fields': ('included_attributes', 'excluded_attributes')
         }),
         (_('Schedule'), {
-            'fields': ('date', 'schedule',)
+            'fields': ('start_date', 'schedule',)
         }),
     )
 
-    name_link = MigasFields.link(model=Repository, name='name')
+    name_link = MigasFields.link(model=Deployment, name='name')
     version_link = MigasFields.link(
-        model=Repository, name='version', order="version__name"
+        model=Deployment, name='version', order="version__name"
     )
     schedule_link = MigasFields.link(
-        model=Repository, name='schedule', order="schedule__name"
+        model=Deployment, name='schedule', order="schedule__name"
     )
-    my_active = MigasFields.boolean(model=Repository, name='active')
-    timeline = MigasFields.timeline(model=Repository)
+    my_enabled = MigasFields.boolean(model=Deployment, name='enabled')
+    timeline = MigasFields.timeline(model=Deployment)
 
     def regenerate_metadata(self, request, objects):
         if not self.has_change_permission(request):
             raise PermissionDenied
 
-        for repo in objects:
-            create_physical_repository(repo, request=request)
+        for deploy in objects:
+            create_repository_metadata(deploy, request=request)
 
     regenerate_metadata.short_description = _("Regenerate metadata")
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
-        if db_field.name == 'packages':
+        if db_field.name == 'available_packages':
             # Packages filter by user version
             kwargs['queryset'] = Package.objects.filter(
                 version__id=request.user.userprofile.version_id
@@ -332,14 +336,14 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
 
             return db_field.formfield(**kwargs)
 
-        if db_field.name == 'attributes':
+        if db_field.name == 'included_attributes':
             kwargs['queryset'] = Attribute.objects.filter(
                 property_att__active=True
             )
 
             return db_field.formfield(**kwargs)
 
-        return super(RepositoryAdmin, self).formfield_for_manytomany(
+        return super(DeploymentAdmin, self).formfield_for_manytomany(
             db_field,
             request,
             **kwargs
@@ -347,8 +351,10 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def save_model(self, request, obj, form, change):
         is_new = (obj.pk is None)
-        packages_after = list(map(int, form.cleaned_data.get('packages')))
-        super(RepositoryAdmin, self).save_model(request, obj, form, change)
+        packages_after = list(
+            map(int, form.cleaned_data.get('available_packages'))
+        )
+        super(DeploymentAdmin, self).save_model(request, obj, form, change)
 
         name_old = form.initial.get('name')
         name_new = obj.name
@@ -358,29 +364,29 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         # or name has been changed (to avoid client errors)
         if ((is_new and len(packages_after) == 0)
                 or compare_list_values(
-                    obj.packages.values_list('id', flat=True),  # pkgs before
+                    obj.available_packages.values_list('id', flat=True),  # pkgs before
                     packages_after
                 ) is False) or (name_new != name_old):
-            create_physical_repository(obj, packages_after, request)
+            create_repository_metadata(obj, packages_after, request)
 
             # delete old repository by name changed
             if name_new != name_old and not is_new:
-                remove_physical_repository(request, obj, name_old)
+                remove_repository_metadata(request, obj, name_old)
 
         Notification.objects.create(
-            _('Repository [%s] modified by user [%s] '
+            _('Deployment [%s] modified by user [%s] '
                 '(<a href="%s">review changes</a>)') % (
                 '<a href="{}">{}</a>'.format(
-                    reverse('admin:server_repository_change', args=(obj.id,)),
+                    reverse('admin:server_deployment_change', args=(obj.id,)),
                     obj.name
                 ),
                 request.user,
-                reverse('admin:server_repository_history', args=(obj.id,))
+                reverse('admin:server_deployment_history', args=(obj.id,))
             )
         )
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(RepositoryAdmin, self).get_form(request, obj, **kwargs)
+        form = super(DeploymentAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['version'].widget.can_add_related = False
         form.base_fields['schedule'].widget.can_add_related = False
         form.current_user = request.user
@@ -388,15 +394,15 @@ class RepositoryAdmin(AjaxSelectAdmin, MigasAdmin):
         return form
 
     def get_queryset(self, request):
-        return super(RepositoryAdmin, self).get_queryset(
+        return super(DeploymentAdmin, self).get_queryset(
             request
         ).extra(
             select={
                 'schedule_begin': '(SELECT delay FROM server_scheduledelay '
-                                  'WHERE server_repository.schedule_id = server_scheduledelay.schedule_id '
+                                  'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
                                   'ORDER BY server_scheduledelay.delay LIMIT 1)',
                 'schedule_end': '(SELECT delay+duration FROM server_scheduledelay '
-                                'WHERE server_repository.schedule_id = server_scheduledelay.schedule_id '
+                                'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
                                 'ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
             }
         ).select_related("version", "schedule")
