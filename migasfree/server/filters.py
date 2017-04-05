@@ -11,7 +11,7 @@ from rest_framework import filters
 from .models import (
     ClientProperty, TagType, Computer,
     Store, Property, Version, Attribute, AttributeSet,
-    Package, Repository, Error, FaultDefinition,
+    Package, Deployment, Error, FaultDefinition,
     Fault, Notification, Migration,
     HwNode, Checking, Synchronization, StatusLog,
 )
@@ -213,20 +213,20 @@ class PropertyFilter(filters.FilterSet):
         fields = ['id', 'active', 'tag']
 
 
-class RepositoryFilter(filters.FilterSet):
+class DeploymentFilter(filters.FilterSet):
     included_attributes = django_filters.CharFilter(
-        name='attributes__value', lookup_type='icontains'
+        name='included_attributes__value', lookup_type='icontains'
     )
     excluded_attributes = django_filters.CharFilter(
-        name='excludes__value', lookup_type='icontains'
+        name='excluded_attributes__value', lookup_type='icontains'
     )
     available_packages = django_filters.CharFilter(
-        name='packages__name', lookup_type='icontains'
+        name='available_packages__name', lookup_type='icontains'
     )
 
     class Meta:
-        model = Repository
-        fields = ['id', 'version__id', 'active', 'schedule__id']
+        model = Deployment
+        fields = ['id', 'version__id', 'enabled', 'schedule__id']
 
 
 class StatusLogFilter(filters.FilterSet):
