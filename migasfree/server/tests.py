@@ -24,16 +24,16 @@ class RepositoryTestCase(TransactionTestCase):
             platform
         )
 
-        self.test1 = Repository()
+        self.test1 = Deployment()
         self.test1.name = "TEST 1 2"
-        self.test1.active = True
+        self.test1.enabled = True
         self.test1.version = version
-        self.test1.date = datetime.now().date()
-        self.test1.toinstall = "bluefish"
-        self.test1.toremove = ""
+        self.test1.start_date = datetime.now().date()
+        self.test1.packages_to_install = "bluefish"
+        self.test1.packages_to_remove = ""
         self.test1.save()  # FIXME remove
 
-    def test_repository_name(self):
+    def test_deployment_name(self):
         self.assertEqual(self.test1.name, 'test-1-2')
 
     def test_login_site(self):
@@ -44,6 +44,6 @@ class RepositoryTestCase(TransactionTestCase):
         self.assertEqual(response.status_code, 200)
 
         response = self.client.get(
-            reverse('admin:server_repository_changelist')
+            reverse('admin:server_deployment_changelist')
         )
         self.assertEqual(response.status_code, 200)
