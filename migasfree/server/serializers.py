@@ -196,44 +196,44 @@ class ScheduleInfoSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class RepositorySerializer(serializers.ModelSerializer):
+class DeploymentSerializer(serializers.ModelSerializer):
     version = VersionInfoSerializer(many=False, read_only=True)
     schedule = ScheduleInfoSerializer(many=False, read_only=True)
-    packages = PackageInfoSerializer(many=True, read_only=True)
-    attributes = AttributeInfoSerializer(many=True, read_only=True)
-    excludes = AttributeInfoSerializer(many=True, read_only=True)
+    available_packages = PackageInfoSerializer(many=True, read_only=True)
+    included_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
 
     class Meta:
-        model = models.Repository
+        model = models.Deployment
         fields = '__all__'
 
 
-class RepositoryWriteSerializer(serializers.ModelSerializer):
+class DeploymentWriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        deploy = super(RepositoryWriteSerializer, self).create(validated_data)
-        tasks.create_physical_repository(deploy)
+        deploy = super(DeploymentWriteSerializer, self).create(validated_data)
+        tasks.create_repository_metadata(deploy)
         return deploy
 
     def update(self, instance, validated_data):
         old_obj = self.Meta.model.objects.get(id=instance.id)
         old_pkgs = sorted(
-            old_obj.packages.values_list('id', flat=True)
+            old_obj.available_packages.values_list('id', flat=True)
         )
         old_name = old_obj.name
 
         # https://github.com/tomchristie/django-rest-framework/issues/2442
-        instance = super(RepositoryWriteSerializer, self).update(
+        instance = super(DeploymentWriteSerializer, self).update(
             instance, validated_data
         )
         new_pkgs = sorted(
-            instance.packages.values_list('id', flat=True)
+            instance.available_packages.values_list('id', flat=True)
         )
 
         if cmp(old_pkgs, new_pkgs) != 0 or old_name != validated_data['name']:
-            tasks.create_physical_repository(instance)
+            tasks.create_repository_metadata(instance)
 
             if old_name != validated_data['name']:
-                tasks.remove_physical_repository(
+                tasks.remove_repository_metadata(
                     {}, instance, old_name
                 )
 
@@ -246,7 +246,7 @@ class RepositoryWriteSerializer(serializers.ModelSerializer):
                 if computer.status not in models.Computer.ACTIVE_STATUS:
                     raise serializers.ValidationError(
                         _('It is not possible to assign an inactive computer (%s) as an attribute')
-                        % computer.__str__()
+                        % computer
                     )
 
     def validate(self, data):
@@ -258,13 +258,13 @@ class RepositoryWriteSerializer(serializers.ModelSerializer):
                     )
                 )
 
-        self._validate_active_computers(data.get('attributes', []))
-        self._validate_active_computers(data.get('excludes', []))
+        self._validate_active_computers(data.get('included_attributes', []))
+        self._validate_active_computers(data.get('excluded_attributes', []))
 
         return data
 
     class Meta:
-        model = models.Repository
+        model = models.Deployment
         fields = '__all__'
 
 
