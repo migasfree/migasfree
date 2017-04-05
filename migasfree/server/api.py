@@ -15,11 +15,11 @@ from .models import (
     Attribute, AttributeSet, ClientProperty, Computer,
     Error, Fault, FaultDefinition, Feature, HwNode, Message,
     Migration, Notification, Package, Pms, Platform, Property,
-    Repository, Store, Tag, Synchronization, User, Version,
+    Deployment, Store, Tag, Synchronization, User, Version,
 )
 from .security import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
-from .tasks import create_physical_repository
+from .tasks import create_repository_metadata
 from .functions import (
     uuid_change_format,
     list_difference, list_common,
@@ -451,23 +451,23 @@ def upload_computer_info(request, name, uuid, computer, data):
                 "code": d['code']
             })
 
-        repositories = Repository.available_repos(computer, lst_attributes)
+        deploys = Deployment.available_deployments(computer, lst_attributes)
 
         # Finally, JSON creation
-        lst_repos = []
-        lst_pkg_remove = []
-        lst_pkg_install = []
+        lst_deploys = []
+        lst_pkg_to_remove = []
+        lst_pkg_to_install = []
 
-        for r in repositories:
-            lst_repos.append({"name": r.name})
-            if r.toremove:
-                for p in r.toremove.replace("\n", " ").split(" "):
+        for d in deploys:
+            lst_deploys.append({"name": d.name})
+            if d.packages_to_remove:
+                for p in d.packages_to_remove.replace("\n", " ").split(" "):
                     if p != "":
-                        lst_pkg_remove.append(p)
-            if r.toinstall:
-                for p in r.toinstall.replace("\n", " ").split(" "):
+                        lst_pkg_to_remove.append(p)
+            if d.packages_to_install:
+                for p in d.packages_to_install.replace("\n", " ").split(" "):
                     if p != "":
-                        lst_pkg_install.append(p)
+                        lst_pkg_to_install.append(p)
 
         # DEVICES
         logical_devices = []
@@ -490,10 +490,10 @@ def upload_computer_info(request, name, uuid, computer, data):
 
         data = {
             "faultsdef": fault_definitions,
-            "repositories": lst_repos,
+            "repositories": lst_deploys,
             "packages": {
-                "remove": lst_pkg_remove,
-                "install": lst_pkg_install
+                "remove": lst_pkg_to_remove,
+                "install": lst_pkg_to_install
             },
             "devices": {
                 "logical": logical_devices,
@@ -730,11 +730,11 @@ def get_computer_tags(request, name, uuid, computer, data):
         selected_tags.append(tag.__str__())
 
     available_tags = {}
-    for rps in Repository.objects.filter(
+    for deploy in Deployment.objects.filter(
         version=computer.version,
         active=True
     ):
-        for tag in rps.attributes.filter(
+        for tag in deploy.included_attributes.filter(
             property_att__tag=True,
             property_att__active=True
         ):
@@ -784,48 +784,48 @@ def set_computer_tags(request, name, uuid, computer, data):
         lst_pkg_install = []
         lst_pkg_preinstall = []
 
-        # old repositories
-        for r in Repository.available_repos(computer, old_tags_id):
+        # old deployments
+        for deploy in Deployment.available_deployments(computer, old_tags_id):
             # INVERSE !!!!
             pkgs = "{} {} {}".format(
-                r.toinstall,
-                r.defaultinclude,
-                r.defaultpreinclude
+                deploy.packages_to_install,
+                deploy.default_included_packages,
+                deploy.default_preincluded_packages
             ).replace("\r", " ").replace("\n", " ")
             for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_remove.append(p)
 
             pkgs = "{} {}".format(
-                r.toremove,
-                r.defaultexclude
+                deploy.packages_to_remove,
+                deploy.default_excluded_packages
             ).replace("\r", " ").replace("\n", " ")
             for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_install.append(p)
 
-        # new repositories
-        for r in Repository.available_repos(
+        # new deployments
+        for deploy in Deployment.available_deployments(
             computer,
             new_tags_id + com_tags_id
         ):
             pkgs = "{} {}".format(
-                r.toremove,
-                r.defaultexclude
+                deploy.packages_to_remove,
+                deploy.default_excluded_packages
             ).replace("\r", " ").replace("\n", " ")
             for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_remove.append(p)
 
             pkgs = "{} {}".format(
-                r.toinstall,
-                r.defaultinclude
+                deploy.packages_to_install,
+                deploy.default_included_packages
             ).replace("\r", " ").replace("\n", " ")
             for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_install.append(p)
 
-            pkgs = r.defaultpreinclude.replace("\r", " ").replace("\n", " ")
+            pkgs = deploy.default_preincluded_packages.replace("\r", " ").replace("\n", " ")
             for p in pkgs.split():
                 if p != "" and p != 'None':
                     lst_pkg_preinstall.append(p)
@@ -919,8 +919,8 @@ def create_repositories_package(package_name, version_name):
     try:
         version = Version.objects.get(name=version_name)
         package = Package.objects.get(name=package_name, version=version)
-        for repo in Repository.objects.filter(packages__id=package.id):
-            create_physical_repository(repo)
+        for deploy in Deployment.objects.filter(packages__id=package.id):
+            create_repository_metadata(deploy)
     except ObjectDoesNotExist:
         pass
 
