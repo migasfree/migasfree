@@ -80,8 +80,8 @@ def create_users():
         "computer", "device", "user", "attribute", "error",
         "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
         "devicetype", "schedule", "scheduledelay", "autocheckerror",
-        "faultdef", "property", "checking", "version", "pms", "query",
-        "package", "repository", "store", "message", "update",
+        "faultdefinition", "property", "checking", "version", "pms", "query",
+        "package", "deployment", "store", "message", "synchronization",
         "platform", "messageserver", "migration", "notification"
     ]
     add_read_perms(read_group, tables)
@@ -90,7 +90,7 @@ def create_users():
     deploy_group = Group()
     deploy_group.name = "Liberator"
     deploy_group.save()
-    tables = ["repository", "schedule", "scheduledelay"]
+    tables = ["deployment", "schedule", "scheduledelay"]
     add_all_perms(deploy_group, tables)
     deploy_group.save()
 
@@ -106,7 +106,7 @@ def create_users():
     checker_group.save()
     tables = [
         "autocheckerror", "error", "fault",
-        "message", "update", "checking"
+        "message", "synchronization", "checking"
     ]
     add_all_perms(checker_group, tables)
     checker_group.save()
@@ -131,7 +131,7 @@ def create_users():
     configurator_group.name = "Configurator"
     configurator_group.save()
     tables = [
-        "checking", "faultdef", "property", "pms", "version",
+        "checking", "faultdefinition", "property", "pms", "version",
         "message", "update", "platform", "messageserver", "migration",
         "notification"
     ]
