@@ -11,7 +11,7 @@ from .. import models, serializers
 from ..filters import (
     ComputerFilter, StoreFilter, PropertyFilter,
     VersionFilter, AttributeSetFilter, AttributeFilter, PackageFilter,
-    RepositoryFilter, ErrorFilter, FaultDefinitionFilter,
+    DeploymentFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
     NodeFilter, CheckingFilter, SynchronizationFilter, StatusLogFilter,
 )
@@ -287,7 +287,7 @@ class PackageViewSet(
         Returns packages that are not in any deployment
         """
         serializer = serializers.PackageSerializer(
-            models.Package.objects.filter(repository__id=None),
+            models.Package.objects.filter(deployment__id=None),
             many=True
         )
 
@@ -320,19 +320,19 @@ class PropertyViewSet(
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
 
 
-class RepositoryViewSet(viewsets.ModelViewSet):
-    queryset = models.Repository.objects.all()
-    serializer_class = serializers.RepositorySerializer
-    filter_class = RepositoryFilter
+class DeploymentViewSet(viewsets.ModelViewSet):
+    queryset = models.Deployment.objects.all()
+    serializer_class = serializers.DeploymentSerializer
+    filter_class = DeploymentFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('-date',)
+    ordering = ('-start_date',)
 
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update':
-            return serializers.RepositoryWriteSerializer
+            return serializers.DeploymentWriteSerializer
 
-        return serializers.RepositorySerializer
+        return serializers.DeploymentSerializer
 
 
 class ScheduleViewSet(
