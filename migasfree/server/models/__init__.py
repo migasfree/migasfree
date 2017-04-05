@@ -53,4 +53,4 @@ from .schedule_delay import ScheduleDelay
 
 from .store import Store
 from .package import Package
-from .repository import Repository
+from .deployment import Deployment
