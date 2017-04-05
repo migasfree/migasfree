@@ -3,7 +3,7 @@
 <ul class="dropdown-menu">
     {% if current_version.id != None %}
         <li>
-            <a href="{% url 'admin:server_repository_changelist' %}?active__exact=1&version__id__exact={{ current_version.id }}">{% trans 'Repositories' %}</a>
+            <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1&version__id__exact={{ current_version.id }}">{% trans 'Deployments' %}</a>
         </li>
         <li>
                <a href="{% url 'admin:server_store_changelist' %}?version__id__exact={{ current_version.id }}">{% trans 'Stores' %}</a>
@@ -13,7 +13,7 @@
         </li>
     {% else %}
         <li>
-            <a href="{% url 'admin:server_repository_changelist' %}?active__exact=1">{% trans 'Repositories' %}</a>
+            <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1">{% trans 'Deployments' %}</a>
         </li>
         <li>
                <a href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a>
