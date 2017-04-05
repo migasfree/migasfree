@@ -360,14 +360,15 @@ class Computer(models.Model, MigasLink):
         source_cid = source.get_cid_attribute()
         target_cid = target.get_cid_attribute()
         swap_m2m(source_cid.devicelogical_set, target_cid.devicelogical_set)
-        swap_m2m(source_cid.faultdef_set, target_cid.faultdef_set)
-        swap_m2m(source_cid.repository_set, target_cid.repository_set)
+        swap_m2m(source_cid.faultdefinition_set, target_cid.faultdefinition_set)
+        swap_m2m(source_cid.deployment_set, target_cid.deployment_set)
         swap_m2m(source_cid.ExcludeAttribute, target_cid.ExcludeAttribute)
         swap_m2m(source_cid.attributeset_set, target_cid.attributeset_set)
         swap_m2m(
-            source_cid.ExcludeAttributeGroup, target_cid.ExcludeAttributeGroup
+            source_cid.ExcludedAttributesGroup,
+            target_cid.ExcludedAttributesGroup
         )
-        swap_m2m(source_cid.scheduledelay_set, target_cid.scheduledelay_set)
+        swap_m2m(source_cid.delays, target_cid.delays)
 
         source.status, target.status = target.status, source.status
 
@@ -400,22 +401,22 @@ class Computer(models.Model, MigasLink):
             ugettext("Status"): ugettext(self.status),
             ugettext("Tags"): ', '.join(str(x) for x in self.tags.all()),
             ugettext("Faults"): ', '.join(
-                str(x) for x in cid.faultdef_set.all()
+                str(x) for x in cid.faultdefinition_set.all()
             ),
-            ugettext("Repositories"): ', '.join(
-                str(x) for x in cid.repository_set.all()
+            ugettext("Deployments"): ', '.join(
+                str(x) for x in cid.deployment_set.all()
             ),
-            ugettext("Repositories (excluded)"): ', '.join(
+            ugettext("Deployments (excluded)"): ', '.join(
                 str(x) for x in cid.ExcludeAttribute.all()
             ),
             ugettext("Sets"): ', '.join(
                 str(x) for x in cid.attributeset_set.all()
             ),
             ugettext("Sets (excluded)"): ', '.join(
-                str(x) for x in cid.ExcludeAttributeGroup.all()
+                str(x) for x in cid.ExcludedAttributesGroup.all()
             ),
             ugettext("Delays"): ', '.join(
-                str(x) for x in cid.scheduledelay_set.all()
+                str(x) for x in cid.delays.all()
             ),
             ugettext("Logical devices"): ', '.join(
                 str(x) for x in self.logical_devices()
@@ -464,9 +465,9 @@ def post_save_computer(sender, instance, created, **kwargs):
 
         cid = instance.get_cid_attribute()
         cid.devicelogical_set.clear()
-        cid.faultdef_set.clear()
-        cid.repository_set.clear()
+        cid.faultdefinition_set.clear()
+        cid.deployment_set.clear()
         cid.ExcludeAttribute.clear()
         cid.attributeset_set.clear()
-        cid.ExcludeAttributeGroup.clear()
+        cid.ExcludedAttributesGroup.clear()
         cid.scheduledelay_set.clear()
