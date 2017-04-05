@@ -11,9 +11,9 @@ from .functions import run_in_server
 from .models import Package, Store
 
 
-def remove_physical_repository(request, repo, old_name=""):
-    name = old_name if old_name else repo.name
-    shutil.rmtree(repo.path(name), ignore_errors=True)
+def remove_repository_metadata(request, deploy, old_name=""):
+    name = old_name if old_name else deploy.name
+    shutil.rmtree(deploy.path(name), ignore_errors=True)
 
     _msg = ("Deleted repository: %s" % name)
     if hasattr(request, 'META'):
@@ -22,17 +22,17 @@ def remove_physical_repository(request, repo, old_name=""):
         return _msg
 
 
-def create_physical_repository(repo, packages=None, request=None):
+def create_repository_metadata(deploy, packages=None, request=None):
     """
     Creates the repository metadata.
-    repo = a Repository object
+    deploy = a Deployment object
     packages = a id's list of packages
     """
-    _tmp_path = repo.path('TMP')
-    _stores_path = Store.path(repo.version.name, '')[:-1]  # remove trailing slash
+    _tmp_path = deploy.path('TMP')
+    _stores_path = Store.path(deploy.version.name, '')[:-1]  # remove trailing slash
     _slug_tmp_path = os.path.join(
         _tmp_path,
-        repo.version.pms.slug
+        deploy.version.pms.slug
     )
 
     if _slug_tmp_path.endswith('/'):
@@ -41,7 +41,7 @@ def create_physical_repository(repo, packages=None, request=None):
 
     _pkg_tmp_path = os.path.join(
         _slug_tmp_path,
-        repo.name,
+        deploy.name,
         'PKGS'  # FIXME hardcoded path!!!
     )
     if not os.path.exists(_pkg_tmp_path):
@@ -49,7 +49,7 @@ def create_physical_repository(repo, packages=None, request=None):
 
     _ret = ''
     if not packages and not isinstance(packages, list):
-        packages = repo.packages.all()
+        packages = deploy.packages.all()
     for _pkg in packages:
         if isinstance(_pkg, int):
             _pkg = Package.objects.get(pk=_pkg)
@@ -64,15 +64,15 @@ def create_physical_repository(repo, packages=None, request=None):
 
     # create metadata
     _run_err = run_in_server(
-        repo.version.pms.createrepo.replace(
-            '%REPONAME%', repo.name
+        deploy.version.pms.createrepo.replace(
+            '%REPONAME%', deploy.name
         ).replace('%PATH%', _slug_tmp_path).replace(
             '%KEYS%', settings.MIGASFREE_KEYS_DIR)
     )["err"]
 
-    _source = os.path.join(_slug_tmp_path, repo.name)
+    _source = os.path.join(_slug_tmp_path, deploy.name)
 
-    _target = repo.path()
+    _target = deploy.path()
     shutil.rmtree(_target, ignore_errors=True)
 
     shutil.copytree(_source, _target, symlinks=True)
