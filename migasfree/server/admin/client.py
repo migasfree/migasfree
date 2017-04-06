@@ -454,12 +454,12 @@ class FaultDefinitionAdmin(MigasAdmin):
 
 @admin.register(Message)
 class MessageAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'date', 'text')
+    list_display = ('id', 'computer_link', 'updated_at', 'text')
     list_display_links = ('id',)
-    ordering = ('-date',)
-    list_filter = ('date',)
-    search_fields = ('computer', 'text', 'date')
-    readonly_fields = ('computer_link', 'text', 'date')
+    ordering = ('-updated_at',)
+    list_filter = ('updated_at',)
+    search_fields = ('computer', 'text', 'updated_at')
+    readonly_fields = ('computer_link', 'text', 'updated_at')
     exclude = ('computer',)
 
     computer_link = MigasFields.link(
