@@ -158,7 +158,7 @@ def computer_messages(request):
 
     data = Message.objects.raw("""
         SELECT server_message.id, server_message.computer_id,
-        server_message.text, server_message.date,
+        server_message.text, server_message.updated_at,
         server_computer.name AS computer_name, server_computer.ip_address,
         server_user.name, server_user.fullname, server_user.id AS user_id,
         server_version.name AS version_name
@@ -168,14 +168,14 @@ def computer_messages(request):
             ON (server_computer.version_id = server_version.id)
         INNER JOIN server_user
             ON (server_computer.sync_user_id = server_user.id)
-        ORDER BY server_message.date DESC
+        ORDER BY server_message.updated_at DESC
     """)
 
     result = []
     for item in data:
         result.append(
             {
-                'delayed': True if item.date < delayed_time else False,
+                'delayed': True if item.updated_at < delayed_time else False,
                 'computer_id': item.computer_id,
                 'computer_name': item.computer_name,
                 'user_id': item.user_id,
@@ -183,7 +183,7 @@ def computer_messages(request):
                 'user_fullname': item.fullname,
                 'version': item.version_name,
                 'ip_address': item.ip_address,
-                'date': str(item.date),
+                'date': str(item.updated_at),
                 'text': item.text
             }
         )
@@ -197,31 +197,6 @@ def computer_messages(request):
         template,
         {
             "title": _("Computer Messages"),
-            "query": result,
-        }
-    )
-
-
-@login_required
-def server_messages(request):
-    template = 'server_messages.html'
-    if request.is_ajax():
-        template = 'includes/server_messages_result.html'
-
-    result = []
-    for item in MessageServer.objects.all().order_by("-date"):
-        result.append(
-            {
-                'date': item.date,
-                'text': item.text
-            }
-        )
-
-    return render(
-        request,
-        template,
-        {
-            "title": _("Server Messages"),
             "query": result,
         }
     )
