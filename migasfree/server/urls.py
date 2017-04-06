@@ -30,11 +30,6 @@ urlpatterns = [
         computer_messages,
         name='computer_messages'
     ),
-    url(
-        r'^server_messages/$',
-        server_messages,
-        name="server_messages"
-    ),
 
     url(r'^info/(.*)', info, name='package_info'),
 
