@@ -3,7 +3,6 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone, dateformat
 
 from . import Computer
 
@@ -13,7 +12,6 @@ class MessageManager(models.Manager):
         obj = Message()
         obj.computer = computer
         obj.text = text
-        obj.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         obj.save()
 
         return obj
@@ -33,20 +31,16 @@ class Message(models.Model):
         blank=True
     )
 
-    date = models.DateTimeField(
-        verbose_name=_("date"),
-        default=0
-    )
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('date'))
 
     objects = MessageManager()
 
     def update_message(self, text):
         self.text = text
-        self.date = dateformat.format(timezone.now(), 'Y-m-d H:i:s')
         self.save()
 
     def __str__(self):
-        return '%s (%s)' % (self.computer, self.date)
+        return u'{} ({:%Y-%m-%d %H:%M:%S})'.format(self.computer, self.updated_at)
 
     class Meta:
         app_label = 'server'
