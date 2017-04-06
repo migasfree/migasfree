@@ -40,8 +40,8 @@ class Checking(models.Model):
                     "<b>target</b>: Enumeration value: {'computer' | 'server'}")
     )
 
-    active = models.BooleanField(
-        verbose_name=_("active"),
+    enabled = models.BooleanField(
+        verbose_name=_("enabled"),
         default=True,
     )
 
