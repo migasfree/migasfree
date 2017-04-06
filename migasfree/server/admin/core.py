@@ -12,7 +12,7 @@ from ajax_select.admin import AjaxSelectAdmin
 from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
-    Attribute, AttributeSet, Checking, ClientProperty, Feature, MessageServer,
+    Attribute, AttributeSet, Checking, ClientProperty, Feature,
     Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
     ScheduleDelay, Store, Tag, TagType, UserProfile, Version
 )
@@ -64,12 +64,12 @@ class AttributeSetAdmin(MigasAdmin):
 
 @admin.register(Checking)
 class CheckingAdmin(MigasAdmin):
-    list_display = ('name', 'my_active')
+    list_display = ('name', 'my_enabled')
     list_display_links = ('name',)
-    list_filter = ('active',)
+    list_filter = ('enabled',)
     search_fields = ('name',)
 
-    my_active = MigasFields.boolean(model=Checking, name='active')
+    my_enabled = MigasFields.boolean(model=Checking, name='enabled')
 
 
 @admin.register(ClientProperty)
@@ -144,16 +144,6 @@ class FeatureAdmin(MigasAdmin):
 
     def has_add_permission(self, request):
         return False
-
-
-@admin.register(MessageServer)
-class MessageServerAdmin(MigasAdmin):
-    list_display = ('id', 'date', 'text')
-    list_display_links = ('id',)
-    ordering = ('-date',)
-    list_filter = ('date',)
-    search_fields = ('text', 'date')
-    readonly_fields = ('text', 'date')
 
 
 @admin.register(Package)
@@ -276,7 +266,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         'name_link', 'version_link', 'my_enabled', 'start_date', 'schedule_link', 'timeline'
     )
     list_filter = ('enabled', 'version', 'schedule')
-    search_fields = ('name', 'packages__name')
+    search_fields = ('name', 'available_packages__name')
     list_select_related = ("version",)
     actions = ['regenerate_metadata']
 
