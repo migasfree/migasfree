@@ -59,6 +59,24 @@
         </div>
 
         <div class="panel-body">
+            {% if faultsdef %}
+                <h3>{% trans 'Fault Definitions' %}</h3>
+                <ul>
+                {% for item in faultsdef %}
+                    <li>{{ item.link }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if repositories %}
+                <h3>{% trans 'Deployments' %}</h3>
+                <ul>
+                {% for item in repositories %}
+                    <li>{{ item.link }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+
             {% if packages.install %}
                 <h3>{% trans 'Packages to install' %}</h3>
                 <ul>
@@ -73,24 +91,6 @@
                 <ul>
                 {% for item in packages.remove %}
                     <li>{{ item }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% if repositories %}
-                <h3>{% trans 'Repositories' %}</h3>
-                <ul>
-                {% for item in repositories %}
-                    <li>{{ item.link }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-
-            {% if faultsdef %}
-                <h3>{% trans 'Fault Definitions' %}</h3>
-                <ul>
-                {% for item in faultsdef %}
-                    <li>{{ item.link }}</li>
                 {% endfor %}
                 </ul>
             {% endif %}
