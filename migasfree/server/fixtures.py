@@ -82,7 +82,7 @@ def create_users():
         "devicetype", "schedule", "scheduledelay", "autocheckerror",
         "faultdefinition", "property", "checking", "version", "pms", "query",
         "package", "deployment", "store", "message", "synchronization",
-        "platform", "messageserver", "migration", "notification"
+        "platform", "migration", "notification"
     ]
     add_read_perms(read_group, tables)
     read_group.save()
@@ -132,7 +132,7 @@ def create_users():
     configurator_group.save()
     tables = [
         "checking", "faultdefinition", "property", "pms", "version",
-        "message", "update", "platform", "messageserver", "migration",
+        "message", "update", "platform", "migration",
         "notification"
     ]
     add_all_perms(configurator_group, tables)
