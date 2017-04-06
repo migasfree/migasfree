@@ -125,7 +125,7 @@ class AttributeFilter(filters.FilterSet):
 class CheckingFilter(filters.FilterSet):
     class Meta:
         model = Checking
-        fields = ['id', 'active']
+        fields = ['id', 'enabled']
 
 
 class ComputerFilter(filters.FilterSet):
