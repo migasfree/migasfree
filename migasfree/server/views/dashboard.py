@@ -11,16 +11,16 @@ from django.db.models import Q  # backwards compatibility
 from ..models import *
 
 
-def execute_active_checkings(request):
+def execute_enabled_checkings(request):
     """
-    Returns active checkings results, as a list
+    Returns enabled checkings results, as a list
     If an error occurs, returns a dictionary with execution error information
     If no results, returns empty list
 
     request parameter maybe used in exec code call (not unused!!!)
     """
     checkings = []
-    for check in Checking.objects.filter(active=True):
+    for check in Checking.objects.filter(enabled=True):
         try:
             exec(check.code.replace("\r", ""))
         except:
@@ -52,7 +52,7 @@ def alerts(request):
     """
     Status of checkings
     """
-    checkings = execute_active_checkings(request)
+    checkings = execute_enabled_checkings(request)
     if isinstance(checkings, dict) and checkings.get('error').get('description'):
         return render(
             request,
