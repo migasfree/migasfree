@@ -30,7 +30,6 @@ from .device_driver import DeviceDriver
 from .device import Device
 from .device_logical import DeviceLogical
 
-from .message_server import MessageServer
 from .computer import Computer
 
 from .synchronization import Synchronization
