@@ -9,7 +9,7 @@ from .stats import (
     synchronized_monthly,
     version_computer
 )
-from .queries import get_query, computer_messages, server_messages
+from .queries import get_query, computer_messages
 from .hardware import hardware_resume, hardware_extract, load_hw, process_hw
 from .client_api import api
 from .public_api import (
