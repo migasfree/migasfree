@@ -46,7 +46,7 @@ def get_computer_info(request):
 
     element = []
     for tag in computer.tags.all():
-        element.append("{}-{}".format(tag.property_att.prefix, tag.value))
+        element.append(u"{}-{}".format(tag.property_att.prefix, tag.value))
     result["tags"] = element
 
     result["available_tags"] = {}
@@ -54,12 +54,12 @@ def get_computer_info(request):
         version=computer.version, enabled=True
     ):
         for tag in deploy.included_attributes.all().filter(
-            property_att__tag=True, property_att__active=True
+            property_att__sort='server', property_att__enabled=True
         ):
             if tag.property_att.name not in result["available_tags"]:
                 result["available_tags"][tag.property_att.name] = []
 
-            value = "{}-{}".format(tag.property_att.prefix, tag.value)
+            value = u"{}-{}".format(tag.property_att.prefix, tag.value)
             if value not in result["available_tags"][tag.property_att.name]:
                 result["available_tags"][tag.property_att.name].append(value)
 
