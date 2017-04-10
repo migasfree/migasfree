@@ -56,7 +56,7 @@ class AttributeSet(models.Model, MigasLink):
             att_set = AttributeSet.objects.get(pk=self.id)
             if att_set.name != self.name and \
                     Attribute.objects.filter(
-                        property_att=Property(id=1), value=self.name
+                        property_att=Property(prefix='SET', sort='basic'), value=self.name
                     ).count() > 0:
                 raise ValidationError(_('Duplicated name'))
 
@@ -64,7 +64,7 @@ class AttributeSet(models.Model, MigasLink):
         super(AttributeSet, self).save(*args, **kwargs)
 
         Attribute.objects.get_or_create(
-            property_att=Property(id=1),
+            property_att=Property.objects.get(prefix='SET', sort='basic'),
             value=self.name,
             defaults={'description': ''}
         )
@@ -101,10 +101,8 @@ class AttributeSet(models.Model, MigasLink):
             sets = AttributeSet.item_at_index(sets, item.id)
 
             for subset in item.included_attributes.filter(
-                id__gt=1
-            ).filter(
-                property_att__id=1
-            ).filter(~Q(value=item.name)):
+                ~Q(property_att__sort='basic')
+            ).filter(property_att__prefix='SET').filter(~Q(value=item.name)):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -112,10 +110,8 @@ class AttributeSet(models.Model, MigasLink):
                 )
 
             for subset in item.excluded_attributes.filter(
-                id__gt=1
-            ).filter(
-                property_att__id=1
-            ).filter(~Q(value=item.name)):
+                ~Q(property_att__sort='basic')
+            ).filter(property_att__prefix='SET').filter(~Q(value=item.name)):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -126,7 +122,7 @@ class AttributeSet(models.Model, MigasLink):
 
     @staticmethod
     def process(attributes):
-        property_set = Property.objects.get(id=1)
+        property_set = Property.objects.get(prefix='SET', sort='basic')
 
         att_id = []
         for item in AttributeSet.get_sets():
@@ -141,8 +137,8 @@ class AttributeSet(models.Model, MigasLink):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Attributes Set")
-        verbose_name_plural = _("Attributes Sets")
+        verbose_name = _("Attribute Set")
+        verbose_name_plural = _("Attribute Sets")
         permissions = (("can_save_attributeset", "Can save Attributes Set"),)
 
 
@@ -151,13 +147,13 @@ def pre_save_attribute_set(sender, instance, **kwargs):
     if instance.id:
         att_set = AttributeSet.objects.get(pk=instance.id)
         if instance.name != att_set.name:
-            att = Attribute.objects.get(property_att=Property(id=1), value=att_set.name)
+            att = Attribute.objects.get(property_att=Property(prefix='SET', sort='basic'), value=att_set.name)
             att.update_value(instance.name)
 
 
 @receiver(pre_delete, sender=AttributeSet)
 def pre_delete_attribute_set(sender, instance, **kwargs):
     try:
-        Attribute.objects.get(property_att=Property(id=1), value=instance.name).delete()
+        Attribute.objects.get(property_att=Property(prefix='SET', sort='basic'), value=instance.name).delete()
     except ObjectDoesNotExist:
         pass
