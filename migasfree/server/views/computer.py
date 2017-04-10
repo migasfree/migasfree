@@ -196,9 +196,7 @@ def computer_simulate_sync(request, pk):
             data = {
                 "upload_computer_info": {
                     "attributes": dict(
-                        computer.sync_attributes.filter(
-                            property_att__sort='client'
-                        ).values_list(
+                        computer.sync_attributes.all().values_list(
                             'property_att__prefix', 'value'
                         )
                     ),
@@ -231,7 +229,7 @@ def computer_simulate_sync(request, pk):
             transaction.rollback()  # only simulate sync... not real sync!
             transaction.set_autocommit(True)
 
-            result["attributes"] = computer.sync_attributes.filter(property_att__sort='client')
+            result["attributes"] = computer.sync_attributes.all()
 
             deployments = []
             for item in result.get("repositories", []):
