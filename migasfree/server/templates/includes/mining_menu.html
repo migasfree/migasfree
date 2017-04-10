@@ -7,8 +7,8 @@
     <li><a href="{% url 'admin:server_migration_changelist' %}">{% trans 'Migrations' %}</a></li>
     <li><a href="{% url 'admin:server_synchronization_changelist' %}">{% trans 'Synchronizations' %}</a></li>
     <li role="separator" class="divider"></li>
-    <li><a href="{% url 'admin:server_feature_changelist' %}">{% trans 'Attributes' %}</a></li>
-    <li><a href="{% url 'admin:server_tag_changelist' %}">{% trans 'Tags' %}</a></li>
+    <li><a href="{% url 'admin:server_clientattribute_changelist' %}">{% trans 'Attributes' %}</a></li>
+    <li><a href="{% url 'admin:server_serverattribute_changelist' %}">{% trans 'Tags' %}</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown,available,in repair">{% trans 'Computers' %}</a></li>
     <li><a href="{% url 'admin:server_user_changelist' %}">{% trans 'Users' %}</a></li>
