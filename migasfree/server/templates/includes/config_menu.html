@@ -1,9 +1,9 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
-    <li><a href="{% url 'admin:server_clientproperty_changelist' %}">{% trans 'Properties' %}</a></li>
-    <li><a href="{% url 'admin:server_tagtype_changelist' %}">{% trans 'Tag Types' %}</a></li>
-    <li><a href="{% url 'admin:server_attributeset_changelist' %}">{% trans 'Attributes Sets' %}</a></li>
+    <li><a href="{% url 'admin:server_clientproperty_changelist' %}">{% trans 'Formulas' %}</a></li>
+    <li><a href="{% url 'admin:server_serverproperty_changelist' %}">{% trans 'Tag Category' %}</a></li>
+    <li><a href="{% url 'admin:server_attributeset_changelist' %}">{% trans 'Attribute Sets' %}</a></li>
 
     <li role="presentation" class="divider"></li>
 
@@ -13,16 +13,16 @@
 
     <li role="presentation" class="divider"></li>
 
-    <li><a href="{% url 'admin:server_userprofile_changelist' %}">{% trans 'User Profiles' %}</a></li>
-    <li><a href="{% url 'admin:auth_group_changelist' %}">{% trans 'Groups' %}</a></li>
-    <li><a href="{% url 'admin:index' %}">{% trans 'Site administration' %}</a></li>
-
-    <li role="presentation" class="divider"></li>
-
     <li><a href="{% url 'admin:server_checking_changelist' %}">{% trans 'Checkings' %}</a></li>
     <li><a href="{% url 'admin:server_faultdefinition_changelist' %}">{% trans 'Fault Definitions' %}</a></li>
     <li><a href="{% url 'admin:server_autocheckerror_changelist' %}">{% trans 'Auto Check Errors' %}</a></li>
     <li><a href="{% url 'admin:server_query_changelist' %}">{% trans 'Queries' %}</a></li>
+
+    <li role="presentation" class="divider"></li>
+
+    <li><a href="{% url 'admin:server_userprofile_changelist' %}">{% trans 'User Profiles' %}</a></li>
+    <li><a href="{% url 'admin:auth_group_changelist' %}">{% trans 'Groups' %}</a></li>
+    <li><a href="{% url 'admin:index' %}">{% trans 'Site administration' %}</a></li>
 
     <li role="presentation" class="divider"></li>
 
