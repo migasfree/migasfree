@@ -309,21 +309,21 @@ class MigasLink(object):
     link.short_description = '...'
 
     def transmodel(self, obj):
-        from . import Property, Feature, Tag, Computer
+        from . import Property, ClientAttribute, ServerAttribute, Computer
 
         if obj.related_model._meta.label_lower == "server.computer" and \
-                self.__class__.__name__ in ["Feature", "Attribute"] and \
+                self.__class__.__name__ in ["ClientAttribute", "Attribute"] and \
                 self.property_att.prefix == "CID":
             return "", ""
 
         if obj.related_model._meta.label_lower == "server.attribute":
             if self.tag:
-                return Tag, "Tag"
+                return ServerAttribute, "Tag"
             else:
-                return Feature, "Attribute"
+                return ClientAttribute, "Attribute"
 
         elif obj.related_model._meta.label_lower == "server.computer":
-            if self.__class__.__name__ == "Tag":
+            if self.__class__.__name__ == "ServerAttribute":
                 return Computer, "tags__id__exact"
             elif self.__class__.__name__ == "Attribute":
                 if Property.objects.get(pk=self.property_att_id).tag:
@@ -336,7 +336,8 @@ class MigasLink(object):
         elif obj.related_model._meta.label_lower in [
                 "admin.logentry",
                 "server.scheduledelay",
-                "server.hwnode"]:  # Excluded
+                "server.hwnode"
+        ]:  # Excluded
             return "", ""
 
         elif obj.field.__class__.__name__ == 'ManyRelatedManager':
