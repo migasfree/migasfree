@@ -13,7 +13,11 @@ from django.conf import settings
 
 from ..functions import swap_m2m, remove_empty_elements_from_dict
 
-from . import Version, Attribute, Property, MigasLink, DeviceLogical, User
+from . import (
+    Version, DeviceLogical, User,
+    Attribute, ServerAttribute, BasicProperty,
+    MigasLink,
+)
 
 
 class ProductiveManager(models.Manager):
@@ -157,7 +161,7 @@ class Computer(models.Model, MigasLink):
     )
 
     tags = models.ManyToManyField(
-        Attribute,
+        ServerAttribute,
         blank=True,
         verbose_name=_("tags"),
         related_name='tags'
@@ -377,9 +381,8 @@ class Computer(models.Model, MigasLink):
         target.save()
 
     def get_cid_attribute(self):
-        prop = Property.objects.get(prefix='CID', active=True)
         cid_att, _ = Attribute.objects.get_or_create(
-            property_att=prop,
+            property_att=BasicProperty.objects.get(prefix='CID'),
             value=str(self.id),
             defaults={'description': self.get_cid_description()}
         )
