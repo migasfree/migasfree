@@ -12,10 +12,10 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 
 from .models import (
-    Attribute, AttributeSet, ClientProperty, Computer,
-    Error, Fault, FaultDefinition, Feature, HwNode, Message,
+    Attribute, AttributeSet, ClientProperty, Computer, BasicAttribute,
+    Error, Fault, FaultDefinition, HwNode, Message,
     Migration, Notification, Package, Pms, Platform, Property,
-    Deployment, Store, Tag, Synchronization, User, Version,
+    Deployment, Store, ServerAttribute, Synchronization, User, Version,
 )
 from .security import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
@@ -228,7 +228,7 @@ def return_message(cmd, data):
 def get_properties(request, name, uuid, computer, data):
     """
     First call of client requesting to server what it must do.
-    The server responds a json:
+    The server responds a JSON:
 
         OUTPUT:
         ======
@@ -244,26 +244,15 @@ def get_properties(request, name, uuid, computer, data):
                     ],
             }
 
-    The client will eval the "functions" in PROPERTIES and FAULTS and
+    The client will eval the code in PROPERTIES and FAULTS and
     will upload it to server in a file called request.json
     calling to "post_request" view
     """
-    cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    properties = []
 
-    try:
-        for p in Property.enabled_client_properties():
-            properties.append({
-                "language": settings.MIGASFREE_PROGRAMMING_LANGUAGES[p['language']][1],
-                "name": p['prefix'],
-                "code": p['code']
-            })
-
-        ret = return_message(cmd, {"properties": properties})
-    except:
-        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
-
-    return ret
+    return return_message(
+        str(inspect.getframeinfo(inspect.currentframe()).function),
+        {"properties": Property.enabled_client_properties()}
+    )
 
 
 def upload_computer_info(request, name, uuid, computer, data):
@@ -288,7 +277,7 @@ def upload_computer_info(request, name, uuid, computer, data):
                     "user": USER,
                     "user_fullname": USER_FULLNAME
                 },
-                "attributes":[{"name":VALUE},...]
+                "attributes":[{"name": VALUE}, ...]
             }
 
         OUTPUT:
@@ -367,18 +356,19 @@ def upload_computer_info(request, name, uuid, computer, data):
 
         notify_version = True
 
-    lst_attributes = []  # List of attributes of computer
+    lst_attributes = []  # computer list of attributes
 
     try:
         dic_computer = data.get("upload_computer_info").get("computer")
-        properties = data.get("upload_computer_info").get("attributes")
+        client_attributes = data.get("upload_computer_info").get("attributes")
+        ip_address = dic_computer.get("ip", "")
 
         # IP registration, version and computer Migration
         computer = check_computer(
             computer,
             name,
             version_name,
-            dic_computer.get("ip", ""),
+            ip_address,
             uuid,
         )
 
@@ -403,16 +393,27 @@ def upload_computer_info(request, name, uuid, computer, data):
         computer.update_sync_user(user)
         computer.sync_attributes.clear()
 
-        # PROCESS PROPERTIES
-        for e in properties:
-            client_property = ClientProperty.objects.get(prefix=e)
-            value = properties.get(e)
+        # basic attributes
+        att_id = BasicAttribute.process(
+            id=computer.id,
+            ip_address=ip_address,
+            version=computer.version.name,
+            platform=computer.version.platform.name,
+            user=user.name,
+            description=computer.get_cid_description()
+        )
+        for item in att_id:
+            computer.sync_attributes.add(item)
+
+        # client attributes
+        for prefix, value in client_attributes.iteritems():
+            client_property = ClientProperty.objects.get(prefix=prefix)
             for att in Attribute.process_kind_property(client_property, value):
                 computer.sync_attributes.add(att)
                 lst_attributes.append(att)
 
-        # ADD Tags (not running on clients!!!)
-        for tag in computer.tags.all().filter(property_att__active=True):
+        # Tags (server attributes) (not running on clients!!!)
+        for tag in computer.tags.all().filter(property_att__enabled=True):
             for att in Attribute.process_kind_property(
                 tag.property_att,
                 tag.value
@@ -420,23 +421,7 @@ def upload_computer_info(request, name, uuid, computer, data):
                 computer.sync_attributes.add(att)
                 lst_attributes.append(att)
 
-        # ADD ATTRIBUTE CID (not running on clients!!!)
-        try:
-            prp_cid = Property.objects.get(prefix="CID", active=True)
-            if prp_cid:
-                cid_description = computer.get_cid_description()
-                cid = Feature.objects.create(
-                    prp_cid,
-                    u"{}~{}".format(computer.id, cid_description)
-                )
-                computer.sync_attributes.add(cid)
-                lst_attributes.append(cid.id)
-
-                cid.update_description(cid_description)
-        except:
-            pass
-
-        # ADD AttributeSets
+        # AttributeSets
         lst_set = AttributeSet.process(lst_attributes)
         if lst_set:
             for item in lst_set:
@@ -504,19 +489,25 @@ def upload_computer_info(request, name, uuid, computer, data):
 
 
 def upload_computer_faults(request, name, uuid, computer, data):
+    """
+    INPUT:
+        'faults': {
+            'name': 'result',
+            ...
+        }
+    """
+
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     faults = data.get(cmd).get("faults")
 
     try:
-        # PROCESS FAULTS
-        for f in faults:
+        for name, result in faults.iteritems():
             try:
-                msg = faults.get(f)
-                if msg != "":
+                if result:
                     Fault.objects.create(
                         computer,
-                        FaultDefinition.objects.get(name=f),
-                        msg
+                        FaultDefinition.objects.get(name=name),
+                        result
                     )
             except:
                 pass
@@ -725,11 +716,11 @@ def get_computer_tags(request, name, uuid, computer, data):
     available_tags = {}
     for deploy in Deployment.objects.filter(
         version=computer.version,
-        active=True
+        enabled=True
     ):
         for tag in deploy.included_attributes.filter(
-            property_att__tag=True,
-            property_att__active=True
+            property_att__sort='server',
+            property_att__enabled=True
         ):
             if tag.property_att.name not in available_tags:
                 available_tags[tag.property_att.name] = []
@@ -749,7 +740,7 @@ def set_computer_tags(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     all_id = Attribute.objects.get(
         property_att__prefix="SET",
-        value="ALL SYSTEMS"
+        value__icontains="ALL SYSTEMS"
     ).id
 
     try:
@@ -758,7 +749,7 @@ def set_computer_tags(request, name, uuid, computer, data):
         for tag in data["set_computer_tags"]["tags"]:
             ltag = tag.split("-", 1)
             if len(ltag) > 1:
-                attribute = Tag.objects.get(
+                attribute = ServerAttribute.objects.get(
                     property_att__prefix=ltag[0],
                     value=ltag[1]
                 )
