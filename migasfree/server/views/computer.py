@@ -175,79 +175,83 @@ def computer_simulate_sync(request, pk):
     computer = Computer.objects.get(pk=pk)
     version = Version.objects.get(id=computer.version.id)
 
-    if computer.sync_user:
-        data = {
-            "upload_computer_info": {
-                "attributes": dict(
-                    computer.sync_attributes.filter(
-                        property_att__sort='client'
-                    ).values_list(
-                        'property_att__prefix', 'value'
-                    )
-                ),
-                "computer": {
-                    "user_fullname": computer.sync_user.fullname,
-                    "pms": version.pms.name,
-                    "ip": computer.ip_address,
-                    "hostname": computer.name,
-                    "platform": version.platform.name,
-                    "version": version.name,
-                    "user": computer.sync_user.name
-                }
-            }
-        }
+    result = {
+        'title': _('Simulate sync: %s') % computer,
+        'computer': computer,
+        'version': version
+    }
 
-        transaction.set_autocommit(False)
-        try:
-            result = upload_computer_info(
-                request,
-                computer.name,
-                computer.uuid,
-                computer,
-                data
-            )['upload_computer_info.return']
-        except:
-            result = {}
-
-        transaction.rollback()  # only simulate sync... not real sync!
-        transaction.set_autocommit(True)
-
-        result['title'] = _('Simulate sync: %s') % computer
-        result["computer"] = computer
-        result["version"] = version
-        result["attributes"] = computer.sync_attributes.filter(property_att__sort='client')
-
-        deployments = []
-        for item in result.get("repositories", []):
-            deployments.append(
-                Deployment.objects.get(
-                    version__id=version.id, name=item['name']
-                )
-            )
-        result["repositories"] = deployments
-
-        fault_definitions = []
-        for item in result.get("faultsdef", []):
-            fault_definitions.append(FaultDefinition.objects.get(name=item['name']))
-        result["faultsdef"] = fault_definitions
-
-        result["default_device"] = result.get("devices", {}).get("default", 0)
-        devices = []
-        for device in result.get("devices", {}).get("logical", []):
-            devices.append(DeviceLogical.objects.get(pk=device['PRINTER']['id']))
-        result["devices"] = devices
-
-    else:
-        result = {
-            'title': _('Simulate sync: %s') % computer,
-            'computer': computer,
-            'version': version
-        }
-
+    if computer.status == 'unsubscribed':
         messages.error(
             request,
-            _('Error: This computer does not have any synchronization!')
+            _('Error: This computer, with unsubscribed status, is not allowed to synchronize!')
         )
+    else:
+        if not computer.sync_user:
+            messages.error(
+                request,
+                _('Error: This computer does not have any synchronization!')
+            )
+        else:
+            data = {
+                "upload_computer_info": {
+                    "attributes": dict(
+                        computer.sync_attributes.filter(
+                            property_att__sort='client'
+                        ).values_list(
+                            'property_att__prefix', 'value'
+                        )
+                    ),
+                    "computer": {
+                        "user_fullname": computer.sync_user.fullname,
+                        "pms": version.pms.name,
+                        "ip": computer.ip_address,
+                        "hostname": computer.name,
+                        "platform": version.platform.name,
+                        "version": version.name,
+                        "user": computer.sync_user.name
+                    }
+                }
+            }
+
+            transaction.set_autocommit(False)
+            try:
+                computer_info_result = upload_computer_info(
+                    request,
+                    computer.name,
+                    computer.uuid,
+                    computer,
+                    data
+                )['upload_computer_info.return']
+            except:
+                computer_info_result = {}
+
+            result.update(computer_info_result)
+
+            transaction.rollback()  # only simulate sync... not real sync!
+            transaction.set_autocommit(True)
+
+            result["attributes"] = computer.sync_attributes.filter(property_att__sort='client')
+
+            deployments = []
+            for item in result.get("repositories", []):
+                deployments.append(
+                    Deployment.objects.get(
+                        version__id=version.id, name=item['name']
+                    )
+                )
+            result["repositories"] = deployments
+
+            fault_definitions = []
+            for item in result.get("faultsdef", []):
+                fault_definitions.append(FaultDefinition.objects.get(name=item['name']))
+            result["faultsdef"] = fault_definitions
+
+            result["default_device"] = result.get("devices", {}).get("default", 0)
+            devices = []
+            for device in result.get("devices", {}).get("logical", []):
+                devices.append(DeviceLogical.objects.get(pk=device['PRINTER']['id']))
+            result["devices"] = devices
 
     return render(
         request,
