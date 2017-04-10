@@ -9,7 +9,7 @@ from django.utils.translation import ugettext as _
 from rest_framework import filters
 
 from .models import (
-    ClientProperty, TagType, Computer,
+    ServerProperty, Computer,
     Store, Property, Version, Attribute, AttributeSet,
     Package, Deployment, Error, FaultDefinition,
     Fault, Notification, Migration,
@@ -54,12 +54,12 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
             }
 
 
-class TagFilter(SimpleListFilter):
-    title = _('Tag Type')
+class ServerAttributeFilter(SimpleListFilter):
+    title = _('Tag Category')
     parameter_name = 'Tag'
 
     def lookups(self, request, model_admin):
-        return [(c.id, c.name) for c in TagType.objects.all()]
+        return [(c.id, c.name) for c in ServerProperty.objects.all()]
 
     def queryset(self, request, queryset):
         if self.value():
@@ -68,12 +68,16 @@ class TagFilter(SimpleListFilter):
             return queryset
 
 
-class FeatureFilter(SimpleListFilter):
+class ClientAttributeFilter(SimpleListFilter):
     title = _('Property')
     parameter_name = 'Attribute'
 
     def lookups(self, request, model_admin):
-        return [(c.id, c.name) for c in ClientProperty.objects.all()]
+        return [
+            (c.id, c.name) for c in Property.objects.filter(
+                Q(sort='client') | Q(sort='basic')
+            )
+        ]
 
     def queryset(self, request, queryset):
         if self.value():
@@ -210,7 +214,7 @@ class PackageFilter(filters.FilterSet):
 class PropertyFilter(filters.FilterSet):
     class Meta:
         model = Property
-        fields = ['id', 'active', 'tag']
+        fields = ['id', 'enabled', 'sort']
 
 
 class DeploymentFilter(filters.FilterSet):
