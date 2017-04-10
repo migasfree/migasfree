@@ -12,16 +12,16 @@ from ajax_select.admin import AjaxSelectAdmin
 from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
-    Attribute, AttributeSet, Checking, ClientProperty, Feature,
+    Attribute, AttributeSet, Checking, ClientProperty, ClientAttribute,
     Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
-    ScheduleDelay, Store, Tag, TagType, UserProfile, Version
+    ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Version
 )
 
 from ..forms import (
-    PropertyForm, DeploymentForm, TagForm, StoreForm, PackageForm
+    PropertyForm, DeploymentForm, ServerAttributeForm, StoreForm, PackageForm
 )
 
-from ..filters import FeatureFilter, TagFilter
+from ..filters import ClientAttributeFilter, ServerAttributeFilter
 from ..functions import compare_list_values
 from ..tasks import (
     create_repository_metadata,
@@ -72,31 +72,13 @@ class CheckingAdmin(MigasAdmin):
     my_enabled = MigasFields.boolean(model=Checking, name='enabled')
 
 
-@admin.register(ClientProperty)
-class ClientPropertyAdmin(MigasAdmin):
-    list_display = ('name_link', 'my_active', 'kind', 'my_auto')
-    list_filter = ('active', 'kind', 'auto')
-    ordering = ('name',)
-    search_fields = ('name', 'prefix')
-    form = PropertyForm
-    fields = (
-        'prefix', 'name', 'active',
-        'language', 'code', 'kind', 'auto',
-    )
-    actions = None
-
-    name_link = MigasFields.link(model=ClientProperty, name='name')
-    my_active = MigasFields.boolean(model=ClientProperty, name='active')
-    my_auto = MigasFields.boolean(model=ClientProperty, name='auto')
-
-
 @admin.register(Attribute)
 class AttributeAdmin(MigasAdmin):
     list_display = (
         'value_link', 'description', 'total_computers', 'property_link'
     )
     list_select_related = ('property_att',)
-    list_filter = (FeatureFilter,)
+    list_filter = (ClientAttributeFilter,)
     fields = ('property_link', 'value', 'description')
     ordering = ('property_att', 'value')
     search_fields = ('value', 'description')
@@ -118,27 +100,27 @@ class AttributeAdmin(MigasAdmin):
         return False
 
 
-@admin.register(Feature)
-class FeatureAdmin(MigasAdmin):
+@admin.register(ClientAttribute)
+class ClientAttributeAdmin(MigasAdmin):
     list_display = (
         'value_link', 'description', 'total_computers', 'property_link'
     )
     list_select_related = ('property_att',)
-    list_filter = (FeatureFilter,)
+    list_filter = (ClientAttributeFilter,)
     fields = ('property_link', 'value', 'description')
     ordering = ('property_att', 'value')
     search_fields = ('value', 'description')
     readonly_fields = ('property_link', 'value')
 
-    value_link = MigasFields.link(model=Feature, name='value')
+    value_link = MigasFields.link(model=ClientAttribute, name='value')
     property_link = MigasFields.link(
-        model=Feature,
+        model=ClientAttribute,
         name='property_att',
         order='property_att__name'
     )
 
     def get_queryset(self, request):
-        return super(FeatureAdmin, self).get_queryset(request).extra(
+        return super(ClientAttributeAdmin, self).get_queryset(request).extra(
             select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
         )
 
@@ -233,16 +215,43 @@ class PmsAdmin(MigasAdmin):
     name_link = MigasFields.link(model=Pms, name='name')
 
 
+@admin.register(ClientProperty)
+class ClientPropertyAdmin(MigasAdmin):
+    list_display = ('name_link', 'my_enabled', 'kind', 'my_auto_add')
+    list_filter = ('enabled', 'kind', 'auto_add')
+    ordering = ('name',)
+    search_fields = ('name', 'prefix')
+    form = PropertyForm
+    fields = (
+        'prefix', 'name', 'enabled',
+        'language', 'code', 'kind', 'auto_add',
+    )
+    actions = None
+
+    name_link = MigasFields.link(model=ClientProperty, name='name')
+    my_enabled = MigasFields.boolean(model=ClientProperty, name='enabled')
+    my_auto_add = MigasFields.boolean(model=ClientProperty, name='auto_add')
+
+
 @admin.register(Property)
 class PropertyAdmin(ClientPropertyAdmin):
-    list_display = ('name_link', 'my_active', 'kind', 'my_auto', 'my_tag')
+    list_display = ('name_link', 'my_enabled', 'kind', 'my_auto_add', 'sort')
     fields = (
-        'prefix', 'name', 'active',
-        'language', 'code', 'kind', 'auto', 'tag'
+        'prefix', 'name', 'enabled',
+        'language', 'code', 'kind', 'auto_add', 'sort'
     )
     search_fields = ('name',)
 
-    my_tag = MigasFields.boolean(model=Property, name='tag')
+
+@admin.register(ServerProperty)
+class ServerPropertyAdmin(MigasAdmin):
+    list_display = ('name_link', 'prefix', 'my_enabled')
+    fields = ('prefix', 'name', 'kind', 'enabled')
+    search_fields = ('name', 'prefix')
+    list_filter = ('enabled',)
+
+    name_link = MigasFields.link(model=ServerProperty, name='name')
+    my_enabled = MigasFields.boolean(model=ServerProperty, name='enabled')
 
 
 @admin.register(Query)
@@ -328,7 +337,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
         if db_field.name == 'included_attributes':
             kwargs['queryset'] = Attribute.objects.filter(
-                property_att__active=True
+                property_att__enabled=True
             )
 
             return db_field.formfield(**kwargs)
@@ -443,41 +452,30 @@ class StoreAdmin(MigasAdmin):
         ).select_related("version")
 
 
-@admin.register(TagType)
-class TagTypeAdmin(MigasAdmin):
-    list_display = ('name_link', 'prefix', 'my_active')
-    fields = ('prefix', 'name', 'kind', 'active')
-    search_fields = ('name', 'prefix')
-    list_filter = ('active',)
-
-    name_link = MigasFields.link(model=TagType, name='name')
-    my_active = MigasFields.boolean(model=TagType, name='active')
-
-
-@admin.register(Tag)
-class TagAdmin(MigasAdmin):
-    form = TagForm
+@admin.register(ServerAttribute)
+class ServerAttributeAdmin(MigasAdmin):
+    form = ServerAttributeForm
     list_display = (
         'value_link', 'description', 'total_computers', 'property_link'
     )
     list_select_related = ('property_att',)
     fields = ('property_att', 'value', 'description', 'computers')
-    list_filter = (TagFilter,)
+    list_filter = (ServerAttributeFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
 
     property_link = MigasFields.link(
-        model=Tag, name='property_att', order='property_att__name'
+        model=ServerAttribute, name='property_att', order='property_att__name'
     )
-    value_link = MigasFields.link(model=Tag, name='value')
+    value_link = MigasFields.link(model=ServerAttribute, name='value')
 
     def get_queryset(self, request):
-        return super(TagAdmin, self).get_queryset(request).extra(
+        return super(ServerAttributeAdmin, self).get_queryset(request).extra(
             select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
         )
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(TagAdmin, self).get_form(request, obj, **kwargs)
+        form = super(ServerAttributeAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['property_att'].widget.can_add_related = False
 
         return form
