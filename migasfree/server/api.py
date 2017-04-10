@@ -407,7 +407,7 @@ def upload_computer_info(request, name, uuid, computer, data):
 
         # client attributes
         for prefix, value in client_attributes.iteritems():
-            client_property = ClientProperty.objects.get(prefix=prefix)
+            client_property = Property.objects.get(prefix=prefix)
             for att in Attribute.process_kind_property(client_property, value):
                 computer.sync_attributes.add(att)
                 lst_attributes.append(att)
