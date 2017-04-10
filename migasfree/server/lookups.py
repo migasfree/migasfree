@@ -8,7 +8,7 @@ from ajax_select import register, LookupChannel
 
 from .models import (
     Attribute,
-    Tag,
+    ServerAttribute,
     Package,
     Property,
     DeviceLogical,
@@ -29,14 +29,14 @@ class AttributeLookup(LookupChannel):
             queryset = self.model.objects.filter(
                 property_att__prefix__icontains=q[0:Property.PREFIX_LEN],
                 value__icontains=q[Property.PREFIX_LEN + 1:],
-                property_att__active=True
+                property_att__enabled=True
             )
         else:
             queryset = self.model.objects.filter(
                 Q(value__icontains=q) |
                 Q(description__icontains=q) |
                 Q(property_att__prefix__icontains=q)
-            ).filter(property_att__active=True)
+            ).filter(property_att__enabled=True)
 
         # exclude available and unsubscribed computers (inactive)
         inactive_computers = [
@@ -92,7 +92,7 @@ class AttributeComputersLookup(LookupChannel):
             return self.model.objects.filter(
                 property_att__prefix__icontains=q[0:Property.PREFIX_LEN],
                 value__icontains=q[Property.PREFIX_LEN + 1:],
-                property_att__active=True
+                property_att__enabled=True
             ).order_by('value')
         else:
             return self.model.objects.filter(
@@ -100,7 +100,7 @@ class AttributeComputersLookup(LookupChannel):
                 Q(description__icontains=q) |
                 Q(property_att__prefix__icontains=q)
             ).filter(
-                property_att__active=True
+                property_att__enabled=True
             ).order_by('value')
 
     def format_match(self, obj):
@@ -168,12 +168,12 @@ class PackageLookup(LookupChannel):
 
 @register('tag')
 class TagLookup(LookupChannel):
-    model = Tag
+    model = ServerAttribute
 
     def get_query(self, q, request):
         return self.model.objects.filter(
-            property_att__active=True,
-            property_att__tag=True
+            property_att__enabled=True,
+            property_att__sort='server'
         ).filter(
             Q(value__icontains=q) |
             Q(description__icontains=q) |
