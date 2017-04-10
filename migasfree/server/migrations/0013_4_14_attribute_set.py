@@ -55,4 +55,12 @@ class Migration(migrations.Migration):
             name='description',
             field=models.TextField(blank=True, null=True, verbose_name='description'),
         ),
+        migrations.AlterModelOptions(
+            name='AttributeSet',
+            options={
+                'permissions': (('can_save_attributeset', 'Can save Attributes Set'),),
+                'verbose_name': 'Attribute Set',
+                'verbose_name_plural': 'Attribute Sets'
+            },
+        ),
     ]
