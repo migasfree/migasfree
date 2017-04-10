@@ -12,7 +12,7 @@ from ajax_select.fields import AutoCompleteSelectMultipleField
 
 from .models import (
     Deployment, UserProfile, Computer, Device, DeviceLogical,
-    Property, Tag, TagType, Attribute, Store, Package
+    Property, ServerAttribute, ServerProperty, Attribute, Store, Package
 )
 
 
@@ -93,7 +93,7 @@ class DeploymentForm(forms.ModelForm):
                 if computer.status not in Computer.ACTIVE_STATUS:
                     raise ValidationError(
                         _('It is not possible to assign an inactive computer (%s) as an attribute')
-                        % computer.__str__()
+                        % computer
                     )
 
     def clean(self):
@@ -195,24 +195,24 @@ class PropertyForm(forms.ModelForm):
         fields = '__all__'
 
 
-class TagForm(forms.ModelForm):
+class ServerAttributeForm(forms.ModelForm):
     x = make_ajax_form(Computer, {'tags': 'computer'})
 
     computers = x.declared_fields['tags']
     computers.label = _('Computers')
 
     class Meta:
-        model = Tag
+        model = ServerAttribute
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super(TagForm, self).__init__(*args, **kwargs)
+        super(ServerAttributeForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             self.fields['computers'].initial = \
                 self.instance.computer_set.all().values_list('id', flat=True)
 
-        self.fields['property_att'].queryset = TagType.objects.all()
-        self.fields['property_att'].label = _('Tag Type')
+        self.fields['property_att'].queryset = ServerProperty.objects.all()
+        self.fields['property_att'].label = _('Tag Category')
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
