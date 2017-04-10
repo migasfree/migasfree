@@ -176,13 +176,15 @@ def computer_simulate_sync(request, pk):
     version = Version.objects.get(id=computer.version.id)
 
     if computer.sync_user:
-        attributes = {}
-        for att in computer.sync_attributes.filter(property_att__tag=False):
-            attributes[att.property_att.prefix] = att.value
-
         data = {
             "upload_computer_info": {
-                "attributes": attributes,
+                "attributes": dict(
+                    computer.sync_attributes.filter(
+                        property_att__sort='client'
+                    ).values_list(
+                        'property_att__prefix', 'value'
+                    )
+                ),
                 "computer": {
                     "user_fullname": computer.sync_user.fullname,
                     "pms": version.pms.name,
@@ -213,25 +215,25 @@ def computer_simulate_sync(request, pk):
         result['title'] = _('Simulate sync: %s') % computer
         result["computer"] = computer
         result["version"] = version
-        result["attributes"] = computer.sync_attributes.filter(property_att__tag=False)
+        result["attributes"] = computer.sync_attributes.filter(property_att__sort='client')
 
-        repositories = []
-        for repo in result["repositories"]:
-            repositories.append(
+        deployments = []
+        for item in result.get("repositories", []):
+            deployments.append(
                 Deployment.objects.get(
-                    version__id=version.id, name=repo['name']
+                    version__id=version.id, name=item['name']
                 )
             )
-        result["repositories"] = repositories
+        result["repositories"] = deployments
 
         fault_definitions = []
-        for fault in result["faultsdef"]:
-            fault_definitions.append(FaultDefinition.objects.get(name=fault['name']))
+        for item in result.get("faultsdef", []):
+            fault_definitions.append(FaultDefinition.objects.get(name=item['name']))
         result["faultsdef"] = fault_definitions
 
-        result["default_device"] = result["devices"]["default"]
+        result["default_device"] = result.get("devices", {}).get("default", 0)
         devices = []
-        for device in result["devices"]["logical"]:
+        for device in result.get("devices", {}).get("logical", []):
             devices.append(DeviceLogical.objects.get(pk=device['PRINTER']['id']))
         result["devices"] = devices
 
@@ -244,7 +246,7 @@ def computer_simulate_sync(request, pk):
 
         messages.error(
             request,
-            _('Error: This computer does not have a login!')
+            _('Error: This computer does not have any synchronization!')
         )
 
     return render(
