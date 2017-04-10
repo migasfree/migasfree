@@ -4,12 +4,13 @@
         "model": "server.property",
         "fields": {
             "kind": "N",
-            "code": "print \"ALL SYSTEMS\"\n",
+            "code": "",
             "name": "ATTRIBUTES SET",
             "language": 1,
-            "auto": true,
+            "auto_add": true,
             "prefix": "SET",
-            "active": true
+            "enabled": true,
+            "sort": "basic"
         }
     },
     {
@@ -20,9 +21,10 @@
             "code": "",
             "name": "COMPUTER ID",
             "language": 1,
-            "auto": true,
+            "auto_add": true,
             "prefix": "CID",
-            "active": true
+            "enabled": true,
+            "sort": "basic"
         }
     },
     {
@@ -30,12 +32,13 @@
         "model": "server.property",
         "fields": {
             "kind": "N",
-            "code": "import platform\nprint platform.system()",
+            "code": "",
             "name": "PLATFORM",
             "language": 1,
-            "auto": true,
+            "auto_add": true,
             "prefix": "PLT",
-            "active": true
+            "enabled": true,
+            "sort": "basic"
         }
     },
     {
@@ -43,12 +46,13 @@
         "model": "server.property",
         "fields": {
             "kind": "N",
-            "code": "from migasfree_client.utils import get_mfc_version\nprint get_mfc_version() \n",
+            "code": "",
             "name": "VERSION",
             "language": 1,
-            "auto": true,
+            "auto_add": true,
             "prefix": "VER",
-            "active": true
+            "enabled": true,
+            "sort": "basic"
         }
     },
     {
@@ -56,12 +60,13 @@
         "model": "server.property",
         "fields": {
             "kind": "N",
-            "code": "import platform\nprint platform.node()",
-            "name": "MACHINE NAME",
+            "code": "",
+            "name": "IP DIRECTION",
             "language": 1,
-            "auto": true,
-            "prefix": "HST",
-            "active": true
+            "auto_add": true,
+            "prefix": "IP",
+            "enabled": true,
+            "sort": "basic"
         }
     },
     {
@@ -69,12 +74,13 @@
         "model": "server.property",
         "fields": {
             "kind": "N",
-            "code": "import migasfree_client.network\nprint migasfree_client.network.get_network_info()['ip']",
-            "name": "IP DIRECTION",
+            "code": "",
+            "name": "USER",
             "language": 1,
-            "auto": true,
-            "prefix": "IP",
-            "active": true
+            "auto_add": true,
+            "prefix": "USR",
+            "enabled": true,
+            "sort": "basic"
         }
     },
     {
@@ -82,38 +88,41 @@
         "model": "server.property",
         "fields": {
             "kind": "N",
-            "code": "import migasfree_client.network\nprint migasfree_client.network.get_network_info()['net']",
-            "name": "NET",
+            "code": "import platform\nprint platform.node()",
+            "name": "MACHINE NAME",
             "language": 1,
-            "auto": true,
-            "prefix": "NET",
-            "active": true
+            "auto_add": true,
+            "prefix": "HST",
+            "enabled": true,
+            "sort": "client"
         }
     },
     {
         "pk": 8,
         "model": "server.property",
         "fields": {
-            "kind": "-",
-            "code": "import subprocess\nimport platform\nimport os\n\n_platform = platform.system()\nif _platform == 'Linux' :\n    if os.path.exists('/proc/bus/pci'):\n        cmd_linux=\"\"\"r=''\n      if [ `lspci -n |sed -n 1p|awk '{print $2}'` = 'Class' ]; then\n        dev=`lspci -n |awk '{print $4}'`\n      else\n        dev=`lspci -n |awk '{print $3}'`\n      fi\n      for l in $dev\n      do\n        n=`lspci -d $l|awk '{for (i = 2; i <=NF;++i) print $i}'|tr \"\\n\" \" \"|sed 's/,//g'`\n        r=\"$r$l~$n,\"\n      done\n      echo $r\"\"\"\n        (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n        print out,\n    else:\n        print 'none',\nelif _platform == 'Windows' :\n    print 'none',\n\nelse:\n    print 'none',",
-            "name": "DEVICE PCI",
+            "kind": "N",
+            "code": "import migasfree_client.network\nprint migasfree_client.network.get_network_info()['net']",
+            "name": "NET",
             "language": 1,
-            "auto": true,
-            "prefix": "PCI",
-            "active": true
+            "auto_add": true,
+            "prefix": "NET",
+            "enabled": true,
+            "sort": "client"
         }
     },
     {
         "pk": 9,
         "model": "server.property",
         "fields": {
-            "kind": "N",
-            "code": "import migasfree_client.utils\nprint migasfree_client.utils.get_current_user()\n",
-            "name": "USER",
+            "kind": "-",
+            "code": "import subprocess\nimport platform\nimport os\n\n_platform = platform.system()\nif _platform == 'Linux' :\n    if os.path.exists('/proc/bus/pci'):\n        cmd_linux=\"\"\"r=''\n      if [ `lspci -n |sed -n 1p|awk '{print $2}'` = 'Class' ]; then\n        dev=`lspci -n |awk '{print $4}'`\n      else\n        dev=`lspci -n |awk '{print $3}'`\n      fi\n      for l in $dev\n      do\n        n=`lspci -d $l|awk '{for (i = 2; i <=NF;++i) print $i}'|tr \"\\n\" \" \"|sed 's/,//g'`\n        r=\"$r$l~$n,\"\n      done\n      echo $r\"\"\"\n        (out,err) = subprocess.Popen( cmd_linux, stdout=subprocess.PIPE, shell=True ).communicate()\n        print out,\n    else:\n        print 'none',\nelif _platform == 'Windows' :\n    print 'none',\n\nelse:\n    print 'none',",
+            "name": "DEVICE PCI",
             "language": 1,
-            "auto": true,
-            "prefix": "USR",
-            "active": true
+            "auto_add": true,
+            "prefix": "PCI",
+            "enabled": true,
+            "sort": "client"
         }
     }
 ]
