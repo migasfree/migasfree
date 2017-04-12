@@ -134,19 +134,19 @@
                                 html += "<li class='list-group-item'>";
                                 switch(dataset) {
                                     case "syncs":
-                                        html += formatedDate + " (" + item.version.name + "): " + item.user.fullname;
+                                        html += formatedDate + " (" + item.project.name + "): " + item.user.fullname;
                                         break;
                                     case "errors":
-                                        html += formatedDate + " (" + item.version.name + "): " + item.error.replace(new RegExp("\n", 'g'), "<br />");
+                                        html += formatedDate + " (" + item.project.name + "): " + item.error.replace(new RegExp("\n", 'g'), "<br />");
                                         break;
                                     case "faults":
-                                        html += formatedDate + " (" + item.version.name + "): " + item.text.replace(new RegExp("\n", 'g'), "<br />");
+                                        html += formatedDate + " (" + item.project.name + "): " + item.text.replace(new RegExp("\n", 'g'), "<br />");
                                         break;
                                     case "status-logs":
                                         html += formatedDate + ": " + item.status;
                                         break;
                                     case "migrations":
-                                        html += formatedDate + ": " + item.version.name;
+                                        html += formatedDate + ": " + item.project.name;
                                         break;
                                 };
                                 html += "</li>";
