@@ -40,14 +40,14 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     list_display = (
         'name_link',
         'status',
-        'version_link',
+        'project_link',
         'sync_user_link',
         'sync_end_date',
         'hw_link',
     )
     ordering = (settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0],)
     list_filter = (
-        'version__name',
+        'project__name',
         ('status', ProductiveFilterSpec),
         'machine',
     )
@@ -58,7 +58,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     readonly_fields = (
         'name',
         'uuid',
-        'version_link',
+        'project_link',
         'created_at',
         'ip_address',
         'software_inventory',
@@ -84,7 +84,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         (_('General'), {
             'fields': (
                 'name',
-                'version_link',
+                'project_link',
                 'created_at',
                 'ip_address',
             )
@@ -186,8 +186,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     last_sync_time.allow_tags = True
 
     name_link = MigasFields.link(model=Computer, name="name")
-    version_link = MigasFields.link(
-        model=Computer, name='version', order='version__name'
+    project_link = MigasFields.link(
+        model=Computer, name='project', order='project__name'
     )
     hw_link = MigasFields.objects_link(
         model=Computer, name='hwnode_set', description=_('Product')
@@ -266,7 +266,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         return super(ComputerAdmin, self).get_queryset(
             request
         ).select_related(
-            "version",
+            "project",
             "sync_user",
             "default_logical_device",
             "default_logical_device__feature",
@@ -281,24 +281,24 @@ class ErrorAdmin(MigasAdmin):
     list_display = (
         'created_at',
         'computer_link',
-        'version_link',
+        'project_link',
         'my_checked',
         'truncated_desc',
     )
     list_display_links = ('created_at',)
-    list_filter = ('checked', 'created_at', 'version__platform', 'version')
+    list_filter = ('checked', 'created_at', 'project__platform', 'project')
     ordering = ('-created_at', 'computer',)
     search_fields = add_computer_search_fields(['created_at', 'description'])
-    readonly_fields = ('computer_link', 'version_link', 'created_at', 'description')
-    exclude = ('computer', 'version')
+    readonly_fields = ('computer_link', 'project_link', 'created_at', 'description')
+    exclude = ('computer', 'project')
     actions = ['checked_ok']
 
     my_checked = MigasFields.boolean(model=Error, name='checked')
     computer_link = MigasFields.link(
         model=Error, name='computer', order='computer__name'
     )
-    version_link = MigasFields.link(
-        model=Error, name="version", order='version__name'
+    project_link = MigasFields.link(
+        model=Error, name='project', order='project__name'
     )
 
     def truncated_desc(self, obj):
@@ -327,7 +327,7 @@ class ErrorAdmin(MigasAdmin):
         return super(ErrorAdmin, self).get_queryset(
             request
         ).select_related(
-            'version',
+            'project',
             'computer',
         )
 
@@ -337,7 +337,7 @@ class FaultAdmin(MigasAdmin):
     list_display = (
         'created_at',
         'computer_link',
-        'version_link',
+        'project_link',
         'my_checked',
         'result',
         'fault_definition_link',
@@ -345,23 +345,23 @@ class FaultAdmin(MigasAdmin):
     list_display_links = ('created_at',)
     list_filter = (
         UserFaultFilter, 'checked', 'created_at',
-        'version__platform', 'version', 'fault_definition'
+        'project__platform', 'project', 'fault_definition'
     )
     ordering = ('-created_at', 'computer',)
     search_fields = add_computer_search_fields(['created_at', 'fault_definition__name'])
     readonly_fields = (
         'computer_link', 'fault_definition_link',
-        'version_link', 'created_at', 'result'
+        'project_link', 'created_at', 'result'
     )
-    exclude = ('computer', 'version', 'fault_definition')
+    exclude = ('computer', 'project', 'fault_definition')
     actions = ['checked_ok']
 
     my_checked = MigasFields.boolean(model=Fault, name='checked')
     computer_link = MigasFields.link(
         model=Fault, name='computer', order='computer__name'
     )
-    version_link = MigasFields.link(
-        model=Fault, name='version', order='version__name'
+    project_link = MigasFields.link(
+        model=Fault, name='project', order='project__name'
     )
     fault_definition_link = MigasFields.link(
         model=Fault, name='fault_definition', order='fault_definition__name'
@@ -384,7 +384,7 @@ class FaultAdmin(MigasAdmin):
         return super(FaultAdmin, self).get_queryset(
             request
         ).select_related(
-            'version',
+            'project',
             'fault_definition',
             'computer',
         )
@@ -469,21 +469,21 @@ class MessageAdmin(MigasAdmin):
 
 @admin.register(Migration)
 class MigrationAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'version_link', 'created_at')
+    list_display = ('id', 'computer_link', 'project_link', 'created_at')
     list_display_links = ('id',)
-    list_select_related = ('computer', 'version')
-    list_filter = ('created_at', 'version__platform', 'version')
+    list_select_related = ('computer', 'project')
+    list_filter = ('created_at', 'project__platform', 'project')
     search_fields = add_computer_search_fields(['created_at'])
-    fields = ('computer_link', 'version_link', 'created_at')
-    readonly_fields = ('computer_link', 'version_link', 'created_at')
+    fields = ('computer_link', 'project_link', 'created_at')
+    readonly_fields = ('computer_link', 'project_link', 'created_at')
     exclude = ('computer',)
     actions = None
 
     computer_link = MigasFields.link(
         model=Migration, name='computer', order='computer__name'
     )
-    version_link = MigasFields.link(
-        model=Migration, name='version', order="version__name"
+    project_link = MigasFields.link(
+        model=Migration, name='project', order='project__name'
     )
 
     def has_add_permission(self, request):
@@ -539,21 +539,21 @@ class StatusLogAdmin(MigasAdmin):
 
 @admin.register(Synchronization)
 class SynchronizationAdmin(MigasAdmin):
-    list_display = ('__str__', 'user_link', 'computer_link', 'version_link')
+    list_display = ('__str__', 'user_link', 'computer_link', 'project_link')
     list_display_links = ('__str__',)
     list_filter = ('created_at',)
     search_fields = add_computer_search_fields(['created_at', 'user__name'])
     readonly_fields = (
-        'computer_link', 'user_link', 'version_link', 'created_at',
+        'computer_link', 'user_link', 'project_link', 'created_at',
     )
-    exclude = ('computer', 'user', 'version')
+    exclude = ('computer', 'user', 'project')
     actions = None
 
     computer_link = MigasFields.link(
         model=Synchronization, name='computer', order='computer__name'
     )
-    version_link = MigasFields.link(
-        model=Synchronization, name='version', order='version__name'
+    project_link = MigasFields.link(
+        model=Synchronization, name='project', order='project__name'
     )
     user_link = MigasFields.link(model=Synchronization, name='user', order='user__name')
 
@@ -562,7 +562,7 @@ class SynchronizationAdmin(MigasAdmin):
             request
         ).select_related(
             'computer',
-            'version',
+            'project',
             'user',
         )
 
