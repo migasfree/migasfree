@@ -38,9 +38,9 @@ class ScheduleDelay(models.Model):
             sync_attributes__id__in=self.attributes.all().values_list('id')
         )
 
-        version = UserProfile.get_logged_version()
-        if version:
-            queryset = queryset.filter(version_id=version.id)
+        project = UserProfile.get_logged_project()
+        if project:
+            queryset = queryset.filter(project__id=project.id)
 
         return queryset.annotate(total=Count('id')).order_by('id').count()
 
