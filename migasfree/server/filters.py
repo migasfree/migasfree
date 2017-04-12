@@ -10,7 +10,7 @@ from rest_framework import filters
 
 from .models import (
     ServerProperty, Computer,
-    Store, Property, Version, Attribute, AttributeSet,
+    Store, Property, Project, Attribute, AttributeSet,
     Package, Deployment, Error, FaultDefinition,
     Fault, Notification, Migration,
     HwNode, Checking, Synchronization, StatusLog,
@@ -133,7 +133,7 @@ class CheckingFilter(filters.FilterSet):
 
 
 class ComputerFilter(filters.FilterSet):
-    platform = django_filters.NumberFilter(name='version__platform__id')
+    platform = django_filters.NumberFilter(name='project__platform__id')
     created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
     mac_address = django_filters.CharFilter(
         name='mac_address', lookup_type='icontains'
@@ -142,7 +142,7 @@ class ComputerFilter(filters.FilterSet):
     class Meta:
         model = Computer
         fields = [
-            'id', 'version__id', 'status', 'name', 'uuid',
+            'id', 'project__id', 'status', 'name', 'uuid',
             'sync_attributes__id', 'tags__id'
         ]
 
@@ -150,11 +150,11 @@ class ComputerFilter(filters.FilterSet):
 class ErrorFilter(filters.FilterSet):
     created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
     created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
-    platform = django_filters.NumberFilter(name='version__platform__id')
+    platform = django_filters.NumberFilter(name='project__platform__id')
 
     class Meta:
         model = Error
-        fields = ['id', 'version__id', 'checked', 'computer__id']
+        fields = ['id', 'project__id', 'checked', 'computer__id']
 
 
 class FaultDefinitionFilter(filters.FilterSet):
@@ -173,7 +173,7 @@ class FaultFilter(filters.FilterSet):
     class Meta:
         model = Fault
         fields = [
-            'id', 'version__id', 'checked', 'fault_definition__id', 'computer__id'
+            'id', 'project__id', 'checked', 'fault_definition__id', 'computer__id'
         ]
 
 
@@ -183,7 +183,7 @@ class MigrationFilter(filters.FilterSet):
 
     class Meta:
         model = Migration
-        fields = ['id', 'version__id', 'computer__id']
+        fields = ['id', 'project__id', 'computer__id']
 
 
 class NodeFilter(filters.FilterSet):
@@ -208,7 +208,7 @@ class NotificationFilter(filters.FilterSet):
 class PackageFilter(filters.FilterSet):
     class Meta:
         model = Package
-        fields = ['id', 'version__id', 'store__id']
+        fields = ['id', 'project__id', 'store__id']
 
 
 class PropertyFilter(filters.FilterSet):
@@ -230,7 +230,7 @@ class DeploymentFilter(filters.FilterSet):
 
     class Meta:
         model = Deployment
-        fields = ['id', 'version__id', 'enabled', 'schedule__id']
+        fields = ['id', 'project__id', 'enabled', 'schedule__id']
 
 
 class StatusLogFilter(filters.FilterSet):
@@ -245,7 +245,7 @@ class StatusLogFilter(filters.FilterSet):
 class StoreFilter(filters.FilterSet):
     class Meta:
         model = Store
-        fields = ['id', 'version__id']
+        fields = ['id', 'project__id']
 
 
 class SynchronizationFilter(filters.FilterSet):
@@ -254,10 +254,10 @@ class SynchronizationFilter(filters.FilterSet):
 
     class Meta:
         model = Synchronization
-        fields = ['id', 'version__id', 'computer__id']
+        fields = ['id', 'project__id', 'computer__id']
 
 
-class VersionFilter(filters.FilterSet):
+class ProjectFilter(filters.FilterSet):
     class Meta:
-        model = Version
+        model = Project
         fields = ['id', 'platform__id', 'name']
