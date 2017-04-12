@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-12 09:27+0200\n"
-"PO-Revision-Date: 2017-04-12 09:36+0200\n"
+"PO-Revision-Date: 2017-04-12 17:12+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -613,14 +613,14 @@ msgstr "habilitado"
 #: migasfree/server/models/fault_definition.py:45
 #: migasfree/server/models/fault_definition.py:64
 msgid "included attributes"
-msgstr "Atributos incluidos"
+msgstr "atributos incluidos"
 
 #: migasfree/server/models/attribute_set.py:46
 #: migasfree/server/models/deployment.py:88
 #: migasfree/server/models/fault_definition.py:52
 #: migasfree/server/models/fault_definition.py:69
 msgid "excluded attributes"
-msgstr "Atributos excluidos"
+msgstr "atributos excluidos"
 
 #: migasfree/server/models/attribute_set.py:61
 msgid "Duplicated name"
@@ -2089,12 +2089,12 @@ msgstr "Ordenadores sincronizados / mes"
 #: migasfree/server/templates/includes/stats_menu.html:7
 #: migasfree/server/views/stats.py:247
 msgid "Provided Computers / Delay"
-msgstr "Ordenadores previstos / Demora"
+msgstr "Ordenadores previstos / demora"
 
 #: migasfree/server/templates/includes/stats_menu.html:8
 #: migasfree/server/views/stats.py:382
 msgid "Productive Computers / Project"
-msgstr "Ordenadores Productivos / Proyecto"
+msgstr "Ordenadores productivos / proyecto"
 
 #: migasfree/server/templates/lines.html:24
 msgid "Choose a project to show the delay calendars"
