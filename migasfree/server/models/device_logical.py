@@ -55,12 +55,12 @@ class DeviceLogical(models.Model, MigasLink):
     def get_name(self):
         return self.name if self.name else self.feature.name
 
-    def as_dict(self, version):
+    def as_dict(self, project):
         device_as_dict = self.device.as_dict()
         driver_as_dict = {}
         try:
             device_driver = DeviceDriver.objects.filter(
-                version__id=version.id,
+                project__id=project.id,
                 model__id=self.device.model.id,
                 feature__id=self.feature.id
             )[0]
@@ -90,12 +90,12 @@ class DeviceLogical(models.Model, MigasLink):
         super(DeviceLogical, self).save(*args, **kwargs)
 
     def __str__(self):
-        return '%s__%s__%s__%s__%s' % (
+        return '{}__{}__{}__{}__{}'.format(
             self.device.model.manufacturer.name,
             self.device.model.name,
             self.feature.name,
             self.device.name,
-            str(self.id)
+            self.id
         )
 
     class Meta:
