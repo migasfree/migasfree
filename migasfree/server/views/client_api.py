@@ -104,7 +104,7 @@ def api(request):
     if computer and computer.status == 'unsubscribed':
         Error.objects.create(
             computer,
-            computer.version,
+            computer.project,
             "{} - {} - {}".format(
                 get_client_ip(request),
                 command,
@@ -136,14 +136,14 @@ def api(request):
             save_request_file(msg, filename)
 
             # UNWRAP AND EXECUTE COMMAND
-            data = unwrap(filename, computer.version.name)
+            data = unwrap(filename, computer.project.name)
             if 'errmfs' in data:
                 ret = return_message(command, data)
 
                 if data["errmfs"]["code"] == errmfs.INVALID_SIGNATURE:
                     Error.objects.create(
                         computer,
-                        computer.version,
+                        computer.project,
                         "{} - {} - {}".format(
                             get_client_ip(request),
                             command,
