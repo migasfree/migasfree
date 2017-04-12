@@ -205,53 +205,58 @@ class BasicAttribute(Attribute):
             enabled=True, sort='basic'
         ).values_list('prefix', 'id'))
 
-        att_id = []
+        basic_attributes = []
 
         if 'SET' in properties.keys():
-            obj = Attribute.objects.create(
-                Property.objects.get(pk=properties['SET']),
-                'All Systems'
+            obj, _ = Attribute.objects.get_or_create(
+                property_att=Property.objects.get(pk=properties['SET']),
+                value='ALL SYSTEMS'  # FIXME 'All Systems'
             )
-            att_id.append(obj.id)
+            basic_attributes.append(obj.id)
 
         if 'CID' in properties.keys() and 'id' in kwargs:
-            obj = Attribute.objects.create(
-                Property.objects.get(pk=properties['CID']),
-                str(kwargs['id']),
-                u'{}~{}'.format(kwargs['id'], kwargs['description'])
+            obj, _ = Attribute.objects.get_or_create(
+                property_att=Property.objects.get(pk=properties['CID']),
+                value=str(kwargs['id']),
+                defaults={
+                    'description': u'{}~{}'.format(
+                        kwargs['id'],
+                        kwargs['description']
+                    )
+                }
             )
             obj.update_description(kwargs['description'])
-            att_id.append(obj.id)
+            basic_attributes.append(obj.id)
 
         if 'PLT' in properties.keys() and 'platform' in kwargs:
-            obj = Attribute.objects.create(
-                Property.objects.get(pk=properties['PLT']),
-                kwargs['platform']
+            obj, _ = Attribute.objects.get_or_create(
+                property_att=Property.objects.get(pk=properties['PLT']),
+                value=kwargs['platform']
             )
-            att_id.append(obj.id)
+            basic_attributes.append(obj.id)
 
         if 'IP' in properties.keys() and 'ip_address' in kwargs:
-            obj = Attribute.objects.create(
-                Property.objects.get(pk=properties['IP']),
-                kwargs['ip_address']
+            obj, _ = Attribute.objects.get_or_create(
+                property_att=Property.objects.get(pk=properties['IP']),
+                value=kwargs['ip_address']
             )
-            att_id.append(obj.id)
+            basic_attributes.append(obj.id)
 
         if 'PRJ' in properties.keys() and 'project' in kwargs:
-            obj = Attribute.objects.create(
-                Property.objects.get(pk=properties['PRJ']),
-                kwargs['project']
+            obj, _ = Attribute.objects.create(
+                property_att=Property.objects.get(pk=properties['PRJ']),
+                value=kwargs['project']
             )
-            att_id.append(obj.id)
+            basic_attributes.append(obj.id)
 
         if 'USR' in properties.keys() and 'user' in kwargs:
-            obj = Attribute.objects.create(
-                Property.objects.get(pk=properties['USR']),
-                kwargs['user']
+            obj,_ = Attribute.objects.get_or_create(
+                property_att=Property.objects.get(pk=properties['USR']),
+                value=kwargs['user']
             )
-            att_id.append(obj.id)
+            basic_attributes.append(obj.id)
 
-        return att_id
+        return basic_attributes
 
     class Meta:
         verbose_name = _("Basic Attribute")
