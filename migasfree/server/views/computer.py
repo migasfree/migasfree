@@ -15,7 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from ..forms import ComputerReplacementForm
 from ..models import (
     Computer, Synchronization, Error, Fault,
-    StatusLog, Migration, Version, Deployment,
+    StatusLog, Migration, Project, Deployment,
     FaultDefinition, DeviceLogical,
 )
 from ..mixins import LoginRequiredMixin
@@ -173,12 +173,12 @@ def computer_events(request, pk):
 @login_required
 def computer_simulate_sync(request, pk):
     computer = Computer.objects.get(pk=pk)
-    version = Version.objects.get(id=computer.version.id)
+    project = Project.objects.get(id=computer.project.id)
 
     result = {
         'title': _('Simulate sync: %s') % computer,
         'computer': computer,
-        'version': version
+        'project': project
     }
 
     if computer.status == 'unsubscribed':
@@ -202,11 +202,11 @@ def computer_simulate_sync(request, pk):
                     ),
                     "computer": {
                         "user_fullname": computer.sync_user.fullname,
-                        "pms": version.pms.name,
+                        "pms": project.pms.name,
                         "ip": computer.ip_address,
                         "hostname": computer.name,
-                        "platform": version.platform.name,
-                        "version": version.name,
+                        "platform": project.platform.name,
+                        "project": project.name,
                         "user": computer.sync_user.name
                     }
                 }
@@ -235,7 +235,7 @@ def computer_simulate_sync(request, pk):
             for item in result.get("repositories", []):
                 deployments.append(
                     Deployment.objects.get(
-                        version__id=version.id, name=item['name']
+                        project__id=project.id, name=item['name']
                     )
                 )
             result["repositories"] = deployments
