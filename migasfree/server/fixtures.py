@@ -185,7 +185,7 @@ def create_registers():
         'server.query.json',
         'server.property.json',
         'server.attribute.json',
-        'server.faultdef.json',
+        'server.faultdefinition.json',
         'server.schedule.json',
         'server.scheduledelay.json',
         'server.devicetype.json',
