@@ -131,7 +131,6 @@ class AttributeSet(models.Model, MigasLink):
             ).filter(~Q(excluded_attributes__id__in=attributes)):
                 att = Attribute.objects.create(property_set, att_set.name)
                 att_id.append(att.id)
-                attributes.append(att.id)
 
         return att_id
 
