@@ -12,20 +12,20 @@ from django.conf import settings
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 
-from . import Version, MigasLink
+from . import Project, MigasLink
 
 
 class StoreManager(models.Manager):
-    def create(self, name, version):
+    def create(self, name, project):
         obj = Store()
         obj.name = name
-        obj.version = version
+        obj.project = project
         obj.save()
 
         return obj
 
-    def by_version(self, version_id):
-        return self.get_queryset().filter(version__id=version_id)
+    def by_project(self, project_id):
+        return self.get_queryset().filter(project__id=project_id)
 
 
 @python_2_unicode_compatible
@@ -39,9 +39,9 @@ class Store(models.Model, MigasLink):
         max_length=50
     )
 
-    version = models.ForeignKey(
-        Version,
-        verbose_name=_("version")
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project")
     )
 
     objects = StoreManager()
@@ -59,12 +59,12 @@ class Store(models.Model, MigasLink):
         if self.id:
             info_link = reverse(
                 'package_info',
-                args=('%s/STORES/%s/' % (self.version.name, self.name),)
+                args=('%s/STORES/%s/' % (self.project.name, self.name),)
             )
 
             download_link = '%s%s/STORES/%s/' % (
                 settings.MEDIA_URL,
-                self.version.name,
+                self.project.name,
                 self.name
             )
 
@@ -76,7 +76,7 @@ class Store(models.Model, MigasLink):
         return super(Store, self).menu_link()
 
     def _create_dir(self):
-        path = self.path(self.version.name, self.name)
+        path = self.path(self.project.name, self.name)
         if not os.path.exists(path):
             os.makedirs(path)
 
@@ -93,13 +93,13 @@ class Store(models.Model, MigasLink):
         app_label = 'server'
         verbose_name = _('Store')
         verbose_name_plural = _('Stores')
-        unique_together = (('name', 'version'),)
+        unique_together = (('name', 'project'),)
         permissions = (("can_save_store", "Can save Store"),)
-        ordering = ['name', 'version']
+        ordering = ['name', 'project']
 
 
 @receiver(pre_delete, sender=Store)
 def delete_store(sender, instance, **kwargs):
-    path = Store.path(instance.version.name, instance.name)
+    path = Store.path(instance.project.name, instance.name)
     if os.path.exists(path):
         shutil.rmtree(path)
