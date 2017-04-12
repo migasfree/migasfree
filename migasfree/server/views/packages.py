@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 
-from ..models import Version
+from ..models import Project
 from ..functions import run_in_server
 
 import logging
@@ -16,14 +16,14 @@ logger = logging.getLogger('migasfree')
 
 @login_required
 def info(request, path=None):
-    version_name = ''
+    project_name = ''
     package = ''
 
     if path:
         try:
-            version_name, package = path.split('/', 1)
+            project_name, package = path.split('/', 1)
         except ValueError:
-            version_name = path
+            project_name = path
 
     logger.debug('package: ' + package)
 
@@ -31,11 +31,11 @@ def info(request, path=None):
     logger.debug('absolute path:' + absolute_path)
 
     if os.path.isfile(absolute_path):
-        version = get_object_or_404(Version, name=version_name)
-        logger.debug('version: ' + version_name)
+        project = get_object_or_404(Project, name=project_name)
+        logger.debug('project: ' + project_name)
 
         cmd = 'PACKAGE={}\n'.format(absolute_path)
-        cmd += version.pms.info
+        cmd += project.pms.info
         package_info = run_in_server(cmd)["out"]
 
         return render(
