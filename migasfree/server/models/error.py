@@ -5,7 +5,7 @@ import re
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from . import Version, AutoCheckError
+from . import Project, AutoCheckError
 from .event import Event
 
 
@@ -17,10 +17,10 @@ class UncheckedManager(models.Manager):
 
 
 class ErrorManager(models.Manager):
-    def create(self, computer, version, description):
+    def create(self, computer, project, description):
         obj = Error()
         obj.computer = computer
-        obj.version = version
+        obj.project = project
         obj.description = description
         obj.save()
 
@@ -39,9 +39,9 @@ class Error(Event):
         default=False,
     )
 
-    version = models.ForeignKey(
-        Version,
-        verbose_name=_("version")
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project")
     )
 
     objects = ErrorManager()
