@@ -80,7 +80,7 @@ def create_users():
         "computer", "device", "user", "attribute", "error",
         "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
         "devicetype", "schedule", "scheduledelay", "autocheckerror",
-        "faultdefinition", "property", "checking", "version", "pms", "query",
+        "faultdefinition", "property", "checking", "project", "pms", "query",
         "package", "deployment", "store", "message", "synchronization",
         "platform", "migration", "notification"
     ]
@@ -131,7 +131,7 @@ def create_users():
     configurator_group.name = "Configurator"
     configurator_group.save()
     tables = [
-        "checking", "faultdefinition", "property", "pms", "version",
+        "checking", "faultdefinition", "property", "pms", "project",
         "message", "update", "platform", "migration",
         "notification"
     ]
