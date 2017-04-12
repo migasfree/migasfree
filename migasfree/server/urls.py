@@ -54,14 +54,14 @@ urlpatterns = [
         name='chart_delay_schedule'
     ),
     url(
-        r'^chart/delay_schedule/(?P<version_name>.+)/$',
+        r'^chart/delay_schedule/(?P<project_name>.+)/$',
         delay_schedule,
         name='chart_delay_schedule'
     ),
     url(
-        r'^chart/version_computer/$',
-        version_computer,
-        name='chart_version_computer'
+        r'^chart/project_computer/$',
+        project_computer,
+        name='chart_project_computer'
     ),
 
     url(
@@ -106,9 +106,9 @@ urlpatterns = [
     ),
 
     url(
-        r'^admin/server/version/(?P<pk>\d+)/delete/$',
-        VersionDelete.as_view(),
-        name='version_delete'
+        r'^admin/server/project/(?P<pk>\d+)/delete/$',
+        ProjectDelete.as_view(),
+        name='project_delete'
     ),
 
     url(
@@ -120,9 +120,9 @@ urlpatterns = [
     url(r'^api/$', api, name='api'),
 
     url(
-        r'^get_versions/$',
-        get_versions,
-        name='get_versions'
+        r'^get_projects/$',
+        get_projects,
+        name='get_projects'
     ),
     url(
         r'^get_computer_info/$',
@@ -209,4 +209,12 @@ urlpatterns = [
     ),
     url(r'^status/$', RedirectView.as_view(url=reverse_lazy('bootstrap')),),
     url(r'^migasfree/api/$', api),  # for 2.x clients
+    url(
+        r'^get_versions/$',
+        RedirectView.as_view(url=reverse_lazy('get_projects'))
+    ),
+    url(
+        r'^chart/version_computer/$',
+        RedirectView.as_view(url=reverse_lazy('chart_project_computer'))
+    ),
 ]
