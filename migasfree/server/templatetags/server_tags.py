@@ -20,10 +20,10 @@ def organization(parser, token):
     return TemplateOrganization()
 
 
-class TemplateVersion(template.Node):
+class TemplateProject(template.Node):
     def render(self, context):
         try:
-            obj = UserProfile.objects.get(id=context["user"].id).version
+            obj = UserProfile.objects.get(id=context["user"].id).project
         except ObjectDoesNotExist:
             obj = ""
 
@@ -31,8 +31,8 @@ class TemplateVersion(template.Node):
 
 
 @register.tag
-def version(parser, token):
-    return TemplateVersion()
+def project(parser, token):
+    return TemplateProject()
 
 
 class TemplateLink(template.Node):
