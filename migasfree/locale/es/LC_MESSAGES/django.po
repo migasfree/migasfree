@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-10 12:46+0200\n"
-"PO-Revision-Date: 2017-04-10 12:56+0200\n"
+"POT-Creation-Date: 2017-04-12 09:27+0200\n"
+"PO-Revision-Date: 2017-04-12 09:36+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -90,13 +90,12 @@ msgstr "Acceso universal"
 #: migasfree/server/models/deployment.py:48
 #: migasfree/server/models/device_driver.py:26
 #: migasfree/server/models/error.py:44 migasfree/server/models/fault.py:48
-#: migasfree/server/models/hw_node.py:113
 #: migasfree/server/models/migration.py:25
 #: migasfree/server/models/package.py:38 migasfree/server/models/store.py:44
 #: migasfree/server/models/synchronization.py:30
-#: migasfree/server/models/version.py:142
-msgid "version"
-msgstr "versión"
+#: migasfree/server/models/version.py:129
+msgid "project"
+msgstr "proyecto"
 
 #: migasfree/catalog/models.py:38 migasfree/server/models/attribute_set.py:21
 #: migasfree/server/models/checking.py:16
@@ -118,7 +117,7 @@ msgstr "versión"
 #: migasfree/server/models/pms.py:27 migasfree/server/models/property.py:49
 #: migasfree/server/models/query.py:11 migasfree/server/models/schedule.py:13
 #: migasfree/server/models/store.py:38 migasfree/server/models/user.py:23
-#: migasfree/server/models/version.py:41
+#: migasfree/server/models/version.py:42
 msgid "name"
 msgstr "nombre"
 
@@ -135,6 +134,12 @@ msgstr "descripción"
 #: migasfree/catalog/models.py:43
 msgid "markdown syntax allowed"
 msgstr "La sintaxis markdown está permitida"
+
+#: migasfree/catalog/models.py:46 migasfree/server/models/event.py:31
+#: migasfree/server/models/message.py:34
+#: migasfree/server/models/notification.py:21
+msgid "date"
+msgstr "fecha"
 
 #: migasfree/catalog/models.py:49 migasfree/server/models/deployment.py:65
 #: migasfree/server/models/device_driver.py:35
@@ -314,7 +319,7 @@ msgstr "Regenerar metadatos"
 msgid ""
 "Deployment [%s] modified by user [%s] (<a href=\"%s\">review changes</a>)"
 msgstr ""
-"La distribución [%s] ha sido modificada por el usuario [%s] (<a href=\"%s"
+"El despliegue [%s] ha sido modificado por el usuario [%s] (<a href=\"%s"
 "\">revisar cambios</a>)"
 
 #: migasfree/server/admin/migasfree.py:19
@@ -347,25 +352,25 @@ msgstr "Plataforma [%s] registrada por el ordenador [%s]."
 
 #: migasfree/server/api.py:50
 #, python-format
-msgid "Version [%s] with P.M.S. [%s] registered by computer [%s]."
-msgstr "Versión [%s] con PMS [%s] registrada por el ordenador [%s]."
+msgid "Project [%s] with P.M.S. [%s] registered by computer [%s]."
+msgstr "Proyecto [%s] con PMS [%s] registrado por el ordenador [%s]."
 
-#: migasfree/server/api.py:843
+#: migasfree/server/api.py:844
 #, python-format
 msgid "New Computer added id=[%s]: NAME=[%s] UUID=[%s]"
 msgstr "Se ha añadido un ordenador con id=[%s]: Nombre=[%s] UUID=[%s]"
 
-#: migasfree/server/api.py:866
+#: migasfree/server/api.py:867
 #, python-format
 msgid "Computer id=[%s]: NAME [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: Nombre [%s] cambiado por [%s]"
 
-#: migasfree/server/api.py:879
+#: migasfree/server/api.py:880
 #, python-format
 msgid "Computer id=[%s]: IP [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: IP [%s] cambiado por [%s]"
 
-#: migasfree/server/api.py:891
+#: migasfree/server/api.py:892
 #, python-format
 msgid "Computer id=[%s]: UUID [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: UUID [%s] cambiado por [%s]"
@@ -490,7 +495,6 @@ msgstr "baja"
 #: migasfree/server/filters.py:58 migasfree/server/forms.py:215
 #: migasfree/server/models/attribute.py:161
 #: migasfree/server/models/property.py:133
-#: migasfree/server/templates/includes/config_menu.html:5
 msgid "Tag Category"
 msgstr "Categoría de etiqueta"
 
@@ -531,13 +535,13 @@ msgid "It is not possible to assign an inactive computer (%s) as an attribute"
 msgstr "No es posible asignar un ordenador inactivo (%s) como atributo"
 
 #: migasfree/server/forms.py:104
-msgid "Version is required"
-msgstr "La versión es obligatoria"
+msgid "Project is required"
+msgstr "El proyecto es obligatorio"
 
 #: migasfree/server/forms.py:110 migasfree/server/serializers.py:256
 #, python-format
-msgid "Package %s must belong to the version %s"
-msgstr "El paquete %s debe pertenecer a la versión %s"
+msgid "Package %s must belong to the project %s"
+msgstr "El paquete %s debe pertenecer al proyecto %s"
 
 #: migasfree/server/forms.py:202 migasfree/server/models/computer.py:446
 #: migasfree/server/templates/computer_change_status.html:9
@@ -851,11 +855,11 @@ msgstr "Ordenador"
 #: migasfree/server/templates/includes/software_menu.html:6
 #: migasfree/server/templates/includes/software_menu.html:16
 msgid "Deployments"
-msgstr "Distribuciones"
+msgstr "Despliegues"
 
 #: migasfree/server/models/computer.py:412
 msgid "Deployments (excluded)"
-msgstr "Distribuciones (excluidos)"
+msgstr "Despliegues (excluidos)"
 
 #: migasfree/server/models/computer.py:415
 msgid "Sets"
@@ -881,7 +885,7 @@ msgstr "Dispositivo lógico por defecto"
 #: migasfree/server/models/deployment.py:39
 msgid "if you uncheck this field, deployment is disabled for all computers."
 msgstr ""
-"si desmarca este campo, la distribución está deshabilitada para todos los "
+"si desmarca este campo, el despliegue está deshabilitado para todos los "
 "ordenadores."
 
 #: migasfree/server/models/deployment.py:51
@@ -932,11 +936,11 @@ msgstr "paquetes excluidos por defecto"
 
 #: migasfree/server/models/deployment.py:233
 msgid "Deployment"
-msgstr "Distribución"
+msgstr "Despliegue"
 
 #: migasfree/server/models/deployment.py:245
-msgid "Is not allowed change version"
-msgstr "No está permitido cambiar la versión"
+msgid "Is not allowed change project"
+msgstr "No está permitido cambiar el proyecto"
 
 #: migasfree/server/models/device.py:29
 #: migasfree/server/models/device_driver.py:21
@@ -1074,11 +1078,6 @@ msgstr "comprobado"
 msgid "Error"
 msgstr "Error"
 
-#: migasfree/server/models/event.py:31 migasfree/server/models/message.py:34
-#: migasfree/server/models/notification.py:21
-msgid "date"
-msgstr "fecha"
-
 #: migasfree/server/models/fault.py:32
 msgid "fault definition"
 msgstr "definición de falla"
@@ -1158,6 +1157,10 @@ msgstr "reclamado"
 #: migasfree/server/models/hw_node.py:101
 msgid "vendor"
 msgstr "vendedor"
+
+#: migasfree/server/models/hw_node.py:113
+msgid "version"
+msgstr "versión"
 
 #: migasfree/server/models/hw_node.py:119
 msgid "serial"
@@ -1245,12 +1248,12 @@ msgid "Download"
 msgstr "Descargar"
 
 #: migasfree/server/models/package.py:88
-msgid "Store must belong to the version"
-msgstr "El almacén debe pertenecer a la versión"
+msgid "Store must belong to the project"
+msgstr "El almacén debe pertenecer al proyecto"
 
 #: migasfree/server/models/package.py:96
-msgid "Duplicated name at version"
-msgstr "Nombre duplicado en la versión"
+msgid "Duplicated name at project"
+msgstr "Nombre duplicado en el proyecto"
 
 #: migasfree/server/models/package.py:107
 msgid "Package/Set"
@@ -1376,6 +1379,7 @@ msgid "Properties"
 msgstr "Propiedades"
 
 #: migasfree/server/models/property.py:134
+#: migasfree/server/templates/includes/config_menu.html:5
 msgid "Tag Categories"
 msgstr "Categorías de etiquetas"
 
@@ -1395,10 +1399,10 @@ msgstr "Propiedades básicas"
 #: migasfree/server/models/query.py:28
 #, python-format
 msgid ""
-"%s: version = user.version, query = QuerySet, fields = list of QuerySet "
+"%s: project = user.project, query = QuerySet, fields = list of QuerySet "
 "fields names to show, titles = list of QuerySet fields titles"
 msgstr ""
-"%s: version = user.version, query = QuerySet, fields = lista de nombres de "
+"%s: project = user.project, query = QuerySet, fields = lista de nombres de "
 "campos QuerySet para mostrar, titles = lista de títulos para los campos "
 "QuerySet"
 
@@ -1482,59 +1486,42 @@ msgstr "Sincronizaciones"
 msgid "fullname"
 msgstr "nombre completo"
 
-#: migasfree/server/models/version.py:48
+#: migasfree/server/models/version.py:49
 msgid "package management system"
 msgstr "sistema de gestión de paquetes"
 
-#: migasfree/server/models/version.py:52
-msgid "Actual line computer"
-msgstr "Línea actual  del ordenador"
+#: migasfree/server/models/version.py:53
+msgid "auto register computers"
+msgstr "auto registrar ordenadores"
 
-#: migasfree/server/models/version.py:54
-msgid "Computer with the actual line software"
-msgstr "Ordenador con la actual linea de software"
-
-#: migasfree/server/models/version.py:59
-msgid "Actual line packages"
-msgstr "Lína actual de paquetes"
-
-#: migasfree/server/models/version.py:62
-msgid "List ordered of packages of actual line computer"
-msgstr "List ordenada de paquetes de la linea actual del ordenador"
-
-#: migasfree/server/models/version.py:66
-msgid "autoregister"
-msgstr "autoregistrado"
-
-#: migasfree/server/models/version.py:68
+#: migasfree/server/models/version.py:55
 msgid ""
-"Is not neccesary a user for register the computer in database and get the "
-"keys."
+"Is not needed a user for register computers in database and get the keys."
 msgstr ""
-"No es necesario un usuario para registrar el ordenador en la base de datos y "
+"No es necesario un usuario para registrar ordenadores en la base de datos y "
 "obtener las claves."
 
-#: migasfree/server/models/version.py:74
+#: migasfree/server/models/version.py:61
 msgid "platform"
 msgstr "plataforma"
 
-#: migasfree/server/models/version.py:128
+#: migasfree/server/models/version.py:115
 #: migasfree/server/templates/computer_simulate_sync.html:34
 #: migasfree/server/templates/includes/computer_messages_result.html:12
-msgid "Version"
-msgstr "Versión"
+msgid "Project"
+msgstr "Proyecto"
 
-#: migasfree/server/models/version.py:129
+#: migasfree/server/models/version.py:116
 #: migasfree/server/templates/includes/config_menu.html:10
 #: migasfree/server/templates/version_confirm_delete.html:9
-msgid "Versions"
-msgstr "Versiones"
+msgid "Projects"
+msgstr "Proyectos"
 
-#: migasfree/server/models/version.py:177
+#: migasfree/server/models/version.py:164
 msgid "User Profile"
 msgstr "Perfil de usuario"
 
-#: migasfree/server/models/version.py:178
+#: migasfree/server/models/version.py:165
 #: migasfree/server/templates/includes/config_menu.html:23
 msgid "User Profiles"
 msgstr "Perfiles de usuario"
@@ -2102,16 +2089,16 @@ msgstr "Ordenadores sincronizados / mes"
 #: migasfree/server/templates/includes/stats_menu.html:7
 #: migasfree/server/views/stats.py:247
 msgid "Provided Computers / Delay"
-msgstr "Ordenadores previstos/demora"
+msgstr "Ordenadores previstos / Demora"
 
 #: migasfree/server/templates/includes/stats_menu.html:8
 #: migasfree/server/views/stats.py:382
-msgid "Productive Computers / Version"
-msgstr "Ordenadores Productivos/Versión"
+msgid "Productive Computers / Project"
+msgstr "Ordenadores Productivos / Proyecto"
 
 #: migasfree/server/templates/lines.html:24
-msgid "Choose a version to show the delay calendars"
-msgstr "Escoje una versión para mostrar las demoras de los calendarios"
+msgid "Choose a project to show the delay calendars"
+msgstr "Escoja un proyecto para mostrar las demoras de los calendarios"
 
 #: migasfree/server/templates/lines.html:43
 msgid "Data"
@@ -2151,12 +2138,8 @@ msgid "Home"
 msgstr "Inicio"
 
 #: migasfree/server/templates/preferences.html:24
-msgid "Filter version for repositories, stores and packages"
-msgstr "Filtro de versión en repositorios, almacenes y paquetes"
-
-#: migasfree/server/templates/preferences.html:44
-msgid "Before selecting a version, you must create at least one."
-msgstr "Antes de seleccionar una versión, debes crear al menos una."
+msgid "Filter project for repositories, stores and packages"
+msgstr "Filtro de proyecto en repositorios, almacenes y paquetes"
 
 #: migasfree/server/templates/query.html:43
 msgid "No results for query"
@@ -2193,12 +2176,12 @@ msgstr "Cambiar mi contraseña"
 
 #: migasfree/server/templates/version_confirm_delete.html:4
 #: migasfree/server/templates/version_confirm_delete.html:15
-msgid "Delete Version"
-msgstr "Borrar versión"
+msgid "Delete Project"
+msgstr "Borrar proyecto"
 
 #: migasfree/server/templates/version_confirm_delete.html:19
-msgid "Are you sure you want to delete this version?"
-msgstr "¿Está seguro de que quiere borrar esta versión?"
+msgid "Are you sure you want to delete this project?"
+msgstr "¿Está seguro de que quiere borrar este proyecto?"
 
 #: migasfree/server/templates/welcome.html:4
 #: migasfree/server/templates/welcome.html:19
@@ -2292,13 +2275,20 @@ msgstr "¡Los ordenadores %s, han cambiado el estado!"
 msgid "Replacement done."
 msgstr "Reemplazo realizado."
 
-#: migasfree/server/views/computer.py:215
-#: migasfree/server/views/computer.py:242
+#: migasfree/server/views/computer.py:179
 #, python-format
 msgid "Simulate sync: %s"
 msgstr "Simular sincronización: %s"
 
-#: migasfree/server/views/computer.py:249
+#: migasfree/server/views/computer.py:187
+msgid ""
+"Error: This computer, with unsubscribed status, is not allowed to "
+"synchronize!"
+msgstr ""
+"¡Error: este ordenador, con estado de baja, no tiene permitida la "
+"sincronización!"
+
+#: migasfree/server/views/computer.py:193
 msgid "Error: This computer does not have any synchronization!"
 msgstr "¡Error: este ordenador no tiene ninguna sincronización!"
 
@@ -2394,8 +2384,35 @@ msgstr "El estado debe tener uno de los siguientes valores: %s"
 
 #: migasfree/server/views/version.py:19
 #, python-format
-msgid "Version %s deleted!"
-msgstr "¡Versión %s borrada!"
+msgid "Project %s deleted!"
+msgstr "¡Proyecto %s borrado!"
+
+#~ msgid "Actual line computer"
+#~ msgstr "Línea actual  del ordenador"
+
+#~ msgid "Computer with the actual line software"
+#~ msgstr "Ordenador con la actual linea de software"
+
+#~ msgid "Actual line packages"
+#~ msgstr "Lína actual de paquetes"
+
+#~ msgid "List ordered of packages of actual line computer"
+#~ msgstr "List ordenada de paquetes de la linea actual del ordenador"
+
+#~ msgid "autoregister"
+#~ msgstr "autoregistrado"
+
+#~ msgid "Version"
+#~ msgstr "Versión"
+
+#~ msgid "Versions"
+#~ msgstr "Versiones"
+
+#~ msgid "Before selecting a version, you must create at least one."
+#~ msgstr "Antes de seleccionar una versión, debes crear al menos una."
+
+#~ msgid "Delete Version"
+#~ msgstr "Borrar versión"
 
 #~ msgid "Atributtes"
 #~ msgstr "Atributos"
@@ -2657,9 +2674,6 @@ msgstr "¡Versión %s borrada!"
 
 #~ msgid "Delete"
 #~ msgstr "Borrar"
-
-#~ msgid "Delete multiple objects"
-#~ msgstr "Borrar múltiples objetos"
 
 #~ msgid " By %(filter_title)s "
 #~ msgstr " Por %(filter_title)s "
