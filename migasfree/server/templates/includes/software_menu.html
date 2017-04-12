@@ -1,22 +1,22 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
-    {% if current_version.id != None %}
+    {% if current_project.id != None %}
         <li>
-            <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1&version__id__exact={{ current_version.id }}">{% trans 'Deployments' %}</a>
+            <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1&project__id__exact={{ current_project.id }}">{% trans 'Deployments' %}</a>
         </li>
         <li>
-               <a href="{% url 'admin:server_store_changelist' %}?version__id__exact={{ current_version.id }}">{% trans 'Stores' %}</a>
+            <a href="{% url 'admin:server_store_changelist' %}?project__id__exact={{ current_project.id }}">{% trans 'Stores' %}</a>
         </li>
         <li>
-            <a href="{% url 'admin:server_package_changelist' %}?version__id__exact={{ current_version.id }}">{% trans 'Packages/Sets' %}</a>
+            <a href="{% url 'admin:server_package_changelist' %}?project__id__exact={{ current_project.id }}">{% trans 'Packages/Sets' %}</a>
         </li>
     {% else %}
         <li>
             <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1">{% trans 'Deployments' %}</a>
         </li>
         <li>
-               <a href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a>
+            <a href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a>
         </li>
         <li>
             <a href="{% url 'admin:server_package_changelist' %}">{% trans 'Packages/Sets' %}</a>
