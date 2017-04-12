@@ -80,7 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'migasfree.server.context_processors.query_names',
-                'migasfree.server.context_processors.version_names',
+                'migasfree.server.context_processors.project_names',
                 'migasfree.server.context_processors.migasfree_version',
             ],
         },
