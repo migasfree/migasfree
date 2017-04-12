@@ -1,9 +1,9 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
-    <li><a class="hourly_updated" href="{% url 'chart_synchronized_hourly' %}">{% trans 'Synchronized Computers / Hour' %}</a></li>
-    <li><a class="daily_updated" href="{% url 'chart_synchronized_daily' %}">{% trans 'Synchronized Computers / Day' %}</a></li>
-    <li><a class="monthly_updated" href="{% url 'chart_synchronized_monthly' %}">{% trans 'Synchronized Computers / Month' %}</a></li>
-    <li><a class="delay_updated" href="{% url 'chart_delay_schedule' %}">{% trans 'Provided Computers / Delay' %}</a></li>
-    <li><a class="version_computer" href="{% url 'chart_version_computer' %}">{% trans 'Productive Computers / Version' %}</a></li>
+    <li><a href="{% url 'chart_synchronized_hourly' %}">{% trans 'Synchronized Computers / Hour' %}</a></li>
+    <li><a href="{% url 'chart_synchronized_daily' %}">{% trans 'Synchronized Computers / Day' %}</a></li>
+    <li><a href="{% url 'chart_synchronized_monthly' %}">{% trans 'Synchronized Computers / Month' %}</a></li>
+    <li><a href="{% url 'chart_delay_schedule' %}">{% trans 'Provided Computers / Delay' %}</a></li>
+    <li><a href="{% url 'chart_project_computer' %}">{% trans 'Productive Computers / Project' %}</a></li>
 </ul>
