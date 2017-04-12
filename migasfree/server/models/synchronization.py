@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from . import Version, MigasLink
+from . import Project, MigasLink
 from .event import Event
 from .user import User
 
@@ -12,7 +12,7 @@ class SynchronizationManager(models.Manager):
     def create(self, computer):
         obj = Synchronization()
         obj.computer = computer
-        obj.version = computer.version
+        obj.project = computer.project
         obj.user = computer.sync_user
         obj.save()
 
@@ -25,9 +25,9 @@ class Synchronization(Event, MigasLink):
         verbose_name=_("user")
     )
 
-    version = models.ForeignKey(
-        Version,
-        verbose_name=_("version"),
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project"),
         null=True
     )
 
