@@ -14,18 +14,18 @@ class ApplicationAdmin(MigasAdmin):
     formfield_overrides = {
         models.ImageField: {'widget': ImageWidget}
     }
-    list_display = ('name', 'version_link', 'score', 'level', 'category',)
+    list_display = ('name', 'project_link', 'score', 'level', 'category',)
     list_display_links = ('name',)
-    list_filter = ('version', 'level', 'category')
+    list_filter = ('project', 'level', 'category')
     ordering = ('name',)
     fields = (
-        'name', 'version', 'category', 'level', 'score', 'icon',
+        'name', 'project', 'category', 'level', 'score', 'icon',
         'description', 'packages_to_install'
     )
     search_fields = ('name', 'description')
 
-    version_link = MigasFields.link(
-        model=Application, name='version', order='version__name'
+    project_link = MigasFields.link(
+        model=Application, name='project', order='project__name'
     )
 
     def __str__(self):

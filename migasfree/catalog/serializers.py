@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from migasfree.server.serializers import VersionInfoSerializer
+from migasfree.server.serializers import ProjectInfoSerializer
 from . import models
 
 
@@ -19,7 +19,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = models.Application
@@ -34,9 +34,9 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'score': obj.score,
             'icon': self.context['request'].build_absolute_uri(obj.icon.url),
             'level':  obj.level,
-            'version': {
-                'id': obj.version.id,
-                'name': obj.version.name
+            'project': {
+                'id': obj.project.id,
+                'name': obj.project.name
             },
             'category': {
                 'id': obj.category,
