@@ -2,22 +2,22 @@
 
 from migasfree import __version__
 
-from .models import Version, Query
+from .models import Project, Query
 
 
 def query_names(request):
     return {'query_names': Query.get_query_names()}
 
 
-def version_names(request):
+def project_names(request):
     try:
-        current = request.user.userprofile.version
+        current = request.user.userprofile.project
     except:
         current = ''
 
     return {
-        'version_names': Version.get_version_names(),
-        'current_version': current
+        'project_names': Project.get_project_names(),
+        'current_project': current
     }
 
 
