@@ -13,11 +13,7 @@ from .pms import Pms
 from .property import Property, ServerProperty, ClientProperty, BasicProperty
 
 from .platform import Platform
-from .version import (
-    Version,
-    VersionManager,
-    UserProfile
-)
+from .project import Project, ProjectManager, UserProfile
 from .attribute import Attribute, ServerAttribute, ClientAttribute, BasicAttribute
 from .attribute_set import AttributeSet
 
