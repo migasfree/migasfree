@@ -9,21 +9,21 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.conf import settings
 
-from . import Version, Store, MigasLink
+from . import Project, Store, MigasLink
 
 
 class PackageManager(models.Manager):
-    def create(self, name, version, store):
+    def create(self, name, project, store):
         pkg = Package()
         pkg.name = name
-        pkg.version = version
+        pkg.project = project
         pkg.store = store
         pkg.save()
 
         return pkg
 
-    def by_version(self, version_id):
-        return self.get_queryset().filter(version__id=version_id)
+    def by_project(self, project_id):
+        return self.get_queryset().filter(project__id=project_id)
 
 
 @python_2_unicode_compatible
@@ -33,9 +33,9 @@ class Package(models.Model, MigasLink):
         max_length=100
     )
 
-    version = models.ForeignKey(
-        Version,
-        verbose_name=_("version")
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project")
     )
 
     store = models.ForeignKey(
@@ -51,14 +51,14 @@ class Package(models.Model, MigasLink):
                 'package_info',
                 args=(
                     '%s/STORES/%s/%s' % (
-                        self.version.name, self.store.name, self.name
+                        self.project.name, self.store.name, self.name
                     ),
                 )
             )
 
             download_link = '%s%s/STORES/%s/%s' % (
                 settings.MEDIA_URL,
-                self.version.name,
+                self.project.name,
                 self.store.name,
                 self.name
             )
@@ -74,26 +74,26 @@ class Package(models.Model, MigasLink):
         return os.path.join(Store.path(project_name, store_name), name)
 
     def create_dir(self):
-        path = self.path(self.version.name, self.store.name, self.name)
+        path = self.path(self.project.name, self.store.name, self.name)
         if not os.path.exists(path):
             os.makedirs(path)
 
     def clean(self):
         super(Package, self).clean()
 
-        if not hasattr(self, 'version'):
+        if not hasattr(self, 'project'):
             return False
 
-        if self.store.version.id != self.version.id:
-            raise ValidationError(_('Store must belong to the version'))
+        if self.store.project.id != self.project.id:
+            raise ValidationError(_('Store must belong to the project'))
 
         queryset = Package.objects.filter(
             name=self.name
         ).filter(
-            version__id=self.version.id
+            project__id=self.project.id
         ).filter(~models.Q(id=self.id))
         if queryset.exists():
-            raise ValidationError(_('Duplicated name at version'))
+            raise ValidationError(_('Duplicated name at project'))
 
     def save(self, *args, **kwargs):
         self.create_dir()
@@ -106,5 +106,5 @@ class Package(models.Model, MigasLink):
         app_label = 'server'
         verbose_name = _("Package/Set")
         verbose_name_plural = _("Packages/Sets")
-        unique_together = (("name", "version"),)
+        unique_together = (("name", "project"),)
         permissions = (("can_save_package", "Can save Package"),)
