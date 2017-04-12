@@ -20,7 +20,7 @@ from ..models import (
     Computer,
     Schedule,
     ScheduleDelay,
-    Version,
+    Project,
 )
 from ..functions import to_heatmap, to_timestamp
 
@@ -59,7 +59,7 @@ def get_syncs_time_range(start_date, end_date, platform=0, range_name='month'):
     ).order_by('-' + range_name)
 
     if platform:
-        syncs = syncs.filter(version__platform=platform)
+        syncs = syncs.filter(project__platform=platform)
 
     return syncs
 
@@ -243,22 +243,22 @@ def synchronized_monthly(request):
 
 
 @login_required
-def delay_schedule(request, version_name=None):
+def delay_schedule(request, project_name=None):
     title = _("Provided Computers / Delay")
-    version_selection = Version.get_version_names()
+    project_selection = Project.get_project_names()
 
-    if version_name is None:
+    if project_name is None:
         return render(
             request,
             'lines.html',
             {
                 'title': title,
-                'version_selection': version_selection,
+                'project_selection': project_selection,
             }
         )
 
-    version = get_object_or_404(Version, name=version_name)
-    title += ' [{}]'.format(version.name)
+    project = get_object_or_404(Project, name=project_name)
+    title += ' [{}]'.format(project.name)
 
     line_chart = pygal.Line(
         no_data_text=_('There are no updates'),
@@ -299,7 +299,7 @@ def delay_schedule(request, version_name=None):
                 ).filter(
                     ~ Q(sync_attributes__id__in=lst_attributes) &
                     Q(sync_attributes__id__in=lst_att_delay) &
-                    Q(version=version.id)
+                    Q(project__id=project.id)
                 ).values('id').annotate(lastdate=Max('sync_start_date')).count()
 
                 line.append([d, value])
@@ -323,8 +323,8 @@ def delay_schedule(request, version_name=None):
         'lines.html',
         {
             'title': title,
-            'version_selection': version_selection,
-            'current_version': version.name,
+            'project_selection': project_selection,
+            'current_project': project.name,
             'chart': line_chart.render_data_uri(),
             'tabular_data': line_chart.render_table(),
         }
@@ -332,7 +332,7 @@ def delay_schedule(request, version_name=None):
 
 
 @login_required
-def version_computer(request):
+def project_computer(request):
     pie = pygal.Pie(
         no_data_text=_('There are no computers'),
         style=DEFAULT_STYLE,
@@ -343,26 +343,26 @@ def version_computer(request):
     )
     total = Computer.productive.count()
 
-    for version in Computer.productive.values(
-        "version__name",
-        "version__id"
+    for project in Computer.productive.values(
+        "project__name",
+        "project__id"
     ).annotate(
         count=Count("id")
-    ).order_by('version__platform__id', '-count'):
-        percent = float(version.get('count')) / total * 100
-        link = '%s://%s%s?version__id__exact=%s&status__in=%s' % (
+    ).order_by('project__platform__id', '-count'):
+        percent = float(project.get('count')) / total * 100
+        link = '%s://%s%s?project__id__exact=%s&status__in=%s' % (
             request.META.get('wsgi.url_scheme'),
             request.META.get('HTTP_HOST'),
             reverse('admin:server_computer_changelist'),
-            version.get('version__id'),
+            project.get('project__id'),
             'intended,reserved,unknown'
         )
 
         pie.add(
             {
                 'title': '{} ({})'.format(
-                    version.get("version__name"),
-                    version.get('count')
+                    project.get("project__name"),
+                    project.get('count')
                 ),
                 'xlink': {
                     'href': link,
@@ -370,7 +370,7 @@ def version_computer(request):
                 }
             },
             [{
-                'value': version.get("count"),
+                'value': project.get("count"),
                 'label': '{:.2f}%'.format(percent)
             }]
         )
@@ -379,7 +379,7 @@ def version_computer(request):
         request,
         'pie.html',
         {
-            'title': _("Productive Computers / Version"),
+            'title': _("Productive Computers / Project"),
             'total': total,
             'chart': pie.render_data_uri(),
         }
