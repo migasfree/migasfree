@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.urlresolvers import reverse
 
-from ..models import Version, UserProfile
+from ..models import Project, UserProfile
 
 
 def login(request):
@@ -40,16 +40,16 @@ def preferences(request):
             'preferences.html',
         )
 
-    version = None
+    project = None
     success_url = '%s?enabled__exact=1' % reverse('admin:server_deployment_changelist')
 
-    version_id = int(request.POST.get('version', 0))
-    if version_id:
-        version = get_object_or_404(Version, pk=version_id)
-        success_url += '&version__id__exact=%d' % version.id
+    project_id = int(request.POST.get('project', 0))
+    if project_id:
+        project = get_object_or_404(Project, pk=project_id)
+        success_url += '&project__id__exact=%d' % project.id
 
     user_profile = UserProfile.objects.get(id=request.user.id)
-    user_profile.update_version(version)
+    user_profile.update_project(project)
 
     messages.success(request, _("Preferences changed"))
 
