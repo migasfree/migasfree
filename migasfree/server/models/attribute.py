@@ -246,7 +246,7 @@ class BasicAttribute(Attribute):
             basic_attributes.append(obj.id)
 
         if 'USR' in properties.keys() and 'user' in kwargs:
-            obj,_ = Attribute.objects.get_or_create(
+            obj, _ = Attribute.objects.get_or_create(
                 property_att=Property.objects.get(pk=properties['USR']),
                 value=kwargs['user']
             )
