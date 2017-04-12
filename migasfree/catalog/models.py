@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from markdownx.models import MarkdownxField
 
-from migasfree.server.models import Version, MigasLink
+from migasfree.server.models import Project, MigasLink
 
 
 @python_2_unicode_compatible
@@ -33,7 +33,7 @@ class Application(models.Model, MigasLink):
         (14, _('Universal Access')),
     )
 
-    version = models.ForeignKey(Version, verbose_name=_('version'))
+    project = models.ForeignKey(Project, verbose_name=_('project'))
 
     name = models.CharField(verbose_name=_('name'), max_length=50)
 
@@ -43,7 +43,7 @@ class Application(models.Model, MigasLink):
         help_text=_('markdown syntax allowed')
     )
 
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('date'))
 
     packages_to_install = models.TextField(
         verbose_name=_('packages to install'),
@@ -83,5 +83,5 @@ class Application(models.Model, MigasLink):
         app_label = 'catalog'
         verbose_name = _('Application')
         verbose_name_plural = _('Applications')
-        unique_together = (("name", "version"),)
+        unique_together = (("name", "project"),)
         permissions = (('can_save_application', 'Can save application'),)
