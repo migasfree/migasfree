@@ -64,16 +64,16 @@ class DeviceConnectionAdmin(MigasAdmin):
 
 @admin.register(DeviceDriver)
 class DeviceDriverAdmin(MigasAdmin):
-    list_display = ('__str__', 'model', 'version', 'feature')
+    list_display = ('__str__', 'model', 'project', 'feature')
     list_display_links = ('__str__',)
-    list_filter = ('version', 'model')
-    fields = ('name', 'model', 'version', 'feature', 'install')
+    list_filter = ('project', 'model')
+    fields = ('name', 'model', 'project', 'feature', 'install')
     search_fields = ('name',)
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeviceDriverAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['model'].widget.can_add_related = False
-        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['project'].widget.can_add_related = False
         form.base_fields['feature'].widget.can_add_related = False
 
         return form
@@ -190,8 +190,8 @@ class DeviceAdmin(MigasAdmin):
 class DeviceDriverInline(admin.TabularInline):
     model = DeviceDriver
     formfield_overrides = {models.TextField: {'widget': ExtraThinTextarea}}
-    fields = ('version', 'feature', 'name', 'install')
-    ordering = ('version', 'feature')
+    fields = ('project', 'feature', 'name', 'install')
+    ordering = ('project', 'feature')
     extra = 1
 
 
