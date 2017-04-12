@@ -25,8 +25,8 @@ class Query(models.Model):
         verbose_name=_("code"),
         null=True,
         blank=True,
-        help_text=_("%s: version = user.version, query = QuerySet, fields = list of QuerySet fields names to show, titles = list of QuerySet fields titles") % _("Django Code"),
-        default="query = Package.objects.filter(version=VERSION).filter(deployment__id__exact=None)\nfields = ('id', 'name', 'store__name')\ntitles = ('id', 'name', 'store')"
+        help_text=_("%s: project = user.project, query = QuerySet, fields = list of QuerySet fields names to show, titles = list of QuerySet fields titles") % _("Django Code"),
+        default="query = Package.objects.filter(project=PROJECT).filter(deployment__id__exact=None)\nfields = ('id', 'name', 'store__name')\ntitles = ('id', 'name', 'store')"
     )
 
     parameters = models.TextField(
