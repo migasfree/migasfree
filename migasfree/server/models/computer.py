@@ -14,7 +14,7 @@ from django.conf import settings
 from ..functions import swap_m2m, remove_empty_elements_from_dict
 
 from . import (
-    Version, DeviceLogical, User,
+    Project, DeviceLogical, User,
     Attribute, ServerAttribute, BasicProperty,
     MigasLink,
 )
@@ -63,10 +63,10 @@ class InactiveManager(models.Manager):
 
 
 class ComputerManager(models.Manager):
-    def create(self, name, version, uuid, ip=None):
+    def create(self, name, project, uuid, ip=None):
         obj = Computer()
         obj.name = name
-        obj.version = version
+        obj.project = project
         obj.uuid = uuid
         obj.ip = ip
         obj.save()
@@ -118,9 +118,9 @@ class Computer(models.Model, MigasLink):
         unique=False
     )
 
-    version = models.ForeignKey(
-        Version,
-        verbose_name=_("version")
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project")
     )
 
     created_at = models.DateTimeField(auto_now_add=True, help_text=_('Date of entry into the migasfree system'))
@@ -300,9 +300,9 @@ class Computer(models.Model, MigasLink):
         self.sync_start_date = datetime.now()
         self.save()
 
-    def update_identification(self, name, version, uuid, ip_address):
+    def update_identification(self, name, project, uuid, ip_address):
         self.name = name
-        self.version = version
+        self.project = project
         self.uuid = uuid
         self.ip_address = ip_address
         self.save()
