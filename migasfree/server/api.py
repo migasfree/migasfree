@@ -381,50 +381,45 @@ def upload_computer_info(request, name, uuid, computer, data):
         computer.update_sync_user(user)
         computer.sync_attributes.clear()
 
-        basic_attributes = BasicAttribute.process(
-            id=computer.id,
-            ip_address=ip_address,
-            project=computer.project.name,
-            platform=computer.project.platform.name,
-            user=user.name,
-            description=computer.get_cid_description()
+        computer.sync_attributes.add(
+            *BasicAttribute.process(
+                id=computer.id,
+                ip_address=ip_address,
+                project=computer.project.name,
+                platform=computer.project.platform.name,
+                user=user.name,
+                description=computer.get_cid_description()
+            )
         )
-        for item in basic_attributes:
-            computer.sync_attributes.add(item)
 
         # client attributes
         for prefix, value in client_attributes.iteritems():
             client_property = Property.objects.get(prefix=prefix)
             if client_property.sort == 'client':
-                for item in Attribute.process_kind_property(client_property, value):
-                    computer.sync_attributes.add(item)
+                computer.sync_attributes.add(
+                    *Attribute.process_kind_property(client_property, value)
+                )
 
         # Tags (server attributes) (not running on clients!!!)
         for tag in computer.tags.all().filter(property_att__enabled=True):
-            for item in Attribute.process_kind_property(
-                tag.property_att,
-                tag.value
-            ):
-                computer.sync_attributes.add(item)
-
-        attribute_list = list(
-            computer.sync_attributes.all().values_list('id', flat=True)
-        )
+            computer.sync_attributes.add(
+                *Attribute.process_kind_property(
+                    tag.property_att,
+                    tag.value
+                )
+            )
 
         # AttributeSets
-        lst_set = AttributeSet.process(attribute_list)
-        if lst_set:
-            for item in lst_set:
-                computer.sync_attributes.add(item)
+        computer.sync_attributes.add(*AttributeSet.process(computer.get_all_attributes()))
 
-        fault_definitions = FaultDefinition.enabled_for_attributes(attribute_list)
+        fault_definitions = FaultDefinition.enabled_for_attributes(computer.get_all_attributes())
 
         lst_deploys = []
         lst_pkg_to_remove = []
         lst_pkg_to_install = []
 
         # deployments
-        deploys = Deployment.available_deployments(computer, attribute_list)
+        deploys = Deployment.available_deployments(computer, computer.get_all_attributes())
         for d in deploys:
             lst_deploys.append({"name": d.name})
             if d.packages_to_remove:
@@ -438,13 +433,12 @@ def upload_computer_info(request, name, uuid, computer, data):
 
         # devices
         logical_devices = []
-        for device in computer.logical_devices(attribute_list):
+        for device in computer.logical_devices(computer.get_all_attributes()):
             logical_devices.append(device.as_dict(computer.project))
 
+        default_logical_device = 0
         if computer.default_logical_device:
             default_logical_device = computer.default_logical_device.id
-        else:
-            default_logical_device = 0
 
         # Hardware
         capture_hardware = True
