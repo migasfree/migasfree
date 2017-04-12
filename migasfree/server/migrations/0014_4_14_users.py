@@ -24,6 +24,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='user',
-            unique_together=set([('name', 'fullname')]),
+            unique_together={('name', 'fullname')},
         ),
     ]
