@@ -62,7 +62,7 @@ def execute_query(request, parameters, form_param=None):
         filters = []
         if form_param:
             for item in form_param:
-                if item.name not in ['id_query', 'user_version']:
+                if item.name not in ['id_query', 'user_project']:
                     filters.append('{}: {}'.format(
                         item.label,
                         parameters['{}_display'.format(item.name)]
@@ -95,17 +95,17 @@ def execute_query(request, parameters, form_param=None):
 def get_query(request, query_id):
     query = get_object_or_404(Query, id=query_id)
 
-    version = get_object_or_404(UserProfile, id=request.user.id).version
-    if not version:
-        # The user does not have a version
-        # We assign to user the first version found
-        version = Version.objects.all().order_by("id")[0]
+    project = get_object_or_404(UserProfile, id=request.user.id).project
+    if not project:
+        # The user does not have a project
+        # We assign to user the first project found
+        project = Project.objects.all().order_by("id")[0]
         user = UserProfile.objects.get(id=request.user.id)
-        user.update_version(version)
+        user.update_project(project)
 
     default_parameters = {
         'id_query': query_id,
-        'user_version': version.id
+        'user_project': project.id
     }
 
     if request.method == 'POST':
@@ -161,11 +161,11 @@ def computer_messages(request):
         server_message.text, server_message.updated_at,
         server_computer.name AS computer_name, server_computer.ip_address,
         server_user.name, server_user.fullname, server_user.id AS user_id,
-        server_version.name AS version_name
+        server_project.name AS project_name
         FROM server_message INNER JOIN server_computer
             ON (server_message.computer_id = server_computer.id)
-        INNER JOIN server_version
-            ON (server_computer.version_id = server_version.id)
+        INNER JOIN server_project
+            ON (server_computer.project_id = server_project.id)
         INNER JOIN server_user
             ON (server_computer.sync_user_id = server_user.id)
         ORDER BY server_message.updated_at DESC
@@ -181,7 +181,7 @@ def computer_messages(request):
                 'user_id': item.user_id,
                 'user_name': item.name,
                 'user_fullname': item.fullname,
-                'version': item.version_name,
+                'project': item.project_name,
                 'ip_address': item.ip_address,
                 'date': str(item.updated_at),
                 'text': item.text
