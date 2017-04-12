@@ -53,19 +53,19 @@ class ComputerInfoSerializer(serializers.ModelSerializer):
         fields = ('id', 'cid_description')
 
 
-class VersionInfoSerializer(serializers.ModelSerializer):
+class ProjectInfoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Version
+        model = models.Project
         fields = ('id', 'name')
 
 
 class ComputerSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = models.Computer
         fields = (
-            'id', 'uuid', 'name', 'version', 'ip_address',
+            'id', 'uuid', 'name', 'project', 'ip_address',
             'status', 'product', 'machine',
             'mac_address', 'cpu', 'disks', 'storage', 'ram',
             'created_at', 'last_hardware_capture', 'sync_end_date',
@@ -73,7 +73,7 @@ class ComputerSerializer(serializers.ModelSerializer):
 
 
 class ErrorSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
     computer = ComputerInfoSerializer(many=False, read_only=True)
 
     class Meta:
@@ -108,7 +108,7 @@ class FaultDefinitionSerializer(serializers.ModelSerializer):
 
 
 class FaultSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
     computer = ComputerInfoSerializer(many=False, read_only=True)
     fault_definition = FaultDefinitionInfoSerializer(many=False, read_only=True)
 
@@ -118,7 +118,7 @@ class FaultSerializer(serializers.ModelSerializer):
 
 
 class MigrationSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
     computer = ComputerInfoSerializer(many=False, read_only=True)
 
     class Meta:
@@ -153,7 +153,7 @@ class StoreInfoSerializer(serializers.ModelSerializer):
 
 
 class PackageSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
     store = StoreInfoSerializer(many=False, read_only=True)
 
     class Meta:
@@ -197,7 +197,7 @@ class ScheduleInfoSerializer(serializers.ModelSerializer):
 
 
 class DeploymentSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
     schedule = ScheduleInfoSerializer(many=False, read_only=True)
     available_packages = PackageInfoSerializer(many=True, read_only=True)
     included_attributes = AttributeInfoSerializer(many=True, read_only=True)
@@ -251,10 +251,10 @@ class DeploymentWriteSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         for item in data.get('packages', []):
-            if item.version.id != data['version'].id:
+            if item.project.id != data['project'].id:
                 raise serializers.ValidationError(
-                    _('Package %s must belong to the version %s') % (
-                        item, data['version']
+                    _('Package %s must belong to the project %s') % (
+                        item, data['project']
                     )
                 )
 
@@ -289,7 +289,7 @@ class ScheduleSerializer(serializers.ModelSerializer):
 
 
 class StoreSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
 
     class Meta:
         model = models.Store
@@ -302,12 +302,12 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class VersionSerializer(serializers.ModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
     platform = PlatformSerializer(many=False, read_only=True)
     pms = PmsInfoSerializer(many=False, read_only=True)
 
     class Meta:
-        model = models.Version
+        model = models.Project
         fields = '__all__'
 
 
@@ -333,7 +333,7 @@ class LogicalSerializer(serializers.ModelSerializer):
 
 
 class SynchronizationSerializer(serializers.ModelSerializer):
-    version = VersionInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
     user = UserSerializer(many=False, read_only=True)
 
     class Meta:
