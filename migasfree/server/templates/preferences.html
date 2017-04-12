@@ -14,21 +14,21 @@
 {% block content %}
     <h1>{% trans 'Preferences' %}</h1>
 
-    {% if version_names %}
+    {% if project_names %}
     <form action="{% url 'preferences' %}" method="post" class="form-horizontal">
         {% csrf_token %}
         <div class="col-md-12 form-group">
             <fieldset>
                 <div class="row">
                     <div class="control-label col-md-3">
-                        <label class="required" for="version">{% trans 'Filter version for repositories, stores and packages' %}:</label>
+                        <label class="required" for="project">{% trans 'Filter project for repositories, stores and packages' %}:</label>
                     </div>
 
                     <div class="controls col-md-9">
-                        <select id="version" name="version" class="form-control form-control-inline">
+                        <select id="project" name="project" class="form-control form-control-inline">
                             <option value="0">----</option>
-                        {% for item in version_names %}
-                            <option value="{{ item.0 }}" {% if item.0 == current_version.id %} selected="selected"{% endif %}>{{ item.1 }}</option>
+                        {% for item in project_names %}
+                            <option value="{{ item.0 }}" {% if item.0 == current_project.id %} selected="selected"{% endif %}>{{ item.1 }}</option>
                         {% endfor %}
                         </select>
                     </div>
@@ -41,6 +41,8 @@
         </div>
     </form>
     {% else %}
-        <p class="alert alert-warning" role="alert">{% trans 'Before selecting a version, you must create at least one.' %}</p>
+        <p class="alert alert-warning" role="alert">{% trans 'Before selecting a project, you must create at least
+            one.'
+            %}</p>
     {% endif %}
 {% endblock content %}
