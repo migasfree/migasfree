@@ -110,27 +110,27 @@ Expire-Date: 0
     return _key
 
 
-def get_keys_to_client(version):
+def get_keys_to_client(project):
     """
     Returns the keys for register computer
     """
     if not os.path.exists(
-        os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pri" % version)
+        os.path.join(settings.MIGASFREE_KEYS_DIR, "{}.pri".format(project))
     ):
-        gen_keys(version)
+        gen_keys(project)
 
     server_public_key = readfile(os.path.join(
         settings.MIGASFREE_KEYS_DIR,
         "migasfree-server.pub"
     ))
-    version_private_key = readfile(os.path.join(
+    project_private_key = readfile(os.path.join(
         settings.MIGASFREE_KEYS_DIR,
-        "%s.pri" % version
+        "{}.pri".format(project)
     ))
 
     return {
         "migasfree-server.pub": server_public_key,
-        "migasfree-client.pri": version_private_key
+        "migasfree-client.pri": project_private_key
     }
 
 
@@ -168,10 +168,10 @@ def wrap(filename, data):
     sign(filename)
 
     with open(filename, 'ab') as fp:
-        with open("%s.sign" % filename, "rb") as fpsign:
+        with open("{}.sign".format(filename), "rb") as fpsign:
             fp.write(fpsign.read())
 
-    os.remove("%s.sign" % filename)
+    os.remove("{}.sign".format(filename))
 
 
 def unwrap(filename, key):
@@ -183,7 +183,7 @@ def unwrap(filename, key):
 
     n = len(content)
 
-    writefile("%s.sign" % filename, content[n - SIGN_LEN:n])
+    writefile("{}.sign".format(filename), content[n - SIGN_LEN:n])
     writefile(filename, content[0:n - SIGN_LEN])
 
     if verify(filename, key):
@@ -192,6 +192,6 @@ def unwrap(filename, key):
     else:
         data = errmfs.error(errmfs.INVALID_SIGNATURE)
 
-    os.remove("%s.sign" % filename)
+    os.remove("{}.sign".format(filename))
 
     return data
