@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from . import Version, DeviceModel, DeviceFeature
+from . import Project, DeviceModel, DeviceFeature
 
 
 @python_2_unicode_compatible
@@ -21,9 +21,9 @@ class DeviceDriver(models.Model):
         verbose_name=_("model")
     )
 
-    version = models.ForeignKey(
-        Version,
-        verbose_name=_("version")
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project")
     )
 
     feature = models.ForeignKey(
@@ -60,5 +60,5 @@ class DeviceDriver(models.Model):
         verbose_name = _("Driver")
         verbose_name_plural = _("Drivers")
         permissions = (("can_save_devicedriver", "Can save Device Driver"),)
-        unique_together = (("model", "version", "feature"),)
+        unique_together = (("model", "project", "feature"),)
         ordering = ['model', 'name']
