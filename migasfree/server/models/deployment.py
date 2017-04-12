@@ -17,7 +17,7 @@ from django.core.exceptions import ValidationError
 from ..functions import time_horizon
 
 from . import (
-    Version,
+    Project,
     Package,
     Attribute,
     Schedule,
@@ -27,8 +27,8 @@ from . import (
 
 
 class DeploymentManager(models.Manager):
-    def by_version(self, version_id):
-        return self.get_queryset().filter(version__id=version_id)
+    def by_project(self, project_id):
+        return self.get_queryset().filter(project__id=project_id)
 
 
 @python_2_unicode_compatible
@@ -45,7 +45,7 @@ class Deployment(models.Model, MigasLink):
         verbose_name=_('name')
     )
 
-    version = models.ForeignKey(Version, verbose_name=_("version"))
+    project = models.ForeignKey(Project, verbose_name=_("project"))
 
     comment = models.TextField(
         verbose_name=_("comment"),
@@ -186,7 +186,7 @@ class Deployment(models.Model, MigasLink):
         """
         # 1.- all deployments by attribute
         attributed = Deployment.objects.filter(
-            version__id=computer.version.id,
+            project__id=computer.project.id,
             enabled=True,
             included_attributes__id__in=attributes,
             start_date__lte=datetime.datetime.now().date()
@@ -195,7 +195,7 @@ class Deployment(models.Model, MigasLink):
 
         # 2.- all deployments by schedule
         scheduled = Deployment.objects.filter(
-            version__id=computer.version.id,
+            project__id=computer.project.id,
             enabled=True,
             schedule__delays__attributes__id__in=attributes
         ).extra(
@@ -223,8 +223,8 @@ class Deployment(models.Model, MigasLink):
 
     def path(self, name=None):
         return os.path.join(
-            Version.path(self.version.name),
-            self.version.pms.slug,
+            Project.path(self.project.name),
+            self.project.pms.slug,
             name
         )
 
@@ -232,17 +232,17 @@ class Deployment(models.Model, MigasLink):
         app_label = 'server'
         verbose_name = _('Deployment')
         verbose_name_plural = _('Deployments')
-        unique_together = (('name', 'version'),)
+        unique_together = (('name', 'project'),)
         permissions = (("can_save_deployment", "Can save Deployment"),)
-        ordering = ['version__name', 'name']
+        ordering = ['project__name', 'name']
 
 
 @receiver(pre_save, sender=Deployment)
 def pre_save_deployment(sender, instance, **kwargs):
     if instance.id:
         old_obj = Deployment.objects.get(pk=instance.id)
-        if old_obj.version.id != instance.version.id:
-            raise ValidationError(_('Is not allowed change version'))
+        if old_obj.project.id != instance.project.id:
+            raise ValidationError(_('Is not allowed change project'))
 
 
 @receiver(pre_delete, sender=Deployment)
