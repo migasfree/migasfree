@@ -14,7 +14,7 @@ from .migasfree import MigasAdmin, MigasFields
 from ..models import (
     Attribute, AttributeSet, Checking, ClientProperty, ClientAttribute,
     Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
-    ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Version
+    ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Project
 )
 
 from ..forms import (
@@ -132,19 +132,19 @@ class ClientAttributeAdmin(MigasAdmin):
 class PackageAdmin(MigasAdmin):
     form = PackageForm
     list_display = (
-        'name_link', 'version_link', 'store_link', 'deployments_link'
+        'name_link', 'project_link', 'store_link', 'deployments_link'
     )
-    list_filter = ('version', 'store', 'deployment')
-    list_select_related = ('version', 'store')
+    list_filter = ('project', 'store', 'deployment')
+    list_select_related = ('project', 'store')
     search_fields = ('name', 'store__name')
     ordering = ('name',)
 
     name_link = MigasFields.link(model=Package, name='name')
-    version_link = MigasFields.link(
-        model=Package, name='version', order="version__name"
+    project_link = MigasFields.link(
+        model=Package, name='project', order='project__name'
     )
     store_link = MigasFields.link(
-        model=Package, name='store', order="store__name"
+        model=Package, name='store', order='store__name'
     )
     deployments_link = MigasFields.objects_link(
         model=Package, name='deployment_set'
@@ -152,9 +152,9 @@ class PackageAdmin(MigasAdmin):
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
         if db_field.name == '++':
-            # Packages filter by user version
+            # Packages filter by user project
             kwargs['queryset'] = Store.objects.filter(
-                version__id=request.user.userprofile.version_id
+                project__id=request.user.userprofile.project_id
             )
 
             return db_field.formfield(**kwargs)
@@ -170,7 +170,7 @@ class PackageAdmin(MigasAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(PackageAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['project'].widget.can_add_related = False
         form.base_fields['store'].widget.can_add_related = False
         form.current_user = request.user
         return form
@@ -272,16 +272,16 @@ class QueryAdmin(MigasAdmin):
 class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     form = DeploymentForm
     list_display = (
-        'name_link', 'version_link', 'my_enabled', 'start_date', 'schedule_link', 'timeline'
+        'name_link', 'project_link', 'my_enabled', 'start_date', 'schedule_link', 'timeline'
     )
-    list_filter = ('enabled', 'version', 'schedule')
+    list_filter = ('enabled', 'project', 'schedule')
     search_fields = ('name', 'available_packages__name')
-    list_select_related = ("version",)
+    list_select_related = ("project",)
     actions = ['regenerate_metadata']
 
     fieldsets = (
         (_('General'), {
-            'fields': ('name', 'version', 'enabled', 'comment',)
+            'fields': ('name', 'project', 'enabled', 'comment',)
         }),
         (_('Packages'), {
             'classes': ('collapse',),
@@ -308,11 +308,11 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     )
 
     name_link = MigasFields.link(model=Deployment, name='name')
-    version_link = MigasFields.link(
-        model=Deployment, name='version', order="version__name"
+    project_link = MigasFields.link(
+        model=Deployment, name='project', order='project__name'
     )
     schedule_link = MigasFields.link(
-        model=Deployment, name='schedule', order="schedule__name"
+        model=Deployment, name='schedule', order='schedule__name'
     )
     my_enabled = MigasFields.boolean(model=Deployment, name='enabled')
     timeline = MigasFields.timeline(model=Deployment)
@@ -328,9 +328,9 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def formfield_for_manytomany(self, db_field, request=None, **kwargs):
         if db_field.name == 'available_packages':
-            # Packages filter by user version
+            # Packages filter by user project
             kwargs['queryset'] = Package.objects.filter(
-                version__id=request.user.userprofile.version_id
+                project__id=request.user.userprofile.project_id
             )
 
             return db_field.formfield(**kwargs)
@@ -386,7 +386,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeploymentAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['project'].widget.can_add_related = False
         form.base_fields['schedule'].widget.can_add_related = False
         form.current_user = request.user
 
@@ -404,7 +404,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
                                 'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
                                 'ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
             }
-        ).select_related("version", "schedule")
+        ).select_related("project", "schedule")
 
 
 class ScheduleDelayline(admin.TabularInline):
@@ -430,26 +430,26 @@ class ScheduleAdmin(MigasAdmin):
 @admin.register(Store)
 class StoreAdmin(MigasAdmin):
     form = StoreForm
-    list_display = ('name_link', 'version_link')
+    list_display = ('name_link', 'project_link')
     search_fields = ('name',)
-    list_filter = ('version',)
+    list_filter = ('project',)
     ordering = ('name',)
 
     name_link = MigasFields.link(model=Store, name='name')
-    version_link = MigasFields.link(
-        model=Store, name='version', order='version__name'
+    project_link = MigasFields.link(
+        model=Store, name='project', order='project__name'
     )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(StoreAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['project'].widget.can_add_related = False
         form.current_user = request.user
         return form
 
     def get_queryset(self, request):
         return super(StoreAdmin, self).get_queryset(
             request
-        ).select_related("version")
+        ).select_related("project")
 
 
 @admin.register(ServerAttribute)
@@ -484,7 +484,7 @@ class ServerAttributeAdmin(MigasAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
     list_display = ('name_link', 'first_name', 'last_name')
-    list_filter = ('version',)
+    list_filter = ('project',)
     ordering = ('username',)
     search_fields = ('username', 'first_name', 'last_name')
 
@@ -492,35 +492,37 @@ class UserProfileAdmin(MigasAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(UserProfileAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['version'].widget.can_add_related = False
+        form.base_fields['project'].widget.can_add_related = False
         form.base_fields['groups'].widget.can_add_related = False
 
         return form
 
 
-@admin.register(Version)
-class VersionAdmin(MigasAdmin):
+@admin.register(Project)
+class ProjectAdmin(MigasAdmin):
     list_display = (
         'name_link',
         'platform_link',
         'pms_link',
-        'my_autoregister'
+        'my_auto_register_computers'
     )
-    fields = ('name', 'platform', 'pms', 'computerbase', 'autoregister', 'base')
+    fields = ('name', 'platform', 'pms', 'auto_register_computers')
     list_filter = ('platform', 'pms')
     list_select_related = ('platform', 'pms')
     search_fields = ('name',)
     actions = None
 
-    name_link = MigasFields.link(model=Version, name='name')
+    name_link = MigasFields.link(model=Project, name='name')
     platform_link = MigasFields.link(
-        model=Version, name='platform', order='platform__name'
+        model=Project, name='platform', order='platform__name'
     )
-    pms_link = MigasFields.link(model=Version, name='pms', order='pms__name')
-    my_autoregister = MigasFields.boolean(model=Version, name='autoregister')
+    pms_link = MigasFields.link(model=Project, name='pms', order='pms__name')
+    my_auto_register_computers = MigasFields.boolean(
+        model=Project, name='auto_register_computers'
+    )
 
     def get_form(self, request, obj=None, **kwargs):
-        form = super(VersionAdmin, self).get_form(request, obj, **kwargs)
+        form = super(ProjectAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['pms'].widget.can_add_related = False
         form.base_fields['platform'].widget.can_add_related = False
 
