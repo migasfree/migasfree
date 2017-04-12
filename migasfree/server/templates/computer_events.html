@@ -137,10 +137,10 @@
                                         html += formatedDate + " (" + item.project.name + "): " + item.user.fullname;
                                         break;
                                     case "errors":
-                                        html += formatedDate + " (" + item.project.name + "): " + item.error.replace(new RegExp("\n", 'g'), "<br />");
+                                        html += formatedDate + " (" + item.project.name + "): " + item.description.replace(new RegExp("\n", 'g'), "<br />");
                                         break;
                                     case "faults":
-                                        html += formatedDate + " (" + item.project.name + "): " + item.text.replace(new RegExp("\n", 'g'), "<br />");
+                                        html += formatedDate + " (" + item.project.name + "): " + item.result.replace(new RegExp("\n", 'g'), "<br />");
                                         break;
                                     case "status-logs":
                                         html += formatedDate + ": " + item.status;
