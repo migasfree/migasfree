@@ -106,13 +106,13 @@ class AttributeComputersLookup(LookupChannel):
     def format_match(self, obj):
         return "%s (total %s)" % (
             escape(obj.__str__()),
-            escape(obj.total_computers(UserProfile.get_logged_version()))
+            escape(obj.total_computers(UserProfile.get_logged_project()))
         )
 
     def format_item_display(self, obj):
         return "%s (total %s)" % (
             obj.link(),
-            escape(obj.total_computers(UserProfile.get_logged_version()))
+            escape(obj.total_computers(UserProfile.get_logged_project()))
         )
 
     def can_add(self, user, model):
@@ -146,10 +146,10 @@ class PackageLookup(LookupChannel):
     model = Package
 
     def get_query(self, q, request):
-        version_id = request.GET.get('version_id', None)
+        project_id = request.GET.get('project_id', None)
         queryset = self.model.objects.filter(name__icontains=q).order_by('name')
-        if version_id:
-            queryset = queryset.filter(version__id=version_id)
+        if project_id:
+            queryset = queryset.filter(project__id=project_id)
 
         return queryset
 
