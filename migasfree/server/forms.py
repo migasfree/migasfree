@@ -18,7 +18,7 @@ from .models import (
 
 class ParametersForm(forms.Form):
     id_query = forms.CharField(required=True, widget=forms.HiddenInput())
-    user_version = forms.CharField(required=True, widget=forms.HiddenInput())
+    user_project = forms.CharField(required=True, widget=forms.HiddenInput())
 
 
 class DeviceReplacementForm(forms.Form):
@@ -79,9 +79,9 @@ class DeploymentForm(forms.ModelForm):
         super(DeploymentForm, self).__init__(*args, **kwargs)
         try:
             self.fields['start_date'].initial = datetime.date.today()
-            self.fields['version'].initial = UserProfile.objects.get(
+            self.fields['project'].initial = UserProfile.objects.get(
                 pk=self.current_user.id
-            ).version.id
+            ).project.id
         except (UserProfile.DoesNotExist, AttributeError):
             pass
 
@@ -100,15 +100,15 @@ class DeploymentForm(forms.ModelForm):
         # http://stackoverflow.com/questions/7986510/django-manytomany-model-validation
         cleaned_data = super(DeploymentForm, self).clean()
 
-        if 'version' not in cleaned_data:
-            raise ValidationError(_('Version is required'))
+        if 'project' not in cleaned_data:
+            raise ValidationError(_('Project is required'))
 
         for pkg_id in cleaned_data.get('available_packages', []):
             pkg = Package.objects.get(pk=pkg_id)
-            if pkg.version.id != cleaned_data['version'].id:
+            if pkg.project.id != cleaned_data['project'].id:
                 raise ValidationError(
-                    _('Package %s must belong to the version %s') % (
-                        pkg, cleaned_data['version']
+                    _('Package %s must belong to the project %s') % (
+                        pkg, cleaned_data['project']
                     )
                 )
 
@@ -129,10 +129,10 @@ class StoreForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(StoreForm, self).__init__(*args, **kwargs)
         try:
-            self.fields['version'].initial = UserProfile.objects.get(
+            self.fields['project'].initial = UserProfile.objects.get(
                 pk=self.current_user.id
-            ).version.id
-            self.fields['version'].empty_label = None
+            ).project.id
+            self.fields['project'].empty_label = None
         except (UserProfile.DoesNotExist, AttributeError):
             pass
 
@@ -146,10 +146,10 @@ class PackageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PackageForm, self).__init__(*args, **kwargs)
         try:
-            self.fields['version'].initial = UserProfile.objects.get(
+            self.fields['project'].initial = UserProfile.objects.get(
                 pk=self.current_user.id
-            ).version.id
-            self.fields['version'].empty_label = None
+            ).project.id
+            self.fields['project'].empty_label = None
         except (UserProfile.DoesNotExist, AttributeError):
             pass
 
