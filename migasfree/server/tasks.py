@@ -29,10 +29,10 @@ def create_repository_metadata(deploy, packages=None, request=None):
     packages = a id's list of packages
     """
     _tmp_path = deploy.path('TMP')
-    _stores_path = Store.path(deploy.version.name, '')[:-1]  # remove trailing slash
+    _stores_path = Store.path(deploy.project.name, '')[:-1]  # remove trailing slash
     _slug_tmp_path = os.path.join(
         _tmp_path,
-        deploy.version.pms.slug
+        deploy.project.pms.slug
     )
 
     if _slug_tmp_path.endswith('/'):
@@ -64,7 +64,7 @@ def create_repository_metadata(deploy, packages=None, request=None):
 
     # create metadata
     _run_err = run_in_server(
-        deploy.version.pms.createrepo.replace(
+        deploy.project.pms.createrepo.replace(
             '%REPONAME%', deploy.name
         ).replace('%PATH%', _slug_tmp_path).replace(
             '%KEYS%', settings.MIGASFREE_KEYS_DIR)
