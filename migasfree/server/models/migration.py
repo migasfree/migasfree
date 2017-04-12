@@ -4,15 +4,15 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from . import Version
+from . import Project
 from .event import Event
 
 
 class MigrationManager(models.Manager):
-    def create(self, computer, version):
+    def create(self, computer, project):
         obj = Migration()
         obj.computer = computer
-        obj.version = version
+        obj.project = project
         obj.save()
 
         return obj
@@ -20,16 +20,16 @@ class MigrationManager(models.Manager):
 
 @python_2_unicode_compatible
 class Migration(Event):
-    version = models.ForeignKey(
-        Version,
-        verbose_name=_("version")
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project")
     )
 
     objects = MigrationManager()
 
     def __str__(self):
         return u'{} ({:%Y-%m-%d %H:%M:%S}) {}'.format(
-            self.computer, self.created_at, self.version
+            self.computer, self.created_at, self.project
         )
 
     class Meta:
