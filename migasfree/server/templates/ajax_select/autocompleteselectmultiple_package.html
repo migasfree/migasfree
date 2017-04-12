@@ -2,20 +2,20 @@
 
 {% block extra_script %}
 <script type="text/javascript">
-function makeLink(link, versionId) {
+function makeLink(link, projectId) {
     var newLink = link;
     var last = link.lastIndexOf("?");
     if (last != -1)
         newLink = newLink.substring(0, last);
-    if (versionId)
-        newLink = newLink + "?version_id=" + versionId;
+    if (projectId)
+        newLink = newLink + "?project_id=" + projectId;
     return newLink;
 }
 
 function changeSource() {
-    var versionId = $("#id_version").val();
+    var projectId = $("#id_project").val();
     oldLink = $("#id_packages_text").autocomplete("option", "source");
-    newLink = makeLink(oldLink, versionId);
+    newLink = makeLink(oldLink, projectId);
     $("#id_packages_text").autocomplete("option", "source", newLink);
 
     if (typeof addMigasEvents === "function") {
@@ -25,7 +25,7 @@ function changeSource() {
 
 $(document).ready(function() {
     changeSource();
-    $("#id_version").bind("change", changeSource);
+    $("#id_project").bind("change", changeSource);
     $("#id_packages_on_deck").bind("added", changeSource);
 });
 </script>
