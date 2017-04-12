@@ -18,7 +18,7 @@ class RepositoryTestCase(TransactionTestCase):
 
         platform = Platform.objects.create("Linux")
 
-        version = Version.objects.create(
+        project = Project.objects.create(
             "UBUNTU",
             Pms.objects.get(name="apt-get"),
             platform
@@ -27,7 +27,7 @@ class RepositoryTestCase(TransactionTestCase):
         self.test1 = Deployment()
         self.test1.name = "TEST 1 2"
         self.test1.enabled = True
-        self.test1.version = version
+        self.test1.project = project
         self.test1.start_date = datetime.now().date()
         self.test1.packages_to_install = "bluefish"
         self.test1.packages_to_remove = ""
