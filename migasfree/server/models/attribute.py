@@ -75,12 +75,12 @@ class Attribute(models.Model, MigasLink):
         else:
             return u'{}-{}'.format(self.property_att.prefix, self.value)
 
-    def total_computers(self, version=None):
+    def total_computers(self, project=None):
         from . import Computer
 
         queryset = Computer.objects.filter(sync_attributes__id=self.id)
-        if version:
-            queryset = queryset.filter(version_id=version.id)
+        if project:
+            queryset = queryset.filter(project_id=project.id)
 
         return queryset.count()
 
@@ -237,10 +237,10 @@ class BasicAttribute(Attribute):
             )
             att_id.append(obj.id)
 
-        if 'VER' in properties.keys() and 'version' in kwargs:
+        if 'PRJ' in properties.keys() and 'project' in kwargs:
             obj = Attribute.objects.create(
-                Property.objects.get(pk=properties['VER']),
-                kwargs['version']
+                Property.objects.get(pk=properties['PRJ']),
+                kwargs['project']
             )
             att_id.append(obj.id)
 
