@@ -12,10 +12,10 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 
 from .models import (
-    Attribute, AttributeSet, ClientProperty, Computer, BasicAttribute,
+    Attribute, AttributeSet, Computer, BasicAttribute,
     Error, Fault, FaultDefinition, HwNode, Message,
     Migration, Notification, Package, Pms, Platform, Property,
-    Deployment, Store, ServerAttribute, Synchronization, User, Version,
+    Deployment, Store, ServerAttribute, Synchronization, User, Project,
 )
 from .security import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
@@ -45,12 +45,12 @@ def add_notification_platform(platform, computer):
     )
 
 
-def add_notification_version(version, pms, computer):
+def add_notification_project(project, pms, computer):
     Notification.objects.create(
-        _("Version [%s] with P.M.S. [%s] registered by computer [%s].") % (
+        _("Project [%s] with P.M.S. [%s] registered by computer [%s].") % (
             '<a href="{}">{}</a>'.format(
-                reverse('admin:server_version_change', args=(version.id,)),
-                version
+                reverse('admin:server_project_change', args=(project.id,)),
+                project
             ),
             '<a href="{}">{}</a>'.format(
                 reverse('admin:server_pms_change', args=(pms.id,)),
@@ -148,16 +148,9 @@ def upload_computer_software_base_diff(request, name, uuid, computer, data):
 
 
 def upload_computer_software_base(request, name, uuid, computer, data):
+    """ DEPRECATED endpoint for migasfree-client >= 4.14 """
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    try:
-        version = Version.objects.get(pk=computer.version_id)
-        version.update_base(data[cmd])
-
-        ret = return_message(cmd, errmfs.ok())
-    except:
-        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
-
-    return ret
+    return return_message(cmd, errmfs.ok())
 
 
 def upload_computer_software_history(request, name, uuid, computer, data):
@@ -172,22 +165,19 @@ def upload_computer_software_history(request, name, uuid, computer, data):
 
 
 def get_computer_software(request, name, uuid, computer, data):
+    """ DEPRECATED endpoint for migasfree-client >= 4.14 """
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    try:
-        ret = return_message(
-            cmd,
-            computer.version.base
-        )
-    except:
-        ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
-    return ret
+    return return_message(
+        cmd,
+        ''  # deprecated field computer.version.base, empty for compatibility!!!
+    )
 
 
 def upload_computer_errors(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
     try:
-        Error.objects.create(computer, computer.version, data[cmd])
+        Error.objects.create(computer, computer.project, data[cmd])
 
         ret = return_message(cmd, errmfs.ok())
     except:
@@ -273,7 +263,7 @@ def upload_computer_info(request, name, uuid, computer, data):
                     "hostname": HOSTNAME,
                     "ip": IP,
                     "platform": PLATFORM,
-                    "version": VERSION,
+                    "version" | "project": VERSION/PROJECT,
                     "user": USER,
                     "user_fullname": USER_FULLNAME
                 },
@@ -309,23 +299,24 @@ def upload_computer_info(request, name, uuid, computer, data):
 
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
-    platform_name = data.get("upload_computer_info").get("computer").get(
-        'platform',
-        'unknown'
+    computer_info = data.get(cmd).get("computer")
+    platform_name = computer_info.get('platform', 'unknown')
+    project_name = computer_info.get(
+        'version',  # key is version for compatibility!!!
+        computer_info.get(
+            'project',
+            'unknown'
+        )
     )
-    version_name = data.get("upload_computer_info").get("computer").get(
-        'version',
-        'unknown'
-    )
-    pms_name = data.get("upload_computer_info").get("computer").get(
+    pms_name = computer_info.get(
         'pms',
         'apt-get'
     )
 
     notify_platform = False
-    notify_version = False
+    notify_project = False
 
-    # Autoregister Platform
+    # auto register Platform
     if not Platform.objects.filter(name=platform_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             return return_message(
@@ -338,55 +329,54 @@ def upload_computer_info(request, name, uuid, computer, data):
 
         notify_platform = True
 
-    # Autoregister Version
-    if not Version.objects.filter(name=version_name):
+    # auto register project
+    if not Project.objects.filter(name=project_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             return return_message(
                 cmd,
                 errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
             )
 
-        # if all ok, we add the version
-        Version.objects.create(
-            version_name,
+        # if all ok, we add the project
+        Project.objects.create(
+            project_name,
             Pms.objects.get(name=pms_name),
             Platform.objects.get(name=platform_name),
             settings.MIGASFREE_AUTOREGISTER
         )
 
-        notify_version = True
+        notify_project = True
 
     lst_attributes = []  # computer list of attributes
 
     try:
-        dic_computer = data.get("upload_computer_info").get("computer")
-        client_attributes = data.get("upload_computer_info").get("attributes")
-        ip_address = dic_computer.get("ip", "")
+        client_attributes = data.get(cmd).get("attributes")
+        ip_address = computer_info.get("ip", "")
 
-        # IP registration, version and computer Migration
+        # IP registration, project and computer Migration
         computer = check_computer(
             computer,
             name,
-            version_name,
+            project_name,
             ip_address,
             uuid,
         )
 
-        version = Version.objects.get(name=version_name)
+        project = Project.objects.get(name=project_name)
 
         if notify_platform:
             platform = Platform.objects.get(name=platform_name)
             add_notification_platform(platform, computer)
 
-        if notify_version:
+        if notify_project:
             pms = Pms.objects.get(name=pms_name)
-            add_notification_version(version, pms, computer)
+            add_notification_project(project, pms, computer)
 
         # if not exists the user, we add it
         user, _ = User.objects.get_or_create(
-            name=dic_computer.get("user"),
+            name=computer_info.get("user"),
             defaults={
-                'fullname': dic_computer.get("user_fullname", "")
+                'fullname': computer_info.get("user_fullname", "")
             }
         )
 
@@ -397,8 +387,8 @@ def upload_computer_info(request, name, uuid, computer, data):
         att_id = BasicAttribute.process(
             id=computer.id,
             ip_address=ip_address,
-            version=computer.version.name,
-            platform=computer.version.platform.name,
+            project=computer.project.name,
+            platform=computer.project.platform.name,
             user=user.name,
             description=computer.get_cid_description()
         )
@@ -449,7 +439,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         # devices
         logical_devices = []
         for device in computer.logical_devices(lst_attributes):
-            logical_devices.append(device.as_dict(computer.version))
+            logical_devices.append(device.as_dict(computer.project))
 
         if computer.default_logical_device:
             default_logical_device = computer.default_logical_device.id
@@ -477,7 +467,7 @@ def upload_computer_info(request, name, uuid, computer, data):
                 "logical": logical_devices,
                 "default": default_logical_device,
             },
-            "base": version.computerbase == computer.__str__(),
+            "base": False,  # computerbase and base has been removed!!!
             "hardware_capture": capture_hardware
         }
 
@@ -537,13 +527,13 @@ def register_computer(request, name, uuid, computer, data):
     )
 
     platform_name = data.get('platform', 'unknown')
-    version_name = data.get('version', 'unknown')
+    project_name = data.get('version', data.get('project', 'unknown'))  # key is version for compatibility!!!
     pms_name = data.get('pms', 'apt-get')
 
     notify_platform = False
-    notify_version = False
+    notify_project = False
 
-    # Autoregister Platform
+    # auto register Platform
     if not Platform.objects.filter(name=platform_name):
         if not settings.MIGASFREE_AUTOREGISTER:
             if not user or not user.has_perm("server.can_save_platform"):
@@ -557,31 +547,31 @@ def register_computer(request, name, uuid, computer, data):
 
         notify_platform = True
 
-    # Autoregister Version
-    if not Version.objects.filter(name=version_name):
+    # auto register project
+    if not Project.objects.filter(name=project_name):
         if not settings.MIGASFREE_AUTOREGISTER:
-            if not user or not user.has_perm("server.can_save_version"):
+            if not user or not user.has_perm("server.can_save_project"):
                 return return_message(
                     cmd,
                     errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
                 )
 
-        # if all ok we add the version
-        Version.objects.create(
-            version_name,
+        # if all ok we add the project
+        Project.objects.create(
+            project_name,
             Pms.objects.get(name=pms_name),
             Platform.objects.get(name=platform_name),
             settings.MIGASFREE_AUTOREGISTER
         )
 
-        notify_version = True
+        notify_project = True
 
     # REGISTER COMPUTER
-    # Check Version
+    # Check project
     try:
-        version = Version.objects.get(name=version_name)
+        project = Project.objects.get(name=project_name)
         # if not autoregister, check that the user can save computer
-        if not version.autoregister:
+        if not project.auto_register_computers:
             if not user or not user.has_perm("server.can_save_computer"):
                 return return_message(
                     cmd,
@@ -592,7 +582,7 @@ def register_computer(request, name, uuid, computer, data):
         computer = check_computer(
             computer,
             name,
-            version_name,
+            project_name,
             data.get('ip', ''),
             uuid
         )
@@ -601,12 +591,12 @@ def register_computer(request, name, uuid, computer, data):
             platform = Platform.objects.get(name=platform_name)
             add_notification_platform(platform, computer)
 
-        if notify_version:
+        if notify_project:
             pms = Pms.objects.get(name=pms_name)
-            add_notification_version(version, pms, computer)
+            add_notification_project(project, pms, computer)
 
         # returns keys to client
-        return return_message(cmd, get_keys_to_client(version_name))
+        return return_message(cmd, get_keys_to_client(project_name))
     except:
         return return_message(
             cmd,
@@ -632,19 +622,21 @@ def get_key_packager(request, name, uuid, computer, data):
 def upload_server_package(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
+    project_name = data.get('version', data.get('project'))
+
     f = request.FILES["package"]
     filename = os.path.join(
-        Store.path(data['version'], data['store']),
+        Store.path(project_name, data['store']),
         f.name
     )
 
     try:
-        version = Version.objects.get(name=data['version'])
+        project = Project.objects.get(name=project_name)
     except ObjectDoesNotExist:
         return return_message(cmd, errmfs.error(errmfs.VERSION_NOT_FOUND))
 
     store, _ = Store.objects.get_or_create(
-        name=data['store'], version=version
+        name=data['store'], project=project
     )
 
     save_request_file(f, filename)
@@ -653,7 +645,7 @@ def upload_server_package(request, name, uuid, computer, data):
     if not data['source']:
         Package.objects.get_or_create(
             name=f.name,
-            version=version,
+            project=project,
             defaults={'store': store}
         )
 
@@ -663,36 +655,38 @@ def upload_server_package(request, name, uuid, computer, data):
 def upload_server_set(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
+    project_name = data.get('version', data.get('project'))
+
     f = request.FILES["package"]
     filename = os.path.join(
-        Store.path(data['version'], data['store']),
+        Store.path(project_name, data['store']),
         data['packageset'],
         f.name
     )
 
     try:
-        version = Version.objects.get(name=data['version'])
+        project = Project.objects.get(name=project_name)
     except ObjectDoesNotExist:
         return return_message(cmd, errmfs.error(errmfs.VERSION_NOT_FOUND))
 
     store, _ = Store.objects.get_or_create(
-        name=data['store'], version=version
+        name=data['store'], project=project
     )
 
     # we add the package set and create the directory
     package, _ = Package.objects.get_or_create(
         name=data['packageset'],
-        version=version,
+        project=project,
         defaults={'store': store}
     )
     package.create_dir()
 
     save_request_file(f, filename)
 
-    # if exists path move it
+    # if exists path, move it
     if "path" in data and data["path"] != "":
         dst = os.path.join(
-            Store.path(data['version'], data['store']),
+            Store.path(project_name, data['store']),
             data['packageset'],
             data['path'],
             f.name
@@ -715,7 +709,7 @@ def get_computer_tags(request, name, uuid, computer, data):
 
     available_tags = {}
     for deploy in Deployment.objects.filter(
-        version=computer.version,
+        project=computer.project,
         enabled=True
     ):
         for tag in deploy.included_attributes.filter(
@@ -830,13 +824,13 @@ def set_computer_tags(request, name, uuid, computer, data):
     return ret
 
 
-def check_computer(computer, name, version_name, ip, uuid):
-    # registration of ip, version, uuid and Migration of a computer
-    version = Version.objects.get(name=version_name)
+def check_computer(computer, name, project_name, ip, uuid):
+    # registration of ip, project, uuid and Migration of a computer
+    project = Project.objects.get(name=project_name)
 
     if not computer:
-        computer = Computer.objects.create(name, version, uuid)
-        Migration.objects.create(computer, version)
+        computer = Computer.objects.create(name, project, uuid)
+        Migration.objects.create(computer, project)
 
         if settings.MIGASFREE_NOTIFY_NEW_COMPUTER:
             Notification.objects.create(
@@ -850,17 +844,17 @@ def check_computer(computer, name, version_name, ip, uuid):
                 )
             )
 
-    if computer.version != version:
-        Migration.objects.create(computer, version)
+    if computer.project != project:
+        Migration.objects.create(computer, project)
 
-    notify_change_data_computer(computer, name, version, ip, uuid)
+    notify_change_data_computer(computer, name, project, ip, uuid)
 
-    computer.update_identification(name, version, uuid, ip)
+    computer.update_identification(name, project, uuid, ip)
 
     return computer
 
 
-def notify_change_data_computer(computer, name, version, ip_address, uuid):
+def notify_change_data_computer(computer, name, project, ip_address, uuid):
     if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (computer.name != name):
         Notification.objects.create(
             _("Computer id=[%s]: NAME [%s] changed by [%s]") % (
@@ -899,10 +893,10 @@ def notify_change_data_computer(computer, name, version, ip_address, uuid):
         )
 
 
-def create_repositories_package(package_name, version_name):
+def create_repositories_package(package_name, project_name):
     try:
-        version = Version.objects.get(name=version_name)
-        package = Package.objects.get(name=package_name, version=version)
+        project = Project.objects.get(name=project_name)
+        package = Package.objects.get(name=package_name, project=project)
         for deploy in Deployment.objects.filter(packages__id=package.id):
             create_repository_metadata(deploy)
     except ObjectDoesNotExist:
@@ -912,10 +906,12 @@ def create_repositories_package(package_name, version_name):
 def create_repositories_of_packageset(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
+    project_name = data.get('version', data.get('project'))
+
     try:
         create_repositories_package(
             os.path.basename(data['packageset']),
-            data['version']
+            project_name
         )
         ret = return_message(cmd, errmfs.ok())
     except:
