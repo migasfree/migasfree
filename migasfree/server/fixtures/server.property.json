@@ -47,10 +47,10 @@
         "fields": {
             "kind": "N",
             "code": "",
-            "name": "VERSION",
+            "name": "PROJECT",
             "language": 1,
             "auto_add": true,
-            "prefix": "VER",
+            "prefix": "PRJ",
             "enabled": true,
             "sort": "basic"
         }
