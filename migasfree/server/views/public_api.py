@@ -6,21 +6,21 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.conf import settings
 
-from ..models import Platform, Version, Deployment
+from ..models import Platform, Project, Deployment
 from ..api import get_computer
 from ..functions import uuid_validate
 from ..security import gpg_get_key
 
 
-def get_versions(request):
+def get_projects(request):
     result = []
     for plat in Platform.objects.all():
         element = {
             "platform": plat.name,
-            "versions": []
+            "projects": []
         }
-        for ver in Version.objects.filter(platform=plat):
-            element["versions"].append({"name": ver.name})
+        for prj in Project.objects.filter(platform=plat):
+            element["projects"].append({"name": prj.name})
 
         result.append(element)
 
@@ -51,7 +51,7 @@ def get_computer_info(request):
 
     result["available_tags"] = {}
     for deploy in Deployment.objects.all().filter(
-        version=computer.version, enabled=True
+        project=computer.project, enabled=True
     ):
         for tag in deploy.included_attributes.all().filter(
             property_att__sort='server', property_att__enabled=True
