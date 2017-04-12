@@ -18,25 +18,26 @@ from migasfree.middleware import threadlocals
 from . import Pms, Platform, MigasLink
 
 
-class VersionManager(models.Manager):
-    def create(self, name, pms, platform, autoregister=False):
-        obj = Version()
+class ProjectManager(models.Manager):
+    def create(self, name, pms, platform, auto_register_computers=False):
+        obj = Project()
         obj.name = name
         obj.pms = pms
         obj.platform = platform
-        obj.autoregister = autoregister
+        obj.auto_register_computers = auto_register_computers
         obj.save()
 
         return obj
 
 
 @python_2_unicode_compatible
-class Version(models.Model, MigasLink):
+class Project(models.Model, MigasLink):
     """
-    Version of S.O. by example 'Ubuntu natty 32bit' or 'AZLinux-2'
-    This is 'your distribution', a set of computers with a determinate
+    OS Version: 'Ubuntu natty 32bit' or 'openSUSE 12.1' or 'Vitalinux'
+    This is 'your personal distribution', a set of computers with a determinate
     Distribution for customize.
     """
+
     name = models.CharField(
         verbose_name=_("name"),
         max_length=50,
@@ -48,24 +49,10 @@ class Version(models.Model, MigasLink):
         verbose_name=_("package management system")
     )
 
-    computerbase = models.CharField(
-        verbose_name=_("Actual line computer"),
-        max_length=50,
-        help_text=_("Computer with the actual line software"),
-        default="---"
-    )
-
-    base = models.TextField(
-        verbose_name=_("Actual line packages"),
-        null=False,
-        blank=True,
-        help_text=_("List ordered of packages of actual line computer")
-    )
-
-    autoregister = models.BooleanField(
-        verbose_name=_("autoregister"),
+    auto_register_computers = models.BooleanField(
+        verbose_name=_("auto register computers"),
         default=False,
-        help_text=_("Is not neccesary a user for register the computer in "
+        help_text=_("Is not needed a user for register computers in "
                     "database and get the keys.")
     )
 
@@ -74,7 +61,7 @@ class Version(models.Model, MigasLink):
         verbose_name=_("platform")
     )
 
-    objects = VersionManager()
+    objects = ProjectManager()
 
     def __str__(self):
         return self.name
@@ -85,19 +72,11 @@ class Version(models.Model, MigasLink):
 
     @staticmethod
     def repositories_path(name):
-        return os.path.join(
-            settings.MIGASFREE_REPO_DIR,
-            name,
-            'REPOSITORIES'
-        )
+        return os.path.join(Project.path(name), 'REPOSITORIES')
 
     @staticmethod
     def stores_path(name):
-        return os.path.join(
-            settings.MIGASFREE_REPO_DIR,
-            name,
-            'STORES'
-        )
+        return os.path.join(Project.path(name), 'STORES')
 
     def _create_dirs(self):
         repos = self.repositories_path(self.name)
@@ -108,26 +87,21 @@ class Version(models.Model, MigasLink):
         if not os.path.exists(stores):
             os.makedirs(stores)
 
-    def update_base(self, base):
-        self.base = base
-        self.save()
-
     @staticmethod
-    def get_version_names():
-        return Version.objects.all().order_by('name').values_list('id', 'name')
+    def get_project_names():
+        return Project.objects.all().order_by('name').values_list('id', 'name')
 
     def save(self, *args, **kwargs):
         self.name = self.name.replace(" ", "-")
         self._create_dirs()
-        self.base = self.base.replace("\r\n", "\n")
 
-        super(Version, self).save(*args, **kwargs)
+        super(Project, self).save(*args, **kwargs)
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Version")
-        verbose_name_plural = _("Versions")
-        permissions = (("can_save_version", "Can save Version"),)
+        verbose_name = _("Project")
+        verbose_name_plural = _("Projects")
+        permissions = (("can_save_project", "Can save Project"),)
         ordering = ['name']
 
 
@@ -137,9 +111,9 @@ class UserProfile(UserSystem, MigasLink):
         % reverse('admin:password_change')
     """
 
-    version = models.ForeignKey(
-        Version,
-        verbose_name=_("version"),
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project"),
         null=True,
         on_delete=models.SET_NULL
     )
@@ -147,20 +121,20 @@ class UserProfile(UserSystem, MigasLink):
     objects = UserManager()
 
     @staticmethod
-    def get_logged_version():
+    def get_logged_project():
         """
-        Return the user version that is logged
+        Return the user project that is logged
         # TODO remove this method
         """
         try:
             return UserProfile.objects.get(
                 id=threadlocals.get_current_user().id
-            ).version
+            ).project
         except:
             return None
 
-    def update_version(self, version):
-        self.version = version
+    def update_project(self, project):
+        self.project = project
         self.save()
 
     def save(self, *args, **kwargs):
@@ -179,8 +153,8 @@ class UserProfile(UserSystem, MigasLink):
         permissions = (("can_save_userprofile", "Can save User Profile"),)
 
 
-@receiver(pre_delete, sender=Version)
+@receiver(pre_delete, sender=Project)
 def delete_project(sender, instance, **kwargs):
-    path = Version.path(instance.name)
+    path = Project.path(instance.name)
     if os.path.exists(path):
         shutil.rmtree(path)
