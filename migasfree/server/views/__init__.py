@@ -7,13 +7,13 @@ from .stats import (
     synchronized_daily,
     synchronized_hourly,
     synchronized_monthly,
-    version_computer
+    project_computer
 )
 from .queries import get_query, computer_messages
 from .hardware import hardware_resume, hardware_extract, load_hw, process_hw
 from .client_api import api
 from .public_api import (
-    get_versions, get_computer_info, computer_label,
+    get_projects, get_computer_info, computer_label,
     get_key_repositories
 )
 from .packages import info
@@ -30,12 +30,12 @@ from .computer import (
 from .migas_link import link
 from .timeline import timeline
 
-from .version import VersionDelete
+from .project import ProjectDelete
 from .platform import PlatformDelete, platform_delete_selected
 from .devices import connections_model, device_replacement
 from .autocomplete import ComputerAutocomplete, AttributeAutocomplete, DeviceAutocomplete
 from .token import (
-    ComputerViewSet, VersionViewSet, PlatformViewSet,
+    ComputerViewSet, ProjectViewSet, PlatformViewSet,
     PmsViewSet, StoreViewSet, PropertyViewSet, AttributeSetViewSet,
     AttributeViewSet, ScheduleViewSet, PackageViewSet,
     DeploymentViewSet, ErrorViewSet, FaultDefinitionViewSet,
