@@ -20,13 +20,13 @@
 {% block bodyclass %}stats{% endblock %}
 
 {% block content %}
-    {% if version_selection %}
-        <p>{% trans 'Choose a version to show the delay calendars' %}:</p>
+    {% if project_selection %}
+        <p>{% trans 'Choose a project to show the delay calendars' %}:</p>
         <div class="btn-group" role="group">
-            {% for version in version_selection %}
+            {% for project in project_selection %}
                 <a role="button"
-                   class="btn btn-default {% if version.1 == current_version %}active{% endif %}"
-                   href="{% url 'chart_delay_schedule' version.1 %}">{{ version.1 }}</a>
+                   class="btn btn-default {% if project.1 == current_project %}active{% endif %}"
+                   href="{% url 'chart_delay_schedule' project.1 %}">{{ project.1 }}</a>
             {% endfor %}
         </div>
     {% endif %}
