@@ -10,7 +10,7 @@ from rest_framework_filters import backends
 from .. import models, serializers
 from ..filters import (
     ComputerFilter, StoreFilter, PropertyFilter,
-    VersionFilter, AttributeSetFilter, AttributeFilter, PackageFilter,
+    ProjectFilter, AttributeSetFilter, AttributeFilter, PackageFilter,
     DeploymentFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
     NodeFilter, CheckingFilter, SynchronizationFilter, StatusLogFilter,
@@ -382,10 +382,10 @@ class UserViewSet(
     ordering = ('name',)
 
 
-class VersionViewSet(
+class ProjectViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
-    queryset = models.Version.objects.all()
-    serializer_class = serializers.VersionSerializer
-    filter_class = VersionFilter
+    queryset = models.Project.objects.all()
+    serializer_class = serializers.ProjectSerializer
+    filter_class = ProjectFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
