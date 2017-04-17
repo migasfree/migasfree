@@ -96,7 +96,7 @@ class MigasLink(object):
                                 ugettext(
                                     related_model._meta.verbose_name_plural
                                 ),
-                                ugettext(related_object.field.name)
+                                ugettext(related_object.field.verbose_name)
                             ),
                             'count': count
                         })
