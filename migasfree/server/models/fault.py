@@ -27,6 +27,13 @@ class FaultManager(models.Manager):
 
 
 class Fault(Event):
+    USER_FILTER_CHOICES = (
+        ('me', _('To check for me')),
+        ('only_me', _('Assigned to me')),
+        ('others', _('Assigned to others')),
+        ('unassigned', _('Unassigned')),
+    )
+
     fault_definition = models.ForeignKey(
         FaultDefinition,
         verbose_name=_("fault definition")
