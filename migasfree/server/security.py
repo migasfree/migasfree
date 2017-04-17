@@ -63,12 +63,12 @@ def gpg_get_key(name):
 
     gpg_home = os.path.join(settings.MIGASFREE_KEYS_DIR, '.gnupg')
     gpg_conf = os.path.join(gpg_home, 'gpg.conf')
-    _file = os.path.join(gpg_home, '%s.gpg' % name)
+    _file = os.path.join(gpg_home, '{}.gpg'.format(name))
 
     if not os.path.exists(_file):
         os.environ['GNUPGHOME'] = gpg_home
         if not os.path.exists(gpg_home):
-            os.mkdir(gpg_home, 0o700)
+            os.makedirs(gpg_home, 0o700)
             # create a blank configuration file
             with open(gpg_conf, 'wb') as handle:
                 handle.write('cert-digest-algo SHA256\ndigest-algo SHA256')
