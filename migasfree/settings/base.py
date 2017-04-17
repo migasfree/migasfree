@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-"""
-Django settings for migasfree project
-
-Please, don't edit this file
-Override or include settings at /etc/migasfree-server/settings.py
-"""
-
 import os
 import django
 
@@ -42,7 +35,7 @@ STATICFILES_FINDERS = (
 )
 
 STATIC_URL = '/static/'
-MEDIA_URL = '/repo/'
+MEDIA_URL = '/public/'
 
 FILE_UPLOAD_TEMP_DIR = MIGASFREE_TMP_DIR
 
