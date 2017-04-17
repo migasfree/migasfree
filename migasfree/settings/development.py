@@ -11,6 +11,8 @@ DEBUG = True
 TEMPLATES[0]['OPTIONS']['debug'] = DEBUG
 TEMPLATES[0]['APP_DIRS'] = True
 LOGGING['loggers']['migasfree']['level'] = 'DEBUG'
+LOGGING['handlers']['console']['level'] = 'DEBUG'
+LOGGING['handlers']['file']['level'] = 'DEBUG'
 
 MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
