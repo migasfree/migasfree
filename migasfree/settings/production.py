@@ -17,11 +17,11 @@ TEMPLATES[0]['OPTIONS']['loaders'] = [
 
 ALLOWED_HOSTS = ['*']
 
-MIGASFREE_REPO_DIR = '/var/migasfree/repo'
+MIGASFREE_PUBLIC_DIR = '/var/migasfree/repo'
 MIGASFREE_KEYS_DIR = '/usr/share/migasfree-server/keys'
 
 STATIC_ROOT = '/var/migasfree/static'
-MEDIA_ROOT = MIGASFREE_REPO_DIR
+MEDIA_ROOT = MIGASFREE_PUBLIC_DIR
 
 SECRET_KEY = secret_key(MIGASFREE_KEYS_DIR)
 

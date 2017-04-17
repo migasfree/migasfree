@@ -238,4 +238,13 @@ class Migration(migrations.Migration):
                 ]
             )]
         ),
+        migrations.RunSQL(
+            [(
+                "UPDATE server_checking SET code=%s WHERE id=10;",
+                [
+                    "import os\nfrom migasfree.settings import MIGASFREE_PUBLIC_DIR\nurl = '#'\nalert = 'info'\ntarget = 'server'\nresult = 0\nmsg = ''\nif os.path.exists(MIGASFREE_PUBLIC_DIR):\n    for _project in os.listdir(MIGASFREE_PUBLIC_DIR):\n        _repos = os.path.join(MIGASFREE_PUBLIC_DIR, _project, 'TMP/REPOSITORIES/dists')\n        if os.path.exists(_repos):\n            for _repo in os.listdir(_repos):\n                result += 1\n                msg += '%s at %s.' % (_repo, _project)\nmsg = 'Creating %s repositories: %s' % (result, msg)"
+                ]
+            )],
+            migrations.RunSQL.noop
+        ),
     ]

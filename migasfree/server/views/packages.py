@@ -27,7 +27,7 @@ def info(request, path=None):
 
     logger.debug('package: ' + package)
 
-    absolute_path = os.path.join(settings.MIGASFREE_REPO_DIR, path)
+    absolute_path = os.path.join(settings.MIGASFREE_PUBLIC_DIR, path)
     logger.debug('absolute path:' + absolute_path)
 
     if os.path.isfile(absolute_path):

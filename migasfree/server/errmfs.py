@@ -52,7 +52,7 @@ def error(number):
         etype = sys.exc_info()[0]
         evalue = sys.exc_info()[1]
 
-        dir_errors = os.path.join(settings.MIGASFREE_REPO_DIR, 'errors')
+        dir_errors = os.path.join(settings.MIGASFREE_PUBLIC_DIR, 'errors')
         if not os.path.exists(dir_errors):
             os.makedirs(dir_errors)
 

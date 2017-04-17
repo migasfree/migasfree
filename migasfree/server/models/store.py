@@ -49,7 +49,7 @@ class Store(models.Model, MigasLink):
     @staticmethod
     def path(project_name, name):
         return os.path.join(
-            settings.MIGASFREE_REPO_DIR,
+            settings.MIGASFREE_PUBLIC_DIR,
             project_name,
             'STORES',
             name

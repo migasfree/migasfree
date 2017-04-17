@@ -88,7 +88,7 @@ function create_apache_config()
     } || :
 
     _STATIC_ROOT=$(get_migasfree_setting STATIC_ROOT)
-    _MIGASFREE_REPO_DIR=$(get_migasfree_setting MIGASFREE_REPO_DIR)
+    _MIGASFREE_PUBLIC_DIR=$(get_migasfree_setting MIGASFREE_PUBLIC_DIR)
     _MIGASFREE_APP_DIR=$(get_migasfree_setting MIGASFREE_APP_DIR)
 
     _CONF_FILE="$_CONF_PATH"/migasfree.conf
@@ -100,14 +100,14 @@ Alias /static $_STATIC_ROOT
     IndexOptions FancyIndexing
 </Directory>
 
-Alias /repo $_MIGASFREE_REPO_DIR
-<Directory $_MIGASFREE_REPO_DIR>
+Alias /repo $_MIGASFREE_PUBLIC_DIR
+<Directory $_MIGASFREE_PUBLIC_DIR>
     $_ALLOW_ALL
     Options Indexes FollowSymlinks
     IndexOptions FancyIndexing
 </Directory>
 
-<Directory $_MIGASFREE_REPO_DIR/errors>
+<Directory $_MIGASFREE_PUBLIC_DIR/errors>
     $_ALLOW_FROM
     Options Indexes FollowSymlinks
     IndexOptions FancyIndexing
@@ -128,13 +128,13 @@ function set_web_server_permissions()
 {
     _USER=$(get_user_web_service)
     # owner for repositories
-    _REPO_PATH=$(get_migasfree_setting MIGASFREE_REPO_DIR)
-    owner "$_REPO_PATH" "$_USER"
+    _PUBLIC_DIR=$(get_migasfree_setting MIGASFREE_PUBLIC_DIR)
+    owner "$_PUBLIC_DIR" "$_USER"
 
     # owner for keys
-    _KEYS_PATH=$(get_migasfree_setting MIGASFREE_KEYS_DIR)
-    owner "$_KEYS_PATH" "$_USER"
-    chmod 700 "$_KEYS_PATH"
+    _KEYS_DIR=$(get_migasfree_setting MIGASFREE_KEYS_DIR)
+    owner "$_KEYS_DIR" "$_USER"
+    chmod 700 "$_KEYS_DIR"
 
     # owner for migasfree.log
     _TMP_DIR=$(get_migasfree_setting MIGASFREE_TMP_DIR)

@@ -68,7 +68,7 @@ class Project(models.Model, MigasLink):
 
     @staticmethod
     def path(name):
-        return os.path.join(settings.MIGASFREE_REPO_DIR, name)
+        return os.path.join(settings.MIGASFREE_PUBLIC_DIR, name)
 
     @staticmethod
     def repositories_path(name):

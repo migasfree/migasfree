@@ -14,13 +14,13 @@ LOGGING['loggers']['migasfree']['level'] = 'DEBUG'
 LOGGING['handlers']['console']['level'] = 'DEBUG'
 LOGGING['handlers']['file']['level'] = 'DEBUG'
 
-MIGASFREE_REPO_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
+MIGASFREE_PUBLIC_DIR = os.path.join(MIGASFREE_PROJECT_DIR, 'repo')
 MIGASFREE_KEYS_DIR = os.path.join(MIGASFREE_APP_DIR, 'keys')
 
 SECRET_KEY = secret_key(MIGASFREE_KEYS_DIR)
 
 STATIC_ROOT = os.path.join(MIGASFREE_APP_DIR, 'static')
-MEDIA_ROOT = MIGASFREE_REPO_DIR
+MEDIA_ROOT = MIGASFREE_PUBLIC_DIR
 
 DATABASES = {
     'default': {
