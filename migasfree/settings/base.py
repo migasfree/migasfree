@@ -15,7 +15,7 @@ from django.contrib import messages
 from .migasfree import BASE_DIR, MIGASFREE_TMP_DIR
 
 if django.VERSION < (1, 9, 0, 'final'):
-    print('Migasfree requires Django 1.9.0. Please, update it.')
+    print('Migasfree requires Django 1.9.0 at least. Please, update it.')
     exit(1)
 
 ADMINS = (
@@ -145,7 +145,8 @@ LOGGING = {
     'version': 1,
     'formatters': {
         'verbose': {
-            'format': '%(asctime)s - %(levelname)s - %(module)s - %(lineno)d - %(funcName)s - %(message)s',
+            'format': '%(asctime)s - %(levelname)s - %(module)s - %(lineno)d '
+                      '- %(funcName)s - %(message)s',
         },
         'simple': {
             'format': '%(asctime)s - %(levelname)s - %(filename)s - %(message)s'
@@ -159,9 +160,10 @@ LOGGING = {
         },
         'file': {
             'level': 'ERROR',
-            'class': 'logging.FileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'formatter': 'verbose',
             'filename': os.path.join(MIGASFREE_TMP_DIR, 'migasfree.log'),
+            'maxBytes': 1024 * 1024 * 10,  # 10 MB
         },
     },
     'loggers': {
