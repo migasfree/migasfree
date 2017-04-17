@@ -256,7 +256,7 @@ class Computer(models.Model, MigasLink):
             return
 
         self._actions = []
-        template = Template(settings.MIGASFREE_REMOTE_ADMIN_LINK)
+        template = Template(' '.join(settings.MIGASFREE_REMOTE_ADMIN_LINK))
         context = {'computer': self}
         for node in template.nodelist:
             try:

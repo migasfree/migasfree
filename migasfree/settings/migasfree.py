@@ -25,9 +25,14 @@ MIGASFREE_TMP_DIR = '/tmp'
 # MIGASFREE_REMOTE_ADMIN_LINK
 # Variables can be: {{computer.<FIELD>}} and {{<<PROPERTYPREFIX>>}}
 # Samples:
-#    MIGASFREE_REMOTE_ADMIN_LINK = "https://myserver/?computer={{computer.name}}&port={{PRT}}"
-#    MIGASFREE_REMOTE_ADMIN_LINK = "ssh://user@{{computer.ip_address}} vnc://{{computer.ip_address}}"
-MIGASFREE_REMOTE_ADMIN_LINK = ""
+#    MIGASFREE_REMOTE_ADMIN_LINK = [
+#        "https://myserver/?computer={{computer.name}}&port={{PRT}}"
+#    ]
+#    MIGASFREE_REMOTE_ADMIN_LINK = [
+#        "ssh://user@{{computer.ip_address}}",
+#        "vnc://{{computer.ip_address}}"
+#    ]
+MIGASFREE_REMOTE_ADMIN_LINK = []
 
 MIGASFREE_INVALID_UUID = [
     '03000200-0400-0500-0006-000700080008',  # ASROCK
