@@ -36,18 +36,7 @@ DATABASES = {
     }
 }
 
-
-def _load_settings(path):
-    """
-    import local settings if exists
-    http://stackoverflow.com/a/1527240
-    """
-    if os.path.exists(path):
-        # Loading configuration from path
-        settings = {}
-        # execfile can't modify globals directly, so we will load them manually
-        execfile(path, globals(), settings)
-        for setting in settings:
-            globals()[setting] = settings[setting]
-
-_load_settings("/etc/migasfree-server/settings.py")
+try:
+    execfile(MIGASFREE_SETTINGS_OVERRIDE, globals(), locals())
+except IOError:
+    pass
