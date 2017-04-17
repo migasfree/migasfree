@@ -9,7 +9,7 @@ from io import BytesIO
 from django.conf import settings
 
 from . import errmfs
-from .functions import readfile, writefile
+from .functions import read_file, write_file
 
 SIGN_LEN = 256
 
@@ -119,11 +119,11 @@ def get_keys_to_client(project):
     ):
         gen_keys(project)
 
-    server_public_key = readfile(os.path.join(
+    server_public_key = read_file(os.path.join(
         settings.MIGASFREE_KEYS_DIR,
         "migasfree-server.pub"
     ))
-    project_private_key = readfile(os.path.join(
+    project_private_key = read_file(os.path.join(
         settings.MIGASFREE_KEYS_DIR,
         "{}.pri".format(project)
     ))
@@ -138,11 +138,11 @@ def get_keys_to_packager():
     """
     Returns the keys for register packager
     """
-    server_public_key = readfile(os.path.join(
+    server_public_key = read_file(os.path.join(
         settings.MIGASFREE_KEYS_DIR,
         "migasfree-server.pub"
     ))
-    packager_private_key = readfile(
+    packager_private_key = read_file(
         os.path.join(settings.MIGASFREE_KEYS_DIR, "migasfree-packager.pri")
     )
 
@@ -183,8 +183,8 @@ def unwrap(filename, key):
 
     n = len(content)
 
-    writefile("{}.sign".format(filename), content[n - SIGN_LEN:n])
-    writefile(filename, content[0:n - SIGN_LEN])
+    write_file("{}.sign".format(filename), content[n - SIGN_LEN:n])
+    write_file(filename, content[0:n - SIGN_LEN])
 
     if verify(filename, key):
         with open(filename, "rb") as f:

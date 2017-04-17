@@ -8,9 +8,9 @@ from datetime import datetime, timedelta
 from django.conf import settings
 
 
-def writefile(filename, content):
+def write_file(filename, content):
     """
-    bool writefile(string filename, string content)
+    bool write_file(string filename, string content)
     """
 
     _file = None
@@ -29,7 +29,7 @@ def writefile(filename, content):
             _file.close()
 
 
-def readfile(filename):
+def read_file(filename):
     with open(filename, 'rb') as fp:
         ret = fp.read()
 
@@ -38,36 +38,7 @@ def readfile(filename):
 
 def d2s(dic):
     """Dictionary to String"""
-    return ['%s: %s' % (k, v) for (k, v) in list(dic.items())]
-
-
-def remove_empty_elements_from_dict(dic):
-    for (k, v) in list(dic.items()):
-        if not v:
-            del dic[k]
-
-    return dic
-
-
-def swap_m2m(source_field, target_field):
-    source_m2m = list(source_field.all())
-    target_m2m = list(target_field.all())
-
-    source_field.clear()
-    source_field.add(*target_m2m)
-
-    target_field.clear()
-    target_field.add(*source_m2m)
-
-
-def time_horizon(date, delay):
-    """
-    No weekends
-    """
-    weekday = int(date.strftime("%w"))  # [0(Sunday), 6]
-    delta = delay + (((delay + weekday - 1) / 5) * 2)
-
-    return date + timedelta(days=delta)
+    return [u'{}: {}'.format(k, v) for (k, v) in list(dic.items())]
 
 
 def compare_list_values(l1, l2):
@@ -92,23 +63,24 @@ def list_common(l1, l2):
 
 def run_in_server(bash_code):
     _, tmp_file = tempfile.mkstemp()
-    writefile(tmp_file, bash_code)
+    write_file(tmp_file, bash_code)
 
     os.system("ionice -c 3 bash %(file)s 1> %(file)s.out 2> %(file)s.err" % {
         'file': tmp_file
     })
 
-    out = readfile('%s.out' % tmp_file)
-    err = readfile('%s.err' % tmp_file)
+    out = read_file('{}.out'.format(tmp_file))
+    err = read_file('{}.err'.format(tmp_file))
 
     os.remove(tmp_file)
-    os.remove('%s.out' % tmp_file)
-    os.remove('%s.err' % tmp_file)
+    os.remove('{}.out'.format(tmp_file))
+    os.remove('{}.err'.format(tmp_file))
 
     return {"out": out, "err": err}
 
 
 def get_client_ip(request):
+    # http://stackoverflow.com/questions/4581789/how-do-i-get-user-ip-address-in-django
     ip = request.META.get('REMOTE_ADDR')
 
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -153,6 +125,31 @@ def uuid_change_format(uuid):
         )
 
     return uuid
+
+
+def time_horizon(date, delay):
+    """
+    No weekends
+    """
+    weekday = int(date.strftime("%w"))  # [0(Sunday), 6]
+    delta = delay + (((delay + weekday - 1) / 5) * 2)
+
+    return date + timedelta(days=delta)
+
+
+def swap_m2m(source_field, target_field):
+    source_m2m = list(source_field.all())
+    target_m2m = list(target_field.all())
+
+    source_field.clear()
+    source_field.add(*target_m2m)
+
+    target_field.clear()
+    target_field.add(*source_m2m)
+
+
+def remove_empty_elements_from_dict(dic):
+    return dict((k, v) for k, v in dic.iteritems() if v)
 
 
 def diff_month(d1, d2):
