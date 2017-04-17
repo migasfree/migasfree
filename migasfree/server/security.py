@@ -5,7 +5,7 @@ import json
 import gpgme
 
 from io import BytesIO
-
+from Crypto.PublicKey import RSA
 from django.conf import settings
 
 from . import errmfs
@@ -31,131 +31,6 @@ def verify(filename, key):
             filename
         )
     ) == 0  # returns True if OK, False otherwise
-
-
-def check_keys_path():
-    if not os.path.lexists(settings.MIGASFREE_KEYS_DIR):
-        os.makedirs(settings.MIGASFREE_KEYS_DIR)
-
-
-def gen_keys(name):
-    """
-    Generates a pair of RSA keys
-    """
-    check_keys_path()
-
-    private_key = os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pri" % name)
-    public_key = os.path.join(settings.MIGASFREE_KEYS_DIR, "%s.pub" % name)
-
-    if not (os.path.exists(private_key) and os.path.exists(public_key)):
-        os.system("openssl genrsa -out %s 2048" % private_key)
-        os.system("openssl rsa -in %s -pubout > %s" % (private_key, public_key))
-
-        # read only keys
-        os.chmod(private_key, 0o400)
-        os.chmod(public_key, 0o400)
-
-
-def gpg_get_key(name):
-    """
-    Return keys gpg and if not exists it is created
-    """
-
-    gpg_home = os.path.join(settings.MIGASFREE_KEYS_DIR, '.gnupg')
-    gpg_conf = os.path.join(gpg_home, 'gpg.conf')
-    _file = os.path.join(gpg_home, '{}.gpg'.format(name))
-
-    if not os.path.exists(_file):
-        os.environ['GNUPGHOME'] = gpg_home
-        if not os.path.exists(gpg_home):
-            os.makedirs(gpg_home, 0o700)
-            # create a blank configuration file
-            with open(gpg_conf, 'wb') as handle:
-                handle.write('cert-digest-algo SHA256\ndigest-algo SHA256')
-
-            os.chmod(gpg_conf, 0o600)
-
-        _file_params = os.path.join(gpg_home, '%s.txt' % name)
-        with open(_file_params, 'wb') as handle:
-            key_params = """
-Key-Type: RSA
-Key-Length: 4096
-Name-Real: %s
-Name-Email: fun.with@migasfree.org
-Expire-Date: 0
-"""
-            handle.write(key_params % name)
-
-        os.system(
-            "echo '' | $(which gpg) --batch "
-            "--passphrase-fd 0 --gen-key %(file)s; rm %(file)s" % {
-                "file": _file_params
-            }
-        )
-
-        # export and save
-        ctx = gpgme.Context()
-        ctx.armor = True
-        keydata = BytesIO()
-        ctx.export(name, keydata)
-        _key = keydata.getvalue()
-        with open(_file, 'wb') as handle:
-            handle.write(_key)
-
-        os.chmod(_file, 0o600)
-
-    with open(_file, 'rb') as handle:
-        _key = handle.read()
-
-    return _key
-
-
-def get_keys_to_client(project):
-    """
-    Returns the keys for register computer
-    """
-    if not os.path.exists(
-        os.path.join(settings.MIGASFREE_KEYS_DIR, "{}.pri".format(project))
-    ):
-        gen_keys(project)
-
-    server_public_key = read_file(os.path.join(
-        settings.MIGASFREE_KEYS_DIR,
-        "migasfree-server.pub"
-    ))
-    project_private_key = read_file(os.path.join(
-        settings.MIGASFREE_KEYS_DIR,
-        "{}.pri".format(project)
-    ))
-
-    return {
-        "migasfree-server.pub": server_public_key,
-        "migasfree-client.pri": project_private_key
-    }
-
-
-def get_keys_to_packager():
-    """
-    Returns the keys for register packager
-    """
-    server_public_key = read_file(os.path.join(
-        settings.MIGASFREE_KEYS_DIR,
-        "migasfree-server.pub"
-    ))
-    packager_private_key = read_file(
-        os.path.join(settings.MIGASFREE_KEYS_DIR, "migasfree-packager.pri")
-    )
-
-    return {
-        "migasfree-server.pub": server_public_key,
-        "migasfree-packager.pri": packager_private_key
-    }
-
-
-def create_keys_server():
-    gen_keys("migasfree-server")
-    gen_keys("migasfree-packager")
-    gpg_get_key("migasfree-repository")
 
 
 def wrap(filename, data):
@@ -195,3 +70,119 @@ def unwrap(filename, key):
     os.remove("{}.sign".format(filename))
 
     return data
+
+
+def check_keys_path():
+    if not os.path.lexists(settings.MIGASFREE_KEYS_DIR):
+        os.makedirs(settings.MIGASFREE_KEYS_DIR)
+
+
+def generate_rsa_keys(name='migasfree-server'):
+    check_keys_path()
+
+    private_pem = os.path.join(settings.MIGASFREE_KEYS_DIR, '{}.pri'.format(name))
+    public_pem = os.path.join(settings.MIGASFREE_KEYS_DIR, '{}.pub'.format(name))
+
+    key = RSA.generate(2048)
+    write_file(public_pem, key.publickey().exportKey('PEM'))
+    write_file(private_pem, key.exportKey('PEM'))
+
+    # read only keys
+    os.chmod(private_pem, 0o400)
+    os.chmod(public_pem, 0o400)
+
+
+def create_server_keys():
+    generate_rsa_keys("migasfree-server")
+    generate_rsa_keys("migasfree-packager")
+    gpg_get_key("migasfree-repository")
+
+
+def gpg_get_key(name):
+    """
+    Returns GPG keys (if not exists it is created)
+    """
+
+    gpg_home = os.path.join(settings.MIGASFREE_KEYS_DIR, '.gnupg')
+    gpg_conf = os.path.join(gpg_home, 'gpg.conf')
+    _file = os.path.join(gpg_home, '{}.gpg'.format(name))
+
+    if not os.path.exists(_file):
+        os.environ['GNUPGHOME'] = gpg_home
+        if not os.path.exists(gpg_home):
+            os.makedirs(gpg_home, 0o700)
+            # creates configuration file
+            write_file(gpg_conf, 'cert-digest-algo SHA256\ndigest-algo SHA256')
+            os.chmod(gpg_conf, 0o600)
+
+        key_params = """
+Key-Type: RSA
+Key-Length: 4096
+Name-Real: %s
+Name-Email: fun.with@migasfree.org
+Expire-Date: 0
+"""
+        file_params = os.path.join(gpg_home, '{}.txt'.format(name))
+        write_file(file_params, key_params % name)
+
+        os.system(
+            "echo '' | $(which gpg) --batch "
+            "--passphrase-fd 0 --gen-key %(file)s; rm %(file)s" % {
+                "file": file_params
+            }
+        )
+
+        # export and save
+        ctx = gpgme.Context()
+        ctx.armor = True
+        key_data = BytesIO()
+        ctx.export(name, key_data)
+        write_file(_file, key_data.getvalue())
+        os.chmod(_file, 0o600)
+
+    return read_file(_file)
+
+
+def get_keys_to_client(project):
+    """
+    Returns the keys for register computer
+    """
+    if not os.path.exists(
+        os.path.join(settings.MIGASFREE_KEYS_DIR, "{}.pri".format(project))
+    ):
+        generate_rsa_keys(project)
+
+    server_public_key = read_file(os.path.join(
+        settings.MIGASFREE_KEYS_DIR,
+        settings.MIGASFREE_PUBLIC_KEY
+    ))
+    project_private_key = read_file(os.path.join(
+        settings.MIGASFREE_KEYS_DIR,
+        "{}.pri".format(project)
+    ))
+
+    return {
+        settings.MIGASFREE_PUBLIC_KEY: server_public_key,
+        "migasfree-client.pri": project_private_key
+    }
+
+
+def get_keys_to_packager():
+    """
+    Returns the keys for register packager
+    """
+    server_public_key = read_file(os.path.join(
+        settings.MIGASFREE_KEYS_DIR,
+        settings.MIGASFREE_PUBLIC_KEY
+    ))
+    packager_private_key = read_file(
+        os.path.join(
+            settings.MIGASFREE_KEYS_DIR,
+            settings.MIGASFREE_PACKAGER_PRI_KEY
+        )
+    )
+
+    return {
+        settings.MIGASFREE_PUBLIC_KEY: server_public_key,
+        settings.MIGASFREE_PACKAGER_PRI_KEY: packager_private_key
+    }
