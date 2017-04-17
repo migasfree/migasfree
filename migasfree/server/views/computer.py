@@ -4,6 +4,7 @@ from datetime import datetime
 
 from django.db import transaction
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,7 +19,6 @@ from ..models import (
     StatusLog, Migration, Project, Deployment,
     FaultDefinition, DeviceLogical,
 )
-from ..mixins import LoginRequiredMixin
 from ..utils import d2s, to_heatmap
 from ..api import upload_computer_info
 

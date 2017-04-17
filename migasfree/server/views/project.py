@@ -1,12 +1,12 @@
 # -*- coding: UTF-8 -*-
 
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import DeleteView
 from django.utils.translation import ugettext_lazy as _
 
 from ..models import Project
-from ..mixins import LoginRequiredMixin
 
 
 class ProjectDelete(LoginRequiredMixin, DeleteView):

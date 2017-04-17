@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.core.urlresolvers import reverse_lazy
 from django.shortcuts import redirect
@@ -8,7 +9,6 @@ from django.views.generic import DeleteView
 from django.utils.translation import ugettext_lazy as _
 
 from ..models import Platform
-from ..mixins import LoginRequiredMixin
 
 
 class PlatformDelete(LoginRequiredMixin, DeleteView):
