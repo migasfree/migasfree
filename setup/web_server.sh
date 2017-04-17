@@ -153,6 +153,6 @@ function web_server_init()
     boot_at_start $(get_apache_name)
     service_action $(get_apache_name) restart
 
-    python -c "import django; django.setup(); from migasfree.server.security import create_keys_server; create_keys_server()"
+    python -c "import django; django.setup(); from migasfree.server.security import create_server_keys; create_server_keys()"
     set_web_server_permissions
 }
