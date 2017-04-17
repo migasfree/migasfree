@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 
-from ..functions import time_horizon
+from ..utils import time_horizon
 from ..models import Deployment, ScheduleDelay
 
 

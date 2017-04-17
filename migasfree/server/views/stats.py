@@ -22,7 +22,7 @@ from ..models import (
     ScheduleDelay,
     Project,
 )
-from ..functions import to_heatmap, to_timestamp
+from ..utils import to_heatmap, to_timestamp
 
 JS_FILE = 'file://' + os.path.join(
     settings.MIGASFREE_APP_DIR,

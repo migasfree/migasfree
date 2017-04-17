@@ -14,7 +14,7 @@ from django.db.models.signals import pre_save, pre_delete
 from django.dispatch import receiver
 from django.core.exceptions import ValidationError
 
-from ..functions import time_horizon
+from ..utils import time_horizon
 
 from . import (
     Project,

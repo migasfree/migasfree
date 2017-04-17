@@ -8,7 +8,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 from . import DeviceConnection, DeviceModel, MigasLink
 
-from ..functions import (
+from ..utils import (
     swap_m2m,
     remove_empty_elements_from_dict
 )

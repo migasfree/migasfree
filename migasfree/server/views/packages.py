@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 
 from ..models import Project
-from ..functions import run_in_server
+from ..utils import run_in_server
 
 import logging
 logger = logging.getLogger('migasfree')

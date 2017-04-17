@@ -12,7 +12,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ..forms import DeviceReplacementForm
 from ..models import Device, DeviceModel, DeviceConnection
-from ..functions import d2s
+from ..utils import d2s
 
 
 @login_required

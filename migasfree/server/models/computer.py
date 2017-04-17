@@ -11,7 +11,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
 
-from ..functions import swap_m2m, remove_empty_elements_from_dict
+from ..utils import swap_m2m, remove_empty_elements_from_dict
 
 from . import (
     Project, DeviceLogical, User,

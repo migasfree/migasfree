@@ -22,7 +22,7 @@ from ..forms import (
 )
 
 from ..filters import ClientAttributeFilter, ServerAttributeFilter
-from ..functions import compare_list_values
+from ..utils import compare_list_values
 from ..tasks import (
     create_repository_metadata,
     remove_repository_metadata

@@ -19,7 +19,7 @@ from ..models import (
     FaultDefinition, DeviceLogical,
 )
 from ..mixins import LoginRequiredMixin
-from ..functions import d2s, to_heatmap
+from ..utils import d2s, to_heatmap
 from ..api import upload_computer_info
 
 

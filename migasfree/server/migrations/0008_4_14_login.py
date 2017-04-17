@@ -6,7 +6,7 @@ from django.db import migrations, models
 from django.utils import timezone
 import django.db.models.deletion
 
-from ..functions import swap_m2m
+from ..utils import swap_m2m
 
 
 def migrate_login_to_computer(apps, schema_editor):

@@ -9,7 +9,7 @@ from Crypto.PublicKey import RSA
 from django.conf import settings
 
 from . import errmfs
-from .functions import read_file, write_file
+from .utils import read_file, write_file
 
 SIGN_LEN = 256
 
