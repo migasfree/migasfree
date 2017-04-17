@@ -11,8 +11,8 @@ from django.utils.translation import ugettext as _
 
 from ..api import *
 from ..models import Error, Notification
-from ..security import wrap, unwrap
-from ..functions import get_client_ip, uuid_validate, read_file
+from ..secure import wrap, unwrap
+from ..utils import get_client_ip, uuid_validate, read_file
 from .. import errmfs
 
 # USING USERNAME AND PASSWORD ONLY (WITHOUT KEYS PAIR)

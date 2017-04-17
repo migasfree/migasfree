@@ -8,8 +8,8 @@ from django.conf import settings
 
 from ..models import Platform, Project, Deployment
 from ..api import get_computer
-from ..functions import uuid_validate
-from ..security import gpg_get_key
+from ..utils import uuid_validate
+from ..secure import gpg_get_key
 
 
 def get_projects(request):

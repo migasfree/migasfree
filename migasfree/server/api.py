@@ -17,10 +17,10 @@ from .models import (
     Migration, Notification, Package, Pms, Platform, Property,
     Deployment, Store, ServerAttribute, Synchronization, User, Project,
 )
-from .security import get_keys_to_client, get_keys_to_packager
+from .secure import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
 from .tasks import create_repository_metadata
-from .functions import (
+from .utils import (
     uuid_change_format,
     list_difference, list_common,
 )
