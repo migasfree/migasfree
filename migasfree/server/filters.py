@@ -91,27 +91,23 @@ class UserFaultFilter(SimpleListFilter):
     parameter_name = 'user'
 
     def lookups(self, request, model_admin):
-        return (
-            ('me', _('To check for me')),
-            ('only_me', _('Assigned to me')),
-            ('others', _('Assigned to others')),
-            ('no_assign', _('Not assigned')),
-        )
+        return Fault.USER_FILTER_CHOICES
 
     def queryset(self, request, queryset):
         lst = [request.user.id]
         if self.value() == 'me':
             return queryset.filter(
-                Q(faultdef__users__id__in=lst) | Q(faultdef__users=None)
+                Q(fault_definition__users__id__in=lst) |
+                Q(fault_definition__users=None)
             )
         elif self.value() == 'only_me':
-            return queryset.filter(Q(faultdef__users__id__in=lst))
+            return queryset.filter(fault_definition__users__id__in=lst)
         elif self.value() == 'others':
             return queryset.exclude(
-                faultdef__users__id__in=lst
-            ).exclude(faultdef__users=None)
-        elif self.value() == 'no_assign':
-            return queryset.filter(Q(faultdef__users=None))
+                fault_definition__users__id__in=lst
+            ).exclude(fault_definition__users=None)
+        elif self.value() == 'unassigned':
+            return queryset.filter(fault_definition__users=None)
 
 
 class AttributeSetFilter(filters.FilterSet):
