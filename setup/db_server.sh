@@ -115,10 +115,10 @@ function db_server_init()
 import django
 django.setup()
 from migasfree.server.fixtures import (
-    create_registers,
+    create_initial_data,
     sequence_reset,
 )
-create_registers()
+create_initial_data()
 sequence_reset()
 EOF
     )

@@ -8,12 +8,12 @@ from datetime import datetime
 from django.test import TransactionTestCase
 from django.core.urlresolvers import reverse
 from .models import *
-from .fixtures import create_registers, sequence_reset
+from .fixtures import create_initial_data, sequence_reset
 
 
 class RepositoryTestCase(TransactionTestCase):
     def setUp(self):  # pylint: disable-msg=C0103
-        create_registers()
+        create_initial_data()
         sequence_reset()
 
         platform = Platform.objects.create("Linux")

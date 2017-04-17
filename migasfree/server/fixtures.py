@@ -2,21 +2,21 @@
 
 import os
 import subprocess
+import tempfile
 
 import django.core.management
 
 from StringIO import StringIO
 
-from django.contrib.auth.models import Group
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Group, Permission
+from django.apps import apps
 from django.conf import settings
 
 from migasfree.server.models import UserProfile
 
-
-def run(cmd_linux):
-    (out, err) = subprocess.Popen(
-        cmd_linux,
+def run(cmd):
+    out, err = subprocess.Popen(
+        cmd,
         stdout=subprocess.PIPE,
         shell=True
     ).communicate()
@@ -28,16 +28,18 @@ def create_user(name, groups=None):
     if groups is None:
         groups = []
 
-    user = UserProfile()
-    user.username = name
-    user.is_staff = True
-    user.is_active = True
-    user.is_superuser = (name == "admin")
-    user.save()
-    user.password = name
-    for group in groups:
-        user.groups.add(group.id)
-    user.save()
+    user = UserProfile.objects.filter(username=name)
+    if not user:
+        user = UserProfile()
+        user.username = name
+        user.is_staff = True
+        user.is_active = True
+        user.is_superuser = (name == 'admin')
+        user.set_password(name)
+        user.save()
+
+        user.groups.add(*groups)
+        user.save()
 
 
 def add_read_perms(group, tables=None):
@@ -68,85 +70,107 @@ def add_all_perms(group, tables=None):
             )
 
 
-def create_users():
+def create_default_users():
     """
     Create default Groups and Users
     """
 
-    read_group = Group()
-    read_group.name = "Reader"
-    read_group.save()
-    tables = [
-        "computer", "device", "user", "attribute", "error",
-        "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
-        "devicetype", "schedule", "scheduledelay", "autocheckerror",
-        "faultdefinition", "property", "checking", "project", "pms", "query",
-        "package", "deployment", "store", "message", "synchronization",
-        "platform", "migration", "notification"
-    ]
-    add_read_perms(read_group, tables)
-    read_group.save()
+    # reader group
+    reader = Group.objects.filter(name='Reader')
+    if not reader:
+        reader = Group()
+        reader.name = "Reader"
+        reader.save()
+        tables = [
+            "computer", "device", "user", "attribute", "error",
+            "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
+            "devicetype", "schedule", "scheduledelay", "autocheckerror",
+            "faultdefinition", "property", "checking", "project", "pms", "query",
+            "package", "deployment", "store", "message", "synchronization",
+            "platform", "migration", "notification"
+        ]
+        add_read_perms(reader, tables)
+        reader.save()
 
-    deploy_group = Group()
-    deploy_group.name = "Liberator"
-    deploy_group.save()
-    tables = ["deployment", "schedule", "scheduledelay"]
-    add_all_perms(deploy_group, tables)
-    deploy_group.save()
+    # liberator group
+    liberator = Group.objects.filter(name='Liberator')
+    if not liberator:
+        liberator = Group()
+        liberator.name = "Liberator"
+        liberator.save()
+        tables = ["deployment", "schedule", "scheduledelay"]
+        add_all_perms(liberator, tables)
+        liberator.save()
 
-    packager_group = Group()
-    packager_group.name = "Packager"
-    packager_group.save()
-    tables = ["package", "store"]
-    add_all_perms(packager_group, tables)
-    packager_group.save()
+    # packager group
+    packager = Group.objects.filter(name='Packager')
+    if not packager:
+        packager = Group()
+        packager.name = "Packager"
+        packager.save()
+        tables = ["package", "store"]
+        add_all_perms(packager, tables)
+        packager.save()
 
-    checker_group = Group()
-    checker_group.name = "Computer Checker"
-    checker_group.save()
-    tables = [
-        "autocheckerror", "error", "fault",
-        "message", "synchronization", "checking"
-    ]
-    add_all_perms(checker_group, tables)
-    checker_group.save()
+    # computer checker group
+    checker = Group.objects.filter(name='Computer Checker')
+    if not checker:
+        checker = Group()
+        checker.name = "Computer Checker"
+        checker.save()
+        tables = [
+            "autocheckerror", "error", "fault",
+            "message", "synchronization", "checking"
+        ]
+        add_all_perms(checker, tables)
+        checker.save()
 
-    device_installer_group = Group()
-    device_installer_group.name = "Device installer"
-    device_installer_group.save()
-    tables = [
-        "deviceconnection", "devicemanufacturer", "devicemodel", "devicetype"
-    ]
-    add_all_perms(device_installer_group, tables)
-    device_installer_group.save()
+    # device installer group
+    device_installer = Group.objects.filter(name='Device installer')
+    if not device_installer:
+        device_installer = Group()
+        device_installer.name = "Device installer"
+        device_installer.save()
+        tables = [
+            "deviceconnection", "devicemanufacturer",
+            "devicemodel", "devicetype"
+        ]
+        add_all_perms(device_installer, tables)
+        device_installer.save()
 
-    query_group = Group()
-    query_group.name = "Query"
-    query_group.save()
-    tables = ["query"]
-    add_all_perms(query_group, tables)
-    query_group.save()
+    # query group
+    questioner = Group.objects.filter(name='Query')
+    if not questioner:
+        questioner = Group()
+        questioner.name = "Query"
+        questioner.save()
+        tables = ["query"]
+        add_all_perms(questioner, tables)
+        questioner.save()
 
-    configurator_group = Group()
-    configurator_group.name = "Configurator"
-    configurator_group.save()
-    tables = [
-        "checking", "faultdefinition", "property", "pms", "project",
-        "message", "update", "platform", "migration",
-        "notification"
-    ]
-    add_all_perms(configurator_group, tables)
-    configurator_group.save()
+    # configurator group
+    configurator = Group.objects.filter(name='Configurator')
+    if not configurator:
+        configurator = Group()
+        configurator.name = "Configurator"
+        configurator.save()
+        tables = [
+            "checking", "faultdefinition", "property", "pms", "project",
+            "message", "update", "platform", "migration",
+            "notification"
+        ]
+        add_all_perms(configurator, tables)
+        configurator.save()
 
     # default users
     create_user("admin")
-    create_user("packager", [read_group, packager_group])
-    create_user("configurator", [read_group, configurator_group])
-    create_user("installer", [read_group, device_installer_group])
-    create_user("query", [read_group, query_group])
-    create_user("liberator", [read_group, deploy_group])
-    create_user("checker", [read_group, checker_group])
-    create_user("reader", [read_group])
+    create_user("packager", [reader, packager])
+    create_user("configurator", [reader, configurator])
+    create_user("installer", [reader, device_installer])
+    create_user("query", [reader, questioner])
+    create_user("liberator", [reader, liberator])
+    create_user("checker", [reader, checker])
+    create_user("reader", [reader])
 
 
 def sequence_reset():
@@ -161,24 +185,24 @@ def sequence_reset():
 
     if settings.DATABASES.get('default').get('ENGINE') == \
             'django.db.backends.postgresql_psycopg2':
-        cfile = "/tmp/migasfree.sequencereset.sql"  # FIXME tmpfile
-        with open(cfile, "w") as ofile:
-            ofile.write(commands.getvalue())
-            ofile.flush()
+        _filename = tempfile.mkstemp()[1]
+        with open(_filename, "w") as _file:
+            _file.write(commands.getvalue())
+            _file.flush()
 
-        cmd_linux = "su postgres -c 'psql migasfree -f %s' -" % cfile
-        run(cmd_linux)
+        cmd = "su postgres -c 'psql %s -f %s' -" % (
+            settings.DATABASES.get('default').get('NAME'), _filename
+        )
+        out, err = run(cmd)
+        if out != 0:
+            print(err)
 
-        os.remove(cfile)
+        os.remove(_filename)
 
 
-def create_registers():
-    """
-    Load default data
-    """
-    create_users()
+def create_initial_data():
+    create_default_users()
 
-    # Load Fixtures
     fixtures = [
         'server.checking.json',
         'server.pms.json',
@@ -193,13 +217,15 @@ def create_registers():
         'server.deviceconnection.json',
     ]
     for fixture in fixtures:
+        app, name, ext = fixture.split('.')
         django.core.management.call_command(
             'loaddata',
             os.path.join(
                 settings.MIGASFREE_APP_DIR,
-                "server",
-                "fixtures",
-                fixture
+                app,
+                'fixtures',
+                '{0}.{1}'.format(name, ext)
             ),
+            interactive=False,
             verbosity=1
         )
