@@ -51,6 +51,7 @@ class HwNodeManager(models.Manager):
 class HwNode(models.Model, MigasLink):
     parent = models.ForeignKey(
         'self',
+        on_delete=models.CASCADE,
         blank=True,
         null=True,
         verbose_name=_("parent"),
@@ -68,6 +69,7 @@ class HwNode(models.Model, MigasLink):
 
     computer = models.ForeignKey(
         Computer,
+        on_delete=models.CASCADE,
         verbose_name=_("computer")
     )
 

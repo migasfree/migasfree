@@ -41,6 +41,7 @@ class Error(Event):
 
     project = models.ForeignKey(
         Project,
+        on_delete=models.CASCADE,
         verbose_name=_("project")
     )
 

@@ -22,11 +22,13 @@ class SynchronizationManager(models.Manager):
 class Synchronization(Event, MigasLink):
     user = models.ForeignKey(
         User,
+        on_delete=models.CASCADE,
         verbose_name=_("user")
     )
 
     project = models.ForeignKey(
         Project,
+        on_delete=models.CASCADE,
         verbose_name=_("project"),
         null=True
     )

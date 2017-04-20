@@ -33,6 +33,7 @@ class Event(models.Model):
 
     computer = models.ForeignKey(
         Computer,
+        on_delete=models.CASCADE,
         verbose_name=_("computer")
     )
 

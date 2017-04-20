@@ -36,6 +36,7 @@ class Fault(Event):
 
     fault_definition = models.ForeignKey(
         FaultDefinition,
+        on_delete=models.CASCADE,
         verbose_name=_("fault definition")
     )
 
@@ -52,6 +53,7 @@ class Fault(Event):
 
     project = models.ForeignKey(
         Project,
+        on_delete=models.CASCADE,
         verbose_name=_("project")
     )
 

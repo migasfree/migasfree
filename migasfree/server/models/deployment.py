@@ -45,7 +45,11 @@ class Deployment(models.Model, MigasLink):
         verbose_name=_('name')
     )
 
-    project = models.ForeignKey(Project, verbose_name=_("project"))
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        verbose_name=_("project")
+    )
 
     comment = models.TextField(
         verbose_name=_("comment"),
@@ -90,6 +94,7 @@ class Deployment(models.Model, MigasLink):
 
     schedule = models.ForeignKey(
         Schedule,
+        on_delete=models.CASCADE,
         verbose_name=_('schedule'),
         null=True,
         blank=True

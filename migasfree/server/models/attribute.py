@@ -45,6 +45,7 @@ class AttributeManager(models.Manager):
 class Attribute(models.Model, MigasLink):
     property_att = models.ForeignKey(
         Property,
+        on_delete=models.CASCADE,
         verbose_name=_("Property")
     )
 

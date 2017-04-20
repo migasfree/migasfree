@@ -25,11 +25,13 @@ class DeviceLogicalManager(models.Manager):
 class DeviceLogical(models.Model, MigasLink):
     device = models.ForeignKey(
         Device,
+        on_delete=models.CASCADE,
         verbose_name=_("device")
     )
 
     feature = models.ForeignKey(
         DeviceFeature,
+        on_delete=models.CASCADE,
         verbose_name=_("feature")
     )
 

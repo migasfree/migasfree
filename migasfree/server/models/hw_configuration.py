@@ -23,12 +23,12 @@ class HwConfigurationManager(models.Manager):
 class HwConfiguration(models.Model):
     node = models.ForeignKey(
         HwNode,
+        on_delete=models.CASCADE,
         verbose_name=_("hardware node")
     )
 
     name = models.TextField(
         verbose_name=_("name"),
-        null=False,
         blank=True
     )  # This is the field "config" in lshw
 

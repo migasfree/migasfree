@@ -41,6 +41,7 @@ class Store(models.Model, MigasLink):
 
     project = models.ForeignKey(
         Project,
+        on_delete=models.CASCADE,
         verbose_name=_("project")
     )
 
@@ -59,10 +60,10 @@ class Store(models.Model, MigasLink):
         if self.id:
             info_link = reverse(
                 'package_info',
-                args=('%s/STORES/%s/' % (self.project.name, self.name),)
+                args=('{}/STORES/{}/'.format(self.project.name, self.name),)
             )
 
-            download_link = '%s%s/STORES/%s/' % (
+            download_link = '{}{}/STORES/{}/'.format(
                 settings.MEDIA_URL,
                 self.project.name,
                 self.name

@@ -18,11 +18,13 @@ class DeviceModel(models.Model, MigasLink):
 
     manufacturer = models.ForeignKey(
         DeviceManufacturer,
+        on_delete=models.CASCADE,
         verbose_name=_("manufacturer")
     )
 
     devicetype = models.ForeignKey(
         DeviceType,
+        on_delete=models.CASCADE,
         verbose_name=_("type")
     )
 

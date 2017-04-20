@@ -26,6 +26,7 @@ class DeviceConnection(models.Model, MigasLink):
 
     devicetype = models.ForeignKey(
         DeviceType,
+        on_delete=models.CASCADE,
         verbose_name=_("device type")
     )
 

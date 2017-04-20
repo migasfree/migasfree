@@ -17,6 +17,7 @@ class ScheduleDelay(models.Model):
 
     schedule = models.ForeignKey(
         Schedule,
+        on_delete=models.CASCADE,
         related_name='delays',
         verbose_name=_("schedule")
     )

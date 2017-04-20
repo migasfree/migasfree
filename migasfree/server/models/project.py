@@ -46,6 +46,7 @@ class Project(models.Model, MigasLink):
 
     pms = models.ForeignKey(
         Pms,
+        on_delete=models.CASCADE,
         verbose_name=_("package management system")
     )
 
@@ -58,6 +59,7 @@ class Project(models.Model, MigasLink):
 
     platform = models.ForeignKey(
         Platform,
+        on_delete=models.CASCADE,
         verbose_name=_("platform")
     )
 

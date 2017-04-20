@@ -18,16 +18,19 @@ class DeviceDriver(models.Model):
 
     model = models.ForeignKey(
         DeviceModel,
+        on_delete=models.CASCADE,
         verbose_name=_("model")
     )
 
     project = models.ForeignKey(
         Project,
+        on_delete=models.CASCADE,
         verbose_name=_("project")
     )
 
     feature = models.ForeignKey(
         DeviceFeature,
+        on_delete=models.CASCADE,
         verbose_name=_("feature")
     )
 

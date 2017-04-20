@@ -177,8 +177,16 @@ class Migration(migrations.Migration):
             name='DeviceLogical',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('device', models.ForeignKey(verbose_name='device', to='server.Device')),
-                ('feature', models.ForeignKey(verbose_name='feature', to='server.DeviceFeature')),
+                ('device', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='device',
+                    to='server.Device'
+                )),
+                ('feature', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='feature',
+                    to='server.DeviceFeature'
+                )),
             ],
             options={
                 'verbose_name': 'Device (Logical)',
@@ -235,7 +243,11 @@ class Migration(migrations.Migration):
                 ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
                 ('error', models.TextField(null=True, verbose_name='error', blank=True)),
                 ('checked', models.BooleanField(default=False, verbose_name='checked')),
-                ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
+                ('computer', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='computer',
+                    to='server.Computer'
+                )),
             ],
             options={
                 'verbose_name': 'Error',
@@ -250,7 +262,11 @@ class Migration(migrations.Migration):
                 ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
                 ('text', models.TextField(null=True, verbose_name='text', blank=True)),
                 ('checked', models.BooleanField(default=False, verbose_name='checked')),
-                ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
+                ('computer', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='computer',
+                    to='server.Computer'
+                )),
             ],
             options={
                 'verbose_name': 'Fault',
@@ -341,10 +357,15 @@ class Migration(migrations.Migration):
                 ('clock', models.IntegerField(null=True, verbose_name='clock')),
                 ('dev', models.TextField(null=True, verbose_name='dev', blank=True)),
                 ('icon', models.TextField(null=True, verbose_name='icon', blank=True)),
-                ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
+                ('computer', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='computer',
+                    to='server.Computer'
+                )),
                 ('parent', models.ForeignKey(
                     related_name='child', verbose_name='parent',
-                    blank=True, to='server.HwNode', null=True
+                    blank=True, to='server.HwNode', null=True,
+                    on_delete=models.CASCADE,
                 )),
             ],
             options={
@@ -362,7 +383,11 @@ class Migration(migrations.Migration):
                     help_text='Sent attributes', to='server.Attribute',
                     null=True, verbose_name='attributes', blank=True
                 )),
-                ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
+                ('computer', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='computer',
+                    to='server.Computer'
+                )),
             ],
             options={
                 'verbose_name': 'Login',
@@ -377,7 +402,12 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('text', models.TextField(null=True, verbose_name='text', blank=True)),
                 ('date', models.DateTimeField(verbose_name='date')),
-                ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer', unique=True)),
+                ('computer', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='computer',
+                    to='server.Computer',
+                    unique=True
+                )),
             ],
             options={
                 'verbose_name': 'Message',
@@ -403,7 +433,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
-                ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
+                ('computer', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='computer',
+                    to='server.Computer'
+                )),
             ],
             options={
                 'verbose_name': 'Migration',
@@ -616,7 +650,11 @@ class Migration(migrations.Migration):
                     to='server.Attribute', null=True,
                     verbose_name='attributes', blank=True
                 )),
-                ('schedule', models.ForeignKey(verbose_name='schedule', to='server.Schedule')),
+                ('schedule', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='schedule',
+                    to='server.Schedule'
+                )),
             ],
             options={
                 'verbose_name': 'Schedule Delay',
@@ -642,7 +680,11 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('date', models.DateTimeField(auto_now_add=True, verbose_name='date')),
-                ('computer', models.ForeignKey(verbose_name='computer', to='server.Computer')),
+                ('computer', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='computer',
+                    to='server.Computer'
+                )),
             ],
             options={
                 'verbose_name': 'Update',
@@ -670,7 +712,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('user_ptr', models.OneToOneField(
                     parent_link=True, auto_created=True, primary_key=True,
-                    serialize=False, to=settings.AUTH_USER_MODEL
+                    serialize=False, to=settings.AUTH_USER_MODEL,
+                    on_delete=models.CASCADE,
                 )),
             ],
             options={
@@ -702,8 +745,16 @@ class Migration(migrations.Migration):
                     help_text='Is not neccesary a user for register the computer in database and get the keys.',
                     verbose_name='autoregister'
                 )),
-                ('platform', models.ForeignKey(verbose_name='platform', to='server.Platform')),
-                ('pms', models.ForeignKey(verbose_name='package management system', to='server.Pms')),
+                ('platform', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='platform',
+                    to='server.Platform'
+                )),
+                ('pms', models.ForeignKey(
+                    on_delete=models.CASCADE,
+                    verbose_name='package management system',
+                    to='server.Pms'
+                )),
             ],
             options={
                 'verbose_name': 'Version',
@@ -725,62 +776,113 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='update',
             name='user',
-            field=models.ForeignKey(verbose_name='user', to='server.User'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='user',
+                to='server.User'
+            ),
         ),
         migrations.AddField(
             model_name='update',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version', null=True),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version',
+                null=True
+            ),
         ),
         migrations.AddField(
             model_name='store',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version'
+            ),
         ),
         migrations.AddField(
             model_name='repository',
             name='schedule',
-            field=models.ForeignKey(verbose_name='schedule', blank=True, to='server.Schedule', null=True),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='schedule',
+                blank=True,
+                to='server.Schedule',
+                null=True
+            ),
         ),
         migrations.AddField(
             model_name='repository',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version'
+            ),
         ),
         migrations.AddField(
             model_name='package',
             name='store',
-            field=models.ForeignKey(verbose_name='store', to='server.Store'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='store',
+                to='server.Store'
+            ),
         ),
         migrations.AddField(
             model_name='package',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version'
+            ),
         ),
         migrations.AddField(
             model_name='migration',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version'
+            ),
         ),
         migrations.AddField(
             model_name='login',
             name='user',
-            field=models.ForeignKey(verbose_name='user', to='server.User'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='user',
+                to='server.User'
+            ),
         ),
         migrations.AddField(
             model_name='hwlogicalname',
             name='node',
-            field=models.ForeignKey(verbose_name='hardware node', to='server.HwNode'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='hardware node',
+                to='server.HwNode'
+            ),
         ),
         migrations.AddField(
             model_name='hwconfiguration',
             name='node',
-            field=models.ForeignKey(verbose_name='hardware node', to='server.HwNode'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='hardware node',
+                to='server.HwNode'
+            ),
         ),
         migrations.AddField(
             model_name='hwcapability',
             name='node',
-            field=models.ForeignKey(verbose_name='hardware node', to='server.HwNode'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='hardware node',
+                to='server.HwNode'
+            ),
         ),
         migrations.AddField(
             model_name='faultdef',
@@ -790,57 +892,101 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='fault',
             name='faultdef',
-            field=models.ForeignKey(verbose_name='fault definition', to='server.FaultDef'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='fault definition',
+                to='server.FaultDef'
+            ),
         ),
         migrations.AddField(
             model_name='fault',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version'
+            ),
         ),
         migrations.AddField(
             model_name='error',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version'
+            ),
         ),
         migrations.AddField(
             model_name='devicemodel',
             name='devicetype',
-            field=models.ForeignKey(verbose_name='type', to='server.DeviceType'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='type',
+                to='server.DeviceType'
+            ),
         ),
         migrations.AddField(
             model_name='devicemodel',
             name='manufacturer',
-            field=models.ForeignKey(verbose_name='manufacturer', to='server.DeviceManufacturer'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='manufacturer',
+                to='server.DeviceManufacturer'
+            ),
         ),
         migrations.AddField(
             model_name='devicedriver',
             name='feature',
-            field=models.ForeignKey(verbose_name='feature', to='server.DeviceFeature'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='feature',
+                to='server.DeviceFeature'
+            ),
         ),
         migrations.AddField(
             model_name='devicedriver',
             name='model',
-            field=models.ForeignKey(verbose_name='model', to='server.DeviceModel'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='model',
+                to='server.DeviceModel'
+            ),
         ),
         migrations.AddField(
             model_name='devicedriver',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version'
+            ),
         ),
         migrations.AddField(
             model_name='deviceconnection',
             name='devicetype',
-            field=models.ForeignKey(verbose_name='device type', to='server.DeviceType'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='device type',
+                to='server.DeviceType'
+            ),
         ),
         migrations.AddField(
             model_name='device',
             name='connection',
-            field=models.ForeignKey(verbose_name='connection', to='server.DeviceConnection'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='connection',
+                to='server.DeviceConnection'
+            ),
         ),
         migrations.AddField(
             model_name='device',
             name='model',
-            field=models.ForeignKey(verbose_name='model', to='server.DeviceModel'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='model',
+                to='server.DeviceModel'
+            ),
         ),
         migrations.AddField(
             model_name='computer',
@@ -855,12 +1001,20 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='computer',
             name='version',
-            field=models.ForeignKey(verbose_name='version', to='server.Version'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='version',
+                to='server.Version'
+            ),
         ),
         migrations.AddField(
             model_name='attribute',
             name='property_att',
-            field=models.ForeignKey(verbose_name='Property', to='server.Property'),
+            field=models.ForeignKey(
+                on_delete=models.CASCADE,
+                verbose_name='Property',
+                to='server.Property'
+            ),
         ),
         migrations.CreateModel(
             name='Att',

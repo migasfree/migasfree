@@ -33,7 +33,11 @@ class Application(models.Model, MigasLink):
         (14, _('Universal Access')),
     )
 
-    project = models.ForeignKey(Project, verbose_name=_('project'))
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        verbose_name=_('project')
+    )
 
     name = models.CharField(verbose_name=_('name'), max_length=50)
 

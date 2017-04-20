@@ -22,6 +22,7 @@ class HwLogicalNameManager(models.Manager):
 class HwLogicalName(models.Model):
     node = models.ForeignKey(
         HwNode,
+        on_delete=models.CASCADE,
         verbose_name=_("hardware node")
     )
 

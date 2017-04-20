@@ -26,11 +26,13 @@ class Device(models.Model, MigasLink):
 
     model = models.ForeignKey(
         DeviceModel,
+        on_delete=models.CASCADE,
         verbose_name=_("model")
     )
 
     connection = models.ForeignKey(
         DeviceConnection,
+        on_delete=models.CASCADE,
         verbose_name=_("connection")
     )
 
@@ -46,11 +48,12 @@ class Device(models.Model, MigasLink):
             data = json.loads(self.data)
             ip = data.get('IP', None)
             if ip:
-                address = 'http://%s' % ip
+                address = 'http://{}'.format(ip)
             else:
                 try:
-                    address = 'http://%s:631' % \
+                    address = 'http://{}:631'.format(
                         self.devicelogical_set.all()[0].attributes.all()[0].ip
+                    )
                 except:
                     address = ''
 
