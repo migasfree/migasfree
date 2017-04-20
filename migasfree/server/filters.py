@@ -130,9 +130,9 @@ class CheckingFilter(filters.FilterSet):
 
 class ComputerFilter(filters.FilterSet):
     platform = django_filters.NumberFilter(name='project__platform__id')
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
     mac_address = django_filters.CharFilter(
-        name='mac_address', lookup_type='icontains'
+        name='mac_address', lookup_expr=['icontains']
     )
 
     class Meta:
@@ -144,8 +144,8 @@ class ComputerFilter(filters.FilterSet):
 
 
 class ErrorFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
-    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
+    created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
     platform = django_filters.NumberFilter(name='project__platform__id')
 
     class Meta:
@@ -163,8 +163,8 @@ class FaultDefinitionFilter(filters.FilterSet):
 
 
 class FaultFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
-    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
+    created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
 
     class Meta:
         model = Fault
@@ -174,8 +174,8 @@ class FaultFilter(filters.FilterSet):
 
 
 class MigrationFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
-    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
+    created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
 
     class Meta:
         model = Migration
@@ -194,7 +194,7 @@ class NodeFilter(filters.FilterSet):
 
 
 class NotificationFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
+    created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
 
     class Meta:
         model = Notification
@@ -215,13 +215,13 @@ class PropertyFilter(filters.FilterSet):
 
 class DeploymentFilter(filters.FilterSet):
     included_attributes = django_filters.CharFilter(
-        name='included_attributes__value', lookup_type='icontains'
+        name='included_attributes__value', lookup_expr=['icontains']
     )
     excluded_attributes = django_filters.CharFilter(
-        name='excluded_attributes__value', lookup_type='icontains'
+        name='excluded_attributes__value', lookup_expr=['icontains']
     )
     available_packages = django_filters.CharFilter(
-        name='available_packages__name', lookup_type='icontains'
+        name='available_packages__name', lookup_expr=['icontains']
     )
 
     class Meta:
@@ -230,8 +230,8 @@ class DeploymentFilter(filters.FilterSet):
 
 
 class StatusLogFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
-    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
+    created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
 
     class Meta:
         model = StatusLog
@@ -245,8 +245,8 @@ class StoreFilter(filters.FilterSet):
 
 
 class SynchronizationFilter(filters.FilterSet):
-    created_at = django_filters.DateFilter(name='created_at', lookup_type='gte')
-    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr='lt')
+    created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
+    created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
 
     class Meta:
         model = Synchronization
