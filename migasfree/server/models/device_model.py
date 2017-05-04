@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
 from . import DeviceType, DeviceManufacturer, DeviceConnection, MigasLink
 
@@ -22,7 +22,7 @@ class DeviceModel(models.Model, MigasLink):
         verbose_name=_("manufacturer")
     )
 
-    devicetype = models.ForeignKey(
+    device_type = models.ForeignKey(
         DeviceType,
         on_delete=models.CASCADE,
         verbose_name=_("type")
@@ -45,6 +45,6 @@ class DeviceModel(models.Model, MigasLink):
         app_label = 'server'
         verbose_name = _("Model")
         verbose_name_plural = _("Models")
-        unique_together = (("devicetype", "manufacturer", "name"),)
+        unique_together = (("device_type", "manufacturer", "name"),)
         permissions = (("can_save_devicemodel", "Can save Device Model"),)
         ordering = ['manufacturer', 'name']
