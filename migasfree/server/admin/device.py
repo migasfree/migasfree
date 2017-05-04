@@ -43,10 +43,10 @@ class DeviceManufacturerAdmin(MigasAdmin):
 
 @admin.register(DeviceConnection)
 class DeviceConnectionAdmin(MigasAdmin):
-    list_display = ('name_link', 'devicetype', 'fields')
-    list_select_related = ('devicetype',)
-    ordering = ('devicetype__name', 'name')
-    fields = ('devicetype', 'name', 'fields')
+    list_display = ('name_link', 'device_type', 'fields')
+    list_select_related = ('device_type',)
+    ordering = ('device_type__name', 'name')
+    fields = ('device_type', 'name', 'fields')
     search_fields = ('name',)
 
     name_link = MigasFields.link(model=DeviceConnection, name='name')
@@ -57,7 +57,7 @@ class DeviceConnectionAdmin(MigasAdmin):
             obj,
             **kwargs
         )
-        form.base_fields['devicetype'].widget.can_add_related = False
+        form.base_fields['device_type'].widget.can_add_related = False
 
         return form
 
@@ -67,7 +67,7 @@ class DeviceDriverAdmin(MigasAdmin):
     list_display = ('__str__', 'model', 'project', 'feature')
     list_display_links = ('__str__',)
     list_filter = ('project', 'model')
-    fields = ('name', 'model', 'project', 'feature', 'install')
+    fields = ('name', 'model', 'project', 'feature', 'packages_to_install')
     search_fields = ('name',)
 
     def get_form(self, request, obj=None, **kwargs):
@@ -82,9 +82,9 @@ class DeviceDriverAdmin(MigasAdmin):
 @admin.register(DeviceLogical)
 class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
-    fields = ('device', 'feature', 'name', 'attributes')
+    fields = ('device', 'feature', 'alternative_feature_name', 'attributes')
     list_select_related = ('device', 'feature')
-    list_display = ('name_link', 'device_link', 'feature_link')
+    list_display = ('alternative_feature_name_link', 'device_link', 'feature_link')
     list_filter = ('device__model', 'feature')
     ordering = ('device__name', 'feature__name')
     search_fields = (
@@ -95,7 +95,9 @@ class DeviceLogicalAdmin(MigasAdmin):
         'feature__name',
     )
 
-    name_link = MigasFields.link(model=DeviceLogical, name='name')
+    alternative_feature_name_link = MigasFields.link(
+        model=DeviceLogical, name='alternative_feature_name'
+    )
     device_link = MigasFields.link(
         model=DeviceLogical, name='device', order="device__name"
     )
@@ -114,7 +116,7 @@ class DeviceLogicalAdmin(MigasAdmin):
 class DeviceLogicalInline(admin.TabularInline):
     model = DeviceLogical
     form = DeviceLogicalForm
-    fields = ('feature', 'name', 'attributes')
+    fields = ('feature', 'alternative_feature_name', 'attributes')
     extra = 0
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
@@ -180,8 +182,8 @@ class DeviceAdmin(MigasAdmin):
         return super(DeviceAdmin, self).get_queryset(
             request
         ).select_related(
-            'connection', 'connection__devicetype',
-            'model', 'model__manufacturer', 'model__devicetype',
+            'connection', 'connection__device_type',
+            'model', 'model__manufacturer', 'model__device_type',
         ).prefetch_related(
             "devicelogical_set"
         )
@@ -190,21 +192,21 @@ class DeviceAdmin(MigasAdmin):
 class DeviceDriverInline(admin.TabularInline):
     model = DeviceDriver
     formfield_overrides = {models.TextField: {'widget': ExtraThinTextarea}}
-    fields = ('project', 'feature', 'name', 'install')
+    fields = ('project', 'feature', 'name', 'packages_to_install')
     ordering = ('project', 'feature')
     extra = 1
 
 
 @admin.register(DeviceModel)
 class DeviceModelAdmin(MigasAdmin):
-    list_display = ('name_link', 'manufacturer_link', 'devicetype')
+    list_display = ('name_link', 'manufacturer_link', 'device_type')
     list_display_links = ('name_link',)
-    list_filter = ('devicetype', 'manufacturer')
-    ordering = ('devicetype__name', 'manufacturer__name', 'name')
+    list_filter = ('device_type', 'manufacturer')
+    ordering = ('device_type__name', 'manufacturer__name', 'name')
     search_fields = (
         'name',
         'manufacturer__name',
-        'connections__devicetype__name'
+        'connections__device_type__name'
     )
     inlines = [DeviceDriverInline]
 
@@ -216,7 +218,7 @@ class DeviceModelAdmin(MigasAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeviceModelAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['manufacturer'].widget.can_add_related = False
-        form.base_fields['devicetype'].widget.can_add_related = False
+        form.base_fields['device_type'].widget.can_add_related = False
         form.base_fields['connections'].widget.can_add_related = False
 
         return form
