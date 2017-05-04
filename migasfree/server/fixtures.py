@@ -9,10 +9,10 @@ import django.core.management
 from StringIO import StringIO
 
 from django.contrib.auth.models import Group, Permission
-from django.apps import apps
 from django.conf import settings
 
 from migasfree.server.models import UserProfile
+
 
 def run(cmd):
     out, err = subprocess.Popen(
