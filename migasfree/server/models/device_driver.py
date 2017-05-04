@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
 from . import Project, DeviceModel, DeviceFeature
 
@@ -34,7 +34,7 @@ class DeviceDriver(models.Model):
         verbose_name=_("feature")
     )
 
-    install = models.TextField(
+    packages_to_install = models.TextField(
         verbose_name=_("packages to install"),
         null=True,
         blank=True
@@ -42,7 +42,9 @@ class DeviceDriver(models.Model):
 
     def as_dict(self):
         lst_install = []
-        for p in self.install.replace("\r", " ").replace("\n", " ").split(" "):
+        for p in self.packages_to_install.replace("\r", " ").replace(
+            "\n", " "
+        ).split(" "):
             if p != '' and p != 'None':
                 lst_install.append(p)
 
@@ -52,7 +54,9 @@ class DeviceDriver(models.Model):
         }
 
     def save(self, *args, **kwargs):
-        self.install = self.install.replace("\r\n", "\n")
+        self.packages_to_install = self.packages_to_install.replace(
+            "\r\n", "\n"
+        )
         super(DeviceDriver, self).save(*args, **kwargs)
 
     def __str__(self):
