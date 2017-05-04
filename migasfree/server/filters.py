@@ -187,8 +187,8 @@ class NodeFilter(filters.FilterSet):
         model = HwNode
         fields = [
             'computer__id', 'id', 'parent', 'product', 'level',
-            'width', 'name', 'classname', 'enabled', 'claimed',
-            'description', 'vendor', 'serial', 'businfo', 'physid',
+            'width', 'name', 'class_name', 'enabled', 'claimed',
+            'description', 'vendor', 'serial', 'bus_info', 'physid',
             'slot', 'size', 'capacity', 'clock', 'dev'
         ]
 
