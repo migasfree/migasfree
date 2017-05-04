@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
 from . import HwNode
 
@@ -45,6 +45,6 @@ class HwConfiguration(models.Model):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Hardware Capability")
-        verbose_name_plural = _("Hardware Capabilities")
+        verbose_name = _("Hardware Configuration")
+        verbose_name_plural = _("Hardware Configurations")
         unique_together = (("name", "node"),)
