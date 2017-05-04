@@ -39,7 +39,6 @@ class Device(models.Model, MigasLink):
     data = models.TextField(
         verbose_name=_("data"),
         null=True,
-        blank=False,
         default="{}"
     )
 
