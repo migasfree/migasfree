@@ -31,7 +31,7 @@ def hardware_resume(request, param):
         request,
         'computer_hardware_resume.html',
         {
-            'title': '%s: %s' % (_("Hardware Information"), computer),
+            'title': '{}: {}'.format(_("Hardware Information"), computer),
             'computer': computer,
             'data': data
         }
@@ -54,7 +54,7 @@ def hardware_extract(request, node):
         request,
         'computer_hardware_extract.html',
         {
-            'title': '%s: %s' % (_("Hardware Information"), node),
+            'title': '{}: {}'.format(_("Hardware Information"), node),
             'computer': node.computer,
             'capability': capability,
             'logical_name': logical_name,
@@ -73,7 +73,7 @@ def load_hw(computer, node, parent, level):
         'computer': Computer.objects.get(id=computer.id),
         'level': level,
         'name': str(node.get('id')),
-        'classname': node.get('class'),
+        'class_name': node.get('class'),
         'enabled': node.get('enabled', False),
         'claimed': node.get('claimed', False),
         'description': node.get('description'),
@@ -81,10 +81,10 @@ def load_hw(computer, node, parent, level):
         'product': node.get('product'),
         'version': node.get('version'),
         'serial': node.get('serial'),
-        'businfo': node.get('businfo'),
+        'bus_info': node.get('businfo'),
         'physid': node.get('physid'),
         'slot': node.get('slot'),
-        'size': size if (size <= MAXINT and size >= -MAXINT - 1) else 0,
+        'size': size if (MAXINT >= size >= -MAXINT - 1) else 0,
         'capacity': node.get('capacity'),
         'clock': node.get('clock'),
         'width': node.get('width'),
@@ -116,11 +116,9 @@ def load_hw(computer, node, parent, level):
         else:
             pass
 
-    return  # ???
-
 
 def process_hw(computer, jsonfile):
-    with open(jsonfile, "r") as f:
+    with open(jsonfile) as f:
         try:
             data = json.load(f)
         except:
@@ -136,5 +134,3 @@ def process_hw(computer, jsonfile):
 
     HwNode.objects.filter(computer=computer).delete()
     load_hw(computer, data, None, 1)
-
-    return  # ???
