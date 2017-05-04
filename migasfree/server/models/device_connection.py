@@ -24,7 +24,7 @@ class DeviceConnection(models.Model, MigasLink):
         help_text=_("Fields separated by comma")
     )
 
-    devicetype = models.ForeignKey(
+    device_type = models.ForeignKey(
         DeviceType,
         on_delete=models.CASCADE,
         verbose_name=_("device type")
@@ -37,7 +37,7 @@ class DeviceConnection(models.Model, MigasLink):
         app_label = 'server'
         verbose_name = _("Connection")
         verbose_name_plural = _("Connections")
-        unique_together = (("devicetype", "name"),)
+        unique_together = (("device_type", "name"),)
         permissions = (
             ("can_save_deviceconnection", "Can save Device Connection"),
         )
