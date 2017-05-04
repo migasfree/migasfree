@@ -1,8 +1,8 @@
 # -*- coding: utf-8 *-*
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
+from django.utils.encoding import python_2_unicode_compatible
 
 from . import (
     Device,
@@ -35,8 +35,8 @@ class DeviceLogical(models.Model, MigasLink):
         verbose_name=_("feature")
     )
 
-    name = models.CharField(
-        verbose_name=_('name'),
+    alternative_feature_name = models.CharField(
+        verbose_name=_('alternative feature name'),
         max_length=50,
         null=True,
         blank=True,
@@ -58,47 +58,49 @@ class DeviceLogical(models.Model, MigasLink):
         return self.name if self.name else self.feature.name
 
     def as_dict(self, project):
-        device_as_dict = self.device.as_dict()
         driver_as_dict = {}
         try:
-            device_driver = DeviceDriver.objects.filter(
+            driver = DeviceDriver.objects.filter(
                 project__id=project.id,
                 model__id=self.device.model.id,
                 feature__id=self.feature.id
             )[0]
-            if device_driver:
-                driver_as_dict = device_driver.as_dict()
-        except:
+            if driver:
+                driver_as_dict = driver.as_dict()
+        except IndexError:
             pass
 
         ret = {
-            self.device.connection.devicetype.name: {
+            self.device.connection.device_type.name: {
                 'feature': self.get_name(),
                 'id': self.id,
                 'manufacturer': self.device.model.manufacturer.name
             }
         }
+
+        device_as_dict = self.device.as_dict()
         for key, value in list(device_as_dict.items()):
-            ret[self.device.connection.devicetype.name][key] = value
+            ret[self.device.connection.device_type.name][key] = value
+
         for key, value in list(driver_as_dict.items()):
-            ret[self.device.connection.devicetype.name][key] = value
+            ret[self.device.connection.device_type.name][key] = value
 
         return ret
 
-    def save(self, *args, **kwargs):
-        if isinstance(self.name, basestring):
-            self.name = self.name.replace(" ", "_")
-
-        super(DeviceLogical, self).save(*args, **kwargs)
-
     def __str__(self):
-        return '{}__{}__{}__{}__{}'.format(
+        return u'{}__{}__{}__{}__{}'.format(
             self.device.model.manufacturer.name,
             self.device.model.name,
             self.feature.name,
             self.device.name,
             self.id
         )
+
+    def save(self, *args, **kwargs):
+        if isinstance(self.name, basestring):
+            self.alternative_feature_name = self.alternative_feature_name.replace(" ", "_")
+
+        super(DeviceLogical, self).save(*args, **kwargs)
 
     class Meta:
         app_label = 'server'
