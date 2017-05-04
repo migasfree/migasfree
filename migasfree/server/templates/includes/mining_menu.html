@@ -1,11 +1,13 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
+    <li><a href="{% url 'admin:server_synchronization_changelist' %}">{% trans 'Synchronizations' %}</a></li>
     <li><a href="{% url 'admin:server_error_changelist' %}?checked__exact=0">{% trans 'Errors' %}</a></li>
     <li><a href="{% url 'admin:server_fault_changelist' %}?checked__exact=0">{% trans 'Faults' %}</a></li>
-    <li><a href="{% url 'admin:server_notification_changelist' %}?checked__exact=0">{% trans 'Notifications' %}</a></li>
+    <li><a href="{% url 'admin:server_statuslog_changelist' %}">{% trans 'Status Logs' %}</a></li>
     <li><a href="{% url 'admin:server_migration_changelist' %}">{% trans 'Migrations' %}</a></li>
-    <li><a href="{% url 'admin:server_synchronization_changelist' %}">{% trans 'Synchronizations' %}</a></li>
+    <li role="separator" class="divider"></li>
+    <li><a href="{% url 'admin:server_notification_changelist' %}?checked__exact=0">{% trans 'Notifications' %}</a></li>
     <li role="separator" class="divider"></li>
     <li><a href="{% url 'admin:server_clientattribute_changelist' %}">{% trans 'Attributes' %}</a></li>
     <li><a href="{% url 'admin:server_serverattribute_changelist' %}">{% trans 'Tags' %}</a></li>
