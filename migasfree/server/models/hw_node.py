@@ -26,7 +26,7 @@ class HwNodeManager(models.Manager):
             level=data.get('level'),
             width=data.get('width'),
             name=data.get('name'),
-            classname=data.get('classname'),
+            class_name=data.get('class_name'),
             enabled=data.get('enabled', False),
             claimed=data.get('claimed', False),
             description=data.get('description'),
@@ -34,7 +34,7 @@ class HwNodeManager(models.Manager):
             product=data.get('product'),
             version=data.get('version'),
             serial=data.get('serial'),
-            businfo=data.get('businfo'),
+            bus_info=data.get('bus_info'),
             physid=data.get('physid'),
             slot=data.get('slot'),
             size=data.get('size'),
@@ -49,6 +49,17 @@ class HwNodeManager(models.Manager):
 
 @python_2_unicode_compatible
 class HwNode(models.Model, MigasLink):
+    # Detect Virtual Machine with lshw:
+    # http://techglimpse.com/xen-kvm-virtualbox-vm-detection-command/
+    VIRTUAL_MACHINES = {
+        'innotek GmbH': 'virtualbox',
+        'Red Hat': 'openstack',
+        'Supermicro': 'kvm host',
+        'Xen': 'xen',
+        'Bochs': 'kvm',
+        'VMware, Inc.': 'vmware'
+    }
+
     parent = models.ForeignKey(
         'self',
         on_delete=models.CASCADE,
@@ -58,19 +69,17 @@ class HwNode(models.Model, MigasLink):
         related_name="child"
     )
 
-    level = models.IntegerField(
-        verbose_name=_("level"),
-    )
-
-    width = models.IntegerField(
-        verbose_name=_("width"),
-        null=True
-    )
-
     computer = models.ForeignKey(
         Computer,
         on_delete=models.CASCADE,
         verbose_name=_("computer")
+    )
+
+    level = models.IntegerField(verbose_name=_("level"))
+
+    width = models.IntegerField(
+        verbose_name=_("width"),
+        null=True
     )
 
     name = models.TextField(
@@ -78,7 +87,7 @@ class HwNode(models.Model, MigasLink):
         blank=True
     )  # This is the field "id" in lshw
 
-    classname = models.TextField(
+    class_name = models.TextField(
         verbose_name=_("class"),
         blank=True
     )  # This is the field "class" in lshw
@@ -123,8 +132,8 @@ class HwNode(models.Model, MigasLink):
         blank=True
     )
 
-    businfo = models.TextField(
-        verbose_name=_("businfo"),
+    bus_info = models.TextField(
+        verbose_name=_("bus info"),
         null=True,
         blank=True
     )
@@ -162,34 +171,14 @@ class HwNode(models.Model, MigasLink):
         blank=True
     )
 
-    icon = models.TextField(
-        verbose_name=_("icon"),
-        null=True,
-        blank=True
-    )
-
     objects = HwNodeManager()
-
-    # Detect Virtual Machine with lshw:
-    # http://techglimpse.com/xen-kvm-virtualbox-vm-detection-command/
-    VIRTUAL_MACHINES = {
-        'innotek GmbH': 'virtualbox',
-        'Red Hat': 'openstack',
-        'Supermicro': 'kvm host',
-        'Xen': 'xen',
-        'Bochs': 'kvm',
-        'VMware, Inc.': 'vmware'
-    }
 
     def get_product(self):
         return self.VIRTUAL_MACHINES.get(self.vendor, self.product)
 
     def __str__(self):
-        text = self.VIRTUAL_MACHINES.get(self.vendor, self.product)
-        if text:
-            return text
-        else:
-            return ""
+        text = self.get_product()
+        return text if text else ''
 
     def menu_link(self):
         if self.id:
@@ -224,6 +213,7 @@ class HwNode(models.Model, MigasLink):
         if query.count() == 1:
             if query[0].vendor in list(HwNode.VIRTUAL_MACHINES.keys()):
                 return True
+
         return False
 
     @staticmethod
@@ -231,14 +221,14 @@ class HwNode(models.Model, MigasLink):
         query = HwNode.objects.filter(
             computer=computer_id,
             name='memory',
-            classname='memory'
+            class_name='memory'
         )
         if query.count() == 1:
             size = query[0].size
         else:
             size = HwNode.objects.filter(
                 computer=computer_id,
-                classname='memory',
+                class_name='memory',
                 name__startswith='bank:'
             ).aggregate(
                 Sum('size')
@@ -250,7 +240,7 @@ class HwNode(models.Model, MigasLink):
     def get_cpu(computer_id):
         query = HwNode.objects.filter(
             computer=computer_id,
-            classname='processor'
+            class_name='processor'
         ).filter(
             Q(description='CPU') | Q(name__startswith='cpu:0')
         )
@@ -272,12 +262,13 @@ class HwNode(models.Model, MigasLink):
         query = HwNode.objects.filter(
             computer=computer_id,
             name='network',
-            classname='network'
+            class_name='network'
         )
         lst = []
         for iface in query:
             if validate_mac(iface.serial):
                 lst.append(iface.serial.upper().replace(':', ''))
+
         return ''.join(lst)
 
     @staticmethod
@@ -285,7 +276,7 @@ class HwNode(models.Model, MigasLink):
         query = HwNode.objects.filter(
             computer=computer_id,
             name='disk',
-            classname='disk',
+            class_name='disk',
             size__gt=0
         )
 
