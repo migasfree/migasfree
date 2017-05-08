@@ -78,7 +78,7 @@ function create_apache_config()
     fi
 
     _ALLOW_ALL="Require all granted"
-    _ALLOW_FROM="Require host 127.0.0.1"
+    _ALLOW_FROM="Require host localhost"
     version_gt "2.3" $(get_apache_version) && {
         _ALLOW_ALL="Order allow,deny
     Allow from all"
