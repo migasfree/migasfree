@@ -30,11 +30,7 @@ def platform_delete_selected(request):
     if selected:
         objects = selected.split(', ')
         for item in objects:
-            try:
-                platform = Platform.objects.get(name=item)
-                platform.delete()
-            except:
-                pass
+            Platform.objects.filter(name=item).delete()
 
         messages.success(request, _("Platforms %s deleted!") % selected)
 
