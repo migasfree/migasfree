@@ -121,7 +121,7 @@ def process_hw(computer, jsonfile):
     with open(jsonfile) as f:
         try:
             data = json.load(f)
-        except:
+        except json.JSONDecodeError:
             Notification.objects.create(
                 _("Error: Hardware dictionary is not valid in computer [%s].") % (
                     '<a href="{}">{}</a>'.format(
