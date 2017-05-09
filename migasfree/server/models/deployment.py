@@ -226,11 +226,11 @@ class Deployment(models.Model, MigasLink):
 
         return deployments
 
-    def path(self, name=''):
+    def path(self, name=None):
         return os.path.join(
             Project.path(self.project.name),
             self.project.pms.slug,
-            name
+            name if name else self.name
         )
 
     class Meta:
