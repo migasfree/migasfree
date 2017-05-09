@@ -721,10 +721,7 @@ def get_computer_tags(request, name, uuid, computer, data):
 
 def set_computer_tags(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
-    all_id = Attribute.objects.get(
-        property_att__prefix="SET",
-        value__icontains="ALL SYSTEMS"
-    ).id
+    all_id = Attribute.objects.get(pk=1).id  # All Systems attribute is the first one
 
     try:
         lst_tags_obj = []
@@ -740,7 +737,7 @@ def set_computer_tags(request, name, uuid, computer, data):
                 lst_tags_id.append(attribute.id)
         lst_tags_id.append(all_id)
 
-        lst_computer_id = computer.tags.values_list('id', flat=True)
+        lst_computer_id = list(computer.tags.values_list('id', flat=True))
         lst_computer_id.append(all_id)
 
         old_tags_id = list_difference(lst_computer_id, lst_tags_id)
