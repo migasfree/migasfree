@@ -226,7 +226,7 @@ class Deployment(models.Model, MigasLink):
 
         return deployments
 
-    def path(self, name=None):
+    def path(self, name=''):
         return os.path.join(
             Project.path(self.project.name),
             self.project.pms.slug,
