@@ -47,6 +47,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     )
     ordering = (settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0],)
     list_filter = (
+        'project__platform',
         'project__name',
         ('status', ProductiveFilterSpec),
         'machine',
