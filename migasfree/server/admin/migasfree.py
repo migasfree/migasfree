@@ -220,9 +220,9 @@ class MigasChangeList(ChangeList):
                     for key, value in x.used_parameters.iteritems():
                         lookup_type = key.split("__")[1]
                         if lookup_type == 'isnull':
-                            element += u'{} '.format(_('empty'))
+                            element += u'{} '.format(_('empty') if value else _('not empty'))
                         else:
-                            element += "%s=%s " % (lookup_type, value)
+                            element += u'{}={}'.format(lookup_type, value)
                         params.pop(key, None)
                     self.append(x.title, element)
                     break
