@@ -31,7 +31,7 @@ def hardware_resume(request, param):
         request,
         'computer_hardware_resume.html',
         {
-            'title': '{}: {}'.format(_("Hardware Information"), computer),
+            'title': u'{}: {}'.format(_("Hardware Information"), computer),
             'computer': computer,
             'data': data
         }
@@ -54,7 +54,7 @@ def hardware_extract(request, node):
         request,
         'computer_hardware_extract.html',
         {
-            'title': '{}: {}'.format(_("Hardware Information"), node),
+            'title': u'{}: {}'.format(_("Hardware Information"), node),
             'computer': node.computer,
             'capability': capability,
             'logical_name': logical_name,
