@@ -3,31 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from django.core.exceptions import ObjectDoesNotExist
 import django.db.models.deletion
-
-from migasfree.server.models import HwNode as Node
-
-
-def insert_initial_hardware_resume(apps, schema_editor):
-    Computer = apps.get_model('server', 'Computer')
-    db_alias = schema_editor.connection.alias
-
-    for computer in Computer.objects.using(db_alias).all():
-        try:
-            computer.product = Node.objects.using(db_alias).get(
-                computer=computer.id, parent=None
-            ).get_product()
-        except ObjectDoesNotExist:
-            computer.product = None
-
-        computer.machine = 'V' if Node.get_is_vm(computer.id) else 'P'
-        computer.cpu = Node.get_cpu(computer.id)
-        computer.ram = Node.get_ram(computer.id)
-        computer.disks, computer.storage = Node.get_storage(computer.id)
-        computer.mac_address = Node.get_mac_address(computer.id)
-
-        computer.save()
 
 
 def logical_device_by_attributes(apps, schema_editor):
@@ -43,7 +19,7 @@ def logical_device_by_attributes(apps, schema_editor):
             for logical_device in computer.devices_logical.all():
                 logical_device.attributes.add(cid)
         except:
-            print("Computer id: %s, have not attribute cid !!!" % computer.id)
+            print("Computer id: %s, does not have CID attribute!!!" % computer.id)
 
 
 def logical_device_by_computer(apps, schema_editor):
@@ -102,5 +78,4 @@ class Migration(migrations.Migration):
             model_name='checking',
             name='alert',
         ),
-        migrations.RunPython(insert_initial_hardware_resume, migrations.RunPython.noop),
     ]
