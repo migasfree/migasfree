@@ -326,7 +326,7 @@ class MigasLink(object):
             if self.__class__.__name__ == "ServerAttribute":
                 return Computer, "tags__id__exact"
             elif self.__class__.__name__ == "Attribute":
-                if Property.objects.get(pk=self.property_att_id).tag:
+                if Property.objects.get(pk=self.property_att_id).sort == 'server':
                     return Computer, "tags__id__exact"
                 else:
                     return "", ""
