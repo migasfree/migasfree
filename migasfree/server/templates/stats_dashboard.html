@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
+{% endblock extrahead %}
+
+{% block extrastyle %}
+<style>
+.highcharts {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+#last-day-events {
+    width: 800px;
+    margin: 0 auto;
+}
+</style>
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Stats' %}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+<div class="row text-center">
+    <div class="col-md-4 col-xs-3">
+    {% if productive_computers_by_platform %}
+        <h2>{{ productive_computers_by_platform.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ productive_computers_by_platform.total }}</h3>
+
+        <div id="platform-project" class="highcharts"></div>
+    {% endif %}
+    </div>
+
+    <div class="col-md-4 col-xs-3">
+    {% if computers_by_project_status %}
+        <h2>{{ computers_by_project_status.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ computers_by_project_status.total }}</h3>
+
+        <div id="project-status" class="highcharts"></div>
+    {% endif %}
+    </div>
+
+    <div class="col-md-4 col-xs-3">
+    {% if computers_by_status %}
+        <h2>{{ computers_by_status.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ computers_by_status.total }}</h3>
+
+        <div id="computer-status" class="highcharts"></div>
+    {% endif %}
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4 col-xs-3">
+    {% if unchecked_errors %}
+        <h2>{{ unchecked_errors.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ unchecked_errors.total }}</h3>
+
+        <div id="unchecked-errors" class="highcharts"></div>
+    {% endif %}
+    </div>
+
+    <div class="col-md-4 col-xs-3">
+    {% if unchecked_faults %}
+        <h2>{{ unchecked_faults.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ unchecked_faults.total }}</h3>
+
+        <div id="unchecked-faults" class="highcharts"></div>
+    {% endif %}
+    </div>
+
+    <div class="col-md-4 col-xs-3">
+    {% if enabled_deployments %}
+        <h2>{{ enabled_deployments.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ enabled_deployments.total }}</h3>
+
+        <div id="enabled-deployments" class="highcharts"></div>
+    {% endif %}
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="cold-md-12 col-xs-12">
+        <h2>{{ last_day_events.title }}</h2>
+        <div id="last-day-events"></div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extrabody %}
+<script type="text/javascript">
+Highcharts.setOptions({
+    lang: {
+        noData: '{{ chart_options.no_data }}',
+        resetZoom: '{{ chart_options.reset_zoom }}',
+        months: {{ chart_options.months|safe }},
+        weekdays: {{ chart_options.weekdays|safe }}
+    }
+});
+
+var colors = [
+    '#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
+    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'
+];
+
+function loadData(data) {
+    var dataLen, drillDataLen, brightness, i, j;
+    var serie1 = [], serie2 = [];
+
+    dataLen = data.length;
+    for (i = 0; i < dataLen; i += 1) {
+        serie1.push({
+            name: data[i].name + ' (' + data[i].value + ')',
+            y: data[i].y,
+            color: colors[i],
+            url: data[i].url
+        });
+
+        drillDataLen = data[i].data.length;
+        for (j = 0; j < drillDataLen; j += 1) {
+            brightness = 0.2 - (j / drillDataLen) / 5;
+            serie2.push({
+                name: data[i].data[j].name + ' (' + data[i].data[j].value + ')',
+                y: data[i].data[j].y,
+                color: Highcharts.Color(colors[i]).brighten(brightness).get(),
+                url: data[i].data[j].url
+            });
+        }
+    }
+
+    return [serie1, serie2]
+}
+
+// Default options
+var options = {
+    credits: {
+        enabled: false
+    },
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: null
+    },
+    plotOptions: {
+        pie: {
+            shadow: false,
+            center: ['50%', '50%']
+        },
+        series: {
+            cursor: 'pointer',
+            point: {
+                events: {
+                    click: function() {
+                        if (typeof this.options.url != 'undefined') {
+                            window.open(this.options.url, "_self");
+                        }
+                    }
+                }
+            }
+        }
+    },
+    tooltip: {
+        valueSuffix: '%',
+        headerFormat: '{point.key}',
+        pointFormat: ': <strong>{point.y}</strong>'
+    },
+    series: [{
+        size: '60%',
+        dataLabels: {
+            formatter: function () {
+                return this.y > 5 ? this.point.name : null;
+            },
+            color: '#fff',
+            distance: -30
+        }
+    }, {
+        size: '100%',
+        innerSize: '60%',
+        dataLabels: {
+            enabled: false
+        }
+    }]
+};
+
+var series;
+
+var platformProjects = {{ productive_computers_by_platform.data|safe }};
+series = loadData(platformProjects);
+
+var platformProjectOptions = {
+    chart: {
+        renderTo: 'platform-project'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+platformProjectOptions = jQuery.extend(true, {}, options, platformProjectOptions);
+var platformProjectChart = new Highcharts.Chart(platformProjectOptions);
+
+var projectStatus = {{ computers_by_project_status.data|safe }};
+series = loadData(projectStatus);
+var projectStatusOptions = {
+    chart: {
+        renderTo: 'project-status'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+projectStatusOptions = jQuery.extend(true, {}, options, projectStatusOptions);
+var projectStatusChart = new Highcharts.Chart(projectStatusOptions);
+
+var computerStatus = {{ computers_by_status.data|safe }};
+series = loadData(computerStatus);
+var computerStatusOptions = {
+    chart: {
+        renderTo: 'computer-status'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+computerStatusOptions = jQuery.extend(true, {}, options, computerStatusOptions);
+var computerStatusChart = new Highcharts.Chart(computerStatusOptions);
+
+var uncheckedErrors = {{ unchecked_errors.data|safe }};
+series = loadData(uncheckedErrors);
+var uncheckedErrorsOptions = {
+    chart: {
+        renderTo: 'unchecked-errors'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+uncheckedErrorsOptions = jQuery.extend(true, {}, options, uncheckedErrorsOptions);
+var uncheckedErrorsChart = new Highcharts.Chart(uncheckedErrorsOptions);
+
+var uncheckedFaults =  {{ unchecked_faults.data|safe }};
+series = loadData(uncheckedFaults);
+var uncheckedFaultsOptions = {
+    chart: {
+        renderTo: 'unchecked-faults'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+uncheckedFaultsOptions = jQuery.extend(true, {}, options, uncheckedFaultsOptions);
+var uncheckedFaultsChart = new Highcharts.Chart(uncheckedFaultsOptions);
+
+var enabledDeployments = {{ enabled_deployments.data|safe }};
+series = loadData(enabledDeployments);
+var enabledDeploymentsOptions = {
+    chart: {
+        renderTo: 'enabled-deployments'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+enabledDeploymentsOptions = jQuery.extend(true, {}, options, enabledDeploymentsOptions);
+var enabledDeploymentsChart = new Highcharts.Chart(enabledDeploymentsOptions);
+
+var pointStart = Date.UTC(
+    {{ last_day_events.start_date.year }},
+    {{ last_day_events.start_date.month }},
+    {{ last_day_events.start_date.day }},
+    {{ last_day_events.start_date.hour }}
+);
+var lastDayEventsOptions = {
+    credits: {
+        enabled: false
+    },
+    chart: {
+        renderTo: 'last-day-events',
+        zoomType: 'xy'
+    },
+    title: {
+        text: null
+    },
+    xAxis: {
+      type: 'datetime'
+    },
+    yAxis: {
+        title: {
+            text: null
+        }
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: false
+            }
+        }
+    },
+    series: [{
+        type: 'spline',
+        color: '#7cb5ec',
+        name: '{{ last_day_events.sync.name }}',
+        data: {{ last_day_events.sync.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }, {
+        type: 'spline',
+        color: '#e4d354',
+        name: '{{ last_day_events.fault.name }}',
+        data: {{ last_day_events.fault.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }, {
+        type: 'spline',
+        color: '#ff7474',
+        name: '{{ last_day_events.error.name }}',
+        data: {{ last_day_events.error.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }, {
+        type: 'spline',
+        color: '#f7a35c',
+        name: '{{ last_day_events.migration.name }}',
+        data: {{ last_day_events.migration.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }, {
+        type: 'spline',
+        color: '#434348',
+        name: '{{ last_day_events.status_log.name }}',
+        data: {{ last_day_events.status_log.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }]
+};
+var lastDayEventsChart = new Highcharts.Chart(lastDayEventsOptions);
+</script>
+{% endblock extrabody %}
