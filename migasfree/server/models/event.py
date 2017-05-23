@@ -46,6 +46,14 @@ class Event(models.Model):
             {"day": "date_trunc('day', created_at)"}
         ).values('day').annotate(count=Count('id')).order_by('-day')
 
+    @classmethod
+    def by_hour(cls, start_date, end_date):
+        return cls.objects.filter(
+            created_at__range=(start_date, end_date)
+        ).extra(
+            {"hour": "date_trunc('hour', created_at)"}
+        ).values('hour').annotate(count=Count('id')).order_by('hour')
+
     def __str__(self):
         return u'{} ({:%Y-%m-%d %H:%M:%S})'.format(self.computer, self.created_at)
 
