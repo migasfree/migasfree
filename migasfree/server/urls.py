@@ -34,11 +34,6 @@ urlpatterns = [
     url(r'^info/(.*)', info, name='package_info'),
 
     url(
-        r'^chart/synchronized_hourly/$',
-        synchronized_hourly,
-        name='chart_synchronized_hourly'
-    ),
-    url(
         r'^chart/synchronized_daily/$',
         synchronized_daily,
         name='chart_synchronized_daily'
@@ -59,9 +54,9 @@ urlpatterns = [
         name='chart_delay_schedule'
     ),
     url(
-        r'^chart/project_computer/$',
-        project_computer,
-        name='chart_project_computer'
+        r'^chart/dashboard/$',
+        stats_dashboard,
+        name='stats_dashboard'
     ),
 
     url(
@@ -215,6 +210,6 @@ urlpatterns = [
     ),
     url(
         r'^chart/version_computer/$',
-        RedirectView.as_view(url=reverse_lazy('chart_project_computer'))
+        RedirectView.as_view(url=reverse_lazy('stats_dashboard'))
     ),
 ]

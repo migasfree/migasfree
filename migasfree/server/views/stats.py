@@ -2,17 +2,20 @@
 
 import os
 import pygal
+import json
 
 from pygal.style import Style
 from datetime import timedelta, datetime, date, time
-from dateutil.relativedelta import *
+from dateutil.relativedelta import relativedelta
+from collections import defaultdict
 
-from django.conf import settings
-from django.utils.translation import ugettext as _
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
-from django.core.urlresolvers import reverse
 from django.db.models import Max, Count, Q
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
+from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 from ..models import (
     Synchronization,
@@ -21,6 +24,11 @@ from ..models import (
     Schedule,
     ScheduleDelay,
     Project,
+    Error,
+    Fault,
+    Deployment,
+    Migration,
+    StatusLog,
 )
 from ..utils import to_heatmap, to_timestamp
 
@@ -70,52 +78,6 @@ def datetime_iterator(from_date=None, to_date=None, delta=timedelta(minutes=1)):
     while to_date is None or from_date <= to_date:
         yield from_date
         from_date = from_date + delta
-
-
-@login_required
-def synchronized_hourly(request):
-    delta = timedelta(hours=1)
-    now = datetime.now()
-    end_date = datetime(now.year, now.month, now.day, now.hour)
-    begin_date = end_date - timedelta(days=HOURLY_RANGE)
-    range_name = 'hour'
-
-    updates_time_range = to_heatmap(
-        get_syncs_time_range(
-            begin_date, end_date + delta, range_name=range_name
-        ),
-        range_name
-    )
-
-    # filling the gaps (zeros)
-    data = []
-    labels = []
-    for item in datetime_iterator(begin_date, end_date, delta):
-        labels.append(item.strftime('%H h. %b %d'))
-        index = str(to_timestamp(item))
-        data.append(updates_time_range[index] if index in updates_time_range else 0)
-
-    line_chart = pygal.Bar(
-        no_data_text=_('There are no updates'),
-        show_legend=False,
-        x_label_rotation=45,
-        style=BAR_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
-    line_chart.x_labels = labels
-    line_chart.add(_('Computers'), data)
-
-    return render(
-        request,
-        'lines.html',
-        {
-            'title': _("Synchronized Computers / Hour"),
-            'chart': line_chart.render_data_uri(),
-            'tabular_data': line_chart.render_table(),
-        }
-    )
 
 
 @login_required
@@ -331,56 +293,466 @@ def delay_schedule(request, project_name=None):
     )
 
 
-@login_required
-def project_computer(request):
-    pie = pygal.Pie(
-        no_data_text=_('There are no computers'),
-        style=DEFAULT_STYLE,
-        js=[JS_FILE],
-        inner_radius=.4,
-        width=WIDTH,
-        height=HEIGHT,
-    )
+def productive_computers_by_platform(protocol, host):
     total = Computer.productive.count()
+    link = '{}://{}{}?_REPLACE_&status__in={}'.format(
+        protocol,
+        host,
+        reverse('admin:server_computer_changelist'),
+        'intended,reserved,unknown'
+    )
 
-    for project in Computer.productive.values(
+    values = defaultdict(list)
+    for item in Computer.productive.values(
         "project__name",
-        "project__id"
+        "project__id",
+        "project__platform__id"
     ).annotate(
         count=Count("id")
     ).order_by('project__platform__id', '-count'):
-        percent = float(project.get('count')) / total * 100
-        link = '%s://%s%s?project__id__exact=%s&status__in=%s' % (
-            request.META.get('wsgi.url_scheme'),
-            request.META.get('HTTP_HOST'),
-            reverse('admin:server_computer_changelist'),
-            project.get('project__id'),
-            'intended,reserved,unknown'
+        percent = float(item.get('count')) / total * 100
+        values[item.get('project__platform__id')].append(
+            {
+                'name': item.get('project__name'),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}'.format(item.get('project__id'))
+                ),
+            }
         )
 
-        pie.add(
-            {
-                'title': '{} ({})'.format(
-                    project.get("project__name"),
-                    project.get('count')
-                ),
-                'xlink': {
-                    'href': link,
-                    'target': '_top'
+    data = []
+    for platform in Platform.objects.all():
+        if platform.id in values:
+            count = sum(item['value'] for item in values[platform.id])
+            percent = float(count) / total * 100
+            data.append(
+                {
+                    'name': platform.name,
+                    'value': count,
+                    'y': float('{:.2f}'.format(percent)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'project__platform__id__exact={}'.format(platform.id)
+                    ),
+                    'data': values[platform.id]
                 }
-            },
-            [{
-                'value': project.get("count"),
-                'label': '{:.2f}%'.format(percent)
-            }]
+            )
+
+    return {
+        'title': _('Productive Computers'),
+        'total': total,
+        'data': json.dumps(data),
+    }
+
+
+def computers_by_project_status(protocol, host):
+    total = Computer.objects.count()
+    link = '{}://{}{}?_REPLACE_'.format(
+        protocol,
+        host,
+        reverse('admin:server_computer_changelist')
+    )
+
+    values = defaultdict(list)
+    for item in Computer.objects.values(
+        "project__name",
+        "project__id",
+        "status"
+    ).annotate(
+        count=Count("id")
+    ).order_by('project__id', '-count'):
+        percent = float(item.get('count')) / total * 100
+        values[item.get('project__id')].append(
+            {
+                'name': _(dict(Computer.STATUS_CHOICES)[item.get('status')]),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}&status__in={}'.format(
+                        item.get('project__id'),
+                        item.get('status')
+                    )
+                ),
+            }
         )
+
+    data = []
+    for project in Project.objects.all():
+        if project.id in values:
+            count = sum(item['value'] for item in values[project.id])
+            percent = float(count) / total * 100
+            data.append(
+                {
+                    'name': project.name,
+                    'value': count,
+                    'y': float('{:.2f}'.format(percent)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'project__id__exact={}'.format(project.id)
+                    ),
+                    'data': values[project.id]
+                }
+            )
+
+    return {
+        'title': _('Computers / Project / Status'),
+        'total': total,
+        'data': json.dumps(data),
+    }
+
+
+def computers_by_status(protocol, host):
+    total = Computer.objects.exclude(status='unsubscribed').count()
+    link = '{}://{}{}?_REPLACE_'.format(
+        protocol,
+        host,
+        reverse('admin:server_computer_changelist')
+    )
+
+    values = dict()
+    for item in Computer.objects.exclude(
+        status='unsubscribed'
+    ).values(
+        "status"
+    ).annotate(
+        count=Count("id")
+    ).order_by('status', '-count'):
+        status = _(dict(Computer.STATUS_CHOICES)[item.get('status')])
+        percent = float(item.get('count')) / total * 100
+        values[item.get('status')] = {
+            'name': status,
+            'value': item.get('count'),
+            'y': float('{:.2f}'.format(percent)),
+            'url': link.replace(
+                '_REPLACE_',
+                'status__in={}'.format(item.get('status'))
+            ),
+        }
+
+    count_productive = values.get('intended', {}).get('value', 0) \
+                       + values.get('reserved', {}).get('value', 0) \
+                       + values.get('unknown', {}).get('value', 0)
+    percent_productive = float(count_productive) / total * 100
+    data_productive = []
+    if 'intended' in values:
+        data_productive.append(values['intended'])
+    if 'reserved' in values:
+        data_productive.append(values['reserved'])
+    if 'unknown' in values:
+        data_productive.append(values['unknown'])
+
+    count_unproductive = values.get('available', {}).get('value', 0) \
+                         + values.get('in repair', {}).get('value', 0)
+    percent_unproductive = float(count_unproductive) / total * 100
+    data_unproductive = []
+    if 'available' in values:
+        data_unproductive.append(values['available'])
+    if 'in repair' in values:
+        data_unproductive.append(values['in repair'])
+
+    data = [
+        {
+            'name': _('Productive'),
+            'value': count_productive,
+            'y': float('{:.2f}'.format(percent_productive)),
+            'url': link.replace(
+                '_REPLACE_',
+                'status__in=intended,reserved,unknown'
+            ),
+            'data': data_productive,
+        },
+        {
+            'name': _('Unproductive'),
+            'value': count_unproductive,
+            'y': float('{:.2f}'.format(percent_unproductive)),
+            'url': link.replace(
+                '_REPLACE_',
+                'status__in=available,in repair'
+            ),
+            'data': data_unproductive,
+        },
+    ]
+
+    return {
+        'title': _('Computers / Status'),
+        'total': total,
+        'data': json.dumps(data),
+    }
+
+
+def unchecked_errors(protocol, host):
+    total = Error.unchecked_count()
+    link = '{}://{}{}?checked__exact=0&_REPLACE_'.format(
+        protocol,
+        host,
+        reverse('admin:server_error_changelist')
+    )
+
+    values = defaultdict(list)
+    for item in Error.objects.filter(
+        checked=False
+    ).values(
+        "computer__project__platform__id",
+        "computer__project__id",
+        "computer__project__name",
+    ).annotate(
+        count=Count("id")
+    ).order_by('computer__project__id', '-count'):
+        percent = float(item.get('count')) / total * 100
+        values[item.get('computer__project__platform__id')].append(
+            {
+                'name': item.get('computer__project__name'),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}'.format(
+                        item.get('computer__project__id')
+                    )
+                ),
+            }
+        )
+
+    data = []
+    for platform in Platform.objects.all():
+        if platform.id in values:
+            count = sum(item['value'] for item in values[platform.id])
+            percent = float(count) / total * 100
+            data.append(
+                {
+                    'name': platform.name,
+                    'value': count,
+                    'y': float('{:.2f}'.format(percent)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'project__platform__id__exact={}'.format(platform.id)
+                    ),
+                    'data': values[platform.id]
+                }
+            )
+
+    return {
+        'title': _('Unchecked Errors'),
+        'total': total,
+        'data': json.dumps(data),
+    }
+
+
+def unchecked_faults(protocol, host):
+    total = Fault.unchecked_count()
+    link = '{}://{}{}?checked__exact=0&_REPLACE_'.format(
+        protocol,
+        host,
+        reverse('admin:server_fault_changelist')
+    )
+
+    values = defaultdict(list)
+    for item in Fault.objects.filter(
+        checked=False
+    ).values(
+        "computer__project__platform__id",
+        "computer__project__id",
+        "computer__project__name",
+    ).annotate(
+        count=Count("id")
+    ).order_by('computer__project__id', '-count'):
+        percent = float(item.get('count')) / total * 100
+        values[item.get('computer__project__platform__id')].append(
+            {
+                'name': item.get('computer__project__name'),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}'.format(
+                        item.get('computer__project__id')
+                    )
+                ),
+            }
+        )
+
+    data = []
+    for platform in Platform.objects.all():
+        if platform.id in values:
+            count = sum(item['value'] for item in values[platform.id])
+            percent = float(count) / total * 100
+            data.append(
+                {
+                    'name': platform.name,
+                    'value': count,
+                    'y': float('{:.2f}'.format(percent)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'project__platform__id__exact={}'.format(platform.id)
+                    ),
+                    'data': values[platform.id]
+                }
+            )
+
+    return {
+        'title': _('Unchecked Faults'),
+        'total': total,
+        'data': json.dumps(data),
+    }
+
+
+def enabled_deployments(protocol, host):
+    total = Deployment.objects.filter(enabled=True).count()
+    link = '{}://{}{}?enabled__exact=1&_REPLACE_'.format(
+        protocol,
+        host,
+        reverse('admin:server_deployment_changelist')
+    )
+
+    values_null = defaultdict(list)
+    for item in Deployment.objects.filter(
+        enabled=True, schedule=None
+    ).values(
+        "project__id",
+    ).annotate(
+        count=Count("id")
+    ).order_by('project__id', '-count'):
+        percent = float(item.get('count')) / total * 100
+        values_null[item.get('project__id')].append(
+            {
+                'name': _('Without schedule'),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}&schedule__isnull=True'.format(
+                        item.get('project__id')
+                    )
+                ),
+            }
+        )
+
+    values_not_null = defaultdict(list)
+    for item in Deployment.objects.filter(
+        enabled=True,
+    ).filter(
+        ~Q(schedule=None)
+    ).values(
+        "project__id",
+    ).annotate(
+        count=Count("id")
+    ).order_by('project__id', '-count'):
+        percent = float(item.get('count')) / total * 100
+        values_not_null[item.get('project__id')].append(
+            {
+                'name': _('With schedule'),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}&schedule__isnull=False'.format(
+                        item.get('project__id')
+                    )
+                ),
+            }
+        )
+
+    data = []
+    for project in Project.objects.all():
+        count = 0
+        data_project = []
+        if project.id in values_null:
+            count += values_null[project.id][0]['value']
+            data_project.append(values_null[project.id][0])
+        if project.id in values_not_null:
+            count += values_not_null[project.id][0]['value']
+            data_project.append(values_not_null[project.id][0])
+        if count:
+            percent = float(count) / total * 100
+            data.append(
+                {
+                    'name': project.name,
+                    'value': count,
+                    'y': float('{:.2f}'.format(percent)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'project__id__exact={}'.format(project.id)
+                    ),
+                    'data': data_project
+                }
+            )
+
+    return {
+        'title': _('Enabled Deployments'),
+        'total': total,
+        'data': json.dumps(data),
+    }
+
+
+@login_required
+def stats_dashboard(request):
+    protocol = request.META.get('wsgi.url_scheme')
+    host = request.META.get('HTTP_HOST')
+
+    now = timezone.now()
+    end_date = datetime(now.year, now.month, now.day, now.hour)
+    begin_date = end_date - timedelta(days=HOURLY_RANGE)
+
+    syncs = dict((i["hour"], i) for i in Synchronization.by_hour(begin_date, end_date))
+    errors = dict((i["hour"], i) for i in Error.by_hour(begin_date, end_date))
+    faults = dict((i["hour"], i) for i in Fault.by_hour(begin_date, end_date))
+    migrations = dict((i["hour"], i) for i in Migration.by_hour(begin_date, end_date))
+    status = dict((i["hour"], i) for i in StatusLog.by_hour(begin_date, end_date))
+    data_syncs = []
+    data_errors = []
+    data_faults = []
+    data_migrations = []
+    data_status = []
+
+    for item in datetime_iterator(begin_date, end_date, delta=timedelta(hours=1)):
+        data_syncs.append(syncs[item]['count'] if item in syncs else 0)
+        data_errors.append(errors[item]['count'] if item in errors else 0)
+        data_faults.append(faults[item]['count'] if item in faults else 0)
+        data_migrations.append(migrations[item]['count'] if item in migrations else 0)
+        data_status.append(status[item]['count'] if item in status else 0)
 
     return render(
         request,
-        'pie.html',
+        'stats_dashboard.html',
         {
-            'title': _("Productive Computers / Project"),
-            'total': total,
-            'chart': pie.render_data_uri(),
+            'title': _('Dashboard'),
+            'chart_options': {
+                'no_data': _('There are no data to show'),
+                'reset_zoom': _('Reset Zoom'),
+                'months': json.dumps([
+                    _('January'), _('February'), _('March'),
+                    _('April'), _('May'), _('June'),
+                    _('July'), _('August'), _('September'),
+                    _('October'), _('November'), _('December')
+                ]),
+                'weekdays': json.dumps([
+                    _('Sunday'), _('Monday'), _('Tuesday'), _('Wednesday'),
+                    _('Thursday'), _('Friday'), _('Saturday')
+                ]),
+            },
+            'productive_computers_by_platform': productive_computers_by_platform(protocol, host),
+            'computers_by_project_status': computers_by_project_status(protocol, host),
+            'computers_by_status': computers_by_status(protocol, host),
+            'unchecked_errors': unchecked_errors(protocol, host),
+            'unchecked_faults': unchecked_faults(protocol, host),
+            'enabled_deployments': enabled_deployments(protocol, host),
+            'last_day_events': {
+                'title': _('History of events in the last %d hours') % (HOURLY_RANGE * 24),
+                'start_date': {
+                    'year': begin_date.year,
+                    'month': begin_date.month - 1,  # JavaScript cast
+                    'day': begin_date.day,
+                    'hour': begin_date.hour,
+                },
+                'sync': {'name': _('Synchronizations'), 'data': json.dumps(data_syncs)},
+                'error': {'name': _('Errors'), 'data': json.dumps(data_errors)},
+                'fault': {'name': _('Faults'), 'data': json.dumps(data_faults)},
+                'migration': {'name': _('Migrations'), 'data': json.dumps(data_migrations)},
+                'status_log': {'name': _('Status Logs'), 'data': json.dumps(data_status)},
+            },
         }
     )

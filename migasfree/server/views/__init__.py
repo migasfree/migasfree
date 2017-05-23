@@ -5,9 +5,8 @@
 from .stats import (
     delay_schedule,
     synchronized_daily,
-    synchronized_hourly,
     synchronized_monthly,
-    project_computer
+    stats_dashboard
 )
 from .queries import get_query, computer_messages
 from .hardware import hardware_resume, hardware_extract, load_hw, process_hw
