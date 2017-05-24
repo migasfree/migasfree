@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from django.db import models
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, m2m_changed
 from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
@@ -467,8 +467,6 @@ def post_save_computer(sender, instance, created, **kwargs):
         StatusLog.objects.create(instance)
 
     if instance.status in ['available', 'unsubscribed']:
-        instance.tags.clear()
-
         cid = instance.get_cid_attribute()
         cid.devicelogical_set.clear()
         cid.faultdefinition_set.clear()
@@ -477,3 +475,9 @@ def post_save_computer(sender, instance, created, **kwargs):
         cid.attributeset_set.clear()
         cid.ExcludedAttributesGroup.clear()
         cid.scheduledelay_set.clear()
+
+
+@receiver(m2m_changed, sender=Computer.tags.through)
+def tags_changed(sender, instance, action, **kwargs):
+    if instance.status in ['available', 'unsubscribed'] and action == 'post_add':
+        instance.tags.clear()

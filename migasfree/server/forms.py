@@ -239,23 +239,6 @@ class ComputerForm(forms.ModelForm):
         model = Computer
         fields = '__all__'
 
-    def clean(self):
-        super(ComputerForm, self).clean()
-        errors = []
-        if self.cleaned_data.get('status') == 'available':
-            if self.cleaned_data.get('tags'):
-                errors.append(_("Status available can not have tags"))
-            if self.cleaned_data.get('devices_logical'):
-                errors.append(
-                    _("Status available can not have devices logical")
-                )
-
-        if errors:
-            raise forms.ValidationError(errors)
-
-        return self.cleaned_data
-
-
 class ExtraThinTextarea(forms.Textarea):
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs', {})
