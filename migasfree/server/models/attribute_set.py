@@ -56,7 +56,8 @@ class AttributeSet(models.Model, MigasLink):
             att_set = AttributeSet.objects.get(pk=self.id)
             if att_set.name != self.name and \
                     Attribute.objects.filter(
-                        property_att=Property(prefix='SET', sort='basic'), value=self.name
+                        property_att=Property.objects.get(prefix='SET', sort='basic'),
+                        value=self.name
                     ).count() > 0:
                 raise ValidationError(_('Duplicated name'))
 
@@ -146,13 +147,19 @@ def pre_save_attribute_set(sender, instance, **kwargs):
     if instance.id:
         att_set = AttributeSet.objects.get(pk=instance.id)
         if instance.name != att_set.name:
-            att = Attribute.objects.get(property_att=Property(prefix='SET', sort='basic'), value=att_set.name)
+            att = Attribute.objects.get(
+                property_att=Property.objects.get(prefix='SET', sort='basic'),
+                value=att_set.name
+            )
             att.update_value(instance.name)
 
 
 @receiver(pre_delete, sender=AttributeSet)
 def pre_delete_attribute_set(sender, instance, **kwargs):
     try:
-        Attribute.objects.get(property_att=Property(prefix='SET', sort='basic'), value=instance.name).delete()
+        Attribute.objects.get(
+            property_att=Property.objects.get(prefix='SET', sort='basic'),
+            value=instance.name
+        ).delete()
     except ObjectDoesNotExist:
         pass
