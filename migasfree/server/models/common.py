@@ -333,10 +333,8 @@ class MigasLink(object):
                 property_att = Property.objects.get(pk=self.property_att.id)
                 if property_att.sort == 'server':
                     return Computer, "tags__id__exact"
-                elif property_att.sort == 'client':
+                elif property_att.sort in ['client', 'basic']:
                     return Computer, "sync_attributes__id__exact"
-                else:
-                    return "", ""
             else:
                 return "", ""
         elif obj.related_model._meta.label_lower in [
