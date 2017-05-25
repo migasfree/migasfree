@@ -45,10 +45,10 @@ class AttributeSetAdmin(MigasAdmin):
 
     name_link = MigasFields.link(model=AttributeSet, name='name')
     included_attributes_link = MigasFields.objects_link(
-        model=AttributeSet, name="included_attributes"
+        model=AttributeSet, name="included_attributes", description=_('included attributes')
     )
     excluded_attributes_link = MigasFields.objects_link(
-        model=AttributeSet, name='excluded_attributes'
+        model=AttributeSet, name='excluded_attributes', description=_('excluded attributes')
     )
 
     def get_queryset(self, request):
