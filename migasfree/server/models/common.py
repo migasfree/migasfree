@@ -314,41 +314,43 @@ class MigasLink(object):
         if obj.related_model._meta.label_lower == "server.computer" and \
                 self.__class__.__name__ in ["ClientAttribute", "Attribute"] and \
                 self.property_att.prefix == "CID":
-            return "", ""
+            return Computer, "sync_attributes__id__exact"
 
         if obj.related_model._meta.label_lower == "server.attribute":
             if self.tag:
                 return ServerAttribute, "Tag"
             else:
                 return ClientAttribute, "Attribute"
-
         elif obj.related_model._meta.label_lower == "server.computer":
             if self.__class__.__name__ == "ServerAttribute":
-                return Computer, "tags__id__exact"
-            elif self.__class__.__name__ == "Attribute":
-                if Property.objects.get(pk=self.property_att_id).sort == 'server':
+                if obj.field.related_model._meta.model_name == 'serverattribute':
                     return Computer, "tags__id__exact"
+                elif obj.field.related_model._meta.model_name == 'attribute':
+                    return Computer, "sync_attributes__id__exact"
+                else:
+                    return "", ""
+            if self.__class__.__name__ in ["ClientAttribute", "Attribute"]:
+                property_att = Property.objects.get(pk=self.property_att.id)
+                if property_att.sort == 'server':
+                    return Computer, "tags__id__exact"
+                elif property_att.sort == 'client':
+                    return Computer, "sync_attributes__id__exact"
                 else:
                     return "", ""
             else:
                 return "", ""
-
         elif obj.related_model._meta.label_lower in [
                 "admin.logentry",
                 "server.scheduledelay",
                 "server.hwnode"
         ]:  # Excluded
             return "", ""
-
         elif obj.field.__class__.__name__ == 'ManyRelatedManager':
             return obj.related_model, obj.field.name + "__id__exact"
-
         elif obj.field.__class__.__name__ == "OneToOneField":
             return obj.related_model, obj.field.name + "__id__exact"
-
         elif obj.field.__class__.__name__ == "ForeignKey":
             return obj.related_model, obj.field.name + "__id__exact"
-
         else:
             return obj.related_model, "%s__%s__exact" % (
                 obj.field.name,
