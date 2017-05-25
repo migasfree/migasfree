@@ -317,7 +317,7 @@ class MigasLink(object):
             return Computer, "sync_attributes__id__exact"
 
         if obj.related_model._meta.label_lower == "server.attribute":
-            if self.tag:
+            if self.sort == 'server':
                 return ServerAttribute, "Tag"
             else:
                 return ClientAttribute, "Attribute"
