@@ -292,27 +292,33 @@ class MigasChangeList(ChangeList):
 
                 if _classname == "ExcludeAttribute":
                     _classname = "deployment"
-                    _name = "excluded_attributes"
+                    _name = "excluded attributes"
                 if _classname == "ExcludedAttributesGroup":
                     _classname = "attributeset"
-                    _name = "excluded_attributes"
+                    _name = "excluded attributes"
+                if _classname == 'sync_attributes':
+                    _classname = 'attribute'
+                    _name = 'sync attributes'
+                if _classname == 'excluded_attributes':
+                    _classname = 'attribute'
+                    _name = 'excluded attributes'
 
                 if not hasattr(self.model, _classname):
-                    mymodel = apps.get_model('server', _classname)
-                    self.append(_name, mymodel.objects.get(pk=params[k]))
+                    model = apps.get_model('server', _classname)
+                    self.append(_name, model.objects.get(pk=params[k]))
                 else:
-                    mymodel = getattr(self.model, _classname)
-                    _classname = mymodel.field.related_model.__name__
-                    mymodel = apps.get_model('server', _classname)
-                    self.append(_name, mymodel.objects.get(pk=params[k]))
+                    model = getattr(self.model, _classname)
+                    _classname = model.field.related_model.__name__
+                    model = apps.get_model('server', _classname)
+                    self.append(_name, model.objects.get(pk=params[k]))
 
             elif k == "id__in":
                 _classname = self.model.__name__
-                mymodel = apps.get_model('server', _classname)
+                model = apps.get_model('server', _classname)
                 _list = []
                 for _id in params[k].split(",")[0:10]:  # limit to 10 elements
                     _list.append(
-                        apps.get_model('server', _classname).objects.get(
+                        model.objects.get(
                             pk=int(_id)
                         ).__str__()
                     )
@@ -324,15 +330,17 @@ class MigasChangeList(ChangeList):
             else:
                 self.append(k, params[k])
 
-        _filter = ", ".join(u"%s: %s" % (
-            k["name"].capitalize(),
-            unicode(k["value"]))
+        _filter = ", ".join(
+            u"{}: {}".format(
+                k["name"].capitalize(),
+                unicode(k["value"])
+            )
             for k in self.filter_description
         )
         if _filter:
-            _filter = "(%s)" % _filter
+            _filter = u"({})".format(_filter)
 
-        self.title = u"%s %s" % (
+        self.title = u"{} {}".format(
            self.model._meta.verbose_name_plural,
            _filter
         )
