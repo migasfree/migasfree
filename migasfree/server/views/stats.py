@@ -348,7 +348,7 @@ def productive_computers_by_platform(protocol, host):
     }
 
 
-def computers_by_project_status(protocol, host):
+def computers_by_machine(protocol, host):
     total = Computer.objects.count()
     link = '{}://{}{}?_REPLACE_'.format(
         protocol,
@@ -357,49 +357,97 @@ def computers_by_project_status(protocol, host):
     )
 
     values = defaultdict(list)
-    for item in Computer.objects.values(
-        "project__name",
-        "project__id",
-        "status"
-    ).annotate(
-        count=Count("id")
-    ).order_by('project__id', '-count'):
-        percent = float(item.get('count')) / total * 100
-        values[item.get('project__id')].append(
-            {
-                'name': _(dict(Computer.STATUS_CHOICES)[item.get('status')]),
-                'value': item.get('count'),
-                'y': float('{:.2f}'.format(percent)),
-                'url': link.replace(
-                    '_REPLACE_',
-                    'project__id__exact={}&status__in={}'.format(
-                        item.get('project__id'),
-                        item.get('status')
-                    )
-                ),
-            }
-        )
-
     data = []
-    for project in Project.objects.all():
-        if project.id in values:
-            count = sum(item['value'] for item in values[project.id])
-            percent = float(count) / total * 100
-            data.append(
+
+    count_subscribed = Computer.subscribed.count()
+    count_subscribed_virtual = Computer.subscribed.filter(machine='V').count()
+    count_subscribed_physical = Computer.subscribed.filter(machine='P').count()
+    count_unsubscribed = Computer.unsubscribed.count()
+    count_unsubscribed_virtual = Computer.unsubscribed.filter(machine='V').count()
+    count_unsubscribed_physical = Computer.unsubscribed.filter(machine='P').count()
+
+    if count_subscribed:
+        if count_subscribed_virtual:
+            values['subscribed'].append(
                 {
-                    'name': project.name,
-                    'value': count,
-                    'y': float('{:.2f}'.format(percent)),
+                    'name': _('Virtual'),
+                    'value': count_subscribed_virtual,
+                    'y': float('{:.2f}'.format(float(count_subscribed_virtual) / total * 100)),
                     'url': link.replace(
                         '_REPLACE_',
-                        'project__id__exact={}'.format(project.id)
-                    ),
-                    'data': values[project.id]
+                        'status__in=intended,reserved,unknown,available,in repair&machine__exact=V'
+                    )
                 }
             )
 
+        if count_subscribed_physical:
+            values['subscribed'].append(
+                {
+                    'name': _('Physical'),
+                    'value': count_subscribed_physical,
+                    'y': float('{:.2f}'.format(float(count_subscribed_physical) / total * 100)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'status__in=intended,reserved,unknown,available,in repair&machine__exact=P'
+                    )
+                }
+            )
+
+        data.append(
+            {
+                'name': _('Subscribed'),
+                'value': count_subscribed,
+                'y': float('{:.2f}'.format(float(count_subscribed) / total * 100)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'status__in=intended,reserved,unknown,available,in repair'
+                ),
+                'data': values['subscribed']
+            },
+        )
+
+    if count_unsubscribed:
+        if count_unsubscribed_virtual:
+            values['unsubscribed'].append(
+                {
+                    'name': _('Virtual'),
+                    'value': count_unsubscribed_virtual,
+                    'y': float('{:.2f}'.format(float(count_unsubscribed_virtual) / total * 100)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'status__in=unsubscribed&machine__exact=V'
+                    )
+                }
+            )
+
+        if count_unsubscribed_physical:
+            values['unsubscribed'].append(
+                {
+                    'name': _('Physical'),
+                    'value': count_unsubscribed_physical,
+                    'y': float('{:.2f}'.format(float(count_unsubscribed_physical) / total * 100)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'status__in=unsubscribed&machine__exact=P'
+                    )
+                }
+            )
+
+        data.append(
+            {
+                'name': _('Unsubscribed'),
+                'value': count_unsubscribed,
+                'y': float('{:.2f}'.format(float(count_unsubscribed) / total * 100)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'status__in=unsubscribed'
+                ),
+                'data': values['unsubscribed']
+            }
+        )
+
     return {
-        'title': _('Computers / Project / Status'),
+        'title': _('Computers / Machine'),
         'total': total,
         'data': json.dumps(data),
     }
@@ -434,8 +482,8 @@ def computers_by_status(protocol, host):
         }
 
     count_productive = values.get('intended', {}).get('value', 0) \
-                       + values.get('reserved', {}).get('value', 0) \
-                       + values.get('unknown', {}).get('value', 0)
+        + values.get('reserved', {}).get('value', 0) \
+        + values.get('unknown', {}).get('value', 0)
     percent_productive = float(count_productive) / total * 100
     data_productive = []
     if 'intended' in values:
@@ -446,7 +494,7 @@ def computers_by_status(protocol, host):
         data_productive.append(values['unknown'])
 
     count_unproductive = values.get('available', {}).get('value', 0) \
-                         + values.get('in repair', {}).get('value', 0)
+        + values.get('in repair', {}).get('value', 0)
     percent_unproductive = float(count_unproductive) / total * 100
     data_unproductive = []
     if 'available' in values:
@@ -478,7 +526,7 @@ def computers_by_status(protocol, host):
     ]
 
     return {
-        'title': _('Computers / Status'),
+        'title': _('Subscribed Computers / Status'),
         'total': total,
         'data': json.dumps(data),
     }
@@ -735,7 +783,7 @@ def stats_dashboard(request):
                 ]),
             },
             'productive_computers_by_platform': productive_computers_by_platform(protocol, host),
-            'computers_by_project_status': computers_by_project_status(protocol, host),
+            'computers_by_machine': computers_by_machine(protocol, host),
             'computers_by_status': computers_by_status(protocol, host),
             'unchecked_errors': unchecked_errors(protocol, host),
             'unchecked_faults': unchecked_faults(protocol, host),

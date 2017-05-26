@@ -28,20 +28,11 @@
 {% block content %}
 <div class="row text-center">
     <div class="col-md-4 col-xs-3">
-    {% if productive_computers_by_platform %}
-        <h2>{{ productive_computers_by_platform.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ productive_computers_by_platform.total }}</h3>
+    {% if computers_by_machine %}
+        <h2>{{ computers_by_machine.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ computers_by_machine.total }}</h3>
 
-        <div id="platform-project" class="highcharts"></div>
-    {% endif %}
-    </div>
-
-    <div class="col-md-4 col-xs-3">
-    {% if computers_by_project_status %}
-        <h2>{{ computers_by_project_status.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ computers_by_project_status.total }}</h3>
-
-        <div id="project-status" class="highcharts"></div>
+        <div id="computer-machine" class="highcharts"></div>
     {% endif %}
     </div>
 
@@ -51,6 +42,15 @@
         <h3>{% trans 'Total' %}: {{ computers_by_status.total }}</h3>
 
         <div id="computer-status" class="highcharts"></div>
+    {% endif %}
+    </div>
+
+    <div class="col-md-4 col-xs-3">
+    {% if productive_computers_by_platform %}
+        <h2>{{ productive_computers_by_platform.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ productive_computers_by_platform.total }}</h3>
+
+        <div id="platform-project" class="highcharts"></div>
     {% endif %}
     </div>
 </div>
@@ -206,11 +206,11 @@ var platformProjectOptions = {
 platformProjectOptions = jQuery.extend(true, {}, options, platformProjectOptions);
 var platformProjectChart = new Highcharts.Chart(platformProjectOptions);
 
-var projectStatus = {{ computers_by_project_status.data|safe }};
-series = loadData(projectStatus);
-var projectStatusOptions = {
+var computerMachine = {{ computers_by_machine.data|safe }};
+series = loadData(computerMachine);
+var computerMachineOptions = {
     chart: {
-        renderTo: 'project-status'
+        renderTo: 'computer-machine'
     },
     series: [{
         data: series[0]
@@ -218,8 +218,8 @@ var projectStatusOptions = {
         data: series[1]
     }]
 };
-projectStatusOptions = jQuery.extend(true, {}, options, projectStatusOptions);
-var projectStatusChart = new Highcharts.Chart(projectStatusOptions);
+computerMachineOptions = jQuery.extend(true, {}, options, computerMachineOptions);
+var computerMachineChart = new Highcharts.Chart(computerMachineOptions);
 
 var computerStatus = {{ computers_by_status.data|safe }};
 series = loadData(computerStatus);
