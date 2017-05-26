@@ -97,7 +97,7 @@ class DeviceLogical(models.Model, MigasLink):
         )
 
     def save(self, *args, **kwargs):
-        if isinstance(self.name, basestring):
+        if isinstance(self.alternative_feature_name, basestring):
             self.alternative_feature_name = self.alternative_feature_name.replace(" ", "_")
 
         super(DeviceLogical, self).save(*args, **kwargs)
