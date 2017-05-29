@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-23 12:48+0200\n"
-"PO-Revision-Date: 2017-05-23 12:51+0200\n"
+"POT-Creation-Date: 2017-05-29 08:14+0200\n"
+"PO-Revision-Date: 2017-05-29 08:16+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -208,11 +208,11 @@ msgstr "Dispositivos"
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: migasfree/server/admin/client.py:145 migasfree/server/views/stats.py:539
+#: migasfree/server/admin/client.py:145 migasfree/server/views/stats.py:587
 msgid "Unchecked Errors"
 msgstr "Errores sin comprobar"
 
-#: migasfree/server/admin/client.py:161 migasfree/server/views/stats.py:597
+#: migasfree/server/admin/client.py:161 migasfree/server/views/stats.py:645
 msgid "Unchecked Faults"
 msgstr "Fallas sin comprobar"
 
@@ -255,7 +255,7 @@ msgstr "%s comprobado/s"
 #: migasfree/server/admin/client.py:318 migasfree/server/models/error.py:73
 #: migasfree/server/templates/computer_events.html:25
 #: migasfree/server/templates/includes/mining_menu.html:5
-#: migasfree/server/views/stats.py:752
+#: migasfree/server/views/stats.py:800
 msgid "Errors"
 msgstr "Errores"
 
@@ -268,7 +268,7 @@ msgstr "La comprobación es correcta"
 #: migasfree/server/models/fault.py:77
 #: migasfree/server/templates/computer_events.html:27
 #: migasfree/server/templates/includes/mining_menu.html:6
-#: migasfree/server/views/stats.py:753
+#: migasfree/server/views/stats.py:801
 msgid "Faults"
 msgstr "Fallas"
 
@@ -294,6 +294,22 @@ msgstr "Usuarios"
 #: migasfree/server/templates/includes/mining_menu.html:10
 msgid "Notifications"
 msgstr "Notificaciones"
+
+#: migasfree/server/admin/core.py:48
+#: migasfree/server/models/attribute_set.py:39
+#: migasfree/server/models/deployment.py:85
+#: migasfree/server/models/fault_definition.py:45
+#: migasfree/server/models/fault_definition.py:64
+msgid "included attributes"
+msgstr "atributos incluidos"
+
+#: migasfree/server/admin/core.py:51
+#: migasfree/server/models/attribute_set.py:46
+#: migasfree/server/models/deployment.py:92
+#: migasfree/server/models/fault_definition.py:52
+#: migasfree/server/models/fault_definition.py:69
+msgid "excluded attributes"
+msgstr "atributos excluidos"
 
 #: migasfree/server/admin/core.py:268
 msgid "Run Query"
@@ -461,11 +477,11 @@ msgstr "Estado"
 msgid "All"
 msgstr "Todos"
 
-#: migasfree/server/filters.py:37
+#: migasfree/server/filters.py:37 migasfree/server/views/stats.py:398
 msgid "Subscribed"
 msgstr "alta"
 
-#: migasfree/server/filters.py:38 migasfree/server/views/stats.py:459
+#: migasfree/server/filters.py:38 migasfree/server/views/stats.py:507
 msgid "Productive"
 msgstr "Productivo"
 
@@ -481,7 +497,7 @@ msgstr "reservado"
 msgid "unknown"
 msgstr "desconocido"
 
-#: migasfree/server/filters.py:42 migasfree/server/views/stats.py:469
+#: migasfree/server/filters.py:42 migasfree/server/views/stats.py:517
 msgid "Unproductive"
 msgstr "Improductivo"
 
@@ -545,14 +561,6 @@ msgstr "El paquete %s debe pertenecer al proyecto %s"
 msgid "Computers"
 msgstr "Ordenadores"
 
-#: migasfree/server/forms.py:247
-msgid "Status available can not have tags"
-msgstr "Estado disponible no puede tener etiquetas"
-
-#: migasfree/server/forms.py:250
-msgid "Status available can not have devices logical"
-msgstr "Estado disponible no puede tener dispositivos logicos"
-
 #: migasfree/server/models/attribute.py:31
 msgid "The attribute can not be created because it prevents property"
 msgstr "El atributo no puede ser creado porque no lo permite la propiedad"
@@ -597,29 +605,15 @@ msgstr "Atributos básicos"
 msgid "enabled"
 msgstr "habilitado"
 
-#: migasfree/server/models/attribute_set.py:39
-#: migasfree/server/models/deployment.py:85
-#: migasfree/server/models/fault_definition.py:45
-#: migasfree/server/models/fault_definition.py:64
-msgid "included attributes"
-msgstr "atributos incluidos"
-
-#: migasfree/server/models/attribute_set.py:46
-#: migasfree/server/models/deployment.py:92
-#: migasfree/server/models/fault_definition.py:52
-#: migasfree/server/models/fault_definition.py:69
-msgid "excluded attributes"
-msgstr "atributos excluidos"
-
-#: migasfree/server/models/attribute_set.py:61
+#: migasfree/server/models/attribute_set.py:62
 msgid "Duplicated name"
 msgstr "Nombre duplicado"
 
-#: migasfree/server/models/attribute_set.py:139
+#: migasfree/server/models/attribute_set.py:140
 msgid "Attribute Set"
 msgstr "Conjunto de Atributos"
 
-#: migasfree/server/models/attribute_set.py:140
+#: migasfree/server/models/attribute_set.py:141
 #: migasfree/server/templates/includes/config_menu.html:6
 msgid "Attribute Sets"
 msgstr "Conjuntos de Atributos"
@@ -723,17 +717,19 @@ msgstr "En reparación"
 msgid "Available"
 msgstr "Disponible"
 
-#: migasfree/server/models/computer.py:85
+#: migasfree/server/models/computer.py:85 migasfree/server/views/stats.py:438
 msgid "Unsubscribed"
 msgstr "Baja"
 
 #: migasfree/server/models/computer.py:92
 #: migasfree/server/templates/computer_hardware_resume.html:22
+#: migasfree/server/views/stats.py:386 migasfree/server/views/stats.py:426
 msgid "Physical"
 msgstr "Física"
 
 #: migasfree/server/models/computer.py:93
 #: migasfree/server/templates/computer_hardware_resume.html:24
+#: migasfree/server/views/stats.py:373 migasfree/server/views/stats.py:413
 msgid "Virtual"
 msgstr "Virtual"
 
@@ -1242,7 +1238,7 @@ msgstr "Migración"
 #: migasfree/server/models/migration.py:39
 #: migasfree/server/templates/computer_events.html:31
 #: migasfree/server/templates/includes/mining_menu.html:8
-#: migasfree/server/views/stats.py:754
+#: migasfree/server/views/stats.py:802
 msgid "Migrations"
 msgstr "Migraciones"
 
@@ -1512,7 +1508,7 @@ msgstr "Registro de Estados"
 #: migasfree/server/models/status_log.py:34
 #: migasfree/server/templates/computer_events.html:29
 #: migasfree/server/templates/includes/mining_menu.html:7
-#: migasfree/server/views/stats.py:755
+#: migasfree/server/views/stats.py:803
 msgid "Status Logs"
 msgstr "Registros de Estados"
 
@@ -1537,7 +1533,7 @@ msgstr "Sincronización"
 #: migasfree/server/models/synchronization.py:47
 #: migasfree/server/templates/computer_events.html:23
 #: migasfree/server/templates/includes/mining_menu.html:4
-#: migasfree/server/views/stats.py:751
+#: migasfree/server/views/stats.py:799
 msgid "Synchronizations"
 msgstr "Sincronizaciones"
 
@@ -2091,9 +2087,9 @@ msgid "Packages information"
 msgstr "Información de paquetes"
 
 #: migasfree/server/templates/includes/stats_menu.html:4
-#: migasfree/server/views/stats.py:722
+#: migasfree/server/views/stats.py:770
 msgid "Dashboard"
-msgstr "Panel de control"
+msgstr "Cuadro de mando"
 
 #: migasfree/server/templates/includes/stats_menu.html:5
 #: migasfree/server/views/stats.py:122
@@ -2379,111 +2375,111 @@ msgstr "%d días"
 msgid "Productive Computers"
 msgstr "Ordenadores productivos"
 
-#: migasfree/server/views/stats.py:402
-msgid "Computers / Project / Status"
-msgstr "Ordenadores / proyecto / estado"
+#: migasfree/server/views/stats.py:450
+msgid "Computers / Machine"
+msgstr "Ordenadores / máquina"
 
-#: migasfree/server/views/stats.py:481
-msgid "Computers / Status"
-msgstr "Ordenadores / estado"
+#: migasfree/server/views/stats.py:529
+msgid "Subscribed Computers / Status"
+msgstr "Ordenadores de alta / estado"
 
-#: migasfree/server/views/stats.py:622 migasfree/server/views/timeline.py:18
+#: migasfree/server/views/stats.py:670 migasfree/server/views/timeline.py:18
 msgid "Without schedule"
 msgstr "Sin calendario"
 
-#: migasfree/server/views/stats.py:647
+#: migasfree/server/views/stats.py:695
 msgid "With schedule"
 msgstr "Con calendario"
 
-#: migasfree/server/views/stats.py:685
+#: migasfree/server/views/stats.py:733
 msgid "Enabled Deployments"
 msgstr "Despliegues habilitados"
 
-#: migasfree/server/views/stats.py:724
+#: migasfree/server/views/stats.py:772
 msgid "There are no data to show"
 msgstr "No hay datos para mostrar"
 
-#: migasfree/server/views/stats.py:725
+#: migasfree/server/views/stats.py:773
 msgid "Reset Zoom"
 msgstr "Reiniciar zoom"
 
-#: migasfree/server/views/stats.py:727
+#: migasfree/server/views/stats.py:775
 msgid "January"
 msgstr "Enero"
 
-#: migasfree/server/views/stats.py:727
+#: migasfree/server/views/stats.py:775
 msgid "February"
 msgstr "Febrero"
 
-#: migasfree/server/views/stats.py:727
+#: migasfree/server/views/stats.py:775
 msgid "March"
 msgstr "Marzo"
 
-#: migasfree/server/views/stats.py:728
+#: migasfree/server/views/stats.py:776
 msgid "April"
 msgstr "Abril"
 
-#: migasfree/server/views/stats.py:728
+#: migasfree/server/views/stats.py:776
 msgid "May"
 msgstr "Mayo"
 
-#: migasfree/server/views/stats.py:728
+#: migasfree/server/views/stats.py:776
 msgid "June"
 msgstr "Junio"
 
-#: migasfree/server/views/stats.py:729
+#: migasfree/server/views/stats.py:777
 msgid "July"
 msgstr "Julio"
 
-#: migasfree/server/views/stats.py:729
+#: migasfree/server/views/stats.py:777
 msgid "August"
 msgstr "Agosto"
 
-#: migasfree/server/views/stats.py:729
+#: migasfree/server/views/stats.py:777
 msgid "September"
 msgstr "Septiembre"
 
-#: migasfree/server/views/stats.py:730
+#: migasfree/server/views/stats.py:778
 msgid "October"
 msgstr "Octubre"
 
-#: migasfree/server/views/stats.py:730
+#: migasfree/server/views/stats.py:778
 msgid "November"
 msgstr "Noviembre"
 
-#: migasfree/server/views/stats.py:730
+#: migasfree/server/views/stats.py:778
 msgid "December"
 msgstr "Diciembre"
 
-#: migasfree/server/views/stats.py:733
+#: migasfree/server/views/stats.py:781
 msgid "Sunday"
 msgstr "Domingo"
 
-#: migasfree/server/views/stats.py:733
+#: migasfree/server/views/stats.py:781
 msgid "Monday"
 msgstr "Lunes"
 
-#: migasfree/server/views/stats.py:733
+#: migasfree/server/views/stats.py:781
 msgid "Tuesday"
 msgstr "Martes"
 
-#: migasfree/server/views/stats.py:733
+#: migasfree/server/views/stats.py:781
 msgid "Wednesday"
 msgstr "Miércoles"
 
-#: migasfree/server/views/stats.py:734
+#: migasfree/server/views/stats.py:782
 msgid "Thursday"
 msgstr "Jueves"
 
-#: migasfree/server/views/stats.py:734
+#: migasfree/server/views/stats.py:782
 msgid "Friday"
 msgstr "Viernes"
 
-#: migasfree/server/views/stats.py:734
+#: migasfree/server/views/stats.py:782
 msgid "Saturday"
 msgstr "Sábado"
 
-#: migasfree/server/views/stats.py:744
+#: migasfree/server/views/stats.py:792
 #, python-format
 msgid "History of events in the last %d hours"
 msgstr "Histórico de sucesos en las últimas %d horas"
@@ -2501,6 +2497,15 @@ msgstr "línea temporal"
 #, python-format
 msgid "Status must have one of the values: %s"
 msgstr "El estado debe tener uno de los siguientes valores: %s"
+
+#~ msgid "Status available can not have tags"
+#~ msgstr "Estado disponible no puede tener etiquetas"
+
+#~ msgid "Status available can not have devices logical"
+#~ msgstr "Estado disponible no puede tener dispositivos logicos"
+
+#~ msgid "Computers / Project / Status"
+#~ msgstr "Ordenadores / proyecto / estado"
 
 #~ msgid "Synchronized Computers / Hour"
 #~ msgstr "Ordenadores sincronizados / hora"
