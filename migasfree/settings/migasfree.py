@@ -57,6 +57,7 @@ MIGASFREE_PROGRAMMING_LANGUAGES = (
     (3, 'php'),
     (4, 'ruby'),
     (5, 'cmd'),
+    (6, 'powershell'),
 )
 
 # Server Keys
