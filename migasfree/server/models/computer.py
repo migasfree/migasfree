@@ -124,11 +124,21 @@ class Computer(models.Model, MigasLink):
         verbose_name=_("project")
     )
 
-    created_at = models.DateTimeField(auto_now_add=True, help_text=_('Date of entry into the migasfree system'))
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text=_('Date of entry into the migasfree system')
+    )
     updated_at = models.DateTimeField(auto_now=True)
 
     ip_address = models.CharField(
         verbose_name=_("ip address"),
+        max_length=50,
+        null=True,
+        blank=True
+    )
+
+    forwarded_ip_address = models.CharField(
+        verbose_name=_("forwarded ip address"),
         max_length=50,
         null=True,
         blank=True
@@ -303,11 +313,12 @@ class Computer(models.Model, MigasLink):
         self.sync_start_date = datetime.now()
         self.save()
 
-    def update_identification(self, name, project, uuid, ip_address):
+    def update_identification(self, name, project, uuid, ip_address, forwarded_ip_address):
         self.name = name
         self.project = project
         self.uuid = uuid
         self.ip_address = ip_address
+        self.forwarded_ip_address = forwarded_ip_address
         self.save()
 
     def update_software_history(self, history):

@@ -21,7 +21,7 @@ from .secure import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
 from .tasks import create_repository_metadata
 from .utils import (
-    uuid_change_format,
+    uuid_change_format, get_client_ip,
     list_difference, list_common,
 )
 from . import errmfs
@@ -350,6 +350,7 @@ def upload_computer_info(request, name, uuid, computer, data):
     try:
         client_attributes = data.get(cmd).get("attributes")  # basic and client attributes
         ip_address = computer_info.get("ip", "")
+        forwarded_ip_address = get_client_ip(request)
 
         # IP registration, project and computer Migration
         computer = check_computer(
@@ -357,6 +358,7 @@ def upload_computer_info(request, name, uuid, computer, data):
             name,
             project_name,
             ip_address,
+            forwarded_ip_address,
             uuid,
         )
 
@@ -559,7 +561,7 @@ def register_computer(request, name, uuid, computer, data):
     # Check project
     try:
         project = Project.objects.get(name=project_name)
-        # if not autoregister, check that the user can save computer
+        # if not auto register, check that the user can save computer
         if not project.auto_register_computers:
             if not user or not user.has_perm("server.can_save_computer"):
                 return return_message(
@@ -573,6 +575,7 @@ def register_computer(request, name, uuid, computer, data):
             name,
             project_name,
             data.get('ip', ''),
+            get_client_ip(request),
             uuid
         )
 
@@ -810,8 +813,8 @@ def set_computer_tags(request, name, uuid, computer, data):
     return ret
 
 
-def check_computer(computer, name, project_name, ip, uuid):
-    # registration of ip, project, uuid and Migration of a computer
+def check_computer(computer, name, project_name, ip_address, forwarded_ip_address, uuid):
+    # registration of IPs, project, uuid and Migration of a computer
     project = Project.objects.get(name=project_name)
 
     if not computer:
@@ -833,14 +836,14 @@ def check_computer(computer, name, project_name, ip, uuid):
     if computer.project != project:
         Migration.objects.create(computer, project)
 
-    notify_change_data_computer(computer, name, project, ip, uuid)
+    notify_change_data_computer(computer, name, ip_address, uuid)
 
-    computer.update_identification(name, project, uuid, ip)
+    computer.update_identification(name, project, uuid, ip_address, forwarded_ip_address)
 
     return computer
 
 
-def notify_change_data_computer(computer, name, project, ip_address, uuid):
+def notify_change_data_computer(computer, name, ip_address, uuid):
     if settings.MIGASFREE_NOTIFY_CHANGE_NAME and (computer.name != name):
         Notification.objects.create(
             _("Computer id=[%s]: NAME [%s] changed by [%s]") % (

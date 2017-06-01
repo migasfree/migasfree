@@ -62,6 +62,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'project_link',
         'created_at',
         'ip_address',
+        'forwarded_ip_address',
         'software_inventory',
         'software_history',
         'hw_link',
@@ -88,6 +89,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'project_link',
                 'created_at',
                 'ip_address',
+                'forwarded_ip_address',
             )
         }),
         (_('Current Situation'), {
