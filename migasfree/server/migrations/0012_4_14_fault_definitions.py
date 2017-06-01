@@ -31,7 +31,15 @@ class Migration(migrations.Migration):
             model_name='FaultDefinition',
             name='language',
             field=models.IntegerField(
-                choices=[(0, b'bash'), (1, b'python'), (2, b'perl'), (3, b'php'), (4, b'ruby'), (5, b'cmd')],
+                choices=[
+                    (0, b'bash'),
+                    (1, b'python'),
+                    (2, b'perl'),
+                    (3, b'php'),
+                    (4, b'ruby'),
+                    (5, b'cmd'),
+                    (6, b'powershell')
+                ],
                 default=0,
                 verbose_name='programming language'
             )
