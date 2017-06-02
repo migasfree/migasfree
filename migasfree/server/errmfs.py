@@ -18,7 +18,7 @@ COMMAND_NOT_FOUND = 4
 INVALID_SIGNATURE = 5
 COMPUTER_NOT_FOUND = 6
 DEVICE_NOT_FOUND = 7
-VERSION_NOT_FOUND = 8
+PROJECT_NOT_FOUND = 8
 USER_DOES_NOT_HAVE_PERMISSION = 9
 UNSUBSCRIBED_COMPUTER = 10
 GENERIC = 100
@@ -32,7 +32,7 @@ ERROR_INFO = {
     INVALID_SIGNATURE: _("Signature is not valid"),
     COMPUTER_NOT_FOUND: _("Computer not found"),
     DEVICE_NOT_FOUND: _("Device not found"),
-    VERSION_NOT_FOUND: _("Version not found"),
+    PROJECT_NOT_FOUND: _("Project not found"),
     USER_DOES_NOT_HAVE_PERMISSION: _("User does not have permission"),
     UNSUBSCRIBED_COMPUTER: _("Unsubscribed computer"),
     GENERIC: _("Generic error")

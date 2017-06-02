@@ -630,7 +630,7 @@ def upload_server_package(request, name, uuid, computer, data):
     try:
         project = Project.objects.get(name=project_name)
     except ObjectDoesNotExist:
-        return return_message(cmd, errmfs.error(errmfs.VERSION_NOT_FOUND))
+        return return_message(cmd, errmfs.error(errmfs.PROJECT_NOT_FOUND))
 
     store, _ = Store.objects.get_or_create(
         name=data['store'], project=project
@@ -664,7 +664,7 @@ def upload_server_set(request, name, uuid, computer, data):
     try:
         project = Project.objects.get(name=project_name)
     except ObjectDoesNotExist:
-        return return_message(cmd, errmfs.error(errmfs.VERSION_NOT_FOUND))
+        return return_message(cmd, errmfs.error(errmfs.PROJECT_NOT_FOUND))
 
     store, _ = Store.objects.get_or_create(
         name=data['store'], project=project
