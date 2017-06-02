@@ -52,7 +52,9 @@ class Event(models.Model):
             created_at__range=(start_date, end_date)
         ).extra(
             {"hour": "date_trunc('hour', created_at)"}
-        ).values('hour').annotate(count=Count('id')).order_by('hour')
+        ).values('hour').annotate(
+            count=Count('computer_id', distinct=True)
+        ).order_by('hour')
 
     def __str__(self):
         return u'{} ({:%Y-%m-%d %H:%M:%S})'.format(self.computer, self.created_at)
