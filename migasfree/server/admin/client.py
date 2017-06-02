@@ -58,6 +58,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
     readonly_fields = (
         'name',
+        'fqdn',
         'uuid',
         'project_link',
         'created_at',
@@ -86,6 +87,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         (_('General'), {
             'fields': (
                 'name',
+                'fqdn',
                 'project_link',
                 'created_at',
                 'ip_address',

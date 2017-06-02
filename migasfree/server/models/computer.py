@@ -118,6 +118,14 @@ class Computer(models.Model, MigasLink):
         unique=False
     )
 
+    fqdn = models.CharField(
+        verbose_name=_('full qualified domain name'),
+        max_length=255,
+        null=True,
+        blank=True,
+        unique=False
+    )
+
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
@@ -126,6 +134,7 @@ class Computer(models.Model, MigasLink):
 
     created_at = models.DateTimeField(
         auto_now_add=True,
+        verbose_name=_('entry date'),
         help_text=_('Date of entry into the migasfree system')
     )
     updated_at = models.DateTimeField(auto_now=True)
@@ -313,8 +322,9 @@ class Computer(models.Model, MigasLink):
         self.sync_start_date = datetime.now()
         self.save()
 
-    def update_identification(self, name, project, uuid, ip_address, forwarded_ip_address):
+    def update_identification(self, name, fqdn, project, uuid, ip_address, forwarded_ip_address):
         self.name = name
+        self.fqdn = fqdn
         self.project = project
         self.uuid = uuid
         self.ip_address = ip_address

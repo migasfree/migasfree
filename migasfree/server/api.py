@@ -261,6 +261,7 @@ def upload_computer_info(request, name, uuid, computer, data):
             {
                 "computer": {
                     "hostname": HOSTNAME,
+                    ["fqdn": FQDN,]
                     "ip": IP,
                     "platform": PLATFORM,
                     "version" | "project": VERSION/PROJECT,
@@ -312,6 +313,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         'pms',
         'apt-get'
     )
+    fqdn = computer_info.get('fqdn', None)
 
     notify_platform = False
     notify_project = False
@@ -356,6 +358,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         computer = check_computer(
             computer,
             name,
+            fqdn,
             project_name,
             ip_address,
             forwarded_ip_address,
@@ -520,6 +523,7 @@ def register_computer(request, name, uuid, computer, data):
     platform_name = data.get('platform', 'unknown')
     project_name = data.get('version', data.get('project', 'unknown'))  # key is version for compatibility!!!
     pms_name = data.get('pms', 'apt-get')
+    fqdn = data.get('fqdn', None)
 
     notify_platform = False
     notify_project = False
@@ -573,6 +577,7 @@ def register_computer(request, name, uuid, computer, data):
         computer = check_computer(
             computer,
             name,
+            fqdn,
             project_name,
             data.get('ip', ''),
             get_client_ip(request),
@@ -813,7 +818,7 @@ def set_computer_tags(request, name, uuid, computer, data):
     return ret
 
 
-def check_computer(computer, name, project_name, ip_address, forwarded_ip_address, uuid):
+def check_computer(computer, name, fqdn, project_name, ip_address, forwarded_ip_address, uuid):
     # registration of IPs, project, uuid and Migration of a computer
     project = Project.objects.get(name=project_name)
 
@@ -838,7 +843,7 @@ def check_computer(computer, name, project_name, ip_address, forwarded_ip_addres
 
     notify_change_data_computer(computer, name, ip_address, uuid)
 
-    computer.update_identification(name, project, uuid, ip_address, forwarded_ip_address)
+    computer.update_identification(name, fqdn, project, uuid, ip_address, forwarded_ip_address)
 
     return computer
 

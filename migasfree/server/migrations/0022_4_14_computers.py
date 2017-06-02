@@ -20,4 +20,12 @@ class Migration(migrations.Migration):
                 null=True, verbose_name='forwarded ip address'
             ),
         ),
+        migrations.AddField(
+            model_name='computer',
+            name='fqdn',
+            field=models.CharField(
+                blank=True, max_length=255,
+                null=True, verbose_name='full qualified domain name'
+            ),
+        ),
     ]
