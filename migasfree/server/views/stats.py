@@ -103,7 +103,7 @@ def synchronized_daily(request):
         data.append(updates_time_range[index] if index in updates_time_range else 0)
 
     line_chart = pygal.Bar(
-        no_data_text=_('There are no updates'),
+        no_data_text=_('There are no synchronizations'),
         show_legend=False,
         x_label_rotation=LABEL_ROTATION,
         style=BAR_STYLE,
@@ -138,7 +138,7 @@ def month_year_iter(start_month, start_year, end_month, end_year):
 @login_required
 def synchronized_monthly(request):
     line_chart = pygal.Line(
-        no_data_text=_('There are no updates'),
+        no_data_text=_('There are no synchronizations'),
         x_label_rotation=LABEL_ROTATION,
         style=DEFAULT_STYLE,
         js=[JS_FILE],
@@ -223,7 +223,7 @@ def delay_schedule(request, project_name=None):
     title += ' [{}]'.format(project.name)
 
     line_chart = pygal.Line(
-        no_data_text=_('There are no updates'),
+        no_data_text=_('There are no synchronizations'),
         x_label_rotation=LABEL_ROTATION,
         legend_at_bottom=True,
         style=DEFAULT_STYLE,
