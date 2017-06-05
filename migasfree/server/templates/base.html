@@ -71,7 +71,7 @@
                   }
                 }, 100);
 
-                $("article input:text:visible:first").focus();
+                $('article').find('input[type=text], textarea').filter(':visible:first').focus();
             });
         //]]>
         </script>
