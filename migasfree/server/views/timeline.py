@@ -43,7 +43,7 @@ def timeline(request):
 
         timeline_delays.append({
             'deploy': result,
-            'date': hori.strftime("%a-%b-%d"),
+            'date': hori,
             'percent': int(Deployment.get_percent(hori, horf)),
             'attributes': item.attributes.values_list("value", flat=True)
         })
