@@ -81,7 +81,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'unchecked_errors',
         'unchecked_faults',
         'last_sync_time',
-        'comment',
     )
 
     fieldsets = (
