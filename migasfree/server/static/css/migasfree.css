@@ -96,7 +96,7 @@ table .ordinal {
     background-color: #d5d5d5;
 }
 
-td.nowrap {
+td.nowrap, .nowrap {
     white-space: nowrap;
 }
 
@@ -255,6 +255,7 @@ li .btn-group {
 .timeline {
     margin: 0;
     width: 150px;
+    float: left;
 }
 
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
