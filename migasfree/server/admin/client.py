@@ -81,6 +81,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'unchecked_errors',
         'unchecked_faults',
         'last_sync_time',
+        'comment',
     )
 
     fieldsets = (
@@ -92,6 +93,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'created_at',
                 'ip_address',
                 'forwarded_ip_address',
+                'comment',
             )
         }),
         (_('Current Situation'), {

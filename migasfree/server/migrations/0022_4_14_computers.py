@@ -28,4 +28,12 @@ class Migration(migrations.Migration):
                 null=True, verbose_name='full qualified domain name'
             ),
         ),
+        migrations.AddField(
+            model_name='computer',
+            name='comment',
+            field=models.TextField(
+                blank=True, null=True,
+                verbose_name='comment'
+            ),
+        ),
     ]

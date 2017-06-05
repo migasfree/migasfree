@@ -262,6 +262,12 @@ class Computer(models.Model, MigasLink):
         unique=False
     )
 
+    comment = models.TextField(
+        verbose_name=_("comment"),
+        null=True,
+        blank=True
+    )
+
     objects = ComputerManager()
     productive = ProductiveManager()
     unproductive = UnproductiveManager()

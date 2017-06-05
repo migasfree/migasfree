@@ -65,7 +65,7 @@ class ComputerSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Computer
         fields = (
-            'id', 'uuid', 'name', 'fqdn', 'project',
+            'id', 'uuid', 'name', 'fqdn', 'project', 'comment',
             'ip_address', 'forwarded_ip_address',
             'status', 'product', 'machine',
             'mac_address', 'cpu', 'disks', 'storage', 'ram',
