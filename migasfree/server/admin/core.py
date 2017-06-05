@@ -278,6 +278,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     search_fields = ('name', 'available_packages__name')
     list_select_related = ("project",)
     actions = ['regenerate_metadata']
+    readonly_fields = ('timeline',)
 
     fieldsets = (
         (_('General'), {
@@ -303,7 +304,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': ('included_attributes', 'excluded_attributes')
         }),
         (_('Schedule'), {
-            'fields': ('start_date', 'schedule',)
+            'fields': ('start_date', 'schedule', 'timeline')
         }),
     )
 
