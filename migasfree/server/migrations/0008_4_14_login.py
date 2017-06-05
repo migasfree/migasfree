@@ -69,7 +69,8 @@ class Migration(migrations.Migration):
             name='created_at',
             field=models.DateTimeField(
                 auto_now_add=True, default=timezone.now,
-                help_text='Date of entry into the migasfree system'
+                help_text='Date of entry into the migasfree system',
+                verbose_name='entry date'
             ),
             preserve_default=False,
         ),
