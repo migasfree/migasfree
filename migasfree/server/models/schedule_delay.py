@@ -35,15 +35,15 @@ class ScheduleDelay(models.Model):
     )
 
     def total_computers(self):
-        queryset = Computer.objects.filter(
-            sync_attributes__id__in=self.attributes.all().values_list('id')
+        queryset = Computer.productive.filter(
+            sync_attributes__id__in=self.attributes.values_list('id')
         )
 
         project = UserProfile.get_logged_project()
         if project:
             queryset = queryset.filter(project__id=project.id)
 
-        return queryset.annotate(total=Count('id')).order_by('id').count()
+        return queryset.annotate(total=Count('id')).count()
 
     total_computers.short_description = _('Total computers')
 

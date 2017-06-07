@@ -79,7 +79,7 @@ class Attribute(models.Model, MigasLink):
     def total_computers(self, project=None):
         from . import Computer
 
-        queryset = Computer.objects.filter(sync_attributes__id=self.id)
+        queryset = Computer.productive.filter(sync_attributes__id=self.id)
         if project:
             queryset = queryset.filter(project_id=project.id)
 
