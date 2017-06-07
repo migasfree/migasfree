@@ -27,24 +27,25 @@ def timeline(request):
 
     timeline_delays = []
     date_format = "%Y-%m-%d"
+    now = datetime.datetime.now()
     for item in delays:
-        hori = datetime.datetime.strptime(
+        start_horizon = datetime.datetime.strptime(
             str(time_horizon(deploy.start_date, item.delay)),
             date_format
         )
-        horf = datetime.datetime.strptime(
+        end_horizon = datetime.datetime.strptime(
             str(time_horizon(deploy.start_date, item.delay + item.duration)),
             date_format
         )
 
         result = 'default'
-        if hori <= datetime.datetime.now():
+        if start_horizon <= now:
             result = 'success'
 
         timeline_delays.append({
             'deploy': result,
-            'date': hori,
-            'percent': int(Deployment.get_percent(hori, horf)),
+            'date': start_horizon,
+            'percent': int(Deployment.get_percent(start_horizon, end_horizon)),
             'attributes': item.attributes.values_list("value", flat=True)
         })
 
