@@ -1,8 +1,8 @@
 function addTimeLineEvents() {
     $(".btn-timeline").click(function () {
-        var repository = $(this).data("repository").toString();
+        var deployment = $(this).data("deployment").toString();
         var that = $(this);
-        $.get("/timeline/?id=" + repository, function(data) {
+        $.get("/timeline/?id=" + deployment, function(data) {
             that.parent().children("ul").html(data);
         });
     });
@@ -11,5 +11,3 @@ function addTimeLineEvents() {
 $(document).ready(function () {
     addTimeLineEvents();
 });
-
-

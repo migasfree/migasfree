@@ -177,7 +177,7 @@ class MigasFields(object):
                     'includes/deployment_timeline.html',
                     {
                         'timeline': {
-                            'repository_id': obj.pk,
+                            'deployment_id': obj.pk,
                             'percent': timeline['percent'],
                             'schedule': obj.schedule,
                             'info': _('%s/%s days (from %s to %s)') % (
