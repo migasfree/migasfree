@@ -57,8 +57,8 @@ class MigasFields(object):
         related_names = name.split('__')
 
         def getter(self, obj):
-            for related_name in related_names:
-                target = getattr(obj, related_name)
+            for item in related_names:
+                target = getattr(obj, item)
                 if not (
                     isinstance(target, unicode)
                     or isinstance(target, datetime.datetime)
@@ -105,8 +105,8 @@ class MigasFields(object):
             if not related_names[0]:
                 return obj.link()
 
-            for related_name in related_names:
-                obj = getattr(obj, related_name)
+            for item in related_names:
+                obj = getattr(obj, item)
 
             if inspect.ismethod(obj):  # Is a method
                 obj = obj()
@@ -156,7 +156,7 @@ class MigasFields(object):
         return getter
 
     @staticmethod
-    def timeline(name="", description='', model=None):
+    def timeline():
         def getter(self, obj):
             if obj.schedule:
                 timeline = obj.schedule_timeline()

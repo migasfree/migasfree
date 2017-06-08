@@ -316,7 +316,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         model=Deployment, name='schedule', order='schedule__name'
     )
     my_enabled = MigasFields.boolean(model=Deployment, name='enabled')
-    timeline = MigasFields.timeline(model=Deployment)
+    timeline = MigasFields.timeline()
 
     def regenerate_metadata(self, request, objects):
         if not self.has_change_permission(request):
