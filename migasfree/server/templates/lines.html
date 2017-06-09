@@ -31,11 +31,7 @@
         </div>
     {% endif %}
 
-    {% if chart %}
-        <figure class="stat-container">
-            <object type="image/svg+xml" data="{{ chart|safe }}"></object>
-        </figure>
-    {% endif %}
+    {% include 'includes/line_chart.html' %}
 
     {% if tabular_data %}
         <h2>

@@ -1,0 +1,7 @@
+{% load i18n %}
+
+{% if chart %}
+    <figure class="stat-container">
+        <object type="image/svg+xml" data="{{ chart|safe }}"></object>
+    </figure>
+{% endif %}
