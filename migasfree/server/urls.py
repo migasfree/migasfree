@@ -140,6 +140,11 @@ urlpatterns = [
         name='timeline',
     ),
     url(
+        r'^provided_computers/$',
+        provided_computers_by_delay,
+        name='provided_computers',
+    ),
+    url(
         r'^connections_model/$',
         connections_model,
         name='connections_model'
