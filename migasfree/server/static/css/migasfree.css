@@ -113,6 +113,11 @@ td.nowrap, .nowrap {
     margin: auto;
 }
 
+.stat-embeded {
+    width: 100%;
+    height: 550px;
+}
+
 span[data-value] {
     display: block !important;
 }
