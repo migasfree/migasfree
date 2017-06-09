@@ -1,0 +1,13 @@
+{% extends "admin/change_form.html" %}
+{% load i18n %}
+
+{% block after_related_objects %}
+    {{ block.super }}
+    {% if original.schedule %}
+        <h3>{% trans 'Provided Computers / Delay' %}</h3>
+
+        <object data="{% url 'provided_computers' %}?id={{ object_id }}" class="stat-embeded">
+            <embed src="{% url 'provided_computers' %}?id={{ object_id }}" class="stat-embeded"></embed>
+        </object>
+    {% endif %}
+{% endblock %}
