@@ -8,15 +8,16 @@ function makeLink(link, projectId) {
     if (last != -1)
         newLink = newLink.substring(0, last);
     if (projectId)
-        newLink = newLink + "?project_id=" + projectId;
+        newLink += "?project_id=" + projectId;
+
     return newLink;
 }
 
 function changeSource() {
     var projectId = $("#id_project").val();
-    oldLink = $("#id_packages_text").autocomplete("option", "source");
+    oldLink = $("#id_available_packages_text").autocomplete("option", "source");
     newLink = makeLink(oldLink, projectId);
-    $("#id_packages_text").autocomplete("option", "source", newLink);
+    $("#id_available_packages_text").autocomplete("option", "source", newLink);
 
     if (typeof addMigasEvents === "function") {
         addMigasEvents();
@@ -26,7 +27,7 @@ function changeSource() {
 $(document).ready(function() {
     changeSource();
     $("#id_project").bind("change", changeSource);
-    $("#id_packages_on_deck").bind("added", changeSource);
+    $("#id_available_packages_on_deck").bind("added", changeSource);
 });
 </script>
 {% endblock extra_script %}
