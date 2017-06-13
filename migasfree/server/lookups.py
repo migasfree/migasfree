@@ -3,6 +3,7 @@
 from django.db.models import Q
 from django.utils.html import escape
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import register, LookupChannel
 
@@ -104,13 +105,13 @@ class AttributeComputersLookup(LookupChannel):
             ).order_by('value')
 
     def format_match(self, obj):
-        return "%s (total %s)" % (
+        return _("%s (total %s)") % (
             escape(obj.__str__()),
             escape(obj.total_computers(UserProfile.get_logged_project()))
         )
 
     def format_item_display(self, obj):
-        return "%s (total %s)" % (
+        return _("%s (total %s)") % (
             obj.link(),
             escape(obj.total_computers(UserProfile.get_logged_project()))
         )
@@ -181,7 +182,7 @@ class TagLookup(LookupChannel):
         ).order_by('value')
 
     def format_match(self, obj):
-        return "%s-%s %s" % (
+        return "{}-{} {}".format(
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description)
@@ -228,9 +229,10 @@ class ComputerLookup(LookupChannel):
             return self.model.objects.filter(
                 Q(id__exact=q) |
                 Q(**{
-                    '%s__icontains' %
-                    settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]: q
-                })
+                    '{}__icontains'.format(
+                        settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]
+                    ): q
+               })
             ).filter(~Q(status__in=['available', 'unsubscribed']))
 
     def format_match(self, obj):
@@ -242,9 +244,9 @@ class ComputerLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
-    def reorder(self, mylist):
+    def reorder(self, ids):
         return [row.id for row in Computer.objects.filter(
-            pk__in=mylist
+            pk__in=ids
         ).order_by(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0])]
 
     def get_objects(self, ids):
