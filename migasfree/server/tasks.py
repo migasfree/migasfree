@@ -49,7 +49,7 @@ def create_repository_metadata(deploy, packages=None, request=None):
 
     _ret = ''
     if not packages and not isinstance(packages, list):
-        packages = deploy.packages.all()
+        packages = deploy.available_packages.all()
     for _pkg in packages:
         if isinstance(_pkg, int):
             _pkg = Package.objects.get(pk=_pkg)
@@ -87,5 +87,5 @@ def create_repository_metadata(deploy, packages=None, request=None):
 
     if hasattr(request, 'META'):
         return messages.add_message(request, _msg_level, _ret)
-    else:
-        return _ret
+
+    return _ret
