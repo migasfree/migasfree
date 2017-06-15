@@ -174,3 +174,10 @@ def to_heatmap(results, range_name='day'):
         heatmap[str(to_timestamp(item[range_name]))] = item['count']
 
     return heatmap
+
+
+def remove_duplicates_preserving_order(seq):
+    seen = set()
+    seen_add = seen.add
+
+    return [x for x in seq if not (x in seen or seen_add(x))]
