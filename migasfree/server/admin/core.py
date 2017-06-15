@@ -14,7 +14,8 @@ from .migasfree import MigasAdmin, MigasFields
 from ..models import (
     Attribute, AttributeSet, Checking, ClientProperty, ClientAttribute,
     Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
-    ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Project
+    ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Project,
+    Policy, PolicyGroup,
 )
 
 from ..forms import (
@@ -408,7 +409,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         ).select_related("project", "schedule")
 
 
-class ScheduleDelayline(admin.TabularInline):
+class ScheduleDelayLine(admin.TabularInline):
     model = ScheduleDelay
     fields = ('delay', 'attributes', 'total_computers', 'duration')
     form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute_computers'})
@@ -422,7 +423,7 @@ class ScheduleAdmin(MigasAdmin):
     list_display = ('name_link', 'description')
     search_fields = ('name', 'description')
     ordering = ('name',)
-    inlines = [ScheduleDelayline]
+    inlines = [ScheduleDelayLine]
     extra = 0
 
     name_link = MigasFields.link(model=Schedule, name='name')
@@ -528,3 +529,114 @@ class ProjectAdmin(MigasAdmin):
         form.base_fields['platform'].widget.can_add_related = False
 
         return form
+
+
+@admin.register(PolicyGroup)
+class PolicyGroupAdmin(MigasAdmin):
+    form = make_ajax_form(
+        PolicyGroup,
+        {
+            'included_attributes': 'attribute',
+            'excluded_attributes': 'attribute'
+        }
+    )
+
+    list_display = (
+        'id', 'policy_link', 'priority',
+        'included_attributes_link', 'excluded_attributes_link'
+    )
+    list_display_links = ('id',)
+    list_filter = ('policy__name',)
+    search_fields = (
+        'policy__name', 'included_attributes__value',
+        'excluded_attributes__value'
+    )
+
+    policy_link = MigasFields.link(model=PolicyGroup, name='policy')
+    included_attributes_link = MigasFields.objects_link(
+        model=PolicyGroup, name='included_attributes',
+        description=_('included attributes')
+    )
+    excluded_attributes_link = MigasFields.objects_link(
+        model=PolicyGroup, name='excluded_attributes',
+        description=_('excluded attributes')
+    )
+
+    def get_queryset(self, request):
+        return super(PolicyGroupAdmin, self).get_queryset(
+            request
+            ).prefetch_related(
+                'included_attributes',
+                'included_attributes__property_att',
+                'excluded_attributes',
+                'excluded_attributes__property_att'
+            )
+
+
+class PolicyGroupLine(admin.TabularInline):
+    form = make_ajax_form(
+        PolicyGroup,
+        {
+            'included_attributes': 'attribute',
+            'excluded_attributes': 'attribute'
+        }
+    )
+    form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+
+    model = PolicyGroup
+    fields = (
+        'priority', 'included_attributes',
+        'excluded_attributes', 'packages_to_install'
+    )
+    ordering = ('priority',)
+    extra = 0
+
+
+@admin.register(Policy)
+class PolicyAdmin(MigasAdmin):
+    form = make_ajax_form(
+        Policy,
+        {
+            'included_attributes': 'attribute',
+            'excluded_attributes': 'attribute'
+        }
+    )
+    form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+
+    list_display = (
+        'name_link', 'included_attributes_link', 'excluded_attributes_link'
+    )
+    list_filter = ('enabled',)
+    list_display_links = ('name_link',)
+    search_fields = (
+        'name', 'included_attributes__value', 'excluded_attributes__value'
+    )
+    fieldsets = (
+        (_('General'), {
+            'fields': (
+                'name',
+                'comment',
+                'enabled',
+            )
+        }),
+        (_('Application Area'), {
+            'fields': (
+                'included_attributes',
+                'excluded_attributes',
+            )
+        }),
+    )
+    inlines = [PolicyGroupLine]
+    extra = 0
+
+    name_link = MigasFields.link(model=Policy, name='name')
+    included_attributes_link = MigasFields.objects_link(
+        model=Policy, name='included_attributes',
+        description=_('included attributes')
+    )
+    excluded_attributes_link = MigasFields.objects_link(
+        model=Policy, name='excluded_attributes',
+        description=_('excluded attributes'),
+    )

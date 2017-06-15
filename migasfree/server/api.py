@@ -15,7 +15,8 @@ from .models import (
     Attribute, AttributeSet, Computer, BasicAttribute,
     Error, Fault, FaultDefinition, HwNode, Message,
     Migration, Notification, Package, Pms, Platform, Property,
-    Deployment, Store, ServerAttribute, Synchronization, User, Project,
+    Deployment, Store, ServerAttribute, Synchronization, User,
+    Project, Policy,
 )
 from .secure import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
@@ -23,6 +24,7 @@ from .tasks import create_repository_metadata
 from .utils import (
     uuid_change_format, get_client_ip,
     list_difference, list_common,
+    remove_duplicates_preserving_order,
 )
 from . import errmfs
 
@@ -431,6 +433,11 @@ def upload_computer_info(request, name, uuid, computer, data):
                     if p != "":
                         lst_pkg_to_install.append(p)
 
+        # policies
+        policy_pkg_to_install, policy_pkg_to_remove = Policy.get_packages(computer)
+        lst_pkg_to_install.extend(policy_pkg_to_install)
+        lst_pkg_to_remove.extend(policy_pkg_to_remove)
+
         # devices
         logical_devices = []
         for device in computer.logical_devices(computer.get_all_attributes()):
@@ -454,8 +461,8 @@ def upload_computer_info(request, name, uuid, computer, data):
             "faultsdef": fault_definitions,
             "repositories": lst_deploys,
             "packages": {
-                "remove": lst_pkg_to_remove,
-                "install": lst_pkg_to_install
+                "remove": remove_duplicates_preserving_order(lst_pkg_to_remove),
+                "install": remove_duplicates_preserving_order(lst_pkg_to_install)
             },
             "devices": {
                 "logical": logical_devices,
