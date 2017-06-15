@@ -62,13 +62,16 @@ class AppendDevicesFromComputerForm(forms.Form):
 
 class DeploymentForm(forms.ModelForm):
     included_attributes = AutoCompleteSelectMultipleField(
-        'attribute', required=False
+        'attribute', required=False,
+        label=_('included attributes'), show_help_text=False
     )
     excluded_attributes = AutoCompleteSelectMultipleField(
-        'attribute', required=False
+        'attribute', required=False,
+        label=_('excluded attributes'), show_help_text=False
     )
     available_packages = AutoCompleteSelectMultipleField(
-        'package', required=False
+        'package', required=False,
+        label=_('available packages'), show_help_text=False
     )
 
     class Meta:
@@ -155,7 +158,10 @@ class PackageForm(forms.ModelForm):
 
 
 class DeviceLogicalForm(forms.ModelForm):
-    attributes = AutoCompleteSelectMultipleField('attribute', required=False)
+    attributes = AutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('attributes')
+    )
 
     class Meta:
         model = DeviceLogical
@@ -196,9 +202,8 @@ class PropertyForm(forms.ModelForm):
 
 
 class ServerAttributeForm(forms.ModelForm):
-    x = make_ajax_form(Computer, {'tags': 'computer'})
-
-    computers = x.declared_fields['tags']
+    form = make_ajax_form(Computer, {'tags': 'computer'})
+    computers = form.declared_fields['tags']
     computers.label = _('Computers')
 
     class Meta:
@@ -233,11 +238,15 @@ class ServerAttributeForm(forms.ModelForm):
 
 
 class ComputerForm(forms.ModelForm):
-    tags = AutoCompleteSelectMultipleField('tag', required=False)
+    tags = AutoCompleteSelectMultipleField(
+        'tag', required=False,
+        label=_('tags'), show_help_text=False
+    )
 
     class Meta:
         model = Computer
         fields = '__all__'
+
 
 class ExtraThinTextarea(forms.Textarea):
     def __init__(self, *args, **kwargs):
