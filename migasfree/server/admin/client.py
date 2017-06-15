@@ -202,9 +202,13 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         model=Computer, name='logical_devices'
     )
     sync_user_link = MigasFields.link(
-        model=Computer, name='sync_user__name', description=_('User'), order="sync_user__name"
+        model=Computer, name='sync_user__name',
+        description=_('User'), order="sync_user__name"
     )
-    sync_attributes_link = MigasFields.objects_link(model=Computer, name='sync_attributes')
+    sync_attributes_link = MigasFields.objects_link(
+        model=Computer, name='sync_attributes',
+        description=_('sync attributes')
+    )
 
     def delete_selected(self, request, objects):
         if not self.has_delete_permission(request):
