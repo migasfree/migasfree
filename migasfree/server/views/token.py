@@ -228,6 +228,8 @@ class FaultViewSet(
 
 
 class HardwareComputerViewSet(viewsets.ViewSet):
+    queryset = models.HwNode.objects.all()  # FIXME
+
     @detail_route(methods=['get'])
     def hardware(self, request, pk=None):
         computer = get_object_or_404(models.Computer, pk=pk)
