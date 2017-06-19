@@ -6,6 +6,7 @@ import datetime
 from import_export.admin import ExportActionModelAdmin
 from django.contrib.admin.views.main import ChangeList
 from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.html import format_html
 from django.db.models.fields import BooleanField, IntegerField
 from django.apps import apps
 from django.template.loader import render_to_string
@@ -23,14 +24,12 @@ class MigasFields(object):
 
             html = '<span class="fa %s"><span class="sr-only">%s</span></span>'
 
-            return html % (style, text)
+            return format_html(html % (style, text))
 
         getter.admin_order_field = name
 
         getter.short_description = description \
             or _(model._meta.get_field(name).verbose_name)
-
-        getter.allow_tags = True
 
         return getter
 
@@ -43,8 +42,6 @@ class MigasFields(object):
 
         getter.short_description = description \
             or _(model._meta.get_field(name).verbose_name)
-
-        getter.allow_tags = True
 
         return getter
 
@@ -111,11 +108,13 @@ class MigasFields(object):
             if inspect.ismethod(obj):  # Is a method
                 obj = obj()
 
-            return render_to_string(
-                'includes/objects_link.html',
-                {
-                    'objects': obj.all()
-                }
+            return format_html(
+                render_to_string(
+                    'includes/objects_link.html',
+                    {
+                        'objects': obj.all()
+                    }
+                )
             )
 
         for related_name in related_names:
@@ -151,8 +150,6 @@ class MigasFields(object):
                     getter.short_description = description \
                         or _(field._meta.verbose_name_plural.title())
 
-        getter.allow_tags = True
-
         return getter
 
     @staticmethod
@@ -173,27 +170,28 @@ class MigasFields(object):
 
                 days = (datetime.datetime.today() - begin_date).days + 1
                 total_days = (end_date - begin_date).days
-                return render_to_string(
-                    'includes/deployment_timeline.html',
-                    {
-                        'timeline': {
-                            'deployment_id': obj.pk,
-                            'percent': timeline['percent'],
-                            'schedule': obj.schedule,
-                            'info': _('%s/%s days (from %s to %s)') % (
-                                days,
-                                total_days,
-                                timeline['begin_date'],
-                                timeline['end_date']
-                            )
+                return format_html(
+                    render_to_string(
+                        'includes/deployment_timeline.html',
+                        {
+                            'timeline': {
+                                'deployment_id': obj.pk,
+                                'percent': timeline['percent'],
+                                'schedule': obj.schedule,
+                                'info': _('%s/%s days (from %s to %s)') % (
+                                    days,
+                                    total_days,
+                                    timeline['begin_date'],
+                                    timeline['end_date']
+                                )
+                            }
                         }
-                    }
+                    )
                 )
             else:
                 return ""
 
         getter.short_description = _("time line")
-        getter.allow_tags = True
 
         return getter
 
@@ -204,6 +202,13 @@ class MigasAdmin(ExportActionModelAdmin):
 
     def get_changelist(self, request, **kwargs):
         return MigasChangeList
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super(MigasAdmin, self).get_form(request, obj, **kwargs)
+        for field in form.base_fields.keys():
+            form.base_fields[field].widget.can_add_related = False
+
+        return form
 
 
 class MigasChangeList(ChangeList):
