@@ -3,11 +3,11 @@
 import os
 import json
 
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.http import HttpResponse
+from django.urls import reverse
 from django.utils.translation import ugettext as _
+from django.views.decorators.csrf import csrf_exempt
 
 from ..api import *
 from ..models import Error, Notification
