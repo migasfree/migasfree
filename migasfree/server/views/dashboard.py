@@ -5,7 +5,7 @@ import sys
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db.models import Q  # backwards compatibility
 
 from ..models import *
