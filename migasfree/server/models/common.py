@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.translation import ugettext
+from django.utils.html import format_html
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -37,10 +38,10 @@ class MigasLink(object):
 
         related_data = []
         for obj, _ in objs:
-            if obj.related.field.related.parent_link:
-                _name = obj.related.field.related.parent_model.__name__.lower()
+            if obj.remote_field.field.remote_field.parent_link:
+                _name = obj.remote_field.field.remote_field.parent_model.__name__.lower()
             else:
-                _name = obj.related.field.related.model.__name__.lower()
+                _name = obj.remote_field.field.remote_field.model.__name__.lower()
 
             if _name == "attribute":
                 if self._meta.model_name == 'computer' and obj.attname == 'tags':
@@ -49,13 +50,13 @@ class MigasLink(object):
             if _name == "permission":
                 break
 
-            count = obj.related.model.objects.filter(
-                **{obj.related.name: self.id}
+            count = obj.remote_field.model.objects.filter(
+                **{obj.remote_field.name: self.id}
             ).count()
             if count:
                 related_link = reverse(
                     'admin:%s_%s_changelist' % (
-                        obj.related.model._meta.app_label,
+                        obj.remote_field.model._meta.app_label,
                         _name)
                     )
 
@@ -65,7 +66,7 @@ class MigasLink(object):
                         obj.remote_field.name,
                         self.pk
                     ),
-                    'text': ugettext(obj.related.field.verbose_name),
+                    'text': ugettext(obj.remote_field.field.verbose_name),
                     'count': count
                 })
 
@@ -298,14 +299,15 @@ class MigasLink(object):
             except ObjectDoesNotExist:
                 pass
 
-        return render_to_string(
-            'includes/migas_link.html',
-            {
-                'lnk': lnk
-            }
+        return format_html(
+            render_to_string(
+                'includes/migas_link.html',
+                {
+                    'lnk': lnk
+                }
+            )
         )
 
-    link.allow_tags = True
     link.short_description = '...'
 
     def transmodel(self, obj):
