@@ -3,7 +3,7 @@
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import make_ajax_form
@@ -171,8 +171,6 @@ class PackageAdmin(MigasAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(PackageAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['project'].widget.can_add_related = False
-        form.base_fields['store'].widget.can_add_related = False
         form.current_user = request.user
         return form
 
@@ -388,8 +386,6 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(DeploymentAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['project'].widget.can_add_related = False
-        form.base_fields['schedule'].widget.can_add_related = False
         form.current_user = request.user
 
         return form
@@ -444,7 +440,6 @@ class StoreAdmin(MigasAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super(StoreAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['project'].widget.can_add_related = False
         form.current_user = request.user
         return form
 
@@ -476,12 +471,6 @@ class ServerAttributeAdmin(MigasAdmin):
             select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
         )
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(ServerAttributeAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['property_att'].widget.can_add_related = False
-
-        return form
-
 
 @admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
@@ -491,13 +480,6 @@ class UserProfileAdmin(MigasAdmin):
     search_fields = ('username', 'first_name', 'last_name')
 
     name_link = MigasFields.link(model=UserProfile, name='username')
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(UserProfileAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['project'].widget.can_add_related = False
-        form.base_fields['groups'].widget.can_add_related = False
-
-        return form
 
 
 @admin.register(Project)
@@ -522,13 +504,6 @@ class ProjectAdmin(MigasAdmin):
     my_auto_register_computers = MigasFields.boolean(
         model=Project, name='auto_register_computers'
     )
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(ProjectAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['pms'].widget.can_add_related = False
-        form.base_fields['platform'].widget.can_add_related = False
-
-        return form
 
 
 @admin.register(PolicyGroup)
