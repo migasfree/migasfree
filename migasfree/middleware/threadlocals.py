@@ -28,12 +28,11 @@
     --------------------------------------------------------------------------
     :copyleft: 2009-2011 by the django-tools team, see AUTHORS for more details.
     :license: GNU GPL v3 or above, see LICENSE for more details.
+
+    Updated for Django >= 1.10: https://gist.github.com/alexpirine/7357232ecf3aab8beb5565b89c587e6d
 """
 
-try:
-    from threading import local
-except ImportError:
-    from django.utils._threading_local import local
+from threading import local
 
 _thread_locals = local()
 
@@ -51,13 +50,11 @@ def get_current_user():
 
 
 class ThreadLocalMiddleware(object):
-    """
-    Simple middleware that adds the request object in thread local storage.
-    """
-    def process_request(self, request):
-        _thread_locals.request = request
+    # Copyright (c) Alexandre Syenchuk (alexpirine), 2016
 
-    def process_response(self, request, response):
-        if hasattr(_thread_locals, 'request'):
-            del _thread_locals.request
-        return response
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        _thread_locals.request = request
+        return self.get_response(request)
