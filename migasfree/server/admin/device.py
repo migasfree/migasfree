@@ -2,7 +2,7 @@
 
 from django.contrib import admin
 from django.db import models
-from django.core.urlresolvers import resolve
+from django.urls import resolve
 
 from .migasfree import MigasAdmin, MigasFields
 
@@ -51,16 +51,6 @@ class DeviceConnectionAdmin(MigasAdmin):
 
     name_link = MigasFields.link(model=DeviceConnection, name='name')
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(DeviceConnectionAdmin, self).get_form(
-            request,
-            obj,
-            **kwargs
-        )
-        form.base_fields['device_type'].widget.can_add_related = False
-
-        return form
-
 
 @admin.register(DeviceDriver)
 class DeviceDriverAdmin(MigasAdmin):
@@ -69,14 +59,6 @@ class DeviceDriverAdmin(MigasAdmin):
     list_filter = ('project', 'model')
     fields = ('name', 'model', 'project', 'feature', 'packages_to_install')
     search_fields = ('name',)
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(DeviceDriverAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['model'].widget.can_add_related = False
-        form.base_fields['project'].widget.can_add_related = False
-        form.base_fields['feature'].widget.can_add_related = False
-
-        return form
 
 
 @admin.register(DeviceLogical)
@@ -104,13 +86,6 @@ class DeviceLogicalAdmin(MigasAdmin):
     feature_link = MigasFields.link(
         model=DeviceLogical, name='feature', order="feature__name"
     )
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(DeviceLogicalAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['device'].widget.can_add_related = False
-        form.base_fields['feature'].widget.can_add_related = False
-
-        return form
 
 
 class DeviceLogicalInline(admin.TabularInline):
@@ -171,13 +146,6 @@ class DeviceAdmin(MigasAdmin):
                     feature=feature
                 )
 
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(DeviceAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['model'].widget.can_add_related = False
-        form.base_fields['connection'].widget.can_add_related = False
-
-        return form
-
     def get_queryset(self, request):
         return super(DeviceAdmin, self).get_queryset(
             request
@@ -214,11 +182,3 @@ class DeviceModelAdmin(MigasAdmin):
     manufacturer_link = MigasFields.link(
         model=DeviceModel, name='manufacturer', order="manufacturer__name"
     )
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(DeviceModelAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['manufacturer'].widget.can_add_related = False
-        form.base_fields['device_type'].widget.can_add_related = False
-        form.base_fields['connections'].widget.can_add_related = False
-
-        return form
