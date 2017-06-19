@@ -7,8 +7,8 @@ from django.contrib import messages
 
 from .migasfree import BASE_DIR, MIGASFREE_TMP_DIR
 
-if django.VERSION < (1, 9, 0, 'final'):
-    print('Migasfree requires Django 1.9.0 at least. Please, update it.')
+if django.VERSION < (1, 11, 0, 'final'):
+    print('Migasfree requires Django 1.11.0 at least. Please, update it.')
     exit(1)
 
 ADMINS = (
@@ -47,16 +47,17 @@ LOCALE_PATHS = (
 
 ADMIN_SITE_ROOT_URL = '/admin/'
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'migasfree.middleware.threadlocals.ThreadLocalMiddleware',
-)
+]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
