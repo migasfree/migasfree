@@ -2,7 +2,7 @@
 
 from django.conf.urls import url
 from django.views.generic import RedirectView, TemplateView
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.conf import settings
 
 from .views import *

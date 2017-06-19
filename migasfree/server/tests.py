@@ -6,7 +6,7 @@
 from datetime import datetime
 
 from django.test import TransactionTestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from .models import *
 from .fixtures import create_initial_data, sequence_reset
 
