@@ -12,8 +12,8 @@ from collections import defaultdict
 from django.db.models import Count, Q
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
