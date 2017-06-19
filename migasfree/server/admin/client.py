@@ -2,14 +2,15 @@
 
 from datetime import datetime, timedelta
 
+from django.db.models import Prefetch
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import resolve, reverse
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
+from django.urls import resolve, reverse
 from django.utils.translation import ugettext_lazy as _
-from django.db.models import Prefetch
+from django.utils.html import format_html
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
@@ -137,34 +138,40 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     def unchecked_errors(self, obj):
         count = Error.unchecked.filter(computer__pk=obj.pk).count()
         if not count:
-            return '<span class="label label-default">{}</span>'.format(count)
+            return format_html(
+                '<span class="label label-default">{}</span>'.format(count)
+            )
 
-        return '<a class="label label-danger" ' \
+        return format_html(
+            '<a class="label label-danger" '
             'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
                 reverse('admin:server_error_changelist'),
                 obj.pk,
                 0,
                 count
             )
+        )
 
     unchecked_errors.short_description = _('Unchecked Errors')
-    unchecked_errors.allow_tags = True
 
     def unchecked_faults(self, obj):
         count = Fault.unchecked.filter(computer__pk=obj.pk).count()
         if not count:
-            return '<span class="label label-default">{}</span>'.format(count)
+            return format_html(
+                '<span class="label label-default">{}</span>'.format(count)
+            )
 
-        return '<a class="label label-danger" ' \
+        return format_html(
+            '<a class="label label-danger" '
             'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
                 reverse('admin:server_fault_changelist'),
                 obj.pk,
                 0,
                 count
             )
+        )
 
     unchecked_faults.short_description = _('Unchecked Faults')
-    unchecked_faults.allow_tags = True
 
     def last_sync_time(self, obj):
         is_updating = Message.objects.filter(computer__id=obj.pk).count()
@@ -175,21 +182,24 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT
             )
             if obj.sync_start_date < delayed_time:
-                return '<span class="label label-warning" title="{}">' \
+                return format_html(
+                    '<span class="label label-warning" title="{}">'
                     '<i class="fa fa-warning"></i> {}</span>'.format(
                         _('Delayed Computer'),
                         diff
                     )
+                )
             else:
-                return '<span class="label label-info">' \
+                return format_html(
+                    '<span class="label label-info">'
                     '<i class="fa fa-refresh"></i> {}</span>'.format(
                         _('Updating...'),
                     )
+                )
 
         return diff
 
     last_sync_time.short_description = _('Last Update Time')
-    last_sync_time.allow_tags = True
 
     name_link = MigasFields.link(model=Computer, name="name")
     project_link = MigasFields.link(
@@ -437,18 +447,14 @@ class FaultDefinitionAdmin(MigasAdmin):
     name_link = MigasFields.link(model=FaultDefinition, name='name')
     my_enabled = MigasFields.boolean(model=FaultDefinition, name='enabled')
     included_attributes_link = MigasFields.objects_link(
-        model=FaultDefinition, name='included_attributes'
+        model=FaultDefinition, name='included_attributes',
+        description=_('included attributes')
     )
     excluded_attributes_link = MigasFields.objects_link(
-        model=FaultDefinition, name='excluded_attributes'
+        model=FaultDefinition, name='excluded_attributes',
+        description=_('excluded attributes')
     )
     users_link = MigasFields.objects_link(model=FaultDefinition, name='users')
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(FaultDefinitionAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['users'].widget.can_add_related = False
-
-        return form
 
     def get_queryset(self, request):
         return super(FaultDefinitionAdmin, self).get_queryset(
