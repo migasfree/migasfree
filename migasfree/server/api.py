@@ -6,9 +6,9 @@ import inspect
 from datetime import datetime, timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.urlresolvers import reverse
 from django.contrib import auth
 from django.conf import settings
+from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 from .models import (
