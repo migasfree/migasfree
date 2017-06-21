@@ -49,8 +49,8 @@ def add_read_perms(group, tables=None):
     for table in tables:
         group.permissions.add(
             Permission.objects.get(
-                codename="change_%s" % table,
-                content_type__app_label="server"
+                codename='change_{}'.format(table),
+                content_type__app_label='server'
             ).id
         )
 
@@ -59,12 +59,12 @@ def add_all_perms(group, tables=None):
     if tables is None:
         tables = []
 
-    perms = ['add_%s', 'change_%s', 'delete_%s', 'can_save_%s']
+    perms = ['add_{}', 'change_{}', 'delete_{}', 'can_save_{}']
     for table in tables:
         for pattern in perms:
             group.permissions.add(
                 Permission.objects.get(
-                    codename=pattern % table,
+                    codename=pattern.format(table),
                     content_type__app_label='server'
                 ).id
             )
@@ -87,7 +87,7 @@ def create_default_users():
             "devicetype", "schedule", "scheduledelay", "autocheckerror",
             "faultdefinition", "property", "checking", "project", "pms", "query",
             "package", "deployment", "store", "message", "synchronization",
-            "platform", "migration", "notification"
+            "platform", "migration", "notification", "policy", "policygroup",
         ]
         add_read_perms(reader, tables)
         reader.save()
@@ -98,7 +98,10 @@ def create_default_users():
         liberator = Group()
         liberator.name = "Liberator"
         liberator.save()
-        tables = ["deployment", "schedule", "scheduledelay"]
+        tables = [
+            "deployment", "schedule", "scheduledelay",
+            "policy", "policygroup",
+        ]
         add_all_perms(liberator, tables)
         liberator.save()
 
@@ -190,8 +193,9 @@ def sequence_reset():
             _file.write(commands.getvalue())
             _file.flush()
 
-        cmd = "su postgres -c 'psql %s -f %s' -" % (
-            settings.DATABASES.get('default').get('NAME'), _filename
+        cmd = "su postgres -c 'psql {} -f {}' -".format(
+            settings.DATABASES.get('default').get('NAME'),
+            _filename
         )
         out, err = run(cmd)
         if out != 0:
