@@ -105,6 +105,7 @@ def gpg_get_key(name):
 
     gpg_home = os.path.join(settings.MIGASFREE_KEYS_DIR, '.gnupg')
     gpg_conf = os.path.join(gpg_home, 'gpg.conf')
+    gpg_agent_conf = os.path.join(gpg_home, 'gpg-agent.conf')
     _file = os.path.join(gpg_home, '{}.gpg'.format(name))
 
     if not os.path.exists(_file):
@@ -112,8 +113,10 @@ def gpg_get_key(name):
         if not os.path.exists(gpg_home):
             os.makedirs(gpg_home, 0o700)
             # creates configuration file
-            write_file(gpg_conf, 'cert-digest-algo SHA256\ndigest-algo SHA256')
+            write_file(gpg_conf, 'cert-digest-algo SHA256\ndigest-algo SHA256\nuse-agent\npinentry-mode loopback')
             os.chmod(gpg_conf, 0o600)
+            write_file(gpg_agent_conf, 'allow-loopback-pinentry')
+            os.chmod(gpg_agent_conf, 0o600)
 
         key_params = """
 Key-Type: RSA
