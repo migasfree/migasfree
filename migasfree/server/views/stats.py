@@ -737,7 +737,7 @@ def stats_dashboard(request):
     host = request.META.get('HTTP_HOST')
 
     now = timezone.now()
-    end_date = datetime(now.year, now.month, now.day, now.hour)
+    end_date = datetime(now.year, now.month, now.day, now.hour) + timedelta(hours=1)
     begin_date = end_date - timedelta(days=HOURLY_RANGE)
 
     syncs = dict((i["hour"], i) for i in Synchronization.by_hour(begin_date, end_date))
