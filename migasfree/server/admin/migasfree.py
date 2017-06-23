@@ -36,7 +36,7 @@ class MigasFields(object):
     @staticmethod
     def text(model=None, name="", description=''):
         def getter(self, obj):
-            return getattr(obj, name)
+            return format_html(getattr(obj, name))
 
         getter.admin_order_field = name
 
