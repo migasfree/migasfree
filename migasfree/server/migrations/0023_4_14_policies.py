@@ -73,7 +73,7 @@ class Migration(migrations.Migration):
                 'ordering': ['policy__name', 'priority'],
                 'verbose_name': 'Policy Group',
                 'verbose_name_plural': 'Policy Groups',
-                'permissions': (('can_save_policy_group', 'Can save Policy Group'),),
+                'permissions': (('can_save_policygroup', 'Can save Policy Group'),),
             },
             bases=(models.Model, migasfree.server.models.common.MigasLink),
         ),

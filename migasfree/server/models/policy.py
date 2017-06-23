@@ -151,5 +151,5 @@ class PolicyGroup(models.Model, MigasLink):
         verbose_name = _("Policy Group")
         verbose_name_plural = _("Policy Groups")
         unique_together = (("policy", "priority"),)
-        permissions = (("can_save_policy_group", "Can save Policy Group"),)
+        permissions = (("can_save_policygroup", "Can save Policy Group"),)
         ordering = ['policy__name', 'priority']
