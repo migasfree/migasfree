@@ -281,7 +281,7 @@ class Migration(migrations.Migration):
             [(
                 "UPDATE server_query SET code=%s WHERE id=7;",
                 [
-                    "from django.utils.translation import ugettext_lazy as _\nfrom datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.productive.select_related('version').filter(created_at__gte=n, created_at__lt=date.today() + delta).order_by('-created_at')\nfields = ('link', 'project', 'created_at', 'ip_address')\ntitles = (_('Computer'), _('Project'), _('Date Input'), _('IP'))"
+                    "from django.utils.translation import ugettext_lazy as _\nfrom datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.productive.select_related('project').filter(created_at__gte=n, created_at__lt=date.today() + delta).order_by('-created_at')\nfields = ('link', 'project', 'created_at', 'ip_address')\ntitles = (_('Computer'), _('Project'), _('Date Input'), _('IP'))"
                 ]
             )],
             [(
