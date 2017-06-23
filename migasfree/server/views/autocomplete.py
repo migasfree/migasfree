@@ -21,13 +21,13 @@ class AutocompleteModelBase(autocomplete.Select2QuerySetView):
         keyword argument.
         """
         if field_name.startswith('^'):
-            return "%s__istartswith" % field_name[1:]
+            return '{}__istartswith'.format(field_name[1:])
         elif field_name.startswith('='):
-            return "%s__iexact" % field_name[1:]
+            return '{}__iexact'.format(field_name[1:])
         elif field_name.startswith('@'):
-            return "%s__search" % field_name[1:]
+            return '{}__search'.format(field_name[1:])
         else:
-            return "%s__icontains" % field_name
+            return '{}__icontains'.format(field_name)
 
     def choices_for_request_conditions(self, q, search_fields):
         """
@@ -99,5 +99,8 @@ class DeviceAutocomplete(AutocompleteModelBase):
         return qs
 
     def get_result_label(self, result):
-        return result.__str__() + " " + result.model.name + \
-            " @ " + result.location()
+        return '{} {} @ {}'.format(
+            result.__str__(),
+            result.model.name,
+            result.location()
+        )
