@@ -31,7 +31,7 @@
                     <tr class="{% cycle '' 'even' %}">
                         <td class="ordinal">{{ forloop.counter }}.</td>
                     {% for field in row %}
-                        <td>{{ field }}</td>
+                        <td>{{ field|escape }}</td>
                     {% endfor %}
                     </tr>
                 {% endfor %}
