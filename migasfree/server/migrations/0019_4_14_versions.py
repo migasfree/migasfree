@@ -247,4 +247,48 @@ class Migration(migrations.Migration):
             )],
             migrations.RunSQL.noop
         ),
+        migrations.RunSQL(
+            [(
+                "UPDATE server_query SET code=%s, parameters=%s WHERE id=3;",
+                [
+                    "from migasfree.server.models import Computer, Property, Project\nfrom django.db.models import Count\nquery = query = Computer.productive.select_related('sync_user').all()\nif parameters['value'] != '':\n    if str(parameters['exact']) == 'True':\n        query = query.filter(sync_attributes__property_att__id=parameters['property_att'], sync_attributes__value=parameters['value'])\n        fld = 'sync_attributes.filter(property_att__id=parameters[\"property_att\"], value=parameters[\"value\"]).values_list(\"value\", flat=True)'\n    else:\n        query = query.filter(sync_attributes__property_att__id=parameters['property_att'], sync_attributes__value__contains=parameters['value'])\n        fld = 'sync_attributes.filter(property_att__id=parameters[\"property_att\"], value__contains=parameters[\"value\"]).values_list(\"value\", flat=True)'\n    if parameters['project']:\n        query = query.select_related('project').filter(project__id=parameters['project'])\nquery = query.annotate(n=Count('id'))\nproperty = Property.objects.get(pk=parameters['property_att'])\nfields = ('link', fld, 'project', 'sync_user.link', 'sync_start_date')\ntitles = ('computer', property.name.lower(), 'project', 'sync user', 'date of login')",
+                    "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        property_att = forms.ModelChoiceField(Property.objects.all())\n        project = forms.ModelChoiceField(Project.objects.all())\n        value = forms.CharField()\n        exact = forms.ChoiceField( ((False,'No'),(True,'Yes')) )\n    return myForm"
+                ]
+            )],
+            [(
+                "UPDATE server_query SET code=%s, parameters=%s WHERE id=3;",
+                [
+                    "from migasfree.server.models import Computer, Property, Version\nfrom django.db.models import Count\nquery = query = Computer.productive.select_related('sync_user').all()\nif parameters['value'] != '':\n    if str(parameters['exact']) == 'True':\n        query = query.filter(sync_attributes__property_att__id=parameters['property_att'], sync_attributes__value=parameters['value'])\n        fld = 'sync_attributes.filter(property_att__id=parameters[\"property_att\"], value=parameters[\"value\"]).values_list(\"value\", flat=True)'\n    else:\n        query = query.filter(sync_attributes__property_att__id=parameters['property_att'], sync_attributes__value__contains=parameters['value'])\n        fld = 'sync_attributes.filter(property_att__id=parameters[\"property_att\"], value__contains=parameters[\"value\"]).values_list(\"value\", flat=True)'\n    if parameters['version']:\n        query = query.select_related('version').filter(version__id=parameters['version'])\nquery = query.annotate(n=Count('id'))\nproperty = Property.objects.get(pk=parameters['property_att'])\nfields = ('link', fld, 'version', 'sync_user.link', 'sync_start_date')\ntitles = ('computer', property.name.lower(), 'version', 'sync user', 'date of login')",
+                    "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        property_att = forms.ModelChoiceField(Property.objects.all())\n        version = forms.ModelChoiceField(Version.objects.all())\n        value = forms.CharField()\n        exact = forms.ChoiceField( ((False,'No'),(True,'Yes')) )\n    return myForm"
+                ]
+            )]
+        ),
+        migrations.RunSQL(
+            [(
+                "UPDATE server_query SET code=%s WHERE id=4;",
+                [
+                    "from migasfree.server.models import Computer\nquery = Computer.productive.select_related('project').filter(software_inventory__contains=parameters['package']).order_by('sync_end_date')\nfields = ('link', 'project.link', 'sync_end_date', 'product')\ntitles = ('Computer', 'Project', 'Last Update', 'Product')"
+                ]
+            )],
+            [(
+                "UPDATE server_query SET code=%s WHERE id=4;",
+                [
+                    "from migasfree.server.models import Computer\nquery = Computer.productive.select_related('version').filter(software_inventory__contains=parameters['package']).order_by('sync_end_date')\nfields = ('link', 'version.link', 'sync_end_date', 'product')\ntitles = ('Computer', 'Version', 'Last Update', 'Product')"
+                ]
+            )]
+        ),
+        migrations.RunSQL(
+            [(
+                "UPDATE server_query SET code=%s WHERE id=7;",
+                [
+                    "from django.utils.translation import ugettext_lazy as _\nfrom datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.productive.select_related('version').filter(created_at__gte=n, created_at__lt=date.today() + delta).order_by('-created_at')\nfields = ('link', 'project', 'created_at', 'ip_address')\ntitles = (_('Computer'), _('Project'), _('Date Input'), _('IP'))"
+                ]
+            )],
+            [(
+                "UPDATE server_query SET code=%s WHERE id=7;",
+                [
+                    "from django.utils.translation import ugettext_lazy as _\nfrom datetime import datetime, timedelta, date\nfrom migasfree.server.models import Computer\nlast_days = parameters['last_days']\nif last_days <= 0 or last_days == '':\n    last_days = 1\nelse:\n    last_days = int(last_days)\ndelta = timedelta(days=1)\nn = date.today() - ((last_days - 1) * delta)\nquery = Computer.productive.select_related('version').filter(created_at__gte=n, created_at__lt=date.today() + delta).order_by('-created_at')\nfields = ('link', 'version', 'created_at', 'ip_address')\ntitles = (_('Computer'), _('Version'), _('Date Input'), _('IP'))"
+                ]
+            )]
+        ),
     ]
