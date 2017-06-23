@@ -240,7 +240,7 @@ class BasicAttribute(Attribute):
             basic_attributes.append(obj.id)
 
         if 'PRJ' in properties.keys() and 'project' in kwargs:
-            obj, _ = Attribute.objects.create(
+            obj, _ = Attribute.objects.get_or_create(
                 property_att=Property.objects.get(pk=properties['PRJ']),
                 value=kwargs['project']
             )
