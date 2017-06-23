@@ -11,6 +11,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q  # for execute_query function
 from django import forms  # for execute_query function
 from django.conf import settings
+from django.db.models import DEFERRED
 
 from ..models import *
 
@@ -49,11 +50,8 @@ def execute_query(request, parameters, form_param=None):
                     cols.append(eval('obj.{}'.format(field)))
                 else:
                     # to allow calls to model methods (as link)
-                    if obj._deferred and inspect.ismethod(value):
-                        meta_model = obj._meta.proxy_for_model.objects.get(
-                            pk=obj.id
-                        )
-                        cols.append(getattr(meta_model, field)())
+                    if DEFERRED and inspect.ismethod(value):
+                        cols.append(getattr(obj, field)())
                     else:
                         cols.append(value)
 
