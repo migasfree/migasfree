@@ -181,3 +181,11 @@ def remove_duplicates_preserving_order(seq):
     seen_add = seen.add
 
     return [x for x in seq if not (x in seen or seen_add(x))]
+
+
+def strfdelta(tdelta, fmt):
+    d = {"days": tdelta.days}
+    d["hours"], rem = divmod(tdelta.seconds, 3600)
+    d["minutes"], d["seconds"] = divmod(rem, 60)
+
+    return fmt.format(**d)
