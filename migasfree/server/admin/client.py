@@ -24,6 +24,7 @@ from ..models import (
     AutoCheckError, Computer, Error, Fault, FaultDefinition, Message,
     Migration, Notification, StatusLog, Synchronization, User, DeviceLogical, HwNode
 )
+from ..utils import strfdelta
 
 admin.site.register(AutoCheckError)
 
@@ -174,30 +175,35 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     unchecked_faults.short_description = _('Unchecked Faults')
 
     def last_sync_time(self, obj):
-        is_updating = Message.objects.filter(computer__id=obj.pk).count()
-        diff = obj.sync_end_date - obj.sync_start_date
+        now = datetime.now()
+        delayed_time = now - timedelta(
+            0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT
+        )
+        is_updating = not obj.sync_end_date or obj.sync_end_date < obj.sync_start_date
 
         if is_updating:
-            delayed_time = datetime.now() - timedelta(
-                0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT
-            )
-            if obj.sync_start_date < delayed_time:
-                return format_html(
-                    '<span class="label label-warning" title="{}">'
-                    '<i class="fa fa-warning"></i> {}</span>'.format(
-                        _('Delayed Computer'),
-                        diff
-                    )
-                )
-            else:
-                return format_html(
-                    '<span class="label label-info">'
-                    '<i class="fa fa-refresh"></i> {}</span>'.format(
-                        _('Updating...'),
-                    )
-                )
+            diff = now - obj.sync_start_date
+        else:
+            diff = obj.sync_end_date - obj.sync_start_date
 
-        return diff
+        if obj.sync_start_date < delayed_time and is_updating:
+            return format_html(
+                '<span class="label label-warning" title="{}">'
+                '<i class="fa fa-warning"></i> {}</span>'.format(
+                    _('Delayed Computer'),
+                    strfdelta(diff, _('{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}'))
+                )
+            )
+
+        if is_updating:
+            return format_html(
+                '<span class="label label-info">'
+                '<i class="fa fa-refresh"></i> {}</span>'.format(
+                    _('Updating...'),
+                )
+            )
+
+        return strfdelta(diff, '{hours:02d}:{minutes:02d}:{seconds:02d}')
 
     last_sync_time.short_description = _('Last Update Time')
 
