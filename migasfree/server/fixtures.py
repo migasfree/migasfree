@@ -91,6 +91,8 @@ def create_default_users():
         ]
         add_read_perms(reader, tables)
         reader.save()
+    else:
+        reader = reader[0]
 
     # liberator group
     liberator = Group.objects.filter(name='Liberator')
@@ -104,6 +106,8 @@ def create_default_users():
         ]
         add_all_perms(liberator, tables)
         liberator.save()
+    else:
+        liberator = liberator[0]
 
     # packager group
     packager = Group.objects.filter(name='Packager')
@@ -114,6 +118,8 @@ def create_default_users():
         tables = ["package", "store"]
         add_all_perms(packager, tables)
         packager.save()
+    else:
+        packager = packager[0]
 
     # computer checker group
     checker = Group.objects.filter(name='Computer Checker')
@@ -127,6 +133,8 @@ def create_default_users():
         ]
         add_all_perms(checker, tables)
         checker.save()
+    else:
+        checker = checker[0]
 
     # device installer group
     device_installer = Group.objects.filter(name='Device installer')
@@ -140,6 +148,8 @@ def create_default_users():
         ]
         add_all_perms(device_installer, tables)
         device_installer.save()
+    else:
+        device_installer = device_installer[0]
 
     # query group
     questioner = Group.objects.filter(name='Query')
@@ -150,6 +160,8 @@ def create_default_users():
         tables = ["query"]
         add_all_perms(questioner, tables)
         questioner.save()
+    else:
+        questioner = questioner[0]
 
     # configurator group
     configurator = Group.objects.filter(name='Configurator')
@@ -159,11 +171,13 @@ def create_default_users():
         configurator.save()
         tables = [
             "checking", "faultdefinition", "property", "pms", "project",
-            "message", "update", "platform", "migration",
+            "message", "synchronization", "platform", "migration",
             "notification"
         ]
         add_all_perms(configurator, tables)
         configurator.save()
+    else:
+        configurator = configurator[0]
 
     # default users
     create_user("admin")
@@ -228,7 +242,7 @@ def create_initial_data():
                 settings.MIGASFREE_APP_DIR,
                 app,
                 'fixtures',
-                '{0}.{1}'.format(name, ext)
+                '{0}.{1}.{2}'.format(app, name, ext)
             ),
             interactive=False,
             verbosity=1
