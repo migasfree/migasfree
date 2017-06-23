@@ -5,7 +5,7 @@
         "fields": {
             "name": "USB",
             "fields": "NAME",
-            "devicetype": 1
+            "device_type": 1
         }
     },
     {
@@ -14,7 +14,7 @@
         "fields": {
             "name": "LPT",
             "fields": "PORT,NAME",
-            "devicetype": 1
+            "device_type": 1
         }
     },
     {
@@ -23,7 +23,7 @@
         "fields": {
             "name": "TCP",
             "fields": "IP,LOCATION,PORT,NAME",
-            "devicetype": 1
+            "device_type": 1
         }
     },
     {
@@ -32,7 +32,7 @@
         "fields": {
             "name": "LPD",
             "fields": "IP,LOCATION,PORT,NAME",
-            "devicetype": 1
+            "device_type": 1
         }
     },
     {
@@ -41,7 +41,7 @@
         "fields": {
             "name": "SRL",
             "fields": "PORT,NAME",
-            "devicetype": 1
+            "device_type": 1
         }
     }
 ]
