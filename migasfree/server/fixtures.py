@@ -203,6 +203,7 @@ def sequence_reset():
     if settings.DATABASES.get('default').get('ENGINE') == \
             'django.db.backends.postgresql_psycopg2':
         _filename = tempfile.mkstemp()[1]
+        os.chmod(_filename, 0x777)
         with open(_filename, "w") as _file:
             _file.write(commands.getvalue())
             _file.flush()
@@ -212,7 +213,7 @@ def sequence_reset():
             _filename
         )
         out, err = run(cmd)
-        if out != 0:
+        if err:
             print(err)
 
         os.remove(_filename)
