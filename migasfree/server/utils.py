@@ -189,3 +189,7 @@ def strfdelta(tdelta, fmt):
     d["minutes"], d["seconds"] = divmod(rem, 60)
 
     return fmt.format(**d)
+
+
+def escape_format_string(text):
+    return text.replace('{', '{{').replace('}', '}}')
