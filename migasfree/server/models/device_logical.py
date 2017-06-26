@@ -14,8 +14,12 @@ from . import (
 
 
 class DeviceLogicalManager(models.Manager):
-    def create(self, device, feature, name=None):
-        obj = DeviceLogical(device=device, feature=feature, name=name)
+    def create(self, device, feature, alternative_feature_name=None):
+        obj = DeviceLogical(
+            device=device,
+            feature=feature,
+            alternative_feature_name=alternative_feature_name
+        )
         obj.save()
 
         return obj
