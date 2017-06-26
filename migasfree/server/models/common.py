@@ -57,13 +57,13 @@ class MigasLink(object):
             ).count()
             if count:
                 related_link = reverse(
-                    'admin:{}_{}_changelist'.format(
+                    u'admin:{}_{}_changelist'.format(
                         obj.remote_field.model._meta.app_label,
                         _name)
                     )
 
                 related_data.append({
-                    'url': '{}?{}__id__exact={}'.format(
+                    'url': u'{}?{}__id__exact={}'.format(
                         related_link,
                         obj.remote_field.name,
                         self.pk
@@ -75,7 +75,7 @@ class MigasLink(object):
         for related_object, _ in related_objects:
             related_model, _field = self.transmodel(related_object)
             if related_model:
-                if not '{} - {}'.format(
+                if not u'{} - {}'.format(
                     related_model._meta.model_name,
                     _field
                 ) in self._exclude_links:
@@ -84,21 +84,19 @@ class MigasLink(object):
                     ).count()
                     if count:
                         related_link = reverse(
-                            'admin:{}_{}_changelist'.format(
+                            u'admin:{}_{}_changelist'.format(
                                 related_model._meta.app_label,
                                 related_model.__name__.lower()
                             )
                         )
                         related_data.append({
-                            'url': '{}?{}={}'.format(
+                            'url': u'{}?{}={}'.format(
                                 related_link,
                                 _field,
                                 self.id
                             ),
-                            'text': '{} [{}]'.format(
-                                ugettext(
-                                    related_model._meta.verbose_name_plural
-                                ),
+                            'text': u'{} [{}]'.format(
+                                ugettext(related_model._meta.verbose_name_plural),
                                 ugettext(related_object.field.verbose_name)
                             ),
                             'count': count
@@ -108,18 +106,18 @@ class MigasLink(object):
             try:
                 _model_name, _field_name = _include.split(" - ")
                 related_link = reverse(
-                    'admin:{}_{}_changelist'.format(
+                    u'admin:{}_{}_changelist'.format(
                         self._meta.app_label,
                         _model_name
                     )
                 )
                 related_data.append({
-                    'url': '{}?{}__id__exact={}'.format(
+                    'url': u'{}?{}__id__exact={}'.format(
                         related_link,
                         _field_name,
                         self.id
                     ),
-                    'text': '{} [{}]'.format(
+                    'text': u'{} [{}]'.format(
                         ugettext(_model_name),
                         ugettext(_field_name)
                     )
@@ -135,12 +133,12 @@ class MigasLink(object):
 
         if self._meta.model_name == 'hwnode':
             related_data.append({
-                'url': '{}?{}={}'.format(
+                'url': u'{}?{}={}'.format(
                     reverse('admin:server_computer_changelist'),
                     'product',
                     self.computer.product,
                 ),
-                'text': '{} [{}]'.format(
+                'text': u'{} [{}]'.format(
                     ugettext('computer'),
                     ugettext('product')
                 )
@@ -222,14 +220,14 @@ class MigasLink(object):
 
             related_data.append({
                 'url': reverse('computer_events', args=(computer.id,)),
-                'text': '{} [{}]'.format(
+                'text': u'{} [{}]'.format(
                     ugettext('Events'),
                     ugettext(computer._meta.model_name)
                 )
             })
             related_data.append({
                 'url': reverse('computer_simulate_sync', args=(computer.id,)),
-                'text': '{} [{}]'.format(
+                'text': u'{} [{}]'.format(
                     ugettext('Simulate sync'),
                     ugettext(computer._meta.model_name)
                 )
@@ -237,7 +235,7 @@ class MigasLink(object):
 
             related_data.append({
                 'url': reverse('hardware_resume', args=(computer.id,)),
-                'text': '{} [{}]'.format(
+                'text': u'{} [{}]'.format(
                     ugettext('Hardware'),
                     ugettext(computer._meta.model_name)
                 )
@@ -245,7 +243,7 @@ class MigasLink(object):
 
             related_data.append({
                 'url': reverse('computer_label') + '?uuid=' + computer.uuid,
-                'text': '{} [{}]'.format(
+                'text': u'{} [{}]'.format(
                     ugettext('Label'),
                     ugettext(computer._meta.model_name)
                 )
@@ -263,7 +261,7 @@ class MigasLink(object):
             {
                 'lnk': {
                     'url': reverse(
-                        'admin:{}_{}_change'.format(
+                        u'admin:{}_{}_change'.format(
                             self._meta.app_label,
                             self._meta.model_name
                         ),
@@ -279,7 +277,7 @@ class MigasLink(object):
     def link(self):
         lnk = {
             'url': reverse(
-                'admin:{}_{}_change'.format(
+                u'admin:{}_{}_change'.format(
                     self._meta.app_label,
                     self._meta.model_name
                 ),
@@ -356,7 +354,7 @@ class MigasLink(object):
         elif obj.field.__class__.__name__ == "ForeignKey":
             return obj.related_model, obj.field.name + "__id__exact"
         else:
-            return obj.related_model, "{}__{}__exact".format(
+            return obj.related_model, u"{}__{}__exact".format(
                 obj.field.name,
                 obj.field.m2m_reverse_target_field_name()
             )
