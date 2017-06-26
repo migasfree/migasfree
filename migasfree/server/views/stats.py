@@ -288,11 +288,9 @@ def delay_schedule(request, project_name=None):
     )
 
 
-def productive_computers_by_platform(protocol, host):
+def productive_computers_by_platform():
     total = Computer.productive.count()
-    link = '{}://{}{}?_REPLACE_&status__in={}'.format(
-        protocol,
-        host,
+    link = '{}?_REPLACE_&status__in={}'.format(
         reverse('admin:server_computer_changelist'),
         'intended,reserved,unknown'
     )
@@ -343,11 +341,9 @@ def productive_computers_by_platform(protocol, host):
     }
 
 
-def computers_by_machine(protocol, host):
+def computers_by_machine():
     total = Computer.objects.count()
-    link = '{}://{}{}?_REPLACE_'.format(
-        protocol,
-        host,
+    link = '{}?_REPLACE_'.format(
         reverse('admin:server_computer_changelist')
     )
 
@@ -448,11 +444,9 @@ def computers_by_machine(protocol, host):
     }
 
 
-def computers_by_status(protocol, host):
+def computers_by_status():
     total = Computer.objects.exclude(status='unsubscribed').count()
-    link = '{}://{}{}?_REPLACE_'.format(
-        protocol,
-        host,
+    link = '{}?_REPLACE_'.format(
         reverse('admin:server_computer_changelist')
     )
 
@@ -527,11 +521,9 @@ def computers_by_status(protocol, host):
     }
 
 
-def unchecked_errors(protocol, host):
+def unchecked_errors():
     total = Error.unchecked_count()
-    link = '{}://{}{}?checked__exact=0&_REPLACE_'.format(
-        protocol,
-        host,
+    link = '{}?checked__exact=0&_REPLACE_'.format(
         reverse('admin:server_error_changelist')
     )
 
@@ -585,11 +577,9 @@ def unchecked_errors(protocol, host):
     }
 
 
-def unchecked_faults(protocol, host):
+def unchecked_faults():
     total = Fault.unchecked_count()
-    link = '{}://{}{}?checked__exact=0&_REPLACE_'.format(
-        protocol,
-        host,
+    link = '{}?checked__exact=0&_REPLACE_'.format(
         reverse('admin:server_fault_changelist')
     )
 
@@ -643,11 +633,9 @@ def unchecked_faults(protocol, host):
     }
 
 
-def enabled_deployments(protocol, host):
+def enabled_deployments():
     total = Deployment.objects.filter(enabled=True).count()
-    link = '{}://{}{}?enabled__exact=1&_REPLACE_'.format(
-        protocol,
-        host,
+    link = '{}?enabled__exact=1&_REPLACE_'.format(
         reverse('admin:server_deployment_changelist')
     )
 
@@ -733,9 +721,6 @@ def enabled_deployments(protocol, host):
 
 @login_required
 def stats_dashboard(request):
-    protocol = request.META.get('wsgi.url_scheme')
-    host = request.META.get('HTTP_HOST')
-
     now = timezone.now()
     end_date = datetime(now.year, now.month, now.day, now.hour) + timedelta(hours=1)
     begin_date = end_date - timedelta(days=HOURLY_RANGE)
@@ -777,12 +762,12 @@ def stats_dashboard(request):
                     _('Thursday'), _('Friday'), _('Saturday')
                 ]),
             },
-            'productive_computers_by_platform': productive_computers_by_platform(protocol, host),
-            'computers_by_machine': computers_by_machine(protocol, host),
-            'computers_by_status': computers_by_status(protocol, host),
-            'unchecked_errors': unchecked_errors(protocol, host),
-            'unchecked_faults': unchecked_faults(protocol, host),
-            'enabled_deployments': enabled_deployments(protocol, host),
+            'productive_computers_by_platform': productive_computers_by_platform(),
+            'computers_by_machine': computers_by_machine(),
+            'computers_by_status': computers_by_status(),
+            'unchecked_errors': unchecked_errors(),
+            'unchecked_faults': unchecked_faults(),
+            'enabled_deployments': enabled_deployments(),
             'last_day_events': {
                 'title': _('History of events in the last %d hours') % (HOURLY_RANGE * 24),
                 'start_date': {
