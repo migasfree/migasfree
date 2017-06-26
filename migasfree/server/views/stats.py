@@ -473,7 +473,7 @@ def computers_by_status():
     count_productive = values.get('intended', {}).get('value', 0) \
         + values.get('reserved', {}).get('value', 0) \
         + values.get('unknown', {}).get('value', 0)
-    percent_productive = float(count_productive) / total * 100
+    percent_productive = float(count_productive) / total * 100 if count_productive else 0
     data_productive = []
     if 'intended' in values:
         data_productive.append(values['intended'])
@@ -484,7 +484,7 @@ def computers_by_status():
 
     count_unproductive = values.get('available', {}).get('value', 0) \
         + values.get('in repair', {}).get('value', 0)
-    percent_unproductive = float(count_unproductive) / total * 100
+    percent_unproductive = float(count_unproductive) / total * 100 if count_unproductive else 0
     data_unproductive = []
     if 'available' in values:
         data_unproductive.append(values['available'])
