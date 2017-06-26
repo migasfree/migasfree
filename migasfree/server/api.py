@@ -409,7 +409,9 @@ def upload_computer_info(request, name, uuid, computer, data):
 
         # Tags (server attributes) (not running on clients!!!)
         for tag in computer.tags.all().filter(property_att__enabled=True):
-            Attribute.process_kind_property(tag.property_att, tag.value)
+            computer.sync_attributes.add(
+                *Attribute.process_kind_property(tag.property_att, tag.value)
+            )
 
         # AttributeSets
         computer.sync_attributes.add(*AttributeSet.process(computer.get_all_attributes()))
