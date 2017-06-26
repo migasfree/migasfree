@@ -275,12 +275,19 @@ class MigasLink(object):
         )
 
     def link(self):
+        url = u'admin:{}_{}_change'.format(
+            self._meta.app_label,
+            self._meta.model_name
+        )
+        if self._meta.model_name == 'attribute':
+            if self.property_att.sort == 'server':
+                url = u'admin:{}_serverattribute_change'.format(self._meta.app_label)
+            else:
+                url = u'admin:{}_clientattribute_change'.format(self._meta.app_label)
+
         lnk = {
             'url': reverse(
-                u'admin:{}_{}_change'.format(
-                    self._meta.app_label,
-                    self._meta.model_name
-                ),
+                url,
                 args=(self.id,)
             ),
             'text': escape_format_string(self.__str__()),
