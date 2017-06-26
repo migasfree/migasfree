@@ -6,6 +6,8 @@ from django.utils.html import format_html
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 
+from ..utils import escape_format_string
+
 
 class MigasLink(object):
     def __init__(self):
@@ -43,11 +45,11 @@ class MigasLink(object):
             else:
                 _name = obj.remote_field.field.remote_field.model.__name__.lower()
 
-            if _name == "attribute":
+            if _name == 'attribute':
                 if self._meta.model_name == 'computer' and obj.attname == 'tags':
-                    _name = "tag"
+                    _name = 'tag'
 
-            if _name == "permission":
+            if _name == 'permission':
                 break
 
             count = obj.remote_field.model.objects.filter(
@@ -55,13 +57,13 @@ class MigasLink(object):
             ).count()
             if count:
                 related_link = reverse(
-                    'admin:%s_%s_changelist' % (
+                    'admin:{}_{}_changelist'.format(
                         obj.remote_field.model._meta.app_label,
                         _name)
                     )
 
                 related_data.append({
-                    'url': '%s?%s__id__exact=%s' % (
+                    'url': '{}?{}__id__exact={}'.format(
                         related_link,
                         obj.remote_field.name,
                         self.pk
@@ -73,7 +75,7 @@ class MigasLink(object):
         for related_object, _ in related_objects:
             related_model, _field = self.transmodel(related_object)
             if related_model:
-                if not "%s - %s" % (
+                if not '{} - {}'.format(
                     related_model._meta.model_name,
                     _field
                 ) in self._exclude_links:
@@ -82,18 +84,18 @@ class MigasLink(object):
                     ).count()
                     if count:
                         related_link = reverse(
-                            'admin:%s_%s_changelist' % (
+                            'admin:{}_{}_changelist'.format(
                                 related_model._meta.app_label,
                                 related_model.__name__.lower()
                             )
                         )
                         related_data.append({
-                            'url': '%s?%s=%d' % (
+                            'url': '{}?{}={}'.format(
                                 related_link,
                                 _field,
                                 self.id
                             ),
-                            'text': '%s [%s]' % (
+                            'text': '{} [{}]'.format(
                                 ugettext(
                                     related_model._meta.verbose_name_plural
                                 ),
@@ -104,20 +106,22 @@ class MigasLink(object):
 
         for _include in self._include_links:
             try:
-                _modelname, _fieldname = _include.split(" - ")
+                _model_name, _field_name = _include.split(" - ")
                 related_link = reverse(
-                    'admin:%s_%s_changelist'
-                    % (self._meta.app_label, _modelname)
+                    'admin:{}_{}_changelist'.format(
+                        self._meta.app_label,
+                        _model_name
+                    )
                 )
                 related_data.append({
-                    'url': '%s?%s__id__exact=%d' % (
+                    'url': '{}?{}__id__exact={}'.format(
                         related_link,
-                        _fieldname,
+                        _field_name,
                         self.id
                     ),
-                    'text': '%s [%s]' % (
-                        ugettext(_modelname),
-                        ugettext(_fieldname)
+                    'text': '{} [{}]'.format(
+                        ugettext(_model_name),
+                        ugettext(_field_name)
                     )
                 })
             except ValueError:
@@ -131,12 +135,12 @@ class MigasLink(object):
 
         if self._meta.model_name == 'hwnode':
             related_data.append({
-                'url': '%s?%s=%s' % (
+                'url': '{}?{}={}'.format(
                     reverse('admin:server_computer_changelist'),
-                    "product",
+                    'product',
                     self.computer.product,
                 ),
-                'text': '%s [%s]' % (
+                'text': '{} [{}]'.format(
                     ugettext('computer'),
                     ugettext('product')
                 )
@@ -218,14 +222,14 @@ class MigasLink(object):
 
             related_data.append({
                 'url': reverse('computer_events', args=(computer.id,)),
-                'text': '%s [%s]' % (
+                'text': '{} [{}]'.format(
                     ugettext('Events'),
                     ugettext(computer._meta.model_name)
                 )
             })
             related_data.append({
                 'url': reverse('computer_simulate_sync', args=(computer.id,)),
-                'text': '%s [%s]' % (
+                'text': '{} [{}]'.format(
                     ugettext('Simulate sync'),
                     ugettext(computer._meta.model_name)
                 )
@@ -233,7 +237,7 @@ class MigasLink(object):
 
             related_data.append({
                 'url': reverse('hardware_resume', args=(computer.id,)),
-                'text': '%s [%s]' % (
+                'text': '{} [{}]'.format(
                     ugettext('Hardware'),
                     ugettext(computer._meta.model_name)
                 )
@@ -241,7 +245,7 @@ class MigasLink(object):
 
             related_data.append({
                 'url': reverse('computer_label') + '?uuid=' + computer.uuid,
-                'text': '%s [%s]' % (
+                'text': '{} [{}]'.format(
                     ugettext('Label'),
                     ugettext(computer._meta.model_name)
                 )
@@ -259,7 +263,7 @@ class MigasLink(object):
             {
                 'lnk': {
                     'url': reverse(
-                        'admin:%s_%s_change' % (
+                        'admin:{}_{}_change'.format(
                             self._meta.app_label,
                             self._meta.model_name
                         ),
@@ -275,13 +279,13 @@ class MigasLink(object):
     def link(self):
         lnk = {
             'url': reverse(
-                'admin:%s_%s_change' % (
+                'admin:{}_{}_change'.format(
                     self._meta.app_label,
                     self._meta.model_name
                 ),
                 args=(self.id,)
             ),
-            'text': self.__str__(),
+            'text': escape_format_string(self.__str__()),
             'app': self._meta.app_label,
             'class': self._meta.model_name,
             'pk': self.id
@@ -352,7 +356,7 @@ class MigasLink(object):
         elif obj.field.__class__.__name__ == "ForeignKey":
             return obj.related_model, obj.field.name + "__id__exact"
         else:
-            return obj.related_model, "%s__%s__exact" % (
+            return obj.related_model, "{}__{}__exact".format(
                 obj.field.name,
                 obj.field.m2m_reverse_target_field_name()
             )
