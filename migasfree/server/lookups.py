@@ -232,7 +232,7 @@ class ComputerLookup(LookupChannel):
                     '{}__icontains'.format(
                         settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]
                     ): q
-               })
+                })
             ).filter(~Q(status__in=['available', 'unsubscribed']))
 
     def format_match(self, obj):
@@ -268,5 +268,5 @@ class ComputerLookup(LookupChannel):
         things = self.model.objects.in_bulk(lst)
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
             return [things[aid] for aid in lst if aid in things]
-        else:
-            return [things[aid] for aid in self.reorder(lst) if aid in things]
+
+        return [things[aid] for aid in self.reorder(lst) if aid in things]
