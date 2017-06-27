@@ -69,14 +69,15 @@ class AttributeLookup(LookupChannel):
                 'property_att',
                 'value'
             ) | self.model.objects.filter(
-                pk__in=ids
-            ).filter(
+                pk__in=ids,
                 property_att__prefix='CID'
             ).order_by(
                 'description'
             )
         else:
-            return self.model.objects.filter(pk__in=ids).order_by(
+            return self.model.objects.filter(
+                pk__in=ids
+            ).order_by(
                 'property_att',
                 'value'
             )
@@ -182,7 +183,7 @@ class TagLookup(LookupChannel):
         ).order_by('value')
 
     def format_match(self, obj):
-        return "{}-{} {}".format(
+        return u'{}-{} {}'.format(
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description)
@@ -195,7 +196,9 @@ class TagLookup(LookupChannel):
         return False
 
     def get_objects(self, ids):
-        return self.model.objects.filter(pk__in=ids).order_by(
+        return self.model.objects.filter(
+            pk__in=ids
+        ).order_by(
             'property_att',
             'value'
         )
@@ -233,7 +236,9 @@ class ComputerLookup(LookupChannel):
                         settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]
                     ): q
                 })
-            ).filter(~Q(status__in=['available', 'unsubscribed']))
+            ).filter(
+                ~Q(status__in=['available', 'unsubscribed'])
+            )
 
     def format_match(self, obj):
         return obj.__str__()
