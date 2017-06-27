@@ -212,7 +212,7 @@ def sequence_reset():
             settings.DATABASES.get('default').get('NAME'),
             _filename
         )
-        out, err = run(cmd)
+        _, err = run(cmd)
         if err:
             print(err)
 
