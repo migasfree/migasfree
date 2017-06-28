@@ -7,8 +7,8 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from dal import autocomplete
-from ajax_select.fields import AutoCompleteSelectMultipleField
 
+from .fields import MigasAutoCompleteSelectMultipleField
 from .models import (
     Deployment, UserProfile, Computer, Device, DeviceLogical,
     Property, ServerAttribute, ServerProperty, Attribute, Store, Package
@@ -60,15 +60,15 @@ class AppendDevicesFromComputerForm(forms.Form):
 
 
 class DeploymentForm(forms.ModelForm):
-    included_attributes = AutoCompleteSelectMultipleField(
+    included_attributes = MigasAutoCompleteSelectMultipleField(
         'attribute', required=False,
         label=_('included attributes'), show_help_text=False
     )
-    excluded_attributes = AutoCompleteSelectMultipleField(
+    excluded_attributes = MigasAutoCompleteSelectMultipleField(
         'attribute', required=False,
         label=_('excluded attributes'), show_help_text=False
     )
-    available_packages = AutoCompleteSelectMultipleField(
+    available_packages = MigasAutoCompleteSelectMultipleField(
         'package', required=False,
         label=_('available packages'), show_help_text=False
     )
@@ -157,7 +157,7 @@ class PackageForm(forms.ModelForm):
 
 
 class DeviceLogicalForm(forms.ModelForm):
-    attributes = AutoCompleteSelectMultipleField(
+    attributes = MigasAutoCompleteSelectMultipleField(
         'attribute', required=False,
         label=_('attributes')
     )
@@ -201,7 +201,7 @@ class PropertyForm(forms.ModelForm):
 
 
 class ServerAttributeForm(forms.ModelForm):
-    computers = AutoCompleteSelectMultipleField(
+    computers = MigasAutoCompleteSelectMultipleField(
         'computer', required=False,
         label=_('Computers'), show_help_text=False
     )
@@ -238,7 +238,7 @@ class ServerAttributeForm(forms.ModelForm):
 
 
 class ComputerForm(forms.ModelForm):
-    tags = AutoCompleteSelectMultipleField(
+    tags = MigasAutoCompleteSelectMultipleField(
         'tag', required=False,
         label=_('tags'), show_help_text=False
     )
