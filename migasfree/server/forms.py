@@ -7,7 +7,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 from dal import autocomplete
-from ajax_select import make_ajax_form
 from ajax_select.fields import AutoCompleteSelectMultipleField
 
 from .models import (
@@ -202,9 +201,10 @@ class PropertyForm(forms.ModelForm):
 
 
 class ServerAttributeForm(forms.ModelForm):
-    form = make_ajax_form(Computer, {'tags': 'computer'})
-    computers = form.declared_fields['tags']
-    computers.label = _('Computers')
+    computers = AutoCompleteSelectMultipleField(
+        'computer', required=False,
+        label=_('Computers'), show_help_text=False
+    )
 
     class Meta:
         model = ServerAttribute
@@ -214,7 +214,7 @@ class ServerAttributeForm(forms.ModelForm):
         super(ServerAttributeForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             self.fields['computers'].initial = \
-                self.instance.computer_set.all()
+                self.instance.tags.all()
 
         self.fields['property_att'].queryset = ServerProperty.objects.all()
         self.fields['property_att'].label = _('Tag Category')
@@ -225,9 +225,9 @@ class ServerAttributeForm(forms.ModelForm):
 
         def save_m2m():
             old_save_m2m()
-            instance.computer_set.clear()
-            for computer in self.cleaned_data['computers']:
-                instance.computer_set.add(computer)
+            instance.tags.clear()
+            for computer_id in self.cleaned_data['computers']:
+                instance.tags.add(computer_id)
 
         self.save_m2m = save_m2m
         if commit:
