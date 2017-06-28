@@ -255,14 +255,6 @@ class ComputerLookup(LookupChannel):
         ).order_by(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0])]
 
     def get_objects(self, ids):
-        """
-        Get the currently selected objects when editing an existing model
-        """
-        # return in the same order as passed in here
-        # this will be however the related objects Manager returns them
-        # which is not guaranteed to be the same order
-        # they were in when you last edited
-        # see OrderedManyToMany.md
         lst = []
         for item in ids:
             if item.__class__.__name__ == "Computer":
