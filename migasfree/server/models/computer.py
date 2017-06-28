@@ -505,5 +505,6 @@ def post_save_computer(sender, instance, created, **kwargs):
 
 @receiver(m2m_changed, sender=Computer.tags.through)
 def tags_changed(sender, instance, action, **kwargs):
-    if instance.status in ['available', 'unsubscribed'] and action == 'post_add':
-        instance.tags.clear()
+    if hasattr(instance, 'status'):
+        if instance.status in ['available', 'unsubscribed'] and action == 'post_add':
+            instance.tags.clear()
