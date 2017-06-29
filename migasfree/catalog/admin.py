@@ -46,9 +46,8 @@ class PackagesByProjectLine(admin.TabularInline):
 
     def get_formset(self, request, obj=None, **kwargs):
         formset = super(PackagesByProjectLine, self).get_formset(request, obj, **kwargs)
-        form = formset.form
-        form.base_fields['project'].widget.can_change_related = False
-        form.base_fields['project'].widget.can_add_related = False
+        formset.form.base_fields['project'].widget.can_change_related = False
+        formset.form.base_fields['project'].widget.can_add_related = False
 
         return formset
 
