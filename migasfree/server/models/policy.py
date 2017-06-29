@@ -4,6 +4,8 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+from migasfree.catalog.models import Application
+
 from . import Attribute, MigasLink
 
 
@@ -19,6 +21,11 @@ class Policy(models.Model, MigasLink):
         default=True,
         help_text=_("if you uncheck this field, the policy is disabled for"
                     " all computers.")
+    )
+
+    exclusive = models.BooleanField(
+        verbose_name=_('exclusive'),
+        default=True,
     )
 
     comment = models.TextField(
@@ -62,17 +69,16 @@ class Policy(models.Model, MigasLink):
         return False
 
     @staticmethod
-    def get_packages_to_remove(group):
+    def get_packages_to_remove(group, project_id=0):
         _packages = []
-        for item in PolicyGroup.objects.filter(policy=group.policy):
-            if item.packages_to_install:
-                for package in item.packages_to_install.replace("\n", " ").split(" "):
-                    if package != "":
-                        _packages.append(package)
-
-        for package in group.packages_to_install.replace("\n", " ").split(" "):
-            if package != "":
-                _packages.remove(package)
+        for item in PolicyGroup.objects.filter(policy=group.policy).exclude(id=group.id):
+            for pkgs in item.applications.filter(
+                packagesbyproject__project__id=project_id
+            ).values_list(
+                'packagesbyproject__packages_to_install',
+                flat=True
+            ):
+                _packages.extend(pkgs.replace("\n", " ").split())
 
         return _packages
 
@@ -87,17 +93,26 @@ class Policy(models.Model, MigasLink):
                     policy.included_attributes.all(),
                     policy.excluded_attributes.all()
             ):
-                for group in PolicyGroup.objects.filter(policy=policy).order_by("priority"):
+                for group in PolicyGroup.objects.filter(
+                        policy=policy
+                ).order_by("priority"):
                     if policy.belongs_excluding(
                             computer,
                             group.included_attributes.all(),
                             group.excluded_attributes.all()
                     ):
-                        if group.packages_to_install:
-                            for package in group.packages_to_install.replace("\n", " ").split(" "):
-                                if package != "":
-                                    to_install.append(package)
-                        to_remove.extend(policy.get_packages_to_remove(group))
+                        for pkgs in group.applications.filter(
+                                packagesbyproject__project__id=computer.project.id
+                        ).values_list(
+                            'packagesbyproject__packages_to_install',
+                            flat=True
+                        ):
+                            to_install.extend(pkgs.replace("\n", " ").split())
+
+                        if policy.exclusive:
+                            to_remove.extend(
+                                policy.get_packages_to_remove(group, computer.project.id)
+                            )
                         break
 
         return to_install, to_remove
@@ -137,14 +152,14 @@ class PolicyGroup(models.Model, MigasLink):
         verbose_name=_("excluded attributes"),
     )
 
-    packages_to_install = models.TextField(
-        verbose_name=_("packages to install"),
-        null=True,
-        blank=True
+    applications = models.ManyToManyField(
+        Application,
+        blank=True,
+        verbose_name=_("application"),
     )
 
     def __str__(self):
-        return "{}-{}".format(self.policy.name, self.priority)
+        return u'{} ({})'.format(self.policy.name, self.priority)
 
     class Meta:
         app_label = 'server'
