@@ -224,14 +224,14 @@ class Migration(migrations.Migration):
         ),
         migrations.RunSQL(
             [(
-                "UPDATE server_property SET name=%s, prefix=%s WHERE id=4;",
+                "UPDATE server_property SET name=%s, prefix=%s WHERE prefix='VER';",
                 [
                     "PROJECT",
                     "PRJ"
                 ]
             )],
             [(
-                "UPDATE server_property SET name=%s, prefix=%s WHERE id=4;",
+                "UPDATE server_property SET name=%s, prefix=%s WHERE prefix='PRJ';",
                 [
                     "VERSION",
                     "VER"
