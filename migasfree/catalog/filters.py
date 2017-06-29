@@ -8,4 +8,4 @@ from .models import Application
 class ApplicationFilter(filters.FilterSet):
     class Meta:
         model = Application
-        fields = ['project__name', 'level', 'category']
+        fields = ['level', 'category']
