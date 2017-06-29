@@ -21,12 +21,12 @@
 
 {% block bodyclass %}{{ block.super }} {{ opts.app_label }}-{{ opts.object_model }} change-form{% endblock %}
 
-{% block title %}{% trans opts.verbose_name %} {{ original }}{% endblock title %}
+{% block title %}{% trans opts.verbose_name %}{% if original %}: {{ original }}{% endif %}{% endblock title %}
 
 {% block content_title %}
     {% if title %}
         <h1 {% if change %}class="change-list-title"{% endif %}>
-            {% trans opts.verbose_name %}: {% link opts %}
+            {% trans opts.verbose_name %}{% if original %}: {% link opts %}{% endif %}
         </h1>
     {% endif %}
 {% endblock content_title %}
