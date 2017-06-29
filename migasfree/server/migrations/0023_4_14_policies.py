@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('server', '0022_4_14_computers'),
+        ('catalog', '0003_4_14_packages_by_project'),
     ]
 
     operations = [
@@ -26,6 +27,10 @@ class Migration(migrations.Migration):
                     default=True,
                     help_text='if you uncheck this field, the policy is disabled for all computers.',
                     verbose_name='enabled'
+                )),
+                ('exclusive', models.BooleanField(
+                    default=True,
+                    verbose_name='exclusive'
                 )),
                 ('comment', models.TextField(blank=True, null=True, verbose_name='comment')),
                 ('excluded_attributes', models.ManyToManyField(
@@ -53,8 +58,8 @@ class Migration(migrations.Migration):
                     serialize=False, verbose_name='ID'
                 )),
                 ('priority', models.IntegerField(verbose_name='priority')),
-                ('packages_to_install', models.TextField(
-                    blank=True, null=True, verbose_name='packages to install'
+                ('applications', models.ManyToManyField(
+                    blank=True, to='catalog.Application', verbose_name='application'
                 )),
                 ('excluded_attributes', models.ManyToManyField(
                     blank=True, related_name='PolicyGroupExcludedAttributes',
