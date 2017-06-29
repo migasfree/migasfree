@@ -7,12 +7,6 @@
 
     <li role="presentation" class="divider"></li>
 
-    <li><a href="{% url 'admin:server_project_changelist' %}">{% trans 'Projects' %}</a></li>
-    <li><a href="{% url 'admin:server_pms_changelist' %}">{% trans 'P.M.S.' %}</a></li>
-    <li><a href="{% url 'admin:server_platform_changelist' %}">{% trans 'Platforms' %}</a></li>
-
-    <li role="presentation" class="divider"></li>
-
     <li><a href="{% url 'admin:server_checking_changelist' %}">{% trans 'Checkings' %}</a></li>
     <li><a href="{% url 'admin:server_faultdefinition_changelist' %}">{% trans 'Fault Definitions' %}</a></li>
     <li><a href="{% url 'admin:server_autocheckerror_changelist' %}">{% trans 'Auto Check Errors' %}</a></li>
@@ -20,11 +14,13 @@
 
     <li role="presentation" class="divider"></li>
 
-    <li><a href="{% url 'admin:server_userprofile_changelist' %}">{% trans 'User Profiles' %}</a></li>
-    <li><a href="{% url 'admin:auth_group_changelist' %}">{% trans 'Groups' %}</a></li>
-    <li><a href="{% url 'admin:index' %}">{% trans 'Site administration' %}</a></li>
+    <li><a href="{% url 'admin:server_project_changelist' %}">{% trans 'Projects' %}</a></li>
+    <li><a href="{% url 'admin:server_pms_changelist' %}">{% trans 'P.M.S.' %}</a></li>
+    <li><a href="{% url 'admin:server_platform_changelist' %}">{% trans 'Platforms' %}</a></li>
 
     <li role="presentation" class="divider"></li>
 
-    <li><a href="{% url 'admin:catalog_application_changelist' %}">{% trans 'Apps Catalog' %}</a></li>
+    <li><a href="{% url 'admin:server_userprofile_changelist' %}">{% trans 'User Profiles' %}</a></li>
+    <li><a href="{% url 'admin:auth_group_changelist' %}">{% trans 'Groups' %}</a></li>
+    <li><a href="{% url 'admin:index' %}">{% trans 'Site administration' %}</a></li>
 </ul>
