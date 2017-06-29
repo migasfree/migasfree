@@ -33,13 +33,11 @@ class Application(models.Model, MigasLink):
         (14, _('Universal Access')),
     )
 
-    project = models.ForeignKey(
-        Project,
-        on_delete=models.CASCADE,
-        verbose_name=_('project')
+    name = models.CharField(
+        verbose_name=_('name'),
+        max_length=50,
+        unique=True
     )
-
-    name = models.CharField(verbose_name=_('name'), max_length=50)
 
     description = MarkdownxField(
         verbose_name=_('description'),
@@ -48,11 +46,6 @@ class Application(models.Model, MigasLink):
     )
 
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('date'))
-
-    packages_to_install = models.TextField(
-        verbose_name=_('packages to install'),
-        blank=True,
-    )
 
     score = models.IntegerField(
         verbose_name=_('score'),
@@ -87,5 +80,34 @@ class Application(models.Model, MigasLink):
         app_label = 'catalog'
         verbose_name = _('Application')
         verbose_name_plural = _('Applications')
-        unique_together = (("name", "project"),)
         permissions = (('can_save_application', 'Can save application'),)
+
+
+@python_2_unicode_compatible
+class PackagesByProject(models.Model, MigasLink):
+    application = models.ForeignKey(
+        Application,
+        on_delete=models.CASCADE,
+        verbose_name=_('application')
+    )
+
+    project = models.ForeignKey(
+        Project,
+        on_delete=models.CASCADE,
+        verbose_name=_('project')
+    )
+
+    packages_to_install = models.TextField(
+        verbose_name=_('packages to install'),
+        blank=True,
+    )
+
+    def __str__(self):
+        return u'{}@{}'.format(self.application, self.project)
+
+    class Meta:
+        app_label = 'catalog'
+        verbose_name = _('Packages by Project')
+        verbose_name_plural = _('Packages by Projects')
+        unique_together = (('application', 'project'),)
+        permissions = (('can_save_packagesbyproject', 'Can save packages by project'),)
