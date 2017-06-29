@@ -11,7 +11,8 @@ from dal import autocomplete
 from .fields import MigasAutoCompleteSelectMultipleField
 from .models import (
     Deployment, UserProfile, Computer, Device, DeviceLogical,
-    Property, ServerAttribute, ServerProperty, Attribute, Store, Package
+    Property, ServerAttribute, ServerProperty, Attribute,
+    AttributeSet, Store, Package
 )
 
 
@@ -245,6 +246,21 @@ class ComputerForm(forms.ModelForm):
 
     class Meta:
         model = Computer
+        fields = '__all__'
+
+
+class AttributeSetForm(forms.ModelForm):
+    included_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('included attributes'), show_help_text=False
+    )
+    excluded_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('excluded attributes'), show_help_text=False
+    )
+
+    class Meta:
+        model = AttributeSet
         fields = '__all__'
 
 

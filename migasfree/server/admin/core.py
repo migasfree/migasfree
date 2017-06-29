@@ -19,7 +19,8 @@ from ..models import (
 )
 
 from ..forms import (
-    PropertyForm, DeploymentForm, ServerAttributeForm, StoreForm, PackageForm
+    PropertyForm, DeploymentForm, ServerAttributeForm,
+    AttributeSetForm, StoreForm, PackageForm
 )
 
 from ..filters import ClientAttributeFilter, ServerAttributeFilter
@@ -32,13 +33,7 @@ from ..tasks import (
 
 @admin.register(AttributeSet)
 class AttributeSetAdmin(MigasAdmin):
-    form = make_ajax_form(
-        AttributeSet,
-        {
-            'included_attributes': 'attribute',
-            'excluded_attributes': 'attribute',
-        }
-    )
+    form = AttributeSetForm
     list_display = ('name_link', 'included_attributes_link', 'excluded_attributes_link')
     list_filter = ('enabled',)
     list_display_links = ('name_link',)
@@ -512,9 +507,13 @@ class PolicyGroupAdmin(MigasAdmin):
         PolicyGroup,
         {
             'included_attributes': 'attribute',
-            'excluded_attributes': 'attribute'
+            'excluded_attributes': 'attribute',
+            'applications': 'application'
         }
     )
+    form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+    form.declared_fields['applications'].label = _('application')
 
     list_display = (
         'id', 'policy_link', 'priority',
@@ -540,12 +539,12 @@ class PolicyGroupAdmin(MigasAdmin):
     def get_queryset(self, request):
         return super(PolicyGroupAdmin, self).get_queryset(
             request
-            ).prefetch_related(
-                'included_attributes',
-                'included_attributes__property_att',
-                'excluded_attributes',
-                'excluded_attributes__property_att'
-            )
+        ).prefetch_related(
+            'included_attributes',
+            'included_attributes__property_att',
+            'excluded_attributes',
+            'excluded_attributes__property_att'
+        )
 
 
 class PolicyGroupLine(admin.TabularInline):
@@ -559,6 +558,7 @@ class PolicyGroupLine(admin.TabularInline):
     )
     form.declared_fields['included_attributes'].label = _('included attributes')
     form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+    form.declared_fields['applications'].label = _('application')
 
     model = PolicyGroup
     fields = (
