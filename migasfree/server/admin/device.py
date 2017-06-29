@@ -94,6 +94,13 @@ class DeviceLogicalInline(admin.TabularInline):
     fields = ('feature', 'alternative_feature_name', 'attributes')
     extra = 0
 
+    def get_formset(self, request, obj=None, **kwargs):
+        formset = super(DeviceLogicalInline, self).get_formset(request, obj, **kwargs)
+        formset.form.base_fields['feature'].widget.can_change_related = False
+        formset.form.base_fields['feature'].widget.can_add_related = False
+
+        return formset
+
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
         args = resolve(request.path).args
         if db_field.name == 'feature' and len(args):
