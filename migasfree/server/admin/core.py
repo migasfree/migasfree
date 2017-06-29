@@ -553,7 +553,8 @@ class PolicyGroupLine(admin.TabularInline):
         PolicyGroup,
         {
             'included_attributes': 'attribute',
-            'excluded_attributes': 'attribute'
+            'excluded_attributes': 'attribute',
+            'applications': 'application'
         }
     )
     form.declared_fields['included_attributes'].label = _('included attributes')
@@ -562,7 +563,7 @@ class PolicyGroupLine(admin.TabularInline):
     model = PolicyGroup
     fields = (
         'priority', 'included_attributes',
-        'excluded_attributes', 'packages_to_install'
+        'excluded_attributes', 'applications'
     )
     ordering = ('priority',)
     extra = 0
@@ -581,9 +582,10 @@ class PolicyAdmin(MigasAdmin):
     form.declared_fields['excluded_attributes'].label = _('excluded attributes')
 
     list_display = (
-        'name_link', 'included_attributes_link', 'excluded_attributes_link'
+        'name_link', 'my_enabled', 'my_exclusive',
+        'included_attributes_link', 'excluded_attributes_link'
     )
-    list_filter = ('enabled',)
+    list_filter = ('enabled', 'exclusive')
     list_display_links = ('name_link',)
     search_fields = (
         'name', 'included_attributes__value', 'excluded_attributes__value'
@@ -594,6 +596,7 @@ class PolicyAdmin(MigasAdmin):
                 'name',
                 'comment',
                 'enabled',
+                'exclusive',
             )
         }),
         (_('Application Area'), {
@@ -615,3 +618,5 @@ class PolicyAdmin(MigasAdmin):
         model=Policy, name='excluded_attributes',
         description=_('excluded attributes'),
     )
+    my_enabled = MigasFields.boolean(model=Policy, name='enabled')
+    my_exclusive = MigasFields.boolean(model=Policy, name='exclusive')
