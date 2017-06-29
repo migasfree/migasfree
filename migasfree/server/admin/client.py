@@ -424,6 +424,9 @@ class FaultDefinitionAdmin(MigasAdmin):
             'excluded_attributes': 'attribute',
         }
     )
+    form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+
     list_display = (
         'name_link',
         'my_enabled',
@@ -491,8 +494,8 @@ class MessageAdmin(MigasAdmin):
 
 @admin.register(Migration)
 class MigrationAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'project_link', 'created_at')
-    list_display_links = ('id',)
+    list_display = ('created_at', 'computer_link', 'project_link')
+    list_display_links = ('created_at',)
     list_select_related = ('computer', 'project')
     list_filter = ('created_at', 'project__platform', 'project')
     search_fields = add_computer_search_fields(['created_at'])
@@ -514,8 +517,8 @@ class MigrationAdmin(MigasAdmin):
 
 @admin.register(Notification)
 class NotificationAdmin(MigasAdmin):
-    list_display = ('id', 'my_checked', 'created_at', 'my_message')
-    list_display_links = ('id',)
+    list_display = ('created_at', 'my_checked', 'my_message')
+    list_display_links = ('created_at',)
     list_filter = ('checked', 'created_at')
     ordering = ('-created_at',)
     search_fields = ('created_at', 'message')
@@ -542,8 +545,8 @@ class NotificationAdmin(MigasAdmin):
 
 @admin.register(StatusLog)
 class StatusLogAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'status', 'created_at')
-    list_display_links = ('id',)
+    list_display = ('created_at', 'computer_link', 'status')
+    list_display_links = ('created_at',)
     list_select_related = ('computer',)
     list_filter = ('created_at', ('status', ProductiveFilterSpec),)
     search_fields = add_computer_search_fields(['created_at'])
@@ -561,8 +564,8 @@ class StatusLogAdmin(MigasAdmin):
 
 @admin.register(Synchronization)
 class SynchronizationAdmin(MigasAdmin):
-    list_display = ('__str__', 'user_link', 'computer_link', 'project_link')
-    list_display_links = ('__str__',)
+    list_display = ('created_at', 'user_link', 'computer_link', 'project_link')
+    list_display_links = ('created_at',)
     list_filter = ('created_at',)
     search_fields = add_computer_search_fields(['created_at', 'user__name'])
     readonly_fields = (
