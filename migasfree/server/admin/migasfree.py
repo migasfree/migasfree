@@ -108,6 +108,9 @@ class MigasFields(object):
             if inspect.ismethod(obj):  # Is a method
                 obj = obj()
 
+            if not hasattr(obj, 'all'):
+                return obj.link()
+
             return format_html(
                 render_to_string(
                     'includes/objects_link.html',
@@ -315,12 +318,14 @@ class MigasChangeList(ChangeList):
                 else:
                     model = getattr(self.model, _classname)
                     _classname = model.field.related_model.__name__
-                    model = apps.get_model('server', _classname)
+                    _app = model.field.related_model._meta.app_label
+                    model = apps.get_model(_app, _classname)
                     self.append(_name, model.objects.get(pk=params[k]))
 
             elif k == "id__in":
                 _classname = self.model.__name__
-                model = apps.get_model('server', _classname)
+                _app = self.model._meta.app_label
+                model = apps.get_model(_app, _classname)
                 _list = []
                 for _id in params[k].split(",")[0:10]:  # limit to 10 elements
                     _list.append(
