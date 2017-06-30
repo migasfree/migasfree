@@ -74,9 +74,9 @@ class Policy(models.Model, MigasLink):
         _packages = []
         for item in PolicyGroup.objects.filter(policy=group.policy).exclude(id=group.id):
             for pkgs in item.applications.filter(
-                packagesbyproject__project__id=project_id
+                packages_by_project__project__id=project_id
             ).values_list(
-                'packagesbyproject__packages_to_install',
+                'packages_by_project__packages_to_install',
                 flat=True
             ):
                 _packages.extend(to_list(pkgs))
@@ -103,9 +103,9 @@ class Policy(models.Model, MigasLink):
                             group.excluded_attributes.all()
                     ):
                         for pkgs in group.applications.filter(
-                                packagesbyproject__project__id=computer.project.id
+                                packages_by_project__project__id=computer.project.id
                         ).values_list(
-                            'packagesbyproject__packages_to_install',
+                            'packages_by_project__packages_to_install',
                             flat=True
                         ):
                             to_install.extend(to_list(pkgs))
