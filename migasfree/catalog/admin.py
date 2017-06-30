@@ -57,8 +57,7 @@ class ApplicationAdmin(MigasAdmin):
     formfield_overrides = {
         models.ImageField: {'widget': ImageWidget}
     }
-    list_display = ('name', 'score', 'level', 'category',)
-    list_display_links = ('name',)
+    list_display = ('name_link', 'score', 'level', 'category',)
     list_filter = ('level', 'category')
     ordering = ('name',)
     fields = (
@@ -70,6 +69,7 @@ class ApplicationAdmin(MigasAdmin):
     inlines = [PackagesByProjectLine]
     extra = 0
 
+    name_link = MigasFields.link(model=Application, name="name")
     project_link = MigasFields.link(
         model=Application, name='project', order='project__name'
     )
