@@ -23,7 +23,7 @@ from .views import load_hw
 from .tasks import create_repository_metadata
 from .utils import (
     uuid_change_format, get_client_ip,
-    list_difference, list_common,
+    list_difference, list_common, to_list,
     remove_duplicates_preserving_order,
 )
 from . import errmfs
@@ -427,11 +427,11 @@ def upload_computer_info(request, name, uuid, computer, data):
         for d in deploys:
             lst_deploys.append({"name": d.name})
             if d.packages_to_remove:
-                for p in d.packages_to_remove.replace("\n", " ").split(" "):
+                for p in to_list(d.packages_to_remove):
                     if p != "":
                         lst_pkg_to_remove.append(p)
             if d.packages_to_install:
-                for p in d.packages_to_install.replace("\n", " ").split(" "):
+                for p in to_list(d.packages_to_install):
                     if p != "":
                         lst_pkg_to_install.append(p)
 
@@ -768,48 +768,51 @@ def set_computer_tags(request, name, uuid, computer, data):
         # old deployments
         for deploy in Deployment.available_deployments(computer, old_tags_id):
             # INVERSE !!!!
-            pkgs = "{} {} {}".format(
-                deploy.packages_to_install,
-                deploy.default_included_packages,
-                deploy.default_preincluded_packages
-            ).replace("\r", " ").replace("\n", " ")
-            for p in pkgs.split():
-                if p != "" and p != 'None':
-                    lst_pkg_remove.append(p)
+            lst_pkg_remove.extend(
+                to_list(
+                    "{} {} {}".format(
+                        deploy.packages_to_install,
+                        deploy.default_included_packages,
+                        deploy.default_preincluded_packages
+                    )
+                )
+            )
 
-            pkgs = "{} {}".format(
-                deploy.packages_to_remove,
-                deploy.default_excluded_packages
-            ).replace("\r", " ").replace("\n", " ")
-            for p in pkgs.split():
-                if p != "" and p != 'None':
-                    lst_pkg_install.append(p)
+            lst_pkg_install.extend(
+                to_list(
+                    "{} {}".format(
+                        deploy.packages_to_remove,
+                        deploy.default_excluded_packages
+                    )
+                )
+            )
 
         # new deployments
         for deploy in Deployment.available_deployments(
             computer,
             new_tags_id + com_tags_id
         ):
-            pkgs = "{} {}".format(
-                deploy.packages_to_remove,
-                deploy.default_excluded_packages
-            ).replace("\r", " ").replace("\n", " ")
-            for p in pkgs.split():
-                if p != "" and p != 'None':
-                    lst_pkg_remove.append(p)
+            lst_pkg_remove.extend(
+                to_list(
+                    "{} {}".format(
+                        deploy.packages_to_remove,
+                        deploy.default_excluded_packages
+                    )
+                )
+            )
 
-            pkgs = "{} {}".format(
-                deploy.packages_to_install,
-                deploy.default_included_packages
-            ).replace("\r", " ").replace("\n", " ")
-            for p in pkgs.split():
-                if p != "" and p != 'None':
-                    lst_pkg_install.append(p)
+            lst_pkg_install.extend(
+                to_list(
+                    "{} {}".format(
+                        deploy.packages_to_install,
+                        deploy.default_included_packages
+                    )
+                )
+            )
 
-            pkgs = deploy.default_preincluded_packages.replace("\r", " ").replace("\n", " ")
-            for p in pkgs.split():
-                if p != "" and p != 'None':
-                    lst_pkg_preinstall.append(p)
+            lst_pkg_preinstall.extend(
+                to_list(deploy.default_preincluded_packages)
+            )
 
         ret_data = errmfs.ok()
         ret_data["packages"] = {

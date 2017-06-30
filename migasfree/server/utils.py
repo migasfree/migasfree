@@ -193,3 +193,10 @@ def strfdelta(tdelta, fmt):
 
 def escape_format_string(text):
     return text.replace('{', '{{').replace('}', '}}')
+
+
+def to_list(text):
+    """
+    Converts text with new lines and spaces to list (space delimiter)
+    """
+    return text.replace('\r', ' ').replace('\n', ' ').split()

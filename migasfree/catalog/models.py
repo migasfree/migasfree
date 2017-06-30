@@ -103,9 +103,6 @@ class PackagesByProject(models.Model, MigasLink):
         blank=True,
     )
 
-    def repr_packages_to_install(self):
-        return self.packages_to_install.replace('\n', ' ').split()
-
     def __str__(self):
         return u'{}@{}'.format(self.application, self.project)
 

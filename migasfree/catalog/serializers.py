@@ -3,6 +3,7 @@
 from rest_framework import serializers
 
 from migasfree.server.serializers import ProjectInfoSerializer
+from migasfree.server.utils import to_list
 from . import models
 
 
@@ -31,7 +32,7 @@ class PackagesByProjectSerializer(serializers.ModelSerializer):
                 'id': obj.project.id,
                 'name': obj.project.name
             },
-            'packages_to_install': obj.repr_packages_to_install()
+            'packages_to_install': to_list(obj.packages_to_install())
         }
 
     class Meta:

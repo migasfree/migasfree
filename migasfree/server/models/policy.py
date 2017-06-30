@@ -6,6 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from migasfree.catalog.models import Application
 
+from ..utils import to_list
 from . import Attribute, MigasLink
 
 
@@ -78,7 +79,7 @@ class Policy(models.Model, MigasLink):
                 'packagesbyproject__packages_to_install',
                 flat=True
             ):
-                _packages.extend(pkgs.replace("\n", " ").split())
+                _packages.extend(to_list(pkgs))
 
         return _packages
 
@@ -107,7 +108,7 @@ class Policy(models.Model, MigasLink):
                             'packagesbyproject__packages_to_install',
                             flat=True
                         ):
-                            to_install.extend(pkgs.replace("\n", " ").split())
+                            to_install.extend(to_list(pkgs))
 
                         if policy.exclusive:
                             to_remove.extend(
