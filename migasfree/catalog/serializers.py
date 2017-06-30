@@ -32,7 +32,7 @@ class PackagesByProjectSerializer(serializers.ModelSerializer):
                 'id': obj.project.id,
                 'name': obj.project.name
             },
-            'packages_to_install': to_list(obj.packages_to_install())
+            'packages_to_install': to_list(obj.packages_to_install)
         }
 
     class Meta:
