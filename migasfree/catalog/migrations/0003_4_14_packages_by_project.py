@@ -42,7 +42,8 @@ class Migration(migrations.Migration):
             name='application',
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
-                to='catalog.Application', verbose_name='application'
+                to='catalog.Application', verbose_name='application',
+                related_name='packages_by_project'
             ),
         ),
         migrations.AddField(

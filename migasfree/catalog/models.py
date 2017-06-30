@@ -88,7 +88,8 @@ class PackagesByProject(models.Model, MigasLink):
     application = models.ForeignKey(
         Application,
         on_delete=models.CASCADE,
-        verbose_name=_('application')
+        verbose_name=_('application'),
+        related_name='packages_by_project'
     )
 
     project = models.ForeignKey(
@@ -101,6 +102,9 @@ class PackagesByProject(models.Model, MigasLink):
         verbose_name=_('packages to install'),
         blank=True,
     )
+
+    def repr_packages_to_install(self):
+        return self.packages_to_install.replace('\n', ' ').split()
 
     def __str__(self):
         return u'{}@{}'.format(self.application, self.project)
