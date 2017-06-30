@@ -70,7 +70,9 @@ class Attribute(models.Model, MigasLink):
         AND server_computer_sync_attributes.computer_id=server_computer.id"
 
     def __str__(self):
-        if self.property_att.prefix == 'CID' and \
+        if self.id == 1:  # special case (SET-ALL SYSTEMS)
+            return self.value
+        elif self.property_att.prefix == 'CID' and \
                 settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != 'id':
             return u'{} (CID-{})'.format(self.description, self.value)
         else:

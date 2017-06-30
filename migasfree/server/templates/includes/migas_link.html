@@ -10,6 +10,7 @@
         {% if lnk.status == 'reserved' %}fa-lock{% endif %}
         {% if lnk.status == 'unknown' %}fa-question{% endif %}
         {% if lnk.status == 'unsubscribed' %}fa-recycle{% endif %}
+        {% if lnk.status == 'set' %}fa-circle-o{% endif %}
         " title="{{ lnk.trans_status }}"></span>
       {% endif %}
       {{ lnk.text }}

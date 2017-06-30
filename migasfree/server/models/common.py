@@ -275,6 +275,21 @@ class MigasLink(object):
         )
 
     def link(self):
+        if self._meta.model_name == 'clientattribute' \
+                or self._meta.model_name == 'attribute':
+            if self.property_att.prefix == 'CID':
+                from . import Computer
+                try:
+                    self = Computer.objects.get(id=self.value)
+                except ObjectDoesNotExist:
+                    pass
+            elif self.property_att.prefix == 'SET':
+                from . import AttributeSet
+                try:
+                    self = AttributeSet.objects.get(name=self.value)
+                except ObjectDoesNotExist:
+                    pass
+
         url = u'admin:{}_{}_change'.format(
             self._meta.app_label,
             self._meta.model_name
@@ -298,15 +313,10 @@ class MigasLink(object):
         if self._meta.model_name == 'computer':
             lnk['status'] = self.status
             lnk['trans_status'] = ugettext(self.status)
-
-        if self._meta.model_name == 'attribute' and self.property_att.prefix == 'CID':
-            from . import Computer
-            try:
-                computer = Computer.objects.get(pk=int(self.value))
-                lnk['status'] = computer.status
-                lnk['trans_status'] = ugettext(computer.status)
-            except ObjectDoesNotExist:
-                pass
+        elif self._meta.model_name == 'attributeset' \
+                or (self._meta.model_name in ['clientattribute', 'attribute'] and self.id == 1):
+            lnk['status'] = 'set'
+            lnk['trans_status'] = ugettext(self._meta.verbose_name)
 
         return format_html(
             render_to_string(
