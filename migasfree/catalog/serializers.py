@@ -6,40 +6,44 @@ from migasfree.server.serializers import ProjectInfoSerializer
 from . import models
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    id = serializers.ChoiceField(choices=models.Application.CATEGORIES)
-    name = serializers.SerializerMethodField()
-
-    class Meta:
-        model = models.Application
-        fields = ('id', 'name')
-
-    def get_name(self, obj):
-        return obj.get_category_display()
+class LevelSerializer(serializers.Serializer):
+    def to_representation(self, obj):
+        return {
+            'id': obj,
+            'name': dict(models.Application.LEVELS)[obj]
+        }
 
 
-class ApplicationSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.Serializer):
+    def to_representation(self, obj):
+        return {
+            'id': obj,
+            'name': dict(models.Application.CATEGORIES)[obj]
+        }
+
+
+class PackagesByProjectSerializer(serializers.ModelSerializer):
     project = ProjectInfoSerializer(many=False, read_only=True)
-
-    class Meta:
-        model = models.Application
-        fields = '__all__'
 
     def to_representation(self, obj):
         return {
-            'id': obj.id,
-            'name': obj.name,
-            'description': obj.description,
-            'packages_to_install': obj.packages_to_install,
-            'score': obj.score,
-            'icon': self.context['request'].build_absolute_uri(obj.icon.url),
-            'level':  obj.level,
             'project': {
                 'id': obj.project.id,
                 'name': obj.project.name
             },
-            'category': {
-                'id': obj.category,
-                'name': obj.get_category_display()
-            }
+            'packages_to_install': obj.repr_packages_to_install()
         }
+
+    class Meta:
+        model = models.PackagesByProject
+        fields = '__all__'
+
+
+class ApplicationSerializer(serializers.ModelSerializer):
+    level = LevelSerializer(many=False, read_only=True)
+    category = CategorySerializer(many=False, read_only=True)
+    packages_by_project = PackagesByProjectSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Application
+        fields = '__all__'
