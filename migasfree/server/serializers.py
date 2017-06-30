@@ -6,16 +6,19 @@ from rest_framework import serializers
 from . import models, tasks
 
 
-class AttributeSetSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.AttributeSet
-        fields = '__all__'
-
-
 class AttributeInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Attribute
         fields = ('id', 'value')
+
+
+class AttributeSetSerializer(serializers.ModelSerializer):
+    included_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.AttributeSet
+        fields = '__all__'
 
 
 class PropertyInfoSerializer(serializers.ModelSerializer):
