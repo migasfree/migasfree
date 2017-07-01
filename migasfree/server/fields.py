@@ -79,4 +79,4 @@ class MigasAutoCompleteSelectMultipleField(AutoCompleteSelectMultipleField):
         kwargs['widget'] = MigasAutoCompleteSelectMultipleWidget(**widget_kwargs)
         kwargs['help_text'] = help_text
 
-        super(AutoCompleteSelectMultipleField, self).__init__(*args, **kwargs)
+        super(MigasAutoCompleteSelectMultipleField, self).__init__(*args, **kwargs)
