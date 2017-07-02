@@ -27,6 +27,9 @@ def option_description(field, value):
 
 def execute_query(request, parameters, form_param=None):
     o_query = get_object_or_404(Query, id=parameters.get('id_query'))
+    fields = []
+    titles = []
+    query = []
 
     try:
         exec(o_query.code.replace("\r", ""))
