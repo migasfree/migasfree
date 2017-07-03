@@ -55,15 +55,19 @@ class Package(models.Model, MigasLink):
             info_link = reverse(
                 'package_info',
                 args=(
-                    '{}/STORES/{}/{}'.format(
-                        self.project.name, self.store.name, self.name
+                    '{}/{}/{}/{}'.format(
+                        self.project.name,
+                        Project.STORE_TRAILING_PATH,
+                        self.store.name,
+                        self.name
                     ),
                 )
             )
 
-            download_link = '{}{}/STORES/{}/{}'.format(
+            download_link = '{}{}/{}/{}/{}'.format(
                 settings.MEDIA_URL,
                 self.project.name,
+                Project.STORE_TRAILING_PATH,
                 self.store.name,
                 self.name
             )

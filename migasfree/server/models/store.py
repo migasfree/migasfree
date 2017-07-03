@@ -52,7 +52,7 @@ class Store(models.Model, MigasLink):
         return os.path.join(
             settings.MIGASFREE_PUBLIC_DIR,
             project_name,
-            'STORES',
+            Project.STORE_TRAILING_PATH,
             name
         )
 
@@ -60,12 +60,19 @@ class Store(models.Model, MigasLink):
         if self.id:
             info_link = reverse(
                 'package_info',
-                args=('{}/STORES/{}/'.format(self.project.name, self.name),)
+                args=(
+                    '{}/{}/{}/'.format(
+                        self.project.name,
+                        Project.STORE_TRAILING_PATH,
+                        self.name
+                    ),
+                )
             )
 
-            download_link = '{}{}/STORES/{}/'.format(
+            download_link = '{}{}/{}/{}/'.format(
                 settings.MEDIA_URL,
                 self.project.name,
+                Project.STORE_TRAILING_PATH,
                 self.name
             )
 
