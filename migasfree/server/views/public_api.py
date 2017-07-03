@@ -6,6 +6,10 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.conf import settings
 
+from rest_framework.decorators import permission_classes
+from rest_framework import permissions, views
+from rest_framework.response import Response
+
 from ..models import Platform, Project, Deployment
 from ..api import get_computer
 from ..utils import uuid_validate
@@ -79,9 +83,27 @@ def computer_label(request):
 
 def get_key_repositories(request):
     """
-    Return the repositories public key
+    Returns the repositories public key
     """
     return HttpResponse(
         gpg_get_key("migasfree-repository"),
         content_type="text/plain"
     )
+
+
+@permission_classes((permissions.AllowAny,))
+class RepositoriesUrlTemplateView(views.APIView):
+    def get(self, request, format=None):
+        """
+        Returns the repositories URL template
+        """
+        protocol = 'https' if request.is_secure() else 'http'
+
+        return Response(
+            '{}://{{server}}{}{{project}}/{}'.format(
+                protocol,
+                settings.MEDIA_URL,
+                Project.REPOSITORY_TRAILING_PATH
+            ),
+            content_type='text/plain'
+        )

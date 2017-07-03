@@ -14,7 +14,7 @@ from .hardware import hardware_resume, hardware_extract, load_hw, process_hw
 from .client_api import api
 from .public_api import (
     get_projects, get_computer_info, computer_label,
-    get_key_repositories
+    get_key_repositories, RepositoriesUrlTemplateView,
 )
 from .packages import info
 from .dashboard import alerts

@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import url
+from django.conf.urls import include, url
 from django.views.generic import RedirectView, TemplateView
 from django.urls import reverse_lazy
 from django.conf import settings
 
 from .views import *
+
+public_patterns = [
+    url(r'repository-url-template/', RepositoriesUrlTemplateView.as_view()),
+]
 
 urlpatterns = [
     url(r'^accounts/login/$', login, name='login'),
@@ -22,6 +26,8 @@ urlpatterns = [
             url='%simg/favicon.png' % settings.STATIC_URL
         ),
     ),
+
+    url(r'^api/v1/public/', include(public_patterns)),
 
     url(r'^alerts/$', alerts, name='alerts'),
     url(r'^query/(?P<query_id>\d+)/$', get_query, name='query'),
