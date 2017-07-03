@@ -38,6 +38,9 @@ class Project(models.Model, MigasLink):
     Distribution for customize.
     """
 
+    REPOSITORY_TRAILING_PATH = 'REPOSITORIES'
+    STORE_TRAILING_PATH = 'STORES'
+
     name = models.CharField(
         verbose_name=_("name"),
         max_length=50,
@@ -74,11 +77,11 @@ class Project(models.Model, MigasLink):
 
     @staticmethod
     def repositories_path(name):
-        return os.path.join(Project.path(name), 'REPOSITORIES')
+        return os.path.join(Project.path(name), Project.REPOSITORY_TRAILING_PATH)
 
     @staticmethod
     def stores_path(name):
-        return os.path.join(Project.path(name), 'STORES')
+        return os.path.join(Project.path(name), Project.STORE_TRAILING_PATH)
 
     def _create_dirs(self):
         repos = self.repositories_path(self.name)
