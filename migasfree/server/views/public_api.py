@@ -93,7 +93,7 @@ def get_key_repositories(request):
 
 @permission_classes((permissions.AllowAny,))
 class RepositoriesUrlTemplateView(views.APIView):
-    def get(self, request, format=None):
+    def post(self, request, format=None):
         """
         Returns the repositories URL template
         """
