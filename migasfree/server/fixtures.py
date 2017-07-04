@@ -24,7 +24,7 @@ def run(cmd):
     return out, err
 
 
-def create_user(name, groups=None):
+def configure_user(name, groups=None):
     if groups is None:
         groups = []
 
@@ -37,42 +37,38 @@ def create_user(name, groups=None):
         user.is_superuser = (name == 'admin')
         user.set_password(name)
         user.save()
+    else:
+        user = user[0]
 
-        user.groups.add(*groups)
-        user.save()
+    user.groups.clear()
+    user.groups.add(*groups)
+    user.save()
 
 
-def add_read_perms(group, tables=None):
+def add_perms(group, tables=None, all_perms=True):
     if tables is None:
         tables = []
 
+    perms = ['change_{}']
+    if all_perms:
+        perms.append('add_{}')
+        perms.append('delete_{}')
+        perms.append('can_save_{}')
+
     for table in tables:
-        group.permissions.add(
-            Permission.objects.get(
-                codename='change_{}'.format(table),
-                content_type__app_label='server'
-            ).id
-        )
-
-
-def add_all_perms(group, tables=None):
-    if tables is None:
-        tables = []
-
-    perms = ['add_{}', 'change_{}', 'delete_{}', 'can_save_{}']
-    for table in tables:
+        app, name = table.split('.')
         for pattern in perms:
             group.permissions.add(
                 Permission.objects.get(
-                    codename=pattern.format(table),
-                    content_type__app_label='server'
+                    codename=pattern.format(name),
+                    content_type__app_label=app
                 ).id
             )
 
 
-def create_default_users():
+def configure_default_users():
     """
-    Create default Groups and Users
+    Create/update default Groups and Users
     """
 
     # reader group
@@ -81,18 +77,31 @@ def create_default_users():
         reader = Group()
         reader.name = "Reader"
         reader.save()
-        tables = [
-            "computer", "device", "user", "attribute", "error",
-            "fault", "deviceconnection", "devicemanufacturer", "devicemodel",
-            "devicetype", "schedule", "scheduledelay", "autocheckerror",
-            "faultdefinition", "property", "checking", "project", "pms", "query",
-            "package", "deployment", "store", "message", "synchronization",
-            "platform", "migration", "notification", "policy", "policygroup",
-        ]
-        add_read_perms(reader, tables)
-        reader.save()
     else:
         reader = reader[0]
+
+    tables = [
+        "server.computer", "server.error", "server.fault",
+        "server.autocheckerror", "server.notification",
+        "server.faultdefinition", "server.synchronization",
+        "server.message", "server.migration", "server.statuslog",
+        "server.package", "server.deployment", "server.store",
+        "server.platform", "server.policy", "server.policygroup",
+        "server.checking", "server.project", "server.pms",
+        "server.schedule", "server.scheduledelay",
+        "server.user", "server.userprofile",
+        "server.property", "server.attribute", "server.attributeset",
+        "server.device", "server.deviceconnection", "server.devicedriver",
+        "server.devicefeature", "server.devicelogical",
+        "server.devicemanufacturer", "server.devicemodel", "server.devicetype",
+        "server.query",
+        "server.hwnode", "server.hwcapability",
+        "server.hwconfiguration", "server.hwlogicalname",
+        "catalog.application", "catalog.packagesbyproject",
+    ]
+    reader.permissions.clear()
+    add_perms(reader, tables, all_perms=False)
+    reader.save()
 
     # liberator group
     liberator = Group.objects.filter(name='Liberator')
@@ -100,14 +109,17 @@ def create_default_users():
         liberator = Group()
         liberator.name = "Liberator"
         liberator.save()
-        tables = [
-            "deployment", "schedule", "scheduledelay",
-            "policy", "policygroup",
-        ]
-        add_all_perms(liberator, tables)
-        liberator.save()
     else:
         liberator = liberator[0]
+
+    tables = [
+        "server.deployment", "server.schedule", "server.scheduledelay",
+        "server.policy", "server.policygroup",
+        "catalog.application", "catalog.packagesbyproject",
+    ]
+    liberator.permissions.clear()
+    add_perms(liberator, tables)
+    liberator.save()
 
     # packager group
     packager = Group.objects.filter(name='Packager')
@@ -115,8 +127,8 @@ def create_default_users():
         packager = Group()
         packager.name = "Packager"
         packager.save()
-        tables = ["package", "store"]
-        add_all_perms(packager, tables)
+        tables = ["server.package", "server.store"]
+        add_perms(packager, tables)
         packager.save()
     else:
         packager = packager[0]
@@ -127,14 +139,16 @@ def create_default_users():
         checker = Group()
         checker.name = "Computer Checker"
         checker.save()
-        tables = [
-            "autocheckerror", "error", "fault",
-            "message", "synchronization", "checking"
-        ]
-        add_all_perms(checker, tables)
-        checker.save()
     else:
         checker = checker[0]
+
+    tables = [
+        "server.autocheckerror", "server.error", "server.fault",
+        "server.message", "server.synchronization", "server.checking"
+    ]
+    checker.permissions.clear()
+    add_perms(checker, tables)
+    checker.save()
 
     # device installer group
     device_installer = Group.objects.filter(name='Device installer')
@@ -142,14 +156,17 @@ def create_default_users():
         device_installer = Group()
         device_installer.name = "Device installer"
         device_installer.save()
-        tables = [
-            "deviceconnection", "devicemanufacturer",
-            "devicemodel", "devicetype"
-        ]
-        add_all_perms(device_installer, tables)
-        device_installer.save()
     else:
         device_installer = device_installer[0]
+
+    tables = [
+        "server.device", "server.deviceconnection", "server.devicedriver",
+        "server.devicefeature", "server.devicelogical",
+        "server.devicemanufacturer", "server.devicemodel", "server.devicetype",
+    ]
+    device_installer.permissions.clear()
+    add_perms(device_installer, tables)
+    device_installer.save()
 
     # query group
     questioner = Group.objects.filter(name='Query')
@@ -157,11 +174,13 @@ def create_default_users():
         questioner = Group()
         questioner.name = "Query"
         questioner.save()
-        tables = ["query"]
-        add_all_perms(questioner, tables)
-        questioner.save()
     else:
         questioner = questioner[0]
+
+    tables = ["server.query"]
+    questioner.permissions.clear()
+    add_perms(questioner, tables)
+    questioner.save()
 
     # configurator group
     configurator = Group.objects.filter(name='Configurator')
@@ -169,25 +188,28 @@ def create_default_users():
         configurator = Group()
         configurator.name = "Configurator"
         configurator.save()
-        tables = [
-            "checking", "faultdefinition", "property", "pms", "project",
-            "message", "synchronization", "platform", "migration",
-            "notification"
-        ]
-        add_all_perms(configurator, tables)
-        configurator.save()
     else:
         configurator = configurator[0]
 
+    tables = [
+        "server.checking", "server.faultdefinition", "server.property",
+        "server.pms", "server.project", "server.notification",
+        "server.message", "server.synchronization", "server.platform",
+        "server.migration", "server.attributeset", "server.autocheckerror",
+    ]
+    configurator.permissions.clear()
+    add_perms(configurator, tables)
+    configurator.save()
+
     # default users
-    create_user("admin")
-    create_user("packager", [reader, packager])
-    create_user("configurator", [reader, configurator])
-    create_user("installer", [reader, device_installer])
-    create_user("query", [reader, questioner])
-    create_user("liberator", [reader, liberator])
-    create_user("checker", [reader, checker])
-    create_user("reader", [reader])
+    configure_user("admin")
+    configure_user("packager", [reader, packager])
+    configure_user("configurator", [reader, configurator])
+    configure_user("installer", [reader, device_installer])
+    configure_user("query", [reader, questioner])
+    configure_user("liberator", [reader, liberator])
+    configure_user("checker", [reader, checker])
+    configure_user("reader", [reader])
 
 
 def sequence_reset():
@@ -220,7 +242,7 @@ def sequence_reset():
 
 
 def create_initial_data():
-    create_default_users()
+    configure_default_users()
 
     fixtures = [
         'server.checking.json',
