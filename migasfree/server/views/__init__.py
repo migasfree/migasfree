@@ -17,7 +17,6 @@ from .public_api import (
     get_key_repositories, RepositoriesUrlTemplateView,
 )
 from .packages import info
-from .dashboard import alerts
 from .login import login, preferences
 from .computer import (
     ComputerDelete,
@@ -40,6 +39,6 @@ from .token import (
     AttributeViewSet, ScheduleViewSet, PackageViewSet,
     DeploymentViewSet, ErrorViewSet, FaultDefinitionViewSet,
     FaultViewSet, NotificationViewSet, MigrationViewSet,
-    HardwareComputerViewSet, HardwareViewSet, CheckingViewSet,
+    HardwareComputerViewSet, HardwareViewSet,
     UserViewSet, SynchronizationViewSet, StatusLogViewSet,
 )
