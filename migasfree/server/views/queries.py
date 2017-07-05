@@ -154,7 +154,7 @@ def get_query(request, query_id):
 @login_required
 def computer_messages(request):
     delayed_time = datetime.now() - timedelta(
-        0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT
+        seconds=settings.MIGASFREE_SECONDS_MESSAGE_ALERT
     )
 
     data = Message.objects.raw("""
