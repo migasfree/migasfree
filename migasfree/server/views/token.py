@@ -13,7 +13,7 @@ from ..filters import (
     ProjectFilter, AttributeSetFilter, AttributeFilter, PackageFilter,
     DeploymentFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
-    NodeFilter, CheckingFilter, SynchronizationFilter, StatusLogFilter,
+    NodeFilter, SynchronizationFilter, StatusLogFilter,
 )
 # from ..permissions import PublicPermission, IsAdminOrIsSelf
 
@@ -102,16 +102,6 @@ class AttributeViewSet(
                 device.attributes.add(pk)
 
             return Response(status=status.HTTP_201_CREATED)
-
-
-class CheckingViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
-):
-    queryset = models.Checking.objects.all()
-    serializer_class = serializers.CheckingSerializer
-    filter_class = CheckingFilter
-    ordering_fields = '__all__'
-    ordering = ('id',)
 
 
 class ComputerViewSet(
