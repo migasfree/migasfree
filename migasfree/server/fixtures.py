@@ -87,7 +87,7 @@ def configure_default_users():
         "server.message", "server.migration", "server.statuslog",
         "server.package", "server.deployment", "server.store",
         "server.platform", "server.policy", "server.policygroup",
-        "server.checking", "server.project", "server.pms",
+        "server.project", "server.pms",
         "server.schedule", "server.scheduledelay",
         "server.user", "server.userprofile",
         "server.property", "server.attribute", "server.attributeset",
@@ -144,7 +144,7 @@ def configure_default_users():
 
     tables = [
         "server.autocheckerror", "server.error", "server.fault",
-        "server.message", "server.synchronization", "server.checking"
+        "server.message", "server.synchronization",
     ]
     checker.permissions.clear()
     add_perms(checker, tables)
@@ -192,7 +192,7 @@ def configure_default_users():
         configurator = configurator[0]
 
     tables = [
-        "server.checking", "server.faultdefinition", "server.property",
+        "server.faultdefinition", "server.property",
         "server.pms", "server.project", "server.notification",
         "server.message", "server.synchronization", "server.platform",
         "server.migration", "server.attributeset", "server.autocheckerror",
@@ -245,7 +245,6 @@ def create_initial_data():
     configure_default_users()
 
     fixtures = [
-        'server.checking.json',
         'server.pms.json',
         'server.query.json',
         'server.property.json',

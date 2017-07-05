@@ -13,7 +13,7 @@ from .models import (
     Store, Property, Project, Attribute, AttributeSet,
     Package, Deployment, Error, FaultDefinition,
     Fault, Notification, Migration,
-    HwNode, Checking, Synchronization, StatusLog,
+    HwNode, Synchronization, StatusLog,
 )
 
 
@@ -120,12 +120,6 @@ class AttributeFilter(filters.FilterSet):
     class Meta:
         model = Attribute
         fields = ['id', 'property_att__id', 'property_att__prefix', 'value']
-
-
-class CheckingFilter(filters.FilterSet):
-    class Meta:
-        model = Checking
-        fields = ['id', 'enabled']
 
 
 class ComputerFilter(filters.FilterSet):

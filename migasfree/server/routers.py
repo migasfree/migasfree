@@ -8,7 +8,6 @@ router = routers.DefaultRouter()
 
 router.register(r'attributes', views.AttributeViewSet)
 router.register(r'attribute-set', views.AttributeSetViewSet)
-router.register(r'checkings', views.CheckingViewSet)
 router.register(r'computers', views.ComputerViewSet)
 router.register(
     r'computers',

@@ -39,12 +39,6 @@ class AttributeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class CheckingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Checking
-        fields = '__all__'
-
-
 class ComputerInfoSerializer(serializers.ModelSerializer):
     cid_description = serializers.SerializerMethodField()
 
