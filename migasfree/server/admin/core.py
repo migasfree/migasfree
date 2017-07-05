@@ -12,7 +12,7 @@ from ajax_select.admin import AjaxSelectAdmin
 from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
-    Attribute, AttributeSet, Checking, ClientProperty, ClientAttribute,
+    Attribute, AttributeSet, ClientProperty, ClientAttribute,
     Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
     ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Project,
     Policy, PolicyGroup,
@@ -56,16 +56,6 @@ class AttributeSetAdmin(MigasAdmin):
             'excluded_attributes',
             'excluded_attributes__property_att'
         )
-
-
-@admin.register(Checking)
-class CheckingAdmin(MigasAdmin):
-    list_display = ('name', 'my_enabled')
-    list_display_links = ('name',)
-    list_filter = ('enabled',)
-    search_fields = ('name',)
-
-    my_enabled = MigasFields.boolean(model=Checking, name='enabled')
 
 
 @admin.register(Attribute)
