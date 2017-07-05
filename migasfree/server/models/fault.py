@@ -61,8 +61,15 @@ class Fault(Event):
     unchecked = UncheckedManager()
 
     @staticmethod
-    def unchecked_count():
-        return Fault.objects.filter(checked=0).count()
+    def unchecked_count(user_id=0):
+        queryset = Fault.objects.filter(checked=0)
+        if user_id:
+            queryset = queryset.filter(
+                models.Q(fault_definition__users__id__in=[user_id,])
+                | models.Q(fault_definition__users=None)
+            )
+
+        return queryset.count()
 
     def checked_ok(self):
         self.checked = True
