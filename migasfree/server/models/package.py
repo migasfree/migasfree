@@ -79,6 +79,10 @@ class Package(models.Model, MigasLink):
         return super(Package, self).menu_link()
 
     @staticmethod
+    def orphan_count():
+        return Package.objects.filter(deployment__id=None).count()
+
+    @staticmethod
     def path(project_name, store_name, name):
         return os.path.join(Store.path(project_name, store_name), name)
 
