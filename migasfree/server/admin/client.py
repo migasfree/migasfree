@@ -177,7 +177,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     def last_sync_time(self, obj):
         now = datetime.now()
         delayed_time = now - timedelta(
-            0, settings.MIGASFREE_SECONDS_MESSAGE_ALERT
+            seconds=settings.MIGASFREE_SECONDS_MESSAGE_ALERT
         )
         is_updating = not obj.sync_end_date or obj.sync_end_date < obj.sync_start_date
 
@@ -479,8 +479,8 @@ class FaultDefinitionAdmin(MigasAdmin):
 
 @admin.register(Message)
 class MessageAdmin(MigasAdmin):
-    list_display = ('id', 'computer_link', 'updated_at', 'text')
-    list_display_links = ('id',)
+    list_display = ('updated_at', 'computer_link', 'text')
+    list_display_links = ('updated_at',)
     ordering = ('-updated_at',)
     list_filter = ('updated_at',)
     search_fields = ('computer', 'text', 'updated_at')
@@ -488,7 +488,8 @@ class MessageAdmin(MigasAdmin):
     exclude = ('computer',)
 
     computer_link = MigasFields.link(
-        model=Message, name='computer', order='computer__name'
+        model=Message, name='computer', order='computer__name',
+        description=_('Computer')
     )
 
 
