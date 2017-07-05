@@ -1,16 +1,21 @@
 {% load i18n %}
 
-<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Alerts' %}"><i class="fa fa-bell"></i> <span class="sr-only">{% trans 'Alerts' %}</span> <span class="badge">{{ badge }}</span> <b class="caret"></b></a>
+<a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{ title }}">
+    <i class="fa fa-bell"></i> <span class="sr-only">{{ title }}</span>
+    <span class="badge">{{ result }}</span> <b class="caret"></b>
+</a>
 
 {% if alerts %}
     <ul class="dropdown-menu">
     {% for item in alerts %}
-        <li>
-            <a class="fa fa-{% if item.target == 'server' %}cloud{% else %}laptop{% endif %}" href='{{ item.url }}'>
-                <span class="badge">{{ item.badge }}</span>
-                <span class="label label-{{ item.alert }}">{{ item.msg }}</span>
-            </a>
-        </li>
+        {% if item.result %}
+            <li>
+                <a class="fa fa-{% if item.target == 'server' %}cloud{% else %}laptop{% endif %}" href='{{ item.url }}'>
+                    <span class="badge">{{ item.result }}</span>
+                    <span class="label label-{{ item.level }}">{{ item.msg }}</span>
+                </a>
+            </li>
+        {% endif %}
     {% endfor %}
     </ul>
 {% endif %}
