@@ -6,7 +6,6 @@ from .common import MigasLink
 
 from .user import User
 from .query import Query
-from .checking import Checking
 from .autocheck_error import AutoCheckError
 
 from .pms import Pms
