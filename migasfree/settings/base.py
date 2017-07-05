@@ -113,6 +113,7 @@ INSTALLED_APPS = (
     'form_utils',
     'markdownx',
     'migasfree.catalog',
+    'migasfree.stats',
 )
 
 REST_FRAMEWORK = {

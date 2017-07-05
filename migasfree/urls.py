@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^api/v1/public/catalog/', include(catalog_router.urls)),
 
     url(r'', include('migasfree.server.urls')),
+    url(r'', include('migasfree.stats.urls')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
     url(r'^admin/', admin.site.urls),

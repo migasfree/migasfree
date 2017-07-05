@@ -29,7 +29,6 @@ urlpatterns = [
 
     url(r'^api/v1/public/', include(public_patterns)),
 
-    url(r'^alerts/$', alerts, name='alerts'),
     url(r'^query/(?P<query_id>\d+)/$', get_query, name='query'),
     url(
         r'^computer_messages/$',
