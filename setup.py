@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011-2016 Jose Antonio Chavarría <jachavar@gmail.com>
+# Copyright (c) 2011-2017 Jose Antonio Chavarría <jachavar@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -115,6 +115,7 @@ setup(
         'migasfree.catalog',
         'migasfree.catalog.migrations',
         'migasfree.settings',
+        'migasfree.stats',
     ],
     package_dir={
         'migasfree': 'migasfree',
@@ -127,6 +128,7 @@ setup(
         'migasfree.server.views': 'migasfree/server/views',
         'migasfree.catalog': 'migasfree/catalog',
         'migasfree.catalog.migrations': 'migasfree/catalog/migrations',
+        'migasfree.stats': 'migasfree/stats',
     },
     cmdclass={
         'install_data': InstallData,
