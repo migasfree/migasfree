@@ -225,11 +225,11 @@ class MigasChangeList(ChangeList):
             if hasattr(x, 'lookup_choices') \
                     and hasattr(x, 'used_parameters') and x.used_parameters:
                 if hasattr(x, 'lookup_val') and not x.lookup_val:
-                    element = ""
+                    element = ''
                     for key, value in x.used_parameters.iteritems():
-                        lookup_type = key.split("__")[1]
+                        lookup_type = key.split('__')[1]
                         if lookup_type == 'isnull':
-                            element += u'{} '.format(_('empty') if value else _('not empty'))
+                            element += u'{}'.format(_('empty') if value else _('not empty'))
                         else:
                             element += u'{}={}'.format(lookup_type, value)
                         params.pop(key, None)
@@ -247,7 +247,7 @@ class MigasChangeList(ChangeList):
                 self.append(x.title, element)
                 for element in x.used_parameters:
                     params.pop(element, None)
-            elif hasattr(x, 'lookup_choices') and hasattr(x, "lookup_val") \
+            elif hasattr(x, 'lookup_choices') and hasattr(x, 'lookup_val') \
                     and x.lookup_val:
                 if isinstance(x.lookup_choices[0][0], int):
                     self.append(
@@ -269,7 +269,7 @@ class MigasChangeList(ChangeList):
             elif hasattr(x, 'field') and hasattr(x.field, 'choices') \
                     and hasattr(x, 'lookup_val') and x.lookup_val:
                 if isinstance(x.field, BooleanField):
-                    if x.lookup_val == "0":
+                    if x.lookup_val == '0':
                         self.append(x.title, _("No"))
                         params.pop(x.lookup_kwarg, None)
                     else:
@@ -281,14 +281,14 @@ class MigasChangeList(ChangeList):
                         elements.append(
                             unicode(dict(x.field.choices)[int(element)])
                         )
-                    self.append(x.title, ", ".join(elements))
+                    self.append(x.title, ', '.join(elements))
                     params.pop(x.lookup_kwarg, None)
                 else:
                     elements = []
                     for element in x.lookup_val.split(','):
                         elements.append(unicode(dict(x.field.choices)[element]))
                         params.pop(x.lookup_kwarg, None)
-                    self.append(x.title, ", ".join(elements))
+                    self.append(x.title, ', '.join(elements))
                     params.pop(x.lookup_kwarg, None)
 
         # filters no standards
@@ -297,7 +297,7 @@ class MigasChangeList(ChangeList):
         for k in params:
             if k.endswith("__id__exact"):
                 _classname = k.split("__")[0]
-                _name = _classname
+                _name = ugettext(_classname.capitalize())
 
                 if _classname == "ExcludeAttribute":
                     _classname = "deployment"
@@ -308,12 +308,16 @@ class MigasChangeList(ChangeList):
                 if _classname == 'sync_attributes':
                     _classname = 'attribute'
                     _name = 'sync attributes'
+                if _classname == 'included_attributes':
+                    _classname = 'attribute'
+                    _name = 'included attributes'
                 if _classname == 'excluded_attributes':
                     _classname = 'attribute'
                     _name = 'excluded attributes'
 
                 if not hasattr(self.model, _classname):
-                    model = apps.get_model('server', _classname)
+                    _app = self.model._meta.app_label
+                    model = apps.get_model(_app, _classname)
                     self.append(_name, model.objects.get(pk=params[k]))
                 else:
                     model = getattr(self.model, _classname)
@@ -334,7 +338,7 @@ class MigasChangeList(ChangeList):
                         ).__str__()
                     )
                 if len(_list) == 10:
-                    self.append(_classname, ", ".join(_list) + " . . .")
+                    self.append(_classname, ", ".join(_list) + "...")
                 else:
                     self.append(_classname, ", ".join(_list))
 
@@ -352,8 +356,8 @@ class MigasChangeList(ChangeList):
             _filter = u"({})".format(_filter)
 
         self.title = u"{} {}".format(
-           self.model._meta.verbose_name_plural,
-           _filter
+            self.model._meta.verbose_name_plural,
+            _filter
         )
 
     def append(self, name, value):
