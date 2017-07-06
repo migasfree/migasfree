@@ -25,4 +25,8 @@
         {% endfor %}
         </ul>
     {% endif %}
+
+    {% if not package_info and not file_selection %}
+        <p class="alert alert-warning">{% trans 'No packages to show' %}</p>
+    {% endif %}
 {% endblock content %}
