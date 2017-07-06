@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from migasfree import __version__
+from .. import __version__
 
 from .models import Project, Query
 
@@ -12,7 +12,7 @@ def query_names(request):
 def project_names(request):
     try:
         current = request.user.userprofile.project
-    except:
+    except AttributeError:
         current = ''
 
     return {
