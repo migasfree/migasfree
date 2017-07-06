@@ -5,7 +5,7 @@
     <span class="badge">{{ result }}</span> <b class="caret"></b>
 </a>
 
-{% if alerts %}
+{% if result > 0 %}
     <ul class="dropdown-menu">
     {% for item in alerts %}
         {% if item.result %}
