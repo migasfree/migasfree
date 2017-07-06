@@ -4,15 +4,16 @@ import os
 import shutil
 
 from django.db import models
+from django.db.models.signals import pre_delete
+from django.dispatch import receiver
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import (
     User as UserSystem,
     UserManager
 )
-from django.conf import settings
-from django.db.models.signals import pre_delete
-from django.dispatch import receiver
 
 from migasfree.middleware import threadlocals
 from . import Pms, Platform, MigasLink
@@ -135,7 +136,7 @@ class UserProfile(UserSystem, MigasLink):
             return UserProfile.objects.get(
                 id=threadlocals.get_current_user().id
             ).project
-        except:
+        except (AttributeError, ObjectDoesNotExist):
             return None
 
     def update_project(self, project):
