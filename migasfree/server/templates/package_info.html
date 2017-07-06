@@ -4,6 +4,7 @@
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>{% trans 'Liberation' %}</li>
+        <li><a href="{% url 'package_info' '' %}">{{ title }}</a></li>
     </ul>
 {% endblock %}
 
