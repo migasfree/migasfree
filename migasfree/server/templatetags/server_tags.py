@@ -24,7 +24,7 @@ class TemplateProject(template.Node):
     def render(self, context):
         try:
             obj = UserProfile.objects.get(id=context["user"].id).project
-        except ObjectDoesNotExist:
+        except (AttributeError, IndexError, ObjectDoesNotExist):
             obj = ""
 
         return obj
@@ -39,10 +39,10 @@ class TemplateLink(template.Node):
     def render(self, context):
         try:
             obj = context["original"].link()
-        except:
+        except (AttributeError, IndexError):
             try:
                 obj = context["original"].__str__()
-            except:
+            except (AttributeError, IndexError):
                 obj = ""
 
         return obj
