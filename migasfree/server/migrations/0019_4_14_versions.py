@@ -240,15 +240,6 @@ class Migration(migrations.Migration):
         ),
         migrations.RunSQL(
             [(
-                "UPDATE server_checking SET code=%s WHERE id=10;",
-                [
-                    "import os\nfrom migasfree.settings import MIGASFREE_PUBLIC_DIR\nurl = '#'\nalert = 'info'\ntarget = 'server'\nresult = 0\nmsg = ''\nif os.path.exists(MIGASFREE_PUBLIC_DIR):\n    for _project in os.listdir(MIGASFREE_PUBLIC_DIR):\n        _repos = os.path.join(MIGASFREE_PUBLIC_DIR, _project, 'TMP/REPOSITORIES/dists')\n        if os.path.exists(_repos):\n            for _repo in os.listdir(_repos):\n                result += 1\n                msg += '%s at %s.' % (_repo, _project)\nmsg = 'Creating %s repositories: %s' % (result, msg)"
-                ]
-            )],
-            migrations.RunSQL.noop
-        ),
-        migrations.RunSQL(
-            [(
                 "UPDATE server_query SET code=%s, parameters=%s WHERE id=3;",
                 [
                     "from migasfree.server.models import Computer, Property, Project\nfrom django.db.models import Count\nquery = Computer.productive.select_related('sync_user').all()\nif parameters['value'] != '':\n    if str(parameters['exact']) == 'True':\n        query = query.filter(sync_attributes__property_att__id=parameters['property_att'], sync_attributes__value=parameters['value'])\n        fld = 'sync_attributes.filter(property_att__id=parameters[\"property_att\"], value=parameters[\"value\"]).values_list(\"value\", flat=True)'\n    else:\n        query = query.filter(sync_attributes__property_att__id=parameters['property_att'], sync_attributes__value__contains=parameters['value'])\n        fld = 'sync_attributes.filter(property_att__id=parameters[\"property_att\"], value__contains=parameters[\"value\"]).values_list(\"value\", flat=True)'\n    if parameters['project']:\n        query = query.select_related('project').filter(project__id=parameters['project'])\nquery = query.annotate(n=Count('id'))\nproperty = Property.objects.get(pk=parameters['property_att'])\nfields = ('link', fld, 'project', 'sync_user.link', 'sync_start_date')\ntitles = ('computer', property.name.lower(), 'project', 'sync user', 'date of login')",
