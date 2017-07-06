@@ -5,24 +5,16 @@ import inspect
 
 from datetime import datetime, timedelta
 
-from django.utils.translation import ugettext as _
+from django import forms  # for execute_query function
+from django.db.models import Q  # for execute_query function
+from django.db.models import DEFERRED
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
-from django.db.models import Q  # for execute_query function
-from django import forms  # for execute_query function
-from django.conf import settings
-from django.db.models import DEFERRED
+from django.utils.html import strip_tags
+from django.utils.translation import ugettext as _
 
-from ..models import *
-
-
-def option_description(field, value):
-    try:
-        return field.split(
-            '<option value="{}">'.format(value)
-        )[1].split("</option>")[0]
-    except:
-        return value
+from ..models import *  # for execute_query function
 
 
 def execute_query(request, parameters, form_param=None):
@@ -126,8 +118,8 @@ def get_query(request, query_id):
 
         if request.method == 'POST':
             for item in form:
-                default_parameters['{}_display'.format(item.name)] = option_description(
-                    str(item), default_parameters[item.name]
+                default_parameters['{}_display'.format(item.name)] = strip_tags(
+                    str(item)
                 )
 
             return execute_query(request, default_parameters, form)
