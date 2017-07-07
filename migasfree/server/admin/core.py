@@ -244,6 +244,7 @@ class QueryAdmin(MigasAdmin):
     list_display_links = ('name',)
     actions = ['run_query']
     search_fields = ('name', 'description')
+    ordering = ('name',)
 
     def run_query(self, request, queryset):
         for query in queryset:
