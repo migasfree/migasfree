@@ -132,7 +132,7 @@ def upload_computer_hardware(request, name, uuid, computer, data):
         computer.update_last_hardware_capture()
         computer.update_hardware_resume()
         ret = return_message(cmd, errmfs.ok())
-    except:
+    except IndexError:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
@@ -143,7 +143,7 @@ def upload_computer_software_base_diff(request, name, uuid, computer, data):
     try:
         computer.update_software_inventory(data[cmd])
         ret = return_message(cmd, errmfs.ok())
-    except:
+    except IndexError:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
@@ -160,7 +160,7 @@ def upload_computer_software_history(request, name, uuid, computer, data):
     try:
         computer.update_software_history(data[cmd])
         ret = return_message(cmd, errmfs.ok())
-    except:
+    except IndexError:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
@@ -182,7 +182,7 @@ def upload_computer_errors(request, name, uuid, computer, data):
         Error.objects.create(computer, computer.project, data[cmd])
 
         ret = return_message(cmd, errmfs.ok())
-    except:
+    except IndexError:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
@@ -207,7 +207,7 @@ def upload_computer_message(request, name, uuid, computer, data):
         else:
             message.update_message(data[cmd])
         ret = return_message(cmd, errmfs.ok())
-    except:
+    except IndexError:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
@@ -475,7 +475,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         }
 
         ret = return_message(cmd, data)
-    except:
+    except ObjectDoesNotExist:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
@@ -502,11 +502,11 @@ def upload_computer_faults(request, name, uuid, computer, data):
                         FaultDefinition.objects.get(name=name),
                         result
                     )
-            except:
+            except ObjectDoesNotExist:
                 pass
 
         ret = return_message(cmd, {})
-    except:
+    except AttributeError:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     logger.debug('upload_computer_faults ret: %s' % ret)
@@ -603,7 +603,7 @@ def register_computer(request, name, uuid, computer, data):
 
         # returns keys to client
         return return_message(cmd, get_keys_to_client(project_name))
-    except:
+    except ObjectDoesNotExist:
         return return_message(
             cmd,
             errmfs.error(errmfs.USER_DOES_NOT_HAVE_PERMISSION)
@@ -824,7 +824,7 @@ def set_computer_tags(request, name, uuid, computer, data):
         computer.tags = lst_tags_obj
 
         ret = return_message(cmd, ret_data)
-    except:
+    except ObjectDoesNotExist:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
@@ -920,7 +920,7 @@ def create_repositories_of_packageset(request, name, uuid, computer, data):
             project_name
         )
         ret = return_message(cmd, errmfs.ok())
-    except:
+    except KeyError:
         ret = return_message(cmd, errmfs.error(errmfs.GENERIC))
 
     return ret
