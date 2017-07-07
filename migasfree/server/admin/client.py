@@ -592,6 +592,9 @@ class SynchronizationAdmin(MigasAdmin):
             'user',
         )
 
+    def has_add_permission(self, request):
+        return False
+
 
 @admin.register(User)
 class UserAdmin(MigasAdmin):
