@@ -157,7 +157,6 @@ class Computer(models.Model, MigasLink):
         verbose_name=_("software inventory"),
         null=True,
         blank=True,
-        help_text=_("gap between software base packages and computer ones")
     )
 
     software_history = models.TextField(

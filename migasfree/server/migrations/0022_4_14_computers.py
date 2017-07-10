@@ -36,4 +36,13 @@ class Migration(migrations.Migration):
                 verbose_name='comment'
             ),
         ),
+        migrations.AlterField(
+            model_name='computer',
+            name='software_inventory',
+            field=models.TextField(
+                verbose_name="software inventory",
+                null=True,
+                blank=True,
+            ),
+        ),
     ]
