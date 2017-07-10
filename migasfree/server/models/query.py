@@ -38,7 +38,7 @@ class Query(models.Model):
 
     @staticmethod
     def get_query_names():
-        return Query.objects.all().order_by('name').values_list('id', 'name')
+        return Query.objects.values_list('id', 'name').order_by('name')
 
     def __str__(self):
         return self.name
