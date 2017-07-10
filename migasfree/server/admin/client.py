@@ -17,7 +17,10 @@ from ajax_select.admin import AjaxSelectAdmin
 
 from .migasfree import MigasAdmin, MigasFields
 
-from ..filters import ProductiveFilterSpec, UserFaultFilter
+from ..filters import (
+    ProductiveFilterSpec, UserFaultFilter,
+    SoftwareInventoryFilter, SyncEndDateFilter,
+)
 from ..forms import ComputerForm
 from ..resources import ComputerResource
 from ..models import (
@@ -53,9 +56,11 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'project',
         ('status', ProductiveFilterSpec),
         'machine',
+        SoftwareInventoryFilter,
+        SyncEndDateFilter,
     )
     search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS + (
-        'sync_user__name', 'sync_user__fullname'
+        'sync_user__name', 'sync_user__fullname',
     )
 
     readonly_fields = (

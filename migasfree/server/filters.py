@@ -2,6 +2,8 @@
 
 import django_filters
 
+from datetime import datetime, timedelta
+
 from django.contrib.admin.filters import ChoicesFieldListFilter
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Q
@@ -108,6 +110,56 @@ class UserFaultFilter(SimpleListFilter):
             ).exclude(fault_definition__users=None)
         elif self.value() == 'unassigned':
             return queryset.filter(fault_definition__users=None)
+
+
+class SoftwareInventoryFilter(SimpleListFilter):
+    title = _('Software Inventory')
+    parameter_name = 'software_inventory'
+
+    def lookups(self, request, model_admin):
+        return [
+            ('without', _('Without software inventory'))
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value():
+            return queryset.filter(
+                Q(software_inventory__isnull=True)
+                | Q(software_inventory__startswith='-')
+                | Q(software_inventory='-')
+            )
+        else:
+            return queryset
+
+
+class SyncEndDateFilter(SimpleListFilter):
+    title = _('Synchronization End Date')
+    parameter_name = 'sync_end_date_ago'
+
+    def lookups(self, request, model_admin):
+        return [
+            (0, _('without date')),
+            (7, _('%d days ago') % 7),
+            (30, _('%d days ago') % 30),
+            (60, _('%d days ago') % 60),
+            (120, _('%d days ago') % 120),
+            (180, _('%d days ago') % 180),
+            (365, _('%d days ago') % 365),
+        ]
+
+    def queryset(self, request, queryset):
+        if self.value() == 0:
+            return queryset.filter(
+                sync_end_date__isnull=True
+            )
+        if self.value() and int(self.value()) > 0:
+            return queryset.filter(
+                sync_end_date__lt=datetime.date(
+                    datetime.now() - timedelta(days=int(self.value()))
+                )
+            )
+
+        return queryset
 
 
 class AttributeSetFilter(filters.FilterSet):
