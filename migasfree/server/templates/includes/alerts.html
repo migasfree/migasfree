@@ -1,8 +1,9 @@
+{% spaceless %}
 {% load i18n %}
 
 <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{ title }}">
-    <i class="fa fa-bell"></i> <span class="sr-only">{{ title }}</span>
-    <span class="badge">{{ result }}</span> <b class="caret"></b>
+    <i class="fa fa-bell"></i>&nbsp;<span class="sr-only">{{ title }}</span>
+    <span class="badge">{{ result }}</span>{% if result > 0 %}&nbsp;<b class="caret"></b>{% endif %}
 </a>
 
 {% if result > 0 %}
@@ -10,8 +11,8 @@
     {% for item in alerts %}
         {% if item.result %}
             <li>
-                <a class="fa fa-{% if item.target == 'server' %}cloud{% else %}laptop{% endif %}" href='{{ item.url }}'>
-                    <span class="badge">{{ item.result }}</span>
+                <a class="fa fa-{% if item.target == 'server' %}cloud{% else %}laptop{% endif %}" href="{{ item.url }}">&nbsp;
+                    <span class="badge">{{ item.result }}</span>&nbsp;
                     <span class="label label-{{ item.level }}">{{ item.msg }}</span>
                 </a>
             </li>
@@ -19,3 +20,4 @@
     {% endfor %}
     </ul>
 {% endif %}
+{% endspaceless %}
