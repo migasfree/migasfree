@@ -9,7 +9,7 @@ from form_utils.widgets import ImageWidget
 
 from migasfree.server.admin.migasfree import MigasAdmin, MigasFields
 
-from .models import Application, PackagesByProject
+from .models import Application, PackagesByProject, Policy, PolicyGroup
 
 
 @admin.register(PackagesByProject)
@@ -82,3 +82,124 @@ class ApplicationAdmin(MigasAdmin):
             "screen, projection, handheld": ("css/star-rating.min.css",)
         }
         js = ("js/star-rating.min.js", "js/app.js")
+
+
+@admin.register(PolicyGroup)
+class PolicyGroupAdmin(MigasAdmin):
+    form = make_ajax_form(
+        PolicyGroup,
+        {
+            'included_attributes': 'attribute',
+            'excluded_attributes': 'attribute',
+            'applications': 'application'
+        }
+    )
+    form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+    form.declared_fields['applications'].label = _('application')
+
+    list_display = (
+        'id', 'policy_link', 'priority',
+        'included_attributes_link', 'excluded_attributes_link'
+    )
+    list_display_links = ('id',)
+    list_filter = ('policy__name',)
+    search_fields = (
+        'policy__name', 'included_attributes__value',
+        'excluded_attributes__value'
+    )
+
+    policy_link = MigasFields.link(model=PolicyGroup, name='policy')
+    included_attributes_link = MigasFields.objects_link(
+        model=PolicyGroup, name='included_attributes',
+        description=_('included attributes')
+    )
+    excluded_attributes_link = MigasFields.objects_link(
+        model=PolicyGroup, name='excluded_attributes',
+        description=_('excluded attributes')
+    )
+
+    def get_queryset(self, request):
+        return super(PolicyGroupAdmin, self).get_queryset(
+            request
+        ).prefetch_related(
+            'included_attributes',
+            'included_attributes__property_att',
+            'excluded_attributes',
+            'excluded_attributes__property_att'
+        )
+
+
+class PolicyGroupLine(admin.TabularInline):
+    form = make_ajax_form(
+        PolicyGroup,
+        {
+            'included_attributes': 'attribute',
+            'excluded_attributes': 'attribute',
+            'applications': 'application'
+        }
+    )
+    form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+    form.declared_fields['applications'].label = _('application')
+
+    model = PolicyGroup
+    fields = (
+        'priority', 'included_attributes',
+        'excluded_attributes', 'applications'
+    )
+    ordering = ('priority',)
+    extra = 0
+
+
+@admin.register(Policy)
+class PolicyAdmin(MigasAdmin):
+    form = make_ajax_form(
+        Policy,
+        {
+            'included_attributes': 'attribute',
+            'excluded_attributes': 'attribute'
+        }
+    )
+    form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+
+    list_display = (
+        'name_link', 'my_enabled', 'my_exclusive',
+        'included_attributes_link', 'excluded_attributes_link'
+    )
+    list_filter = ('enabled', 'exclusive')
+    list_display_links = ('name_link',)
+    search_fields = (
+        'name', 'included_attributes__value', 'excluded_attributes__value'
+    )
+    fieldsets = (
+        (_('General'), {
+            'fields': (
+                'name',
+                'comment',
+                'enabled',
+                'exclusive',
+            )
+        }),
+        (_('Application Area'), {
+            'fields': (
+                'included_attributes',
+                'excluded_attributes',
+            )
+        }),
+    )
+    inlines = [PolicyGroupLine]
+    extra = 0
+
+    name_link = MigasFields.link(model=Policy, name='name')
+    included_attributes_link = MigasFields.objects_link(
+        model=Policy, name='included_attributes',
+        description=_('included attributes')
+    )
+    excluded_attributes_link = MigasFields.objects_link(
+        model=Policy, name='excluded_attributes',
+        description=_('excluded attributes'),
+    )
+    my_enabled = MigasFields.boolean(model=Policy, name='enabled')
+    my_exclusive = MigasFields.boolean(model=Policy, name='exclusive')
