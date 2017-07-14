@@ -86,8 +86,7 @@ def configure_default_users():
         "server.faultdefinition", "server.synchronization",
         "server.message", "server.migration", "server.statuslog",
         "server.package", "server.deployment", "server.store",
-        "server.platform", "server.policy", "server.policygroup",
-        "server.project", "server.pms",
+        "server.platform", "server.project", "server.pms",
         "server.schedule", "server.scheduledelay",
         "server.user", "server.userprofile",
         "server.property", "server.attribute", "server.attributeset",
@@ -98,6 +97,7 @@ def configure_default_users():
         "server.hwnode", "server.hwcapability",
         "server.hwconfiguration", "server.hwlogicalname",
         "catalog.application", "catalog.packagesbyproject",
+        "catalog.policy", "catalog.policygroup",
     ]
     reader.permissions.clear()
     add_perms(reader, tables, all_perms=False)
@@ -114,7 +114,7 @@ def configure_default_users():
 
     tables = [
         "server.deployment", "server.schedule", "server.scheduledelay",
-        "server.policy", "server.policygroup",
+        "catalog.policy", "catalog.policygroup",
         "catalog.application", "catalog.packagesbyproject",
     ]
     liberator.permissions.clear()
