@@ -48,5 +48,3 @@ from .schedule_delay import ScheduleDelay
 from .store import Store
 from .package import Package
 from .deployment import Deployment
-
-from .policy import Policy, PolicyGroup
