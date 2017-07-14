@@ -11,12 +11,14 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
+from migasfree.catalog.models import Policy
+
 from .models import (
     Attribute, AttributeSet, Computer, BasicAttribute,
     Error, Fault, FaultDefinition, HwNode, Message,
     Migration, Notification, Package, Pms, Platform, Property,
     Deployment, Store, ServerAttribute, Synchronization, User,
-    Project, Policy,
+    Project,
 )
 from .secure import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
