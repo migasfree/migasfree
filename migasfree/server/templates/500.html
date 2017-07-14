@@ -1,39 +1,12 @@
-<!doctype html>
+{% extends "base_full.html" %}
 {% load i18n %}
-{% load admin_static %}
-{% load server_tags %}
-<html lang="{{ LANGUAGE_CODE }}">
-    <head>
-        <meta charset="utf-8" />
 
-        <title>{% trans 'Server error (500)' %}</title>
+{% block title %}{% trans 'Server error (500)' %}{% endblock title %}
 
-        <link rel="shortcut icon" href="{% static 'img/favicon.png' %}" />
+{% block content %}
+    <h1>{% trans 'Server error (500)' %}</h1>
 
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'css/migasfree.css' %}" />
-    </head>
-
-    <body>
-        <header>
-            <nav class="navbar navbar-default navbar-header navbar-fixed-top" role="navigation">
-                <a id="organization" href="/" class="navbar-brand">{% organization %}</a>
-            </nav>
-        </header>
-
-        <div id="wrapper" class="container">
-            <article class="col-lg-12" role="main">
-                <h1>{% trans 'Server error (500)' %}</h1>
-
-                <p>{% trans "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience." %}</p>
-            </article>
-        </div>
-
-        <footer>
-            <p id="copyright">
-                &copy; 2010-{% now 'Y' %} <a href="http://www.migasfree.org">migasfree team</a>,
-                under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a> <a href="https://github.com/migasfree/migasfree"><span class="fa fa-github"></span> <span class="sr-only">(code project)</span></a>
-            </p>
-        </footer>
-    </body>
-</html>
+    <div class="alert alert-warning">
+        {% trans "There's been an error. It's been reported to the site administrators via e-mail and should be fixed shortly. Thanks for your patience." %}
+    </div>
+{% endblock content %}
