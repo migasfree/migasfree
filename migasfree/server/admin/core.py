@@ -117,6 +117,17 @@ class ClientAttributeAdmin(MigasAdmin):
 @admin.register(Package)
 class PackageAdmin(MigasAdmin):
     form = PackageForm
+    readonly_fields = ('deployments_link',)
+    fieldsets = (
+        ('', {
+            'fields': (
+                'name',
+                'project',
+                'store',
+                'deployments_link',
+            )
+        }),
+    )
     list_display = (
         'name_link', 'project_link', 'store_link', 'deployments_link'
     )
