@@ -263,6 +263,16 @@ li .btn-group {
     float: left;
 }
 
+.highcharts {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+#last-day-events {
+    width: 800px;
+    margin: 0 auto;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
