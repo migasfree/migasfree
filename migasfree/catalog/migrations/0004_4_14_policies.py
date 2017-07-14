@@ -10,7 +10,6 @@ import migasfree.server.models.common
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('server', '0022_4_14_computers'),
         ('catalog', '0003_4_14_packages_by_project'),
     ]
 
@@ -71,7 +70,7 @@ class Migration(migrations.Migration):
                 )),
                 ('policy', models.ForeignKey(
                     on_delete=django.db.models.deletion.CASCADE,
-                    to='server.Policy', verbose_name='policy'
+                    to='catalog.Policy', verbose_name='policy'
                 )),
             ],
             options={
