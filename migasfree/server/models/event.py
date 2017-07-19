@@ -18,6 +18,7 @@
 
 from django.db import models
 from django.db.models.aggregates import Count
+from django.db.models.functions import TruncDay, TruncHour
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -42,19 +43,21 @@ class Event(models.Model):
         return cls.objects.filter(
              computer__id=computer_id,
              created_at__range=(start_date, end_date)
-        ).extra(
-            {"day": "date_trunc('day', created_at)"}
-        ).values('day').annotate(count=Count('id')).order_by('-day')
+        ).annotate(
+            day=TruncDay('created_at', output_field=models.DateTimeField())
+        ).values('day').order_by('-day').annotate(
+            count=Count('id')
+        )
 
     @classmethod
     def by_hour(cls, start_date, end_date):
         return cls.objects.filter(
             created_at__range=(start_date, end_date)
-        ).extra(
-            {"hour": "date_trunc('hour', created_at)"}
-        ).values('hour').annotate(
+        ).annotate(
+            hour=TruncHour('created_at', output_field=models.DateTimeField())
+        ).order_by('hour').values('hour').annotate(
             count=Count('computer_id', distinct=True)
-        ).order_by('hour')
+        )
 
     def __str__(self):
         return u'{} ({:%Y-%m-%d %H:%M:%S})'.format(self.computer, self.created_at)
