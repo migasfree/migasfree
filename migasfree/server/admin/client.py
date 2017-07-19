@@ -12,7 +12,6 @@ from django.urls import resolve, reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.html import format_html
 
-from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
 from .migasfree import MigasAdmin, MigasFields
@@ -21,7 +20,7 @@ from ..filters import (
     ProductiveFilterSpec, UserFaultFilter,
     SoftwareInventoryFilter, SyncEndDateFilter,
 )
-from ..forms import ComputerForm
+from ..forms import ComputerForm, FaultDefinitionForm
 from ..resources import ComputerResource
 from ..models import (
     AutoCheckError, Computer, Error, Fault, FaultDefinition, Message,
@@ -423,15 +422,7 @@ class FaultAdmin(MigasAdmin):
 
 @admin.register(FaultDefinition)
 class FaultDefinitionAdmin(MigasAdmin):
-    form = make_ajax_form(
-        FaultDefinition, {
-            'included_attributes': 'attribute',
-            'excluded_attributes': 'attribute',
-        }
-    )
-    form.declared_fields['included_attributes'].label = _('included attributes')
-    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
-
+    form = FaultDefinitionForm
     list_display = (
         'name_link',
         'my_enabled',

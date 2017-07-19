@@ -12,7 +12,7 @@ from .fields import MigasAutoCompleteSelectMultipleField
 from .models import (
     Deployment, UserProfile, Computer, Device, DeviceLogical,
     Property, ServerAttribute, ServerProperty, Attribute,
-    AttributeSet, Store, Package
+    AttributeSet, Store, Package, FaultDefinition,
 )
 
 
@@ -261,6 +261,25 @@ class AttributeSetForm(forms.ModelForm):
 
     class Meta:
         model = AttributeSet
+        fields = '__all__'
+
+
+class FaultDefinitionForm(forms.ModelForm):
+    included_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('included attributes'), show_help_text=False
+    )
+    excluded_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('excluded attributes'), show_help_text=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(FaultDefinitionForm, self).__init__(*args, **kwargs)
+        self.fields['users'].help_text = ''
+
+    class Meta:
+        model = FaultDefinition
         fields = '__all__'
 
 
