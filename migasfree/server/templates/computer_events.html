@@ -103,7 +103,8 @@
                     var dayEnd = new Date(dateEnd - tzOffset).toISOString().slice(0, 10);
 
                     var url = "/api/v1/token/" + dataset + "/?computer__id=" + computerId;
-                    url += "&created_at=" + dayStart + "&created_at__lt=" + dayEnd;
+                    url += "&created_at_0=" + dayStart + "&created_at_1=gte"
+                    url += "&created_at__lt_0=" + dayEnd + "&created_at__lt_1=lt";
 
                     $.getJSON(url, function(data) {
                         if (data.count > 0) {
