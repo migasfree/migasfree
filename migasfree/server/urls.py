@@ -209,6 +209,12 @@ urlpatterns = [
         name='user_profile_autocomplete',
     ),
 
+    url(
+        r'^group_autocomplete/$',
+        GroupAutocomplete.as_view(),
+        name='group_autocomplete',
+    ),
+
     # backwards compatibility
     url(
         r'^migasfree/$',

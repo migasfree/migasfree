@@ -285,6 +285,30 @@ class FaultDefinitionForm(forms.ModelForm):
             'users': autocomplete.ModelSelect2Multiple(url='user_profile_autocomplete')
         }
 
+
+class UserProfileForm(forms.ModelForm):
+    user_permissions = MigasAutoCompleteSelectMultipleField(
+        'permission', required=False,
+        label=_('User Permissions'), show_help_text=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        self.fields['groups'].help_text = ''
+
+    class Meta:
+        model = UserProfile
+        fields = (
+            'username', 'first_name', 'last_name',
+            'email', 'date_joined', 'last_login',
+            'is_active', 'is_superuser', 'is_staff',
+            'groups', 'user_permissions',
+        )
+        widgets = {
+            'groups': autocomplete.ModelSelect2Multiple(url='group_autocomplete')
+        }
+
+
 class ExtraThinTextarea(forms.Textarea):
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs', {})

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
 from django.db.models import Q
+from django.contrib.auth.models import Group
+from django.conf import settings
 
 from dal import autocomplete
 
@@ -122,3 +123,21 @@ class UserProfileAutocomplete(AutocompleteModelBase):
             qs = qs.filter(conditions)
 
         return qs.order_by('username')
+
+
+class GroupAutocomplete(AutocompleteModelBase):
+    search_fields = ['name']
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return Group.objects.none()
+
+        qs = Group.objects.all()
+
+        if self.q:
+            conditions = self.choices_for_request_conditions(
+                self.q, self.search_fields
+            )
+            qs = qs.filter(conditions)
+
+        return qs.order_by('name')

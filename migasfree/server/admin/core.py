@@ -19,7 +19,7 @@ from ..models import (
 
 from ..forms import (
     PropertyForm, DeploymentForm, ServerAttributeForm,
-    AttributeSetForm, StoreForm, PackageForm
+    AttributeSetForm, StoreForm, PackageForm, UserProfileForm,
 )
 
 from ..filters import ClientAttributeFilter, ServerAttributeFilter
@@ -470,10 +470,33 @@ class ServerAttributeAdmin(MigasAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
+    form = UserProfileForm
     list_display = ('name_link', 'first_name', 'last_name')
     list_filter = ('project',)
     ordering = ('username',)
     search_fields = ('username', 'first_name', 'last_name')
+    readonly_fields = ('date_joined', 'last_login')
+    fieldsets = (
+        (_('General'), {
+            'fields': (
+                'username',
+                'first_name',
+                'last_name',
+                'email',
+                'date_joined',
+                'last_login',
+            ),
+        }),
+        (_('Authorizations'), {
+            'fields': (
+                'is_active',
+                'is_superuser',
+                'is_staff',
+                'groups',
+                'user_permissions',
+            ),
+        }),
+    )
 
     name_link = MigasFields.link(model=UserProfile, name='username')
 

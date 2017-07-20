@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from django.db.models import Q
-from django.utils.html import escape
 from django.conf import settings
+from django.contrib.auth.models import Permission
+from django.utils.html import escape
 from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import register, LookupChannel
@@ -18,12 +19,31 @@ from .models import (
 )
 
 
+@register('permission')
+class PermissionLookup(LookupChannel):
+    model = Permission
+
+    def get_query(self, q, request):
+        return self.model.objects.filter(
+            Q(name__icontains=q) | Q(codename__icontains=q)
+        ).order_by('name')
+
+    def format_match(self, obj):
+        return escape(obj.__str__())
+
+    def format_item_display(self, obj):
+        return obj.__str__()
+
+    def get_objects(self, ids):
+        return self.model.objects.filter(pk__in=ids).order_by('name')
+
+
 @register('attribute')
 class AttributeLookup(LookupChannel):
     model = Attribute
 
     def get_query(self, q, request):
-        properties = Property.objects.all().values_list('prefix', flat=True)
+        properties = Property.objects.values_list('prefix', flat=True)
         if q[0:Property.PREFIX_LEN].upper() \
                 in (item.upper() for item in properties) \
                 and len(q) > (Property.PREFIX_LEN + 1):
@@ -88,7 +108,7 @@ class AttributeComputersLookup(LookupChannel):
     model = Attribute
 
     def get_query(self, q, request):
-        properties = Property.objects.all().values_list('prefix', flat=True)
+        properties = Property.objects.values_list('prefix', flat=True)
         if q[0:Property.PREFIX_LEN].upper() in (item.upper() for item in properties) \
                 and len(q) > (Property.PREFIX_LEN + 1):
             return self.model.objects.filter(
