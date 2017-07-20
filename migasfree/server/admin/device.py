@@ -10,7 +10,7 @@ from ..models import (
     DeviceType, DeviceFeature, DeviceManufacturer, DeviceConnection,
     DeviceDriver, DeviceLogical, DeviceModel, Device
 )
-from ..forms import DeviceLogicalForm, ExtraThinTextarea
+from ..forms import DeviceLogicalForm, DeviceModelForm, ExtraThinTextarea
 
 
 @admin.register(DeviceType)
@@ -183,6 +183,7 @@ class DeviceDriverInline(admin.TabularInline):
 
 @admin.register(DeviceModel)
 class DeviceModelAdmin(MigasAdmin):
+    form = DeviceModelForm
     list_display = ('name_link', 'manufacturer_link', 'device_type')
     list_display_links = ('name_link',)
     list_filter = ('device_type', 'manufacturer')

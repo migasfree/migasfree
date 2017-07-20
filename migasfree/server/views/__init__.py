@@ -35,7 +35,7 @@ from .devices import connections_model, device_replacement
 from .autocomplete import (
     ComputerAutocomplete, AttributeAutocomplete,
     DeviceAutocomplete, UserProfileAutocomplete,
-    GroupAutocomplete,
+    GroupAutocomplete, DeviceConnectionAutocomplete,
 )
 from .token import (
     ComputerViewSet, ProjectViewSet, PlatformViewSet,

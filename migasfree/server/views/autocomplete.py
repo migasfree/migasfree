@@ -6,7 +6,10 @@ from django.conf import settings
 
 from dal import autocomplete
 
-from ..models import Computer, Attribute, Device, UserProfile
+from ..models import (
+    Computer, Attribute, UserProfile,
+    Device, DeviceConnection,
+)
 
 
 class AutocompleteModelBase(autocomplete.Select2QuerySetView):
@@ -133,6 +136,24 @@ class GroupAutocomplete(AutocompleteModelBase):
             return Group.objects.none()
 
         qs = Group.objects.all()
+
+        if self.q:
+            conditions = self.choices_for_request_conditions(
+                self.q, self.search_fields
+            )
+            qs = qs.filter(conditions)
+
+        return qs.order_by('name')
+
+
+class DeviceConnectionAutocomplete(AutocompleteModelBase):
+    search_fields = ['name']
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return DeviceConnection.objects.none()
+
+        qs = DeviceConnection.objects.all().distinct('name')
 
         if self.q:
             conditions = self.choices_for_request_conditions(

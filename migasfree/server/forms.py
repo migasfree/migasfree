@@ -12,7 +12,7 @@ from .fields import MigasAutoCompleteSelectMultipleField
 from .models import (
     Deployment, UserProfile, Computer, Device, DeviceLogical,
     Property, ServerAttribute, ServerProperty, Attribute,
-    AttributeSet, Store, Package, FaultDefinition,
+    AttributeSet, Store, Package, FaultDefinition, DeviceModel,
 )
 
 
@@ -74,10 +74,6 @@ class DeploymentForm(forms.ModelForm):
         label=_('available packages'), show_help_text=False
     )
 
-    class Meta:
-        model = Deployment
-        fields = '__all__'
-
     def __init__(self, *args, **kwargs):
         super(DeploymentForm, self).__init__(*args, **kwargs)
         try:
@@ -122,13 +118,12 @@ class DeploymentForm(forms.ModelForm):
             cleaned_data.get('excluded_attributes', [])
         )
 
-
-class StoreForm(forms.ModelForm):
-
     class Meta:
-        model = Store
+        model = Deployment
         fields = '__all__'
 
+
+class StoreForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(StoreForm, self).__init__(*args, **kwargs)
         try:
@@ -139,13 +134,12 @@ class StoreForm(forms.ModelForm):
         except (UserProfile.DoesNotExist, AttributeError):
             pass
 
-
-class PackageForm(forms.ModelForm):
-
     class Meta:
-        model = Package
+        model = Store
         fields = '__all__'
 
+
+class PackageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PackageForm, self).__init__(*args, **kwargs)
         try:
@@ -156,16 +150,16 @@ class PackageForm(forms.ModelForm):
         except (UserProfile.DoesNotExist, AttributeError):
             pass
 
+    class Meta:
+        model = Package
+        fields = '__all__'
+
 
 class DeviceLogicalForm(forms.ModelForm):
     attributes = MigasAutoCompleteSelectMultipleField(
         'attribute', required=False,
         label=_('attributes')
     )
-
-    class Meta:
-        model = DeviceLogical
-        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(DeviceLogicalForm, self).__init__(*args, **kwargs)
@@ -189,6 +183,10 @@ class DeviceLogicalForm(forms.ModelForm):
             self.save_m2m()
         return instance
 
+    class Meta:
+        model = DeviceLogical
+        fields = '__all__'
+
 
 class PropertyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -206,10 +204,6 @@ class ServerAttributeForm(forms.ModelForm):
         'computer', required=False,
         label=_('Computers'), show_help_text=False
     )
-
-    class Meta:
-        model = ServerAttribute
-        fields = '__all__'
 
     def __init__(self, *args, **kwargs):
         super(ServerAttributeForm, self).__init__(*args, **kwargs)
@@ -236,6 +230,10 @@ class ServerAttributeForm(forms.ModelForm):
             self.save_m2m()
 
         return instance
+
+    class Meta:
+        model = ServerAttribute
+        fields = '__all__'
 
 
 class ComputerForm(forms.ModelForm):
@@ -306,6 +304,21 @@ class UserProfileForm(forms.ModelForm):
         )
         widgets = {
             'groups': autocomplete.ModelSelect2Multiple(url='group_autocomplete')
+        }
+
+
+class DeviceModelForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(DeviceModelForm, self).__init__(*args, **kwargs)
+        self.fields['connections'].help_text = ''
+
+    class Meta:
+        model = DeviceModel
+        fields = '__all__'
+        widgets = {
+            'connections': autocomplete.ModelSelect2Multiple(
+                url='device_connection_autocomplete'
+            )
         }
 
 
