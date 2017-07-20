@@ -140,8 +140,11 @@ class PolicyGroupLine(admin.TabularInline):
         }
     )
     form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['included_attributes'].help_text = ''
     form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+    form.declared_fields['excluded_attributes'].help_text = ''
     form.declared_fields['applications'].label = _('application')
+    form.declared_fields['applications'].help_text = ''
 
     model = PolicyGroup
     fields = (
@@ -162,7 +165,9 @@ class PolicyAdmin(MigasAdmin):
         }
     )
     form.declared_fields['included_attributes'].label = _('included attributes')
+    form.declared_fields['included_attributes'].help_text = ''
     form.declared_fields['excluded_attributes'].label = _('excluded attributes')
+    form.declared_fields['excluded_attributes'].help_text = ''
 
     list_display = (
         'name_link', 'my_enabled', 'my_exclusive',
