@@ -15,13 +15,13 @@ function getOptions(url, key, value)
     return _options;
 }
 
-function changeVersion(defaultValue)
+function changeProject(defaultValue)
 {
-    if (typeof $("#id_version").val() !== "undefined")
+    if (typeof $("#id_project").val() !== "undefined")
     {
         defaultValue = defaultValue || "";
         $("#id_store").html(getOptions(
-            "/api/v1/token/stores/?version__id=" + $("#id_version").val(),
+            "/api/v1/token/stores/?project__id=" + $("#id_project").val(),
             "id",
             "name"
         ));
@@ -30,11 +30,11 @@ function changeVersion(defaultValue)
         {
             $("#id_store option[value=" + defaultValue + "]").attr("selected", true);
         }
-        $("#id_version").attr("selected", "selected");
+        $("#id_project").attr("selected", "selected");
     }
 }
 
 $(function() {
-    changeVersion($("#id_store").val());
-    $("#id_version").change(changeVersion);
+    changeProject($("#id_store").val());
+    $("#id_project").change(changeProject);
 });
