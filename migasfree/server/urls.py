@@ -203,6 +203,12 @@ urlpatterns = [
         name='device_autocomplete',
     ),
 
+    url(
+        r'^user_profile_autocomplete/$',
+        UserProfileAutocomplete.as_view(),
+        name='user_profile_autocomplete',
+    ),
+
     # backwards compatibility
     url(
         r'^migasfree/$',

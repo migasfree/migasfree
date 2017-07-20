@@ -5,7 +5,7 @@ from django.db.models import Q
 
 from dal import autocomplete
 
-from ..models import Computer, Attribute, Device
+from ..models import Computer, Attribute, Device, UserProfile
 
 
 class AutocompleteModelBase(autocomplete.Select2QuerySetView):
@@ -104,3 +104,21 @@ class DeviceAutocomplete(AutocompleteModelBase):
             result.model.name,
             result.location()
         )
+
+
+class UserProfileAutocomplete(AutocompleteModelBase):
+    search_fields = ['username', 'first_name', 'last_name']
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return UserProfile.objects.none()
+
+        qs = UserProfile.objects.all()
+
+        if self.q:
+            conditions = self.choices_for_request_conditions(
+                self.q, self.search_fields
+            )
+            qs = qs.filter(conditions)
+
+        return qs.order_by('username')

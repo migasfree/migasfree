@@ -281,7 +281,9 @@ class FaultDefinitionForm(forms.ModelForm):
     class Meta:
         model = FaultDefinition
         fields = '__all__'
-
+        widgets = {
+            'users': autocomplete.ModelSelect2Multiple(url='user_profile_autocomplete')
+        }
 
 class ExtraThinTextarea(forms.Textarea):
     def __init__(self, *args, **kwargs):

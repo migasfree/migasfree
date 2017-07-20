@@ -32,7 +32,10 @@ from .timeline import timeline
 from .project import ProjectDelete
 from .platform import PlatformDelete, platform_delete_selected
 from .devices import connections_model, device_replacement
-from .autocomplete import ComputerAutocomplete, AttributeAutocomplete, DeviceAutocomplete
+from .autocomplete import (
+    ComputerAutocomplete, AttributeAutocomplete,
+    DeviceAutocomplete, UserProfileAutocomplete,
+)
 from .token import (
     ComputerViewSet, ProjectViewSet, PlatformViewSet,
     PmsViewSet, StoreViewSet, PropertyViewSet, AttributeSetViewSet,
