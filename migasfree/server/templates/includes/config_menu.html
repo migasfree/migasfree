@@ -7,7 +7,7 @@
 
     <li role="presentation" class="divider"></li>
 
-    <li><a href="{% url 'admin:server_faultdefinition_changelist' %}">{% trans 'Fault Definitions' %}</a></li>
+    <li><a href="{% url 'admin:server_faultdefinition_changelist' %}?enabled__exact=1">{% trans 'Fault Definitions' %}</a></li>
     <li><a href="{% url 'admin:server_autocheckerror_changelist' %}">{% trans 'Auto Check Errors' %}</a></li>
     <li><a href="{% url 'admin:server_query_changelist' %}">{% trans 'Queries' %}</a></li>
 
