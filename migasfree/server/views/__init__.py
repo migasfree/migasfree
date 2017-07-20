@@ -36,6 +36,7 @@ from .autocomplete import (
     ComputerAutocomplete, AttributeAutocomplete,
     DeviceAutocomplete, UserProfileAutocomplete,
     GroupAutocomplete, DeviceConnectionAutocomplete,
+    DeviceModelAutocomplete,
 )
 from .token import (
     ComputerViewSet, ProjectViewSet, PlatformViewSet,

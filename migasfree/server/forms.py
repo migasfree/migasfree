@@ -322,6 +322,15 @@ class DeviceModelForm(forms.ModelForm):
         }
 
 
+class DeviceForm(forms.ModelForm):
+    class Meta:
+        model = Device
+        fields = '__all__'
+        widgets = {
+            'model': autocomplete.ModelSelect2(url='device_model_autocomplete')
+        }
+
+
 class ExtraThinTextarea(forms.Textarea):
     def __init__(self, *args, **kwargs):
         attrs = kwargs.setdefault('attrs', {})

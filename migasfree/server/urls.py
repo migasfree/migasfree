@@ -221,6 +221,12 @@ urlpatterns = [
         name='device_connection_autocomplete',
     ),
 
+    url(
+        r'^device_model_autocomplete/$',
+        DeviceModelAutocomplete.as_view(),
+        name='device_model_autocomplete',
+    ),
+
     # backwards compatibility
     url(
         r'^migasfree/$',
