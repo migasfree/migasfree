@@ -59,13 +59,14 @@ class MigasLink(object):
                 related_link = reverse(
                     u'admin:{}_{}_changelist'.format(
                         obj.remote_field.model._meta.app_label,
-                        _name)
+                        _name
                     )
+                )
 
                 related_data.append({
                     'url': u'{}?{}__id__exact={}'.format(
                         related_link,
-                        obj.remote_field.name,
+                        obj.remote_field.name if _name != 'serverattribute' else 'computer',
                         self.pk
                     ),
                     'text': ugettext(obj.remote_field.field.verbose_name),
