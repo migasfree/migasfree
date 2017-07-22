@@ -98,12 +98,20 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'created_at',
                 'ip_address',
                 'forwarded_ip_address',
-                'comment',
             )
         }),
         (_('Current Situation'), {
             'fields': (
+                'comment',
                 'status',
+                'tags',
+            )
+        }),
+        (_('Devices'), {
+            'fields': ('logical_devices_link', 'default_logical_device',)
+        }),
+        (_('Synchronization'), {
+            'fields': (
                 'sync_user_link',
                 'sync_attributes_link',
                 'sync_start_date',
@@ -112,6 +120,9 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'unchecked_errors',
                 'unchecked_faults',
             )
+        }),
+        (_('Software'), {
+            'fields': ('software_inventory', 'software_history',)
         }),
         (_('Hardware'), {
             'fields': (
@@ -125,15 +136,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'disks',
                 'mac_address',
             )
-        }),
-        (_('Software'), {
-            'fields': ('software_inventory', 'software_history',)
-        }),
-        (_('Devices'), {
-            'fields': ('logical_devices_link', 'default_logical_device',)
-        }),
-        (_('Tags'), {
-            'fields': ('tags',)
         }),
     )
 
