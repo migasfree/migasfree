@@ -11,6 +11,7 @@
         {% if lnk.status == 'unknown' %}fa-question{% endif %}
         {% if lnk.status == 'unsubscribed' %}fa-recycle{% endif %}
         {% if lnk.status == 'set' %}fa-circle-o{% endif %}
+        {% if lnk.status == 'tag' %}fa-tag{% endif %}
         " title="{{ lnk.trans_status }}"></span>
       {% endif %}
       {{ lnk.text }}

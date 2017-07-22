@@ -313,6 +313,10 @@ class MigasLink(object):
         if self._meta.model_name == 'computer':
             lnk['status'] = self.status
             lnk['trans_status'] = ugettext(self.status)
+        elif self._meta.model_name == 'serverattribute' \
+                or (self._meta.model_name == 'attribute' and self.property_att.sort == 'server'):
+            lnk['status'] = 'tag'
+            lnk['trans_status'] = ugettext(self._meta.verbose_name)
         elif self._meta.model_name == 'attributeset' \
                 or (self._meta.model_name in ['clientattribute', 'attribute'] and self.id == 1):
             lnk['status'] = 'set'
