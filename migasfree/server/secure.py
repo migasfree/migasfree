@@ -83,13 +83,14 @@ def generate_rsa_keys(name='migasfree-server'):
     private_pem = os.path.join(settings.MIGASFREE_KEYS_DIR, '{}.pri'.format(name))
     public_pem = os.path.join(settings.MIGASFREE_KEYS_DIR, '{}.pub'.format(name))
 
-    key = RSA.generate(2048)
-    write_file(public_pem, key.publickey().exportKey('PEM'))
-    write_file(private_pem, key.exportKey('PEM'))
+    if not (os.path.exists(private_pem) and os.path.exists(public_pem)):
+        key = RSA.generate(2048)
+        write_file(public_pem, key.publickey().exportKey('PEM'))
+        write_file(private_pem, key.exportKey('PEM'))
 
-    # read only keys
-    os.chmod(private_pem, 0o400)
-    os.chmod(public_pem, 0o400)
+        # read only keys
+        os.chmod(private_pem, 0o400)
+        os.chmod(public_pem, 0o400)
 
 
 def create_server_keys():
