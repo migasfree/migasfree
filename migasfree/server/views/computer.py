@@ -18,6 +18,7 @@ from ..models import (
     Computer, Synchronization, Error, Fault,
     StatusLog, Migration, Project, Deployment,
     FaultDefinition, DeviceLogical,
+    Attribute, AttributeSet
 )
 from ..utils import d2s, to_heatmap
 from ..api import upload_computer_info
@@ -229,7 +230,18 @@ def computer_simulate_sync(request, pk):
             transaction.rollback()  # only simulate sync... not real sync!
             transaction.set_autocommit(True)
 
-            result["attributes"] = computer.sync_attributes.all()
+            result["attributes"] = computer.sync_attributes.all().filter(
+                property_att__sort='client'
+            )
+
+            set_ids = AttributeSet.process(
+                [1, computer.get_cid_attribute().id] +
+                list(computer.tags.values_list('id', flat=True)) +
+                list(result["attributes"].values_list('id',flat=True))
+            )
+
+            result["sets"] = Attribute.objects.filter(id__in=  [1] + set_ids)
+
 
             deployments = []
             for item in result.get("repositories", []):
