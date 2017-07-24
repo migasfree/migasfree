@@ -237,11 +237,10 @@ def computer_simulate_sync(request, pk):
             set_ids = AttributeSet.process(
                 [1, computer.get_cid_attribute().id] +
                 list(computer.tags.values_list('id', flat=True)) +
-                list(result["attributes"].values_list('id',flat=True))
+                list(result["attributes"].values_list('id', flat=True))
             )
 
-            result["sets"] = Attribute.objects.filter(id__in=  [1] + set_ids)
-
+            result["sets"] = Attribute.objects.filter(id__in=[1] + set_ids)
 
             deployments = []
             for item in result.get("repositories", []):
