@@ -230,8 +230,11 @@ def sequence_reset():
             _file.write(commands.getvalue())
             _file.flush()
 
-        cmd = "su postgres -c 'psql {} -f {}' -".format(
-            settings.DATABASES.get('default').get('NAME'),
+        cmd = "PGPASSWORD={} psql -h {} -p {} -U {} -f {}".format(
+            settings.DATABASES.get('default').get('PASSWORD'),
+            settings.DATABASES.get('default').get('HOST'),
+            settings.DATABASES.get('default').get('PORT'),
+            settings.DATABASES.get('default').get('USER'),
             _filename
         )
         _, err = run(cmd)
