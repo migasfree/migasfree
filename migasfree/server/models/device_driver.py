@@ -43,7 +43,7 @@ class DeviceDriver(models.Model):
 
     def as_dict(self):
         return {
-            'driver': self.name,
+            'driver': self.name if self.name else '',
             'packages': to_list(self.packages_to_install),
         }
 
@@ -54,7 +54,7 @@ class DeviceDriver(models.Model):
         super(DeviceDriver, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.name.split("/")[-1]
+        return self.name.split("/")[-1] if self.name else ''
 
     class Meta:
         app_label = 'server'
