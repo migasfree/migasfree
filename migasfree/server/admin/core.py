@@ -36,6 +36,7 @@ class AttributeSetAdmin(MigasAdmin):
     list_display = ('name_link', 'included_attributes_link', 'excluded_attributes_link')
     list_filter = ('enabled',)
     list_display_links = ('name_link',)
+    ordering = ('name',)
     search_fields = ('name', 'included_attributes__value', 'excluded_attributes__value')
 
     name_link = MigasFields.link(model=AttributeSet, name='name')
