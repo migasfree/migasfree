@@ -147,6 +147,7 @@ setup(
             'server/templates/*.html',
             'server/templates/*/*.html',
             'server/templates/*/*/*.html',
+            'server/templates/*/*/*/*.html',
             'catalog/static/css/*',
             'catalog/static/img/*',
             'catalog/static/js/*.js',
