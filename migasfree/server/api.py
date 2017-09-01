@@ -618,7 +618,7 @@ def get_key_packager(request, name, uuid, computer, data):
         username=data['username'],
         password=data['password']
     )
-    if not user.has_perm("server.can_save_package"):
+    if not user or not user.has_perm("server.can_save_package"):
         return return_message(
             cmd,
             errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
