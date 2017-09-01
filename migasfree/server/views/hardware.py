@@ -96,7 +96,8 @@ def load_hw(computer, node, parent, level):
     for e in node:
         if e == "children":
             for x in node[e]:
-                load_hw(computer, x, n, level)
+                if isinstance(x, dict):
+                    load_hw(computer, x, n, level)
         elif e == "capabilities":
             for x in node[e]:
                 HwCapability.objects.create(
