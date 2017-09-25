@@ -18,14 +18,19 @@ from ..filters import (
 # from ..permissions import PublicPermission, IsAdminOrIsSelf
 
 
-class AttributeSetViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
-):
+class AttributeSetViewSet(viewsets.ModelViewSet):
     queryset = models.AttributeSet.objects.all()
     serializer_class = serializers.AttributeSetSerializer
     filter_class = AttributeSetFilter
     ordering_fields = '__all__'
     ordering = ('name',)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.AttributeSetWriteSerializer
+
+        return serializers.AttributeSetSerializer
 
 
 class AttributeViewSet(
@@ -321,7 +326,8 @@ class DeploymentViewSet(viewsets.ModelViewSet):
     ordering = ('-start_date',)
 
     def get_serializer_class(self):
-        if self.action == 'create' or self.action == 'update':
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
             return serializers.DeploymentWriteSerializer
 
         return serializers.DeploymentSerializer

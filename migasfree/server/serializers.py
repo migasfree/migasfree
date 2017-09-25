@@ -21,6 +21,12 @@ class AttributeSetSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AttributeSetWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.AttributeSet
+        fields = '__all__'
+
+
 class PropertyInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Property
