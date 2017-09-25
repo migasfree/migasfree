@@ -133,6 +133,15 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%c',
 }
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    },
+    'VALIDATOR_URL': None,
+}
+
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
 # http://docs.python.org/2/howto/logging-cookbook.html
