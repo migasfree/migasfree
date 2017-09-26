@@ -279,7 +279,7 @@ class PackageViewSet(
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
 
     @list_route(methods=['get'])
-    def orphaned(self, request):
+    def orphan(self, request):
         """
         Returns packages that are not in any deployment
         """
