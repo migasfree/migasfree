@@ -8,7 +8,7 @@ class PublicPermission(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        return request.user.is_authenticated()
+        return request.user.is_authenticated
 
 
 class IsAdminOrIsSelf(permissions.BasePermission):
