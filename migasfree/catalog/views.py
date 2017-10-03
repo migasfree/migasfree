@@ -11,7 +11,8 @@ from .filters import ApplicationFilter
 
 
 class ApplicationViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    mixins.ListModelMixin, mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin, viewsets.GenericViewSet
 ):
     queryset = models.Application.objects.all()
     serializer_class = serializers.ApplicationSerializer

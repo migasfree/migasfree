@@ -45,6 +45,12 @@ class AttributeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class AttributeWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Attribute
+        fields = ('description',)
+
+
 class ComputerInfoSerializer(serializers.ModelSerializer):
     cid_description = serializers.SerializerMethodField()
 
@@ -85,6 +91,12 @@ class ErrorSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ErrorWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Error
+        fields = ('checked',)
+
+
 class FaultDefinitionInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.FaultDefinition
@@ -95,6 +107,12 @@ class UserProfileInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
         fields = ('id', 'username')
+
+
+class FaultDefinitionWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.FaultDefinition
+        fields = '__all__'
 
 
 class FaultDefinitionSerializer(serializers.ModelSerializer):
@@ -121,6 +139,12 @@ class FaultSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class FaultWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Fault
+        fields = ('checked',)
+
+
 class MigrationSerializer(serializers.ModelSerializer):
     project = ProjectInfoSerializer(many=False, read_only=True)
     computer = ComputerInfoSerializer(many=False, read_only=True)
@@ -144,6 +168,12 @@ class NotificationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class NotificationWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Notification
+        fields = ('checked',)
+
+
 class PackageInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Package
@@ -154,6 +184,12 @@ class StoreInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Store
         fields = ('id', 'name')
+
+
+class PackageWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Package
+        fields = '__all__'
 
 
 class PackageSerializer(serializers.ModelSerializer):
@@ -181,6 +217,12 @@ class PmsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Pms
         fields = ('id', 'name', 'slug', 'createrepo', 'info')
+
+
+class PropertyWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Property
+        fields = '__all__'
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -272,6 +314,12 @@ class DeploymentWriteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ScheduleDelayWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ScheduleDelay
+        fields = '__all__'
+
+
 class ScheduleDelaySerializer(serializers.ModelSerializer):
     attributes = AttributeSerializer(many=True, read_only=True)
     total_computers = serializers.SerializerMethodField()
@@ -284,12 +332,24 @@ class ScheduleDelaySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ScheduleWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Schedule
+        fields = '__all__'
+
+
 class ScheduleSerializer(serializers.ModelSerializer):
     delays = ScheduleDelaySerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Schedule
         fields = ('id', 'name', 'description', 'delays')
+
+
+class StoreWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Store
+        fields = '__all__'
 
 
 class StoreSerializer(serializers.ModelSerializer):
@@ -303,6 +363,12 @@ class StoreSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
+        fields = '__all__'
+
+
+class ProjectWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Project
         fields = '__all__'
 
 
