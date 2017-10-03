@@ -2,7 +2,6 @@
 
 from rest_framework import serializers
 
-from migasfree.server.serializers import ProjectInfoSerializer
 from migasfree.server.utils import to_list
 from . import models
 
