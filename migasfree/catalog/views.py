@@ -10,15 +10,19 @@ from . import models, serializers
 from .filters import ApplicationFilter
 
 
-class ApplicationViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin, viewsets.GenericViewSet
-):
+class ApplicationViewSet(viewsets.ModelViewSet):
     queryset = models.Application.objects.all()
     serializer_class = serializers.ApplicationSerializer
     filter_class = ApplicationFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     permission_classes = (PublicPermission,)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.ApplicationWriteSerializer
+
+        return serializers.ApplicationSerializer
 
     @list_route(methods=['get'])
     def levels(self, request):

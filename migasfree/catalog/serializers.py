@@ -24,8 +24,6 @@ class CategorySerializer(serializers.Serializer):
 
 
 class PackagesByProjectSerializer(serializers.ModelSerializer):
-    project = ProjectInfoSerializer(many=False, read_only=True)
-
     def to_representation(self, obj):
         return {
             'project': {
@@ -37,6 +35,12 @@ class PackagesByProjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.PackagesByProject
+        fields = '__all__'
+
+
+class ApplicationWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Application
         fields = '__all__'
 
 
