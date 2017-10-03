@@ -46,4 +46,7 @@ from .token import (
     FaultViewSet, NotificationViewSet, MigrationViewSet,
     HardwareComputerViewSet, HardwareViewSet,
     UserViewSet, SynchronizationViewSet, StatusLogViewSet,
+    ConnectionViewSet, DeviceViewSet, DriverViewSet,
+    FeatureViewSet, LogicalViewSet, ManufacturerViewSet,
+    ModelViewSet, TypeViewSet,
 )

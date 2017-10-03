@@ -381,27 +381,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class DeviceInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Device
-        fields = ('id', 'name')
-
-
-class FeatureSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.DeviceFeature
-        fields = '__all__'
-
-
-class LogicalSerializer(serializers.ModelSerializer):
-    device = DeviceInfoSerializer(many=False, read_only=True)
-    feature = FeatureSerializer(many=False, read_only=True)
-
-    class Meta:
-        model = models.DeviceLogical
-        fields = '__all__'
-
-
 class SynchronizationSerializer(serializers.ModelSerializer):
     project = ProjectInfoSerializer(many=False, read_only=True)
     user = UserSerializer(many=False, read_only=True)
@@ -429,3 +408,113 @@ class ComputerSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Computer
         fields = ('sync_start_date', 'sync_end_date', 'sync_user', 'sync_attributes')
+
+
+class ConnectionInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceConnection
+        fields = ('id', 'name')
+
+
+class ConnectionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceConnection
+        fields = '__all__'
+
+
+class ModelInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceModel
+        fields = ('id', 'name')
+
+
+class DeviceInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Device
+        fields = ('id', 'name')
+
+
+class DeviceWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Device
+        fields = '__all__'
+
+
+class DeviceSerializer(serializers.ModelSerializer):
+    connection = ConnectionInfoSerializer(many=False, read_only=True)
+    model = ModelInfoSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.Device
+        fields = '__all__'
+
+
+class FeatureInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceFeature
+        fields = ('id', 'name')
+
+
+class DriverWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceDriver
+        fields = '__all__'
+
+
+class DriverSerializer(serializers.ModelSerializer):
+    model = ModelInfoSerializer(many=False, read_only=True)
+    project = ProjectInfoSerializer(many=False, read_only=True)
+    feature = FeatureInfoSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.DeviceDriver
+        fields = '__all__'
+
+
+class FeatureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceFeature
+        fields = '__all__'
+
+
+class LogicalSerializer(serializers.ModelSerializer):
+    device = DeviceInfoSerializer(many=False, read_only=True)
+    feature = FeatureSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.DeviceLogical
+        fields = '__all__'
+
+
+class LogicalWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceLogical
+        fields = '__all__'
+
+
+class ManufacturerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceManufacturer
+        fields = '__all__'
+
+
+class TypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceType
+        fields = '__all__'
+
+
+class ModelWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.DeviceModel
+        fields = '__all__'
+
+
+class ModelSerializer(serializers.ModelSerializer):
+    manufacturer = ManufacturerSerializer(many=False, read_only=True)
+    connections = ConnectionInfoSerializer(many=True, read_only=True)
+    device_type = TypeSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.DeviceModel
+        fields = '__all__'

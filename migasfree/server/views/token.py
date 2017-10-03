@@ -14,6 +14,7 @@ from ..filters import (
     DeploymentFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
     NodeFilter, SynchronizationFilter, StatusLogFilter,
+    DeviceFilter,
 )
 # from ..permissions import PublicPermission, IsAdminOrIsSelf
 
@@ -463,3 +464,89 @@ class ProjectViewSet(viewsets.ModelViewSet):
             return serializers.ProjectWriteSerializer
 
         return serializers.ProjectSerializer
+
+
+class ConnectionViewSet(viewsets.ModelViewSet):
+    queryset = models.DeviceConnection.objects.all()
+    serializer_class = serializers.ConnectionSerializer
+    ordering_fields = '__all__'
+    ordering = ('id',)
+
+
+class DeviceViewSet(viewsets.ModelViewSet):
+    queryset = models.Device.objects.all()
+    serializer_class = serializers.DeviceSerializer
+    filter_class = DeviceFilter
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    ordering_fields = '__all__'
+    ordering = ('name',)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.DeviceWriteSerializer
+
+        return serializers.DeviceSerializer
+
+
+class DriverViewSet(viewsets.ModelViewSet):
+    queryset = models.DeviceDriver.objects.all()
+    serializer_class = serializers.DriverSerializer
+    ordering_fields = '__all__'
+    ordering = ('name',)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.DriverWriteSerializer
+
+        return serializers.DriverSerializer
+
+
+class FeatureViewSet(viewsets.ModelViewSet):
+    queryset = models.DeviceFeature.objects.all()
+    serializer_class = serializers.FeatureSerializer
+    ordering_fields = '__all__'
+    ordering = ('name',)
+
+
+class LogicalViewSet(viewsets.ModelViewSet):
+    queryset = models.DeviceLogical.objects.all()
+    serializer_class = serializers.LogicalSerializer
+    ordering_fields = '__all__'
+    ordering = ('device__name',)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.LogicalWriteSerializer
+
+        return serializers.LogicalSerializer
+
+
+class ManufacturerViewSet(viewsets.ModelViewSet):
+    queryset = models.DeviceManufacturer.objects.all()
+    serializer_class = serializers.ManufacturerSerializer
+    ordering_fields = '__all__'
+    ordering = ('name',)
+
+
+class ModelViewSet(viewsets.ModelViewSet):
+    queryset = models.DeviceModel.objects.all()
+    serializer_class = serializers.ModelSerializer
+    ordering_fields = '__all__'
+    ordering = ('name',)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.ModelWriteSerializer
+
+        return serializers.ModelSerializer
+
+
+class TypeViewSet(viewsets.ModelViewSet):
+    queryset = models.DeviceType.objects.all()
+    serializer_class = serializers.TypeSerializer
+    ordering_fields = '__all__'
+    ordering = ('name',)

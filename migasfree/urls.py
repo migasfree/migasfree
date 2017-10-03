@@ -8,7 +8,7 @@ from ajax_select import urls as ajax_select_urls
 from rest_framework.authtoken import views
 from rest_framework_swagger.views import get_swagger_view
 
-from server.routers import router
+from server.routers import router, device_router
 from catalog.routers import router as catalog_router
 
 from django.contrib import admin
@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^docs/', swagger_schema_view, name='docs'),
     url(r'^token-auth/$', views.obtain_auth_token),
     url(r'^api/v1/token/', include(router.urls)),
+    url(r'^api/v1/token/devices/', include(device_router.urls)),
     url(r'^api/v1/public/catalog/', include(catalog_router.urls)),
 
     url(r'', include('migasfree.server.urls')),

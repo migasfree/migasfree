@@ -16,6 +16,7 @@ from .models import (
     Package, Deployment, Error, FaultDefinition,
     Fault, Notification, Migration,
     HwNode, Synchronization, StatusLog,
+    Device,
 )
 
 
@@ -303,3 +304,9 @@ class ProjectFilter(filters.FilterSet):
     class Meta:
         model = Project
         fields = ['id', 'platform__id', 'name']
+
+
+class DeviceFilter(filters.FilterSet):
+    class Meta:
+        model = Device
+        fields = ['model__id', 'model__name']
