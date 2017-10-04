@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from migasfree.server.utils import to_list
@@ -22,9 +23,33 @@ class CategorySerializer(serializers.Serializer):
         }
 
 
+class PackagesByProjectWriteSerializer(serializers.ModelSerializer):
+    def to_internal_value(self, data):
+        """
+        :param data: {
+            'project': 17,
+            'application': 1,
+            'packages_to_install': ['one', 'two']
+        }
+        :return: PackagesByProject object
+        """
+        if 'packages_to_install' not in data:
+            msg = _('Incorrect data structure. Missing %s.')
+            raise serializers.ValidationError(msg % 'packages_to_install')
+
+        data['packages_to_install'] = '\n'.join(data.get('packages_to_install', []))
+        return super(PackagesByProjectWriteSerializer, self).to_internal_value(data)
+
+    class Meta:
+        model = models.PackagesByProject
+        fields = '__all__'
+
+
 class PackagesByProjectSerializer(serializers.ModelSerializer):
     def to_representation(self, obj):
         return {
+            'id': obj.id,
+            'application': obj.application.id,
             'project': {
                 'id': obj.project.id,
                 'name': obj.project.name

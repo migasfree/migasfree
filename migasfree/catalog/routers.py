@@ -7,3 +7,4 @@ from . import views
 router = routers.DefaultRouter()
 
 router.register(r'apps', views.ApplicationViewSet)
+router.register(r'packages', views.PackagesByProjectViewSet)
