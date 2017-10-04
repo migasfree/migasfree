@@ -14,9 +14,8 @@ from ..filters import (
     DeploymentFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
     NodeFilter, SynchronizationFilter, StatusLogFilter,
-    DeviceFilter,
+    DeviceFilter, ScheduleDelayFilter,
 )
-# from ..permissions import PublicPermission, IsAdminOrIsSelf
 
 
 class AttributeSetViewSet(viewsets.ModelViewSet):
@@ -383,6 +382,22 @@ class DeploymentViewSet(viewsets.ModelViewSet):
             return serializers.DeploymentWriteSerializer
 
         return serializers.DeploymentSerializer
+
+
+class ScheduleDelayViewSet(viewsets.ModelViewSet):
+    queryset = models.ScheduleDelay.objects.all()
+    serializer_class = serializers.ScheduleDelaySerializer
+    filter_class = ScheduleDelayFilter
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    ordering_fields = '__all__'
+    ordering = ('delay',)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.ScheduleDelayWriteSerializer
+
+        return serializers.ScheduleDelaySerializer
 
 
 class ScheduleViewSet(viewsets.ModelViewSet):

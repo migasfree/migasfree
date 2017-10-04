@@ -48,5 +48,5 @@ from .token import (
     UserViewSet, SynchronizationViewSet, StatusLogViewSet,
     ConnectionViewSet, DeviceViewSet, DriverViewSet,
     FeatureViewSet, LogicalViewSet, ManufacturerViewSet,
-    ModelViewSet, TypeViewSet,
+    ModelViewSet, TypeViewSet, ScheduleDelayViewSet,
 )
