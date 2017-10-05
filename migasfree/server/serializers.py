@@ -522,6 +522,13 @@ class FeatureInfoSerializer(serializers.ModelSerializer):
 
 
 class DriverWriteSerializer(serializers.ModelSerializer):
+    def to_internal_value(self, data):
+        if 'packages_to_install' in data:
+            data['packages_to_install'] = '\n'.join(data.get('packages_to_install', []))
+
+        return super(DriverWriteSerializer, self).to_internal_value(data)
+
+
     class Meta:
         model = models.DeviceDriver
         fields = '__all__'
@@ -531,6 +538,10 @@ class DriverSerializer(serializers.ModelSerializer):
     model = ModelInfoSerializer(many=False, read_only=True)
     project = ProjectInfoSerializer(many=False, read_only=True)
     feature = FeatureInfoSerializer(many=False, read_only=True)
+    packages_to_install = serializers.SerializerMethodField()
+
+    def get_packages_to_install(self, obj):
+        return to_list(obj.packages_to_install)
 
     class Meta:
         model = models.DeviceDriver
