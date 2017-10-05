@@ -199,4 +199,4 @@ def to_list(text):
     """
     Converts text with new lines and spaces to list (space delimiter)
     """
-    return text.replace('\r', ' ').replace('\n', ' ').split()
+    return text.replace('\r', ' ').replace('\n', ' ').split() if text else []
