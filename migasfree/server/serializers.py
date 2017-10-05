@@ -71,6 +71,12 @@ class ProjectInfoSerializer(serializers.ModelSerializer):
 
 class ComputerSerializer(serializers.ModelSerializer):
     project = ProjectInfoSerializer(many=False, read_only=True)
+    software_inventory = serializers.HyperlinkedIdentityField(
+        view_name='computer-software/inventory'
+    )
+    software_history = serializers.HyperlinkedIdentityField(
+        view_name='computer-software/history'
+    )
 
     class Meta:
         model = models.Computer
@@ -80,6 +86,7 @@ class ComputerSerializer(serializers.ModelSerializer):
             'status', 'product', 'machine',
             'mac_address', 'cpu', 'disks', 'storage', 'ram',
             'created_at', 'last_hardware_capture', 'sync_end_date',
+            'software_inventory', 'software_history',
         )
 
 
