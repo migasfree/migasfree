@@ -4,6 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from . import models, tasks
+from .utils import to_list
 
 
 class AttributeInfoSerializer(serializers.ModelSerializer):
@@ -249,12 +250,70 @@ class DeploymentSerializer(serializers.ModelSerializer):
     included_attributes = AttributeInfoSerializer(many=True, read_only=True)
     excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
 
+    packages_to_install = serializers.SerializerMethodField()
+    packages_to_remove = serializers.SerializerMethodField()
+    default_preincluded_packages = serializers.SerializerMethodField()
+    default_included_packages = serializers.SerializerMethodField()
+    default_excluded_packages = serializers.SerializerMethodField()
+
+    def get_packages_to_install(self, obj):
+        return to_list(obj.packages_to_install)
+
+    def get_packages_to_remove(self, obj):
+        return to_list(obj.packages_to_remove)
+
+    def get_default_preincluded_packages(self, obj):
+        return to_list(obj.default_preincluded_packages)
+
+    def get_default_included_packages(self, obj):
+        return to_list(obj.default_included_packages)
+
+    def get_default_excluded_packages(self, obj):
+        return to_list(obj.default_excluded_packages)
+
     class Meta:
         model = models.Deployment
         fields = '__all__'
 
 
 class DeploymentWriteSerializer(serializers.ModelSerializer):
+    def to_internal_value(self, data):
+        """
+        :param data: {
+            "enabled": true,
+            "project": id,
+            "name": "string",
+            "comment": "string",
+            "available_packages": ["string", ...],
+            "start_date": "string",
+            "packages_to_install": [],
+            "packages_to_remove": [],
+            "default_preincluded_packages": [],
+            "default_included_packages": [],
+            "default_excluded_packages": [],
+            "schedule": id,
+            "included_attributes": [id1, id2, ...],
+            "excluded_attributes": [id1, ...]
+        }
+        :return: Deployment object
+        """
+        if 'packages_to_install' in data:
+            data['packages_to_install'] = '\n'.join(data.get('packages_to_install', []))
+
+        if 'packages_to_remove' in data:
+            data['packages_to_remove'] = '\n'.join(data.get('packages_to_remove', []))
+
+        if 'default_preincluded_packages' in data:
+            data['default_preincluded_packages'] = '\n'.join(data.get('default_preincluded_packages', []))
+
+        if 'default_included_packages' in data:
+            data['default_included_packages'] = '\n'.join(data.get('default_included_packages', []))
+
+        if 'default_excluded_packages' in data:
+            data['default_excluded_packages'] = '\n'.join(data.get('default_excluded_packages', []))
+
+        return super(DeploymentWriteSerializer, self).to_internal_value(data)
+
     def create(self, validated_data):
         deploy = super(DeploymentWriteSerializer, self).create(validated_data)
         tasks.create_repository_metadata(deploy)
