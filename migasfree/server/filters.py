@@ -16,7 +16,7 @@ from .models import (
     Package, Deployment, Error, FaultDefinition,
     Fault, Notification, Migration,
     HwNode, Synchronization, StatusLog,
-    Device, ScheduleDelay,
+    Device, DeviceDriver, ScheduleDelay,
 )
 
 
@@ -310,6 +310,16 @@ class DeviceFilter(filters.FilterSet):
     class Meta:
         model = Device
         fields = ['model__id', 'model__name']
+
+
+class DriverFilter(filters.FilterSet):
+    class Meta:
+        model = DeviceDriver
+        fields = [
+            'project__id', 'project__name',
+            'model__id', 'model__name',
+            'feature__id', 'feature__name'
+        ]
 
 
 class ScheduleDelayFilter(filters.FilterSet):
