@@ -16,6 +16,7 @@ from ..filters import (
     NodeFilter, SynchronizationFilter, StatusLogFilter,
     DeviceFilter, DriverFilter, ScheduleDelayFilter,
 )
+from ..tasks import create_repository_metadata
 
 
 class AttributeSetViewSet(viewsets.ModelViewSet):
@@ -409,6 +410,16 @@ class DeploymentViewSet(viewsets.ModelViewSet):
             return serializers.DeploymentWriteSerializer
 
         return serializers.DeploymentSerializer
+
+    @detail_route(methods=['get'])
+    def metadata(self, request, pk=None):
+        get_object_or_404(models.Deployment, pk=pk)
+        ret = create_repository_metadata(pk)
+
+        return Response(
+            {'detail': ret},
+            status=status.HTTP_200_OK
+        )
 
 
 class ScheduleDelayViewSet(viewsets.ModelViewSet):
