@@ -14,7 +14,7 @@ from ..filters import (
     DeploymentFilter, ErrorFilter, FaultDefinitionFilter,
     FaultFilter, NotificationFilter, MigrationFilter,
     NodeFilter, SynchronizationFilter, StatusLogFilter,
-    DeviceFilter, ScheduleDelayFilter,
+    DeviceFilter, DriverFilter, ScheduleDelayFilter,
 )
 
 
@@ -121,6 +121,33 @@ class ComputerViewSet(
     serializer_class = serializers.ComputerSerializer
     filter_class = ComputerFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+
+    @detail_route(methods=['get'], url_path='software/inventory')
+    def software_inventory(self, request, pk=None):
+        """
+        Returns installed packages in a computer
+        """
+        computer = get_object_or_404(models.Computer, pk=pk)
+        data = []
+        if computer.software_inventory:
+            data = computer.software_inventory.replace('+', '').split('\n')
+
+        return Response(
+            data,
+            status=status.HTTP_200_OK
+        )
+
+    @detail_route(methods=['get'], url_path='software/history')
+    def software_history(self, request, pk=None):
+        """
+        Returns software history of a computer
+        """
+        computer = get_object_or_404(models.Computer, pk=pk)
+
+        return Response(
+            computer.software_history,
+            status=status.HTTP_200_OK
+        )
 
     @detail_route(methods=['post'])
     def status(self, request, pk=None):
@@ -507,6 +534,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
 class DriverViewSet(viewsets.ModelViewSet):
     queryset = models.DeviceDriver.objects.all()
     serializer_class = serializers.DriverSerializer
+    filter_class = DriverFilter
     ordering_fields = '__all__'
     ordering = ('name',)
 
