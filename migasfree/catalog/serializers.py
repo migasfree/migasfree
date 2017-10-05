@@ -33,11 +33,9 @@ class PackagesByProjectWriteSerializer(serializers.ModelSerializer):
         }
         :return: PackagesByProject object
         """
-        if 'packages_to_install' not in data:
-            msg = _('Incorrect data structure. Missing %s.')
-            raise serializers.ValidationError(msg % 'packages_to_install')
+        if 'packages_to_install' in data:
+            data['packages_to_install'] = '\n'.join(data.get('packages_to_install', []))
 
-        data['packages_to_install'] = '\n'.join(data.get('packages_to_install', []))
         return super(PackagesByProjectWriteSerializer, self).to_internal_value(data)
 
     class Meta:
