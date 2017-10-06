@@ -96,7 +96,6 @@ def delayed_computers():
         'target': 'computer',
         'level': 'warning',
         'result': Message.objects.filter(updated_at__lt=t).count(),
-        # 'url': reverse('computer_messages'),
         'url': reverse('admin:server_message_changelist')
                + '?updated_at__lt=' + t.strftime("%Y-%m-%d %H:%M:%S")
     }
