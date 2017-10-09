@@ -27,10 +27,10 @@ Requirements
 ============
 
 * Server:
-    + Apache with WSGI
+    + Web server with WSGI
     + Python 2.7
-    + Django 1.9
-    + PostgreSQL 9.1
+    + Django 1.11
+    + PostgreSQL 9.3
 
 * Clients:
     + a Linux distribution (Debian, Fedora, openSUSE, Ubuntu, ...)
@@ -58,7 +58,7 @@ How can you change the software configuration of machines with migasfree?
 
 When migasfree client is running, queries the migasfree Server and it responds with a code survey to execute in the client, created *ad hoc* for this client after consulting the database.
 
-This code survey is executed in the client and basically configures the repositories of packages (rpm or deb). Previously, these repositories have been created for the server when the migasfree's administrator configures a repository.
+This code survey is executed in the client and basically configures the repositories of packages (rpm or deb). Previously, these repositories have been created in the server.
 
 A repository in migasfree server defines the packages that should be installed, updated or removed in the clients in function of attributes of client computer: **HOSTNAME**, **USER**, **LDAP CONTEXT**, **VIDEO CARD**, ... (the administrator defines the properties that he wants to use in his organization).
 
