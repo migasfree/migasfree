@@ -39,32 +39,6 @@ urlpatterns = [
     url(r'^info/(.*)', info, name='package_info'),
 
     url(
-        r'^chart/synchronized_daily/$',
-        synchronized_daily,
-        name='chart_synchronized_daily'
-    ),
-    url(
-        r'^chart/synchronized_monthly/$',
-        synchronized_monthly,
-        name='chart_synchronized_monthly'
-    ),
-    url(
-        r'^chart/delay_schedule/$',
-        delay_schedule,
-        name='chart_delay_schedule'
-    ),
-    url(
-        r'^chart/delay_schedule/(?P<project_name>.+)/$',
-        delay_schedule,
-        name='chart_delay_schedule'
-    ),
-    url(
-        r'^chart/dashboard/$',
-        stats_dashboard,
-        name='stats_dashboard'
-    ),
-
-    url(
         r'^hardware_resume/(.*)',
         hardware_resume,
         name='hardware_resume'
@@ -143,11 +117,6 @@ urlpatterns = [
         r'^timeline/$',
         timeline,
         name='timeline',
-    ),
-    url(
-        r'^provided_computers/$',
-        provided_computers_by_delay,
-        name='provided_computers',
     ),
     url(
         r'^connections_model/$',
@@ -245,5 +214,29 @@ urlpatterns = [
     url(
         r'^chart/version_computer/$',
         RedirectView.as_view(url=reverse_lazy('stats_dashboard'))
+    ),
+    url(
+        r'^chart/synchronized_daily/$',
+        RedirectView.as_view(url=reverse_lazy('stats_syncs_daily'))
+    ),
+    url(
+        r'^chart/synchronized_monthly/$',
+        RedirectView.as_view(url=reverse_lazy('stats_syncs_monthly'))
+    ),
+    url(
+        r'^chart/delay_schedule/$',
+        RedirectView.as_view(url=reverse_lazy('stats_project_schedule_delays'))
+    ),
+    url(
+        r'^chart/delay_schedule/(?P<project_name>.+)/$',
+        RedirectView.as_view(url=reverse_lazy('stats_project_schedule_delays'))
+    ),
+    url(
+        r'^chart/dashboard/$',
+        RedirectView.as_view(url=reverse_lazy('stats_dashboard'))
+    ),
+    url(
+        r'^provided_computers/$',
+        RedirectView.as_view(url=reverse_lazy('provided_computers'))
     ),
 ]

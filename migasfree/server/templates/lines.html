@@ -27,7 +27,7 @@
             {% for project in project_selection %}
                 <a role="button"
                    class="btn btn-default {% if project.1 == current_project %}active{% endif %}"
-                   href="{% url 'chart_delay_schedule' project.1 %}">{{ project.1 }}</a>
+                   href="{% url 'stats_project_schedule_delays' project.1 %}">{{ project.1 }}</a>
             {% endfor %}
         </div>
     {% endif %}

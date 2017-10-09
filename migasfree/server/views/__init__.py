@@ -2,13 +2,6 @@
 
 # import order is very important!!!
 
-from .stats import (
-    delay_schedule,
-    synchronized_daily,
-    synchronized_monthly,
-    stats_dashboard,
-    provided_computers_by_delay,
-)
 from .queries import get_query, computer_messages
 from .hardware import hardware_resume, hardware_extract, load_hw, process_hw
 from .client_api import api
