@@ -2,12 +2,10 @@
 
 import django_filters
 
-from rest_framework import filters
-
-from .models import Application, PackagesByProject
+from .models import Application, PackagesByProject, Policy
 
 
-class ApplicationFilter(filters.FilterSet):
+class ApplicationFilter(django_filters.FilterSet):
     description = django_filters.CharFilter(
         name='description', lookup_expr='icontains'
     )
@@ -17,7 +15,7 @@ class ApplicationFilter(filters.FilterSet):
         fields = ['level', 'category', 'packages_by_project__project__name']
 
 
-class PackagesByProjectFilter(filters.FilterSet):
+class PackagesByProjectFilter(django_filters.FilterSet):
     packages_to_install = django_filters.CharFilter(
         name='packages_to_install', lookup_expr='icontains'
     )
@@ -25,3 +23,13 @@ class PackagesByProjectFilter(filters.FilterSet):
     class Meta:
         model = PackagesByProject
         fields = ['project__id', 'project__name']
+
+
+class PolicyFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(
+        name='name', lookup_expr='icontains'
+    )
+
+    class Meta:
+        model = Policy
+        fields = ['name']
