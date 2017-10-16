@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from migasfree.server.permissions import PublicPermission
 from . import models, serializers
-from .filters import ApplicationFilter, PackagesByProjectFilter
+from .filters import ApplicationFilter, PackagesByProjectFilter, PolicyFilter
 
 
 class ApplicationViewSet(viewsets.ModelViewSet):
@@ -52,3 +52,30 @@ class PackagesByProjectViewSet(viewsets.ModelViewSet):
             return serializers.PackagesByProjectWriteSerializer
 
         return serializers.PackagesByProjectSerializer
+
+
+class PolicyViewSet(viewsets.ModelViewSet):
+    queryset = models.Policy.objects.all()
+    serializer_class = serializers.PolicySerializer
+    filter_class = PolicyFilter
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.PolicyWriteSerializer
+
+        return serializers.PolicySerializer
+
+
+class PolicyGroupViewSet(viewsets.ModelViewSet):
+    queryset = models.PolicyGroup.objects.all()
+    serializer_class = serializers.PolicyGroupSerializer
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.PolicyGroupWriteSerializer
+
+        return serializers.PolicyGroupSerializer

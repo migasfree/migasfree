@@ -3,6 +3,7 @@
 from rest_framework import serializers
 
 from migasfree.server.utils import to_list
+from migasfree.server.serializers import AttributeInfoSerializer
 from . import models
 
 
@@ -59,6 +60,12 @@ class PackagesByProjectSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ApplicationInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Application
+        fields = ['id', 'name']
+
+
 class ApplicationWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Application
@@ -72,4 +79,42 @@ class ApplicationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Application
+        fields = '__all__'
+
+
+class PolicyInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Policy
+        fields = ['id', 'name']
+
+
+class PolicyWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Policy
+        fields = '__all__'
+
+
+class PolicySerializer(serializers.ModelSerializer):
+    included_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Policy
+        fields = '__all__'
+
+
+class PolicyGroupWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.PolicyGroup
+        fields = '__all__'
+
+
+class PolicyGroupSerializer(serializers.ModelSerializer):
+    policy = PolicyInfoSerializer(many=False, read_only=True)
+    applications = ApplicationInfoSerializer(many=True, read_only=True)
+    included_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.PolicyGroup
         fields = '__all__'
