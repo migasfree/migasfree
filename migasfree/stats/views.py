@@ -109,6 +109,8 @@ def month_year_iter(start_month, start_year, end_month, end_year):
 
 
 class SyncStatsViewSet(viewsets.ViewSet):
+    queryset = Synchronization.objects.all()  # FIXME
+
     @list_route(methods=['get'])
     def monthly(self, request, format=None):
         fmt = '%Y%m'
@@ -182,7 +184,7 @@ class SyncStatsViewSet(viewsets.ViewSet):
         data = []
         labels = []
         for item in datetime_iterator(begin, end, delta):
-            labels.append(item.strftime('%b %d'))
+            labels.append(item.strftime('%Y-%m-%d'))
             index = str(to_timestamp(datetime.combine(item, time.min)))
             data.append(updates_time_range[index] if index in updates_time_range else 0)
 
