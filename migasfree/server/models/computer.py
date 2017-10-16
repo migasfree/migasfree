@@ -401,6 +401,22 @@ class Computer(models.Model, MigasLink):
             target_cid.ExcludedAttributesGroup
         )
         swap_m2m(source_cid.scheduledelay_set, target_cid.scheduledelay_set)
+        swap_m2m(
+            source_cid.PolicyIncludedAttributes,
+            target_cid.PolicyIncludedAttributes
+        )
+        swap_m2m(
+            source_cid.PolicyExcludedAttributes,
+            target_cid.PolicyExcludedAttributes
+        )
+        swap_m2m(
+            source_cid.PolicyGroupIncludedAttributes,
+            target_cid.PolicyGroupIncludedAttributes
+        )
+        swap_m2m(
+            source_cid.PolicyGroupExcludedAttributes,
+            target_cid.PolicyGroupExcludedAttributes
+        )
 
         source.status, target.status = target.status, source.status
 
@@ -453,6 +469,18 @@ class Computer(models.Model, MigasLink):
                 str(x) for x in self.logical_devices()
             ),
             ugettext("Default logical device"): self.default_logical_device.__str__(),
+            ugettext("Policies (included)"): ', '.join(
+                str(x) for x in cid.PolicyIncludedAttributes.all()
+            ),
+            ugettext("Policies (excluded)"): ', '.join(
+                str(x) for x in cid.PolicyExcludedAttributes.all()
+            ),
+            ugettext("Policy Groups (included)"): ', '.join(
+                str(x) for x in cid.PolicyGroupIncludedAttributes.all()
+            ),
+            ugettext("Policy Groups (excluded)"): ', '.join(
+                str(x) for x in cid.PolicyGroupExcludedAttributes.all()
+            ),
         })
 
     def append_devices(self, computer_id):
