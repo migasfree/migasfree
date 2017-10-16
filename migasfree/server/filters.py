@@ -8,7 +8,6 @@ from django.contrib.admin.filters import ChoicesFieldListFilter
 from django.contrib.admin import SimpleListFilter
 from django.db.models import Q
 from django.utils.translation import ugettext as _
-from rest_framework import filters
 
 from .models import (
     ServerProperty, Computer,
@@ -163,19 +162,19 @@ class SyncEndDateFilter(SimpleListFilter):
         return queryset
 
 
-class AttributeSetFilter(filters.FilterSet):
+class AttributeSetFilter(django_filters.FilterSet):
     class Meta:
         model = AttributeSet
         fields = ['id', 'enabled']
 
 
-class AttributeFilter(filters.FilterSet):
+class AttributeFilter(django_filters.FilterSet):
     class Meta:
         model = Attribute
         fields = ['id', 'property_att__id', 'property_att__prefix', 'value']
 
 
-class ComputerFilter(filters.FilterSet):
+class ComputerFilter(django_filters.FilterSet):
     platform = django_filters.NumberFilter(name='project__platform__id')
     created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
     mac_address = django_filters.CharFilter(
@@ -190,7 +189,7 @@ class ComputerFilter(filters.FilterSet):
         ]
 
 
-class ErrorFilter(filters.FilterSet):
+class ErrorFilter(django_filters.FilterSet):
     created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
     created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
     platform = django_filters.NumberFilter(name='project__platform__id')
@@ -200,7 +199,7 @@ class ErrorFilter(filters.FilterSet):
         fields = ['id', 'project__id', 'checked', 'computer__id']
 
 
-class FaultDefinitionFilter(filters.FilterSet):
+class FaultDefinitionFilter(django_filters.FilterSet):
     class Meta:
         model = FaultDefinition
         fields = [
@@ -209,7 +208,7 @@ class FaultDefinitionFilter(filters.FilterSet):
         ]
 
 
-class FaultFilter(filters.FilterSet):
+class FaultFilter(django_filters.FilterSet):
     created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
     created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
 
@@ -220,7 +219,7 @@ class FaultFilter(filters.FilterSet):
         ]
 
 
-class MigrationFilter(filters.FilterSet):
+class MigrationFilter(django_filters.FilterSet):
     created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
     created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
 
@@ -229,7 +228,7 @@ class MigrationFilter(filters.FilterSet):
         fields = ['id', 'project__id', 'computer__id']
 
 
-class NodeFilter(filters.FilterSet):
+class NodeFilter(django_filters.FilterSet):
     class Meta:
         model = HwNode
         fields = [
@@ -240,7 +239,7 @@ class NodeFilter(filters.FilterSet):
         ]
 
 
-class NotificationFilter(filters.FilterSet):
+class NotificationFilter(django_filters.FilterSet):
     created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
 
     class Meta:
@@ -248,19 +247,19 @@ class NotificationFilter(filters.FilterSet):
         fields = ['id', 'checked']
 
 
-class PackageFilter(filters.FilterSet):
+class PackageFilter(django_filters.FilterSet):
     class Meta:
         model = Package
         fields = ['id', 'project__id', 'store__id']
 
 
-class PropertyFilter(filters.FilterSet):
+class PropertyFilter(django_filters.FilterSet):
     class Meta:
         model = Property
         fields = ['id', 'enabled', 'sort']
 
 
-class DeploymentFilter(filters.FilterSet):
+class DeploymentFilter(django_filters.FilterSet):
     included_attributes = django_filters.CharFilter(
         name='included_attributes__value', lookup_expr=['icontains']
     )
@@ -276,7 +275,7 @@ class DeploymentFilter(filters.FilterSet):
         fields = ['id', 'project__id', 'enabled', 'schedule__id']
 
 
-class StatusLogFilter(filters.FilterSet):
+class StatusLogFilter(django_filters.FilterSet):
     created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
     created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
 
@@ -285,13 +284,13 @@ class StatusLogFilter(filters.FilterSet):
         fields = ['id', 'computer__id']
 
 
-class StoreFilter(filters.FilterSet):
+class StoreFilter(django_filters.FilterSet):
     class Meta:
         model = Store
         fields = ['id', 'project__id']
 
 
-class SynchronizationFilter(filters.FilterSet):
+class SynchronizationFilter(django_filters.FilterSet):
     created_at = django_filters.DateFilter(name='created_at', lookup_expr=['gte'])
     created_at__lt = django_filters.DateFilter(name='created_at', lookup_expr=['lt'])
 
@@ -300,19 +299,19 @@ class SynchronizationFilter(filters.FilterSet):
         fields = ['id', 'project__id', 'computer__id']
 
 
-class ProjectFilter(filters.FilterSet):
+class ProjectFilter(django_filters.FilterSet):
     class Meta:
         model = Project
         fields = ['id', 'platform__id', 'name']
 
 
-class DeviceFilter(filters.FilterSet):
+class DeviceFilter(django_filters.FilterSet):
     class Meta:
         model = Device
         fields = ['model__id', 'model__name']
 
 
-class DriverFilter(filters.FilterSet):
+class DriverFilter(django_filters.FilterSet):
     class Meta:
         model = DeviceDriver
         fields = [
@@ -322,7 +321,7 @@ class DriverFilter(filters.FilterSet):
         ]
 
 
-class ScheduleDelayFilter(filters.FilterSet):
+class ScheduleDelayFilter(django_filters.FilterSet):
     class Meta:
         model = ScheduleDelay
         fields = ['schedule__id', 'schedule__name']
