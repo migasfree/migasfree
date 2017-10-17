@@ -215,6 +215,7 @@ def synchronized_monthly(request):
     begin_date = end_date - relativedelta(months=+MONTHLY_RANGE)
 
     client = APIClient()
+    client.force_authenticate(user=request.user)
     url = '/api/v1/token/stats/syncs/monthly/'
 
     platforms = Platform.objects.only("id", "name")
@@ -275,6 +276,7 @@ def synchronized_daily(request):
     )
 
     client = APIClient()
+    client.force_authenticate(user=request.user)
     response = client.get(
         '/api/v1/token/stats/syncs/daily/',
         HTTP_ACCEPT_LANGUAGE=request.LANGUAGE_CODE
