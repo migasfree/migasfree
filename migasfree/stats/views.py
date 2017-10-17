@@ -227,7 +227,8 @@ def synchronized_monthly(request):
             '{}?platform_id={}'.format(url, platform.id),
             HTTP_ACCEPT_LANGUAGE=request.LANGUAGE_CODE
         )
-        x_labels[platform.id], data[platform.id] = zip(*response.data)
+        if hasattr(response, 'data') and response.status_code == status.HTTP_200_OK:
+            x_labels[platform.id], data[platform.id] = zip(*response.data)
 
     # shuffle data series
     x_axe = []
@@ -274,6 +275,7 @@ def synchronized_daily(request):
         width=WIDTH,
         height=HEIGHT,
     )
+    data = []
 
     client = APIClient()
     client.force_authenticate(user=request.user)
@@ -282,8 +284,10 @@ def synchronized_daily(request):
         HTTP_ACCEPT_LANGUAGE=request.LANGUAGE_CODE
     )
 
-    labels, data = zip(*response.data)
-    line_chart.x_labels = labels
+    if hasattr(response, 'data') and response.status_code == status.HTTP_200_OK:
+        labels, data = zip(*response.data)
+        line_chart.x_labels = labels
+
     line_chart.add(_('Computers'), data)
 
     return render(
