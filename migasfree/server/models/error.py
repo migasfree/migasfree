@@ -50,7 +50,7 @@ class Error(Event):
 
     @staticmethod
     def unchecked_count():
-        return Error.objects.filter(checked=0).count()
+        return Error.unchecked.count()
 
     def checked_ok(self):
         self.checked = True

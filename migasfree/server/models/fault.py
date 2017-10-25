@@ -62,7 +62,7 @@ class Fault(Event):
 
     @staticmethod
     def unchecked_count(user_id=0):
-        queryset = Fault.objects.filter(checked=0)
+        queryset = Fault.unchecked.all()
         if user_id:
             queryset = queryset.filter(
                 models.Q(fault_definition__users__id__in=[user_id,])
