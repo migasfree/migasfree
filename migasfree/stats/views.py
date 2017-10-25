@@ -625,25 +625,23 @@ def unchecked_errors():
     )
 
     values = defaultdict(list)
-    for item in Error.objects.filter(
-        checked=False
-    ).values(
-        "computer__project__platform__id",
-        "computer__project__id",
-        "computer__project__name",
+    for item in Error.unchecked.values(
+        "project__platform__id",
+        "project__id",
+        "project__name",
     ).annotate(
         count=Count("id")
-    ).order_by('computer__project__id', '-count'):
+    ).order_by('project__id', '-count'):
         percent = float(item.get('count')) / total * 100
-        values[item.get('computer__project__platform__id')].append(
+        values[item.get('project__platform__id')].append(
             {
-                'name': item.get('computer__project__name'),
+                'name': item.get('project__name'),
                 'value': item.get('count'),
                 'y': float('{:.2f}'.format(percent)),
                 'url': link.replace(
                     '_REPLACE_',
                     'project__id__exact={}'.format(
-                        item.get('computer__project__id')
+                        item.get('project__id')
                     )
                 ),
             }
@@ -681,9 +679,7 @@ def unchecked_faults():
     )
 
     values = defaultdict(list)
-    for item in Fault.objects.filter(
-        checked=False
-    ).values(
+    for item in Fault.unchecked.values(
         "computer__project__platform__id",
         "computer__project__id",
         "computer__project__name",
