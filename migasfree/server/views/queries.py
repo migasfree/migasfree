@@ -176,7 +176,7 @@ def computer_messages(request):
                 'user_fullname': item.fullname,
                 'project': item.project_name,
                 'ip_address': item.ip_address,
-                'date': str(item.updated_at),
+                'date': item.updated_at,
                 'text': item.text
             }
         )
