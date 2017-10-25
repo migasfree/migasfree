@@ -21,7 +21,7 @@
             <tr class="{% cycle '' 'even' %}">
                 <td class="ordinal">{{ forloop.counter }}.</td>
 
-                <td>{{ item.date }}</td>
+                <td>{{ item.date|date:"Y-m-d H:i:s" }}</td>
 
                 <td>
                     {% if item.delayed %}
