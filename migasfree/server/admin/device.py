@@ -121,8 +121,8 @@ class DeviceLogicalInline(admin.TabularInline):
 @admin.register(Device)
 class DeviceAdmin(MigasAdmin):
     form = DeviceForm
-    list_display = ('name_link', 'location', 'model_link', 'connection')
-    list_filter = ('model',)
+    list_display = ('name_link', 'location', 'model_link', 'connection_link')
+    list_filter = ('model', 'connection')
     search_fields = (
         'name',
         'model__name',
@@ -136,6 +136,9 @@ class DeviceAdmin(MigasAdmin):
     name_link = MigasFields.link(model=Device, name='name')
     model_link = MigasFields.link(
         model=Device, name='model', order="model__name"
+    )
+    connection_link = MigasFields.link(
+        model=Device, name='connection', order="connection__name"
     )
 
     class Media:
