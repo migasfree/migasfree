@@ -57,7 +57,7 @@ DAILY_RANGE = 35  # days
 MONTHLY_RANGE = 18  # months
 
 
-@permission_required('server.change_userprofile', raise_exception=True)
+@permission_required('server.change_computer', raise_exception=True)
 @login_required
 def alerts(request):
     """
