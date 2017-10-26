@@ -147,13 +147,13 @@ class GroupAutocomplete(AutocompleteModelBase):
 
 
 class DeviceConnectionAutocomplete(AutocompleteModelBase):
-    search_fields = ['name']
+    search_fields = ['name', 'device_type__name']
 
     def get_queryset(self):
         if not self.request.user.is_authenticated():
             return DeviceConnection.objects.none()
 
-        qs = DeviceConnection.objects.all().distinct('name')
+        qs = DeviceConnection.objects.all()
 
         if self.q:
             conditions = self.choices_for_request_conditions(
@@ -163,15 +163,18 @@ class DeviceConnectionAutocomplete(AutocompleteModelBase):
 
         return qs.order_by('name')
 
+    def get_result_label(self, result):
+        return '{} ({})'.format(result.name, result.device_type.name)
+
 
 class DeviceModelAutocomplete(AutocompleteModelBase):
-    search_fields = ['name']
+    search_fields = ['name', 'manufacturer__name']
 
     def get_queryset(self):
         if not self.request.user.is_authenticated():
             return DeviceModel.objects.none()
 
-        qs = DeviceModel.objects.all().distinct('name')
+        qs = DeviceModel.objects.all()
 
         if self.q:
             conditions = self.choices_for_request_conditions(
@@ -180,3 +183,6 @@ class DeviceModelAutocomplete(AutocompleteModelBase):
             qs = qs.filter(conditions)
 
         return qs.order_by('name')
+
+    def get_result_label(self, result):
+        return '{} ({})'.format(result.name, result.manufacturer.name)
