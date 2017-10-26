@@ -3,10 +3,10 @@
 from datetime import datetime
 
 from django.db import transaction
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.views.generic import DeleteView
@@ -84,11 +84,9 @@ def computer_change_status(request):
     return redirect(success_url)
 
 
+@permission_required('server.can_save_computer', raise_exception=True)
 @login_required
 def computer_replacement(request):
-    if not request.user.has_perm('server.can_save_computer'):
-        raise PermissionDenied
-
     if request.method == 'POST':
         form = ComputerReplacementForm(request.POST)
         if form.is_valid():

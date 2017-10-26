@@ -3,8 +3,7 @@
 import json
 
 from django.core import serializers
-from django.core.exceptions import PermissionDenied
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -34,11 +33,9 @@ def connections_model(request):
     return JsonResponse(json.loads(response), safe=False)
 
 
+@permission_required('server.can_save_device', raise_exception=True)
 @login_required
 def device_replacement(request):
-    if not request.user.has_perm('server.can_save_device'):
-        raise PermissionDenied
-
     if request.method == 'POST':
         form = DeviceReplacementForm(request.POST)
         if form.is_valid():
