@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-16 12:24+0200\n"
-"PO-Revision-Date: 2017-10-16 12:25+0200\n"
+"PO-Revision-Date: 2017-10-26 09:51+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -1648,7 +1648,7 @@ msgstr "prohibido"
 
 #: migasfree/server/templates/403.html:10
 msgid "We're sorry, but the requested page is forbidden."
-msgstr "Lo sentimos, pero la página solicitada no pudo ser encontrada."
+msgstr "Lo sentimos, pero no tiene acceso a la página solicitada."
 
 #: migasfree/server/templates/404.html:4 migasfree/server/templates/404.html:7
 msgid "Page not found"
