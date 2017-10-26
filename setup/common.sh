@@ -31,7 +31,7 @@ function service_action()
     _SERVICE=$1
     _ACTION=$2
 
-    /etc/init.d/$1 $2
+    /etc/init.d/"$_SERVICE" "$_ACTION"
 }
 
 # boot_at_start service
@@ -41,9 +41,9 @@ function boot_at_start()
 
     if which update-rc.d &> /dev/null
     then
-        update-rc.d $_SERVICE defaults || :
+        update-rc.d "$_SERVICE" defaults || :
     elif which chkconfig &> /dev/null
     then
-        chkconfig --add $_SERVICE || :
+        chkconfig --add "$_SERVICE" || :
     fi
 }
