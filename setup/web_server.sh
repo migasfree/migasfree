@@ -92,7 +92,7 @@ function create_apache_config()
     _MIGASFREE_APP_DIR=$(get_migasfree_setting MIGASFREE_APP_DIR)
 
     _CONF_FILE="$_CONF_PATH"/migasfree.conf
-    cat > $_CONF_FILE << EOF
+    cat > "$_CONF_FILE" << EOF
 Alias /static $_STATIC_ROOT
 <Directory $_STATIC_ROOT>
     $_ALLOW_ALL

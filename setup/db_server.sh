@@ -17,7 +17,7 @@ function remove_database()
     _NAME=$(get_migasfree_setting "DATABASES['default']['NAME']")
     if [ is_sqlite_db -eq 0 ]
     then
-        rm -f $_NAME
+        rm -f "$_NAME"
     else
         su - postgres -c "psql -c 'DROP DATABASE IF EXISTS $_NAME' &>/dev/null"
     fi
@@ -33,7 +33,7 @@ function is_pg_hba_configured()
 {
     _NAME=$(get_migasfree_setting "DATABASES['default']['NAME']")
     _FILE=$(get_pg_hba)
-    grep -q $_NAME $_FILE
+    grep -q "$_NAME" "$_FILE"
     test $? -eq 0
 }
 
