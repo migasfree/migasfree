@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from django.db import models
-from django.db.models.signals import pre_save, post_save, m2m_changed
+from django.db.models.signals import pre_save, post_save, m2m_changed, pre_delete
 from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
@@ -16,7 +16,7 @@ from ..utils import swap_m2m, remove_empty_elements_from_dict
 from . import (
     Project, DeviceLogical, User,
     Attribute, ServerAttribute, BasicProperty,
-    MigasLink,
+    MigasLink, Property,
 )
 
 
@@ -535,3 +535,11 @@ def tags_changed(sender, instance, action, **kwargs):
     if hasattr(instance, 'status'):
         if instance.status in ['available', 'unsubscribed'] and action == 'post_add':
             instance.tags.clear()
+
+
+@receiver(pre_delete, sender=Computer)
+def pre_delete_computer(sender, instance, **kwargs):
+    Attribute.objects.filter(
+        property_att=Property.objects.get(prefix='CID'),
+        value=instance.id
+    ).delete()
