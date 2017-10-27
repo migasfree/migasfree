@@ -157,7 +157,7 @@ def pre_save_attribute_set(sender, instance, **kwargs):
 @receiver(pre_delete, sender=AttributeSet)
 def pre_delete_attribute_set(sender, instance, **kwargs):
     try:
-        Attribute.objects.get(
+        Attribute.objects.filter(
             property_att=Property.objects.get(prefix='SET', sort='basic'),
             value=instance.name
         ).delete()
