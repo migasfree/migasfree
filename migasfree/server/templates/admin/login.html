@@ -37,6 +37,12 @@ $(document).ready(function() {
         {% endfor %}
     {% endif %}
 
+    {% if error_message %}
+        <div class="alert alert-danger">
+            {{ error_message }}
+        </div>
+    {% endif %}
+
     <form action="{{ app_path }}" method="post" id="login-form" role="form">
         {% csrf_token %}
 
