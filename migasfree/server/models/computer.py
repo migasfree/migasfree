@@ -520,6 +520,7 @@ def post_save_computer(sender, instance, created, **kwargs):
         StatusLog.objects.create(instance)
 
     if instance.status in ['available', 'unsubscribed']:
+        instance.tags.clear()
         cid = instance.get_cid_attribute()
         cid.devicelogical_set.clear()
         cid.faultdefinition_set.clear()
