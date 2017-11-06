@@ -25,8 +25,6 @@ class Platform(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
         max_length=50,
-        null=True,
-        blank=True,
         unique=True
     )
 

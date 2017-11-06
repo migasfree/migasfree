@@ -11,9 +11,7 @@ from . import DeviceType, MigasLink
 class DeviceConnection(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
-        max_length=50,
-        null=True,
-        blank=True
+        max_length=50
     )
 
     fields = models.CharField(

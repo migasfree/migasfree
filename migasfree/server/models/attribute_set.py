@@ -19,7 +19,8 @@ from . import (
 class AttributeSet(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
-        max_length=50
+        max_length=50,
+        unique=True
     )
 
     description = models.TextField(
@@ -139,7 +140,7 @@ class AttributeSet(models.Model, MigasLink):
         app_label = 'server'
         verbose_name = _("Attribute Set")
         verbose_name_plural = _("Attribute Sets")
-        permissions = (("can_save_attributeset", "Can save Attributes Set"),)
+        permissions = (("can_save_attributeset", "Can save Attribute Sets"),)
 
 
 @receiver(pre_save, sender=AttributeSet)
