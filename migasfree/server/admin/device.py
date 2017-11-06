@@ -3,6 +3,7 @@
 from django.contrib import admin
 from django.db import models
 from django.urls import resolve
+from django.utils.translation import ugettext_lazy as _
 
 from .migasfree import MigasAdmin, MigasFields
 
@@ -69,7 +70,7 @@ class DeviceLogicalAdmin(MigasAdmin):
     form = DeviceLogicalForm
     fields = ('device', 'feature', 'alternative_feature_name', 'attributes')
     list_select_related = ('device', 'feature')
-    list_display = ('alternative_feature_name_link', 'device_link', 'feature_link')
+    list_display = ('device_logical_link', 'alternative_feature_name', 'device_link', 'feature_link')
     list_filter = ('device__model', 'feature')
     ordering = ('device__name', 'feature__name')
     search_fields = (
@@ -80,9 +81,12 @@ class DeviceLogicalAdmin(MigasAdmin):
         'feature__name',
     )
 
-    alternative_feature_name_link = MigasFields.link(
-        model=DeviceLogical, name='alternative_feature_name'
-    )
+    def device_logical_link(self, obj):
+        return obj.link()
+
+    device_logical_link.short_description = _('Device Logical')
+    device_logical_link.admin_order_field = 'id'
+
     device_link = MigasFields.link(
         model=DeviceLogical, name='device', order="device__name"
     )
