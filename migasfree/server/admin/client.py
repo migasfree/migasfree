@@ -477,7 +477,7 @@ class FaultDefinitionAdmin(MigasAdmin):
 
 @admin.register(Message)
 class MessageAdmin(MigasAdmin):
-    list_display = ('updated_at', 'computer_link', 'text')
+    list_display = ('updated_at', 'computer_link', 'project_link', 'text')
     list_display_links = ('updated_at',)
     ordering = ('-updated_at',)
     list_filter = ('updated_at',)
@@ -489,6 +489,13 @@ class MessageAdmin(MigasAdmin):
         model=Message, name='computer', order='computer__name',
         description=_('Computer')
     )
+    project_link = MigasFields.link(
+        model=Message, name='computer__project', order='computer__project__name',
+        description=_('Project')
+    )
+
+    def has_add_permission(self, request):
+        return False
 
 
 @admin.register(Migration)
