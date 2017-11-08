@@ -174,7 +174,10 @@ class HwNode(models.Model, MigasLink):
     objects = HwNodeManager()
 
     def get_product(self):
-        return self.VIRTUAL_MACHINES.get(self.vendor, self.product)
+        if self.vendor:
+            return self.VIRTUAL_MACHINES.get(self.vendor, self.product)
+        if HwNode.get_is_docker(self.computer_id):
+            return "docker"
 
     def __str__(self):
         text = self.get_product()
@@ -209,12 +212,27 @@ class HwNode(models.Model, MigasLink):
     def get_is_vm(computer_id):
         query = HwNode.objects.filter(
             computer=computer_id,
-        ).filter(parent_id__isnull=True)
+            parent_id__isnull=True
+        )
         if query.count() == 1:
             if query[0].vendor in list(HwNode.VIRTUAL_MACHINES.keys()):
                 return True
+            elif HwNode.get_is_docker(computer_id):
+                return True
 
         return False
+
+    @staticmethod
+    def get_is_docker(computer_id):
+        query = HwNode.objects.filter(
+            computer=computer_id,
+            name="network",
+            class_name="network",
+            description="Ethernet interface"
+        )
+
+        return query.count() == 1 and \
+            query[0].serial.upper().startswith("02:42:AC")
 
     @staticmethod
     def get_ram(computer_id):
