@@ -186,3 +186,6 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
     'django.contrib.auth.hashers.CryptPasswordHasher',
 )
+
+SESSION_COOKIE_NAME = 'migasfree'
+CSRF_COOKIE_NAME = 'csrftoken_migasfree'
