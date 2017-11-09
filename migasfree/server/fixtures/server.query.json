@@ -5,7 +5,7 @@
         "fields": {
             "code": "from migasfree.server.models import Computer, Property, Project\nfrom django.db.models import Count\nquery = Computer.productive.select_related('sync_user').all()\nif parameters['value'] != '':\n    if str(parameters['exact']) == 'True':\n        query = query.filter(sync_attributes__property_att__id=parameters['property_att'], sync_attributes__value=parameters['value'])\n        fld = 'sync_attributes.filter(property_att__id=parameters[\"property_att\"], value=parameters[\"value\"]).values_list(\"value\", flat=True)'\n    else:\n        query = query.filter(sync_attributes__property_att__id=parameters['property_att'], sync_attributes__value__contains=parameters['value'])\n        fld = 'sync_attributes.filter(property_att__id=parameters[\"property_att\"], value__contains=parameters[\"value\"]).values_list(\"value\", flat=True)'\n    if parameters['project']:\n        query = query.select_related('project').filter(project__id=parameters['project'])\nquery = query.annotate(n=Count('id'))\nproperty = Property.objects.get(pk=parameters['property_att'])\nfields = ('link', fld, 'project', 'sync_user.link', 'sync_start_date')\ntitles = ('computer', property.name.lower(), 'project', 'sync user', 'date of login')",
             "name": "Production Computers by Attributes...",
-            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        property_att = forms.ModelChoiceField(Property.objects.all())\n        project = forms.ModelChoiceField(Project.objects.all())\n        value = forms.CharField()\n        exact = forms.ChoiceField( ((False,'No'),(True,'Yes')) )\n    return myForm",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        property_att = forms.ModelChoiceField(Property.objects.all())\n        project = forms.ModelChoiceField(Project.objects.all(), required=False)\n        value = forms.CharField()\n        exact = forms.ChoiceField(((False,'No'), (True,'Yes')))\n    return myForm",
             "description": "Computer list that have a certain attribute"
         }
     },
@@ -13,9 +13,9 @@
         "pk": 4,
         "model": "server.query",
         "fields": {
-            "code": "from migasfree.server.models import Computer\nquery = Computer.productive.select_related('project').filter(software_inventory__contains=parameters['package']).order_by('sync_end_date')\nfields = ('link', 'project.link', 'sync_end_date', 'product')\ntitles = ('Computer', 'Project', 'Last Update', 'Product')",
+            "code": "from migasfree.server.models import Computer\nquery = Computer.productive.select_related('project').filter(software_inventory__contains=parameters['package'])\nif parameters['project']:\n    query = query.filter(project=parameters['project'])\nquery = query.order_by('sync_end_date')\nfields = ('link', 'project.link', 'sync_end_date', 'product')\ntitles = ('Computer', 'Project', 'Last Update', 'Product')",
             "name": "Production Computers with the Package...",
-            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        package = forms.CharField()\n    return myForm\n",
+            "parameters": "def form_params():\n    from migasfree.server.forms import ParametersForm\n    from django import forms\n    class myForm(ParametersForm):\n        project = forms.ModelChoiceField(Project.objects.all(), required=False)\n        package = forms.CharField()\n    return myForm\n",
             "description": "Computer list with the specified package"
         }
     },
