@@ -188,4 +188,4 @@ PASSWORD_HASHERS = (
 )
 
 SESSION_COOKIE_NAME = 'migasfree'
-CSRF_COOKIE_NAME = 'csrftoken_migasfree'
+# CSRF_COOKIE_NAME = 'csrftoken_migasfree'  # issue with markdownx component :_(
