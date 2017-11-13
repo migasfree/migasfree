@@ -24,7 +24,7 @@ MEDIA_ROOT = MIGASFREE_PUBLIC_DIR
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'migasfree',
         'USER': 'migasfree',
         'PASSWORD': 'migasfree',

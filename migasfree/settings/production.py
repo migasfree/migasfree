@@ -27,7 +27,7 @@ SECRET_KEY = secret_key(MIGASFREE_KEYS_DIR)
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'migasfree',
         'USER': 'migasfree',
         'PASSWORD': 'migasfree',
