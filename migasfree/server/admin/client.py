@@ -142,6 +142,15 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     resource_class = ComputerResource
     actions = ['delete_selected', 'change_status']
 
+    def get_readonly_fields(self, request, obj=None):
+        readonly_fields = super(ComputerAdmin, self).get_readonly_fields(request, obj)
+        if request.user.is_superuser:
+            readonly_list = list(readonly_fields)
+            readonly_list.remove('name')
+            return tuple(readonly_list)
+
+        return readonly_fields
+
     def unchecked_errors(self, obj):
         count = Error.unchecked.filter(computer__pk=obj.pk).count()
         if not count:
