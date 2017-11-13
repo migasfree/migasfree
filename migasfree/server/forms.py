@@ -4,6 +4,7 @@ import datetime
 
 from django import forms
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from dal import autocomplete
@@ -293,6 +294,11 @@ class UserProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserProfileForm, self).__init__(*args, **kwargs)
         self.fields['groups'].help_text = ''
+        if self.instance.id:
+            self.fields['username'].help_text += '<p><a href="{}">{}</a></p>'.format(
+                reverse('admin:auth_user_password_change', args=(self.instance.id,)),
+                _('Change Password')
+            )
 
     class Meta:
         model = UserProfile
