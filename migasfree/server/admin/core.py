@@ -240,10 +240,10 @@ class PropertyAdmin(ClientPropertyAdmin):
 
 @admin.register(ServerProperty)
 class ServerPropertyAdmin(MigasAdmin):
-    list_display = ('name_link', 'prefix', 'my_enabled')
+    list_display = ('name_link', 'prefix', 'kind', 'my_enabled')
     fields = ('prefix', 'name', 'kind', 'enabled')
     search_fields = ('name', 'prefix')
-    list_filter = ('enabled',)
+    list_filter = ('enabled', 'kind')
 
     name_link = MigasFields.link(model=ServerProperty, name='name')
     my_enabled = MigasFields.boolean(model=ServerProperty, name='enabled')
