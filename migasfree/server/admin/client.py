@@ -327,7 +327,10 @@ class ErrorAdmin(MigasAdmin):
         'truncated_desc',
     )
     list_display_links = ('created_at',)
-    list_filter = ('checked', 'created_at', 'project__platform', 'project')
+    list_filter = (
+        'checked', 'created_at', 'project__platform',
+        'project', ('computer__status', ProductiveFilterSpec),
+    )
     ordering = ('-created_at', 'computer',)
     search_fields = add_computer_search_fields(['created_at', 'description'])
     readonly_fields = ('computer_link', 'project_link', 'created_at', 'description')
@@ -389,7 +392,9 @@ class FaultAdmin(MigasAdmin):
         'project__platform', 'project', 'fault_definition'
     )
     ordering = ('-created_at', 'computer',)
-    search_fields = add_computer_search_fields(['created_at', 'fault_definition__name'])
+    search_fields = add_computer_search_fields(
+        ['created_at', 'fault_definition__name', 'fault_definition__description']
+    )
     readonly_fields = (
         'computer_link', 'fault_definition_link',
         'project_link', 'created_at', 'result'
