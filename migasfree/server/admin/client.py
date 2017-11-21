@@ -491,10 +491,11 @@ class FaultDefinitionAdmin(MigasAdmin):
 
 @admin.register(Message)
 class MessageAdmin(MigasAdmin):
-    list_display = ('updated_at', 'computer_link', 'project_link', 'text')
+    list_display = ('updated_at', 'computer_link', 'project_link', 'user_link', 'text')
     list_display_links = ('updated_at',)
-    ordering = ('-updated_at',)
+    list_select_related = ('computer',)
     list_filter = ('updated_at',)
+    ordering = ('-updated_at',)
     search_fields = ('computer', 'text', 'updated_at')
     readonly_fields = ('computer_link', 'text', 'updated_at')
     exclude = ('computer',)
@@ -507,9 +508,21 @@ class MessageAdmin(MigasAdmin):
         model=Message, name='computer__project', order='computer__project__name',
         description=_('Project')
     )
+    user_link = MigasFields.link(
+        model=Message, name='computer__sync_user', order='computer__sync_user__name',
+        description=_('User')
+    )
 
     def has_add_permission(self, request):
         return False
+
+    def get_queryset(self, request):
+        return super(MessageAdmin, self).get_queryset(
+            request
+            ).prefetch_related(
+                'computer__project',
+                'computer__sync_user',
+            )
 
 
 @admin.register(Migration)
