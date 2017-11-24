@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
@@ -400,6 +401,24 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
                                 'ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
             }
         ).select_related("project", "schedule")
+
+    def response_add(self, request, obj, post_url_continue=None):
+        return HttpResponseRedirect(
+            '{}?enabled__exact={}&project__id__exact={}'.format(
+                reverse('admin:server_deployment_changelist'),
+                obj.enabled,
+                obj.project.id
+            )
+        )
+
+    def response_change(self, request, obj):
+        return HttpResponseRedirect(
+            '{}?enabled__exact={}&project__id__exact={}'.format(
+                reverse('admin:server_deployment_changelist'),
+                obj.enabled,
+                obj.project.id
+            )
+        )
 
 
 class ScheduleDelayLine(admin.TabularInline):
