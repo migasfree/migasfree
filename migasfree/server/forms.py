@@ -213,7 +213,6 @@ class ServerAttributeForm(forms.ModelForm):
                 self.instance.tags.all()
 
         self.fields['property_att'].queryset = ServerProperty.objects.all()
-        self.fields['property_att'].label = _('Tag Category')
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)

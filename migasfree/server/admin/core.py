@@ -103,7 +103,8 @@ class ClientAttributeAdmin(MigasAdmin):
     property_link = MigasFields.link(
         model=ClientAttribute,
         name='property_att',
-        order='property_att__name'
+        order='property_att__name',
+        description=_('Formula')
     )
 
     def get_queryset(self, request):
@@ -478,7 +479,10 @@ class ServerAttributeAdmin(MigasAdmin):
     search_fields = ('value', 'description')
 
     property_link = MigasFields.link(
-        model=ServerAttribute, name='property_att', order='property_att__name'
+        model=ServerAttribute,
+        name='property_att',
+        order='property_att__name',
+        description=_('Tag Category')
     )
     value_link = MigasFields.link(model=ServerAttribute, name='value')
 
