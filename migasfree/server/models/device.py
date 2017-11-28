@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 
-from . import DeviceConnection, DeviceModel, MigasLink
+from . import DeviceConnection, DeviceModel, Attribute, MigasLink
 
 from ..utils import (
     swap_m2m,
@@ -34,6 +34,12 @@ class Device(models.Model, MigasLink):
         DeviceConnection,
         on_delete=models.CASCADE,
         verbose_name=_("connection")
+    )
+
+    available_for_attributes = models.ManyToManyField(
+        Attribute,
+        blank=True,
+        verbose_name=_("available for attributes")
     )
 
     data = models.TextField(
@@ -123,7 +129,7 @@ class Device(models.Model, MigasLink):
 
     def get_replacement_info(self):
         return remove_empty_elements_from_dict({
-            ugettext("Device"): "%s - %s" % (self.link(), self.location()),
+            ugettext("Device"): u'{} - {}'.format(self.link(), self.location()),
             ugettext("Logical devices"): '<br />' +
             '<br />'.join(
                 str(x.feature) + ': ' + ', '.join(

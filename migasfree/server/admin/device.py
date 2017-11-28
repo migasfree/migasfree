@@ -133,7 +133,7 @@ class DeviceAdmin(MigasAdmin):
         'model__manufacturer__name',
         'data'
     )
-    fields = ('name', 'model', 'connection', 'data')
+    fields = ('name', 'model', 'connection', 'available_for_attributes', 'data')
     ordering = ('name',)
     inlines = [DeviceLogicalInline]
 

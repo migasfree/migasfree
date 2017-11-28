@@ -509,6 +509,7 @@ class DeviceWriteSerializer(serializers.ModelSerializer):
 class DeviceSerializer(serializers.ModelSerializer):
     connection = ConnectionInfoSerializer(many=False, read_only=True)
     model = ModelInfoSerializer(many=False, read_only=True)
+    available_for_attributes = AttributeInfoSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Device

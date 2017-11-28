@@ -328,6 +328,11 @@ class DeviceModelForm(forms.ModelForm):
 
 
 class DeviceForm(forms.ModelForm):
+    available_for_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('available for attributes'), show_help_text=False
+    )
+
     class Meta:
         model = Device
         fields = '__all__'
