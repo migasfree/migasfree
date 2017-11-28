@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib import admin
-from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import make_ajax_form
-from form_utils.widgets import ImageWidget
 
 from migasfree.server.admin.migasfree import MigasAdmin, MigasFields
 
 from .models import Application, PackagesByProject, Policy, PolicyGroup
+from .forms import ApplicationForm, PolicyForm, PolicyGroupForm
 
 
 @admin.register(PackagesByProject)
@@ -54,15 +53,13 @@ class PackagesByProjectLine(admin.TabularInline):
 
 @admin.register(Application)
 class ApplicationAdmin(MigasAdmin):
-    formfield_overrides = {
-        models.ImageField: {'widget': ImageWidget}
-    }
+    form = ApplicationForm
     list_display = ('name_link', 'score', 'level', 'category',)
     list_filter = ('level', 'category')
     ordering = ('name',)
     fields = (
         'name', 'category', 'level',
-        'score', 'icon', 'description'
+        'score', 'icon', 'available_for_attributes', 'description'
     )
     search_fields = ('name', 'description')
 
@@ -86,18 +83,7 @@ class ApplicationAdmin(MigasAdmin):
 
 @admin.register(PolicyGroup)
 class PolicyGroupAdmin(MigasAdmin):
-    form = make_ajax_form(
-        PolicyGroup,
-        {
-            'included_attributes': 'attribute',
-            'excluded_attributes': 'attribute',
-            'applications': 'application'
-        }
-    )
-    form.declared_fields['included_attributes'].label = _('included attributes')
-    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
-    form.declared_fields['applications'].label = _('application')
-
+    form = PolicyGroupForm
     list_display = (
         'id', 'policy_link', 'priority',
         'included_attributes_link', 'excluded_attributes_link'
@@ -131,21 +117,7 @@ class PolicyGroupAdmin(MigasAdmin):
 
 
 class PolicyGroupLine(admin.TabularInline):
-    form = make_ajax_form(
-        PolicyGroup,
-        {
-            'included_attributes': 'attribute',
-            'excluded_attributes': 'attribute',
-            'applications': 'application'
-        }
-    )
-    form.declared_fields['included_attributes'].label = _('included attributes')
-    form.declared_fields['included_attributes'].help_text = ''
-    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
-    form.declared_fields['excluded_attributes'].help_text = ''
-    form.declared_fields['applications'].label = _('application')
-    form.declared_fields['applications'].help_text = ''
-
+    form = PolicyGroupForm
     model = PolicyGroup
     fields = (
         'priority', 'included_attributes',
@@ -157,18 +129,7 @@ class PolicyGroupLine(admin.TabularInline):
 
 @admin.register(Policy)
 class PolicyAdmin(MigasAdmin):
-    form = make_ajax_form(
-        Policy,
-        {
-            'included_attributes': 'attribute',
-            'excluded_attributes': 'attribute'
-        }
-    )
-    form.declared_fields['included_attributes'].label = _('included attributes')
-    form.declared_fields['included_attributes'].help_text = ''
-    form.declared_fields['excluded_attributes'].label = _('excluded attributes')
-    form.declared_fields['excluded_attributes'].help_text = ''
-
+    form = PolicyForm
     list_display = (
         'name_link', 'my_enabled', 'my_exclusive',
         'included_attributes_link', 'excluded_attributes_link'
