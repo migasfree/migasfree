@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, exceptions, status, mixins, filters
@@ -576,6 +577,32 @@ class LogicalViewSet(viewsets.ModelViewSet):
             return serializers.LogicalWriteSerializer
 
         return serializers.LogicalSerializer
+
+    @list_route(methods=['get'])
+    def availables(self, request):
+        """
+        :param request:
+            cid (computer Id) int,
+            q string (name or data contains...),
+            page int
+        :return: DeviceLogicalSerializer set
+        """
+        computer = get_object_or_404(models.Computer, pk=request.GET.get('cid', 0))
+        query = request.GET.get('q', '')
+
+        results = models.DeviceLogical.objects.filter(
+            device__available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True)
+        ).order_by('device__name', 'feature__name')
+        if query:
+            results = results.filter(Q(device__name__icontains=query) | Q(device__data__icontains=query))
+
+        page = self.paginate_queryset(results)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(results, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ManufacturerViewSet(viewsets.ModelViewSet):
