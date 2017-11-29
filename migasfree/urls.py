@@ -9,10 +9,7 @@ from rest_framework.authtoken import views
 from rest_framework_swagger.views import get_swagger_view
 
 from server.routers import router, device_router
-from catalog.routers import (
-    public_router as catalog_public_router,
-    token_router as catalog_token_router
-)
+from catalog.routers import router as catalog_router
 from stats.routers import router as stats_router
 
 from django.contrib import admin
@@ -28,8 +25,7 @@ urlpatterns = [
     url(r'^api/v1/token/', include(router.urls)),
     url(r'^api/v1/token/', include(stats_router.urls)),
     url(r'^api/v1/token/devices/', include(device_router.urls)),
-    url(r'^api/v1/public/catalog/', include(catalog_public_router.urls)),
-    url(r'^api/v1/token/catalog/', include(catalog_token_router.urls)),
+    url(r'^api/v1/token/catalog/', include(catalog_router.urls)),
 
     url(r'', include('migasfree.server.urls')),
     url(r'', include('migasfree.stats.urls')),
