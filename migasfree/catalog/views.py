@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, filters, status
 from rest_framework_filters import backends
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 
 from migasfree.server.permissions import PublicPermission
+from migasfree.server.models import Computer
 from . import models, serializers
 from .filters import ApplicationFilter, PackagesByProjectFilter, PolicyFilter
 
@@ -37,6 +40,41 @@ class ApplicationViewSet(viewsets.ModelViewSet):
             dict(models.Application.CATEGORIES),
             status=status.HTTP_200_OK
         )
+
+    @list_route(methods=['get'])
+    def availables(self, request):
+        """
+        :param request:
+            cid (computer Id) int,
+            category int,
+            level int,
+            q string (name or description contains...),
+            page int
+        :return: ApplicationSerializer set
+        """
+        computer = get_object_or_404(Computer, pk=request.GET.get('cid', 0))
+        category = request.GET.get('category', 0)
+        level = request.GET.get('level', '')
+        query = request.GET.get('q', '')
+
+        results = models.Application.objects.filter(
+            available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True),
+            packages_by_project__project=computer.project
+        ).order_by('-score', 'name')
+        if category:
+            results = results.filter(category=category)
+        if level:
+            results = results.filter(level=level)
+        if query:
+            results = results.filter(Q(name__icontains=query) | Q(description__icontains=query))
+
+        page = self.paginate_queryset(results)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(results, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PackagesByProjectViewSet(viewsets.ModelViewSet):
