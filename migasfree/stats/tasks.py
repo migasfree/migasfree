@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from migasfree.server.models import (
-    Error, Fault, Message,
+    Error, Fault, Message, Deployment,
     Notification, Package, Project,
 )
 
@@ -96,8 +96,10 @@ def delayed_computers():
         'target': 'computer',
         'level': 'warning',
         'result': Message.objects.filter(updated_at__lt=t).count(),
-        'url': reverse('admin:server_message_changelist')
-               + '?updated_at__lt=' + t.strftime("%Y-%m-%d %H:%M:%S")
+        'url': '{}?updated_at__lt={}'.format(
+            reverse('admin:server_message_changelist'),
+            t.strftime("%Y-%m-%d %H:%M:%S")
+        )
     }
 
 
@@ -131,16 +133,61 @@ def generating_repositories():
     }
 
 
+def active_schedule_deployments():
+    """
+    With schedule, but not finished -> to relationship with errors
+    """
+    result = 0
+    for item in Deployment.objects.filter(schedule__isnull=False, enabled=True):
+        if int(item.schedule_timeline()['percent']) < 100:
+            result += 1
+
+    return {
+        'msg': _('Active schedule deployments'),
+        'target': 'server',
+        'level': 'info',
+        'result': result,
+        'url': '{}?enabled__exact=1&schedule__isnull=False'.format(
+            reverse('admin:server_deployment_changelist')
+        ),
+    }
+
+
+def finished_schedule_deployments():
+    """
+    To convert in permanents or delete
+    """
+    result = 0
+    for item in Deployment.objects.filter(schedule__isnull=False, enabled=True):
+        if int(item.schedule_timeline()['percent']) == 100:
+            result += 1
+
+    return {
+        'msg': _('Finished schedule deployments'),
+        'target': 'server',
+        'level': 'warning',
+        'result': result,
+        'url': '{}?enabled__exact=1&schedule__isnull=False'.format(
+            reverse('admin:server_deployment_changelist')
+        ),
+    }
+
+
 def checkings(user_id=0):
     """
     Returns checkings results order by level ('info', 'warning', 'error')
     """
     return [
+        # info
         generating_repositories(),
         synchronizing_computers(),
+        active_schedule_deployments(),
+        # warning
         orphan_packages(),
         unchecked_notifications(),
         delayed_computers(),
+        finished_schedule_deployments(),
+        # error
         unchecked_faults(user_id),
         unchecked_errors(),
     ]
