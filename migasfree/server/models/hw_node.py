@@ -160,7 +160,7 @@ class HwNode(models.Model, MigasLink):
         null=True
     )
 
-    clock = models.IntegerField(
+    clock = models.BigIntegerField(
         verbose_name=_("clock"),
         null=True
     )
