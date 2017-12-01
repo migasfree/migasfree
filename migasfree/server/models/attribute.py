@@ -121,23 +121,27 @@ class Attribute(models.Model, MigasLink):
                     obj = Attribute.objects.create(property_att, item)
                     attributes.append(obj.id)
 
-        if property_att.kind == "R":  # Adds right
-            lst = value.split(".")
-            pos = 0
-            for item in lst:
-                obj = Attribute.objects.create(property_att, value[pos:])
+        if property_att.kind == "R" or property_att.kind == "L":
+            if property_att.sort == 'server':
+                obj = Attribute.objects.create(property_att, '')
                 attributes.append(obj.id)
-                pos += len(item) + 1
 
-        if property_att.kind == "L":  # Adds left
             lst = value.split(".")
             pos = 0
-            for item in lst:
-                pos += len(item) + 1
-                obj = Attribute.objects.create(
-                    property_att, value[0:pos - 1]
-                )
-                attributes.append(obj.id)
+
+            if property_att.kind == "R":  # Adds right
+                for item in lst:
+                    obj = Attribute.objects.create(property_att, value[pos:])
+                    attributes.append(obj.id)
+                    pos += len(item) + 1
+
+            if property_att.kind == "L":  # Adds left
+                for item in lst:
+                    pos += len(item) + 1
+                    obj = Attribute.objects.create(
+                        property_att, value[0:pos - 1]
+                    )
+                    attributes.append(obj.id)
 
         return attributes
 
