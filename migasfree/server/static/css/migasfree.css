@@ -209,7 +209,13 @@ a.btn-role:focus, a.btn-role:hover {
     list-style-type: none;
 }
 
-.li-point-none {
+.hardware-resume {
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    font-size: 140%;
+}
+
+.hardware-resume li {
     list-style-type: none;
 }
 
