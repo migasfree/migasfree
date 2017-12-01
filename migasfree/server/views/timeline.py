@@ -61,4 +61,5 @@ def timeline(request):
         }
     )
 
+
 timeline.short_description = _('timeline')

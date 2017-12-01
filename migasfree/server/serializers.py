@@ -529,7 +529,6 @@ class DriverWriteSerializer(serializers.ModelSerializer):
 
         return super(DriverWriteSerializer, self).to_internal_value(data)
 
-
     class Meta:
         model = models.DeviceDriver
         fields = '__all__'

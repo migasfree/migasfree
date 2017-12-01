@@ -65,7 +65,7 @@ class Fault(Event):
         queryset = Fault.unchecked.all()
         if user_id:
             queryset = queryset.filter(
-                models.Q(fault_definition__users__id__in=[user_id,])
+                models.Q(fault_definition__users__id__in=[user_id, ])
                 | models.Q(fault_definition__users=None)
             )
 
