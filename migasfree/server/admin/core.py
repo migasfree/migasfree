@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import format_html
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
@@ -13,7 +14,7 @@ from ajax_select.admin import AjaxSelectAdmin
 from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
-    Attribute, AttributeSet, ClientProperty, ClientAttribute,
+    Attribute, AttributeSet, ClientProperty, ClientAttribute, Computer,
     Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
     ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Project,
 )
@@ -473,10 +474,11 @@ class ServerAttributeAdmin(MigasAdmin):
         'value_link', 'description', 'total_computers', 'property_link'
     )
     list_select_related = ('property_att',)
-    fields = ('property_att', 'value', 'description', 'computers')
+    fields = ('property_att', 'value', 'description', 'computers', 'inflicted_computers')
     list_filter = (ServerAttributeFilter,)
     ordering = ('property_att', 'value',)
     search_fields = ('value', 'description')
+    readonly_fields = ('inflicted_computers',)
 
     property_link = MigasFields.link(
         model=ServerAttribute,
@@ -490,6 +492,15 @@ class ServerAttributeAdmin(MigasAdmin):
         return super(ServerAttributeAdmin, self).get_queryset(request).extra(
             select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
         )
+
+    def inflicted_computers(self, obj):
+        ret = []
+        for c in Computer.productive.filter(sync_attributes__in=[obj.pk]).exclude(tags__in=[obj.pk]):
+            ret.append(c.link())
+
+        return format_html('<br />'.join(ret))
+
+    inflicted_computers.short_description = _('Inflicted Computers')
 
 
 @admin.register(UserProfile)
