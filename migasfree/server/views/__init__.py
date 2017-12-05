@@ -29,7 +29,7 @@ from .autocomplete import (
     ComputerAutocomplete, AttributeAutocomplete,
     DeviceAutocomplete, UserProfileAutocomplete,
     GroupAutocomplete, DeviceConnectionAutocomplete,
-    DeviceModelAutocomplete,
+    DeviceModelAutocomplete, DeviceLogicalAutocomplete,
 )
 from .token import (
     ComputerViewSet, ProjectViewSet, PlatformViewSet,

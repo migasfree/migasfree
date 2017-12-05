@@ -8,7 +8,7 @@ from dal import autocomplete
 
 from ..models import (
     Computer, Attribute, UserProfile,
-    Device, DeviceConnection, DeviceModel,
+    Device, DeviceConnection, DeviceModel, DeviceLogical,
 )
 
 
@@ -186,3 +186,28 @@ class DeviceModelAutocomplete(AutocompleteModelBase):
 
     def get_result_label(self, result):
         return '{} ({})'.format(result.name, result.manufacturer.name)
+
+
+class DeviceLogicalAutocomplete(AutocompleteModelBase):
+    search_fields = [
+        'device__name',
+        'device__model__manufacturer__name',
+        'device__data',
+    ]
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated():
+            return DeviceLogical.objects.none()
+
+        qs = DeviceLogical.objects.all()
+
+        if self.q:
+            conditions = self.choices_for_request_conditions(
+                self.q, self.search_fields
+            )
+            qs = qs.filter(conditions)
+
+        return qs.order_by('device__name')
+
+    def get_result_label(self, result):
+        return result.__str__()

@@ -196,6 +196,12 @@ urlpatterns = [
         name='device_model_autocomplete',
     ),
 
+    url(
+        r'^device_logical_autocomplete/$',
+        DeviceLogicalAutocomplete.as_view(),
+        name='device_logical_autocomplete',
+    ),
+
     # backwards compatibility
     url(
         r'^migasfree/$',
