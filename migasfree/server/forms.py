@@ -15,6 +15,7 @@ from .models import (
     Property, ServerAttribute, ServerProperty, Attribute,
     AttributeSet, Store, Package, FaultDefinition, DeviceModel,
 )
+from .utils import list_difference
 
 
 class ParametersForm(forms.Form):
@@ -166,7 +167,7 @@ class DeviceLogicalForm(forms.ModelForm):
         super(DeviceLogicalForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
             self.fields['attributes'].initial = \
-                self.instance.attributes.all().values_list('id', flat=True)
+                self.instance.attributes.values_list('id', flat=True)
 
     def save(self, commit=True):
         instance = forms.ModelForm.save(self, False)
@@ -192,7 +193,6 @@ class DeviceLogicalForm(forms.ModelForm):
 class PropertyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PropertyForm, self).__init__(*args, **kwargs)
-
         self.fields['code'].required = True
 
     class Meta:
@@ -239,8 +239,40 @@ class ServerAttributeForm(forms.ModelForm):
 class ComputerForm(forms.ModelForm):
     tags = MigasAutoCompleteSelectMultipleField(
         'tag', required=False,
-        label=_('tags'), show_help_text=False
+        label=_('Tags'), show_help_text=False
     )
+
+    assigned_logical_devices_to_cid = forms.ModelMultipleChoiceField(
+        required=False,
+        queryset=DeviceLogical.objects.all(),
+        widget=autocomplete.ModelSelect2Multiple('device_logical_autocomplete'),
+        label=_('Assigned Logical Devices to CID attribute')
+    )
+
+    def __init__(self, *args, **kwargs):
+        super(ComputerForm, self).__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            self.fields['assigned_logical_devices_to_cid'].initial = \
+                list(self.instance.assigned_logical_devices_to_cid().values_list('id', flat=True))
+
+    def save(self, commit=True):
+        cid_attribute = self.instance.get_cid_attribute()
+
+        assigned_logical_devices_to_cid = self.cleaned_data.get('assigned_logical_devices_to_cid', None)
+        if assigned_logical_devices_to_cid:
+            assigned_logical_devices_to_cid = list(assigned_logical_devices_to_cid.values_list('id', flat=True))
+        else:
+            assigned_logical_devices_to_cid = []
+
+        initial_logical_devices = self.fields['assigned_logical_devices_to_cid'].initial
+
+        for pk in list_difference(assigned_logical_devices_to_cid, initial_logical_devices):
+            DeviceLogical.objects.get(pk=pk).attributes.add(cid_attribute)
+
+        for pk in list_difference(initial_logical_devices, assigned_logical_devices_to_cid):
+            DeviceLogical.objects.get(pk=pk).attributes.remove(cid_attribute)
+
+        return super(ComputerForm, self).save(commit=commit)
 
     class Meta:
         model = Computer
