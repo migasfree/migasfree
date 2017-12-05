@@ -138,6 +138,7 @@ setup(
             'locale/*/LC_MESSAGES/*.mo',
             'server/fixtures/*',
             'server/static/ajax-select/*.css',
+            'server/static/ajax-select/*.js',
             'server/static/ajax-select/images/*',
             'server/static/css/*',
             'server/static/img/*',
