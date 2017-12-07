@@ -109,9 +109,9 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         }),
         (_('Devices'), {
             'fields': (
-                'inflected_logical_devices_link',
                 'assigned_logical_devices_to_cid',
                 'default_logical_device',
+                'inflected_logical_devices_link',
             )
         }),
         (_('Synchronization'), {
