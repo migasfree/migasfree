@@ -350,31 +350,27 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def save_model(self, request, obj, form, change):
         is_new = (obj.pk is None)
-        packages_after = list(
-            map(int, form.cleaned_data.get('available_packages'))
-        )
-        super(DeploymentAdmin, self).save_model(request, obj, form, change)
+        has_name_changed = form.initial.get('name') != obj.name
+        packages_after = map(int, form.cleaned_data.get('available_packages'))
 
-        name_old = form.initial.get('name')
-        name_new = obj.name
+        super(DeploymentAdmin, self).save_model(request, obj, form, change)
 
         # create physical repository when packages have been changed
         # or repository does not have packages at first time
         # or name has been changed (to avoid client errors)
         if ((is_new and len(packages_after) == 0)
                 or compare_list_values(
-                    obj.available_packages.values_list('id', flat=True),  # pkgs before
+                    obj.available_packages.values_list('id', flat=True),  # packages before
                     packages_after
-                ) is False) or (name_new != name_old):
+                ) is False) or has_name_changed:
             create_repository_metadata(obj, packages_after, request)
 
-            # delete old repository by name changed
-            if name_new != name_old and not is_new:
-                remove_repository_metadata(request, obj, name_old)
+            # delete old repository by name change
+            if has_name_changed and not is_new:
+                remove_repository_metadata(request, obj, form.initial.get('name'))
 
         Notification.objects.create(
-            _('Deployment [%s] modified by user [%s] '
-                '(<a href="%s">review changes</a>)') % (
+            _('Deployment [%s] modified by user [%s] (<a href="%s">review changes</a>)') % (
                 '<a href="{}">{}</a>'.format(
                     reverse('admin:server_deployment_change', args=(obj.id,)),
                     obj.name
