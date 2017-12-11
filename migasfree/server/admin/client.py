@@ -115,6 +115,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         }),
         (_('Synchronization'), {
+            'classes': ('collapse',),
             'fields': (
                 'sync_user_link',
                 'sync_attributes_link',
@@ -126,9 +127,11 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         }),
         (_('Software'), {
+            'classes': ('collapse',),
             'fields': ('software_inventory', 'software_history',)
         }),
         (_('Hardware'), {
+            'classes': ('collapse',),
             'fields': (
                 'last_hardware_capture',
                 'hw_link',
@@ -319,6 +322,9 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         ).prefetch_related(
             Prefetch('hwnode_set', queryset=HwNode.objects.filter(parent=None)),
         )
+
+    class Media:
+        js = ('js/default_logical_device.js',)
 
 
 @admin.register(Error)
