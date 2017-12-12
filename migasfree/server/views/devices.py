@@ -33,7 +33,7 @@ def connections_model(request):
     return JsonResponse(json.loads(response), safe=False)
 
 
-@permission_required('server.can_save_device', raise_exception=True)
+@permission_required('server.can_change_device', raise_exception=True)
 @login_required
 def device_replacement(request):
     if request.method == 'POST':
