@@ -6,9 +6,6 @@
     {% url 'admin:jsi18n' as jsi18nurl %}
     <script type="text/javascript" src="{{ jsi18nurl|default:'../../../jsi18n/' }}"></script>
 
-    {# https://github.com/crucialfelix/django-ajax-selects/issues/107 #}
-    <script type="text/javascript" src="{% static 'ajax_select/js/bootstrap.js'%}"></script>
-
     {{ media }}
 {% endblock %}
 
