@@ -34,7 +34,7 @@ DATABASES = {
 }
 
 # python manage.py graph_models -a -o myapp_models.png
-INSTALLED_APPS += ("debug_toolbar", 'django_extensions')
+INSTALLED_APPS += ('debug_toolbar', 'django_extensions', 'template_debug',)
 INTERNAL_IPS = ("127.0.0.1",)
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'testserver']
 
