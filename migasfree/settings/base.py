@@ -114,6 +114,7 @@ INSTALLED_APPS = (
     'django_filters',
     'form_utils',
     'markdownx',
+    'datetimewidget',
     'migasfree.catalog',
     'migasfree.stats',
 )
