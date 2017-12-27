@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime, timedelta
-
 from django.db.models import Prefetch
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
-from django.urls import resolve, reverse
+from django.urls import resolve
 from django.utils.translation import ugettext_lazy as _
-from django.utils.html import format_html
 
 from ajax_select.admin import AjaxSelectAdmin
 
@@ -26,7 +23,6 @@ from ..models import (
     AutoCheckError, Computer, Error, Fault, FaultDefinition, Message,
     Migration, Notification, StatusLog, Synchronization, User, DeviceLogical, HwNode
 )
-from ..utils import strfdelta
 
 admin.site.register(AutoCheckError)
 
@@ -105,6 +101,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'comment',
                 'status',
                 'tags',
+                'unchecked_errors',
+                'unchecked_faults',
             )
         }),
         (_('Devices'), {
@@ -122,8 +120,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
                 'sync_start_date',
                 'sync_end_date',
                 'last_sync_time',
-                'unchecked_errors',
-                'unchecked_faults',
             )
         }),
         (_('Software'), {
@@ -157,77 +153,6 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             return tuple(readonly_list)
 
         return readonly_fields
-
-    def unchecked_errors(self, obj):
-        count = Error.unchecked.filter(computer__pk=obj.pk).count()
-        if not count:
-            return format_html(
-                '<span class="label label-default">{}</span>'.format(count)
-            )
-
-        return format_html(
-            '<a class="label label-danger" '
-            'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
-                reverse('admin:server_error_changelist'),
-                obj.pk,
-                0,
-                count
-            )
-        )
-
-    unchecked_errors.short_description = _('Unchecked Errors')
-
-    def unchecked_faults(self, obj):
-        count = Fault.unchecked.filter(computer__pk=obj.pk).count()
-        if not count:
-            return format_html(
-                '<span class="label label-default">{}</span>'.format(count)
-            )
-
-        return format_html(
-            '<a class="label label-danger" '
-            'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
-                reverse('admin:server_fault_changelist'),
-                obj.pk,
-                0,
-                count
-            )
-        )
-
-    unchecked_faults.short_description = _('Unchecked Faults')
-
-    def last_sync_time(self, obj):
-        now = datetime.now()
-        delayed_time = now - timedelta(
-            seconds=settings.MIGASFREE_SECONDS_MESSAGE_ALERT
-        )
-        is_updating = not obj.sync_end_date or obj.sync_end_date < obj.sync_start_date
-
-        if is_updating:
-            diff = now - obj.sync_start_date
-        else:
-            diff = obj.sync_end_date - obj.sync_start_date
-
-        if obj.sync_start_date < delayed_time and is_updating:
-            return format_html(
-                '<span class="label label-warning" title="{}">'
-                '<i class="fa fa-warning"></i> {}</span>'.format(
-                    _('Delayed Computer'),
-                    strfdelta(diff, _('{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}'))
-                )
-            )
-
-        if is_updating:
-            return format_html(
-                '<span class="label label-info">'
-                '<i class="fa fa-refresh"></i> {}</span>'.format(
-                    _('Updating...'),
-                )
-            )
-
-        return strfdelta(diff, '{hours:02d}:{minutes:02d}:{seconds:02d}')
-
-    last_sync_time.short_description = _('Last Update Time')
 
     name_link = MigasFields.link(model=Computer, name="name")
     project_link = MigasFields.link(
@@ -324,7 +249,10 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         )
 
     class Media:
-        js = ('js/default_logical_device.js',)
+        js = (
+            'js/default_logical_device.js',
+            'js/computer_change_form.js',
+        )
 
 
 @admin.register(Error)
