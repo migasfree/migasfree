@@ -1,0 +1,272 @@
+{% extends "admin/change_form.html" %}
+{% load admin_urls i18n server_tags bootstrapped_goodies_tags mac_address_list %}
+
+{% block content %}
+<input type="hidden" id="computer-id" value="{{ original.id }}" />
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="input-group">
+                    {% if user.is_superuser %}
+                        {% dab_field_rendering adminform.form.name %}
+                        <div class="input-group-btn">
+                            <button id="update-name" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
+                                <span class="fa fa-floppy-o"></span>
+                                <span class="sr-only">{% trans 'Update' %}</span>
+                            </button>
+                        </div>
+                    {% else %}
+                        {{ original.name }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <p title="{% trans 'full qualified domain name' %}">
+                            <span class="fa fa-info-circle"></span> {{ original.fqdn }}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                        <span class="fa fa-sitemap" title="{% trans 'Project' %}"></span>&nbsp; {{ original.project.link }}
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <p title="{% trans 'Date of entry into the migasfree system' %}">
+                            <span class="fa fa-calendar-plus-o"></span> {{ original.created_at }}
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                        <p title="{% trans 'ip address' %}">
+                            <span class="fa fa-at"></span> {{ original.ip_address }}
+                        </p>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <p title="{% trans 'forwarded ip address' %}">
+                            <span class="fa fa-share-square-o"></span> {{ original.forwarded_ip_address }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">{% trans 'Hardware' %}</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <span class="pull-left fa fa-{% if original.machine == 'P' %}laptop{% else %}cube{% endif %} fa-5x"
+                            title="{% if original.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}"></span>
+                    </div>
+                    <div class="col-md-9">
+                        <p>{{ original.hwnode_set.first.link }}</p>
+                        <p class="small" title="{% trans 'UUID' %}">{{ original.uuid }}</p>
+                    </div>
+                </div>
+                <div class="row small">
+                    <div class="col-md-6 col-xs-6">
+                        <div class="col-md-3 col-xs-3"><span class="fa fa-microchip fa-4x"></span></div>
+                        <div class="col-md-9 col-xs-9">
+                            <p title="{% trans 'CPU' %}">{{ original.cpu }}</p>
+                            <p title="{% trans 'RAM' %}">{{ original.ram|filesizeformat }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <div class="col-md-3 col-xs-3"><span class="fa fa-hdd-o fa-4x"></span></div>
+                        <div class="col-md-9 col-xs-9">
+                            <p title="{% trans 'Storage' %}">{{ original.storage|filesizeformat }}</p>
+                            <p title="{% trans 'Disks' %}">{{ original.disks }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row small">
+                    <div class="col-md-6">
+                        <div class="col-md-2 col-xs-2"><span class="fa fa-plug fa-lg"></span></div>
+                        <div class="col-md-10 col-xs-10">
+                            <p title="{% trans 'MAC address' %}">{{ original.mac_address|mac_address_list }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% if not has_change_permission %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <p title="{% trans 'last hardware capture' %}"><span class="fa fa-clock-o"></span> {{ original.last_hardware_capture }}</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% if has_change_permission %}
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-10 col-xs-10">
+                        {% dab_field_rendering adminform.form.last_hardware_capture %}
+                    </div>
+                    <div class="col-md-2 col-xs-2">
+                        <button id="update-last-hardware-capture"
+                                class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
+                            <span class="fa fa-floppy-o"></span>
+                            <span class="sr-only">{% trans 'Update' %}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">{% trans 'Current Situation' %}</div>
+            <div class="panel-body">
+                {% if has_change_permission %}
+                <p title="{% trans 'status' %}">
+                    {% dab_field_rendering adminform.form.status %}
+                </p>
+                <p title="{% trans 'comment' %}">
+                    <span class="fa fa-comment"></span>
+                    {% dab_field_rendering adminform.form.comment %}
+                </p>
+                <p title="{% trans 'tags' %}">
+                    <span class="fa fa-tag"></span>
+                    {% dab_field_rendering adminform.form.tags %}
+                </p>
+                {% else %}
+                <div class="col-md-12" title="{% trans 'status' %}">
+                    {{ original.status }}
+                </div>
+                <div class="col-md-12" title="{% trans 'comment' %}">
+                    <p class="fa fa-comment"></p>
+                    <pre>{{ original.comment }}</pre>
+                </div>
+                <div class="col-md-12" title="{% trans 'tags' %}">
+                    <div class="compact-content">
+                        {% for att in original.tags.all %}
+                            {{ att.link }}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                <div class="col-md-12">
+                    <div class="col-md-6 col-xs-6">
+                        <p title="{% trans 'Unchecked Errors' %}" class="lead text-center">
+                            <span class="fa fa-bug fa-lg"></span>&nbsp; {{ original.unchecked_errors }}
+                        </p>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <p title="{% trans 'Unchecked Faults' %}" class="lead text-center">
+                            <span class="fa fa-bomb fa-lg"></span>&nbsp; {{ original.unchecked_faults }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% if has_change_permission %}
+            <div class="panel-footer">
+                <button id="update-current-situation" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
+                    <span class="fa fa-floppy-o"></span>
+                    <span class="sr-only">{% trans 'Update' %}</span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">{% trans 'Synchronization' %}</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <span title="{% trans 'sync start date' %}"><span class="fa fa-play"></span> {{ original.sync_start_date }}</span>
+                    &nbsp;<span class="fa fa-long-arrow-right"></span>&nbsp;
+                    <span title="{% trans 'sync end date' %}">{{ original.sync_end_date }} <span class="fa fa-stop"></span></span>
+                    &nbsp;&nbsp;<span title="{% trans 'Last Update Time' %}">({{ original.last_sync_time }} <span class="fa fa-clock-o"></span>)</span>
+                </div>
+                <div class="col-md-12">
+                    <span class="fa fa-user" title="{% trans 'User' %}"></span>&nbsp; {{ original.sync_user.link }}
+                </div>
+                <div class="col-md-12" title="{% trans 'sync attributes' %}">
+                    <div class="compact-content">
+                        {% for att in original.sync_attributes.all %}
+                            {{ att.link }}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">{% trans 'Software' %}</div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <span class="fa fa-archive" title="{% trans 'software inventory' %}"></span>
+                    <pre class="reduced-content" title="{% trans 'software inventory' %}">{{ original.software_inventory }}</pre>
+                </div>
+                <div class="col-md-12">
+                    <span class="fa fa-history" title="{% trans 'software history' %}"></span>
+                    <pre class="reduced-content" title="{% trans 'software history' %}">{{ original.software_history }}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">{% trans 'Devices' %}</div>
+            <div class="panel-body">
+                {% if has_change_permission %}
+                <p>
+                    <span class="fa fa-print" title="{% trans 'Assigned' %}"></span>
+                    {% dab_field_rendering adminform.form.assigned_logical_devices_to_cid %}
+                </p>
+                {% else %}
+                    {{ adminform.form.assigned_logical_devices_to_cid }}
+                {% endif %}
+                {% if has_change_permission %}
+                <p>
+                    <span class="fa fa-asterisk" title="{% trans 'Default' %}"></span>
+                    {% dab_field_rendering adminform.form.default_logical_device %}
+                </p>
+                {% elif original.default_logical_device %}
+                <div class="col-md-12" title="{% trans 'Default' %}">
+                    <span class="fa fa-asterisk"></span>&nbsp; {{ original.default_logical_device }}
+                </div>
+                {% endif %}
+                {% if original.inflected_logical_devices.count %}
+                    <p class="clearfix">
+                        {% trans 'Inflected' %}
+                        {% for device in original.inflected_logical_devices.all %}
+                            {{ device.link }}<br />
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+            {% if has_change_permission %}
+            <div class="panel-footer">
+                <button id="update-devices" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
+                    <span class="fa fa-floppy-o"></span>
+                    <span class="sr-only">{% trans 'Update' %}</span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+    {% if has_delete_permission %}
+        <div class="form-actions">
+            <a href="{% url opts|admin_urlname:'changelist' %}{{ original.id }}/delete/" class="btn btn-danger deletelink">{% trans "Delete" %}</a>
+        </div>
+    {% endif %}
+{% endblock content %}
