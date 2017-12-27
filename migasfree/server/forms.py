@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from dal import autocomplete
+from datetimewidget.widgets import DateTimeWidget
 
 from .fields import MigasAutoCompleteSelectMultipleField
 from .models import (
@@ -16,6 +17,21 @@ from .models import (
     AttributeSet, Store, Package, FaultDefinition, DeviceModel,
 )
 from .utils import list_difference
+
+
+class ExtraThinTextarea(forms.Textarea):
+    def __init__(self, *args, **kwargs):
+        attrs = kwargs.setdefault('attrs', {})
+        attrs.setdefault('cols', 20)
+        attrs.setdefault('rows', 1)
+        super(ExtraThinTextarea, self).__init__(*args, **kwargs)
+
+
+class NormalTextarea(forms.Textarea):
+    def __init__(self, *args, **kwargs):
+        attrs = kwargs.setdefault('attrs', {})
+        attrs.setdefault('rows', 5)
+        super(NormalTextarea, self).__init__(*args, **kwargs)
 
 
 class ParametersForm(forms.Form):
@@ -256,27 +272,27 @@ class ComputerForm(forms.ModelForm):
                 list(self.instance.assigned_logical_devices_to_cid().values_list('id', flat=True))
 
     def save(self, commit=True):
-        cid_attribute = self.instance.get_cid_attribute()
-
-        assigned_logical_devices_to_cid = self.cleaned_data.get('assigned_logical_devices_to_cid', None)
+        assigned_logical_devices_to_cid = self.cleaned_data.get('assigned_logical_devices_to_cid', [])
         if assigned_logical_devices_to_cid:
             assigned_logical_devices_to_cid = list(assigned_logical_devices_to_cid.values_list('id', flat=True))
-        else:
-            assigned_logical_devices_to_cid = []
-
-        initial_logical_devices = self.fields['assigned_logical_devices_to_cid'].initial
-
-        for pk in list_difference(assigned_logical_devices_to_cid, initial_logical_devices):
-            DeviceLogical.objects.get(pk=pk).attributes.add(cid_attribute)
-
-        for pk in list_difference(initial_logical_devices, assigned_logical_devices_to_cid):
-            DeviceLogical.objects.get(pk=pk).attributes.remove(cid_attribute)
+            self.instance.update_logical_devices(assigned_logical_devices_to_cid)
 
         return super(ComputerForm, self).save(commit=commit)
 
     class Meta:
         model = Computer
         fields = '__all__'
+        widgets = {
+            'last_hardware_capture': DateTimeWidget(
+                usel10n=True,
+                bootstrap_version=3,
+                options={
+                    'format': 'yyyy-mm-dd HH:ii',
+                    'autoclose': True,
+                }
+            ),
+            'comment': NormalTextarea,
+        }
 
 
 class AttributeSetForm(forms.ModelForm):
@@ -371,11 +387,3 @@ class DeviceForm(forms.ModelForm):
         widgets = {
             'model': autocomplete.ModelSelect2(url='device_model_autocomplete')
         }
-
-
-class ExtraThinTextarea(forms.Textarea):
-    def __init__(self, *args, **kwargs):
-        attrs = kwargs.setdefault('attrs', {})
-        attrs.setdefault('cols', 20)
-        attrs.setdefault('rows', 1)
-        super(ExtraThinTextarea, self).__init__(*args, **kwargs)
