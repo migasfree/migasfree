@@ -77,6 +77,7 @@ class ComputerSerializer(serializers.ModelSerializer):
     software_history = serializers.HyperlinkedIdentityField(
         view_name='computer-software/history'
     )
+    tags = AttributeInfoSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Computer
@@ -86,7 +87,17 @@ class ComputerSerializer(serializers.ModelSerializer):
             'status', 'product', 'machine',
             'mac_address', 'cpu', 'disks', 'storage', 'ram',
             'created_at', 'last_hardware_capture', 'sync_end_date',
-            'software_inventory', 'software_history',
+            'software_inventory', 'software_history', 'tags',
+        )
+
+
+class ComputerWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Computer
+        fields = (
+            'name', 'last_hardware_capture',
+            'status', 'comment', 'tags',
+            'default_logical_device',
         )
 
 
