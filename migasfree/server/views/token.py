@@ -115,14 +115,30 @@ class AttributeViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_201_CREATED)
 
 
-class ComputerViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin, viewsets.GenericViewSet
-):
+class ComputerViewSet(viewsets.ModelViewSet):
     queryset = models.Computer.objects.all()
     serializer_class = serializers.ComputerSerializer
     filter_class = ComputerFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+
+    def get_serializer_class(self):
+        if self.action == 'update' or self.action == 'partial_update':
+            return serializers.ComputerWriteSerializer
+
+        return serializers.ComputerSerializer
+
+    def partial_update(self, request, *args, **kwargs):
+        data = dict(request.data.iterlists())
+        if 'assigned_logical_devices_to_cid[]' in data:
+            assigned_logical_devices_to_cid = map(int, data['assigned_logical_devices_to_cid[]'])
+            computer = get_object_or_404(models.Computer, pk=kwargs['pk'])
+            computer.update_logical_devices(assigned_logical_devices_to_cid)
+
+        return super(ComputerViewSet, self).partial_update(
+            request,
+            *args,
+            **kwargs
+        )
 
     @detail_route(methods=['get'], url_path='software/inventory')
     def software_inventory(self, request, pk=None):
