@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.db import models
 from django.db.models.signals import pre_save, post_save, m2m_changed, pre_delete
 from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
+from django.utils.html import format_html
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
 
-from ..utils import swap_m2m, remove_empty_elements_from_dict
+from ..utils import swap_m2m, remove_empty_elements_from_dict, strfdelta, list_difference
 
 from . import (
     Project, DeviceLogical, User,
@@ -371,6 +373,23 @@ class Computer(models.Model, MigasLink):
 
         self.save()
 
+    def update_logical_devices(self, devices):
+        """
+        :param devices: [id1, id2, id3, ...]
+        :return: void
+        """
+        cid_attribute = self.get_cid_attribute()
+        initial_logical_devices = list(
+            self.assigned_logical_devices_to_cid().values_list('id', flat=True)
+        )
+        print initial_logical_devices, devices
+
+        for pk in list_difference(devices, initial_logical_devices):
+            DeviceLogical.objects.get(pk=pk).attributes.add(cid_attribute)
+
+        for pk in list_difference(initial_logical_devices, devices):
+            DeviceLogical.objects.get(pk=pk).attributes.remove(cid_attribute)
+
     def logical_devices(self, attributes=None):
         if not attributes:
             attributes = self.sync_attributes.values_list('id', flat=True)
@@ -501,6 +520,79 @@ class Computer(models.Model, MigasLink):
             target.devices_logical.add(*self.devices_logical.all())
         except ObjectDoesNotExist:
             pass
+
+    def unchecked_errors(self):
+        from .error import Error
+        count = Error.unchecked.filter(computer__pk=self.pk).count()
+        if not count:
+            return format_html(
+                '<span class="label label-default">{}</span>'.format(count)
+            )
+
+        return format_html(
+            '<a class="label label-danger" '
+            'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
+                reverse('admin:server_error_changelist'),
+                self.pk,
+                0,
+                count
+            )
+        )
+
+    unchecked_errors.short_description = _('Unchecked Errors')
+
+    def unchecked_faults(self):
+        from .fault import Fault
+        count = Fault.unchecked.filter(computer__pk=self.pk).count()
+        if not count:
+            return format_html(
+                '<span class="label label-default">{}</span>'.format(count)
+            )
+
+        return format_html(
+            '<a class="label label-danger" '
+            'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
+                reverse('admin:server_fault_changelist'),
+                self.pk,
+                0,
+                count
+            )
+        )
+
+    unchecked_faults.short_description = _('Unchecked Faults')
+
+    def last_sync_time(self):
+        now = datetime.now()
+        delayed_time = now - timedelta(
+            seconds=settings.MIGASFREE_SECONDS_MESSAGE_ALERT
+        )
+        is_updating = not self.sync_end_date or self.sync_end_date < self.sync_start_date
+
+        if is_updating:
+            diff = now - self.sync_start_date
+        else:
+            diff = self.sync_end_date - self.sync_start_date
+
+        if self.sync_start_date < delayed_time and is_updating:
+            return format_html(
+                '<span class="label label-warning" title="{}">'
+                '<i class="fa fa-warning"></i> {}</span>'.format(
+                    _('Delayed Computer'),
+                    strfdelta(diff, _('{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}'))
+                )
+            )
+
+        if is_updating:
+            return format_html(
+                '<span class="label label-info">'
+                '<i class="fa fa-refresh"></i> {}</span>'.format(
+                    _('Updating...'),
+                )
+            )
+
+        return strfdelta(diff, '{hours:02d}:{minutes:02d}:{seconds:02d}')
+
+    last_sync_time.short_description = _('Last Update Time')
 
     def __str__(self):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == 'id':
