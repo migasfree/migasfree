@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.static import static
+from django.views.i18n import JavaScriptCatalog
 
 from ajax_select import urls as ajax_select_urls
 from rest_framework.authtoken import views
@@ -35,6 +36,8 @@ urlpatterns = [
 
     url(r'^admin/lookups/', include(ajax_select_urls)),
     url(r'^markdownx/', include('markdownx.urls')),
+
+    url(r'^jsi18n/$', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 ]
 
 if settings.DEBUG:
