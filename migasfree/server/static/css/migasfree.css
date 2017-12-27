@@ -55,7 +55,7 @@ p#copyright {
     padding-left: 40px;
 }
 
-form .form-group p {
+form .form-group p, .reduced-content {
     max-height: 15em;
     overflow: auto;
     line-height: 1.8em;
@@ -277,6 +277,15 @@ li .btn-group {
 #last-day-events {
     width: 800px;
     margin: 0 auto;
+}
+
+.compact-content {
+    margin: 10px 0;
+    column-count: 3;
+    -moz-column-count: 3;
+    -webkit-column-count: 3;
+    column-gap: 20px;
+    -moz-column-gap: 20px;
 }
 
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
