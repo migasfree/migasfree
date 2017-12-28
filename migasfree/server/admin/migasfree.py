@@ -159,35 +159,11 @@ class MigasFields(object):
     def timeline():
         def getter(self, obj):
             if obj.schedule:
-                timeline = obj.schedule_timeline()
-
-                date_format = "%Y-%m-%d"
-                begin_date = datetime.datetime.strptime(
-                    timeline['begin_date'],
-                    date_format
-                )
-                end_date = datetime.datetime.strptime(
-                    timeline['end_date'],
-                    date_format
-                )
-
-                days = (datetime.datetime.today() - begin_date).days + 1
-                total_days = (end_date - begin_date).days
                 return format_html(
                     render_to_string(
                         'includes/deployment_timeline.html',
                         {
-                            'timeline': {
-                                'deployment_id': obj.pk,
-                                'percent': timeline['percent'],
-                                'schedule': obj.schedule,
-                                'info': _('%s/%s days (from %s to %s)') % (
-                                    days,
-                                    total_days,
-                                    timeline['begin_date'],
-                                    timeline['end_date']
-                                )
-                            }
+                            'timeline': obj.timeline()
                         }
                     )
                 )
