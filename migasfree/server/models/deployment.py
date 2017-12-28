@@ -167,6 +167,36 @@ class Deployment(models.Model, MigasLink):
             'percent': '%d' % self.get_percent(begin_date, end_date)
         }
 
+    def timeline(self):
+        schedule_timeline = self.schedule_timeline()
+
+        if not schedule_timeline:
+            return None
+
+        date_format = "%Y-%m-%d"
+        begin_date = datetime.datetime.strptime(
+            schedule_timeline['begin_date'],
+            date_format
+        )
+        end_date = datetime.datetime.strptime(
+            schedule_timeline['end_date'],
+            date_format
+        )
+
+        days = (datetime.datetime.today() - begin_date).days + 1
+        total_days = (end_date - begin_date).days
+        return {
+            'deployment_id': self.pk,
+            'percent': schedule_timeline['percent'],
+            'schedule': self.schedule,
+            'info': _('%s/%s days (from %s to %s)') % (
+                days,
+                total_days,
+                schedule_timeline['begin_date'],
+                schedule_timeline['end_date']
+            )
+        }
+
     def save(self, *args, **kwargs):
         self.name = slugify(self.name)
 
