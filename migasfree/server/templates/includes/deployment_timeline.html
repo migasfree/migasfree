@@ -1,15 +1,27 @@
 {% load i18n %}
 {% spaceless %}
-{% if timeline %}
+{% if original.timeline or timeline %}
     <div class="btn-group btn-group-xs nowrap">
-        <span class="timeline progress" title="{{ timeline.info }}">
-            <span class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ timeline.percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ timeline.percent }}%">
-                <span>{{ timeline.percent }}%</span>
-                <span class="sr-only">{% blocktrans with percent=timeline.percent %}{{ percent }}% completed{% endblocktrans %}</span>
+        <span class="timeline progress"
+              title="{% if original.timeline %}{{ original.timeline.info }}{% else %}{{ timeline.info }}{% endif %}">
+            <span class="progress-bar progress-bar-success" role="progressbar"
+                  aria-valuenow="{% if original.timeline %}{{ original.timeline.percent }}{% else %}{{ timeline.percent }}{% endif %}"
+                  aria-valuemin="0" aria-valuemax="100"
+                  style="width: {% if original.timeline %}{{ original.timeline.percent }}{% else %}{{ timeline.percent }}{% endif %}%">
+                <span>{% if original.timeline %}{{ original.timeline.percent }}{% else %}{{ timeline.percent }}{% endif %}%</span>
+                <span class="sr-only">
+                    {% if original.timeline %}
+                        {% blocktrans with percent=original.timeline.percent %}{{ percent }}% completed{% endblocktrans %}
+                    {% else %}
+                        {% blocktrans with percent=timeline.percent %}{{ percent }}% completed{% endblocktrans %}
+                    {% endif %}
+                </span>
             </span>
         </span>
 
-        <button type="button" class="btn btn-default btn-timeline dropdown-toggle" data-toggle="dropdown" data-deployment="{{ timeline.deployment_id }}" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn btn-default btn-timeline dropdown-toggle" data-toggle="dropdown"
+                data-deployment="{% if original.timeline %}{{ original.timeline.deployment_id }}{% else %}{{ timeline.deployment_id }}{% endif %}"
+                aria-haspopup="true" aria-expanded="false">
             <span class="caret"> </span>
             <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
         </button>
