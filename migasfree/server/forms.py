@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
 from dal import autocomplete
-from datetimewidget.widgets import DateTimeWidget
+from datetimewidget.widgets import DateWidget, DateTimeWidget
 
 from .fields import MigasAutoCompleteSelectMultipleField
 from .models import (
@@ -139,6 +139,22 @@ class DeploymentForm(forms.ModelForm):
     class Meta:
         model = Deployment
         fields = '__all__'
+        widgets = {
+            'comment': NormalTextarea,
+            'packages_to_install': NormalTextarea,
+            'packages_to_remove': NormalTextarea,
+            'default_preincluded_packages': NormalTextarea,
+            'default_included_packages': NormalTextarea,
+            'default_excluded_packages': NormalTextarea,
+            'start_date': DateWidget(
+                usel10n=True,
+                bootstrap_version=3,
+                options={
+                    'format': 'yyyy-mm-dd',
+                    'autoclose': True,
+                }
+            ),
+        }
 
 
 class StoreForm(forms.ModelForm):
