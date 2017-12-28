@@ -21,7 +21,7 @@
         <ul class="list-group">
         {% for item in file_selection %}
             <li class="list-group-item">
-                <a href="{% url 'package_info' item.path %}"><span class="fa fa-{{ item.icon }}"></span> {{ item.text }}</a>
+                <a href="{% url 'package_info' item.path %}"><span class="fas fa-{{ item.icon }}"></span> {{ item.text }}</a>
             </li>
         {% endfor %}
         </ul>

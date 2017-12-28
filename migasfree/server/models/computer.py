@@ -576,7 +576,7 @@ class Computer(models.Model, MigasLink):
         if self.sync_start_date < delayed_time and is_updating:
             return format_html(
                 '<span class="label label-warning" title="{}">'
-                '<i class="fa fa-warning"></i> {}</span>'.format(
+                '<i class="fas fa-exclamation-triangle"></i> {}</span>'.format(
                     _('Delayed Computer'),
                     strfdelta(diff, _('{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}'))
                 )
@@ -585,7 +585,7 @@ class Computer(models.Model, MigasLink):
         if is_updating:
             return format_html(
                 '<span class="label label-info">'
-                '<i class="fa fa-refresh"></i> {}</span>'.format(
+                '<i class="fas fa-sync-alt"></i> {}</span>'.format(
                     _('Updating...'),
                 )
             )

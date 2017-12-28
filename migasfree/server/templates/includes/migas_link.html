@@ -3,7 +3,7 @@
 <div class="btn-group btn-group-xs nowrap">
   <a href="{{ lnk.url }}" class="btn btn-default btn-role" role="button" aria-label="{{ lnk.text }}">
       {% if lnk.status %}
-        <span class="fa
+        <span class="far
         {% if lnk.status == 'intended' %}fa-heartbeat{% endif %}
         {% if lnk.status == 'in repair' %}fa-wrench{% endif %}
         {% if lnk.status == 'available' %}fa-shopping-cart{% endif %}
@@ -23,7 +23,7 @@
       <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
   </button>
   <ul class="dropdown-menu" role="menu">
-      <li class="text-center"><span class="fa fa-refresh fa-spin"></span></li>
+      <li class="text-center"><span class="fas fa-sync-alt fa-spin"></span></li>
   </ul>
 </div>
 {% endspaceless %}

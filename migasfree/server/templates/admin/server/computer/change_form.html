@@ -13,7 +13,7 @@
                         {% dab_field_rendering adminform.form.name %}
                         <div class="input-group-btn">
                             <button id="update-name" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
-                                <span class="fa fa-floppy-o"></span>
+                                <span class="far fa-save"></span>
                                 <span class="sr-only">{% trans 'Update' %}</span>
                             </button>
                         </div>
@@ -26,29 +26,29 @@
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'full qualified domain name' %}">
-                            <span class="fa fa-info-circle"></span> {{ original.fqdn }}
+                            <span class="far fa-info-circle"></span> {{ original.fqdn }}
                         </p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-xs-6">
-                        <span class="fa fa-sitemap" title="{% trans 'Project' %}"></span>&nbsp; {{ original.project.link }}
+                        <span class="far fa-sitemap" title="{% trans 'Project' %}"></span>&nbsp; {{ original.project.link }}
                     </div>
                     <div class="col-md-6 col-xs-6">
                         <p title="{% trans 'Date of entry into the migasfree system' %}">
-                            <span class="fa fa-calendar-plus-o"></span> {{ original.created_at }}
+                            <span class="far fa-calendar-plus"></span> {{ original.created_at }}
                         </p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-xs-6">
                         <p title="{% trans 'ip address' %}">
-                            <span class="fa fa-at"></span> {{ original.ip_address }}
+                            <span class="far fa-at"></span> {{ original.ip_address }}
                         </p>
                     </div>
                     <div class="col-md-6 col-xs-6">
                         <p title="{% trans 'forwarded ip address' %}">
-                            <span class="fa fa-share-square-o"></span> {{ original.forwarded_ip_address }}
+                            <span class="fas fa-share-square"></span> {{ original.forwarded_ip_address }}
                         </p>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-3">
-                        <span class="pull-left fa fa-{% if original.machine == 'P' %}laptop{% else %}cube{% endif %} fa-5x"
+                        <span class="pull-left far fa-{% if original.machine == 'P' %}laptop{% else %}cube{% endif %} fa-5x"
                             title="{% if original.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}"></span>
                     </div>
                     <div class="col-md-9">
@@ -72,14 +72,14 @@
                 </div>
                 <div class="row small">
                     <div class="col-md-6 col-xs-6">
-                        <div class="col-md-3 col-xs-3"><span class="fa fa-microchip fa-4x"></span></div>
+                        <div class="col-md-3 col-xs-3"><span class="fas fa-microchip fa-3x"></span></div>
                         <div class="col-md-9 col-xs-9">
                             <p title="{% trans 'CPU' %}">{{ original.cpu }}</p>
                             <p title="{% trans 'RAM' %}">{{ original.ram|filesizeformat }}</p>
                         </div>
                     </div>
                     <div class="col-md-6 col-xs-6">
-                        <div class="col-md-3 col-xs-3"><span class="fa fa-hdd-o fa-4x"></span></div>
+                        <div class="col-md-3 col-xs-3"><span class="far fa-hdd fa-4x"></span></div>
                         <div class="col-md-9 col-xs-9">
                             <p title="{% trans 'Storage' %}">{{ original.storage|filesizeformat }}</p>
                             <p title="{% trans 'Disks' %}">{{ original.disks }}</p>
@@ -88,7 +88,7 @@
                 </div>
                 <div class="row small">
                     <div class="col-md-6">
-                        <div class="col-md-2 col-xs-2"><span class="fa fa-plug fa-lg"></span></div>
+                        <div class="col-md-2 col-xs-2"><span class="far fa-plug fa-lg"></span></div>
                         <div class="col-md-10 col-xs-10">
                             <p title="{% trans 'MAC address' %}">{{ original.mac_address|mac_address_list }}</p>
                         </div>
@@ -97,7 +97,7 @@
                 {% if not has_change_permission %}
                 <div class="row">
                     <div class="col-md-12">
-                        <p title="{% trans 'last hardware capture' %}"><span class="fa fa-clock-o"></span> {{ original.last_hardware_capture }}</p>
+                        <p title="{% trans 'last hardware capture' %}"><span class="far fa-clock"></span> {{ original.last_hardware_capture }}</p>
                     </div>
                 </div>
                 {% endif %}
@@ -111,7 +111,7 @@
                     <div class="col-md-2 col-xs-2">
                         <button id="update-last-hardware-capture"
                                 class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
-                            <span class="fa fa-floppy-o"></span>
+                            <span class="far fa-save"></span>
                             <span class="sr-only">{% trans 'Update' %}</span>
                         </button>
                     </div>
@@ -132,11 +132,11 @@
                     {% dab_field_rendering adminform.form.status %}
                 </p>
                 <p title="{% trans 'comment' %}">
-                    <span class="fa fa-comment"></span>
+                    <span class="fas fa-comment"></span>
                     {% dab_field_rendering adminform.form.comment %}
                 </p>
                 <p title="{% trans 'tags' %}">
-                    <span class="fa fa-tag"></span>
+                    <span class="far fa-tag"></span>
                     {% dab_field_rendering adminform.form.tags %}
                 </p>
                 {% else %}
@@ -144,13 +144,13 @@
                     {{ original.status }}
                 </div>
                 <div class="col-md-12" title="{% trans 'comment' %}">
-                    <p class="fa fa-comment"></p>
+                    <p class="fas fa-comment"></p>
                     <pre>{{ original.comment }}</pre>
                 </div>
                 <div class="col-md-12" title="{% trans 'tags' %}">
                     <div class="compact-content">
                         {% for att in original.tags.all %}
-                            {{ att.link }}
+                            {{ att.link }}<br />
                         {% endfor %}
                     </div>
                 </div>
@@ -158,12 +158,12 @@
                 <div class="col-md-12">
                     <div class="col-md-6 col-xs-6">
                         <p title="{% trans 'Unchecked Errors' %}" class="lead text-center">
-                            <span class="fa fa-bug fa-lg"></span>&nbsp; {{ original.unchecked_errors }}
+                            <span class="far fa-bug fa-lg"></span>&nbsp; {{ original.unchecked_errors }}
                         </p>
                     </div>
                     <div class="col-md-6 col-xs-6">
                         <p title="{% trans 'Unchecked Faults' %}" class="lead text-center">
-                            <span class="fa fa-bomb fa-lg"></span>&nbsp; {{ original.unchecked_faults }}
+                            <span class="far fa-bomb fa-lg"></span>&nbsp; {{ original.unchecked_faults }}
                         </p>
                     </div>
                 </div>
@@ -171,7 +171,7 @@
             {% if has_change_permission %}
             <div class="panel-footer">
                 <button id="update-current-situation" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
-                    <span class="fa fa-floppy-o"></span>
+                    <span class="far fa-save"></span>
                     <span class="sr-only">{% trans 'Update' %}</span>
                 </button>
             </div>
@@ -184,18 +184,18 @@
             <div class="panel-heading">{% trans 'Synchronization' %}</div>
             <div class="panel-body">
                 <div class="col-md-12">
-                    <span title="{% trans 'sync start date' %}"><span class="fa fa-play"></span> {{ original.sync_start_date }}</span>
-                    &nbsp;<span class="fa fa-long-arrow-right"></span>&nbsp;
-                    <span title="{% trans 'sync end date' %}">{{ original.sync_end_date }} <span class="fa fa-stop"></span></span>
-                    &nbsp;&nbsp;<span title="{% trans 'Last Update Time' %}">({{ original.last_sync_time }} <span class="fa fa-clock-o"></span>)</span>
+                    <span title="{% trans 'sync start date' %}"><span class="far fa-play"></span> {{ original.sync_start_date }}</span>
+                    &nbsp;<span class="fas fa-long-arrow-alt-right"></span>&nbsp;
+                    <span title="{% trans 'sync end date' %}">{{ original.sync_end_date }} <span class="far fa-stop"></span></span>
+                    &nbsp;&nbsp;<span title="{% trans 'Last Update Time' %}">({{ original.last_sync_time }} <span class="far fa-clock"></span>)</span>
                 </div>
                 <div class="col-md-12">
-                    <span class="fa fa-user" title="{% trans 'User' %}"></span>&nbsp; {{ original.sync_user.link }}
+                    <span class="fas fa-user" title="{% trans 'User' %}"></span>&nbsp; {{ original.sync_user.link }}
                 </div>
                 <div class="col-md-12" title="{% trans 'sync attributes' %}">
                     <div class="compact-content">
                         {% for att in original.sync_attributes.all %}
-                            {{ att.link }}
+                            {{ att.link }}<br />
                         {% endfor %}
                     </div>
                 </div>
@@ -210,11 +210,11 @@
             <div class="panel-heading">{% trans 'Software' %}</div>
             <div class="panel-body">
                 <div class="col-md-12">
-                    <span class="fa fa-archive" title="{% trans 'software inventory' %}"></span>
+                    <span class="far fa-archive" title="{% trans 'software inventory' %}"></span>
                     <pre class="reduced-content" title="{% trans 'software inventory' %}">{{ original.software_inventory }}</pre>
                 </div>
                 <div class="col-md-12">
-                    <span class="fa fa-history" title="{% trans 'software history' %}"></span>
+                    <span class="far fa-history" title="{% trans 'software history' %}"></span>
                     <pre class="reduced-content" title="{% trans 'software history' %}">{{ original.software_history }}</pre>
                 </div>
             </div>
@@ -227,7 +227,7 @@
             <div class="panel-body">
                 {% if has_change_permission %}
                 <p>
-                    <span class="fa fa-print" title="{% trans 'Assigned' %}"></span>
+                    <span class="far fa-print" title="{% trans 'Assigned' %}"></span>
                     {% dab_field_rendering adminform.form.assigned_logical_devices_to_cid %}
                 </p>
                 {% else %}
@@ -235,12 +235,12 @@
                 {% endif %}
                 {% if has_change_permission %}
                 <p>
-                    <span class="fa fa-asterisk" title="{% trans 'Default' %}"></span>
+                    <span class="far fa-asterisk" title="{% trans 'Default' %}"></span>
                     {% dab_field_rendering adminform.form.default_logical_device %}
                 </p>
                 {% elif original.default_logical_device %}
                 <div class="col-md-12" title="{% trans 'Default' %}">
-                    <span class="fa fa-asterisk"></span>&nbsp; {{ original.default_logical_device }}
+                    <span class="far fa-asterisk"></span>&nbsp; {{ original.default_logical_device }}
                 </div>
                 {% endif %}
                 {% if original.inflected_logical_devices.count %}
@@ -255,7 +255,7 @@
             {% if has_change_permission %}
             <div class="panel-footer">
                 <button id="update-devices" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
-                    <span class="fa fa-floppy-o"></span>
+                    <span class="far fa-save"></span>
                     <span class="sr-only">{% trans 'Update' %}</span>
                 </button>
             </div>
@@ -266,7 +266,7 @@
 
     {% if has_delete_permission %}
         <div class="form-actions">
-            <a href="{% url opts|admin_urlname:'changelist' %}{{ original.id }}/delete/" class="btn btn-danger deletelink">{% trans "Delete" %}</a>
+            <a href="{% url opts|admin_urlname:'changelist' %}{{ original.id }}/delete/" class="btn btn-danger deletelink"><span class="far fa-trash-alt"></span> {% trans "Delete" %}</a>
         </div>
     {% endif %}
 {% endblock content %}

@@ -36,7 +36,7 @@
                     <div class="col-md-12 col-xs-12{% if adminform.errors.name %} has-error{% endif %}">
                         <p>
                             <label class="control-label required" for="id_name">
-                                <span class="fa fa-info" title="{% trans 'name' %}"></span>
+                                <span class="fas fa-info" title="{% trans 'name' %}"></span>
                             </label>
                             {% dab_field_rendering adminform.form.name %}
                             {% if adminform.errors.name %}
@@ -49,7 +49,7 @@
                     <div class="col-md-12 col-xs-12{% if adminform.errors.project %} has-error{% endif %}">
                         <p title="{% trans 'project' %}">
                             <label class="control-label required" for="id_project">
-                                <span class="fa fa-sitemap"></span>
+                                <span class="far fa-sitemap"></span>
                             </label>
                             {% dab_field_rendering adminform.form.project %}
                             {% if adminform.errors.project %}
@@ -62,7 +62,7 @@
                     <div class="col-md-12 col-xs-12{% if adminform.errors.comment %} has-error{% endif %}">
                         <p title="{% trans 'comment' %}">
                             <label class="control-label" for="id_comment">
-                                <span class="fa fa-comment"></span>
+                                <span class="fas fa-comment"></span>
                             </label>
                             {% dab_field_rendering adminform.form.comment %}
                             {% if adminform.errors.comment %}
@@ -85,7 +85,7 @@
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'included attributes' %}">
                             <label class="control-label" for="id_included_attributes_text">
-                                <span class="fa fa-thumbs-up"></span>
+                                <span class="fas fa-thumbs-up"></span>
                             </label>
                             {% dab_field_rendering adminform.form.included_attributes %}
                         </p>
@@ -95,7 +95,7 @@
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'excluded attributes' %}">
                             <label class="control-label" for="id_excluded_attributes_text">
-                                <span class="fa fa-thumbs-down"></span>
+                                <span class="fas fa-thumbs-down"></span>
                             </label>
                             {% dab_field_rendering adminform.form.excluded_attributes %}
                         </p>
@@ -117,7 +117,7 @@
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'available packages' %}">
                             <label class="control-label" for="id_available_packages_text">
-                                <span class="fa fa-cubes"></span>
+                                <span class="far fa-cubes"></span>
                             </label>
                             {% dab_field_rendering adminform.form.available_packages %}
                         </p>
@@ -127,7 +127,7 @@
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'packages to install' %}">
                             <label class="control-label" for="id_packages_to_install">
-                                <span class="fa fa-download"></span>
+                                <span class="far fa-download"></span>
                             </label>
                             {% dab_field_rendering adminform.form.packages_to_install %}
                         </p>
@@ -137,7 +137,7 @@
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'packages to remove' %}">
                             <label class="control-label" for="id_packages_to_remove">
-                                <span class="fa fa-upload"></span>
+                                <span class="far fa-upload"></span>
                             </label>
                             {% dab_field_rendering adminform.form.packages_to_remove %}
                         </p>
@@ -204,13 +204,13 @@
                     </div>
                     <div class="col-md-4 col-xs-4 text-center">
                         <label class="control-label pull-left" for="id_schedule" title="{% trans 'Schedule' %}">
-                            <span class="fa fa-calendar">&nbsp;</span>
+                            <span class="far fa-calendar-alt">&nbsp;</span>
                         </label>
                         {% dab_field_rendering adminform.form.schedule %}
                     </div>
                     {% if original.schedule %}
                     <div class="col-md-4 col-xs-4 text-center">
-                        <span class="fa fa-bar-chart" title="{% trans 'time line' %}">&nbsp;</span>
+                        <span class="far fa-chart-line" title="{% trans 'time line' %}">&nbsp;</span>
                         {% include "includes/deployment_timeline.html" %}
                     </div>
                     {% endif %}

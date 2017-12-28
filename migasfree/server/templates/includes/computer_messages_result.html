@@ -25,9 +25,9 @@
 
                 <td>
                     {% if item.delayed %}
-                        <span class="fa fa-warning"></span>
+                        <span class="fas fa-exclamation-triangle"></span>
                     {% else %}
-                        <span class="fa fa-refresh fa-spin"></span>
+                        <span class="fas fa-sync-alt fa-spin"></span>
                     {% endif %}
                     <a href="{% url 'admin:server_computer_change' item.computer_id %}">
                         {{ item.computer_name }} (CID-{{ item.computer_id }})

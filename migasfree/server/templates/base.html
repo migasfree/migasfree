@@ -16,7 +16,7 @@
         {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock blockbots %}
 
         <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/fontawesome-all.min.css' %}" />
         <link rel="stylesheet" href="{% static 'admin/css/overrides.css' %}" />
 
         <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20171228" />
@@ -102,28 +102,28 @@
                 <nav class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li id="settings" class="dropdown">
-                            <a href="#" class="dropdown-toggle fa fa-gears" data-toggle="dropdown" title="{% trans 'Settings' %}"><span class="sr-only">{% trans 'Settings' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle far fa-cogs" data-toggle="dropdown" title="{% trans 'Settings' %}"><span class="sr-only">{% trans 'Settings' %}</span> <b class="caret"></b></a>
                             {% include 'includes/config_menu.html' %}
                         </li>
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle fa fa-print" data-toggle="dropdown" title="{% trans 'Devices' %}"><span class="sr-only">{% trans 'Devices' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle far fa-print" data-toggle="dropdown" title="{% trans 'Devices' %}"><span class="sr-only">{% trans 'Devices' %}</span> <b class="caret"></b></a>
                             {% include 'includes/devices_menu.html' %}
                         </li>
 
                         <li id="liberation" class="dropdown">
-                            <a href="#" class="dropdown-toggle fa fa-truck" data-toggle="dropdown" title="{% trans 'Liberation' %}"><span class="sr-only">{% trans 'Liberation' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle far fa-truck" data-toggle="dropdown" title="{% trans 'Liberation' %}"><span class="sr-only">{% trans 'Liberation' %}</span> <b class="caret"></b></a>
                             {% include 'includes/software_menu.html' %}
                         </li>
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle fa fa-laptop" data-toggle="dropdown" title="{% trans 'Datum' %}"><span class="sr-only">{% trans 'Datum' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle far fa-laptop" data-toggle="dropdown" title="{% trans 'Datum' %}"><span class="sr-only">{% trans 'Datum' %}</span> <b class="caret"></b></a>
                             {% include 'includes/mining_menu.html' %}
                         </li>
 
                         {% if query_names %}
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle fa fa-list-alt" data-toggle="dropdown" title="{% trans 'Queries' %}"><span class="sr-only">{% trans 'Queries' %}</span> <b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle far fa-list-alt" data-toggle="dropdown" title="{% trans 'Queries' %}"><span class="sr-only">{% trans 'Queries' %}</span> <b class="caret"></b></a>
                                 <ul id="queries" class="dropdown-menu">
                                 {% for item in query_names %}
                                     <li>
@@ -135,7 +135,7 @@
                         {% endif %}
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle fa fa-bar-chart-o" data-toggle="dropdown" title="{% trans 'Stats' %}"><span class="sr-only">{% trans 'Stats' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle far fa-chart-bar" data-toggle="dropdown" title="{% trans 'Stats' %}"><span class="sr-only">{% trans 'Stats' %}</span> <b class="caret"></b></a>
                             {% include 'includes/stats_menu.html' %}
                         </li>
                     </ul>
@@ -148,7 +148,7 @@
 
                                 <div class="input-group-btn">
                                     <button class="btn btn-default btn-sm" type="submit" title="{% trans 'Search' %}">
-                                        <span class="fa fa-search"></span>
+                                        <span class="fas fa-search"></span>
                                         <span class="sr-only">{% trans 'Search' %}</span>
                                     </button>
                                 </div>
@@ -160,20 +160,20 @@
                         {% if user.is_staff %}
                             <li class="dropdown alerts-dropdown" id="alerts">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Alerts' %}">
-                                    <i class="fa fa-bell"></i> <span class="sr-only">{% trans 'Alerts' %}</span> <span class="badge">0</span>
+                                    <i class="fas fa-bell"></i> <span class="sr-only">{% trans 'Alerts' %}</span> <span class="badge">0</span>
                                 </a>
                             </li>
                         {% endif %}
 
                         <li class="dropdown user-dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-user"></i> {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %} <b class="caret"></b>
+                                <i class="fas fa-user"></i> {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{% url 'admin:password_change' %}"><i class="fa fa-key"></i> {% trans 'Password change' %}</a></li>
-                                <li><a href="{% url 'preferences' %}"><i class="fa fa-gear"></i> {% trans 'Preferences' %}</a></li>
+                                <li><a href="{% url 'admin:password_change' %}"><i class="far fa-key"></i> {% trans 'Password change' %}</a></li>
+                                <li><a href="{% url 'preferences' %}"><i class="far fa-cog"></i> {% trans 'Preferences' %}</a></li>
                                 <li class="divider"></li>
-                                <li><a href="{% url 'admin:logout' %}"><i class="fa fa-power-off"></i> {% trans 'Logout' %}</a></li>
+                                <li><a href="{% url 'admin:logout' %}"><i class="fas fa-power-off"></i> {% trans 'Logout' %}</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -222,17 +222,17 @@
                 <footer class="bs-footer container">
                     <p id="copyright" class="pull-left">
                         &copy; 2010-{% now 'Y' %} <a href="http://www.migasfree.org">migasfree</a>,
-                        under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>, <a href="https://github.com/migasfree/migasfree" title="migasfree-server_{{ migasfree_version }}"><span class="fa fa-github"></span> <span class="sr-only">(code project)</span></a>
+                        under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>, <a href="https://github.com/migasfree/migasfree" title="migasfree-server_{{ migasfree_version }}"><span class="fab fa-github"></span> <span class="sr-only">(code project)</span></a>
                     </p>
 
                     <ul class="pull-right">
                         {% block documentation %}
-                            <li><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="fa fa-database"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a></li>
+                            <li><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="far fa-database"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a></li>
                         {% endblock documentation %}
 
-                        <li><a href="/docs/" title="{% trans 'Experimental REST API' %}"><span class="fa fa-user-secret"></span> <span class="sr-only">{% trans 'Experimental REST API' %}</span></a></li>
+                        <li><a href="/docs/" title="{% trans 'Experimental REST API' %}"><span class="far fa-user-secret"></span> <span class="sr-only">{% trans 'Experimental REST API' %}</span></a></li>
 
-                        <li><a href="http://fun-with-migasfree.readthedocs.io/" title="{% trans 'Fun with migasfree' %}"><span class="fa fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></li>
+                        <li><a href="http://fun-with-migasfree.readthedocs.io/" title="{% trans 'Fun with migasfree' %}"><span class="far fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></li>
                     </ul>
                 </footer>
             {% endblock footer %}

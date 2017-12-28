@@ -2,7 +2,7 @@
 {% load i18n %}
 
 <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{{ title }}">
-    <i class="fa fa-bell"></i>&nbsp;<span class="sr-only">{{ title }}</span>
+    <i class="fas fa-bell"></i>&nbsp;<span class="sr-only">{{ title }}</span>
     <span class="badge">{{ result }}</span>{% if result > 0 %}&nbsp;<b class="caret"></b>{% endif %}
 </a>
 
@@ -11,7 +11,7 @@
     {% for item in alerts %}
         {% if item.result %}
             <li>
-                <a class="fa fa-{% if item.target == 'server' %}cloud{% else %}laptop{% endif %}" href="{{ item.url }}">&nbsp;
+                <a class="fas fa-{% if item.target == 'server' %}cloud{% else %}laptop{% endif %}" href="{{ item.url }}">&nbsp;
                     <span class="badge">{{ item.result }}</span>&nbsp;
                     <span class="label label-{{ item.level }}">{{ item.msg }}</span>
                 </a>
