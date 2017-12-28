@@ -19,7 +19,6 @@ $(function(){
     $.ajaxSetup({
         headers: {"X-CSRFToken": Cookies.get("csrftoken")},  // FIXME setting
         url: "/api/v1/token/computers/" + $("input#computer-id").val() + "/",
-        dataType: "json",
         error: function( jqXHR, textStatus, errorThrown ) {
             if (jqXHR.status === 0) {
                 alert('Not connect: Verify Network.');
@@ -46,6 +45,7 @@ $(function(){
             data: {
                 name: $("#id_name").val()
             },
+            dataType: "json",
             success: (result) => {
                 $("#id_name").val(result.name);
                 successMsg(gettext("Name has been changed!"));
@@ -61,6 +61,7 @@ $(function(){
             data: {
                 last_hardware_capture: $("input#id_last_hardware_capture").val()
             },
+            dataType: "json",
             success: (result) => {
                 successMsg(gettext("Last hardware capture has been changed!"));
             }
@@ -77,6 +78,7 @@ $(function(){
                 comment: $("#id_comment").val(),
                 tags: ajaxSelect2Array($("#id_tags").val())
             },
+            dataType: "json",
             traditional: true,
             success: (result) => {
                 successMsg(gettext("Current Situation has been changed!"));
@@ -93,6 +95,7 @@ $(function(){
                 default_logical_device: $("#id_default_logical_device").val(),
                 assigned_logical_devices_to_cid: $("#id_assigned_logical_devices_to_cid").val()
             },
+            dataType: "json",
             success: (result) => {
                 successMsg(gettext("Devices have been changed!"));
             }
