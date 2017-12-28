@@ -409,15 +409,6 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         )
 
-    def response_change(self, request, obj):
-        return HttpResponseRedirect(
-            '{}?enabled__exact={}&project__id__exact={}'.format(
-                reverse('admin:server_deployment_changelist'),
-                obj.enabled,
-                obj.project.id
-            )
-        )
-
 
 class ScheduleDelayLine(admin.TabularInline):
     model = ScheduleDelay
