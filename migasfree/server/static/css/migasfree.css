@@ -118,6 +118,10 @@ td.nowrap, .nowrap {
     height: 550px;
 }
 
+#computers-delay {
+    margin: 30px auto 0;
+}
+
 span[data-value] {
     display: block !important;
 }
