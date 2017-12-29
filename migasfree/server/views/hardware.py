@@ -50,11 +50,18 @@ def hardware_extract(request, node):
         'name', 'value'
     )
 
+    name = node.__str__()
+    if not name:
+        name = node.description
+        if node.product:
+            name = '{}: {}'.format(name, node.product)
+
     return render(
         request,
         'computer_hardware_extract.html',
         {
-            'title': u'{}: {}'.format(_("Hardware Information"), node),
+            'title': u'{}: {}'.format(_("Hardware Information"), name),
+            'name': name,
             'computer': node.computer,
             'capability': capability,
             'logical_name': logical_name,
