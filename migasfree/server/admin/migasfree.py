@@ -22,7 +22,7 @@ class MigasFields(object):
                 style = 'fa-times boolean-no'
                 text = ugettext('No')
 
-            html = '<span class="fas %s"><span class="sr-only">%s</span></span>'
+            html = '<span class="fas %s"></span><span class="sr-only">%s</span>'
 
             return format_html(html % (style, text))
 
