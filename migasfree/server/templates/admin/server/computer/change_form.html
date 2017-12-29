@@ -13,7 +13,7 @@
                         {% dab_field_rendering adminform.form.name %}
                         <div class="input-group-btn">
                             <button id="update-name" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
-                                <span class="far fa-save"></span>
+                                <span class="far fa-save fa-lg"></span>
                                 <span class="sr-only">{% trans 'Update' %}</span>
                             </button>
                         </div>
@@ -61,11 +61,11 @@
             <div class="panel-heading">{% trans 'Hardware' %}</div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-3">
-                        <span class="pull-left far fa-{% if original.machine == 'P' %}laptop{% else %}cube{% endif %} fa-5x"
+                    <div class="col-md-3 col-xs-3">
+                        <span class="pull-left far fa-{% if original.machine == 'P' %}laptop fa-5x{% else %}cube fa-4x{% endif %}"
                             title="{% if original.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}"></span>
                     </div>
-                    <div class="col-md-9">
+                    <div class="col-md-9 col-xs-9">
                         <p>{{ original.hwnode_set.first.link }}</p>
                         <p class="small" title="{% trans 'UUID' %}">{{ original.uuid }}</p>
                     </div>
@@ -111,7 +111,7 @@
                     <div class="col-md-2 col-xs-2">
                         <button id="update-last-hardware-capture"
                                 class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
-                            <span class="far fa-save"></span>
+                            <span class="far fa-save fa-lg"></span>
                             <span class="sr-only">{% trans 'Update' %}</span>
                         </button>
                     </div>
@@ -171,7 +171,7 @@
             {% if has_change_permission %}
             <div class="panel-footer">
                 <button id="update-current-situation" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
-                    <span class="far fa-save"></span>
+                    <span class="far fa-save fa-lg"></span>
                     <span class="sr-only">{% trans 'Update' %}</span>
                 </button>
             </div>
@@ -255,7 +255,7 @@
             {% if has_change_permission %}
             <div class="panel-footer">
                 <button id="update-devices" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
-                    <span class="far fa-save"></span>
+                    <span class="far fa-save fa-lg"></span>
                     <span class="sr-only">{% trans 'Update' %}</span>
                 </button>
             </div>
