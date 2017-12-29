@@ -3,7 +3,7 @@
 <div class="btn-group btn-group-xs nowrap">
   <a href="{{ lnk.url }}" class="btn btn-default btn-role" role="button" aria-label="{{ lnk.text }}">
       {% if lnk.status %}
-        <span class="far
+        <span class="fas
         {% if lnk.status == 'intended' %}fa-heartbeat{% endif %}
         {% if lnk.status == 'in repair' %}fa-wrench{% endif %}
         {% if lnk.status == 'available' %}fa-shopping-cart{% endif %}

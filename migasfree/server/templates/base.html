@@ -16,7 +16,7 @@
         {% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE" />{% endblock blockbots %}
 
         <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" />
-        <link rel="stylesheet" href="{% static 'css/fontawesome-all.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/fa-svg-with-js.css' %}" />
         <link rel="stylesheet" href="{% static 'admin/css/overrides.css' %}" />
 
         <link rel="stylesheet" href="{% static 'css/migasfree.css' %}?20171228" />
@@ -45,6 +45,7 @@
         <script src="{% static 'js/migas_link.js' %}" type="text/javascript"></script>
         <script src="{% static 'js/timeline.js' %}" type="text/javascript"></script>
         <script src="{% static 'js/js.cookie.js' %}" type="text/javascript"></script>
+        <script src="{% static 'js/fontawesome-all.min.js' %}" type="text/javascript"></script>
         <script src="{% url 'javascript-catalog' %}" type="text/javascript"></script>
 
         <script type="text/javascript">
@@ -102,28 +103,48 @@
                 <nav class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li id="settings" class="dropdown">
-                            <a href="#" class="dropdown-toggle far fa-cogs" data-toggle="dropdown" title="{% trans 'Settings' %}"><span class="sr-only">{% trans 'Settings' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Settings' %}">
+                                <span class="fas fa-cogs"></span>
+                                <span class="sr-only">{% trans 'Settings' %}</span>
+                                <b class="caret"></b>
+                            </a>
                             {% include 'includes/config_menu.html' %}
                         </li>
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle far fa-print" data-toggle="dropdown" title="{% trans 'Devices' %}"><span class="sr-only">{% trans 'Devices' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Devices' %}">
+                                <span class="fas fa-print"></span>
+                                <span class="sr-only">{% trans 'Devices' %}</span>
+                                <b class="caret"></b>
+                            </a>
                             {% include 'includes/devices_menu.html' %}
                         </li>
 
                         <li id="liberation" class="dropdown">
-                            <a href="#" class="dropdown-toggle far fa-truck" data-toggle="dropdown" title="{% trans 'Liberation' %}"><span class="sr-only">{% trans 'Liberation' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Liberation' %}">
+                                <span class="fas fa-truck"></span>
+                                <span class="sr-only">{% trans 'Liberation' %}</span>
+                                <b class="caret"></b>
+                            </a>
                             {% include 'includes/software_menu.html' %}
                         </li>
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle far fa-laptop" data-toggle="dropdown" title="{% trans 'Datum' %}"><span class="sr-only">{% trans 'Datum' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Datum' %}">
+                                <span class="fas fa-laptop"></span>
+                                <span class="sr-only">{% trans 'Datum' %}</span>
+                                <b class="caret"></b>
+                            </a>
                             {% include 'includes/mining_menu.html' %}
                         </li>
 
                         {% if query_names %}
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle far fa-list-alt" data-toggle="dropdown" title="{% trans 'Queries' %}"><span class="sr-only">{% trans 'Queries' %}</span> <b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Queries' %}">
+                                    <span class="fas fa-list-alt"></span>
+                                    <span class="sr-only">{% trans 'Queries' %}</span>
+                                    <b class="caret"></b>
+                                </a>
                                 <ul id="queries" class="dropdown-menu">
                                 {% for item in query_names %}
                                     <li>
@@ -135,7 +156,11 @@
                         {% endif %}
 
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle far fa-chart-bar" data-toggle="dropdown" title="{% trans 'Stats' %}"><span class="sr-only">{% trans 'Stats' %}</span> <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Stats' %}">
+                                <span class="fas fa-chart-bar"></span>
+                                <span class="sr-only">{% trans 'Stats' %}</span>
+                                <b class="caret"></b>
+                            </a>
                             {% include 'includes/stats_menu.html' %}
                         </li>
                     </ul>
@@ -170,8 +195,8 @@
                                 <i class="fas fa-user"></i> {% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{% url 'admin:password_change' %}"><i class="far fa-key"></i> {% trans 'Password change' %}</a></li>
-                                <li><a href="{% url 'preferences' %}"><i class="far fa-cog"></i> {% trans 'Preferences' %}</a></li>
+                                <li><a href="{% url 'admin:password_change' %}"><i class="fas fa-key"></i> {% trans 'Password change' %}</a></li>
+                                <li><a href="{% url 'preferences' %}"><i class="fas fa-cog"></i> {% trans 'Preferences' %}</a></li>
                                 <li class="divider"></li>
                                 <li><a href="{% url 'admin:logout' %}"><i class="fas fa-power-off"></i> {% trans 'Logout' %}</a></li>
                             </ul>
@@ -227,12 +252,12 @@
 
                     <ul class="pull-right">
                         {% block documentation %}
-                            <li><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="far fa-database"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a></li>
+                            <li><a href="{% url 'django-admindocs-models-index' %}{{ opts.app_label }}.{{ opts.object_name.lower }}" title="{% trans 'Data Model' %}"><span class="fas fa-database"></span> <span class="sr-only">{% trans 'Data Model' %}</span></a></li>
                         {% endblock documentation %}
 
-                        <li><a href="/docs/" title="{% trans 'Experimental REST API' %}"><span class="far fa-user-secret"></span> <span class="sr-only">{% trans 'Experimental REST API' %}</span></a></li>
+                        <li><a href="/docs/" title="{% trans 'Experimental REST API' %}"><span class="fas fa-user-secret"></span> <span class="sr-only">{% trans 'Experimental REST API' %}</span></a></li>
 
-                        <li><a href="http://fun-with-migasfree.readthedocs.io/" title="{% trans 'Fun with migasfree' %}"><span class="far fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></li>
+                        <li><a href="http://fun-with-migasfree.readthedocs.io/" title="{% trans 'Fun with migasfree' %}"><span class="fas fa-book"></span> <span class="sr-only">{% trans 'Fun with migasfree' %}</span></a></li>
                     </ul>
                 </footer>
             {% endblock footer %}

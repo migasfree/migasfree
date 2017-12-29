@@ -11,8 +11,9 @@
     {% for item in alerts %}
         {% if item.result %}
             <li>
-                <a class="fas fa-{% if item.target == 'server' %}cloud{% else %}laptop{% endif %}" href="{{ item.url }}">&nbsp;
-                    <span class="badge">{{ item.result }}</span>&nbsp;
+                <a href="{{ item.url }}">
+                    <span class="fas fa-{% if item.target == 'server' %}cloud{% else %}laptop{% endif %}"></span>
+                    &nbsp;<span class="badge">{{ item.result }}</span>&nbsp;
                     <span class="label label-{{ item.level }}">{{ item.msg }}</span>
                 </a>
             </li>
