@@ -1,34 +1,65 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n mac_address_list %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
         <li>{% trans 'Datum' %}</li>
         <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
         <li><a href="{% url 'admin:server_computer_change' computer.id %}">{{ computer }}</a></li>
+        <li>{% trans 'Hardware Information' %}</li>
     </ol>
 {% endblock breadcrumbs %}
 
 {% block content_title %}
-    <h1>{% trans 'Hardware' %}: {{ computer.link }} </h1>
+    <h1>{% trans 'Hardware Information' %}: {{ computer.link }} </h1>
 
-    <ul class="hardware-resume">
-        <li>{% trans 'Product' %}: {{ computer.product }}</li>
-        <li>{% trans 'Uuid' %}: {{ computer.uuid }}</li>
-        <li>
-            {% trans 'Machine' %}:
-            {% if computer.machine == 'P' %}
-                {% trans 'Physical' %}
-            {% else %}
-                {% trans 'Virtual' %}
-            {% endif %}
-        </li>
-        <li>{% trans 'CPU' %}: {{ computer.cpu }}</li>
-        <li>{% trans 'RAM' %}: {% widthratio computer.ram 1073741824 1 %} GB</li>
-        <li>{% trans 'Storage' %}: {% widthratio computer.storage 1073741824 1 %} GB</li>
-        <li>{% trans 'Disks' %}: {{ computer.disks }}</li>
-        <li>{% trans 'MAC address' %}: {{ computer.mac_address }}</li>
-    </ul>
+    <div class="row">
+        <div class="col-md-6 col-xs-6">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-3 col-xs-3">
+                            <span class="pull-left far fa-{% if computer.machine == 'P' %}laptop{% else %}cube{% endif %} fa-4x"
+                                title="{% if computer.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}"></span>
+                        </div>
+                        <div class="col-md-9 col-xs-9">
+                            <p>{{ computer.hwnode_set.first }}</p>
+                            <p title="{% trans 'UUID' %}">{{ computer.uuid }}</p>
+                        </div>
+                    </div>
+                    <div class="row small">
+                        <div class="col-md-6 col-xs-6">
+                            <div class="col-md-3 col-xs-3"><span class="fas fa-microchip fa-3x"></span></div>
+                            <div class="col-md-9 col-xs-9">
+                                <p title="{% trans 'CPU' %}">{{ computer.cpu }}</p>
+                                <p title="{% trans 'RAM' %}">{{ computer.ram|filesizeformat }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <div class="col-md-3 col-xs-3"><span class="far fa-hdd fa-4x"></span></div>
+                            <div class="col-md-9 col-xs-9">
+                                <p title="{% trans 'Storage' %}">{{ computer.storage|filesizeformat }}</p>
+                                <p title="{% trans 'Disks' %}">{{ computer.disks }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row small">
+                        <div class="col-md-6">
+                            <div class="col-md-2 col-xs-2"><span class="far fa-plug fa-lg"></span></div>
+                            <div class="col-md-10 col-xs-10">
+                                <p title="{% trans 'MAC address' %}">{{ computer.mac_address|mac_address_list }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p title="{% trans 'last hardware capture' %}"><span class="far fa-clock"></span> {{ computer.last_hardware_capture }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content_title %}
 
 {% block content %}
