@@ -7,11 +7,13 @@
         <li><a href="{% url 'admin:server_computer_changelist' %}">{% trans 'Computers' %}</a></li>
         <li><a href="{% url 'admin:server_computer_change' computer.id %}">{{ computer }}</a></li>
         <li><a href="{% url 'hardware_resume' computer.id %}">{% trans 'Hardware Information' %}</a></li>
+        <li>{{ name }}</li>
     </ol>
 {% endblock breadcrumbs %}
 
 {% block content_title %}
-    <h1>{% trans 'Hardware' %}: {{ computer.link }}</h1>
+    <h1>{{ title }}</h1>
+    <p>{{ computer.link }}</p>
 {% endblock content_title %}
 
 {% block content %}
