@@ -61,9 +61,8 @@
             <div class="panel-heading">{% trans 'Hardware' %}</div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-3 col-xs-3">
-                        <span class="pull-left fas fa-{% if original.machine == 'P' %}laptop{% else %}cube{% endif %} fa-4x"
-                            title="{% if original.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}"></span>
+                    <div class="col-md-3 col-xs-3" title="{% if original.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}">
+                        <span class="pull-left fas fa-{% if original.machine == 'P' %}laptop{% else %}cube{% endif %} fa-4x"></span>
                     </div>
                     <div class="col-md-9 col-xs-9">
                         <p>{{ original.hwnode_set.first.link }}</p>
