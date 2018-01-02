@@ -35,8 +35,8 @@
                 <div class="row">
                     <div class="col-md-12 col-xs-12{% if adminform.errors.name %} has-error{% endif %}">
                         <p>
-                            <label class="control-label required" for="id_name">
-                                <span class="fas fa-info" title="{% trans 'name' %}"></span>
+                            <label class="control-label required" for="id_name" title="{% trans 'name' %}">
+                                <span class="fas fa-info"></span>
                             </label>
                             {% dab_field_rendering adminform.form.name %}
                             {% if adminform.errors.name %}
@@ -48,12 +48,16 @@
                 <div class="row">
                     <div class="col-md-12 col-xs-12{% if adminform.errors.project %} has-error{% endif %}">
                         <p title="{% trans 'project' %}">
-                            <label class="control-label required" for="id_project">
-                                <span class="fas fa-sitemap"></span>
-                            </label>
-                            {% dab_field_rendering adminform.form.project %}
-                            {% if adminform.errors.project %}
-                                <span class="text-danger">{{ adminform.errors.project|striptags }}</span>
+                            {% if original.id %}
+                                <span class="fas fa-sitemap"></span>&nbsp; {{ original.project.link }}
+                            {% else %}
+                                    <label class="control-label required" for="id_project">
+                                        <span class="fas fa-sitemap"></span>
+                                    </label>
+                                    {% dab_field_rendering adminform.form.project %}
+                                    {% if adminform.errors.project %}
+                                        <span class="text-danger">{{ adminform.errors.project|striptags }}</span>
+                                    {% endif %}
                             {% endif %}
                         </p>
                     </div>
@@ -204,13 +208,13 @@
                     </div>
                     <div class="col-md-4 col-xs-4 text-center">
                         <label class="control-label pull-left" for="id_schedule" title="{% trans 'Schedule' %}">
-                            <span class="far fa-calendar-alt">&nbsp;</span>
+                            <span class="far fa-calendar-alt"></span>&nbsp;
                         </label>
                         {% dab_field_rendering adminform.form.schedule %}
                     </div>
                     {% if original.schedule %}
-                    <div class="col-md-4 col-xs-4 text-center">
-                        <span class="fas fa-chart-line" title="{% trans 'time line' %}">&nbsp;</span>
+                    <div class="col-md-4 col-xs-4 text-center" title="{% trans 'time line' %}">
+                        <span class="fas fa-chart-line"></span>&nbsp;
                         {% include "includes/deployment_timeline.html" %}
                     </div>
                     {% endif %}
