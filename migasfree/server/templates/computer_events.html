@@ -74,7 +74,7 @@
 
         var now = new Date();
         var tzOffset = now.getTimezoneOffset() * 60000;  // offset in milliseconds
-        var inputDate = new Date("{{ computer.dateinput.isoformat }}");
+        var inputDate = new Date("{{ computer.created_at.isoformat }}");
         var startDate = new Date();
         startDate.setMonth(now.getMonth() - 11);
 
