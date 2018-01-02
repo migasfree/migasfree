@@ -7,7 +7,7 @@ from .models import Application, PackagesByProject, Policy
 
 class ApplicationFilter(django_filters.FilterSet):
     description = django_filters.CharFilter(
-        name='description', lookup_expr='icontains'
+        field_name='description', lookup_expr='icontains'
     )
 
     class Meta:
@@ -17,7 +17,7 @@ class ApplicationFilter(django_filters.FilterSet):
 
 class PackagesByProjectFilter(django_filters.FilterSet):
     packages_to_install = django_filters.CharFilter(
-        name='packages_to_install', lookup_expr='icontains'
+        field_name='packages_to_install', lookup_expr='icontains'
     )
 
     class Meta:
@@ -27,7 +27,7 @@ class PackagesByProjectFilter(django_filters.FilterSet):
 
 class PolicyFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(
-        name='name', lookup_expr='icontains'
+        field_name='name', lookup_expr='icontains'
     )
 
     class Meta:
