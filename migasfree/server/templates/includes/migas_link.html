@@ -1,29 +1,28 @@
 {% spaceless %}
 {% load i18n %}
 <div class="btn-group btn-group-xs nowrap">
-  <a href="{{ lnk.url }}" class="btn btn-default btn-role" role="button" aria-label="{{ lnk.text }}">
-      {% if lnk.status %}
-        <span class="fas
-        {% if lnk.status == 'intended' %}fa-heartbeat{% endif %}
-        {% if lnk.status == 'in repair' %}fa-wrench{% endif %}
-        {% if lnk.status == 'available' %}fa-shopping-cart{% endif %}
-        {% if lnk.status == 'reserved' %}fa-lock{% endif %}
-        {% if lnk.status == 'unknown' %}fa-question{% endif %}
-        {% if lnk.status == 'unsubscribed' %}fa-recycle{% endif %}
-        {% if lnk.status == 'set' %}fa-circle-o{% endif %}
-        {% if lnk.status == 'tag' %}fa-tag{% endif %}
-        " title="{{ lnk.trans_status }}"></span>
-      {% endif %}
-      {{ lnk.text }}
-  </a>
-  <button type="button" class="btn btn-default btn-migas dropdown-toggle-split"
+    <a href="{{ lnk.url }}" class="btn btn-default btn-role" role="button" aria-label="{{ lnk.text }}"
+    {% if lnk.status %}title="{{ lnk.trans_status }}"{% endif %}>
+        {% if lnk.status %}
+            <span class="{% if lnk.status == 'intended' %}fas fa-heartbeat{% endif %}
+            {% if lnk.status == 'in repair' %}fas fa-wrench{% endif %}
+            {% if lnk.status == 'available' %}fas fa-shopping-cart{% endif %}
+            {% if lnk.status == 'reserved' %}fas fa-lock{% endif %}
+            {% if lnk.status == 'unknown' %}fas fa-question{% endif %}
+            {% if lnk.status == 'unsubscribed' %}fas fa-recycle{% endif %}
+            {% if lnk.status == 'set' %}far fa-circle{% endif %}
+            {% if lnk.status == 'tag' %}fas fa-tag{% endif %}"></span>
+        {% endif %}
+        {{ lnk.text }}
+    </a>
+    <button type="button" class="btn btn-default btn-migas dropdown-toggle-split"
           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
           data-app="{{ lnk.app }}" data-model="{{ lnk.class }}" data-pk="{{ lnk.pk }}">
-      <span class="caret"> </span>
-      <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
-  </button>
-  <ul class="dropdown-menu" role="menu">
-      <li class="text-center"><span class="fas fa-sync-alt fa-spin"></span></li>
-  </ul>
+        <span class="caret"> </span>
+        <span class="sr-only">{% trans 'Toggle Dropdown' %}</span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+        <li class="text-center"><span class="fas fa-sync-alt fa-spin"></span></li>
+    </ul>
 </div>
 {% endspaceless %}
