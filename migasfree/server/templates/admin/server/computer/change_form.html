@@ -208,13 +208,13 @@
         <div class="panel panel-default">
             <div class="panel-heading">{% trans 'Software' %}</div>
             <div class="panel-body">
-                <div class="col-md-12">
-                    <span class="fas fa-archive" title="{% trans 'software inventory' %}"></span>
-                    <pre class="reduced-content" title="{% trans 'software inventory' %}">{{ original.software_inventory }}</pre>
+                <div class="col-md-12" title="{% trans 'software inventory' %}">
+                    <span class="fas fa-archive"></span>
+                    <pre class="reduced-content">{{ original.software_inventory }}</pre>
                 </div>
-                <div class="col-md-12">
-                    <span class="fas fa-history" title="{% trans 'software history' %}"></span>
-                    <pre class="reduced-content" title="{% trans 'software history' %}">{{ original.software_history }}</pre>
+                <div class="col-md-12" title="{% trans 'software history' %}">
+                    <span class="fas fa-history"></span>
+                    <pre class="reduced-content">{{ original.software_history }}</pre>
                 </div>
             </div>
         </div>
@@ -225,26 +225,26 @@
             <div class="panel-heading">{% trans 'Devices' %}</div>
             <div class="panel-body">
                 {% if has_change_permission %}
-                <p>
-                    <span class="fas fa-print" title="{% trans 'Assigned' %}"></span>
+                <p title="{% trans 'Assigned' %}">
+                    <span class="fas fa-print"></span>
                     {% dab_field_rendering adminform.form.assigned_logical_devices_to_cid %}
                 </p>
                 {% else %}
                     {{ adminform.form.assigned_logical_devices_to_cid }}
                 {% endif %}
                 {% if has_change_permission %}
-                <p>
-                    <span class="fas fa-asterisk" title="{% trans 'Default' %}"></span>
+                <p title="{% trans 'Default' %}">
+                    <span class="fas fa-asterisk"></span>
                     {% dab_field_rendering adminform.form.default_logical_device %}
                 </p>
                 {% elif original.default_logical_device %}
                 <div class="col-md-12" title="{% trans 'Default' %}">
-                    <span class="far fa-asterisk"></span>&nbsp; {{ original.default_logical_device }}
+                    <span class="fas fa-asterisk"></span>&nbsp; {{ original.default_logical_device }}
                 </div>
                 {% endif %}
                 {% if original.inflected_logical_devices.count %}
-                    <p class="clearfix">
-                        {% trans 'Inflected' %}
+                    <p class="clearfix" title="{% trans 'Inflected' %}">
+                        <span class="fas fa-magic"></span>
                         {% for device in original.inflected_logical_devices.all %}
                             {{ device.link }}<br />
                         {% endfor %}
