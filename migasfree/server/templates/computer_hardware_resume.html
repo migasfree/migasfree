@@ -20,8 +20,8 @@
                     <div class="row">
                         <div class="col-md-4 col-xs-4" title="{% if computer.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}">
                             <span class="pull-left fas fa-{% if computer.machine == 'P' %}laptop{% else %}cube{% endif %} fa-4x"></span>
-                            {% if original.get_architecture %}
-                                <span class="badge">{{ original.get_architecture }} bits</span>
+                            {% if computer.get_architecture %}
+                                <span class="badge">{{ computer.get_architecture }} bits</span>
                             {% endif %}
                        </div>
                         <div class="col-md-8 col-xs-8">
