@@ -409,6 +409,18 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         )
 
+    def response_change(self, request, obj):
+        if request.POST.get('_save', None):
+            return HttpResponseRedirect(
+                '{}?enabled__exact={}&project__id__exact={}'.format(
+                    reverse('admin:server_deployment_changelist'),
+                    obj.enabled,
+                    obj.project.id
+                )
+            )
+
+        return super(DeploymentAdmin, self).response_change(request, obj)
+
 
 class ScheduleDelayLine(admin.TabularInline):
     model = ScheduleDelay
