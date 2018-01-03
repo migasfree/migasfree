@@ -292,6 +292,10 @@ li .btn-group {
     -moz-column-gap: 20px;
 }
 
+#sync-attributes {
+    margin-top: 20px;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
