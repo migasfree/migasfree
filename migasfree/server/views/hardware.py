@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.core import serializers
 from django.urls import reverse
+from django.utils.encoding import smart_unicode
 
 from ..models import (
     HwNode,
@@ -54,13 +55,13 @@ def hardware_extract(request, node):
     if not name:
         name = node.description
         if node.product:
-            name = '{}: {}'.format(name, node.product)
+            name = u'{}: {}'.format(name, node.product)
 
     return render(
         request,
         'computer_hardware_extract.html',
         {
-            'title': u'{}: {}'.format(_("Hardware Information"), name),
+            'title': u'{}: {}'.format(_("Hardware Information"), smart_unicode(name)),
             'name': name,
             'computer': node.computer,
             'capability': capability,
