@@ -25,7 +25,7 @@ MAXINT = 9223372036854775807  # sys.maxint = (2**63) - 1
 def hardware_resume(request, param):
     computer = get_object_or_404(Computer, id=param)
 
-    hardware = HwNode.objects.filter(computer__id=param).order_by('id')
+    hardware = HwNode.objects.filter(computer__id=param).order_by('id', 'parent_id', 'level')
     data = serializers.serialize('python', hardware)
 
     return render(
