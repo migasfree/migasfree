@@ -12,9 +12,9 @@
                     {% if user.is_superuser %}
                         {% dab_field_rendering adminform.form.name %}
                         <div class="input-group-btn">
-                            <button id="update-name" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
+                            <button id="update-name" class="btn btn-primary" type="submit" title="{% trans 'Save' %}">
                                 <span class="far fa-save fa-lg"></span>
-                                <span class="sr-only">{% trans 'Update' %}</span>
+                                <span class="sr-only">{% trans 'Save' %}</span>
                             </button>
                         </div>
                     {% else %}
@@ -121,9 +121,9 @@
                     </div>
                     <div class="col-md-2 col-xs-2">
                         <button id="update-last-hardware-capture"
-                                class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
+                                class="btn btn-primary" type="submit" title="{% trans 'Save' %}">
                             <span class="far fa-save fa-lg"></span>
-                            <span class="sr-only">{% trans 'Update' %}</span>
+                            <span class="sr-only">{% trans 'Save' %}</span>
                         </button>
                     </div>
                 </div>
@@ -185,9 +185,9 @@
             </div>
             {% if has_change_permission %}
             <div class="panel-footer">
-                <button id="update-current-situation" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
+                <button id="update-current-situation" class="btn btn-primary" type="submit" title="{% trans 'Save' %}">
                     <span class="far fa-save fa-lg"></span>
-                    <span class="sr-only">{% trans 'Update' %}</span>
+                    <span class="sr-only">{% trans 'Save' %}</span>
                 </button>
             </div>
             {% endif %}
@@ -277,9 +277,9 @@
             </div>
             {% if has_change_permission %}
             <div class="panel-footer">
-                <button id="update-devices" class="btn btn-primary" type="submit" title="{% trans 'Update' %}">
+                <button id="update-devices" class="btn btn-primary" type="submit" title="{% trans 'Save' %}">
                     <span class="far fa-save fa-lg"></span>
-                    <span class="sr-only">{% trans 'Update' %}</span>
+                    <span class="sr-only">{% trans 'Save' %}</span>
                 </button>
             </div>
             {% endif %}
