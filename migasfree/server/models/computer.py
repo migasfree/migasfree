@@ -412,6 +412,18 @@ class Computer(models.Model, MigasLink):
 
     assigned_logical_devices_to_cid.short_description = _('Assigned Logical Devices to CID')
 
+    def get_architecture(self):
+        from .hw_node import HwNode
+
+        query = HwNode.objects.filter(
+            computer=self.id,
+            class_name='processor'
+        )
+        if query.count() == 1:
+            return query[0].width
+
+        return None
+
     @staticmethod
     def replacement(source, target):
         swap_m2m(source.tags, target.tags)
