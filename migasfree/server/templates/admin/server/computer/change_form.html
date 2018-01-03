@@ -66,37 +66,45 @@
                     </div>
                     <div class="col-md-9 col-xs-9">
                         <p>{{ original.hwnode_set.first.link }}</p>
-                        <p class="small" title="{% trans 'UUID' %}">{{ original.uuid }}</p>
+                        <p title="{% trans 'UUID' %}">{{ original.uuid }}</p>
                     </div>
                 </div>
-                <div class="row small">
+                <div class="row">
                     <div class="col-md-6 col-xs-6">
-                        <div class="col-md-3 col-xs-3"><span class="fas fa-microchip fa-3x"></span></div>
-                        <div class="col-md-9 col-xs-9">
-                            <p title="{% trans 'CPU' %}">{{ original.cpu }}</p>
-                            <p title="{% trans 'RAM' %}">{{ original.ram|filesizeformat }}</p>
-                        </div>
+                        <p title="{% trans 'CPU' %}">
+                            <span class="fas fa-tachometer-alt fa-lg"></span>
+                            {{ original.cpu }}
+                        </p>
                     </div>
                     <div class="col-md-6 col-xs-6">
-                        <div class="col-md-3 col-xs-3"><span class="far fa-hdd fa-4x"></span></div>
-                        <div class="col-md-9 col-xs-9">
-                            <p title="{% trans 'Storage' %}">{{ original.storage|filesizeformat }}</p>
-                            <p title="{% trans 'Disks' %}">{{ original.disks }}</p>
-                        </div>
+                        <p title="{% trans 'RAM' %}">
+                            <span class="fas fa-microchip fa-lg"></span>
+                            {{ original.ram|filesizeformat }}
+                        </p>
                     </div>
                 </div>
-                <div class="row small">
-                    <div class="col-md-6">
-                        <div class="col-md-2 col-xs-2"><span class="fas fa-plug fa-lg"></span></div>
-                        <div class="col-md-10 col-xs-10">
-                            <p title="{% trans 'MAC address' %}">{{ original.mac_address|mac_address_list }}</p>
-                        </div>
+                <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                        <p title="{% trans 'Storage' %}">
+                            <span class="far fa-hdd fa-lg"></span>
+                            {{ original.storage|filesizeformat }}
+                            <span title="{% trans 'Disks' %}">({{ original.disks }})</span>
+                        </p>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <p title="{% trans 'MAC address' %}">
+                            <span class="fas fa-plug fa-lg"></span>
+                            {{ original.mac_address|mac_address_list }}
+                        </p>
                     </div>
                 </div>
                 {% if not has_change_permission %}
                 <div class="row">
                     <div class="col-md-12">
-                        <p title="{% trans 'last hardware capture' %}"><span class="far fa-clock"></span> {{ original.last_hardware_capture }}</p>
+                        <p title="{% trans 'last hardware capture' %}">
+                            <span class="far fa-clock fa-lg"></span>
+                            {{ original.last_hardware_capture }}
+                        </p>
                     </div>
                 </div>
                 {% endif %}
