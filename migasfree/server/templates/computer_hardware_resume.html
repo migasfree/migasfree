@@ -18,9 +18,8 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-3 col-xs-3">
-                            <span class="pull-left fas fa-{% if computer.machine == 'P' %}laptop{% else %}cube{% endif %} fa-4x"
-                                title="{% if computer.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}"></span>
+                        <div class="col-md-3 col-xs-3" title="{% if computer.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}">
+                            <span class="pull-left fas fa-{% if computer.machine == 'P' %}laptop{% else %}cube{% endif %} fa-4x"></span>
                         </div>
                         <div class="col-md-9 col-xs-9">
                             <p>{{ computer.hwnode_set.first }}</p>
