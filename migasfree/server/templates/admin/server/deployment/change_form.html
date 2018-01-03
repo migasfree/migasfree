@@ -50,6 +50,7 @@
                         <p title="{% trans 'project' %}">
                             {% if original.id %}
                                 <span class="fas fa-sitemap"></span>&nbsp; {{ original.project.link }}
+                                <input type="hidden" id="id_project" name="project" value="{{ original.project.id }}" />
                             {% else %}
                                     <label class="control-label required" for="id_project">
                                         <span class="fas fa-sitemap"></span>
@@ -89,7 +90,7 @@
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'included attributes' %}">
                             <label class="control-label" for="id_included_attributes_text">
-                                <span class="fas fa-thumbs-up"></span>
+                                <span class="fas fa-hashtag fa-lg"></span>
                             </label>
                             {% dab_field_rendering adminform.form.included_attributes %}
                         </p>
@@ -99,7 +100,8 @@
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'excluded attributes' %}">
                             <label class="control-label" for="id_excluded_attributes_text">
-                                <span class="fas fa-thumbs-down"></span>
+                                <span class="fas fa-hashtag fa-lg"></span>
+                                <span class="fas fa-minus fa-xs" data-fa-transform="shrink-3 up-8 right-4"></span>
                             </label>
                             {% dab_field_rendering adminform.form.excluded_attributes %}
                         </p>
@@ -121,7 +123,7 @@
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'available packages' %}">
                             <label class="control-label" for="id_available_packages_text">
-                                <span class="fas fa-cubes"></span>
+                                <span class="fas fa-archive"></span>
                             </label>
                             {% dab_field_rendering adminform.form.available_packages %}
                         </p>
