@@ -260,7 +260,7 @@ class HwNode(models.Model, MigasLink):
             computer=computer_id,
             class_name='processor'
         ).filter(
-            Q(description='CPU') | Q(name__startswith='cpu:0')
+            Q(name='cpu') | Q(name='cpu:0')
         )
         if query.count() == 1:
             product = query[0].product
