@@ -187,6 +187,7 @@ class MigasAdmin(ExportActionModelAdmin):
         for field in form.base_fields.keys():
             form.base_fields[field].widget.can_change_related = False
             form.base_fields[field].widget.can_add_related = False
+            form.base_fields[field].widget.can_delete_related = False
 
         return form
 
