@@ -417,9 +417,10 @@ class Computer(models.Model, MigasLink):
 
         query = HwNode.objects.filter(
             computer=self.id,
-            class_name='processor'
+            class_name='processor',
+            width__gt=0
         )
-        if query.count() == 1:
+        if query.count():
             return query[0].width
 
         return None
