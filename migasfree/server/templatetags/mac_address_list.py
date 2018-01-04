@@ -16,6 +16,9 @@ def mac_address_list(value):
     http://stackoverflow.com/questions/8346735/
     inserting-a-character-at-regular-intervals-in-a-list
     """
+    if not value:
+        return ''
+
     ret = []
     for i in range(0, len(value), MAC_RAW_LEN):
         ret.append(':'.join(re.findall('..', value[i:i + MAC_RAW_LEN])))
