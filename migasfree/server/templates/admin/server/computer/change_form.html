@@ -65,8 +65,8 @@
             <div class="panel-heading">{% trans 'Hardware' %}</div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-md-4 col-xs-4" title="{% if original.machine == 'P' %}{% trans 'Physical' %}{% else %}{% trans 'Virtual' %}{% endif %}">
-                        <span class="pull-left fas fa-{% if original.machine == 'P' %}laptop{% else %}cube{% endif %} fa-4x"></span>
+                    <div class="col-md-4 col-xs-4" title="{% if original.machine == 'P' %}{% trans 'Physical' %}{% elif original.is_docker %}docker{% else %}{% trans 'Virtual' %}{% endif %}">
+                        <span class="pull-left {% if original.machine == 'P' %}fas fa-laptop{% elif original.is_docker %}fab fa-docker{% else %}fas fa-cube{% endif %} fa-4x"></span>
                         {% if original.get_architecture %}
                             <span class="badge">{{ original.get_architecture }} bits</span>
                         {% endif %}

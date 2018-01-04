@@ -425,6 +425,11 @@ class Computer(models.Model, MigasLink):
 
         return None
 
+    def is_docker(self):
+        from .hw_node import HwNode
+
+        return HwNode.get_is_docker(self.id)
+
     @staticmethod
     def replacement(source, target):
         swap_m2m(source.tags, target.tags)
