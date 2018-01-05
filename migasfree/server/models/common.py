@@ -335,7 +335,7 @@ class MigasLink(object):
     link.short_description = '...'
 
     def transmodel(self, obj):
-        from . import Property, ClientAttribute, ServerAttribute, Computer
+        from . import ClientAttribute, ServerAttribute, Computer
 
         if obj.related_model._meta.label_lower == "server.computer" and \
                 self.__class__.__name__ in ["ClientAttribute", "Attribute"] and \
@@ -348,16 +348,10 @@ class MigasLink(object):
             else:
                 return ClientAttribute, "Attribute"
         elif obj.related_model._meta.label_lower == "server.computer":
-            if self.__class__.__name__ == "ServerAttribute":
+            if self.__class__.__name__ == ["ClientAttribute", "Attribute", "ServerAttribute"]:
                 if obj.field.related_model._meta.model_name == 'serverattribute':
                     return Computer, "tags__id__exact"
                 elif obj.field.related_model._meta.model_name == 'attribute':
-                    return Computer, "sync_attributes__id__exact"
-            if self.__class__.__name__ in ["ClientAttribute", "Attribute"]:
-                property_att = Property.objects.get(pk=self.property_att.id)
-                if property_att.sort == 'server':
-                    return Computer, "tags__id__exact"
-                elif property_att.sort in ['client', 'basic']:
                     return Computer, "sync_attributes__id__exact"
         elif obj.related_model._meta.label_lower in [
                 "admin.logentry",
