@@ -22,10 +22,10 @@ MAXINT = 9223372036854775807  # sys.maxint = (2**63) - 1
 
 
 @login_required
-def hardware_resume(request, param):
-    computer = get_object_or_404(Computer, id=param)
+def hardware_resume(request, pk):
+    computer = get_object_or_404(Computer, id=pk)
 
-    hardware = HwNode.objects.filter(computer__id=param).order_by('id', 'parent_id', 'level')
+    hardware = HwNode.objects.filter(computer__id=pk).order_by('id', 'parent_id', 'level')
     data = serializers.serialize('python', hardware)
 
     return render(
@@ -40,8 +40,8 @@ def hardware_resume(request, param):
 
 
 @login_required
-def hardware_extract(request, node):
-    node = get_object_or_404(HwNode, id=node)
+def hardware_extract(request, pk):
+    node = get_object_or_404(HwNode, id=pk)
 
     capability = HwCapability.objects.filter(node=node.id).values(
         'name', 'description'
