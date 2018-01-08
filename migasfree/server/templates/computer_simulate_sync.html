@@ -1,10 +1,6 @@
 {% extends "base.html" %}
 {% load i18n admin_static %}
 
-{% block extrastyle %}
-    <link rel="stylesheet" href="{% static 'css/cal-heatmap.css' %}" />
-{% endblock extrastyle %}
-
 {% block breadcrumbs %}
     <ul class="breadcrumb">
         <li>{% trans 'Datum' %}</li>
@@ -19,107 +15,155 @@
 {% endblock content_title %}
 
 {% block content %}
-<div class="simulation">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h2>{% trans 'Input (from computer)' %}</h2>
-        </div>
+<div class="simulation row">
+    <div class="col-md-6 col-xs-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2>{% trans 'Input (from computer)' %}</h2>
+            </div>
 
-        <div class="panel-body">
-            <h3>{% trans 'Login' %}</h3>
-            <ul>
-                <li>{% trans 'Date' %}: {{ computer.sync_start_date }}</li>
-                <li>{% trans 'uuid' %}: {{ computer.uuid }}</li>
-                <li>{% trans 'Platform' %}: {{ project.platform.link }}</li>
-                <li>{% trans 'Project' %}: {{ project.link }}</li>
-                <li>{% trans 'User' %}: {{ computer.sync_user.link }}</li>
-            </ul>
-
-            <h3>{% trans 'Attributes' %}</h3>
-            <ul>
-            {% for item in attributes %}
-                <li>{{ item.link }}</li>
-            {% endfor %}
-            </ul>
-
-            {% if computer.tags.all %}
-                <h3>{% trans 'Tags' %}</h3>
+            <div class="panel-body">
                 <ul>
-                {% for item in computer.tags.all %}
-                    <li>{{ item.link }}</li>
-                {% endfor %}
+                    <li title="{% trans 'Date' %}">
+                        <span class="far fa-clock"></span>&nbsp;
+                        {{ computer.sync_start_date }}
+                    </li>
+                    <li title="{% trans 'uuid' %}">
+                        <span class="far fa-id-card"></span>&nbsp;
+                        {{ computer.uuid }}
+                    </li>
+                    <li title="{% trans 'Platform' %}">
+                        <span class="fas fa-adjust"></span>&nbsp;
+                        {{ project.platform.link }}
+                    </li>
+                    <li title="{% trans 'Project' %}">
+                        <span class="fas fa-sitemap"></span>&nbsp;
+                        {{ project.link }}
+                    </li>
+                    <li title="{% trans 'User' %}">
+                        <span class="fas fa-user"></span>&nbsp;
+                        {{ computer.sync_user.link }}
+                    </li>
                 </ul>
-            {% endif %}
 
-            <h3>{% trans 'Sets' %}</h3>
-            <ul>
-            {% for item in sets %}
-                <li>{{ item.link }}</li>
-            {% endfor %}
-            </ul>
+                <h3 title="{% trans 'Attributes' %}">
+                    <span class="fas fa-hashtag"></span>
+                    <span class="sr-only">{% trans 'Attributes' %}</span>
+                </h3>
+                <div class="compact-content">
+                    {% for att in attributes %}
+                        {{ att.link }}<br />
+                    {% endfor %}
+                </div>
 
+                {% if computer.tags.all %}
+                    <h3 title="{% trans 'Tags' %}">
+                        <span class="fas fa-tag"></span>
+                        <span class="sr-only">{% trans 'Tags' %}</span>
+                    </h3>
+                    <div class="compact-content">
+                        {% for item in computer.tags.all %}
+                            {{ item.link }}<br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <h3 title="{% trans 'Sets' %}">
+                    <span class="far fa-circle"></span>
+                    <span class="sr-only">{% trans 'Sets' %}</span>
+                </h3>
+                <div class="compact-content">
+                    {% for item in sets %}
+                        {{ item.link }}<br />
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h2>{% trans 'Output (from server)' %}</h2>
-        </div>
+    <div class="col-md-6 col-xs-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2>{% trans 'Output (from server)' %}</h2>
+            </div>
 
-        <div class="panel-body">
-            {% if faultsdef %}
-                <h3>{% trans 'Fault Definitions' %}</h3>
-                <ul>
-                {% for item in faultsdef %}
-                    <li>{{ item.link }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
+            <div class="panel-body">
+                {% if faultsdef %}
+                    <h3 title="{% trans 'Fault Definitions' %}">
+                        <span class="fas fa-bomb"></span>
+                        <span class="fas fa-code fa-xs" data-fa-transform="shrink-3 up-8 right-4"></span>
+                        <span class="sr-only">{% trans 'Fault Definitions' %}</span>
+                    </h3>
+                    <div class="compact-content">
+                        {% for item in faultsdef %}
+                            {{ item.link }}<br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-            {% if repositories %}
-                <h3>{% trans 'Deployments' %}</h3>
-                <ul>
-                {% for item in repositories %}
-                    <li>{{ item.link }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
+                {% if repositories %}
+                    <h3 title="{% trans 'Deployments' %}">
+                        <span class="fas fa-truck"></span>
+                        <span class="sr-only">{% trans 'Deployments' %}</span>
+                    </h3>
+                    <div class="compact-content">
+                        {% for item in repositories %}
+                            {{ item.link }}<br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-            {% if packages.install %}
-                <h3>{% trans 'Packages to install' %}</h3>
-                <ul>
-                {% for item in packages.install %}
-                    <li>{{ item }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
+                {% if packages.install %}
+                    <h3 title="{% trans 'Packages to install' %}">
+                        <span class="fas fa-download"></span>
+                        <span class="sr-only">{% trans 'Packages to install' %}</span>
+                    </h3>
+                    <div class="compact-content">
+                        {% for item in packages.install %}
+                            {{ item }}<br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-            {% if packages.remove %}
-                <h3>{% trans 'Packages to remove' %}</h3>
-                <ul>
-                {% for item in packages.remove %}
-                    <li>{{ item }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
+                {% if packages.remove %}
+                    <h3 title="{% trans 'Packages to remove' %}">
+                        <span class="fas fa-upload"></span>
+                        <span class="sr-only">{% trans 'Packages to remove' %}</span>
+                    </h3>
+                    <div class="compact-content">
+                        {% for item in packages.remove %}
+                            {{ item }}<br />
+                        {% endfor %}
+                    </div>
+                {% endif %}
 
-            {% if devices %}
-                <h3>{% trans 'Devices' %}</h3>
-                <ul>
-                {% for item in devices %}
-                    <li>
-                        {{ item.link }}
-                        {% if item.id == default_device %}
-                           <span class="label label-default">default</span>
+                {% if devices %}
+                    <h3 title="{% trans 'Devices' %}">
+                        <span class="fas fa-print"></span>
+                        <span class="sr-only">{% trans 'Devices' %}</span>
+                    </h3>
+                    <ul>
+                    {% for item in devices %}
+                        <li{% if item.id == default_device %} title="{% trans 'Default' %}"{% endif %}>
+                            {{ item.link }}
+                            {% if item.id == default_device %}
+                                &nbsp;<span class="fas fa-asterisk"></span>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+
+                <h3>{% trans 'Hardware Capture' %}:
+                    <span class="label label-{% if hardware_capture %}success{% else %}info{% endif %}">
+                        {% if hardware_capture %}
+                            {% trans 'Yes' %}
+                        {% else %}
+                            {% trans 'No' %}
                         {% endif %}
-                    </li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-
-            <h3>{% trans 'Hardware Capture' %}:
-                <span class="label label-{% if hardware_capture %}success{% else %}info{% endif %}">{{ hardware_capture }}</span>
-            </h3>
+                    </span>
+                </h3>
+            </div>
         </div>
     </div>
 </div>

@@ -211,6 +211,8 @@ a.btn-role:focus, a.btn-role:hover {
 
 .simulation ul, td ul {
     list-style-type: none;
+    margin-left: 0 !important;
+    padding-left: 0 !important;
 }
 
 .hardware-resume {
