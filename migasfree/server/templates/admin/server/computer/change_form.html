@@ -1,5 +1,5 @@
 {% extends "admin/change_form.html" %}
-{% load admin_urls i18n server_tags bootstrapped_goodies_tags mac_address_list %}
+{% load admin_urls i18n server_tags bootstrapped_goodies_tags mac_address_list debug_tags %}
 
 {% block content %}
 <input type="hidden" id="computer-id" value="{{ original.id }}" />
@@ -55,6 +55,19 @@
                             {{ original.forwarded_ip_address }}
                         </p>
                     </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="btn-group" role="group" aria-label="{% trans 'Related data' %}">
+                    <a href="{% url 'computer_events' original.id %}" class="btn btn-default">
+                        {% trans 'Events' %}
+                    </a>
+                    <a href="{% url 'computer_simulate_sync' original.id %}" class="btn btn-default">
+                        {% trans 'Simulate sync' %}
+                    </a>
+                    <a href="{% url 'computer_label' original.uuid %}" class="btn btn-default">
+                        {% trans 'Label' %}
+                    </a>
                 </div>
             </div>
         </div>
