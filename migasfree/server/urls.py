@@ -31,7 +31,7 @@ urlpatterns = [
 
     url(r'^query/(?P<query_id>\d+)/$', get_query, name='query'),
     url(
-        r'^computer_messages/$',
+        r'^computer/messages/$',
         computer_messages,
         name='computer_messages'
     ),
@@ -39,12 +39,12 @@ urlpatterns = [
     url(r'^info/(.*)', info, name='package_info'),
 
     url(
-        r'^hardware_resume/(.*)',
+        r'^computer/(?P<pk>\d+)/hardware/$',
         hardware_resume,
         name='hardware_resume'
     ),
     url(
-        r'^hardware_extract/(.*)',
+        r'^hw-node/(?P<pk>\d+)/$',
         hardware_extract,
         name='hardware_extract'
     ),
@@ -104,9 +104,9 @@ urlpatterns = [
         name='get_computer_info'
     ),
     url(
-        r'^computer_label/$',
+        r'^computer/(?P<uuid>[0-9A-Fa-f-]+)/label/$',
         computer_label,
-        name='computer_label'
+        name='computer_label',
     ),
     url(
         r'^get_key_repositories/$',
@@ -125,7 +125,7 @@ urlpatterns = [
     ),
 
     url(
-        r'^computer_replacement/$',
+        r'^computer/replacement/$',
         computer_replacement,
         name='computer_replacement'
     ),
@@ -149,7 +149,7 @@ urlpatterns = [
     ),
 
     url(
-        r'^device_replacement/$',
+        r'^device/replacement/$',
         device_replacement,
         name='device_replacement'
     ),
@@ -244,5 +244,9 @@ urlpatterns = [
     url(
         r'^provided_computers/$',
         RedirectView.as_view(url=reverse_lazy('provided_computers'))
+    ),
+    url(
+        r'^computer_label/$',
+        computer_label
     ),
 ]
