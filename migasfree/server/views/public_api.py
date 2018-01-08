@@ -2,7 +2,7 @@
 
 import json
 
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render
 from django.conf import settings
 
@@ -31,13 +31,18 @@ def get_projects(request):
     return JsonResponse(result, safe=False)
 
 
-def get_computer_info(request):
-    _uuid = uuid_validate(request.GET.get('uuid', ''))
+def get_computer_info(request, uuid=None):
+    if uuid:
+        _uuid = uuid_validate(uuid)
+    else:
+        _uuid = uuid_validate(request.GET.get('uuid', ''))
     _name = request.GET.get('name', '')
     if _uuid == "":
         _uuid = _name
 
     computer = get_computer(_name, _uuid)
+    if not computer:
+        raise Http404
 
     result = {
         'id': computer.id,
@@ -70,14 +75,17 @@ def get_computer_info(request):
     return JsonResponse(result)
 
 
-def computer_label(request):
+def computer_label(request, uuid=None):
     """
     To Print a Computer Label
     """
+    if not uuid:
+        uuid = request.GET.get('uuid', '')
+
     return render(
         request,
         'computer_label.html',
-        json.loads(get_computer_info(request).content)
+        json.loads(get_computer_info(request, uuid).content)
     )
 
 
