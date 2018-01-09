@@ -129,8 +129,12 @@ class ComputerViewSet(viewsets.ModelViewSet):
 
     def partial_update(self, request, *args, **kwargs):
         data = dict(request.data.iterlists())
-        if 'assigned_logical_devices_to_cid[]' in data:
-            assigned_logical_devices_to_cid = map(int, data['assigned_logical_devices_to_cid[]'])
+        devices = data.get('assigned_logical_devices_to_cid[]', data.get('assigned_logical_devices_to_cid', None))
+        if devices:
+            try:
+                assigned_logical_devices_to_cid = map(int, devices)
+            except ValueError:
+                assigned_logical_devices_to_cid = []
             computer = get_object_or_404(models.Computer, pk=kwargs['pk'])
             computer.update_logical_devices(assigned_logical_devices_to_cid)
 
