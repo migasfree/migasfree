@@ -382,7 +382,6 @@ class Computer(models.Model, MigasLink):
         initial_logical_devices = list(
             self.assigned_logical_devices_to_cid().values_list('id', flat=True)
         )
-        print initial_logical_devices, devices
 
         for pk in list_difference(devices, initial_logical_devices):
             DeviceLogical.objects.get(pk=pk).attributes.add(cid_attribute)
