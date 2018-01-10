@@ -1,5 +1,5 @@
 function addMigasEvents() {
-    $(".btn-migas").click(function () {
+    $("body").on("click", ".btn-migas", function() {
         var app = $(this).data("app");
         var model = $(this).data("model");
         var pk = $(this).data("pk");
