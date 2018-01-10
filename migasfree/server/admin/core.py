@@ -220,11 +220,25 @@ class ClientPropertyAdmin(MigasAdmin):
     ordering = ('name',)
     search_fields = ('name', 'prefix')
     form = PropertyForm
-    fields = (
-        'prefix', 'name', 'enabled',
-        'language', 'code', 'kind', 'auto_add',
-    )
     actions = None
+
+    fieldsets = (
+        (_('General'), {
+            'fields': (
+                'prefix',
+                'name',
+                'kind',
+                'enabled',
+                'auto_add',
+            )
+        }),
+        (_('Code'), {
+            'fields': (
+                'language',
+                'code',
+            )
+        }),
+    )
 
     name_link = MigasFields.link(model=ClientProperty, name='name')
     my_enabled = MigasFields.boolean(model=ClientProperty, name='enabled')
@@ -234,11 +248,26 @@ class ClientPropertyAdmin(MigasAdmin):
 @admin.register(Property)
 class PropertyAdmin(ClientPropertyAdmin):
     list_display = ('name_link', 'my_enabled', 'kind', 'my_auto_add', 'sort')
-    fields = (
-        'prefix', 'name', 'enabled',
-        'language', 'code', 'kind', 'auto_add', 'sort'
-    )
     search_fields = ('name',)
+
+    fieldsets = (
+        (_('General'), {
+            'fields': (
+                'sort',
+                'prefix',
+                'name',
+                'kind',
+                'enabled',
+                'auto_add',
+            )
+        }),
+        (_('Code'), {
+            'fields': (
+                'language',
+                'code',
+            )
+        }),
+    )
 
 
 @admin.register(ServerProperty)
