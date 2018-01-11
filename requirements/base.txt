@@ -1,7 +1,7 @@
 Django==1.11.9
 pycrypto==2.6.1
 pygpgme==0.3
-django-ajax-selects==1.6.1
+django-ajax-selects==1.7.0
 python-dateutil==2.6.1
 django-autocomplete-light==3.2.10
 six==1.11.0
