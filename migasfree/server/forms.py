@@ -16,7 +16,6 @@ from .models import (
     Property, ServerAttribute, ServerProperty, Attribute,
     AttributeSet, Store, Package, FaultDefinition, DeviceModel,
 )
-from .utils import list_difference
 
 
 class ExtraThinTextarea(forms.Textarea):
