@@ -84,7 +84,7 @@ def computer_change_status(request):
     return redirect(success_url)
 
 
-@permission_required('server.can_change_computer', raise_exception=True)
+@permission_required('server.change_computer', raise_exception=True)
 @login_required
 def computer_replacement(request):
     if request.method == 'POST':

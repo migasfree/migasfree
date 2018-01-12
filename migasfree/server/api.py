@@ -542,7 +542,7 @@ def register_computer(request, name, uuid, computer, data):
     # auto register Platform
     if not Platform.objects.filter(name=platform_name):
         if not settings.MIGASFREE_AUTOREGISTER:
-            if not user or not user.has_perm("server.can_add_platform"):
+            if not user or not user.has_perm("server.add_platform"):
                 return return_message(
                     cmd,
                     errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
@@ -556,7 +556,7 @@ def register_computer(request, name, uuid, computer, data):
     # auto register project
     if not Project.objects.filter(name=project_name):
         if not settings.MIGASFREE_AUTOREGISTER:
-            if not user or not user.has_perm("server.can_add_project"):
+            if not user or not user.has_perm("server.add_project"):
                 return return_message(
                     cmd,
                     errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
@@ -578,8 +578,8 @@ def register_computer(request, name, uuid, computer, data):
         project = Project.objects.get(name=project_name)
         # if not auto register, check that user can save computer
         if not project.auto_register_computers:
-            if not user or not user.has_perm("server.can_add_computer") \
-                    or not user.has_perm("server.can_change_computer"):
+            if not user or not user.has_perm("server.add_computer") \
+                    or not user.has_perm("server.change_computer"):
                 return return_message(
                     cmd,
                     errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
@@ -619,8 +619,8 @@ def get_key_packager(request, name, uuid, computer, data):
         username=data['username'],
         password=data['password']
     )
-    if not user or not user.has_perm("server.can_add_package") \
-            or not user.has_perm("server.can_change_package"):
+    if not user or not user.has_perm("server.add_package") \
+            or not user.has_perm("server.change_package"):
         return return_message(
             cmd,
             errmfs.error(errmfs.CAN_NOT_REGISTER_COMPUTER)
