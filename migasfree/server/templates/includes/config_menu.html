@@ -1,25 +1,49 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
-    <li><a href="{% url 'admin:server_clientproperty_changelist' %}">{% trans 'Formulas' %}</a></li>
-    <li><a href="{% url 'admin:server_serverproperty_changelist' %}">{% trans 'Tag Categories' %}</a></li>
-    <li><a href="{% url 'admin:server_attributeset_changelist' %}">{% trans 'Attribute Sets' %}</a></li>
+    {% if perms.server.change_clientproperty %}
+        <li><a href="{% url 'admin:server_clientproperty_changelist' %}">{% trans 'Formulas' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_serverproperty %}
+        <li><a href="{% url 'admin:server_serverproperty_changelist' %}">{% trans 'Tag Categories' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_attributeset %}
+        <li><a href="{% url 'admin:server_attributeset_changelist' %}">{% trans 'Attribute Sets' %}</a></li>
+    {% endif %}
 
     <li role="presentation" class="divider"></li>
 
-    <li><a href="{% url 'admin:server_faultdefinition_changelist' %}?enabled__exact=1">{% trans 'Fault Definitions' %}</a></li>
-    <li><a href="{% url 'admin:server_autocheckerror_changelist' %}">{% trans 'Auto Check Errors' %}</a></li>
-    <li><a href="{% url 'admin:server_query_changelist' %}">{% trans 'Queries' %}</a></li>
+    {% if perms.server.change_faultdefinition %}
+        <li><a href="{% url 'admin:server_faultdefinition_changelist' %}?enabled__exact=1">{% trans 'Fault Definitions' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_autocheckerror %}
+        <li><a href="{% url 'admin:server_autocheckerror_changelist' %}">{% trans 'Auto Check Errors' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_query %}
+        <li><a href="{% url 'admin:server_query_changelist' %}">{% trans 'Queries' %}</a></li>
+    {% endif %}
 
     <li role="presentation" class="divider"></li>
 
+    {% if perms.server.change_project %}
     <li><a href="{% url 'admin:server_project_changelist' %}">{% trans 'Projects' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_pms %}
     <li><a href="{% url 'admin:server_pms_changelist' %}">{% trans 'Package Management Systems' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_platform %}
     <li><a href="{% url 'admin:server_platform_changelist' %}">{% trans 'Platforms' %}</a></li>
+    {% endif %}
 
     <li role="presentation" class="divider"></li>
 
-    <li><a href="{% url 'admin:server_userprofile_changelist' %}">{% trans 'User Profiles' %}</a></li>
+    {% if perms.server.change_userprofile %}
+        <li><a href="{% url 'admin:server_userprofile_changelist' %}">{% trans 'User Profiles' %}</a></li>
+    {% endif %}
+    {% if perms.auth.change_group %}
     <li><a href="{% url 'admin:auth_group_changelist' %}">{% trans 'Groups' %}</a></li>
-    <li><a href="{% url 'admin:index' %}">{% trans 'Site administration' %}</a></li>
+    {% endif %}
+    {% if user.is_superuser %}
+        <li><a href="{% url 'admin:index' %}">{% trans 'Site administration' %}</a></li>
+    {% endif %}
 </ul>

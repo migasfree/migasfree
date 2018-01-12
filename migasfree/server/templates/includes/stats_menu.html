@@ -2,7 +2,11 @@
 
 <ul class="dropdown-menu">
     <li><a href="{% url 'stats_dashboard' %}">{% trans 'Dashboard' %}</a></li>
-    <li><a href="{% url 'stats_syncs_daily' %}">{% trans 'Synchronized Computers / Day' %}</a></li>
-    <li><a href="{% url 'stats_syncs_monthly' %}">{% trans 'Synchronized Computers / Month' %}</a></li>
-    <li><a href="{% url 'stats_project_schedule_delays' %}">{% trans 'Provided Computers / Delay' %}</a></li>
+    {% if perms.server.change_synchronization %}
+        <li><a href="{% url 'stats_syncs_daily' %}">{% trans 'Synchronized Computers / Day' %}</a></li>
+        <li><a href="{% url 'stats_syncs_monthly' %}">{% trans 'Synchronized Computers / Month' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_computer and perms.server.change_schedule %}
+        <li><a href="{% url 'stats_project_schedule_delays' %}">{% trans 'Provided Computers / Delay' %}</a></li>
+    {% endif %}
 </ul>

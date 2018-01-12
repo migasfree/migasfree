@@ -2,37 +2,55 @@
 
 <ul class="dropdown-menu">
     {% if current_project.id != None %}
-        <li>
-            <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1&project__id__exact={{ current_project.id }}">{% trans 'Deployments' %}</a>
-        </li>
-        <li>
-            <a href="{% url 'admin:server_store_changelist' %}?project__id__exact={{ current_project.id }}">{% trans 'Stores' %}</a>
-        </li>
-        <li>
-            <a href="{% url 'admin:server_package_changelist' %}?project__id__exact={{ current_project.id }}">{% trans 'Packages/Sets' %}</a>
-        </li>
+        {% if perms.server.change_deployment %}
+            <li>
+                <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1&project__id__exact={{ current_project.id }}">{% trans 'Deployments' %}</a>
+            </li>
+        {% endif %}
+        {% if perms.server.change_store %}
+            <li>
+                <a href="{% url 'admin:server_store_changelist' %}?project__id__exact={{ current_project.id }}">{% trans 'Stores' %}</a>
+            </li>
+        {% endif %}
+        {% if perms.server.change_package %}
+            <li>
+                <a href="{% url 'admin:server_package_changelist' %}?project__id__exact={{ current_project.id }}">{% trans 'Packages/Sets' %}</a>
+            </li>
+        {% endif %}
     {% else %}
+        {% if perms.server.change_deployment %}
+            <li>
+                <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1">{% trans 'Deployments' %}</a>
+            </li>
+        {% endif %}
+        {% if perms.server.change_store %}
+            <li>
+                <a href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a>
+            </li>
+        {% endif %}
+        {% if perms.server.change_package %}
+            <li>
+                <a href="{% url 'admin:server_package_changelist' %}">{% trans 'Packages/Sets' %}</a>
+            </li>
+        {% endif %}
+    {% endif %}
+    {% if perms.server.change_schedule %}
         <li>
-            <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1">{% trans 'Deployments' %}</a>
-        </li>
-        <li>
-            <a href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a>
-        </li>
-        <li>
-            <a href="{% url 'admin:server_package_changelist' %}">{% trans 'Packages/Sets' %}</a>
+            <a href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a>
         </li>
     {% endif %}
-    <li>
-        <a href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a>
-    </li>
     <li>
         <a href="{% url 'package_info' '' %}">{% trans 'Packages information' %}</a>
     </li>
     <li role="separator" class="divider"></li>
-    <li>
-        <a href="{% url 'admin:catalog_application_changelist' %}">{% trans 'Applications' %}</a>
-    </li>
-    <li>
-        <a href="{% url 'admin:catalog_policy_changelist' %}">{% trans 'Policies' %}</a>
-    </li>
+    {% if perms.catalog.change_application %}
+        <li>
+            <a href="{% url 'admin:catalog_application_changelist' %}">{% trans 'Applications' %}</a>
+        </li>
+    {% endif %}
+    {% if perms.catalog.change_policy %}
+        <li>
+            <a href="{% url 'admin:catalog_policy_changelist' %}">{% trans 'Policies' %}</a>
+        </li>
+    {% endif %}
 </ul>

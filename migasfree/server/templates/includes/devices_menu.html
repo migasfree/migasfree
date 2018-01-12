@@ -1,10 +1,18 @@
 {% load i18n %}
 
 <ul id="devices" class="dropdown-menu">
-    <li><a href="{% url 'admin:server_devicemanufacturer_changelist' %}">{% trans 'Manufacturers' %}</a></li>
-    <li><a href="{% url 'admin:server_devicemodel_changelist' %}">{% trans 'Models' %}</a></li>
-    <li><a href="{% url 'admin:server_devicefeature_changelist' %}">{% trans 'Features' %}</a></li>
-    <li><a href="{% url 'admin:server_device_changelist' %}">{% trans 'Devices' %}</a></li>
-    <li role="separator" class="divider"></li>
-    <li><a href="{% url 'device_replacement' %}">{% trans 'Devices Replacement' %}</a></li>
+    {% if perms.server.change_devicemanufacturer %}
+        <li><a href="{% url 'admin:server_devicemanufacturer_changelist' %}">{% trans 'Manufacturers' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_devicemodel %}
+        <li><a href="{% url 'admin:server_devicemodel_changelist' %}">{% trans 'Models' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_devicefeature %}
+        <li><a href="{% url 'admin:server_devicefeature_changelist' %}">{% trans 'Features' %}</a></li>
+    {% endif %}
+    {% if perms.server.change_device %}
+        <li><a href="{% url 'admin:server_device_changelist' %}">{% trans 'Devices' %}</a></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="{% url 'device_replacement' %}">{% trans 'Devices Replacement' %}</a></li>
+    {% endif %}
 </ul>
