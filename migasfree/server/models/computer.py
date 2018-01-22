@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 
 from django.db import models
-from django.db.models.signals import pre_save, post_save, m2m_changed, pre_delete
+from django.db.models.signals import pre_save, post_save, pre_delete
 from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
 from django.urls import reverse
@@ -653,13 +653,6 @@ def post_save_computer(sender, instance, created, **kwargs):
         cid.attributeset_set.clear()
         cid.ExcludedAttributesGroup.clear()
         cid.scheduledelay_set.clear()
-
-
-@receiver(m2m_changed, sender=Computer.tags.through)
-def tags_changed(sender, instance, action, **kwargs):
-    if hasattr(instance, 'status'):
-        if instance.status in ['available', 'unsubscribed'] and action == 'post_add':
-            instance.tags.clear()
 
 
 @receiver(pre_delete, sender=Computer)
