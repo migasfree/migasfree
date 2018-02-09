@@ -50,7 +50,7 @@ class ComputerAutocomplete(AutocompleteModelBase):
     search_fields = settings.MIGASFREE_COMPUTER_SEARCH_FIELDS
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Computer.objects.none()
 
         qs = Computer.objects.all()
@@ -71,7 +71,7 @@ class AttributeAutocomplete(AutocompleteModelBase):
     search_fields = ['^property_att__prefix', 'value']
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Attribute.objects.none()
 
         qs = Attribute.objects.all()
@@ -89,7 +89,7 @@ class DeviceAutocomplete(AutocompleteModelBase):
     search_fields = ['name', 'data']
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Device.objects.none()
 
         qs = Device.objects.all()
@@ -114,7 +114,7 @@ class UserProfileAutocomplete(AutocompleteModelBase):
     search_fields = ['username', 'first_name', 'last_name']
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return UserProfile.objects.none()
 
         qs = UserProfile.objects.all()
@@ -132,7 +132,7 @@ class GroupAutocomplete(AutocompleteModelBase):
     search_fields = ['name']
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return Group.objects.none()
 
         qs = Group.objects.all()
@@ -150,7 +150,7 @@ class DeviceConnectionAutocomplete(AutocompleteModelBase):
     search_fields = ['name', 'device_type__name']
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return DeviceConnection.objects.none()
 
         qs = DeviceConnection.objects.all()
@@ -171,7 +171,7 @@ class DeviceModelAutocomplete(AutocompleteModelBase):
     search_fields = ['name', 'manufacturer__name']
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return DeviceModel.objects.none()
 
         qs = DeviceModel.objects.all()
@@ -196,7 +196,7 @@ class DeviceLogicalAutocomplete(AutocompleteModelBase):
     ]
 
     def get_queryset(self):
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             return DeviceLogical.objects.none()
 
         qs = DeviceLogical.objects.all()
