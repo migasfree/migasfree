@@ -28,8 +28,8 @@ class AttributeManager(models.Manager):
 
         if property_att.auto_add is False:
             raise ValidationError(
-                _('The attribute can not be created because'
-                  ' it prevents property')
+                _('The attribute cannot be created because'
+                  ' property prevents it')
             )
 
         obj = Attribute()
