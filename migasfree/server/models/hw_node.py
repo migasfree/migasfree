@@ -179,9 +179,10 @@ class HwNode(models.Model, MigasLink):
         if HwNode.get_is_docker(self.computer_id):
             return "docker"
 
+        return self.product or self.description
+
     def __str__(self):
-        text = self.get_product()
-        return text if text else ''
+        return self.get_product() or self.name
 
     def menu_link(self):
         if self.id:
@@ -279,7 +280,7 @@ class HwNode(models.Model, MigasLink):
     def get_mac_address(computer_id):
         query = HwNode.objects.filter(
             computer=computer_id,
-            name='network',
+            name__icontains='network',
             class_name='network'
         )
         lst = []

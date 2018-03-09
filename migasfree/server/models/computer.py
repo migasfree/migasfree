@@ -422,6 +422,14 @@ class Computer(models.Model, MigasLink):
         if query.count():
             return query[0].width
 
+        query = HwNode.objects.filter(
+            computer=self.id,
+            class_name='system',
+            width__gt=0
+        )
+        if query.count():
+            return query[0].width
+
         return None
 
     def is_docker(self):
