@@ -4,10 +4,12 @@ from django.db import models
 from django.db.models import Q
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Property, MigasLink
+from .notification import Notification
 
 
 class AttributeManager(models.Manager):
@@ -15,10 +17,17 @@ class AttributeManager(models.Manager):
         """
         if value = "text~other", description = "other"
         """
-        if '~' in value:
+
+        if value.count('~') == 1:
             value, description = value.split('~')
+        else:
+            description = description
 
         value = value.strip()  # clean field
+        original_value = value
+
+        if len(value) > Attribute.VALUE_LEN:
+            value = value[:Attribute.VALUE_LEN]
 
         queryset = Attribute.objects.filter(
             property_att=property_att, value=value
@@ -38,11 +47,25 @@ class AttributeManager(models.Manager):
         obj.description = description
         obj.save()
 
+        if original_value != obj.value:
+            Notification.objects.create(
+                _('The value of the attribute [%s] has more than %d characters. The original value is truncated: %s') % (
+                    '<a href="{}">{}</a>'.format(
+                        reverse('admin:server_attribute_change', args=(obj.id,)),
+                        obj
+                    ),
+                    Attribute.VALUE_LEN,
+                    original_value
+                )
+            )
+
         return obj
 
 
 @python_2_unicode_compatible
 class Attribute(models.Model, MigasLink):
+    VALUE_LEN = 250
+
     property_att = models.ForeignKey(
         Property,
         on_delete=models.CASCADE,
@@ -51,7 +74,7 @@ class Attribute(models.Model, MigasLink):
 
     value = models.CharField(
         verbose_name=_("value"),
-        max_length=250
+        max_length=VALUE_LEN
     )
 
     description = models.TextField(
