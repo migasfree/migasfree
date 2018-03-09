@@ -6,7 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
-from django.urls import resolve
+from django.urls import resolve, reverse
 from django.utils.translation import ugettext_lazy as _
 
 from ajax_select.admin import AjaxSelectAdmin
@@ -581,6 +581,17 @@ class UserAdmin(MigasAdmin):
 
 @admin.register(HwNode)
 class HwNodeAdmin(MigasAdmin):  # TODO to hardware.py
-    list_display = ('name_link',)
+    list_display = ('str_link', 'computer_link')
 
-    name_link = MigasFields.link(model=HwNode, name='name')
+    def str_link(self,obj):
+        return u'<a href="{}">{}</a>'.format(
+            reverse('hardware_extract', args=(obj.id,)),
+            obj
+        )
+
+    str_link.allow_tags = True
+    str_link.short_description = _('Hardware Node')
+
+    computer_link = MigasFields.link(
+        model=HwNode, name='computer', order='computer__name'
+    )
