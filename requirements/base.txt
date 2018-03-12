@@ -1,4 +1,4 @@
-Django==1.11.9
+Django==1.11.11
 pycrypto==2.6.1
 pygpgme==0.3
 django-ajax-selects==1.7.0
@@ -17,6 +17,6 @@ django-rest-swagger==2.1.2
 pygal==2.4.0
 lxml==4.1.1
 Pillow==4.3.0
-django-markdownx==2.0.21
+django-markdownx==2.0.22
 django-form-utils==1.0.3
-psycopg2==2.7.3.2
+psycopg2-binary==2.7.4
