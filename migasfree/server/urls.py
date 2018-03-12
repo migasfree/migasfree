@@ -104,7 +104,7 @@ urlpatterns = [
         name='get_computer_info'
     ),
     url(
-        r'^computer/(?P<uuid>[0-9A-Fa-f-]+)/label/$',
+        r'^computer/(?P<uuid>.+)/label/$',
         computer_label,
         name='computer_label',
     ),
