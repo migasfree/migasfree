@@ -5,6 +5,7 @@ import datetime
 from django import forms
 from django.core.exceptions import ValidationError
 from django.urls import reverse
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from dal import autocomplete
@@ -15,6 +16,7 @@ from .models import (
     Deployment, UserProfile, Computer, Device, DeviceLogical,
     Property, ServerAttribute, ServerProperty, Attribute,
     AttributeSet, Store, Package, FaultDefinition, DeviceModel,
+    DeviceDriver, DeviceFeature,
 )
 
 
@@ -395,6 +397,52 @@ class DeviceForm(forms.ModelForm):
         'attribute', required=False,
         label=_('available for attributes'), show_help_text=False
     )
+
+    def _get_computers_from_attributes(self, attributes):
+        """
+        :param attributes: string like "|123|456|"
+        :return: computer id list
+        """
+        clean_attributes = filter(None, attributes.split('|'))
+        computers = list(Attribute.objects.filter(
+            pk__in=clean_attributes, property_att__prefix='CID'
+        ).values_list('value', flat=True))
+
+        return computers
+
+    def clean(self):
+        cleaned_data = super(DeviceForm, self).clean()
+
+        device_logical_count = int(self.data.get('devicelogical_set-TOTAL_FORMS', 0))
+        for i in range(0, device_logical_count):
+            attributes = self.data.get('devicelogical_set-{}-attributes'.format(i), '')
+            feature_pk = self.data.get('devicelogical_set-{}-feature'.format(i), '')
+            computers = self._get_computers_from_attributes(attributes)
+            if computers:
+                for cid in computers:
+                    computer = Computer.objects.filter(pk=cid).first()
+                    if not DeviceDriver.objects.filter(
+                        feature__pk=feature_pk,
+                        model=cleaned_data['model'],
+                        project=computer.project
+                    ):
+                        feature = DeviceFeature.objects.filter(pk=feature_pk).first()
+                        raise ValidationError(mark_safe(
+                            _('Error in feature %s for assign computer %s. There is no driver defined for project %s in model %s.') % (
+                                feature,
+                                computer,
+                                computer.project,
+                                '<a href="{}">{}</a>'.format(
+                                    reverse(
+                                        'admin:server_devicemodel_change',
+                                        args=(cleaned_data['model'].pk,)
+                                    ),
+                                    cleaned_data['model']
+                                )
+                            )
+                        ))
+
+        return cleaned_data
 
     class Meta:
         model = Device
