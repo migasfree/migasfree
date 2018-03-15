@@ -35,19 +35,13 @@ from ..tasks import (
 @admin.register(AttributeSet)
 class AttributeSetAdmin(MigasAdmin):
     form = AttributeSetForm
-    list_display = ('name_link', 'included_attributes_link', 'excluded_attributes_link')
+    list_display = ('name_link',)
     list_filter = ('enabled',)
     list_display_links = ('name_link',)
     ordering = ('name',)
     search_fields = ('name', 'included_attributes__value', 'excluded_attributes__value')
 
     name_link = MigasFields.link(model=AttributeSet, name='name')
-    included_attributes_link = MigasFields.objects_link(
-        model=AttributeSet, name="included_attributes", description=_('included attributes')
-    )
-    excluded_attributes_link = MigasFields.objects_link(
-        model=AttributeSet, name='excluded_attributes', description=_('excluded attributes')
-    )
 
     def get_queryset(self, request):
         return super(AttributeSetAdmin, self).get_queryset(
