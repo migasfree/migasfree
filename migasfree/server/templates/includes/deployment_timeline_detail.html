@@ -5,7 +5,7 @@
         <li class="list-group-item">
             <p class="list-group-item-heading">
                 <span class="label label-{{ item.deploy }}">
-                    {{ item.date|date:"D-b-d" }}
+                    {{ item.date|date:"D, d b" }}
                 </span>
                 {% if item.percent > 0 and item.percent <= 100 %}
                     &nbsp;{{ item.percent }}%
