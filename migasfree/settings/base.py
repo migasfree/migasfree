@@ -57,7 +57,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.gzip.GZipMiddleware',
-    'migasfree.middleware.threadlocals.ThreadLocalMiddleware',
 ]
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
@@ -75,7 +74,8 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'migasfree.server.context_processors.query_names',
-                'migasfree.server.context_processors.project_names',
+                'migasfree.server.context_processors.domain_names',
+                'migasfree.server.context_processors.scope_names',
                 'migasfree.server.context_processors.migasfree_version',
             ],
         },

@@ -15,7 +15,15 @@ from django.dispatch import receiver
 from . import Project, Store, MigasLink
 
 
-class PackageManager(models.Manager):
+class DomainPackageManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainPackageManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+        return qs
+
+
+class PackageManager(DomainPackageManager):
     def create(self, name, project, store):
         pkg = Package()
         pkg.name = name
@@ -50,7 +58,7 @@ class Package(models.Model, MigasLink):
 
     objects = PackageManager()
 
-    def menu_link(self):
+    def menu_link(self, user):
         if self.id:
             info_link = reverse(
                 'package_info',
@@ -76,11 +84,11 @@ class Package(models.Model, MigasLink):
                 [ugettext('Package Information'), info_link],
                 [ugettext('Download'), download_link]
             ]
-        return super(Package, self).menu_link()
+        return super(Package, self).menu_link(user)
 
     @staticmethod
-    def orphan_count():
-        return Package.objects.filter(deployment__id=None).count()
+    def orphan_count(user):
+        return Package.objects.scope(user).filter(deployment__id=None).count()
 
     @staticmethod
     def path(project_name, store_name, name):

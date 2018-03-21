@@ -63,7 +63,7 @@ def alerts(request):
     """
     Checkings status
     """
-    results = checkings(request.user.id)
+    results = checkings(request.user.userprofile)
 
     return render(
         request,
@@ -76,8 +76,8 @@ def alerts(request):
     )
 
 
-def get_syncs_time_range(start_date, end_date, platform=0, range_name='month'):
-    syncs = Synchronization.objects.filter(
+def get_syncs_time_range(start_date, end_date, platform=0, range_name='month', user=None):
+    syncs = Synchronization.objects.scope(user).filter(
         created_at__range=(start_date, end_date)
     ).extra(
         {range_name: "date_trunc('" + range_name + "', created_at)"}
@@ -109,7 +109,14 @@ def month_year_iter(start_month, start_year, end_month, end_year):
 
 
 class SyncStatsViewSet(viewsets.ViewSet):
-    queryset = Synchronization.objects.all()  # FIXME
+    queryset = Synchronization.objects.all()
+
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(computer_id__in=user.get_computers())
+        return qs
 
     @list_route(methods=['get'])
     def monthly(self, request, format=None):
@@ -133,9 +140,10 @@ class SyncStatsViewSet(viewsets.ViewSet):
         if platform_id:
             get_object_or_404(Platform, pk=platform_id)
 
+        user = request.user.userprofile
         updates_time_range = to_heatmap(
             get_syncs_time_range(
-                begin, end, platform_id, range_name
+                begin, end, platform_id, range_name, user=user
             ),
             range_name
         )
@@ -173,9 +181,10 @@ class SyncStatsViewSet(viewsets.ViewSet):
         except ValueError:
             begin = end - timedelta(days=DAILY_RANGE)
 
+        user = request.user.userprofile
         updates_time_range = to_heatmap(
             get_syncs_time_range(
-                begin, end + delta, range_name=range_name
+                begin, end + delta, range_name=range_name, user=user
             ),
             range_name
         )
@@ -218,7 +227,7 @@ def synchronized_monthly(request):
     client.force_authenticate(user=request.user)
     url = '/api/v1/token/stats/syncs/monthly/'
 
-    platforms = Platform.objects.only("id", "name")
+    platforms = Platform.objects.scope(request.user.userprofile).only("id", "name")
     for platform in platforms:
         new_data[platform.id] = []
         labels[platform.id] = platform.name
@@ -385,15 +394,15 @@ def project_schedule_delays(request, project_name=None):
     )
 
 
-def productive_computers_by_platform():
-    total = Computer.productive.count()
+def productive_computers_by_platform(user):
+    total = Computer.productive.scope(user).count()
     link = '{}?_REPLACE_&status__in={}'.format(
         reverse('admin:server_computer_changelist'),
         'intended,reserved,unknown'
     )
 
     values = defaultdict(list)
-    for item in Computer.productive.values(
+    for item in Computer.productive.scope(user).values(
         "project__name",
         "project__id",
         "project__platform__id"
@@ -414,7 +423,7 @@ def productive_computers_by_platform():
         )
 
     data = []
-    for platform in Platform.objects.all():
+    for platform in Platform.objects.scope(user).all():
         if platform.id in values:
             count = sum(item['value'] for item in values[platform.id])
             percent = float(count) / total * 100
@@ -438,8 +447,8 @@ def productive_computers_by_platform():
     }
 
 
-def computers_by_machine():
-    total = Computer.objects.count()
+def computers_by_machine(user):
+    total = Computer.objects.scope(user).count()
     link = '{}?_REPLACE_'.format(
         reverse('admin:server_computer_changelist')
     )
@@ -447,12 +456,12 @@ def computers_by_machine():
     values = defaultdict(list)
     data = []
 
-    count_subscribed = Computer.subscribed.count()
-    count_subscribed_virtual = Computer.subscribed.filter(machine='V').count()
-    count_subscribed_physical = Computer.subscribed.filter(machine='P').count()
-    count_unsubscribed = Computer.unsubscribed.count()
-    count_unsubscribed_virtual = Computer.unsubscribed.filter(machine='V').count()
-    count_unsubscribed_physical = Computer.unsubscribed.filter(machine='P').count()
+    count_subscribed = Computer.subscribed.scope(user).count()
+    count_subscribed_virtual = Computer.subscribed.scope(user).filter(machine='V').count()
+    count_subscribed_physical = Computer.subscribed.scope(user).filter(machine='P').count()
+    count_unsubscribed = Computer.unsubscribed.scope(user).count()
+    count_unsubscribed_virtual = Computer.unsubscribed.scope(user).filter(machine='V').count()
+    count_unsubscribed_physical = Computer.unsubscribed.scope(user).filter(machine='P').count()
 
     if count_subscribed:
         if count_subscribed_virtual:
@@ -541,14 +550,14 @@ def computers_by_machine():
     }
 
 
-def computers_by_status():
-    total = Computer.objects.exclude(status='unsubscribed').count()
+def computers_by_status(user):
+    total = Computer.objects.scope(user).exclude(status='unsubscribed').count()
     link = '{}?_REPLACE_'.format(
         reverse('admin:server_computer_changelist')
     )
 
     values = dict()
-    for item in Computer.objects.exclude(
+    for item in Computer.objects.scope(user).exclude(
         status='unsubscribed'
     ).values(
         "status"
@@ -618,14 +627,14 @@ def computers_by_status():
     }
 
 
-def unchecked_errors():
-    total = Error.unchecked_count()
+def unchecked_errors(user):
+    total = Error.unchecked_count(user)
     link = '{}?checked__exact=0&_REPLACE_'.format(
         reverse('admin:server_error_changelist')
     )
 
     values = defaultdict(list)
-    for item in Error.unchecked.values(
+    for item in Error.unchecked.scope(user).values(
         "project__platform__id",
         "project__id",
         "project__name",
@@ -648,7 +657,7 @@ def unchecked_errors():
         )
 
     data = []
-    for platform in Platform.objects.all():
+    for platform in Platform.objects.scope(user).all():
         if platform.id in values:
             count = sum(item['value'] for item in values[platform.id])
             percent = float(count) / total * 100
@@ -672,21 +681,23 @@ def unchecked_errors():
     }
 
 
-def unchecked_faults():
-    total = Fault.unchecked_count()
+def unchecked_faults(user):
+    total = Fault.unchecked_count(user)
     link = '{}?checked__exact=0&_REPLACE_'.format(
         reverse('admin:server_fault_changelist')
     )
 
     values = defaultdict(list)
-    for item in Fault.unchecked.values(
+    for item in Fault.unchecked.scope(user).values(
         "project__platform__id",
         "project__id",
         "project__name",
     ).annotate(
         count=Count("id")
     ).order_by('project__id', '-count'):
-        percent = float(item.get('count')) / total * 100
+        percent = 0
+        if total:
+            percent = float(item.get('count')) / total * 100
         values[item.get('project__platform__id')].append(
             {
                 'name': item.get('project__name'),
@@ -702,10 +713,12 @@ def unchecked_faults():
         )
 
     data = []
-    for platform in Platform.objects.all():
+    for platform in Platform.objects.scope(user).all():
         if platform.id in values:
             count = sum(item['value'] for item in values[platform.id])
-            percent = float(count) / total * 100
+            percent = 0
+            if total:
+                percent = float(count) / total * 100
             data.append(
                 {
                     'name': platform.name,
@@ -726,14 +739,14 @@ def unchecked_faults():
     }
 
 
-def enabled_deployments():
-    total = Deployment.objects.filter(enabled=True).count()
+def enabled_deployments(user):
+    total = Deployment.objects.scope(user).filter(enabled=True).count()
     link = '{}?enabled__exact=1&_REPLACE_'.format(
         reverse('admin:server_deployment_changelist')
     )
 
     values_null = defaultdict(list)
-    for item in Deployment.objects.filter(
+    for item in Deployment.objects.scope(user).filter(
         enabled=True, schedule=None
     ).values(
         "project__id",
@@ -756,7 +769,7 @@ def enabled_deployments():
         )
 
     values_not_null = defaultdict(list)
-    for item in Deployment.objects.filter(
+    for item in Deployment.objects.scope(user).filter(
         enabled=True,
     ).filter(
         ~Q(schedule=None)
@@ -781,7 +794,7 @@ def enabled_deployments():
         )
 
     data = []
-    for project in Project.objects.all():
+    for project in Project.objects.scope(user).all():
         count = 0
         data_project = []
         if project.id in values_null:
@@ -817,12 +830,12 @@ def stats_dashboard(request):
     now = timezone.now()
     end_date = datetime(now.year, now.month, now.day, now.hour) + timedelta(hours=1)
     begin_date = end_date - timedelta(days=HOURLY_RANGE)
-
-    syncs = dict((i["hour"], i) for i in Synchronization.by_hour(begin_date, end_date))
-    errors = dict((i["hour"], i) for i in Error.by_hour(begin_date, end_date))
-    faults = dict((i["hour"], i) for i in Fault.by_hour(begin_date, end_date))
-    migrations = dict((i["hour"], i) for i in Migration.by_hour(begin_date, end_date))
-    status_logs = dict((i["hour"], i) for i in StatusLog.by_hour(begin_date, end_date))
+    user = request.user.userprofile
+    syncs = dict((i["hour"], i) for i in Synchronization.by_hour(begin_date, end_date, user))
+    errors = dict((i["hour"], i) for i in Error.by_hour(begin_date, end_date, user))
+    faults = dict((i["hour"], i) for i in Fault.by_hour(begin_date, end_date, user))
+    migrations = dict((i["hour"], i) for i in Migration.by_hour(begin_date, end_date, user))
+    status_logs = dict((i["hour"], i) for i in StatusLog.by_hour(begin_date, end_date, user))
     data_syncs = []
     data_errors = []
     data_faults = []
@@ -836,6 +849,7 @@ def stats_dashboard(request):
         data_migrations.append(migrations[item]['count'] if item in migrations else 0)
         data_status.append(status_logs[item]['count'] if item in status_logs else 0)
 
+    user = request.user.userprofile
     return render(
         request,
         'stats_dashboard.html',
@@ -855,12 +869,12 @@ def stats_dashboard(request):
                     _('Thursday'), _('Friday'), _('Saturday')
                 ]),
             },
-            'productive_computers_by_platform': productive_computers_by_platform(),
-            'computers_by_machine': computers_by_machine(),
-            'computers_by_status': computers_by_status(),
-            'unchecked_errors': unchecked_errors(),
-            'unchecked_faults': unchecked_faults(),
-            'enabled_deployments': enabled_deployments(),
+            'productive_computers_by_platform': productive_computers_by_platform(user),
+            'computers_by_machine': computers_by_machine(user),
+            'computers_by_status': computers_by_status(user),
+            'unchecked_errors': unchecked_errors(user),
+            'unchecked_faults': unchecked_faults(user),
+            'enabled_deployments': enabled_deployments(user),
             'last_day_events': {
                 'title': _('History of events in the last %d hours') % (HOURLY_RANGE * 24),
                 'start_date': {
@@ -926,6 +940,13 @@ def provided_computers_by_delay(request):
                 date_format
             )
 
+        if deploy.domain:
+            q_in_domain = ~Q(sync_attributes__id__in=deploy.domain.included_attributes.all())
+            q_ex_domain = Q(sync_attributes__id__in=deploy.domain.excluded_attributes.all())
+        else:
+            q_in_domain = Q()
+            q_ex_domain = Q()
+
         duration = 0
         for real_days in range(0, (end_horizon - start_horizon).days):
             loop_date = start_horizon + timedelta(days=real_days)
@@ -940,6 +961,10 @@ def provided_computers_by_delay(request):
                     ~ Q(sync_attributes__id__in=lst_attributes) &
                     Q(sync_attributes__id__in=lst_att_delay) &
                     Q(project__id=deploy.project.id)
+                ).exclude(
+                    q_in_domain
+                ).exclude(
+                    q_ex_domain
                 ).values('id').count()
                 duration += 1
 

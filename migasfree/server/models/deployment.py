@@ -17,6 +17,7 @@ from django.core.exceptions import ValidationError
 from ..utils import time_horizon
 
 from . import (
+    Domain,
     Project,
     Package,
     Attribute,
@@ -27,8 +28,15 @@ from . import (
 
 
 class DeploymentManager(models.Manager):
-    def by_project(self, project_id):
-        return self.get_queryset().filter(project__id=project_id)
+    def scope(self, user):
+        qs = super(DeploymentManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+            domain = user.domain_preference
+            if domain:
+                qs = qs.filter(domain_id=domain.id)
+
+        return qs
 
 
 @python_2_unicode_compatible
@@ -77,6 +85,14 @@ class Deployment(models.Model, MigasLink):
         null=True,
         blank=True,
         help_text=_('Mandatory packages to remove each time')
+    )
+
+    domain = models.ForeignKey(
+        Domain,
+        verbose_name=_("domain"),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
     )
 
     included_attributes = models.ManyToManyField(
@@ -225,6 +241,11 @@ class Deployment(models.Model, MigasLink):
             enabled=True,
             included_attributes__id__in=attributes,
             start_date__lte=datetime.datetime.now().date()
+        ).filter(
+            Q(domain__isnull=True) | (
+                Q(domain__included_attributes__id__in=attributes) &
+                ~Q(domain__excluded_attributes__id__in=attributes)
+            )
         ).values_list('id', flat=True)
         lst = list(attributed)
 
@@ -233,6 +254,11 @@ class Deployment(models.Model, MigasLink):
             project__id=computer.project.id,
             enabled=True,
             schedule__delays__attributes__id__in=attributes
+        ).filter(
+            Q(domain__isnull=True) | (
+                Q(domain__included_attributes__id__in=attributes) &
+                ~Q(domain__excluded_attributes__id__in=attributes)
+            )
         ).extra(
             select={
                 'delay': 'server_scheduledelay.delay',

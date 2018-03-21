@@ -7,7 +7,15 @@ from .computer import Computer
 from .event import Event
 
 
-class StatusLogManager(models.Manager):
+class DomainStatusLogManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainStatusLogManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(computer_id__in=user.get_computers())
+        return qs
+
+
+class StatusLogManager(DomainStatusLogManager):
     def create(self, computer):
         obj = StatusLog()
         obj.computer = computer

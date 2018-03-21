@@ -15,13 +15,14 @@ from .migasfree import MigasAdmin, MigasFields
 
 from ..filters import (
     ProductiveFilterSpec, UserFaultFilter,
-    SoftwareInventoryFilter, SyncEndDateFilter,
+    SoftwareInventoryFilter, SyncEndDateFilter, ProjectFilterAdmin, PlatformFilterAdmin
 )
 from ..forms import ComputerForm, FaultDefinitionForm
 from ..resources import ComputerResource
 from ..models import (
     AutoCheckError, Computer, Error, Fault, FaultDefinition, Message,
-    Migration, Notification, StatusLog, Synchronization, User, DeviceLogical, HwNode
+    Migration, Notification, StatusLog, Synchronization, User, DeviceLogical,
+    HwNode, Attribute,
 )
 
 admin.site.register(AutoCheckError)
@@ -47,8 +48,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     )
     ordering = (settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0],)
     list_filter = (
-        'project__platform',
-        'project',
+        ('project__platform', PlatformFilterAdmin),
+        ('project', ProjectFilterAdmin),
         ('status', ProductiveFilterSpec),
         'machine',
         SoftwareInventoryFilter,
@@ -236,9 +237,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         return False
 
     def get_queryset(self, request):
-        return super(ComputerAdmin, self).get_queryset(
-            request
-        ).select_related(
+        return Computer.objects.scope(request.user.userprofile).select_related(
             "project",
             "sync_user",
             "default_logical_device",
@@ -266,8 +265,8 @@ class ErrorAdmin(MigasAdmin):
     )
     list_display_links = ('created_at',)
     list_filter = (
-        'checked', 'created_at', 'project__platform',
-        'project', ('computer__status', ProductiveFilterSpec),
+        'checked', 'created_at', ('project__platform', PlatformFilterAdmin),
+        ('project', ProjectFilterAdmin), ('computer__status', ProductiveFilterSpec),
     )
     ordering = ('-created_at', 'computer',)
     search_fields = add_computer_search_fields(['created_at', 'description'])
@@ -327,7 +326,8 @@ class FaultAdmin(MigasAdmin):
     list_display_links = ('created_at',)
     list_filter = (
         UserFaultFilter, 'checked', 'created_at',
-        'project__platform', 'project', 'fault_definition'
+        ('project__platform', PlatformFilterAdmin),
+        ('project', ProjectFilterAdmin), 'fault_definition'
     )
     ordering = ('-created_at', 'computer',)
     search_fields = add_computer_search_fields(
@@ -416,15 +416,16 @@ class FaultDefinitionAdmin(MigasAdmin):
     users_link = MigasFields.objects_link(model=FaultDefinition, name='users')
 
     def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
         return super(FaultDefinitionAdmin, self).get_queryset(
             request
-            ).prefetch_related(
-                'included_attributes',
-                'included_attributes__property_att',
-                'excluded_attributes',
-                'excluded_attributes__property_att',
-                'users',
-            )
+        ).prefetch_related(
+            Prefetch('included_attributes', queryset=qs),
+            'included_attributes__property_att',
+            Prefetch('excluded_attributes', queryset=qs),
+            'excluded_attributes__property_att',
+            'users',
+        )
 
 
 @admin.register(Message)
@@ -468,7 +469,11 @@ class MigrationAdmin(MigasAdmin):
     list_display = ('created_at', 'computer_link', 'project_link')
     list_display_links = ('created_at',)
     list_select_related = ('computer', 'project')
-    list_filter = ('created_at', 'project__platform', 'project')
+    list_filter = (
+        'created_at',
+        ('project__platform', PlatformFilterAdmin),
+        ('project', ProjectFilterAdmin)
+    )
     search_fields = add_computer_search_fields(['created_at'])
     fields = ('computer_link', 'project_link', 'created_at')
     readonly_fields = ('computer_link', 'project_link', 'created_at')

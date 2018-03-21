@@ -7,6 +7,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.utils.html import format_html
+from django.db.models import Prefetch
 
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
@@ -17,14 +18,19 @@ from ..models import (
     Attribute, AttributeSet, ClientProperty, ClientAttribute, Computer,
     Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
     ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Project,
+    Domain, Scope,
 )
 
 from ..forms import (
     PropertyForm, DeploymentForm, ServerAttributeForm,
     AttributeSetForm, StoreForm, PackageForm, UserProfileForm,
+    DomainForm, ScopeForm
 )
 
-from ..filters import ClientAttributeFilter, ServerAttributeFilter
+from ..filters import (
+    ClientAttributeFilter, ServerAttributeFilter,
+    ProjectFilterAdmin, PlatformFilterAdmin,
+)
 from ..utils import compare_list_values
 from ..tasks import (
     create_repository_metadata,
@@ -74,8 +80,15 @@ class AttributeAdmin(MigasAdmin):
     )
 
     def get_queryset(self, request):
-        return super(AttributeAdmin, self).get_queryset(request).extra(
-            select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
+        sql = Attribute.TOTAL_COMPUTER_QUERY
+        user = request.user.userprofile
+        if not user.is_view_all():
+            computers = user.get_computers()
+            if computers:
+                sql += " AND server_computer_sync_attributes.computer_id in " \
+                    + "(" + ",".join(str(x) for x in computers) + ")"
+        return Attribute.objects.scope(user).extra(
+            select={'total_computers': sql}
         )
 
     def has_add_permission(self, request):
@@ -103,8 +116,15 @@ class ClientAttributeAdmin(MigasAdmin):
     )
 
     def get_queryset(self, request):
-        return super(ClientAttributeAdmin, self).get_queryset(request).extra(
-            select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
+        sql = Attribute.TOTAL_COMPUTER_QUERY
+        user = request.user.userprofile
+        if not user.is_view_all():
+            computers = user.get_computers()
+            if computers:
+                sql += " AND server_computer_sync_attributes.computer_id in " \
+                    + "(" + ",".join(str(x) for x in computers) + ")"
+        return ClientAttribute.objects.scope(user).extra(
+            select={'total_computers': sql}
         )
 
     def has_add_permission(self, request):
@@ -128,7 +148,7 @@ class PackageAdmin(MigasAdmin):
     list_display = (
         'name_link', 'project_link', 'store_link', 'deployments_link'
     )
-    list_filter = ('project', 'store', 'deployment')
+    list_filter = (('project', ProjectFilterAdmin), 'store', 'deployment')
     list_select_related = ('project', 'store')
     search_fields = ('name', 'store__name')
     ordering = ('name',)
@@ -170,9 +190,9 @@ class PackageAdmin(MigasAdmin):
     def get_queryset(self, request):
         return super(PackageAdmin, self).get_queryset(
             request
-            ).prefetch_related(
-                'deployment_set'
-            )
+        ).prefetch_related(
+            Prefetch('deployment_set', queryset=Deployment.objects.scope(request.user.userprofile))
+        )
 
 
 @admin.register(Platform)
@@ -294,9 +314,10 @@ class QueryAdmin(MigasAdmin):
 class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     form = DeploymentForm
     list_display = (
-        'name_link', 'project_link', 'my_enabled', 'start_date', 'schedule_link', 'timeline'
+        'name_link', 'project_link', 'domain_link',
+        'my_enabled', 'start_date', 'schedule_link', 'timeline',
     )
-    list_filter = ('enabled', 'project', 'schedule')
+    list_filter = ('enabled', ('project', ProjectFilterAdmin), 'schedule')
     search_fields = ('name', 'available_packages__name')
     list_select_related = ("project",)
     actions = ['regenerate_metadata']
@@ -323,7 +344,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         }),
         (_('Attributes'), {
-            'fields': ('included_attributes', 'excluded_attributes')
+            'fields': ('domain', 'included_attributes', 'excluded_attributes')
         }),
         (_('Schedule'), {
             'fields': ('start_date', 'schedule', 'timeline')
@@ -333,6 +354,9 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     name_link = MigasFields.link(model=Deployment, name='name')
     project_link = MigasFields.link(
         model=Deployment, name='project', order='project__name'
+    )
+    domain_link = MigasFields.link(
+        model=Deployment, name='domain', order='domain__name'
     )
     schedule_link = MigasFields.link(
         model=Deployment, name='schedule', order='schedule__name'
@@ -349,32 +373,18 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
     regenerate_metadata.short_description = _("Regenerate metadata")
 
-    def formfield_for_manytomany(self, db_field, request=None, **kwargs):
-        if db_field.name == 'available_packages':
-            # Packages filter by user project
-            kwargs['queryset'] = Package.objects.filter(
-                project__id=request.user.userprofile.project_id
-            )
-
-            return db_field.formfield(**kwargs)
-
-        if db_field.name == 'included_attributes':
-            kwargs['queryset'] = Attribute.objects.filter(
-                property_att__enabled=True
-            )
-
-            return db_field.formfield(**kwargs)
-
-        return super(DeploymentAdmin, self).formfield_for_manytomany(
-            db_field,
-            request,
-            **kwargs
-        )
-
     def save_model(self, request, obj, form, change):
         is_new = (obj.pk is None)
         has_name_changed = form.initial.get('name') != obj.name
         packages_after = map(int, form.cleaned_data.get('available_packages'))
+
+        user = request.user.userprofile
+        if user:
+            obj.domain = user.domain_preference
+
+        if user.domain_preference:
+            if not obj.name.startswith(user.domain_preference.name.lower()):
+                obj.name = u'{}_{}'.format(user.domain_preference.name.lower(), obj.name)
 
         super(DeploymentAdmin, self).save_model(request, obj, form, change)
 
@@ -402,12 +412,6 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
                 reverse('admin:server_deployment_history', args=(obj.id,))
             )
         )
-
-    def get_form(self, request, obj=None, **kwargs):
-        form = super(DeploymentAdmin, self).get_form(request, obj, **kwargs)
-        form.current_user = request.user
-
-        return form
 
     def get_queryset(self, request):
         return super(DeploymentAdmin, self).get_queryset(
@@ -448,10 +452,24 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 class ScheduleDelayLine(admin.TabularInline):
     model = ScheduleDelay
     fields = ('delay', 'attributes', 'total_computers', 'duration')
-    form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute_computers'})
+    form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute'})
     ordering = ('delay',)
     readonly_fields = ('total_computers',)
     extra = 0
+
+    def get_queryset(self, request):
+        sql = ScheduleDelay.TOTAL_COMPUTER_QUERY
+        user = request.user.userprofile
+        if not user.is_view_all():
+            computers = user.get_computers()
+            if computers:
+                sql += " AND server_computer_sync_attributes.computer_id in " \
+                    + "(" + ",".join(str(x) for x in computers) + ")"
+            qs = ScheduleDelay.objects.scope(user).extra(select={'total_computers': sql})
+        else:
+            qs = ScheduleDelay.objects.all()
+
+        return qs
 
 
 @admin.register(Schedule)
@@ -470,8 +488,17 @@ class StoreAdmin(MigasAdmin):
     form = StoreForm
     list_display = ('name_link', 'project_link')
     search_fields = ('name',)
-    list_filter = ('project',)
+    list_filter = (('project', ProjectFilterAdmin),)
     ordering = ('name',)
+
+    fieldsets = (
+        ('', {
+            'fields': (
+                'name',
+                'project',
+            )
+        }),
+    )
 
     name_link = MigasFields.link(model=Store, name='name')
     project_link = MigasFields.link(
@@ -511,8 +538,15 @@ class ServerAttributeAdmin(MigasAdmin):
     value_link = MigasFields.link(model=ServerAttribute, name='value')
 
     def get_queryset(self, request):
-        return super(ServerAttributeAdmin, self).get_queryset(request).extra(
-            select={'total_computers': Attribute.TOTAL_COMPUTER_QUERY}
+        sql = Attribute.TOTAL_COMPUTER_QUERY
+        user = request.user.userprofile
+        if not user.is_view_all():
+            computers = user.get_computers()
+            if computers:
+                sql += " AND server_computer_sync_attributes.computer_id in " \
+                    + "(" + ",".join(str(x) for x in computers) + ")"
+        return ServerAttribute.objects.scope(user).extra(
+            select={'total_computers': sql}
         )
 
     def inflicted_computers(self, obj):
@@ -528,8 +562,7 @@ class ServerAttributeAdmin(MigasAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(MigasAdmin):
     form = UserProfileForm
-    list_display = ('name_link', 'first_name', 'last_name')
-    list_filter = ('project',)
+    list_display = ('name_link', 'first_name', 'last_name', 'domain_link')
     ordering = ('username',)
     search_fields = ('username', 'first_name', 'last_name')
     readonly_fields = ('date_joined', 'last_login')
@@ -551,11 +584,93 @@ class UserProfileAdmin(MigasAdmin):
                 'is_staff',
                 'groups',
                 'user_permissions',
+                'domains',
+            ),
+        }),
+        (_('Preferences'), {
+            'fields': (
+                'domain_preference',
+                'scope_preference',
             ),
         }),
     )
 
     name_link = MigasFields.link(model=UserProfile, name='username')
+    domain_link = MigasFields.link(model=Domain, name='domain_preference__name')
+
+
+@admin.register(Scope)
+class ScopeAdmin(MigasAdmin):
+    form = ScopeForm
+    list_display = ('name_link', 'domain_link', 'included_attributes_link', 'excluded_attributes_link')
+    ordering = ('name',)
+    search_fields = ('name',)
+    fieldsets = (
+        (_('General'), {
+            'fields': (
+                'name',
+                'domain'
+            ),
+        }),
+        (_('Attributes'), {
+            'fields': (
+                'included_attributes',
+                'excluded_attributes',
+            ),
+        }),
+        ('', {
+            'fields': ('user',),
+            'classes': ['hidden'],
+        })
+    )
+
+    name_link = MigasFields.link(model=Scope, name='name')
+    domain_link = MigasFields.link(model=Domain, name='domain__name')
+    included_attributes_link = MigasFields.objects_link(
+        model=AttributeSet, name="included_attributes", description=_('included attributes')
+    )
+    excluded_attributes_link = MigasFields.objects_link(
+        model=AttributeSet, name='excluded_attributes', description=_('excluded attributes')
+    )
+
+
+@admin.register(Domain)
+class DomainAdmin(MigasAdmin):
+    form = DomainForm
+    list_display = ('name_link', 'included_attributes_link', 'excluded_attributes_link')
+    ordering = ('name',)
+    search_fields = ('name',)
+    fieldsets = (
+        (_('General'), {
+            'fields': (
+                'name', 'comment',
+            ),
+        }),
+        (_('Attributes'), {
+            'fields': (
+                'included_attributes',
+                'excluded_attributes',
+             ),
+        }),
+        (_('Available tags'), {
+            'fields': (
+                'tags',
+            ),
+        }),
+    )
+
+    name_link = MigasFields.link(model=Domain, name='name')
+    included_attributes_link = MigasFields.objects_link(
+        model=AttributeSet, name="included_attributes", description=_('included attributes')
+    )
+    excluded_attributes_link = MigasFields.objects_link(
+        model=AttributeSet, name='excluded_attributes', description=_('excluded attributes')
+    )
+
+    def get_queryset(self, request):
+        user_profile = UserProfile.objects.get(id=request.user.id)
+        user_profile.update_scope(0)
+        return super(DomainAdmin, self).get_queryset(request)
 
 
 @admin.register(Project)
@@ -567,7 +682,7 @@ class ProjectAdmin(MigasAdmin):
         'my_auto_register_computers'
     )
     fields = ('name', 'platform', 'pms', 'auto_register_computers')
-    list_filter = ('platform', 'pms')
+    list_filter = (('platform', PlatformFilterAdmin), 'pms')
     list_select_related = ('platform', 'pms')
     search_fields = ('name',)
     actions = None

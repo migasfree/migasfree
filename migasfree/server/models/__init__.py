@@ -4,17 +4,23 @@
 
 from .common import MigasLink
 
-from .user import User
 from .query import Query
 from .autocheck_error import AutoCheckError
 
 from .pms import Pms
 from .property import Property, ServerProperty, ClientProperty, BasicProperty
 
-from .platform import Platform
-from .project import Project, ProjectManager, UserProfile
 from .attribute import Attribute, ServerAttribute, ClientAttribute, BasicAttribute
 from .attribute_set import AttributeSet
+
+from .domain import Domain
+from .scope import Scope
+
+from .userprofile import UserProfile
+
+from .platform import Platform
+
+from .project import Project, ProjectManager
 
 from .device_type import DeviceType
 from .device_manufacturer import DeviceManufacturer
@@ -25,6 +31,7 @@ from .device_driver import DeviceDriver
 from .device import Device
 from .device_logical import DeviceLogical
 
+from .user import User
 from .computer import Computer
 
 from .synchronization import Synchronization

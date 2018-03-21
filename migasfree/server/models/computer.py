@@ -18,53 +18,91 @@ from ..utils import swap_m2m, remove_empty_elements_from_dict, strfdelta, list_d
 from . import (
     Project, DeviceLogical, User,
     Attribute, ServerAttribute, BasicProperty,
-    MigasLink, Property,
+    MigasLink, Property
 )
 
 
-class ProductiveManager(models.Manager):
+class DomainComputerManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainComputerManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(id__in=user.get_computers())
+        return qs.defer("software_inventory", "software_history")
+
+
+class ProductiveManager(DomainComputerManager):
     def get_queryset(self):
         return super(ProductiveManager, self).get_queryset().filter(
             status__in=Computer.PRODUCTIVE_STATUS
         )
 
+    def scope(self, user):
+        return super(ProductiveManager, self).scope(user).filter(
+            status__in=Computer.PRODUCTIVE_STATUS
+        )
 
-class UnproductiveManager(models.Manager):
+
+class UnproductiveManager(DomainComputerManager):
     def get_queryset(self):
         return super(UnproductiveManager, self).get_queryset().exclude(
             status__in=Computer.PRODUCTIVE_STATUS
         )
 
+    def scope(self, user):
+        return super(UnproductiveManager, self).scope(user).exclude(
+            status__in=Computer.PRODUCTIVE_STATUS
+        )
 
-class SubscribedManager(models.Manager):
+
+class SubscribedManager(DomainComputerManager):
     def get_queryset(self):
         return super(SubscribedManager, self).get_queryset().exclude(
             status='unsubscribed'
         )
 
+    def scope(self, user):
+        return super(SubscribedManager, self).scope(user).exclude(
+            status='unsubscribed'
+        )
 
-class UnsubscribedManager(models.Manager):
+
+class UnsubscribedManager(DomainComputerManager):
     def get_queryset(self):
         return super(UnsubscribedManager, self).get_queryset().filter(
             status='unsubscribed'
         )
 
+    def scope(self, user):
+        return super(UnsubscribedManager, self).scope(user).filter(
+            status='unsubscribed'
+        )
 
-class ActiveManager(models.Manager):
+
+class ActiveManager(DomainComputerManager):
     def get_queryset(self):
         return super(ActiveManager, self).get_queryset().filter(
             status__in=Computer.ACTIVE_STATUS
         )
 
+    def scope(self, user):
+        return super(ActiveManager, self).scope(user).filter(
+            status__in=Computer.ACTIVE_STATUS
+        )
 
-class InactiveManager(models.Manager):
+
+class InactiveManager(DomainComputerManager):
     def get_queryset(self):
         return super(InactiveManager, self).get_queryset().exclude(
             status__in=Computer.ACTIVE_STATUS
         )
 
+    def scope(self, user):
+        return super(InactiveManager, self).scope(user).exclude(
+            status__in=Computer.ACTIVE_STATUS
+        )
 
-class ComputerManager(models.Manager):
+
+class ComputerManager(DomainComputerManager):
     def create(self, name, project, uuid, ip=None):
         obj = Computer()
         obj.name = name
@@ -89,6 +127,7 @@ class Computer(models.Model, MigasLink):
 
     PRODUCTIVE_STATUS = ['intended', 'reserved', 'unknown']
     ACTIVE_STATUS = PRODUCTIVE_STATUS + ['in repair']
+    UNSUBSCRIBED_STATUS = ['unsubscribed']
 
     MACHINE_CHOICES = (
         ('P', _('Physical')),
@@ -472,6 +511,22 @@ class Computer(models.Model, MigasLink):
         swap_m2m(
             source_cid.PolicyGroupExcludedAttributes,
             target_cid.PolicyGroupExcludedAttributes
+        )
+        swap_m2m(
+            source_cid.ScopeIncludedAttribute,
+            target_cid.ScopeIncludedAttribute
+        )
+        swap_m2m(
+            source_cid.ScopeExcludedAttribute,
+            target_cid.ScopeExcludedAttribute
+        )
+        swap_m2m(
+            source_cid.DomainIncludedAttribute,
+            target_cid.DomainIncludedAttribute
+        )
+        swap_m2m(
+            source_cid.DomainExcludedAttribute,
+            target_cid.DomainExcludedAttribute
         )
 
         source.status, target.status = target.status, source.status

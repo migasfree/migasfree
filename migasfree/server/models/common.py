@@ -15,7 +15,7 @@ class MigasLink(object):
         self._exclude_links = []
         self._include_links = []
 
-    def get_relations(self):
+    def get_relations(self, user):
         related_objects = [
             (f, f.model if f.model != self else None)
             for f in self._meta.get_fields()
@@ -52,9 +52,15 @@ class MigasLink(object):
             if _name == 'permission':
                 break
 
-            count = obj.remote_field.model.objects.filter(
-                **{obj.remote_field.name: self.id}
-            ).count()
+            if hasattr(obj, 'scope'):
+                count = obj.remote_field.model.objects.scope(user).filter(
+                    **{obj.remote_field.name: self.id}
+                ).count()
+            else:
+                count = obj.remote_field.model.objects.filter(
+                    **{obj.remote_field.name: self.id}
+                ).count()
+
             if count:
                 related_link = reverse(
                     u'admin:{}_{}_changelist'.format(
@@ -80,9 +86,13 @@ class MigasLink(object):
                     related_model._meta.model_name,
                     _field
                 ) in self._exclude_links:
-                    count = related_model.objects.filter(
-                        **{related_object.field.name: self.id}
-                    ).count()
+                    try:
+                        count = related_model.objects.scope(user).filter(
+                            **{related_object.field.name: self.id}
+                        ).count()
+                    except:
+                        count = 0
+
                     if count:
                         related_link = reverse(
                             u'admin:{}_{}_changelist'.format(
@@ -128,7 +138,7 @@ class MigasLink(object):
 
         return action_data, related_data
 
-    def relations(self):
+    def relations(self, user):
         action_data = []
         related_data = []
 
@@ -148,12 +158,9 @@ class MigasLink(object):
             return action_data, related_data
 
         # ATTRIBUTESET === ATTRIBUTE
-        if self._meta.model_name == 'attributeset' or (
-                (
-                    self._meta.model_name == 'attribute' or
-                    self._meta.model_name == 'feature'
-                ) and self.property_att.prefix == 'SET'
-        ):
+        if self._meta.model_name == 'attributeset' \
+                or (self._meta.model_name == 'attribute' and self.pk > 1) \
+                and self.property_att.prefix == 'SET':
             if self._meta.model_name == 'attributeset':
                 from . import Attribute
                 attribute_set = self
@@ -173,13 +180,13 @@ class MigasLink(object):
                     attribute_set = None
 
             if att:
-                att_action_data, att_related_data = att.get_relations()
+                att_action_data, att_related_data = att.get_relations(user)
             else:
                 att_action_data = []
                 att_related_data = []
 
             if attribute_set:
-                set_action_data, set_related_data = attribute_set.get_relations()
+                set_action_data, set_related_data = attribute_set.get_relations(user)
                 action_data = set_action_data + att_action_data
                 related_data = set_related_data + att_related_data
 
@@ -189,7 +196,7 @@ class MigasLink(object):
         if self._meta.model_name == 'computer' or (
                 (
                     self._meta.model_name == 'attribute' or
-                    self._meta.model_name == 'feature'
+                    self._meta.model_name == 'clientattribute'
                 ) and self.property_att.prefix == 'CID'
         ):
             if self._meta.model_name == 'computer':
@@ -208,10 +215,10 @@ class MigasLink(object):
                 computer = Computer.objects.get(pk=int(self.value))
 
             computer_action_data, \
-                computer_related_data = computer.get_relations()
+                computer_related_data = computer.get_relations(user)
 
             if cid:
-                cid_action_data, cid_related_data = cid.get_relations()
+                cid_action_data, cid_related_data = cid.get_relations(user)
             else:
                 cid_action_data = []
                 cid_related_data = []
@@ -252,10 +259,10 @@ class MigasLink(object):
 
             return action_data, related_data
         else:
-            return self.get_relations()
+            return self.get_relations(user)
 
-    def menu_link(self):
-        action_data, related_data = self.relations()
+    def menu_link(self, user):
+        action_data, related_data = self.relations(user)
 
         return render_to_string(
             'includes/migas_link_menu.html',
@@ -354,9 +361,9 @@ class MigasLink(object):
                 elif obj.field.related_model._meta.model_name == 'attribute':
                     return Computer, "sync_attributes__id__exact"
         elif obj.related_model._meta.label_lower in [
-                "admin.logentry",
-                "server.scheduledelay",
-                "server.hwnode"
+            "admin.logentry",
+            "server.scheduledelay",
+            "server.hwnode"
         ]:
             return "", ""  # Excluded
 

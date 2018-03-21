@@ -7,19 +7,21 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import (
-    User as UserSystem,
-    UserManager
-)
 
-from migasfree.middleware import threadlocals
 from . import Pms, Platform, MigasLink
 
 
-class ProjectManager(models.Manager):
+class DomainProjectManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainProjectManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(id__in=user.get_projects())
+        return qs
+
+
+class ProjectManager(DomainProjectManager):
     def create(self, name, pms, platform, auto_register_computers=False):
         obj = Project()
         obj.name = name
@@ -34,7 +36,7 @@ class ProjectManager(models.Manager):
 @python_2_unicode_compatible
 class Project(models.Model, MigasLink):
     """
-    OS Version: 'Ubuntu natty 32bit' or 'openSUSE 12.1' or 'Vitalinux'
+    Your Distro: 'Ubuntu natty 32bit' or 'openSUSE 12.1' or 'Vitalinux'
     This is 'your personal distribution', a set of computers with a determinate
     Distribution for customize.
     """
@@ -109,54 +111,6 @@ class Project(models.Model, MigasLink):
         verbose_name_plural = _("Projects")
         permissions = (("can_save_project", "Can save Project"),)
         ordering = ['name']
-
-
-class UserProfile(UserSystem, MigasLink):
-    """
-    info = 'For change password use <a href="%s">change password form</a>.' \
-        % reverse('admin:password_change')
-    """
-
-    project = models.ForeignKey(
-        Project,
-        verbose_name=_("project"),
-        null=True,
-        on_delete=models.SET_NULL
-    )
-
-    objects = UserManager()
-
-    @staticmethod
-    def get_logged_project():
-        """
-        Return the user project that is logged
-        # TODO remove this method
-        """
-        try:
-            return UserProfile.objects.get(
-                id=threadlocals.get_current_user().id
-            ).project
-        except (AttributeError, ObjectDoesNotExist):
-            return None
-
-    def update_project(self, project):
-        self.project = project
-        self.save()
-
-    def save(self, *args, **kwargs):
-        if not (
-            self.password.startswith("sha1$")
-            or self.password.startswith("pbkdf2")
-        ):
-            super(UserProfile, self).set_password(self.password)
-
-        super(UserProfile, self).save(*args, **kwargs)
-
-    class Meta:
-        app_label = 'server'
-        verbose_name = _("User Profile")
-        verbose_name_plural = _("User Profiles")
-        permissions = (("can_save_userprofile", "Can save User Profile"),)
 
 
 @receiver(pre_delete, sender=Project)

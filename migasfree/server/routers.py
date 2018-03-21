@@ -14,6 +14,7 @@ router.register(
     views.HardwareComputerViewSet,
     base_name='computers-hardware'
 )
+router.register(r'domains', views.DomainViewSet)
 router.register(r'errors', views.ErrorViewSet)
 router.register(r'fault-definitions', views.FaultDefinitionViewSet)
 router.register(r'faults', views.FaultViewSet)
@@ -28,6 +29,7 @@ router.register(r'projects', views.ProjectViewSet)
 router.register(r'deployments', views.DeploymentViewSet)
 router.register(r'schedules', views.ScheduleViewSet)
 router.register(r'schedule-delays', views.ScheduleDelayViewSet)
+router.register(r'scopes', views.ScopeViewSet)
 router.register(r'status-logs', views.StatusLogViewSet)
 router.register(r'stores', views.StoreViewSet)
 router.register(r'syncs', views.SynchronizationViewSet)

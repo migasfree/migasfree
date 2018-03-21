@@ -12,7 +12,18 @@ from . import Property, MigasLink
 from .notification import Notification
 
 
-class AttributeManager(models.Manager):
+class DomainAttributeManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainAttributeManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(
+                Q(id__in=user.get_attributes()) |
+                Q(id__in=user.get_domain_tags())
+            )
+        return qs.defer("computer__software_inventory", "computer__software_history")
+
+
+class AttributeManager(DomainAttributeManager):
     def create(self, property_att, value, description=None):
         """
         if value = "text~other", description = "other"
@@ -87,7 +98,7 @@ class Attribute(models.Model, MigasLink):
 
     objects = AttributeManager()
 
-    TOTAL_COMPUTER_QUERY = "SELECT COUNT(server_computer.id) \
+    TOTAL_COMPUTER_QUERY = "SELECT DISTINCT COUNT(server_computer.id) \
         FROM server_computer, server_computer_sync_attributes \
         WHERE server_attribute.id=server_computer_sync_attributes.attribute_id \
         AND server_computer_sync_attributes.computer_id=server_computer.id"
@@ -101,13 +112,12 @@ class Attribute(models.Model, MigasLink):
         else:
             return u'{}-{}'.format(self.property_att.prefix, self.value)
 
-    def total_computers(self, project=None):
+    def total_computers(self, user=None):
         from . import Computer
 
         queryset = Computer.productive.filter(sync_attributes__id=self.id)
-        if project:
-            queryset = queryset.filter(project_id=project.id)
-
+        if user and not user.userprofile.is_view_all():
+            queryset = Computer.productive.scope(user.userprofile)
         return queryset.count()
 
     total_computers.admin_order_field = 'total_computers'
@@ -177,10 +187,12 @@ class Attribute(models.Model, MigasLink):
         ordering = ['property_att__prefix', 'value']
 
 
-class ServerAttributeManager(AttributeManager):
-    def get_queryset(self):
-        return super(ServerAttributeManager, self).get_queryset().filter(
-            property_att__sort='server'
+class ServerAttributeManager(DomainAttributeManager):
+
+    def scope(self, user):
+        qs = super(ServerAttributeManager, self).scope(user)
+        return qs.filter(
+            Q(property_att__sort='server')
         )
 
 
@@ -198,10 +210,12 @@ class ServerAttribute(Attribute):  # Tag
         proxy = True
 
 
-class ClientAttributeManager(AttributeManager):
-    def get_queryset(self):
-        return super(ClientAttributeManager, self).get_queryset().filter(
-            Q(property_att__sort='client') | Q(property_att__sort='basic')
+class ClientAttributeManager(DomainAttributeManager):
+    def scope(self, user):
+        qs = super(ClientAttributeManager, self).scope(user)
+        return qs.filter(
+            Q(property_att__sort='client') |
+            Q(property_att__sort='basic')
         )
 
 
@@ -219,10 +233,11 @@ class ClientAttribute(Attribute):  # Feature
         proxy = True
 
 
-class BasicAttributeManager(AttributeManager):
-    def get_queryset(self):
-        return super(BasicAttributeManager, self).get_queryset().filter(
-            property_att__sort='basic'
+class BasicAttributeManager(DomainAttributeManager):
+    def scope(self, user):
+        qs = super(BasicAttributeManager, self).scope(user)
+        return qs.filter(
+            Q(property_att__sort='basic')
         )
 
 

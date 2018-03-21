@@ -50,6 +50,13 @@ class PackagesByProjectLine(admin.TabularInline):
 
         return formset
 
+    def get_queryset(self, request):
+        qs = super(PackagesByProjectLine, self).get_queryset(request)
+        user = request.user.userprofile
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+        return qs
+
 
 @admin.register(Application)
 class ApplicationAdmin(MigasAdmin):

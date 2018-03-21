@@ -4,9 +4,9 @@ import django_filters
 
 from datetime import datetime, timedelta
 
-from django.contrib.admin.filters import ChoicesFieldListFilter
-from django.contrib.admin import SimpleListFilter
 from django.db.models import Q
+from django.contrib.admin import SimpleListFilter, RelatedFieldListFilter
+from django.contrib.admin.filters import ChoicesFieldListFilter
 from django.utils.translation import ugettext as _
 
 from .models import (
@@ -15,7 +15,7 @@ from .models import (
     Package, Deployment, Error, FaultDefinition,
     Fault, Notification, Migration,
     HwNode, Synchronization, StatusLog,
-    Device, DeviceDriver, ScheduleDelay,
+    Device, DeviceDriver, ScheduleDelay, Platform,
 )
 
 
@@ -24,7 +24,9 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
         super(ProductiveFilterSpec, self).__init__(
             field, request, params, model, model_admin, field_path
         )
-        self.lookup_kwarg = '%s__in' % field_path
+
+        self.user = request.user.userprofile
+        self.lookup_kwarg = '{}__in'.format(field_path)
         self.lookup_val = request.GET.get(self.lookup_kwarg)
         self.title = _('Status')
 
@@ -61,7 +63,13 @@ class ServerAttributeFilter(SimpleListFilter):
     parameter_name = 'Tag'
 
     def lookups(self, request, model_admin):
-        return [(c.id, c.name) for c in ServerProperty.objects.all()]
+        if request.user.userprofile.is_view_all():
+            return [(c.id, c.name) for c in ServerProperty.objects.all()]
+        else:
+            return [(c.id, c.name) for c in ServerProperty.objects.filter(
+                Q(attribute__in=request.user.userprofile.get_attributes()) |
+                Q(attribute__in=request.user.userprofile.get_domain_tags())
+            ).distinct()]
 
     def queryset(self, request, queryset):
         if self.value():
@@ -160,6 +168,36 @@ class SyncEndDateFilter(SimpleListFilter):
             )
 
         return queryset
+
+
+class ProjectFilterAdmin(RelatedFieldListFilter):
+    def __init__(self, field, request, params, model, model_admin, field_path):
+        super(ProjectFilterAdmin, self).__init__(
+            field, request, params, model, model_admin, field_path
+        )
+        if request.user.userprofile.is_view_all():
+            qs = Project.objects.all()
+        else:
+            qs = Project.objects.scope(request.user.userprofile)
+
+        self.lookup_choices = tuple((project.id, project.name) for project in qs)
+        self.lookup_title = field.verbose_name
+        self.title = self.lookup_title
+
+
+class PlatformFilterAdmin(RelatedFieldListFilter):
+    def __init__(self, field, request, params, model, model_admin, field_path):
+        super(PlatformFilterAdmin, self).__init__(
+            field, request, params, model, model_admin, field_path
+        )
+        if request.user.userprofile.is_view_all():
+            qs = Platform.objects.all()
+        else:
+            qs = Platform.objects.filter(project__in=request.user.userprofile.get_projects()).distinct()
+
+        self.lookup_choices = tuple((platform.id, platform.name) for platform in qs)
+        self.lookup_title = field.verbose_name
+        self.title = self.lookup_title
 
 
 class AttributeSetFilter(django_filters.FilterSet):

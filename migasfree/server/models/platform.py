@@ -7,7 +7,15 @@ from django.utils.translation import ugettext_lazy as _
 from . import MigasLink
 
 
-class PlatformManager(models.Manager):
+class DomainPlatformManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainPlatformManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects()).distinct()
+        return qs
+
+
+class PlatformManager(DomainPlatformManager):
     def create(self, name):
         obj = Platform()
         obj.name = name

@@ -128,9 +128,13 @@ class AttributeSet(models.Model, MigasLink):
 
         att_id = []
         for item in AttributeSet.get_sets():
-            for att_set in AttributeSet.objects.filter(id=item).filter(
+            for att_set in AttributeSet.objects.filter(
+                id=item
+            ).filter(
                 Q(included_attributes__id__in=attributes)
-            ).filter(~Q(excluded_attributes__id__in=attributes)):
+            ).filter(
+                ~Q(excluded_attributes__id__in=attributes)
+            ).distinct():
                 att = Attribute.objects.create(property_set, att_set.name)
                 att_id.append(att.id)
 

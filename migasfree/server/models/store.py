@@ -15,7 +15,15 @@ from django.dispatch import receiver
 from . import Project, MigasLink
 
 
-class StoreManager(models.Manager):
+class DomainStoreManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainStoreManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+        return qs
+
+
+class StoreManager(DomainStoreManager):
     def create(self, name, project):
         obj = Store()
         obj.name = name
@@ -56,7 +64,7 @@ class Store(models.Model, MigasLink):
             name
         )
 
-    def menu_link(self):
+    def menu_link(self, user):
         if self.id:
             info_link = reverse(
                 'package_info',
@@ -81,7 +89,7 @@ class Store(models.Model, MigasLink):
                 [ugettext('Download'), download_link]
             ]
 
-        return super(Store, self).menu_link()
+        return super(Store, self).menu_link(user)
 
     def _create_dir(self):
         path = self.path(self.project.name, self.name)

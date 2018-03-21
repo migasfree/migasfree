@@ -41,7 +41,13 @@
         <li><a href="{% url 'admin:server_userprofile_changelist' %}">{% trans 'User Profiles' %}</a></li>
     {% endif %}
     {% if perms.auth.change_group %}
-    <li><a href="{% url 'admin:auth_group_changelist' %}">{% trans 'Groups' %}</a></li>
+        <li><a href="{% url 'admin:auth_group_changelist' %}">{% trans 'Groups' %}</a></li>
+    {% endif %}
+    {% if perms.auth.change_domain %}
+        <li><a href="{% url 'admin:server_domain_changelist' %}">{% trans 'Domains' %}</a></li>
+    {% endif %}
+    {% if perms.auth.change_scope %}
+        <li><a href="{% url 'admin:server_scope_changelist' %}">{% trans 'Scopes' %}</a></li>
     {% endif %}
     {% if user.is_superuser %}
         <li><a href="{% url 'admin:index' %}">{% trans 'Site administration' %}</a></li>

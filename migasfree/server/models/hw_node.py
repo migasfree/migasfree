@@ -18,7 +18,15 @@ def validate_mac(mac):
         len(re.findall(r':', mac)) == 5
 
 
-class HwNodeManager(models.Manager):
+class DomainHwNodeManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainHwNodeManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(computer_id__in=user.get_computers())
+        return qs
+
+
+class HwNodeManager(DomainHwNodeManager):
     def create(self, data):
         obj = HwNode(
             parent=data.get('parent'),
@@ -184,7 +192,7 @@ class HwNode(models.Model, MigasLink):
     def __str__(self):
         return self.get_product() or self.name
 
-    def menu_link(self):
+    def menu_link(self, user):
         if self.id:
             self._exclude_links = [
                 "hwnode - parent__id__exact",
@@ -193,7 +201,8 @@ class HwNode(models.Model, MigasLink):
                 "hwlogicalname - node__id__exact"
             ]
             self._include_links = ["computer - product"]
-        return super(HwNode, self).menu_link()
+
+        return super(HwNode, self).menu_link(user)
 
     def link(self):
         return render_to_string(

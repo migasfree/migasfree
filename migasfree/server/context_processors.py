@@ -2,22 +2,70 @@
 
 from .. import __version__
 
-from .models import Project, Query
+from django.utils.translation import ugettext_lazy as _
+
+from .models import Domain, Scope, Query
+
+
+ALL_RANGE = _("all")
 
 
 def query_names(request):
     return {'query_names': Query.get_query_names()}
 
 
-def project_names(request):
+def scope_names(request):
     try:
-        current = request.user.userprofile.project
+        current = request.user.userprofile.scope_preference
     except AttributeError:
-        current = ''
+        current = None
+
+    if not current:
+        current = ALL_RANGE
+
+    lst = []
+    lst.append([0, ALL_RANGE])
+    try:
+        for scope in list(
+            Scope.objects.filter(
+                user=request.user, domain=request.user.userprofile.domain_preference
+            ).order_by('name').values_list('id', 'name')
+        ):
+            lst.append(scope)
+    except AttributeError:
+        return {}
 
     return {
-        'project_names': Project.get_project_names(),
-        'current_project': current
+        'scope_names': lst,
+        'current_scope': current
+    }
+
+
+def domain_names(request):
+    try:
+        current = request.user.userprofile.domain_preference
+    except AttributeError:
+        current = None
+
+    if not current:
+        current = ALL_RANGE.upper()
+
+    lst = []
+    try:
+        user = request.user.userprofile
+        if user.is_superuser:
+            lst.append([0, ALL_RANGE.upper()])
+            for domain in list(Domain.objects.order_by('name').values_list('id', 'name')):
+                lst.append(domain)
+        else:
+            for domain in list(user.domains.order_by('name').values_list('id', 'name')):
+                lst.append(domain)
+    except AttributeError:
+        return {}
+
+    return {
+        'domain_names': lst,
+        'current_domain': current
     }
 
 

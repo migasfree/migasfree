@@ -10,7 +10,7 @@ from .public_api import (
     get_key_repositories, RepositoriesUrlTemplateView,
 )
 from .packages import info
-from .login import login, preferences
+from .login import login
 from .computer import (
     ComputerDelete,
     computer_delete_selected,
@@ -30,6 +30,7 @@ from .autocomplete import (
     DeviceAutocomplete, UserProfileAutocomplete,
     GroupAutocomplete, DeviceConnectionAutocomplete,
     DeviceModelAutocomplete, DeviceLogicalAutocomplete,
+    DomainAutocomplete,
 )
 from .token import (
     ComputerViewSet, ProjectViewSet, PlatformViewSet,
@@ -42,4 +43,7 @@ from .token import (
     ConnectionViewSet, DeviceViewSet, DriverViewSet,
     FeatureViewSet, LogicalViewSet, ManufacturerViewSet,
     ModelViewSet, TypeViewSet, ScheduleDelayViewSet,
+    DomainViewSet, ScopeViewSet,
 )
+from .domain import change_domain
+from .scope import change_scope

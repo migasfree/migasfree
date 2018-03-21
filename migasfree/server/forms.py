@@ -16,7 +16,7 @@ from .models import (
     Deployment, UserProfile, Computer, Device, DeviceLogical,
     Property, ServerAttribute, ServerProperty, Attribute,
     AttributeSet, Store, Package, FaultDefinition, DeviceModel,
-    DeviceDriver, DeviceFeature,
+    DeviceDriver, DeviceFeature, Domain, Scope, Project,
 )
 
 
@@ -94,14 +94,22 @@ class DeploymentForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
         super(DeploymentForm, self).__init__(*args, **kwargs)
+        user = self.request.user.userprofile
+
+        self.fields['start_date'].initial = datetime.date.today()
         try:
-            self.fields['start_date'].initial = datetime.date.today()
-            self.fields['project'].initial = UserProfile.objects.get(
-                pk=self.current_user.id
-            ).project.id
-        except (UserProfile.DoesNotExist, AttributeError):
+            if Project.objects.scope(user).count() == 1:
+                self.fields['project'].initial = Project.objects.scope(user).first().id
+
+            self.fields['project'].queryset = Project.objects.scope(user)
+        except AttributeError:
             pass
+
+        if not self.instance and user.domain_preference:
+            self.fields['domain'].initial = user.domain_preference
+            self.fields['domain'].widget.attrs['readonly'] = True
 
     def _validate_active_computers(self, att_list):
         for att_id in att_list:
@@ -160,13 +168,17 @@ class DeploymentForm(forms.ModelForm):
 
 class StoreForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
         super(StoreForm, self).__init__(*args, **kwargs)
+
+        user = self.request.user.userprofile
         try:
-            self.fields['project'].initial = UserProfile.objects.get(
-                pk=self.current_user.id
-            ).project.id
+            if Project.objects.scope(user).count() == 1:
+                self.fields['project'].initial = Project.objects.scope(user).first().id
+
             self.fields['project'].empty_label = None
-        except (UserProfile.DoesNotExist, AttributeError):
+            self.fields['project'].queryset = Project.objects.scope(user)
+        except AttributeError:
             pass
 
     class Meta:
@@ -176,13 +188,17 @@ class StoreForm(forms.ModelForm):
 
 class PackageForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
         super(PackageForm, self).__init__(*args, **kwargs)
+
+        user = self.request.user.userprofile
         try:
-            self.fields['project'].initial = UserProfile.objects.get(
-                pk=self.current_user.id
-            ).project.id
+            if Project.objects.scope(user).count() == 1:
+                self.fields['project'].initial = Project.objects.scope(user).first().id
+
             self.fields['project'].empty_label = None
-        except (UserProfile.DoesNotExist, AttributeError):
+            self.fields['project'].queryset = Project.objects.scope(user)
+        except AttributeError:
             pass
 
     class Meta:
@@ -322,6 +338,10 @@ class AttributeSetForm(forms.ModelForm):
         label=_('excluded attributes'), show_help_text=False
     )
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super(AttributeSetForm, self).__init__(*args, **kwargs)
+
     class Meta:
         model = AttributeSet
         fields = '__all__'
@@ -370,11 +390,59 @@ class UserProfileForm(forms.ModelForm):
             'username', 'first_name', 'last_name',
             'email', 'date_joined', 'last_login',
             'is_active', 'is_superuser', 'is_staff',
-            'groups', 'user_permissions',
+            'groups', 'user_permissions', 'domains',
         )
         widgets = {
-            'groups': autocomplete.ModelSelect2Multiple(url='group_autocomplete')
+            'groups': autocomplete.ModelSelect2Multiple(url='group_autocomplete'),
+            'domains': autocomplete.ModelSelect2Multiple(url='domain_autocomplete'),
         }
+
+
+class ScopeForm(forms.ModelForm):
+    included_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('included attributes'), show_help_text=False
+    )
+    excluded_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('excluded attributes'), show_help_text=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super(ScopeForm, self).__init__(*args, **kwargs)
+
+        try:
+            self.fields['user'].initial = self.request.user.userprofile
+            self.fields['domain'].initial = self.request.user.userprofile.domain_preference
+        except AttributeError:
+            pass
+
+    class Meta:
+        model = Scope
+        fields = (
+            'name', 'user',
+        )
+
+
+class DomainForm(forms.ModelForm):
+    included_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('included attributes'), show_help_text=False
+    )
+    excluded_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('excluded attributes'), show_help_text=False
+    )
+
+    tags = MigasAutoCompleteSelectMultipleField(
+        'tag', required=False,
+        label=_('Tags'), show_help_text=False
+    )
+
+    class Meta:
+        model = Domain
+        fields = ('name',)
 
 
 class DeviceModelForm(forms.ModelForm):

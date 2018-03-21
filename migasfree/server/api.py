@@ -5,6 +5,7 @@ import inspect
 
 from datetime import datetime, timedelta
 
+from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib import auth
 from django.conf import settings
@@ -18,7 +19,7 @@ from .models import (
     Error, Fault, FaultDefinition, HwNode, Message,
     Migration, Notification, Package, Pms, Platform, Property,
     Deployment, Store, ServerAttribute, Synchronization, User,
-    Project,
+    Project, Domain,
 )
 from .secure import get_keys_to_client, get_keys_to_packager
 from .views import load_hw
@@ -409,6 +410,9 @@ def upload_computer_info(request, name, uuid, computer, data):
                     *Attribute.process_kind_property(client_property, value)
                 )
 
+        # Domain attribute
+        computer.sync_attributes.add(*Domain.process(computer.get_all_attributes()))
+
         # Tags (server attributes) (not running on clients!!!)
         for tag in computer.tags.all().filter(property_att__enabled=True):
             computer.sync_attributes.add(
@@ -604,6 +608,10 @@ def register_computer(request, name, uuid, computer, data):
             pms = Pms.objects.get(name=pms_name)
             add_notification_project(project, pms, computer)
 
+        # Add Computer to Domain
+        if user and user.userprofile.domain_preference:
+            user.userprofile.domain_preference.included_attributes.add(computer.get_cid_attribute())
+
         # returns keys to client
         return return_message(cmd, get_keys_to_client(project_name))
     except ObjectDoesNotExist:
@@ -717,6 +725,7 @@ def get_computer_tags(request, name, uuid, computer, data):
     for tag in computer.tags.all():
         selected_tags.append(tag.__str__())
 
+    # DEPLOYMENT TAGS
     available_tags = {}
     for deploy in Deployment.objects.filter(
         project=computer.project,
@@ -729,6 +738,18 @@ def get_computer_tags(request, name, uuid, computer, data):
             if tag.property_att.name not in available_tags:
                 available_tags[tag.property_att.name] = []
 
+            value = tag.__str__()
+            if value not in available_tags[tag.property_att.name]:
+                available_tags[tag.property_att.name].append(value)
+
+    # DOMAIN TAGS
+    for domain in Domain.objects.filter(
+        Q(included_attributes__in=computer.sync_attributes.all()) &
+        ~Q(excluded_attributes__in=computer.sync_attributes.all())
+    ):
+        for tag in domain.tags.all():
+            if tag.property_att.name not in available_tags:
+                available_tags[tag.property_att.name] = []
             value = tag.__str__()
             if value not in available_tags[tag.property_att.name]:
                 available_tags[tag.property_att.name].append(value)

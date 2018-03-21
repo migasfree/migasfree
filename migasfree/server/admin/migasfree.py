@@ -10,6 +10,8 @@ from django.utils.html import format_html
 from django.db.models.fields import BooleanField, IntegerField
 from django.apps import apps
 from django.template.loader import render_to_string
+from django import forms
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class MigasFields(object):
@@ -189,7 +191,21 @@ class MigasAdmin(ExportActionModelAdmin):
             form.base_fields[field].widget.can_add_related = False
             form.base_fields[field].widget.can_delete_related = False
 
+        if self.model.__name__ in ['Store', 'Package', 'Deployment', 'Scope']:
+            # adding request to ModelForm
+            class ModelFormMetaClass(forms.ModelForm):
+                def __new__(cls, *args, **kwargs):
+                    kwargs['request'] = request
+                    return form(*args, **kwargs)
+            return ModelFormMetaClass
+
         return form
+
+    def get_queryset(self, request):
+        if hasattr(self.model.objects, 'scope'):
+            return self.model.objects.scope(request.user.userprofile)
+        else:
+            return super(MigasAdmin, self).get_queryset(request)
 
 
 class MigasChangeList(ChangeList):
@@ -206,7 +222,9 @@ class MigasChangeList(ChangeList):
                     for key, value in x.used_parameters.iteritems():
                         lookup_type = key.split('__')[1]
                         if lookup_type == 'isnull':
-                            element += u'{}'.format(_('empty') if value else _('not empty'))
+                            element += u'{}'.format(
+                                _('empty') if value else _('not empty')
+                            )
                         else:
                             element += u'{}={}'.format(lookup_type, value)
                         params.pop(key, None)
@@ -293,16 +311,24 @@ class MigasChangeList(ChangeList):
                     _name = 'excluded attributes'
 
                 if not hasattr(self.model, _classname):
-                    _app = self.model._meta.app_label
+                    if _classname == "attribute":
+                        _app = "server"
+                    else:
+                        _app = self.model._meta.app_label
                     model = apps.get_model(_app, _classname)
-                    self.append(_name, model.objects.get(pk=params[k]))
+                    try:
+                        self.append(_name, model.objects.get(pk=params[k]))
+                    except ObjectDoesNotExist:
+                        pass
                 else:
                     model = getattr(self.model, _classname)
                     _classname = model.field.related_model.__name__
                     _app = model.field.related_model._meta.app_label
                     model = apps.get_model(_app, _classname)
-                    self.append(_name, model.objects.get(pk=params[k]))
-
+                    try:
+                        self.append(_name, model.objects.get(pk=params[k]))
+                    except ObjectDoesNotExist:
+                        pass
             elif k == "id__in":
                 _classname = self.model.__name__
                 _app = self.model._meta.app_label

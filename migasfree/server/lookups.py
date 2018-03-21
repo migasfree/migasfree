@@ -4,7 +4,6 @@ from django.db.models import Q
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.utils.html import escape
-from django.utils.translation import ugettext_lazy as _
 
 from ajax_select import register, LookupChannel
 
@@ -14,8 +13,7 @@ from .models import (
     Package,
     Property,
     DeviceLogical,
-    UserProfile,
-    Computer
+    Computer,
 )
 
 
@@ -34,7 +32,8 @@ class PermissionLookup(LookupChannel):
     def format_item_display(self, obj):
         return obj.__str__()
 
-    def get_objects(self, ids):
+    def get_objects(self, objects):
+        ids = [obj.pk for obj in objects]
         return self.model.objects.filter(pk__in=ids).order_by('name')
 
 
@@ -47,13 +46,13 @@ class AttributeLookup(LookupChannel):
         if q[0:Property.PREFIX_LEN].upper() \
                 in (item.upper() for item in properties) \
                 and len(q) > (Property.PREFIX_LEN + 1):
-            queryset = self.model.objects.filter(
+            queryset = self.model.objects.scope(request.user.userprofile).filter(
                 property_att__prefix__icontains=q[0:Property.PREFIX_LEN],
                 value__icontains=q[Property.PREFIX_LEN + 1:],
                 property_att__enabled=True
             )
         else:
-            queryset = self.model.objects.filter(
+            queryset = self.model.objects.scope(request.user.userprofile).filter(
                 Q(value__icontains=q) |
                 Q(description__icontains=q) |
                 Q(property_att__prefix__icontains=q)
@@ -79,7 +78,8 @@ class AttributeLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
-    def get_objects(self, ids):
+    def get_objects(self, objects):
+        ids = [obj.pk for obj in objects]
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
             return self.model.objects.filter(
                 pk__in=ids
@@ -103,73 +103,13 @@ class AttributeLookup(LookupChannel):
             )
 
 
-@register('attribute_computers')
-class AttributeComputersLookup(LookupChannel):
-    model = Attribute
-
-    def get_query(self, q, request):
-        properties = Property.objects.values_list('prefix', flat=True)
-        if q[0:Property.PREFIX_LEN].upper() in (item.upper() for item in properties) \
-                and len(q) > (Property.PREFIX_LEN + 1):
-            return self.model.objects.filter(
-                property_att__prefix__icontains=q[0:Property.PREFIX_LEN],
-                value__icontains=q[Property.PREFIX_LEN + 1:],
-                property_att__enabled=True
-            ).order_by('value')
-        else:
-            return self.model.objects.filter(
-                Q(value__icontains=q) |
-                Q(description__icontains=q) |
-                Q(property_att__prefix__icontains=q)
-            ).filter(
-                property_att__enabled=True
-            ).order_by('value')
-
-    def format_match(self, obj):
-        return _("%s (total %s)") % (
-            escape(obj.__str__()),
-            escape(obj.total_computers(UserProfile.get_logged_project()))
-        )
-
-    def format_item_display(self, obj):
-        return _("%s (total %s)") % (
-            obj.link(),
-            escape(obj.total_computers(UserProfile.get_logged_project()))
-        )
-
-    def can_add(self, user, model):
-        return False
-
-    def get_objects(self, ids):
-        if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
-            return self.model.objects.filter(
-                pk__in=ids
-            ).filter(
-                ~Q(property_att__prefix='CID')
-            ).order_by(
-                'property_att',
-                'value'
-            ) | self.model.objects.filter(
-                pk__in=ids
-            ).filter(
-                property_att__prefix='CID'
-            ).order_by(
-                'description'
-            )
-        else:
-            return self.model.objects.filter(pk__in=ids).order_by(
-                'property_att',
-                'value'
-            )
-
-
 @register('package')
 class PackageLookup(LookupChannel):
     model = Package
 
     def get_query(self, q, request):
         project_id = request.GET.get('project_id', None)
-        queryset = self.model.objects.filter(name__icontains=q).order_by('name')
+        queryset = self.model.objects.scope(request.user.userprofile).filter(name__icontains=q).order_by('name')
         if project_id:
             queryset = queryset.filter(project__id=project_id)
 
@@ -184,7 +124,8 @@ class PackageLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
-    def get_objects(self, ids):
+    def get_objects(self, objects):
+        ids = [obj.pk for obj in objects]
         return self.model.objects.filter(pk__in=ids).order_by('name')
 
 
@@ -193,7 +134,7 @@ class TagLookup(LookupChannel):
     model = ServerAttribute
 
     def get_query(self, q, request):
-        return self.model.objects.filter(
+        return self.model.objects.scope(request.user.userprofile).filter(
             property_att__enabled=True,
             property_att__sort='server'
         ).filter(
@@ -215,7 +156,8 @@ class TagLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
-    def get_objects(self, ids):
+    def get_objects(self, objects):
+        ids = [obj.pk for obj in objects]
         return self.model.objects.filter(
             pk__in=ids
         ).order_by(
@@ -247,9 +189,9 @@ class ComputerLookup(LookupChannel):
 
     def get_query(self, q, request):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
-            return self.model.objects.filter(id__exact=q)
+            return self.model.objects.scope(request.user.userprofile).filter(id__exact=q)
         else:
-            return self.model.objects.filter(
+            return self.model.objects.scope(request.user.userprofile).filter(
                 Q(id__exact=q) |
                 Q(**{
                     '{}__icontains'.format(
@@ -274,7 +216,9 @@ class ComputerLookup(LookupChannel):
             pk__in=ids
         ).order_by(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0])]
 
-    def get_objects(self, ids):
+    def get_objects(self, objects):
+        ids = [obj.pk for obj in objects]
+
         lst = []
         for item in ids:
             if item.__class__.__name__ == "Computer":

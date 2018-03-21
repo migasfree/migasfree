@@ -85,12 +85,6 @@ urlpatterns = [
         name='project_delete'
     ),
 
-    url(
-        r'^admin/preferences/$',
-        preferences,
-        name='preferences'
-    ),
-
     url(r'^api/$', api, name='api'),
 
     url(
@@ -185,6 +179,12 @@ urlpatterns = [
     ),
 
     url(
+        r'^domain_autocomplete/$',
+        DomainAutocomplete.as_view(),
+        name='domain_autocomplete',
+    ),
+
+    url(
         r'^device_connection_autocomplete/$',
         DeviceConnectionAutocomplete.as_view(),
         name='device_connection_autocomplete',
@@ -200,6 +200,18 @@ urlpatterns = [
         r'^device_logical_autocomplete/$',
         DeviceLogicalAutocomplete.as_view(),
         name='device_logical_autocomplete',
+    ),
+
+    url(
+        r'^domain/change/$',
+        change_domain,
+        name='change_domain'
+    ),
+
+    url(
+        r'^scope/change/$',
+        change_scope,
+        name='change_scope'
     ),
 
     # backwards compatibility

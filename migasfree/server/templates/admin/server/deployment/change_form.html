@@ -86,6 +86,25 @@
                 {% trans 'To Whom (Attributes)' %}
             </div>
             <div class="panel-body">
+                {% if user.userprofile.domain %}
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <p title="{% trans 'domain' %}">
+                            <span class="fas fa-globe"></span>&nbsp; {{ user.userprofile.domain.link }}
+                            <input type="hidden" id="id_domain" name="domain" value="{{ adminform.form.domain.initial.real }}" />
+                        </p>
+                    </div>
+                </div>
+                {% elif original.domain %}
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <p title="{% trans 'domain' %}">
+                            <span class="fas fa-globe"></span>&nbsp; {{ original.domain.link }}
+                            <input type="hidden" id="id_domain" name="domain" value="{{ original.domain.id }}" />
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'included attributes' %}">

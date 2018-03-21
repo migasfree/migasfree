@@ -7,7 +7,16 @@ from django.utils.encoding import python_2_unicode_compatible
 from . import MigasLink
 
 
-class UserManager(models.Manager):
+class DomainUserManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainUserManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(computer__in=user.get_computers())
+
+        return qs.distinct()
+
+
+class UserManager(DomainUserManager):
     def create(self, name, fullname=''):
         obj = User()
         obj.name = name

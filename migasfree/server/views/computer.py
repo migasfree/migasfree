@@ -5,6 +5,7 @@ from datetime import datetime
 from django.db import transaction
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import AnonymousUser
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render, get_object_or_404
@@ -18,7 +19,7 @@ from ..models import (
     Computer, Synchronization, Error, Fault,
     StatusLog, Migration, Project, Deployment,
     FaultDefinition, DeviceLogical,
-    Attribute, AttributeSet
+    Attribute, AttributeSet,
 )
 from ..utils import d2s, to_heatmap
 from ..api import upload_computer_info
@@ -117,7 +118,7 @@ def computer_replacement(request):
         'computer_replacement.html',
         {
             'title': _('Computers Replacement'),
-            'form': form
+            'form': form,
         }
     )
 
@@ -128,27 +129,27 @@ def computer_events(request, pk):
     now = datetime.now()
 
     syncs = to_heatmap(
-        Synchronization.by_day(computer.pk, computer.created_at, now)
+        Synchronization.by_day(computer.pk, computer.created_at, now, request.user.userprofile)
     )
     syncs_count = sum(syncs.values())
 
     errors = to_heatmap(
-        Error.by_day(computer.pk, computer.created_at, now)
+        Error.by_day(computer.pk, computer.created_at, now, request.user.userprofile)
     )
     errors_count = sum(errors.values())
 
     faults = to_heatmap(
-        Fault.by_day(computer.pk, computer.created_at, now)
+        Fault.by_day(computer.pk, computer.created_at, now, request.user.userprofile)
     )
     faults_count = sum(faults.values())
 
     status = to_heatmap(
-        StatusLog.by_day(computer.pk, computer.created_at, now)
+        StatusLog.by_day(computer.pk, computer.created_at, now, request.user.userprofile)
     )
     status_count = sum(status.values())
 
     migrations = to_heatmap(
-        Migration.by_day(computer.pk, computer.created_at, now)
+        Migration.by_day(computer.pk, computer.created_at, now, request.user.userprofile)
     )
     migrations_count = sum(migrations.values())
 
@@ -174,8 +175,13 @@ def computer_events(request, pk):
 
 @login_required
 def computer_simulate_sync(request, pk):
-    computer = Computer.objects.get(pk=pk)
+    computer = get_object_or_404(Computer, pk=pk)
     project = Project.objects.get(id=computer.project.id)
+
+    user = request.user
+
+    # do not use the user logged. Change to AnonymousUser
+    request.user = AnonymousUser()
 
     result = {
         'title': _('Simulate sync: %s') % computer,
@@ -262,6 +268,9 @@ def computer_simulate_sync(request, pk):
             for device in result.get("devices", {}).get("logical", []):
                 devices.append(DeviceLogical.objects.get(pk=device['PRINTER']['id']))
             result["devices"] = devices
+
+            # return to user logged
+            request.user = user
 
     return render(
         request,

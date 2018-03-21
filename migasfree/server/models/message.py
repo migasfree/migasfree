@@ -7,7 +7,15 @@ from django.utils.translation import ugettext_lazy as _
 from . import Computer
 
 
-class MessageManager(models.Manager):
+class DomainMessageManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainMessageManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(computer_id__in=user.get_computers())
+        return qs
+
+
+class MessageManager(DomainMessageManager):
     def create(self, computer, text):
         obj = Message()
         obj.computer = computer

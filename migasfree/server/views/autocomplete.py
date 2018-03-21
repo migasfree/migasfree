@@ -7,7 +7,7 @@ from django.conf import settings
 from dal import autocomplete
 
 from ..models import (
-    Computer, Attribute, UserProfile,
+    Computer, Attribute, UserProfile, Domain,
     Device, DeviceConnection, DeviceModel, DeviceLogical,
 )
 
@@ -53,7 +53,7 @@ class ComputerAutocomplete(AutocompleteModelBase):
         if not self.request.user.is_authenticated:
             return Computer.objects.none()
 
-        qs = Computer.objects.all()
+        qs = Computer.objects.scope(self.request.user.userprofile)
 
         if self.q:
             conditions = self.choices_for_request_conditions(
@@ -144,6 +144,25 @@ class GroupAutocomplete(AutocompleteModelBase):
             qs = qs.filter(conditions)
 
         return qs.order_by('name')
+
+
+class DomainAutocomplete(AutocompleteModelBase):
+    search_fields = ['name']
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Domain.objects.none()
+
+        qs = Domain.objects.all()
+
+        if self.q:
+            conditions = self.choices_for_request_conditions(
+                self.q, self.search_fields
+            )
+            qs = qs.filter(conditions)
+
+        return qs.order_by('name')
+
 
 
 class DeviceConnectionAutocomplete(AutocompleteModelBase):

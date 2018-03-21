@@ -8,7 +8,16 @@ from . import Project
 from .event import Event
 
 
-class MigrationManager(models.Manager):
+class DomainMigrationManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainMigrationManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project_id__in=user.get_projects())
+            qs = qs.filter(computer_id__in=user.get_computers())
+        return qs
+
+
+class MigrationManager(DomainMigrationManager):
     def create(self, computer, project):
         obj = Migration()
         obj.computer = computer

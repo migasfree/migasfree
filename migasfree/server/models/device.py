@@ -46,7 +46,7 @@ class Device(models.Model, MigasLink):
         default="{}"
     )
 
-    def menu_link(self):
+    def menu_link(self, user):
         if self.id:
             data = json.loads(self.data)
             ip = data.get('IP', None)
@@ -64,7 +64,8 @@ class Device(models.Model, MigasLink):
                 self._actions = [
                     [ugettext('Go to %s' % self.model), address]
                 ]
-        return super(Device, self).menu_link()
+
+        return super(Device, self).menu_link(user)
 
     def location(self):
         data = json.loads(self.data)

@@ -18,6 +18,25 @@ from migasfree.server.utils import to_list
 _UNSAVED_IMAGEFIELD = 'unsaved_imagefield'
 
 
+class DomainPackagesByProjectManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainPackagesByProjectManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+        return qs
+
+
+class PackagesByProjectManager(DomainPackagesByProjectManager):
+    def create(self, applcation, project,packages_to_install):
+        obj = PackagesByProject()
+        obj.applcation = applcation
+        obj.project = project
+        obj.packages_to_install = packages_to_install
+        obj.save()
+
+        return obj
+
+
 class MediaFileSystemStorage(FileSystemStorage):
     def get_available_name(self, name, max_length=None):
         if max_length and len(name) > max_length:
@@ -137,6 +156,8 @@ class PackagesByProject(models.Model, MigasLink):
         verbose_name=_('packages to install'),
         blank=True,
     )
+
+    objects = PackagesByProjectManager()
 
     def __str__(self):
         return u'{}@{}'.format(self.application, self.project)

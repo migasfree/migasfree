@@ -9,14 +9,30 @@ from . import Project, AutoCheckError
 from .event import Event
 
 
-class UncheckedManager(models.Manager):
+class DomainErrorManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainErrorManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(
+                project_id__in=user.get_projects(),
+                computer_id__in=user.get_computers()
+            )
+        return qs
+
+
+class UncheckedManager(DomainErrorManager):
     def get_queryset(self):
         return super(UncheckedManager, self).get_queryset().filter(
             checked=0
         )
 
+    def scope(self, user):
+        return super(UncheckedManager, self).scope(user).filter(
+            checked=0
+        )
 
-class ErrorManager(models.Manager):
+
+class ErrorManager(DomainErrorManager):
     def create(self, computer, project, description):
         obj = Error()
         obj.computer = computer
@@ -49,8 +65,8 @@ class Error(Event):
     unchecked = UncheckedManager()
 
     @staticmethod
-    def unchecked_count():
-        return Error.unchecked.count()
+    def unchecked_count(user):
+        return Error.unchecked.scope(user).count()
 
     def checked_ok(self):
         self.checked = True

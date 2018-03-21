@@ -65,6 +65,21 @@ def add_perms(group, tables=None, all_perms=True):
                 ).id
             )
 
+def add_perms_only_modify(group, tables=None):
+    if tables is None:
+        tables = []
+
+    perms = ['change_{}','can_save_{}']
+
+    for table in tables:
+        app, name = table.split('.')
+        for pattern in perms:
+            group.permissions.add(
+                Permission.objects.get(
+                    codename=pattern.format(name),
+                    content_type__app_label=app
+                ).id
+            )
 
 def configure_default_users():
     """
@@ -96,6 +111,7 @@ def configure_default_users():
         "server.query",
         "server.hwnode", "server.hwcapability",
         "server.hwconfiguration", "server.hwlogicalname",
+        "server.domain", "server.scope",
         "catalog.application", "catalog.packagesbyproject",
         "catalog.policy", "catalog.policygroup",
     ]
@@ -201,8 +217,26 @@ def configure_default_users():
     add_perms(configurator, tables)
     configurator.save()
 
+    # admin domain group
+    admin_domain = Group.objects.filter(name='Admin Domain')
+    if not admin_domain:
+        admin_domain = Group()
+        admin_domain.name = "Admin Domain"
+        admin_domain.save()
+    else:
+        admin_domain = admin_domain[0]
+
+    tables = [
+        "server.scope", "server.deployment",
+    ]
+    admin_domain.permissions.clear()
+    add_perms(admin_domain, tables)
+    add_perms_only_modify(admin_domain, ["server.computer", ])
+    admin_domain.save()
+
     # default users
     configure_user("admin")
+    configure_user("admin-domain", [reader, admin_domain] )
     configure_user("packager", [reader, packager])
     configure_user("configurator", [reader, configurator])
     configure_user("installer", [reader, device_installer])

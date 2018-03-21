@@ -41,6 +41,14 @@ class AttributeViewSet(viewsets.ModelViewSet):
     filter_class = AttributeFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(id__in=user.get_attributes()).distinct()
+
+        return qs
+
     def get_serializer_class(self):
         if self.action == 'update' or self.action == 'partial_update':
             return serializers.AttributeWriteSerializer
@@ -143,6 +151,14 @@ class ComputerViewSet(viewsets.ModelViewSet):
             *args,
             **kwargs
         )
+
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(id__in=user.get_computers())
+
+        return qs
 
     @detail_route(methods=['get'], url_path='software/inventory')
     def software_inventory(self, request, pk=None):
@@ -257,6 +273,17 @@ class ErrorViewSet(
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(
+                project_id__in=user.get_projects(),
+                computer_id__in=user.get_computers()
+            )
+
+        return qs
+
     def get_serializer_class(self):
         if self.action == 'update' or self.action == 'partial_update':
             return serializers.ErrorWriteSerializer
@@ -292,6 +319,17 @@ class FaultViewSet(
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(
+                project_id__in=user.get_projects(),
+                computer_id__in=user.get_computers()
+            )
+
+        return qs
+
     def get_serializer_class(self):
         if self.action == 'update' or self.action == 'partial_update':
             return serializers.FaultWriteSerializer
@@ -324,6 +362,14 @@ class HardwareViewSet(
     ordering_fields = '__all__'
     ordering = ('id',)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(computer_id__in=user.get_computers())
+
+        return qs
+
 
 class MigrationViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
@@ -335,6 +381,17 @@ class MigrationViewSet(
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('-created_at',)
+
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(
+                project_id__in=user.get_projects(),
+                computer_id__in=user.get_computers()
+            )
+
+        return qs
 
 
 class NotificationViewSet(
@@ -364,6 +421,14 @@ class PackageViewSet(viewsets.ModelViewSet):
     ordering_fields = '__all__'
     ordering = ('name',)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+
+        return qs
+
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update' \
                 or self.action == 'partial_update':
@@ -392,6 +457,14 @@ class PlatformViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PlatformSerializer
     ordering_fields = '__all__'
     ordering = ('name',)
+
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects()).distinct()
+
+        return qs
 
 
 class PmsViewSet(viewsets.ModelViewSet):
@@ -424,6 +497,16 @@ class DeploymentViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('-start_date',)
+
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+            if user.domain_preference:
+                qs = qs.filter(domain=user.domain_preference)
+
+        return qs
 
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update' \
@@ -485,6 +568,14 @@ class StatusLogViewSet(
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(computer_id__in=user.get_computers())
+
+        return qs
+
 
 class StoreViewSet(viewsets.ModelViewSet):
     queryset = models.Store.objects.all()
@@ -493,6 +584,14 @@ class StoreViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('name',)
+
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+
+        return qs
 
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update' \
@@ -513,6 +612,17 @@ class SynchronizationViewSet(
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(
+                project_id__in=user.get_projects(),
+                computer_id__in=user.get_computers()
+            )
+
+        return qs
+
 
 class UserViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
@@ -523,6 +633,14 @@ class UserViewSet(
     ordering_fields = '__all__'
     ordering = ('name',)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(computer__in=user.get_computers())
+
+        return qs
+
 
 class ProjectViewSet(viewsets.ModelViewSet):
     queryset = models.Project.objects.all()
@@ -532,12 +650,50 @@ class ProjectViewSet(viewsets.ModelViewSet):
     ordering_fields = '__all__'
     ordering = ('name',)
 
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset
+        if not user.is_view_all():
+            qs = qs.filter(id__in=user.get_projects())
+
+        return qs
+
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update' \
                 or self.action == 'partial_update':
             return serializers.ProjectWriteSerializer
 
         return serializers.ProjectSerializer
+
+
+class DomainViewSet(viewsets.ModelViewSet):
+    queryset = models.Domain.objects.all()
+    serializer_class = serializers.DomainSerializer
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    ordering_fields = '__all__'
+    ordering = ('name',)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.DomainWriteSerializer
+
+        return serializers.DomainSerializer
+
+
+class ScopeViewSet(viewsets.ModelViewSet):
+    queryset = models.Scope.objects.all()
+    serializer_class = serializers.ScopeSerializer
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    ordering_fields = '__all__'
+    ordering = ('name',)
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.ScopeWriteSerializer
+
+        return serializers.ScopeSerializer
 
 
 class ConnectionViewSet(viewsets.ModelViewSet):

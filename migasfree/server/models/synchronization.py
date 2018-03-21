@@ -8,7 +8,19 @@ from .event import Event
 from .user import User
 
 
-class SynchronizationManager(models.Manager):
+class DomainSynchronizationManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainSynchronizationManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(
+                project_id__in=user.get_projects(),
+                computer_id__in=user.get_computers()
+            )
+
+        return qs
+
+
+class SynchronizationManager(DomainSynchronizationManager):
     def create(self, computer):
         obj = Synchronization()
         obj.computer = computer

@@ -7,14 +7,28 @@ from . import FaultDefinition, Project
 from .event import Event
 
 
-class UncheckedManager(models.Manager):
+class DomainFaultManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainFaultManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project_id__in=user.get_projects())
+            qs = qs.filter(computer_id__in=user.get_computers())
+        return qs
+
+
+class UncheckedManager(DomainFaultManager):
     def get_queryset(self):
         return super(UncheckedManager, self).get_queryset().filter(
             checked=0
         )
 
+    def scope(self, user):
+        return super(UncheckedManager, self).scope(user).filter(
+            checked=0
+        )
 
-class FaultManager(models.Manager):
+
+class FaultManager(DomainFaultManager):
     def create(self, computer, definition, result):
         obj = Fault()
         obj.computer = computer
@@ -61,11 +75,11 @@ class Fault(Event):
     unchecked = UncheckedManager()
 
     @staticmethod
-    def unchecked_count(user_id=0):
-        queryset = Fault.unchecked.all()
-        if user_id:
+    def unchecked_count(user):
+        queryset = Fault.unchecked.scope(user)
+        if user:
             queryset = queryset.filter(
-                models.Q(fault_definition__users__id__in=[user_id, ])
+                models.Q(fault_definition__users__id__in=[user.id, ])
                 | models.Q(fault_definition__users=None)
             )
 

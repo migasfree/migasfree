@@ -183,6 +183,36 @@
 
                     <ul class="nav navbar-nav navbar-right navbar-user">
                         {% if user.is_staff %}
+                            {% if domain_names %}
+                            <li class="dropdown area-dropdown">
+                                <a href="#" title="{% trans 'Change Domain' %}" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fas fa-globe"></i>  {{ current_domain }} <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    {% for item in domain_names %}
+                                        <li>
+                                            <a href="{% url 'change_domain' %}?domain={{ item.0 }}">{{ item.1 }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endif %}
+
+                            {% if scope_names %}
+                            <li class="dropdown area-dropdown">
+                                <a href="#" title="{% trans 'Change Scope' %}" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fas fa-eye"></i>  {{ current_scope }} <b class="caret"></b>
+                                </a>
+                                <ul class="dropdown-menu">
+                                    {% for item in scope_names %}
+                                        <li>
+                                            <a href="{% url 'change_scope' %}?scope={{ item.0 }}">{{ item.1 }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            {% endif %}
+
                             <li class="dropdown alerts-dropdown" id="alerts">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="{% trans 'Alerts' %}">
                                     <i class="fas fa-bell"></i> <span class="sr-only">{% trans 'Alerts' %}</span> <span class="badge">0</span>
@@ -196,8 +226,6 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a href="{% url 'admin:password_change' %}"><i class="fas fa-key"></i> {% trans 'Password change' %}</a></li>
-                                <li><a href="{% url 'preferences' %}"><i class="fas fa-cog"></i> {% trans 'Preferences' %}</a></li>
-                                <li class="divider"></li>
                                 <li><a href="{% url 'admin:logout' %}"><i class="fas fa-power-off"></i> {% trans 'Logout' %}</a></li>
                             </ul>
                         </li>

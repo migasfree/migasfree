@@ -39,7 +39,7 @@ class AttributeSerializer(serializers.ModelSerializer):
     property_att = PropertyInfoSerializer(many=False, read_only=True)
 
     def get_total_computers(self, obj):
-        return obj.total_computers()
+        return obj.total_computers(user=self.context['request'].user)
 
     class Meta:
         model = models.Attribute
@@ -402,7 +402,7 @@ class ScheduleDelaySerializer(serializers.ModelSerializer):
     total_computers = serializers.SerializerMethodField()
 
     def get_total_computers(self, obj):
-        return obj.total_computers()
+        return obj.total_computers(user=self.context['request'].user)
 
     class Meta:
         model = models.ScheduleDelay
@@ -485,6 +485,45 @@ class ComputerSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Computer
         fields = ('sync_start_date', 'sync_end_date', 'sync_user', 'sync_attributes')
+
+
+class DomainInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Domain
+        fields = ('id', 'name')
+
+
+class DomainSerializer(serializers.ModelSerializer):
+    included_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    available_tags = AttributeInfoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.Domain
+        fields = '__all__'
+
+
+class DomainWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Domain
+        fields = '__all__'
+
+
+class ScopeSerializer(serializers.ModelSerializer):
+    included_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
+    user = UserProfileInfoSerializer(many=False, read_only=True)
+    domain = DomainInfoSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = models.Scope
+        fields = '__all__'
+
+
+class ScopeWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Scope
+        fields = '__all__'
 
 
 class ConnectionInfoSerializer(serializers.ModelSerializer):

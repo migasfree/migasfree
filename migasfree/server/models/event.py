@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2017 Jose Antonio Chavarría <jachavar@gmail.com>
-# Copyright (c) 2016-2017 Alberto Gacías <alberto@migasfree.org>
+# Copyright (c) 2016-2018 Jose Antonio Chavarría <jachavar@gmail.com>
+# Copyright (c) 2016-2018 Alberto Gacías <alberto@migasfree.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -39,8 +39,8 @@ class Event(models.Model):
     )
 
     @classmethod
-    def by_day(cls, computer_id, start_date, end_date):
-        return cls.objects.filter(
+    def by_day(cls, computer_id, start_date, end_date, user):
+        return cls.objects.scope(user).filter(
              computer__id=computer_id,
              created_at__range=(start_date, end_date)
         ).annotate(
@@ -50,8 +50,8 @@ class Event(models.Model):
         )
 
     @classmethod
-    def by_hour(cls, start_date, end_date):
-        return cls.objects.filter(
+    def by_hour(cls, start_date, end_date, user):
+        return cls.objects.scope(user).filter(
             created_at__range=(start_date, end_date)
         ).annotate(
             hour=TruncHour('created_at', output_field=models.DateTimeField())
