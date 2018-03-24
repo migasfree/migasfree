@@ -105,7 +105,6 @@ setup(
     platforms=['Linux'],
     packages=[
         'migasfree',
-        'migasfree.middleware',
         'migasfree.server',
         'migasfree.server.admin',
         'migasfree.server.migrations',
@@ -119,7 +118,6 @@ setup(
     ],
     package_dir={
         'migasfree': 'migasfree',
-        'migasfree.middleware': 'migasfree/middleware',
         'migasfree.server': 'migasfree/server',
         'migasfree.server.admin': 'migasfree/server/admin',
         'migasfree.server.migrations': 'migasfree/server/migrations',
