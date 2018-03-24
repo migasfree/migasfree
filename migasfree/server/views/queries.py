@@ -55,7 +55,7 @@ def execute_query(request, parameters, form_param=None):
         filters = []
         if form_param:
             for item in form_param:
-                if item.name not in ['id_query', 'user_project']:
+                if item.name not in ['id_query']:
                     filters.append('{}: {}'.format(
                         item.label,
                         parameters['{}_display'.format(item.name)]
@@ -88,17 +88,8 @@ def execute_query(request, parameters, form_param=None):
 def get_query(request, query_id):
     query = get_object_or_404(Query, id=query_id)
 
-    project = get_object_or_404(UserProfile, id=request.user.id).project
-    if not project:
-        # The user does not have a project
-        # We assign to user the first project found
-        project = Project.objects.all().order_by("id")[0]
-        user = UserProfile.objects.get(id=request.user.id)
-        user.update_project(project)
-
     default_parameters = {
         'id_query': query_id,
-        'user_project': project.id
     }
 
     if request.method == 'POST':
@@ -110,11 +101,11 @@ def get_query(request, query_id):
     try:
         # this function will be override after exec query.parameters
         # only declared to avoid unresolved reference
-        def form_params():
+        def form_params(request):
             pass
 
         exec(query.parameters.replace("\r", ""))
-        form = form_params()(initial=default_parameters)
+        form = form_params(request)(initial=default_parameters)
 
         if request.method == 'POST':
             for item in form:
