@@ -256,7 +256,7 @@ class ComputerViewSet(viewsets.ModelViewSet):
             }
         """
         computer = get_object_or_404(models.Computer, pk=pk)
-        serializer = serializers.ComputerSyncSerializer(computer)
+        serializer = serializers.ComputerSyncSerializer(computer, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
