@@ -47,11 +47,12 @@ class ScheduleDelay(models.Model):
 
     objects = ScheduleDelayManager()
 
+    # computers with productive status
     TOTAL_COMPUTER_QUERY = "SELECT DISTINCT COUNT(server_computer.id) \
         FROM server_computer, server_computer_sync_attributes \
         WHERE server_scheduledelay_attributes.attribute_id=server_computer_sync_attributes.attribute_id \
         AND server_computer_sync_attributes.computer_id=server_computer.id \
-        AND server_computer.status <> 'unsubscribed'"
+        AND server_computer.status IN ('intended', 'reserved', 'unknown')"
 
     def total_computers(self, user=None):
         if user and not user.userprofile.is_view_all():
