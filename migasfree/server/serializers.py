@@ -39,7 +39,10 @@ class AttributeSerializer(serializers.ModelSerializer):
     property_att = PropertyInfoSerializer(many=False, read_only=True)
 
     def get_total_computers(self, obj):
-        return obj.total_computers(user=self.context['request'].user)
+        if self.context.get('request'):
+            return obj.total_computers(user=self.context['request'].user)
+
+        return obj.total_computers()
 
     class Meta:
         model = models.Attribute
@@ -402,7 +405,10 @@ class ScheduleDelaySerializer(serializers.ModelSerializer):
     total_computers = serializers.SerializerMethodField()
 
     def get_total_computers(self, obj):
-        return obj.total_computers(user=self.context['request'].user)
+        if self.context.get('request'):
+            return obj.total_computers(user=self.context['request'].user)
+
+        return obj.total_computers()
 
     class Meta:
         model = models.ScheduleDelay
@@ -481,6 +487,14 @@ class StatusLogSerializer(serializers.ModelSerializer):
 class ComputerSyncSerializer(serializers.ModelSerializer):
     sync_user = UserSerializer(many=False, read_only=True)
     sync_attributes = AttributeSerializer(many=True, read_only=True)
+
+    def __init__(self, *args, **kwargs):
+        super(ComputerSyncSerializer, self).__init__(*args, **kwargs)
+
+        context = kwargs.get('context', None)
+        if context:
+            request = kwargs['context']['request']
+            self.sync_attributes = AttributeSerializer(many=True, read_only=True, context={'request': request})
 
     class Meta:
         model = models.Computer
