@@ -209,7 +209,7 @@ class AttributeSetFilter(django_filters.FilterSet):
 class AttributeFilter(django_filters.FilterSet):
     class Meta:
         model = Attribute
-        fields = ['id', 'property_att__id', 'property_att__prefix', 'value']
+        fields = ['id', 'property_att__id', 'property_att__prefix', 'value', 'property_att__sort']
 
 
 class ComputerFilter(django_filters.FilterSet):
