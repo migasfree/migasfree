@@ -55,7 +55,7 @@ class Domain(models.Model, MigasLink):
     @staticmethod
     def process(attributes):
         property_set, _ = Property.objects.get_or_create(
-            prefix='DMN', sort='server',
+            prefix='DMN', sort='basic',
             defaults={'name': 'DOMAIN', 'kind': 'R'}
         )
 
