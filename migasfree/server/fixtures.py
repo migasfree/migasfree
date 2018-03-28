@@ -65,11 +65,12 @@ def add_perms(group, tables=None, all_perms=True):
                 ).id
             )
 
+
 def add_perms_only_modify(group, tables=None):
     if tables is None:
         tables = []
 
-    perms = ['change_{}','can_save_{}']
+    perms = ['change_{}', 'can_save_{}']
 
     for table in tables:
         app, name = table.split('.')
@@ -80,6 +81,7 @@ def add_perms_only_modify(group, tables=None):
                     content_type__app_label=app
                 ).id
             )
+
 
 def configure_default_users():
     """
@@ -236,7 +238,7 @@ def configure_default_users():
 
     # default users
     configure_user("admin")
-    configure_user("admin-domain", [reader, admin_domain] )
+    configure_user("admin-domain", [reader, admin_domain])
     configure_user("packager", [reader, packager])
     configure_user("configurator", [reader, configurator])
     configure_user("installer", [reader, device_installer])
