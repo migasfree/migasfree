@@ -9,6 +9,16 @@ from django.utils.encoding import python_2_unicode_compatible
 from . import Attribute, UserProfile, MigasLink
 
 
+class DomainFaultDefinitionManager(models.Manager):
+    def scope(self, user):
+        qs = super(DomainFaultDefinitionManager, self).get_queryset()
+        if not user.is_view_all():
+            atts = user.get_attributes()
+            qs = qs.filter(included_attributes__in=atts)
+            qs = qs.exclude(excluded_attributes__in=atts)
+            qs = qs.distinct()
+        return qs
+
 @python_2_unicode_compatible
 class FaultDefinition(models.Model, MigasLink):
     name = models.CharField(
@@ -57,6 +67,8 @@ class FaultDefinition(models.Model, MigasLink):
         blank=True,
         verbose_name=_("users")
     )
+
+    objects = DomainFaultDefinitionManager()
 
     def list_included_attributes(self):
         return self.included_attributes.all().values_list('value', flat=True)
