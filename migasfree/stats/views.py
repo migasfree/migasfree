@@ -355,7 +355,7 @@ def project_schedule_delays(request, project_name=None):
                 d += 1
 
             for duration in range(0, delay.duration):
-                value += Computer.productive.extra(
+                value += Computer.productive.scope(request.user.userprofile).extra(
                     select={'deployment': 'id'},
                     where=[
                         "computer_id %% {} = {}".format(delay.duration, duration)
