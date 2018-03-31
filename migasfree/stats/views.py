@@ -952,7 +952,7 @@ def provided_computers_by_delay(request):
             loop_date = start_horizon + timedelta(days=real_days)
             weekday = int(loop_date.strftime("%w"))  # [0(Sunday), 6]
             if weekday not in [0, 6]:
-                value += Computer.productive.extra(
+                value += Computer.productive.scope(request.user.userprofile).extra(
                     select={'deployment': 'id'},
                     where=[
                         "computer_id %% {} = {}".format(item.duration, duration)
