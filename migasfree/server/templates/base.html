@@ -80,6 +80,21 @@
         //]]>
         </script>
 
+        <script>
+            function filter_domain(){
+                var search = document.getElementById("domain_search").value.toUpperCase()
+                var div = document.getElementById("div_domain");
+                var items = div.getElementsByTagName("li");
+                for (var i = 0; i < items.length; ++i) {
+                  if (items[i].innerText.indexOf(search) !== -1 ){
+                    items[i].style.display = "block";
+                  } else {
+                    items[i].style.display = "none";
+                  }
+                }
+            }
+        </script>
+
         {% block extrahead %}{% endblock extrahead %}
     </head>
 
@@ -189,11 +204,18 @@
                                     <i class="fas fa-globe"></i>  {{ current_domain }} <b class="caret"></b>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    {% for item in domain_names %}
-                                        <li>
-                                            <a href="{% url 'change_domain' %}?domain={{ item.0 }}">{{ item.1 }}</a>
-                                        </li>
-                                    {% endfor %}
+                                    <form method="get">
+                                        <a>
+                                            <input id="domain_search" type="search" value="" onkeyup="filter_domain()"/>
+                                        </a>
+                                    </form>
+                                    <div id="div_domain">
+                                        {% for item in domain_names %}
+                                            <li>
+                                                <a id="{{ item.0 }}" href="{% url 'change_domain' %}?domain={{ item.0 }}">{{ item.1 }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </div>
                                 </ul>
                             </li>
                             {% endif %}
