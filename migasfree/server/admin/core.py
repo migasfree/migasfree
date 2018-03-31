@@ -30,6 +30,7 @@ from ..forms import (
 from ..filters import (
     ClientAttributeFilter, ServerAttributeFilter,
     ProjectFilterAdmin, PlatformFilterAdmin,
+    DomainFilter
 )
 from ..utils import compare_list_values
 from ..tasks import (
@@ -317,7 +318,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         'name_link', 'project_link', 'domain_link',
         'my_enabled', 'start_date', 'schedule_link', 'timeline',
     )
-    list_filter = ('enabled', ('project', ProjectFilterAdmin), 'domain')
+    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter )
     search_fields = ('name', 'available_packages__name')
     list_select_related = ("project",)
     actions = ['regenerate_metadata']
@@ -379,8 +380,6 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         packages_after = map(int, form.cleaned_data.get('available_packages'))
 
         user = request.user.userprofile
-        if user:
-            obj.domain = user.domain_preference
 
         if user.domain_preference:
             if not obj.name.startswith(user.domain_preference.name.lower()):
