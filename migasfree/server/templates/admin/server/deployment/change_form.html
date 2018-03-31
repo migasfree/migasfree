@@ -69,6 +69,9 @@
                             {% if original.id and original.domain %}
                                 <span class="fas fa-globe"></span>&nbsp;
                                 {{ original.domain.link }}
+                                <div style="display: none;">
+                                    {% dab_field_rendering adminform.form.domain %}
+                                </div>
                             {% else %}
                                 <span class="fas fa-globe"></span>
                                 {% dab_field_rendering adminform.form.domain %}
