@@ -109,7 +109,12 @@ class DeploymentForm(forms.ModelForm):
 
         if not self.instance and user.domain_preference:
             self.fields['domain'].initial = user.domain_preference
-            self.fields['domain'].widget.attrs['readonly'] = True
+
+        domains = user.domains.all()
+        if domains.count() == 0:
+            self.fields['domain'].queryset = Domain.objects.all()
+        else:
+            self.fields['domain'].queryset = domains
 
     def _validate_active_computers(self, att_list):
         for att_id in att_list:

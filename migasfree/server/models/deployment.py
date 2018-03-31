@@ -34,7 +34,7 @@ class DeploymentManager(models.Manager):
             qs = qs.filter(project__in=user.get_projects())
             domain = user.domain_preference
             if domain:
-                qs = qs.filter(domain_id=domain.id)
+                qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
 
         return qs
 
@@ -288,6 +288,18 @@ class Deployment(models.Model, MigasLink):
             self.project.pms.slug,
             name if name else self.name
         )
+
+    def can_save(self, user):
+        if user.has_perm("server.can_save_deployment"):
+            if len(user.userprofile.domains.all()) == 0 or self.domain == user.userprofile.domain_preference:
+                return True
+        return False
+
+    def can_delete(self, user):
+        if user.has_perm("server.delete_deployment"):
+            if len(user.userprofile.domains.all()) == 0 or self.domain == user.userprofile.domain_preference:
+                return True
+        return False
 
     class Meta:
         app_label = 'server'

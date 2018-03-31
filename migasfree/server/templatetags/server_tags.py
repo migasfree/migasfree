@@ -61,14 +61,24 @@ def submit_row(context):
 
     http://stackoverflow.com/questions/9179505/how-to-add-button-to-submit-row-context-in-django
     """
+
     opts = context['opts']
     change = context['change']
     is_popup = context['is_popup']
     save_as = context['save_as']
     user_id = context['user'].id
-    can_save = UserSystem.objects.get(id=user_id).has_perm(
+    user =  UserSystem.objects.get(id=user_id)
+    can_save = user.has_perm(
         '{}.can_save_{}'.format(opts.app_label, opts.model_name)
     )
+
+    delete = user.has_perm(
+        '{}.delete_{}'.format(opts.app_label, opts.model_name)
+    )
+
+    if opts.model_name == "deployment":
+        can_save = context['original'].can_save(user)
+        delete = context['original'].can_delete(user)
 
     return {
         'opts': opts,
@@ -76,7 +86,7 @@ def submit_row(context):
         'preserved_filters': context['preserved_filters'],
         'show_delete_link': (
             not is_popup and context['has_delete_permission']
-            and (change or context.get('show_delete', True))
+            and (change or context.get('show_delete', True) ) and delete
         ),
         'show_save_as_new': not is_popup and change and save_as and can_save,
         'show_save_and_add_another': (

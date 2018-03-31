@@ -64,6 +64,20 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <p title="{% trans 'editable by domain administrators' %}">
+                            {% if original.id and original.domain %}
+                                <span class="fas fa-globe"></span>&nbsp;
+                                {{ original.domain.link }}
+                            {% else %}
+                                <span class="fas fa-globe"></span>
+                                {% dab_field_rendering adminform.form.domain %}
+                            {% endif %}
+                        </p>
+
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-12 col-xs-12{% if adminform.errors.comment %} has-error{% endif %}">
                         <p title="{% trans 'comment' %}">
                             <label class="control-label" for="id_comment">
@@ -86,25 +100,6 @@
                 {% trans 'To Whom (Attributes)' %}
             </div>
             <div class="panel-body">
-                {% if user.userprofile.domain %}
-                <div class="row">
-                    <div class="col-md-12 col-xs-12">
-                        <p title="{% trans 'domain' %}">
-                            <span class="fas fa-globe"></span>&nbsp; {{ user.userprofile.domain.link }}
-                            <input type="hidden" id="id_domain" name="domain" value="{{ adminform.form.domain.initial.real }}" />
-                        </p>
-                    </div>
-                </div>
-                {% elif original.domain %}
-                <div class="row">
-                    <div class="col-md-12 col-xs-12">
-                        <p title="{% trans 'domain' %}">
-                            <span class="fas fa-globe"></span>&nbsp; {{ original.domain.link }}
-                            <input type="hidden" id="id_domain" name="domain" value="{{ original.domain.id }}" />
-                        </p>
-                    </div>
-                </div>
-                {% endif %}
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'included attributes' %}">
