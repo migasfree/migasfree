@@ -76,7 +76,7 @@ def submit_row(context):
         '{}.delete_{}'.format(opts.app_label, opts.model_name)
     )
 
-    if opts.model_name == "deployment":
+    if context['original'] and opts.model_name == "deployment":
         can_save = context['original'].can_save(user)
         delete = context['original'].can_delete(user)
 

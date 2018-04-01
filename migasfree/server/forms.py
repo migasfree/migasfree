@@ -107,7 +107,7 @@ class DeploymentForm(forms.ModelForm):
         except AttributeError:
             pass
 
-        if not self.instance and user.domain_preference:
+        if not self.instance.id and user.domain_preference:
             self.fields['domain'].initial = user.domain_preference
 
         domains = user.domains.all()
