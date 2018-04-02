@@ -261,7 +261,11 @@ class MigasChangeList(ChangeList):
             elif hasattr(x, 'links'):
                 for l in x.links:
                     if l[1] == x.used_parameters:
-                        self.append(x.title, unicode(l[0]), x.lookup_kwarg)
+                        self.append(
+                            x.title,
+                            unicode(l[0]),
+                            [x.lookup_kwarg_since, x.lookup_kwarg_until]
+                        )
                         break
             elif hasattr(x, 'field') and hasattr(x.field, 'choices') \
                     and hasattr(x, 'lookup_val') and x.lookup_val:
