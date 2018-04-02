@@ -164,7 +164,6 @@ class DomainAutocomplete(AutocompleteModelBase):
         return qs.order_by('name')
 
 
-
 class DeviceConnectionAutocomplete(AutocompleteModelBase):
     search_fields = ['name', 'device_type__name']
 
