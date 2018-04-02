@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from django.db.models import Q
 from django.contrib.admin import SimpleListFilter, RelatedFieldListFilter, ListFilter
 from django.contrib.admin.filters import ChoicesFieldListFilter
+from django.core.exceptions import ImproperlyConfigured
 from django.utils.translation import ugettext as _
 
 from .models import (
