@@ -27,9 +27,9 @@ class DomainPackagesByProjectManager(models.Manager):
 
 
 class PackagesByProjectManager(DomainPackagesByProjectManager):
-    def create(self, applcation, project,packages_to_install):
+    def create(self, application, project, packages_to_install):
         obj = PackagesByProject()
-        obj.applcation = applcation
+        obj.application = application
         obj.project = project
         obj.packages_to_install = packages_to_install
         obj.save()
