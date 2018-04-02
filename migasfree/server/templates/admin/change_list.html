@@ -1,5 +1,5 @@
 {% extends "admin/base_site.html" %}
-{% load i18n admin_urls admin_static admin_list bootstrapped_goodies_tags %}
+{% load i18n admin_urls admin_static admin_list bootstrapped_goodies_tags urls %}
 
 {% block extrastyle %}
     {{ block.super }}
@@ -60,7 +60,12 @@
         <div class="navbar-collapse collapse clearfix">
             <ul class="nav navbar-nav navbar-left">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans 'Filter' %} <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <span class="glyphicon glyphicon-filter" title="{% trans 'Filter' %}">
+                            <span class="sr-only">{% trans 'Filter' %}</span>
+                        </span>
+                        <span class="caret"></span>
+                    </a>
                     <ul class="dropdown-menu pull-left scrollable-dropdown-menu">
                         {% for spec in cl.filter_specs %}
                             {% admin_list_filter cl spec %}
@@ -72,7 +77,12 @@
                     <ul class="filter-container">
                         {% for row in cl.filter_description %}
                             <li class="filter-content">
-                                <span class="filter-field"><span class="glyphicon glyphicon-filter"></span> {{ row.name|capfirst }}</span>
+                                <span class="filter-field">
+                                    <a href="{{ current_url.get_path }}{% del_params cl.get_query_string row.param %}" class="text-danger">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                    {{ row.name|capfirst }}
+                                </span>
                                 <span class="filter-value">{{ row.value }}</span>
                             </li>
                         {% endfor %}
