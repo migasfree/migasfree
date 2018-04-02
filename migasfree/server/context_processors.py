@@ -23,8 +23,7 @@ def scope_names(request):
     if not current:
         current = ALL_RANGE
 
-    lst = []
-    lst.append([0, ALL_RANGE])
+    lst = [[0, ALL_RANGE]]
     try:
         for scope in list(
             Scope.objects.filter(
@@ -53,7 +52,7 @@ def domain_names(request):
     lst = []
     try:
         user = request.user.userprofile
-        if user.is_superuser or len(user.domains.all())==0:
+        if user.is_superuser or len(user.domains.all()) == 0:
             lst.append([0, ALL_RANGE.upper()])
             for domain in list(Domain.objects.order_by('name').values_list('id', 'name')):
                 lst.append(domain)
