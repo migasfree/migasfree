@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'url_tools.context_processors.current_url',
                 'migasfree.server.context_processors.query_names',
                 'migasfree.server.context_processors.domain_names',
                 'migasfree.server.context_processors.scope_names',
@@ -115,6 +116,7 @@ INSTALLED_APPS = (
     'form_utils',
     'markdownx',
     'datetimewidget',
+    'url_tools',
     'migasfree.catalog',
     'migasfree.stats',
 )
