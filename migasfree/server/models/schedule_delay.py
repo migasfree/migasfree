@@ -18,7 +18,9 @@ class ScheduleDelayManager(models.Manager):
                 Q(attributes__in=user.get_attributes()) |
                 Q(attributes__in=user.get_domain_tags())
             )
+
         return qs
+
 
 @python_2_unicode_compatible
 class ScheduleDelay(models.Model):
