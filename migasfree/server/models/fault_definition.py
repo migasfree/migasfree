@@ -17,7 +17,9 @@ class DomainFaultDefinitionManager(models.Manager):
             qs = qs.filter(included_attributes__in=atts)
             qs = qs.exclude(excluded_attributes__in=atts)
             qs = qs.distinct()
+
         return qs
+
 
 @python_2_unicode_compatible
 class FaultDefinition(models.Model, MigasLink):
