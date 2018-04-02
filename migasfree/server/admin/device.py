@@ -16,6 +16,9 @@ from ..forms import (
     DeviceForm, ExtraThinTextarea,
 )
 
+from ..filters import (
+    ModelFilter
+)
 
 @admin.register(DeviceType)
 class DeviceTypeAdmin(MigasAdmin):
@@ -126,7 +129,7 @@ class DeviceLogicalInline(admin.TabularInline):
 class DeviceAdmin(MigasAdmin):
     form = DeviceForm
     list_display = ('name_link', 'location', 'model_link', 'connection_link')
-    list_filter = ('model', 'connection')
+    list_filter = (ModelFilter, 'connection')
     search_fields = (
         'name',
         'model__name',
