@@ -425,6 +425,7 @@ class DomainFilter(SingleTextInputFilter):
         if self.value():
             return queryset.filter(domain__name__icontains=self.value())
 
+
 class ModelFilter(SingleTextInputFilter):
     title = 'model'
     parameter_name = 'model'
