@@ -20,6 +20,7 @@ from ..filters import (
     ModelFilter
 )
 
+
 @admin.register(DeviceType)
 class DeviceTypeAdmin(MigasAdmin):
     list_display = ('name',)
