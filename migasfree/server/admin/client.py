@@ -588,7 +588,7 @@ class UserAdmin(MigasAdmin):
 class HwNodeAdmin(MigasAdmin):  # TODO to hardware.py
     list_display = ('str_link', 'computer_link')
 
-    def str_link(self,obj):
+    def str_link(self, obj):
         return u'<a href="{}">{}</a>'.format(
             reverse('hardware_extract', args=(obj.id,)),
             obj
