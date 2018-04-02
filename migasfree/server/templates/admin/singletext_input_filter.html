@@ -6,11 +6,12 @@
 
 {#i for item, to be short in names#}
 {% with choices.0 as i %}
-
     <li>
         <form method="get">
             <a>
-                <input type="search" name="{{ i.parameter_name }}" value="{{ i.current_value|default_if_none:"" }}"/>
+                <input class="form-control" type="search"
+                       name="{{ i.parameter_name }}"
+                       value="{{ i.current_value|default_if_none:'' }}" />
             </a>
             {#create hidden inputs to preserve values from other filters and search field#}
             {% for k, v in i.get_query.items %}
@@ -27,5 +28,4 @@
             {{ i.all_choice.display }}
         </a>
     </li>
-
 {% endwith %}
