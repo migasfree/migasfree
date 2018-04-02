@@ -36,12 +36,13 @@ if not hasattr(sys, 'version_info') or sys.version_info < (2, 7, 0, 'final'):
     raise SystemExit('migasfree-server requires Python 2.7 or later.')
 
 import os
-PATH = os.path.dirname(__file__)
-README = open(os.path.join(PATH, 'README.md')).read()
-VERSION = __import__('migasfree').__version__
 
 from distutils.core import setup
 from distutils.command.install_data import install_data
+
+PATH = os.path.dirname(__file__)
+README = open(os.path.join(PATH, 'README.md')).read()
+VERSION = __import__('migasfree').__version__
 
 
 class InstallData(install_data):
@@ -55,8 +56,10 @@ class InstallData(install_data):
                     final_files.append(os.path.join(root, archive))
 
                 data_files.append(
-                    ('/usr/share/%s' % os.path.join('migasfree-server', root),
-                    final_files)
+                    (
+                        '/usr/share/%s' % os.path.join('migasfree-server', root),
+                        final_files
+                    )
                 )
 
         return data_files
@@ -92,6 +95,7 @@ class InstallData(install_data):
         self.data_files.extend(self._find_other_files())
         self.data_files.extend(self._find_doc_files())
         install_data.run(self)
+
 
 setup(
     name='migasfree-server',
