@@ -318,7 +318,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         'name_link', 'project_link', 'domain_link',
         'my_enabled', 'start_date', 'schedule_link', 'timeline',
     )
-    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter )
+    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
     search_fields = ('name', 'available_packages__name')
     list_select_related = ("project",)
     actions = ['regenerate_metadata']
