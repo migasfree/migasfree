@@ -69,15 +69,14 @@
                             {% if original.id and original.domain %}
                                 <span class="fas fa-globe"></span>&nbsp;
                                 {{ original.domain.link }}
-                                <div style="display: none;">
+                                <span class="hidden">
                                     {% dab_field_rendering adminform.form.domain %}
-                                </div>
+                                </span>
                             {% else %}
                                 <span class="fas fa-globe"></span>
                                 {% dab_field_rendering adminform.form.domain %}
                             {% endif %}
                         </p>
-
                     </div>
                 </div>
                 <div class="row">
@@ -244,7 +243,7 @@
                         <p id="computers-delay" class="lead text-center">{% trans 'Provided Computers / Delay' %}</p>
                         <object data="{% url 'provided_computers' %}?id={{ object_id }}" class="stat-embeded">
                             <embed src="{% url 'provided_computers' %}?id={{ object_id }}"
-                                   class="stat-embeded"></embed>
+                                   class="stat-embeded" />
                         </object>
                     </div>
                 </div>
