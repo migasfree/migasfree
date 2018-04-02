@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import os
-
 from .migasfree import *
 from .base import *
 from .functions import secret_key
