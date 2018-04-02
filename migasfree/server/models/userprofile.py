@@ -102,9 +102,9 @@ SELECT ARRAY(
         if computers:
             cursor = connection.cursor()
             cursor.execute("""
-                select array(
-                    select DISTINCT attribute_id from server_computer_sync_attributes WHERE computer_id IN %s
-                ) as attributes""" % ("(" + ",".join(str(e) for e in computers) + ")") )
+                SELECT array(
+                    SELECT DISTINCT attribute_id FROM server_computer_sync_attributes WHERE computer_id IN %s
+                ) AS attributes""" % ("(" + ",".join(str(e) for e in computers) + ")"))
             attributes = cursor.fetchall()[0][0]
             cursor.close()
 
@@ -115,10 +115,11 @@ SELECT ARRAY(
         if self.domain_preference:
 
             cursor = connection.cursor()
-            cursor.execute("""
-                select array(
-                    select serverattribute_id from server_domain_tags where domain_id=%s
-                ) as attributes """ % (self.domain_preference.id))
+            cursor.execute(
+                """SELECT array(
+                    SELECT serverattribute_id FROM server_domain_tags WHERE domain_id=%s
+                ) AS attributes """ % self.domain_preference.id
+            )
             tags = cursor.fetchall()[0][0]
             cursor.close()
         return tags
@@ -128,10 +129,10 @@ SELECT ARRAY(
         cursor = connection.cursor()
         computers = self.get_computers()
         if computers:
-            cursor.execute("""
-                select array(
-                    select DISTINCT project_id from server_computer WHERE id IN %s
-                ) as projects""" % ("(" + ",".join(str(e) for e in computers) + ")")
+            cursor.execute(
+                """SELECT array(
+                    SELECT DISTINCT project_id FROM server_computer WHERE id IN %s
+                ) AS projects""" % ("(" + ",".join(str(e) for e in computers) + ")")
             )
             projects = cursor.fetchall()[0][0]
             cursor.close()
