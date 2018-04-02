@@ -6,6 +6,12 @@
 
 {#i for item, to be short in names#}
 {% with choices.0 as i %}
+    {#show "All" link to reset current filter#}
+    <li{% if i.all_choice.selected %} class="selected"{% endif %}>
+        <a href="{{ i.all_choice.query_string|iriencode }}">
+            {{ i.all_choice.display }}
+        </a>
+    </li>
     <li>
         <form method="get">
             <a>
@@ -20,12 +26,5 @@
                 {% endif %}
             {% endfor %}
         </form>
-    </li>
-
-    {#show "All" link to reset current filter#}
-    <li{% if i.all_choice.selected %} class="selected"{% endif %}>
-        <a href="{{ i.all_choice.query_string|iriencode }}">
-            {{ i.all_choice.display }}
-        </a>
     </li>
 {% endwith %}
