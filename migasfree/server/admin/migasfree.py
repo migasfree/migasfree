@@ -213,6 +213,7 @@ class MigasChangeList(ChangeList):
         super(MigasChangeList, self).__init__(*args, **kwargs)
         self.filter_description = []
         params = dict(self.params)
+        remove = []
 
         for x in self.filter_specs:
             if hasattr(x, 'lookup_choices') \
@@ -229,9 +230,7 @@ class MigasChangeList(ChangeList):
                             element += u'{}={}'.format(lookup_type, value)
                         params.pop(key, None)
                     self.append(x.title, element, x.lookup_kwarg)
-                    break
-
-                if isinstance(x.lookup_choices[0][0], int):
+                elif isinstance(x.lookup_choices[0][0], int):
                     element = dict(
                         x.lookup_choices
                     )[int(x.used_parameters.values()[0])]
@@ -239,56 +238,43 @@ class MigasChangeList(ChangeList):
                     element = dict(
                         x.lookup_choices
                     )[x.used_parameters.values()[0]]
+
                 self.append(x.title, element, x.used_parameters.keys()[0])
                 for element in x.used_parameters:
                     params.pop(element, None)
             elif hasattr(x, 'lookup_choices') and hasattr(x, 'lookup_val') \
                     and x.lookup_val:
+                value = dict(x.lookup_choices)[x.lookup_val]
                 if isinstance(x.lookup_choices[0][0], int):
-                    self.append(
-                        x.lookup_title,
-                        dict(x.lookup_choices)[int(x.lookup_val)],
-                        x.lookup_kwarg
-                    )
-                    params.pop(x.lookup_kwarg, None)
-                else:
-                    self.append(
-                        x.lookup_title,
-                        dict(x.lookup_choices)[x.lookup_val],
-                        x.lookup_kwarg
-                    )
-                    params.pop(x.lookup_kwarg, None)
+                    value = dict(x.lookup_choices)[int(x.lookup_val)]
+                self.append(x.lookup_title, value, x.lookup_kwarg)
+                params.pop(x.lookup_kwarg, None)
             elif hasattr(x, 'links'):
                 for l in x.links:
-                    if l[1] == x.used_parameters:
+                    if l[1] and hasattr(x, 'used_parameters') and l[1] == x.used_parameters:
                         self.append(
                             x.title,
-                            unicode(l[0]),
+                            l[0],
                             [x.lookup_kwarg_since, x.lookup_kwarg_until]
                         )
-                        break
+                        for i in l[1]:
+                            remove.append(i)
             elif hasattr(x, 'field') and hasattr(x.field, 'choices') \
                     and hasattr(x, 'lookup_val') and x.lookup_val:
                 if isinstance(x.field, BooleanField):
-                    if x.lookup_val == '0':
-                        self.append(x.title, _("No"), x.lookup_kwarg)
-                        params.pop(x.lookup_kwarg, None)
-                    else:
-                        self.append(x.title, _("Yes"), x.lookup_kwarg)
-                        params.pop(x.lookup_kwarg, None)
-                elif isinstance(x.field, IntegerField):
-                    elements = []
-                    for element in x.lookup_val.split(','):
-                        elements.append(
-                            unicode(dict(x.field.choices)[int(element)])
-                        )
-                    self.append(x.title, ', '.join(elements), x.lookup_kwarg)
+                    self.append(
+                        x.title,
+                        _("No") if x.lookup_val == '0' else _("Yes"),
+                        x.lookup_kwarg
+                    )
                     params.pop(x.lookup_kwarg, None)
                 else:
+                    choices = dict(x.field.choices)
                     elements = []
-                    for element in x.lookup_val.split(','):
-                        elements.append(unicode(dict(x.field.choices)[element]))
-                        params.pop(x.lookup_kwarg, None)
+                    for i in x.lookup_val.split(','):
+                        elements.append(
+                            unicode(choices[int(i)] if isinstance(x.field, IntegerField) else choices[i])
+                        )
                     self.append(x.title, ', '.join(elements), x.lookup_kwarg)
                     params.pop(x.lookup_kwarg, None)
 
@@ -346,13 +332,14 @@ class MigasChangeList(ChangeList):
                             pk=int(_id)
                         ).__str__()
                     )
-                if len(_list) == 10:
-                    self.append(_classname, ", ".join(_list) + "...", k)
-                else:
-                    self.append(_classname, ", ".join(_list), k)
-
+                self.append(
+                    _classname,
+                    ", ".join(_list) + "..." if len(_list) == 10 else ", ".join(_list),
+                    k
+                )
             else:
-                self.append(k, params[k], k)
+                if k not in remove:
+                    self.append(k, params[k], k)
 
         _filter = ", ".join(
             u"{}: {}".format(
@@ -372,6 +359,6 @@ class MigasChangeList(ChangeList):
     def append(self, name, value, param=None):
         self.filter_description.append({
             "name": _(unicode(name)),
-            "value": value,
+            "value": unicode(value),
             "param": param,
         })
