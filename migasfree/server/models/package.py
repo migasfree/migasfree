@@ -126,9 +126,9 @@ class Package(models.Model, MigasLink):
         if queryset.exists():
             raise ValidationError(_('Duplicated name at project'))
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.create_dir()
-        super(Package, self).save(*args, **kwargs)
+        super(Package, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return self.name

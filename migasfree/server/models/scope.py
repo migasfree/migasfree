@@ -70,9 +70,9 @@ class Scope(models.Model, MigasLink):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.name = slugify(self.name)
-        super(Scope, self).save(*args, **kwargs)
+        super(Scope, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         app_label = 'server'

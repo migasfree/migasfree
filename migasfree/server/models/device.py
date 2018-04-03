@@ -81,13 +81,13 @@ class Device(models.Model, MigasLink):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         data = json.loads(self.data)
         if 'NAME' in data:
             data['NAME'] = data['NAME'].replace(' ', '_')
             self.data = json.dumps(data)
 
-        super(Device, self).save(*args, **kwargs)
+        super(Device, self).save(force_insert, force_update, using, update_fields)
 
     def incompatible_features(self, target):
         features = []

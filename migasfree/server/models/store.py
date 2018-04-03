@@ -96,11 +96,11 @@ class Store(models.Model, MigasLink):
         if not os.path.exists(path):
             os.makedirs(path)
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.name = slugify(self.name)
         self._create_dir()
 
-        super(Store, self).save(*args, **kwargs)
+        super(Store, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return self.name

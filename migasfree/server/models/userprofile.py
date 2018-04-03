@@ -147,14 +147,14 @@ SELECT ARRAY(
         self.domain_preference = value if value > 0 else None
         self.save()
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not (
             self.password.startswith("sha1$")
             or self.password.startswith("pbkdf2")
         ):
             super(UserProfile, self).set_password(self.password)
 
-        super(UserProfile, self).save(*args, **kwargs)
+        super(UserProfile, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         app_label = 'server'

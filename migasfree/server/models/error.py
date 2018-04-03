@@ -78,10 +78,10 @@ class Error(Event):
                 self.checked = True
                 return
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.description = self.description.replace("\r\n", "\n")
         self.auto_check()
-        super(Error, self).save(*args, **kwargs)
+        super(Error, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         app_label = 'server'

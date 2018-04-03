@@ -55,10 +55,10 @@ class Pms(models.Model, MigasLink):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.createrepo = self.createrepo.replace("\r\n", "\n")
         self.info = self.info.replace("\r\n", "\n")
-        super(Pms, self).save(*args, **kwargs)
+        super(Pms, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         app_label = 'server'

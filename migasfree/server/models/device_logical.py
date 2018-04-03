@@ -100,11 +100,11 @@ class DeviceLogical(models.Model, MigasLink):
             self.id
         )
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if isinstance(self.alternative_feature_name, basestring):
             self.alternative_feature_name = self.alternative_feature_name.replace(" ", "_")
 
-        super(DeviceLogical, self).save(*args, **kwargs)
+        super(DeviceLogical, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         app_label = 'server'

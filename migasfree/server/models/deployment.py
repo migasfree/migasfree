@@ -213,7 +213,7 @@ class Deployment(models.Model, MigasLink):
             )
         }
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.name = slugify(self.name)
 
         if self.packages_to_install:
@@ -228,7 +228,7 @@ class Deployment(models.Model, MigasLink):
         if self.default_excluded_packages:
             self.default_excluded_packages = self.default_excluded_packages.replace("\r\n", "\n")
 
-        super(Deployment, self).save(*args, **kwargs)
+        super(Deployment, self).save(force_insert, force_update, using, update_fields)
 
     @staticmethod
     def available_deployments(computer, attributes):

@@ -124,10 +124,10 @@ class Property(models.Model, MigasLink):
 class ServerProperty(Property):
     objects = ServerPropertyManager()
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.sort = 'server'
         self.code = ''
-        super(ServerProperty, self).save(*args, **kwargs)
+        super(ServerProperty, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         verbose_name = _("Tag Category")
@@ -138,10 +138,10 @@ class ServerProperty(Property):
 class ClientProperty(Property):
     objects = ClientPropertyManager()
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.sort = 'client'
         self.code = self.code.replace("\r\n", "\n")
-        super(ClientProperty, self).save(*args, **kwargs)
+        super(ClientProperty, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         verbose_name = _("Formula")
@@ -150,10 +150,10 @@ class ClientProperty(Property):
 
 
 class BasicProperty(Property):
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.sort = 'basic'
         self.code = self.code.replace("\r\n", "\n")
-        super(BasicProperty, self).save(*args, **kwargs)
+        super(BasicProperty, self).save(force_insert, force_update, using, update_fields)
 
     class Meta:
         verbose_name = _("Basic Property")

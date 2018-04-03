@@ -47,8 +47,8 @@ class Synchronization(Event, MigasLink):
 
     objects = SynchronizationManager()
 
-    def save(self, *args, **kwargs):
-        super(Synchronization, self).save(*args, **kwargs)
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super(Synchronization, self).save(force_insert, force_update, using, update_fields)
 
         self.computer.sync_end_date = self.created_at
         self.computer.save()

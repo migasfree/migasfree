@@ -40,9 +40,9 @@ class Notification(models.Model):
     def unchecked_count():
         return Notification.objects.filter(checked=0).count()
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.message = self.message.replace("\r\n", "\n")
-        super(Notification, self).save(*args, **kwargs)
+        super(Notification, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return '{} ({:%Y-%m-%d %H:%M:%S})'.format(self.id, self.created_at)

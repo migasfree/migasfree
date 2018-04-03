@@ -47,11 +47,11 @@ class DeviceDriver(models.Model):
             'packages': to_list(self.packages_to_install),
         }
 
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.packages_to_install = self.packages_to_install.replace(
             "\r\n", "\n"
         )
-        super(DeviceDriver, self).save(*args, **kwargs)
+        super(DeviceDriver, self).save(force_insert, force_update, using, update_fields)
 
     def __str__(self):
         return self.name.split("/")[-1] if self.name else ''

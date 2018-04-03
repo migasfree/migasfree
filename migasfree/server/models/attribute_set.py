@@ -62,8 +62,8 @@ class AttributeSet(models.Model, MigasLink):
                     ).count() > 0:
                 raise ValidationError(_('Duplicated name'))
 
-    def save(self, *args, **kwargs):
-        super(AttributeSet, self).save(*args, **kwargs)
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        super(AttributeSet, self).save(force_insert, force_update, using, update_fields)
 
         Attribute.objects.get_or_create(
             property_att=Property.objects.get(prefix='SET', sort='basic'),
