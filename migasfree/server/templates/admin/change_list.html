@@ -78,7 +78,8 @@
                         {% for row in cl.filter_description %}
                             <li class="filter-content">
                                 <span class="filter-field">
-                                    <a href="{{ current_url.get_path }}{% del_params cl.get_query_string row.param %}" class="text-danger">
+                                    <a href="{% del_params current_url.get_full_path row.param row.aux_param %}"
+                                       title="{% trans 'Remove filter' %}" class="text-danger">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </a>
                                     {{ row.name|capfirst }}

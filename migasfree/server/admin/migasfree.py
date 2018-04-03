@@ -255,10 +255,10 @@ class MigasChangeList(ChangeList):
                         self.append(
                             x.title,
                             l[0],
-                            [x.lookup_kwarg_since, x.lookup_kwarg_until]
+                            x.lookup_kwarg_since,
+                            x.lookup_kwarg_until
                         )
-                        for i in l[1]:
-                            remove.append(i)
+                        remove.extend(l[1])
             elif hasattr(x, 'field') and hasattr(x.field, 'choices') \
                     and hasattr(x, 'lookup_val') and x.lookup_val:
                 if isinstance(x.field, BooleanField):
@@ -356,9 +356,10 @@ class MigasChangeList(ChangeList):
             _filter
         )
 
-    def append(self, name, value, param=None):
+    def append(self, name, value, param=None, aux_param=None):
         self.filter_description.append({
             "name": _(unicode(name)),
             "value": unicode(value),
             "param": param,
+            "aux_param": aux_param,
         })
