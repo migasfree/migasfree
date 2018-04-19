@@ -1,397 +1,26 @@
 # -*- coding: utf-8 -*-
 
-import os
 import json
-import pygal
 
-from datetime import timedelta, datetime, date, time
-from dateutil.relativedelta import relativedelta
 from collections import defaultdict
-from pygal.style import Style
+from datetime import timedelta, datetime
 
-from django.conf import settings
-from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Count, Q
-from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext as _
-from rest_framework import viewsets, status
-from rest_framework.decorators import list_route
-from rest_framework.response import Response
-from rest_framework.test import APIClient
 
 from migasfree.server.models import (
     Computer, Error, Fault,
     Platform, Project, Deployment,
     Migration, StatusLog,
-    Schedule, ScheduleDelay,
     Synchronization
 )
-from migasfree.server.utils import to_heatmap, to_timestamp, time_horizon
 
-from .tasks import checkings
-
-JS_FILE = 'file://' + os.path.join(
-    settings.MIGASFREE_APP_DIR,
-    'server',
-    'static',
-    'js',
-    'pygal-tooltips.min.js'
-)
-BAR_STYLE = Style(
-    font_family='Average Sans',
-    background='transparent',
-    colors=('#edc240', '#5cb85c'),
-)
-DEFAULT_STYLE = Style(
-    font_family='Average Sans',
-    background='transparent',
-)
-WIDTH = 800
-HEIGHT = 400
-LABEL_ROTATION = 45
-
-HOURLY_RANGE = 3  # days
-DAILY_RANGE = 35  # days
-MONTHLY_RANGE = 18  # months
-
-
-@permission_required('server.change_computer', raise_exception=True)
-@login_required
-def alerts(request):
-    """
-    Checkings status
-    """
-    results = checkings(request.user.userprofile)
-
-    return render(
-        request,
-        'includes/alerts.html',
-        {
-            'title': _('Alerts'),
-            'alerts': results,
-            'result': sum(row['result'] for row in results),
-        }
-    )
-
-
-def get_syncs_time_range(start_date, end_date, platform=0, range_name='month', user=None):
-    syncs = Synchronization.objects.scope(user).filter(
-        created_at__range=(start_date, end_date)
-    ).extra(
-        {range_name: "date_trunc('" + range_name + "', created_at)"}
-    ).values(range_name).annotate(
-        count=Count("computer_id", distinct=True)
-    ).order_by('-' + range_name)
-
-    if platform:
-        syncs = syncs.filter(project__platform=platform)
-
-    return syncs
-
-
-def datetime_iterator(from_date=None, to_date=None, delta=timedelta(minutes=1)):
-    # from https://www.ianlewis.org/en/python-date-range-iterator
-    from_date = from_date or datetime.now()
-    while to_date is None or from_date <= to_date:
-        yield from_date
-        from_date += delta
-
-
-def month_year_iter(start_month, start_year, end_month, end_year):
-    # http://stackoverflow.com/questions/5734438/how-to-create-a-month-iterator
-    ym_start = 12 * start_year + start_month - 1
-    ym_end = 12 * end_year + end_month - 1
-    for ym in range(ym_start, ym_end):
-        y, m = divmod(ym, 12)
-        yield y, m + 1
-
-
-class SyncStatsViewSet(viewsets.ViewSet):
-    queryset = Synchronization.objects.all()
-
-    def get_queryset(self):
-        user = self.request.user.userprofile
-        qs = self.queryset
-        if not user.is_view_all():
-            qs = qs.filter(computer_id__in=user.get_computers())
-        return qs
-
-    @list_route(methods=['get'])
-    def monthly(self, request, format=None):
-        fmt = '%Y%m'
-        delta = relativedelta(months=+1)
-        range_name = 'month'
-
-        end = request.query_params.get('end', '')
-        try:
-            end = datetime.strptime(end, fmt)
-        except ValueError:
-            end = datetime.now() + delta
-
-        begin = request.query_params.get('begin', '')
-        try:
-            begin = datetime.strptime(begin, fmt)
-        except ValueError:
-            begin = end - relativedelta(months=+MONTHLY_RANGE)
-
-        platform_id = request.query_params.get('platform_id', None)
-        if platform_id:
-            get_object_or_404(Platform, pk=platform_id)
-
-        user = request.user.userprofile
-        updates_time_range = to_heatmap(
-            get_syncs_time_range(
-                begin, end, platform_id, range_name, user=user
-            ),
-            range_name
-        )
-
-        # shuffle data series
-        data = []
-        labels = []
-        for monthly in month_year_iter(
-            begin.month, begin.year,
-            end.month, end.year
-        ):
-            key = '%d-%02d' % (monthly[0], monthly[1])
-            labels.append(key)
-            index = str(to_timestamp(datetime(monthly[0], monthly[1], 1)))
-            data.append(updates_time_range[index] if index in updates_time_range else 0)
-
-        return Response(zip(labels, data), status=status.HTTP_200_OK)
-
-    @list_route(methods=['get'])
-    def daily(self, request, format=None):
-        now = datetime.now().timetuple()
-        fmt = '%Y%m%d'
-        delta = timedelta(days=1)
-        range_name = 'day'
-
-        end = request.query_params.get('end', '')
-        try:
-            end = datetime.strptime(end, fmt)
-        except ValueError:
-            end = datetime(now[0], now[1], now[2])
-
-        begin = request.query_params.get('begin', '')
-        try:
-            begin = datetime.strptime(begin, fmt)
-        except ValueError:
-            begin = end - timedelta(days=DAILY_RANGE)
-
-        user = request.user.userprofile
-        updates_time_range = to_heatmap(
-            get_syncs_time_range(
-                begin, end + delta, range_name=range_name, user=user
-            ),
-            range_name
-        )
-
-        # filling the gaps (zeros)
-        data = []
-        labels = []
-        for item in datetime_iterator(begin, end, delta):
-            labels.append(item.strftime('%Y-%m-%d'))
-            index = str(to_timestamp(datetime.combine(item, time.min)))
-            data.append(updates_time_range[index] if index in updates_time_range else 0)
-
-        return Response(zip(labels, data), status=status.HTTP_200_OK)
-
-
-@login_required
-def synchronized_monthly(request):
-    line_chart = pygal.Line(
-        no_data_text=_('There are no synchronizations'),
-        x_label_rotation=LABEL_ROTATION,
-        style=DEFAULT_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
-
-    labels = {
-        'total': _("Totals")
-    }
-    x_labels = {}
-    data = {}
-    new_data = {}
-    total = []
-
-    delta = relativedelta(months=+1)
-    end_date = date.today() + delta
-    begin_date = end_date - relativedelta(months=+MONTHLY_RANGE)
-
-    client = APIClient()
-    client.force_authenticate(user=request.user)
-    url = '/api/v1/token/stats/syncs/monthly/'
-
-    platforms = Platform.objects.scope(request.user.userprofile).only("id", "name")
-    for platform in platforms:
-        new_data[platform.id] = []
-        labels[platform.id] = platform.name
-
-        response = client.get(
-            '{}?platform_id={}'.format(url, platform.id),
-            HTTP_ACCEPT_LANGUAGE=request.LANGUAGE_CODE
-        )
-        if hasattr(response, 'data') and response.status_code == status.HTTP_200_OK:
-            x_labels[platform.id], data[platform.id] = zip(*response.data)
-
-    # shuffle data series
-    x_axe = []
-    for monthly in month_year_iter(
-        begin_date.month, begin_date.year,
-        end_date.month, end_date.year
-    ):
-        key = '%d-%02d' % (monthly[0], monthly[1])
-        x_axe.append(key)
-        total_month = 0
-        for serie in data:
-            new_data[serie].append(
-                data[serie][x_labels[serie].index(key)] if key in x_labels[serie] else 0
-            )
-            total_month += new_data[serie][-1]
-
-        total.append(total_month)
-
-    line_chart.x_labels = x_axe
-
-    line_chart.add(labels['total'], total)
-    for item in new_data:
-        line_chart.add(labels[item], new_data[item])
-
-    return render(
-        request,
-        'lines.html',
-        {
-            'title': _("Synchronized Computers / Month"),
-            'chart': line_chart.render_data_uri(),
-            'tabular_data': line_chart.render_table(),
-        }
-    )
-
-
-@login_required
-def synchronized_daily(request):
-    line_chart = pygal.Bar(
-        no_data_text=_('There are no synchronizations'),
-        show_legend=False,
-        x_label_rotation=LABEL_ROTATION,
-        style=BAR_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
-    data = []
-
-    client = APIClient()
-    client.force_authenticate(user=request.user)
-    response = client.get(
-        '/api/v1/token/stats/syncs/daily/',
-        HTTP_ACCEPT_LANGUAGE=request.LANGUAGE_CODE
-    )
-
-    if hasattr(response, 'data') and response.status_code == status.HTTP_200_OK:
-        labels, data = zip(*response.data)
-        line_chart.x_labels = labels
-
-    line_chart.add(_('Computers'), data)
-
-    return render(
-        request,
-        'lines.html',
-        {
-            'title': _("Synchronized Computers / Day"),
-            'chart': line_chart.render_data_uri(),
-            'tabular_data': line_chart.render_table(),
-        }
-    )
-
-
-@login_required
-def project_schedule_delays(request, project_name=None):
-    title = _("Provided Computers / Delay")
-    project_selection = Project.get_project_names()
-
-    if project_name is None:
-        return render(
-            request,
-            'lines.html',
-            {
-                'title': title,
-                'project_selection': project_selection,
-            }
-        )
-
-    project = get_object_or_404(Project, name=project_name)
-    title += ' [{}]'.format(project.name)
-
-    line_chart = pygal.Line(
-        no_data_text=_('There are no synchronizations'),
-        x_label_rotation=LABEL_ROTATION,
-        legend_at_bottom=True,
-        style=DEFAULT_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
-
-    maximum_delay = 0
-    for schedule in Schedule.objects.all():
-        lst_attributes = []
-        d = 1
-        value = 0
-        line = []
-
-        delays = ScheduleDelay.objects.filter(
-            schedule__name=schedule.name
-        ).order_by("delay")
-        for delay in delays:
-            lst_att_delay = list(delay.attributes.values_list('id', flat=True))
-            for i in range(d, delay.delay):
-                line.append([i, value])
-                d += 1
-
-            for duration in range(0, delay.duration):
-                value += Computer.productive.scope(request.user.userprofile).extra(
-                    select={'deployment': 'id'},
-                    where=[
-                        "computer_id %% {} = {}".format(delay.duration, duration)
-                    ]
-                ).filter(
-                    ~ Q(sync_attributes__id__in=lst_attributes) &
-                    Q(sync_attributes__id__in=lst_att_delay) &
-                    Q(project__id=project.id)
-                ).values('id').count()
-
-                line.append([d, value])
-
-                d += 1
-
-            lst_attributes += lst_att_delay
-
-        maximum_delay = max(maximum_delay, d)
-        line_chart.add(schedule.name, [row[1] for row in line])
-
-    labels = []
-    for i in range(0, maximum_delay + 1):
-        labels.append(_('%d days') % i)
-
-    line_chart.x_labels = labels
-
-    return render(
-        request,
-        'lines.html',
-        {
-            'title': title,
-            'project_selection': project_selection,
-            'current_project': project.name,
-            'chart': line_chart.render_data_uri(),
-            'tabular_data': line_chart.render_table(),
-        }
-    )
+from . import HOURLY_RANGE
+from .syncs import datetime_iterator
 
 
 def productive_computers_by_platform(user):
@@ -403,11 +32,11 @@ def productive_computers_by_platform(user):
 
     values = defaultdict(list)
     for item in Computer.productive.scope(user).values(
-        "project__name",
-        "project__id",
-        "project__platform__id"
+        'project__name',
+        'project__id',
+        'project__platform__id'
     ).annotate(
-        count=Count("id")
+        count=Count('id')
     ).order_by('project__platform__id', '-count'):
         percent = float(item.get('count')) / total * 100
         values[item.get('project__platform__id')].append(
@@ -560,9 +189,9 @@ def computers_by_status(user):
     for item in Computer.objects.scope(user).exclude(
         status='unsubscribed'
     ).values(
-        "status"
+        'status'
     ).annotate(
-        count=Count("id")
+        count=Count('id')
     ).order_by('status', '-count'):
         status_name = _(dict(Computer.STATUS_CHOICES)[item.get('status')])
         percent = float(item.get('count')) / total * 100
@@ -635,11 +264,11 @@ def unchecked_errors(user):
 
     values = defaultdict(list)
     for item in Error.unchecked.scope(user).values(
-        "project__platform__id",
-        "project__id",
-        "project__name",
+        'project__platform__id',
+        'project__id',
+        'project__name',
     ).annotate(
-        count=Count("id")
+        count=Count('id')
     ).order_by('project__id', '-count'):
         percent = float(item.get('count')) / total * 100
         values[item.get('project__platform__id')].append(
@@ -689,11 +318,11 @@ def unchecked_faults(user):
 
     values = defaultdict(list)
     for item in Fault.unchecked.scope(user).values(
-        "project__platform__id",
-        "project__id",
-        "project__name",
+        'project__platform__id',
+        'project__id',
+        'project__name',
     ).annotate(
-        count=Count("id")
+        count=Count('id')
     ).order_by('project__id', '-count'):
         percent = 0
         if total:
@@ -749,9 +378,9 @@ def enabled_deployments(user):
     for item in Deployment.objects.scope(user).filter(
         enabled=True, schedule=None
     ).values(
-        "project__id",
+        'project__id',
     ).annotate(
-        count=Count("id")
+        count=Count('id')
     ).order_by('project__id', '-count'):
         percent = float(item.get('count')) / total * 100
         values_null[item.get('project__id')].append(
@@ -774,9 +403,9 @@ def enabled_deployments(user):
     ).filter(
         ~Q(schedule=None)
     ).values(
-        "project__id",
+        'project__id',
     ).annotate(
-        count=Count("id")
+        count=Count('id')
     ).order_by('project__id', '-count'):
         percent = float(item.get('count')) / total * 100
         values_not_null[item.get('project__id')].append(
@@ -831,11 +460,11 @@ def stats_dashboard(request):
     end_date = datetime(now.year, now.month, now.day, now.hour) + timedelta(hours=1)
     begin_date = end_date - timedelta(days=HOURLY_RANGE)
     user = request.user.userprofile
-    syncs = dict((i["hour"], i) for i in Synchronization.by_hour(begin_date, end_date, user))
-    errors = dict((i["hour"], i) for i in Error.by_hour(begin_date, end_date, user))
-    faults = dict((i["hour"], i) for i in Fault.by_hour(begin_date, end_date, user))
-    migrations = dict((i["hour"], i) for i in Migration.by_hour(begin_date, end_date, user))
-    status_logs = dict((i["hour"], i) for i in StatusLog.by_hour(begin_date, end_date, user))
+    syncs = dict((i['hour'], i) for i in Synchronization.by_hour(begin_date, end_date, user))
+    errors = dict((i['hour'], i) for i in Error.by_hour(begin_date, end_date, user))
+    faults = dict((i['hour'], i) for i in Fault.by_hour(begin_date, end_date, user))
+    migrations = dict((i['hour'], i) for i in Migration.by_hour(begin_date, end_date, user))
+    status_logs = dict((i['hour'], i) for i in StatusLog.by_hour(begin_date, end_date, user))
     data_syncs = []
     data_errors = []
     data_faults = []
@@ -889,101 +518,5 @@ def stats_dashboard(request):
                 'migration': {'name': _('Migrations'), 'data': json.dumps(data_migrations)},
                 'status_log': {'name': _('Status Logs'), 'data': json.dumps(data_status)},
             },
-        }
-    )
-
-
-@login_required
-def provided_computers_by_delay(request):
-    deploy = get_object_or_404(Deployment, pk=request.GET.get('id'))
-    rolling_date = deploy.start_date
-
-    line_chart = pygal.Line(
-        no_data_text=_('There are no data'),
-        show_legend=False,
-        x_label_rotation=LABEL_ROTATION,
-        style=BAR_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
-
-    available_data = []
-    provided_data = []
-    labels = []
-
-    lst_attributes = []
-    value = 0
-    date_format = "%Y-%m-%d"
-    now = datetime.now()
-
-    delays = ScheduleDelay.objects.filter(
-        schedule__id=deploy.schedule.id
-    ).order_by("delay")
-    len_delays = len(delays)
-
-    for i, item in enumerate(delays):
-        lst_att_delay = list(item.attributes.values_list('id', flat=True))
-
-        start_horizon = datetime.strptime(
-            str(time_horizon(rolling_date, 0)),
-            date_format
-        )
-        if i < (len_delays - 1):
-            end_horizon = datetime.strptime(
-                str(time_horizon(rolling_date, delays[i + 1].delay - item.delay)),
-                date_format
-            )
-        else:
-            end_horizon = datetime.strptime(
-                str(time_horizon(rolling_date, item.duration)),
-                date_format
-            )
-
-        if deploy.domain:
-            q_in_domain = ~Q(sync_attributes__id__in=deploy.domain.included_attributes.all())
-            q_ex_domain = Q(sync_attributes__id__in=deploy.domain.excluded_attributes.all())
-        else:
-            q_in_domain = Q()
-            q_ex_domain = Q()
-
-        duration = 0
-        for real_days in range(0, (end_horizon - start_horizon).days):
-            loop_date = start_horizon + timedelta(days=real_days)
-            weekday = int(loop_date.strftime("%w"))  # [0(Sunday), 6]
-            if weekday not in [0, 6]:
-                value += Computer.productive.scope(request.user.userprofile).extra(
-                    select={'deployment': 'id'},
-                    where=[
-                        "computer_id %% {} = {}".format(item.duration, duration)
-                    ]
-                ).filter(
-                    ~ Q(sync_attributes__id__in=lst_attributes) &
-                    Q(sync_attributes__id__in=lst_att_delay) &
-                    Q(project__id=deploy.project.id)
-                ).exclude(
-                    q_in_domain
-                ).exclude(
-                    q_ex_domain
-                ).values('id').count()
-                duration += 1
-
-            labels.append(loop_date.strftime(date_format))
-            provided_data.append(value)
-            if loop_date <= now:
-                available_data.append(value)
-
-        lst_attributes += lst_att_delay
-        rolling_date = end_horizon.date()
-
-    line_chart.add(_('Provided'), provided_data)
-    line_chart.add(_('Available'), available_data)
-    line_chart.x_labels = labels
-
-    return render(
-        request,
-        'includes/line_chart.html',
-        {
-            'chart': line_chart.render_data_uri(),
         }
     )
