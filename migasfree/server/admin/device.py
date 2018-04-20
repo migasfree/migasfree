@@ -130,7 +130,7 @@ class DeviceLogicalInline(admin.TabularInline):
 class DeviceAdmin(MigasAdmin):
     form = DeviceForm
     list_display = ('name_link', 'location', 'model_link', 'connection_link')
-    list_filter = (ModelFilter, 'connection')
+    list_filter = (ModelFilter, 'connection', 'model__manufacturer')
     search_fields = (
         'name',
         'model__name',
