@@ -5,7 +5,7 @@ from django.conf.urls import url
 from .views import (
     alerts, synchronized_daily, synchronized_monthly,
     project_schedule_delays, stats_dashboard,
-    provided_computers_by_delay,
+    provided_computers_by_delay, devices_summary,
 )
 
 urlpatterns = [
@@ -39,5 +39,10 @@ urlpatterns = [
         r'^stats/provided-computers-by-delay/$',
         provided_computers_by_delay,
         name='provided_computers',
+    ),
+    url(
+        r'^stats/devices/$',
+        devices_summary,
+        name='devices_summary'
     ),
 ]

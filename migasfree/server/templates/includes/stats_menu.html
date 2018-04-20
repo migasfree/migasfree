@@ -9,4 +9,7 @@
     {% if perms.server.change_computer and perms.server.change_schedule %}
         <li><a href="{% url 'stats_project_schedule_delays' %}">{% trans 'Provided Computers / Delay' %}</a></li>
     {% endif %}
+    {% if perms.server.change_device %}
+        <li><a href="{% url 'devices_summary' %}">{% trans 'Devices Summary' %}</a></li>
+    {% endif %}
 </ul>
