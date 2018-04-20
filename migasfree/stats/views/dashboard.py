@@ -478,7 +478,6 @@ def stats_dashboard(request):
         data_migrations.append(migrations[item]['count'] if item in migrations else 0)
         data_status.append(status_logs[item]['count'] if item in status_logs else 0)
 
-    user = request.user.userprofile
     return render(
         request,
         'stats_dashboard.html',
