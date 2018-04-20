@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
+{% endblock extrahead %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Stats' %}</li>
+        <li>{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+<div class="row text-center">
+    <div class="col-md-6 col-xs-6">
+    {% if devices_by_connection %}
+        <h2>{{ devices_by_connection.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ devices_by_connection.total }}</h3>
+
+        <div id="devices-connection" class="highcharts"></div>
+    {% endif %}
+    </div>
+
+    <div class="col-md-6 col-xs-6">
+    {% if devices_by_model %}
+        <h2>{{ devices_by_model.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ devices_by_model.total }}</h3>
+
+        <div id="devices-model" class="highcharts"></div>
+    {% endif %}
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-6 col-xs-6">
+    {% if devices_by_manufacturer %}
+        <h2>{{ devices_by_manufacturer.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ devices_by_manufacturer.total }}</h3>
+
+        <div id="devices-manufacturer" class="highcharts"></div>
+    {% endif %}
+    </div>
+
+    <div class="col-md-6 col-xs-6">
+    {% if models_by_manufacturer %}
+        <h2>{{ models_by_manufacturer.title }}</h2>
+        <h3>{% trans 'Total' %}: {{ models_by_manufacturer.total }}</h3>
+
+        <div id="models-manufacturer" class="highcharts"></div>
+    {% endif %}
+    </div>
+</div>
+{% endblock content %}
+
+{% block extrabody %}
+<script type="text/javascript">
+Highcharts.setOptions({
+    lang: {
+        noData: '{{ chart_options.no_data }}',
+        resetZoom: '{{ chart_options.reset_zoom }}'
+    }
+});
+
+var colors = [
+    '#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
+    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'
+];
+
+function loadData(data) {
+    var dataLen, i;
+    var serie = [];
+
+    dataLen = data.length;
+    for (i = 0; i < dataLen; i += 1) {
+        serie.push({
+            name: data[i].name + ' (' + data[i].value + ')',
+            y: data[i].y,
+            color: colors[i],
+            url: data[i].url
+        });
+    }
+
+    return serie;
+}
+
+// Default options
+var options = {
+    credits: {
+        enabled: false
+    },
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: null
+    },
+    plotOptions: {
+        pie: {
+            shadow: false,
+            center: ['50%', '50%']
+        },
+        series: {
+            cursor: 'pointer',
+            point: {
+                events: {
+                    click: function() {
+                        if (typeof this.options.url != 'undefined') {
+                            window.open(this.options.url, "_self");
+                        }
+                    }
+                }
+            }
+        }
+    },
+    tooltip: {
+        valueSuffix: '%',
+        headerFormat: '{point.key}',
+        pointFormat: ': <strong>{point.y}</strong>'
+    },
+    series: [{
+        size: '100%',
+        dataLabels: {
+            formatter: function () {
+                return this.y > 5 ? this.point.name : null;
+            },
+            color: '#fff',
+            distance: -30
+        }
+    }]
+};
+
+var devicesConnection = {{ devices_by_connection.data|safe }};
+var devicesConnectionOptions = {
+    chart: {
+        renderTo: 'devices-connection'
+    },
+    series: [{
+        data: loadData(devicesConnection)
+    }]
+};
+devicesConnectionOptions = jQuery.extend(true, {}, options, devicesConnectionOptions);
+var devicesConnectionChart = new Highcharts.Chart(devicesConnectionOptions);
+
+var devicesModel = {{ devices_by_model.data|safe }};
+var devicesModelOptions = {
+    chart: {
+        renderTo: 'devices-model'
+    },
+    series: [{
+        data: loadData(devicesModel)
+    }]
+};
+devicesModelOptions = jQuery.extend(true, {}, options, devicesModelOptions);
+var devicesModelChart = new Highcharts.Chart(devicesModelOptions);
+
+var devicesManufacturer = {{ devices_by_manufacturer.data|safe }};
+var devicesManufacturerOptions = {
+    chart: {
+        renderTo: 'devices-manufacturer'
+    },
+    series: [{
+        data: loadData(devicesManufacturer)
+    }]
+};
+devicesManufacturerOptions = jQuery.extend(true, {}, options, devicesManufacturerOptions);
+var devicesManufacturerChart = new Highcharts.Chart(devicesManufacturerOptions);
+
+var modelsManufacturer = {{ models_by_manufacturer.data|safe }};
+var modelsManufacturerOptions = {
+    chart: {
+        renderTo: 'models-manufacturer'
+    },
+    series: [{
+        data: loadData(modelsManufacturer)
+    }]
+};
+modelsManufacturerOptions = jQuery.extend(true, {}, options, modelsManufacturerOptions);
+var modelsManufacturerChart = new Highcharts.Chart(modelsManufacturerOptions);
+</script>
+{% endblock extrabody %}

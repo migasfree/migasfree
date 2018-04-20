@@ -32,10 +32,10 @@ MONTHLY_RANGE = 18  # months
 from .checkings import alerts
 
 from .dashboard import (
-    computers_by_machine, computers_by_status, enabled_deployments,
-    productive_computers_by_platform, stats_dashboard,
-    unchecked_errors, unchecked_faults,
+    stats_dashboard,
 )
+
+from .devices import devices_summary
 
 from .schedules import project_schedule_delays, provided_computers_by_delay
 
