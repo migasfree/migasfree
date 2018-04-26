@@ -119,6 +119,7 @@ setup(
         'migasfree.catalog.migrations',
         'migasfree.settings',
         'migasfree.stats',
+        'migasfree.stats.views',
     ],
     package_dir={
         'migasfree': 'migasfree',
