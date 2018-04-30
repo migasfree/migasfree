@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models, connection
-
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import (
     User as UserSystem,
-    UserManager
+    UserManager,
 )
 
 from .common import MigasLink
@@ -41,8 +40,8 @@ class UserProfile(UserSystem, MigasLink):
         if str(self) == "AnonymousUser":
             # TODO: only view current computer (migasfree-client 4.x)
             return True
-        else:
-            return not self.domain_preference and not self.scope_preference
+
+        return not self.domain_preference and not self.scope_preference
 
     def get_computers(self):
         cursor = connection.cursor()
