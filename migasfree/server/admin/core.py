@@ -549,9 +549,11 @@ class ServerAttributeAdmin(MigasAdmin):
         )
 
     def inflicted_computers(self, obj):
-        ret = []
-        for c in Computer.productive.filter(sync_attributes__in=[obj.pk]).exclude(tags__in=[obj.pk]):
-            ret.append(c.link())
+        ret = [
+            c.link() for c in Computer.productive.filter(
+                sync_attributes__in=[obj.pk]
+            ).exclude(tags__in=[obj.pk])
+        ]
 
         return format_html('<br />'.join(ret))
 
