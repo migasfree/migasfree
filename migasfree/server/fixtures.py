@@ -219,26 +219,26 @@ def configure_default_users():
     add_perms(configurator, tables)
     configurator.save()
 
-    # admin domain group
-    admin_domain = Group.objects.filter(name='Admin Domain')
-    if not admin_domain:
-        admin_domain = Group()
-        admin_domain.name = "Admin Domain"
-        admin_domain.save()
+    # domain admin group
+    domain_admin = Group.objects.filter(name='Domain Admin')
+    if not domain_admin:
+        domain_admin = Group()
+        domain_admin.name = "Domain Admin"
+        domain_admin.save()
     else:
-        admin_domain = admin_domain[0]
+        domain_admin = domain_admin[0]
 
     tables = [
         "server.scope", "server.deployment",
     ]
-    admin_domain.permissions.clear()
-    add_perms(admin_domain, tables)
-    add_perms_only_modify(admin_domain, ["server.computer", ])
-    admin_domain.save()
+    domain_admin.permissions.clear()
+    add_perms(domain_admin, tables)
+    add_perms_only_modify(domain_admin, ["server.computer", ])
+    domain_admin.save()
 
     # default users
     configure_user("admin")
-    configure_user("admin-domain", [reader, admin_domain])
+    configure_user("domain-admin", [reader, domain_admin])
     configure_user("packager", [reader, packager])
     configure_user("configurator", [reader, configurator])
     configure_user("installer", [reader, device_installer])

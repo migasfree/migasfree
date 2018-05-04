@@ -6,13 +6,13 @@ from django.db import migrations
 from django.core.management.sql import emit_post_migrate_signal
 
 
-def add_admin_domain_group(apps, schema_editor):
+def add_domain_admin_group(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     emit_post_migrate_signal(2, False, db_alias)
     Group = apps.get_model('auth', 'Group')
     Permission = apps.get_model('auth', 'Permission')
 
-    group, _ = Group.objects.get_or_create(name='Admin Domain')
+    group, _ = Group.objects.get_or_create(name='Domain Admin')
     permissions = Permission.objects.filter(codename__in=[
         'add_deployment', 'delete_deployment', 'change_deployment', 'can_save_deployment',
         'add_scope', 'delete_scope', 'change_scope', 'can_save_scope',
@@ -28,5 +28,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(add_admin_domain_group),
+        migrations.RunPython(add_domain_admin_group),
     ]
