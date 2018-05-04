@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
+from ..utils import list_difference
 
 from . import (
     Property,
@@ -72,6 +73,33 @@ class Domain(models.Model, MigasLink):
                 att_id.append(att.id)
 
         return att_id
+
+    def update_domain_admins(self, users):
+        """
+        :param users: [id1, id2, id3, ...]
+        :return: void
+        """
+        from .userprofile import UserProfile
+
+        initial_admins = list(self.userprofile_set.values_list('id', flat=True))
+
+        for pk in list_difference(initial_admins, users):
+            try:
+                user = UserProfile.objects.get(pk=pk)
+                user.domains.remove(self.id)
+                if user.domain_preference == self.id:
+                    user.update_domain(0)
+                self.userprofile_set.remove(user)
+            except UserProfile.DoesNotExist:
+                pass
+
+        for pk in list_difference(users, initial_admins):
+            try:
+                user = UserProfile.objects.get(pk=pk)
+                user.domains.add(self.id)
+                self.userprofile_set.add(user)
+            except UserProfile.DoesNotExist:
+                pass
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.name = slugify(self.name).upper()
