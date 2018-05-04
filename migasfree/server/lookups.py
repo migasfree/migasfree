@@ -14,7 +14,30 @@ from .models import (
     Property,
     DeviceLogical,
     Computer,
+    UserProfile,
 )
+
+
+@register('user_profile')
+class UserProfileLookup(LookupChannel):
+    model = UserProfile
+
+    def can_add(self, user, model):
+        return False
+
+    def get_query(self, q, request):
+        return self.model.objects.filter(
+            Q(username__icontains=q) | Q(first_name__icontains=q) | Q(last_name__icontains=q)
+        ).order_by('username')
+
+    def format_item_display(self, obj):
+        if obj.first_name or obj.last_name:
+            return u'{} ({})'.format(
+                obj.link(),
+                u' '.join(filter(None, [obj.first_name, obj.last_name]))
+            )
+
+        return obj.link()
 
 
 @register('permission')
@@ -32,8 +55,7 @@ class PermissionLookup(LookupChannel):
     def format_item_display(self, obj):
         return obj.__str__()
 
-    def get_objects(self, objects):
-        ids = [obj.pk for obj in objects]
+    def get_objects(self, ids):
         return self.model.objects.filter(pk__in=ids).order_by('name')
 
 
