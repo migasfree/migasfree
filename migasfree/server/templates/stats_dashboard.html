@@ -16,28 +16,58 @@
 <div class="row text-center">
     <div class="col-md-4 col-xs-3">
     {% if computers_by_machine %}
-        <h2>{{ computers_by_machine.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ computers_by_machine.total }}</h3>
-
-        <div id="computer-machine" class="highcharts"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {{ computers_by_machine.title }}
+                <div class="pull-right">
+                    <a href="{% url 'admin:server_computer_changelist' %}"
+                       class="label label-info" title="{% trans 'Total' %}">
+                        {{ computers_by_machine.total }}
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="computer-machine" class="highcharts"></div>
+            </div>
+        </div>
     {% endif %}
     </div>
 
     <div class="col-md-4 col-xs-3">
     {% if computers_by_status %}
-        <h2>{{ computers_by_status.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ computers_by_status.total }}</h3>
-
-        <div id="computer-status" class="highcharts"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {{ computers_by_status.title }}
+                <div class="pull-right">
+                    <a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown,available,in%20repair"
+                       class="label label-info" title="{% trans 'Total' %}">
+                        {{ computers_by_status.total }}
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="computer-status" class="highcharts"></div>
+            </div>
+        </div>
     {% endif %}
     </div>
 
     <div class="col-md-4 col-xs-3">
     {% if productive_computers_by_platform %}
-        <h2>{{ productive_computers_by_platform.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ productive_computers_by_platform.total }}</h3>
-
-        <div id="platform-project" class="highcharts"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {{ productive_computers_by_platform.title }}
+                <div class="pull-right">
+                    <a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown"
+                       class="label label-info" title="{% trans 'Total' %}">
+                        {{ productive_computers_by_platform.total }}
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="platform-project" class="highcharts"></div>
+            </div>
+        </div>
     {% endif %}
     </div>
 </div>
@@ -45,36 +75,72 @@
 <div class="row text-center">
     <div class="col-md-4 col-xs-3">
     {% if unchecked_errors %}
-        <h2>{{ unchecked_errors.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ unchecked_errors.total }}</h3>
-
-        <div id="unchecked-errors" class="highcharts"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {{ unchecked_errors.title }}
+                <div class="pull-right">
+                    <a href="{% url 'admin:server_error_changelist' %}?checked__exact=0"
+                       class="label label-danger" title="{% trans 'Total' %}">
+                        {{ unchecked_errors.total }}
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="unchecked-errors" class="highcharts"></div>
+            </div>
+        </div>
     {% endif %}
     </div>
 
     <div class="col-md-4 col-xs-3">
     {% if unchecked_faults %}
-        <h2>{{ unchecked_faults.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ unchecked_faults.total }}</h3>
-
-        <div id="unchecked-faults" class="highcharts"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {{ unchecked_faults.title }}
+                <div class="pull-right">
+                    <a href="{% url 'admin:server_fault_changelist' %}?checked__exact=0"
+                       class="label label-danger" title="{% trans 'Total' %}">
+                        {{ unchecked_faults.total }}
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="unchecked-faults" class="highcharts"></div>
+            </div>
+        </div>
     {% endif %}
     </div>
 
     <div class="col-md-4 col-xs-3">
     {% if enabled_deployments %}
-        <h2>{{ enabled_deployments.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ enabled_deployments.total }}</h3>
-
-        <div id="enabled-deployments" class="highcharts"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {{ enabled_deployments.title }}
+                <div class="pull-right">
+                    <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1"
+                       class="label label-info" title="{% trans 'Total' %}">
+                        {{ enabled_deployments.total }}
+                    </a>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="enabled-deployments" class="highcharts"></div>
+            </div>
+        </div>
     {% endif %}
     </div>
 </div>
 
 <div class="row text-center">
     <div class="cold-md-12 col-xs-12">
-        <h2>{{ last_day_events.title }}</h2>
-        <div id="last-day-events"></div>
+        <div class="panel panel-default">
+            <div class="panel-heading text-center lead">
+                {{ last_day_events.title }}
+            </div>
+            <div class="panel-body">
+                <div id="last-day-events"></div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock content %}
