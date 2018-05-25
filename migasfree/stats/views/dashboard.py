@@ -73,6 +73,7 @@ def productive_computers_by_platform(user):
         'title': _('Productive Computers'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('_REPLACE_&', ''),
     }
 
 
@@ -176,6 +177,7 @@ def computers_by_machine(user):
         'title': _('Computers / Machine'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('?_REPLACE_', ''),
     }
 
 
@@ -253,6 +255,7 @@ def computers_by_status(user):
         'title': _('Subscribed Computers / Status'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('_REPLACE_', 'status__in=intended,reserved,unknown,available,in repair'),
     }
 
 
@@ -307,6 +310,7 @@ def unchecked_errors(user):
         'title': _('Unchecked Errors'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('&_REPLACE_', ''),
     }
 
 
@@ -365,6 +369,7 @@ def unchecked_faults(user):
         'title': _('Unchecked Faults'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('&_REPLACE_', ''),
     }
 
 
@@ -451,6 +456,7 @@ def enabled_deployments(user):
         'title': _('Enabled Deployments'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('&_REPLACE_', ''),
     }
 
 
