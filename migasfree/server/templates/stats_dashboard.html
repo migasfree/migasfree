@@ -14,125 +14,23 @@
 
 {% block content %}
 <div class="row text-center">
-    <div class="col-md-4 col-xs-3">
-    {% if computers_by_machine %}
-        <div class="panel panel-default">
-            <div class="panel-heading text-left lead">
-                {{ computers_by_machine.title }}
-                <div class="pull-right">
-                    <a href="{% url 'admin:server_computer_changelist' %}"
-                       class="label label-info" title="{% trans 'Total' %}">
-                        {{ computers_by_machine.total }}
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div id="computer-machine" class="highcharts"></div>
-            </div>
-        </div>
-    {% endif %}
-    </div>
+    {% include 'includes/multipie_chart.html' with item=computers_by_machine id='computer-machine' label='info' %}
 
-    <div class="col-md-4 col-xs-3">
-    {% if computers_by_status %}
-        <div class="panel panel-default">
-            <div class="panel-heading text-left lead">
-                {{ computers_by_status.title }}
-                <div class="pull-right">
-                    <a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown,available,in%20repair"
-                       class="label label-info" title="{% trans 'Total' %}">
-                        {{ computers_by_status.total }}
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div id="computer-status" class="highcharts"></div>
-            </div>
-        </div>
-    {% endif %}
-    </div>
+    {% include 'includes/multipie_chart.html' with item=computers_by_status id='computer-status' label='info' %}
 
-    <div class="col-md-4 col-xs-3">
-    {% if productive_computers_by_platform %}
-        <div class="panel panel-default">
-            <div class="panel-heading text-left lead">
-                {{ productive_computers_by_platform.title }}
-                <div class="pull-right">
-                    <a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown"
-                       class="label label-info" title="{% trans 'Total' %}">
-                        {{ productive_computers_by_platform.total }}
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div id="platform-project" class="highcharts"></div>
-            </div>
-        </div>
-    {% endif %}
-    </div>
+    {% include 'includes/multipie_chart.html' with item=productive_computers_by_platform id='platform-project' label='info' %}
 </div>
 
 <div class="row text-center">
-    <div class="col-md-4 col-xs-3">
-    {% if unchecked_errors %}
-        <div class="panel panel-default">
-            <div class="panel-heading text-left lead">
-                {{ unchecked_errors.title }}
-                <div class="pull-right">
-                    <a href="{% url 'admin:server_error_changelist' %}?checked__exact=0"
-                       class="label label-danger" title="{% trans 'Total' %}">
-                        {{ unchecked_errors.total }}
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div id="unchecked-errors" class="highcharts"></div>
-            </div>
-        </div>
-    {% endif %}
-    </div>
+    {% include 'includes/multipie_chart.html' with item=unchecked_errors id='unchecked-errors' label='danger' %}
 
-    <div class="col-md-4 col-xs-3">
-    {% if unchecked_faults %}
-        <div class="panel panel-default">
-            <div class="panel-heading text-left lead">
-                {{ unchecked_faults.title }}
-                <div class="pull-right">
-                    <a href="{% url 'admin:server_fault_changelist' %}?checked__exact=0"
-                       class="label label-danger" title="{% trans 'Total' %}">
-                        {{ unchecked_faults.total }}
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div id="unchecked-faults" class="highcharts"></div>
-            </div>
-        </div>
-    {% endif %}
-    </div>
+    {% include 'includes/multipie_chart.html' with item=unchecked_faults id='unchecked-faults' label='danger' %}
 
-    <div class="col-md-4 col-xs-3">
-    {% if enabled_deployments %}
-        <div class="panel panel-default">
-            <div class="panel-heading text-left lead">
-                {{ enabled_deployments.title }}
-                <div class="pull-right">
-                    <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1"
-                       class="label label-info" title="{% trans 'Total' %}">
-                        {{ enabled_deployments.total }}
-                    </a>
-                </div>
-            </div>
-            <div class="panel-body">
-                <div id="enabled-deployments" class="highcharts"></div>
-            </div>
-        </div>
-    {% endif %}
-    </div>
+    {% include 'includes/multipie_chart.html' with item=enabled_deployments id='enabled-deployments' label='info' %}
 </div>
 
 <div class="row text-center">
-    <div class="cold-md-12 col-xs-12">
+    <div class="cold-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading text-center lead">
                 {{ last_day_events.title }}
