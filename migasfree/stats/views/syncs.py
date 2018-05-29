@@ -178,7 +178,7 @@ def synchronized_monthly(request):
     client.force_authenticate(user=request.user)
     url = '/api/v1/token/stats/syncs/monthly/'
 
-    platforms = Platform.objects.scope(request.user.userprofile).only("id", "name")
+    platforms = Platform.objects.only("id", "name")
     for platform in platforms:
         new_data[platform.id] = []
         labels[platform.id] = platform.name

@@ -13,7 +13,6 @@ class DomainSynchronizationManager(models.Manager):
         qs = super(DomainSynchronizationManager, self).get_queryset()
         if not user.is_view_all():
             qs = qs.filter(
-                project_id__in=user.get_projects(),
                 computer_id__in=user.get_computers()
             )
 
