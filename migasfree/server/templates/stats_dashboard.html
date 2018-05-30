@@ -14,11 +14,11 @@
 
 {% block content %}
 <div class="row text-center">
-    {% include 'includes/multipie_chart.html' with item=computers_by_machine id='computer-machine' label='info' %}
+    {% include 'includes/multipie_chart.html' with item=computers_by_machine id='computer-machine' %}
 
-    {% include 'includes/multipie_chart.html' with item=computers_by_status id='computer-status' label='info' %}
+    {% include 'includes/multipie_chart.html' with item=computers_by_status id='computer-status' %}
 
-    {% include 'includes/multipie_chart.html' with item=productive_computers_by_platform id='platform-project' label='info' %}
+    {% include 'includes/multipie_chart.html' with item=productive_computers_by_platform id='platform-project' %}
 </div>
 
 <div class="row text-center">
@@ -26,7 +26,7 @@
 
     {% include 'includes/multipie_chart.html' with item=unchecked_faults id='unchecked-faults' label='danger' %}
 
-    {% include 'includes/multipie_chart.html' with item=enabled_deployments id='enabled-deployments' label='info' %}
+    {% include 'includes/multipie_chart.html' with item=enabled_deployments id='enabled-deployments' %}
 </div>
 
 <div class="row text-center">
