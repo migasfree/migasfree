@@ -36,6 +36,7 @@ class Scope(models.Model, MigasLink):
         UserProfile,
         verbose_name=_("user"),
         null=False,
+        on_delete=models.CASCADE,
     )
 
     name = models.CharField(
