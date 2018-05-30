@@ -14,43 +14,15 @@
 
 {% block content %}
 <div class="row text-center">
-    <div class="col-md-6 col-xs-6">
-    {% if devices_by_connection %}
-        <h2>{{ devices_by_connection.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ devices_by_connection.total }}</h3>
+    {% include 'includes/multipie_chart.html' with item=devices_by_connection id='devices-connection' col=6 %}
 
-        <div id="devices-connection" class="highcharts"></div>
-    {% endif %}
-    </div>
-
-    <div class="col-md-6 col-xs-6">
-    {% if devices_by_model %}
-        <h2>{{ devices_by_model.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ devices_by_model.total }}</h3>
-
-        <div id="devices-model" class="highcharts"></div>
-    {% endif %}
-    </div>
+    {% include 'includes/multipie_chart.html' with item=devices_by_model id='devices-model' col=6 %}
 </div>
 
 <div class="row text-center">
-    <div class="col-md-6 col-xs-6">
-    {% if devices_by_manufacturer %}
-        <h2>{{ devices_by_manufacturer.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ devices_by_manufacturer.total }}</h3>
+    {% include 'includes/multipie_chart.html' with item=devices_by_manufacturer id='devices-manufacturer' col=6 %}
 
-        <div id="devices-manufacturer" class="highcharts"></div>
-    {% endif %}
-    </div>
-
-    <div class="col-md-6 col-xs-6">
-    {% if models_by_manufacturer %}
-        <h2>{{ models_by_manufacturer.title }}</h2>
-        <h3>{% trans 'Total' %}: {{ models_by_manufacturer.total }}</h3>
-
-        <div id="models-manufacturer" class="highcharts"></div>
-    {% endif %}
-    </div>
+    {% include 'includes/multipie_chart.html' with item=models_by_manufacturer id='models-manufacturer' col=6 %}
 </div>
 {% endblock content %}
 

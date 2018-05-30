@@ -39,6 +39,7 @@ def devices_by_connection():
         'title': _('Devices / Connection'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('?_REPLACE_', ''),
     }
 
 
@@ -70,6 +71,7 @@ def devices_by_model():
         'title': _('Devices / Model'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('?_REPLACE_', ''),
     }
 
 
@@ -101,6 +103,7 @@ def devices_by_manufacturer():
         'title': _('Devices / Manufacturer'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('?_REPLACE_', ''),
     }
 
 
@@ -132,6 +135,7 @@ def models_by_manufacturer():
         'title': _('Models / Manufacturer'),
         'total': total,
         'data': json.dumps(data),
+        'url': link.replace('?_REPLACE_', ''),
     }
 
 
