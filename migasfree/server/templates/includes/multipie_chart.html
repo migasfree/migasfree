@@ -1,14 +1,14 @@
 {% spaceless %}
 {% load i18n %}
 
-<div class="col-md-4 col-sm-6 col-xs-12">
+<div class="col-md-{{ col|default:4 }} col-sm-6 col-xs-12">
 {% if item %}
     <div class="panel panel-default">
         <div class="panel-heading text-left lead">
             {{ item.title }}
             <div class="pull-right">
-                <a href="{{ item.url }}"
-                   class="label label-{{ label }}" title="{% trans 'Total' %}">
+                <a href="{{ item.url|default:'#' }}"
+                   class="label label-{{ label|default:'info' }}" title="{% trans 'Total' %}">
                     {{ item.total }}
                 </a>
             </div>
