@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, filters, status
 from rest_framework_filters import backends
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from migasfree.server.permissions import PublicPermission
@@ -27,21 +27,21 @@ class ApplicationViewSet(viewsets.ModelViewSet):
 
         return serializers.ApplicationSerializer
 
-    @list_route(methods=['get'])
+    @action(methods=['get'], detail=False)
     def levels(self, request):
         return Response(
             dict(models.Application.LEVELS),
             status=status.HTTP_200_OK
         )
 
-    @list_route(methods=['get'])
+    @action(methods=['get'], detail=False)
     def categories(self, request):
         return Response(
             dict(models.Application.CATEGORIES),
             status=status.HTTP_200_OK
         )
 
-    @list_route(methods=['get'])
+    @action(methods=['get'], detail=False)
     def availables(self, request):
         """
         :param request:

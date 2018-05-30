@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, exceptions, status, mixins, filters
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework_filters import backends
 
@@ -55,7 +55,7 @@ class AttributeViewSet(viewsets.ModelViewSet):
 
         return serializers.AttributeSerializer
 
-    @detail_route(methods=['get', 'put', 'patch'], url_path='logical-devices')
+    @action(methods=['get', 'put', 'patch'], detail=True, url_path='logical-devices')
     def logical_devices(self, request, pk=None):
         """
         GET
@@ -160,7 +160,7 @@ class ComputerViewSet(viewsets.ModelViewSet):
 
         return qs
 
-    @detail_route(methods=['get'], url_path='software/inventory')
+    @action(methods=['get'], detail=True, url_path='software/inventory')
     def software_inventory(self, request, pk=None):
         """
         Returns installed packages in a computer
@@ -175,7 +175,7 @@ class ComputerViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
-    @detail_route(methods=['get'], url_path='software/history')
+    @action(methods=['get'], detail=True, url_path='software/history')
     def software_history(self, request, pk=None):
         """
         Returns software history of a computer
@@ -187,7 +187,7 @@ class ComputerViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
-    @detail_route(methods=['post'])
+    @action(methods=['post'], detail=True)
     def status(self, request, pk=None):
         """
         Input: {
@@ -212,7 +212,7 @@ class ComputerViewSet(viewsets.ModelViewSet):
             status=status.HTTP_200_OK
         )
 
-    @detail_route(methods=['post'])
+    @action(methods=['post'], detail=True)
     def replacement(self, request, pk=None):
         """
         Input: {
@@ -229,7 +229,7 @@ class ComputerViewSet(viewsets.ModelViewSet):
 
         return Response(status=status.HTTP_200_OK)
 
-    @detail_route(methods=['get'])
+    @action(methods=['get'], detail=True)
     def sync(self, request, pk=None):
         """
         :returns
@@ -340,7 +340,7 @@ class FaultViewSet(
 class HardwareComputerViewSet(viewsets.ViewSet):
     queryset = models.HwNode.objects.all()  # FIXME
 
-    @detail_route(methods=['get'])
+    @action(methods=['get'], detail=True)
     def hardware(self, request, pk=None):
         computer = get_object_or_404(models.Computer, pk=pk)
         nodes = models.HwNode.objects.filter(computer=computer).order_by('id')
@@ -436,7 +436,7 @@ class PackageViewSet(viewsets.ModelViewSet):
 
         return serializers.PackageSerializer
 
-    @list_route(methods=['get'])
+    @action(methods=['get'], detail=False)
     def orphan(self, request):
         """
         Returns packages that are not in any deployment
@@ -515,7 +515,7 @@ class DeploymentViewSet(viewsets.ModelViewSet):
 
         return serializers.DeploymentSerializer
 
-    @detail_route(methods=['get'])
+    @action(methods=['get'], detail=True)
     def metadata(self, request, pk=None):
         get_object_or_404(models.Deployment, pk=pk)
         ret = create_repository_metadata(pk)
@@ -754,7 +754,7 @@ class LogicalViewSet(viewsets.ModelViewSet):
 
         return serializers.LogicalSerializer
 
-    @list_route(methods=['get'])
+    @action(methods=['get'], detail=False)
     def availables(self, request):
         """
         :param request:

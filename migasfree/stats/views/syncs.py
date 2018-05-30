@@ -10,7 +10,7 @@ from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext as _
 from rest_framework import viewsets, status
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 
@@ -69,7 +69,7 @@ class SyncStatsViewSet(viewsets.ViewSet):
             qs = qs.filter(computer_id__in=user.get_computers())
         return qs
 
-    @list_route(methods=['get'])
+    @action(methods=['get'], detail=False)
     def monthly(self, request, format=None):
         fmt = '%Y%m'
         delta = relativedelta(months=+1)
@@ -113,7 +113,7 @@ class SyncStatsViewSet(viewsets.ViewSet):
 
         return Response(zip(labels, data), status=status.HTTP_200_OK)
 
-    @list_route(methods=['get'])
+    @action(methods=['get'], detail=False)
     def daily(self, request, format=None):
         now = datetime.now().timetuple()
         fmt = '%Y%m%d'
