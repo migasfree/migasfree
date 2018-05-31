@@ -87,6 +87,8 @@ class SyncStatsViewSet(viewsets.ViewSet):
         except ValueError:
             begin = end - relativedelta(months=+MONTHLY_RANGE)
 
+        begin += relativedelta(day=1, hour=0, minute=0, second=0, microsecond=0)
+
         platform_id = request.query_params.get('platform_id', None)
         if platform_id:
             get_object_or_404(Platform, pk=platform_id)
