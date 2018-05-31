@@ -77,10 +77,10 @@ class ProjectInfoSerializer(serializers.ModelSerializer):
 class ComputerSerializer(serializers.ModelSerializer):
     project = ProjectInfoSerializer(many=False, read_only=True)
     software_inventory = serializers.HyperlinkedIdentityField(
-        view_name='computer-software/inventory'
+        view_name='computer-software_inventory',
     )
     software_history = serializers.HyperlinkedIdentityField(
-        view_name='computer-software/history'
+        view_name='computer-software_history',
     )
     tags = AttributeInfoSerializer(many=True, read_only=True)
 
