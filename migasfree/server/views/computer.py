@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import AnonymousUser
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.views.generic import DeleteView
@@ -23,6 +23,11 @@ from ..models import (
 )
 from ..utils import d2s, to_heatmap
 from ..api import upload_computer_info
+
+
+def check_scope(computer_id, user):
+    if computer_id not in user.userprofile.get_computers():
+        raise PermissionDenied
 
 
 class ComputerDelete(LoginRequiredMixin, DeleteView):
@@ -126,6 +131,8 @@ def computer_replacement(request):
 @login_required
 def computer_events(request, pk):
     computer = get_object_or_404(Computer, pk=pk)
+    check_scope(int(pk), request.user)
+
     now = datetime.now()
 
     syncs = to_heatmap(
@@ -176,6 +183,7 @@ def computer_events(request, pk):
 @login_required
 def computer_simulate_sync(request, pk):
     computer = get_object_or_404(Computer, pk=pk)
+    check_scope(int(pk), request.user)
     project = Project.objects.get(id=computer.project.id)
 
     user = request.user

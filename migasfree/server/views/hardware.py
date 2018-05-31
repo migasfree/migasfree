@@ -2,12 +2,13 @@
 
 import json
 
-from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404
 from django.core import serializers
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.utils.encoding import smart_unicode
+from django.utils.translation import ugettext as _
 
 from ..models import (
     HwNode,
@@ -24,6 +25,8 @@ MAXINT = 9223372036854775807  # sys.maxint = (2**63) - 1
 @login_required
 def hardware_resume(request, pk):
     computer = get_object_or_404(Computer, id=pk)
+    if int(pk) not in request.user.userprofile.get_computers():
+        raise PermissionDenied
 
     hardware = HwNode.objects.filter(computer__id=pk).order_by('id', 'parent_id', 'level')
     data = serializers.serialize('python', hardware)

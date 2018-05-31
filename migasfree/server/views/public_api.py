@@ -2,9 +2,10 @@
 
 import json
 
+from django.conf import settings
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render
-from django.conf import settings
 
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, views
@@ -82,10 +83,14 @@ def computer_label(request, uuid=None):
     if not uuid:
         uuid = request.GET.get('uuid', '')
 
+    computer_info = json.loads(get_computer_info(request, uuid).content)
+    if computer_info['id'] not in request.user.userprofile.get_computers():
+        raise PermissionDenied
+
     return render(
         request,
         'computer_label.html',
-        json.loads(get_computer_info(request, uuid).content)
+        computer_info
     )
 
 
