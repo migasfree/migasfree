@@ -182,11 +182,10 @@ def computer_events(request, pk):
 
 @login_required
 def computer_simulate_sync(request, pk):
-    computer = get_object_or_404(Computer, pk=pk)
-    check_scope(int(pk), request.user)
-    project = Project.objects.get(id=computer.project.id)
-
     user = request.user
+    computer = get_object_or_404(Computer, pk=pk)
+    check_scope(int(pk), user)
+    project = Project.objects.get(id=computer.project.id)
 
     # do not use the user logged. Change to AnonymousUser
     request.user = AnonymousUser()
