@@ -115,9 +115,11 @@ class Attribute(models.Model, MigasLink):
     def total_computers(self, user=None):
         from . import Computer
 
-        queryset = Computer.productive.filter(sync_attributes__id=self.id)
         if user and not user.userprofile.is_view_all():
-            queryset = Computer.productive.scope(user.userprofile)
+            queryset = Computer.productive.scope(user.userprofile).filter(sync_attributes__id=self.id)
+        else:
+            queryset = Computer.productive.filter(sync_attributes__id=self.id)
+
         return queryset.count()
 
     total_computers.admin_order_field = 'total_computers'
