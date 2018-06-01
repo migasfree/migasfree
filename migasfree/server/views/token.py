@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db.models import Q
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, exceptions, status, mixins, filters
@@ -128,6 +129,7 @@ class ComputerViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ComputerSerializer
     filter_class = ComputerFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    ordering = (settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0],)
 
     def get_serializer_class(self):
         if self.action == 'update' or self.action == 'partial_update':
