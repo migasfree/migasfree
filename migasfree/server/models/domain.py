@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q
+from django.db.models.signals import post_save
+
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -56,8 +58,8 @@ class Domain(models.Model, MigasLink):
     @staticmethod
     def process(attributes):
         property_set, _ = Property.objects.get_or_create(
-            prefix='DMN', sort='basic',
-            defaults={'name': 'DOMAIN', 'kind': 'R'}
+            prefix='DMN', sort='server',
+            defaults={'name': 'DOMAIN', 'kind': 'L'}
         )
 
         att_id = []
@@ -74,6 +76,17 @@ class Domain(models.Model, MigasLink):
 
         return att_id
 
+    def get_tags(self):
+        tags = []
+        tags.append(Attribute.objects.get(property_att__prefix="DMN",value=self.name))
+        for tag in Attribute.objects.filter(property_att__prefix="DMN",value__startswith=self.name+"."):
+            tags.append(tag)
+
+        for tag in self.tags.all():
+            tags.append(tag)
+
+        return tags
+
     def update_domain_admins(self, users):
         """
         :param users: [id1, id2, id3, ...]
@@ -81,25 +94,22 @@ class Domain(models.Model, MigasLink):
         """
         from .userprofile import UserProfile
 
-        initial_admins = list(self.userprofile_set.values_list('id', flat=True))
+        if self.id:
+            initial_admins = list(self.domains.values_list('id', flat=True))
 
-        for pk in list_difference(initial_admins, users):
-            try:
-                user = UserProfile.objects.get(pk=pk)
-                user.domains.remove(self.id)
-                if user.domain_preference == self.id:
-                    user.update_domain(0)
-                self.userprofile_set.remove(user)
-            except UserProfile.DoesNotExist:
-                pass
+            for pk in list_difference(initial_admins, users):
+                try:
+                    user = UserProfile.objects.get(pk=pk)
+                    user.domains.remove(self.id)
+                except UserProfile.DoesNotExist:
+                    pass
 
-        for pk in list_difference(users, initial_admins):
-            try:
-                user = UserProfile.objects.get(pk=pk)
-                user.domains.add(self.id)
-                self.userprofile_set.add(user)
-            except UserProfile.DoesNotExist:
-                pass
+            for pk in list_difference(users, initial_admins):
+                try:
+                    user = UserProfile.objects.get(pk=pk)
+                    user.domains.add(self.id)
+                except UserProfile.DoesNotExist:
+                    pass
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.name = slugify(self.name).upper()
@@ -110,3 +120,23 @@ class Domain(models.Model, MigasLink):
         verbose_name = _("Domain")
         verbose_name_plural = _("Domains")
         permissions = (("can_save_domain", "Can save Domain"),)
+
+
+def set_m2m_domain(sender, instance, created, **kwargs):
+    property, _ = Property.objects.get_or_create(
+        prefix='DMN', sort='server',
+        defaults={'name': 'DOMAIN', 'kind': 'L'}
+    )
+
+    att_dmn, _ = Attribute.objects.get_or_create(
+        value=instance.name,
+        description='',
+        property_att=property
+    )
+
+    # Add the domain attrribute
+    transaction.on_commit(
+	             lambda: instance.included_attributes.add(att_dmn)
+	        )
+
+post_save.connect(set_m2m_domain, sender=Domain)
