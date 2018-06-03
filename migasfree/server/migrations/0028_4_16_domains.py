@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(
                     auto_created=True, primary_key=True, serialize=False, verbose_name='ID'
                 )),
-                ('name', models.CharField(max_length=50, verbose_name='name')),
+                ('name', models.CharField(max_length=50, verbose_name='name', unique=True)),
                 ('comment', models.TextField(blank=True, null=True, verbose_name='comment')),
                 ('excluded_attributes', models.ManyToManyField(
                     blank=True, related_name='DomainExcludedAttribute',

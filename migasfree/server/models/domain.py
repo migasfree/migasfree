@@ -22,7 +22,8 @@ from . import (
 class Domain(models.Model, MigasLink):
     name = models.CharField(
         max_length=50,
-        verbose_name=_('name')
+        verbose_name=_('name'),
+        unique=True
     )
 
     comment = models.TextField(
