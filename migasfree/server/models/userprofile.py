@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import (
     User as UserSystem,
     UserManager,
+    Group,
 )
 
 from .common import MigasLink
@@ -145,6 +146,14 @@ SELECT ARRAY(
     def update_domain(self, value):
         self.domain_preference = value if value > 0 else None
         self.save()
+
+    def is_domain_admin(self):
+        if not self.is_superuser:
+            domain_admin = Group.objects.get(name="Domain Admin")
+            if domain_admin in self.groups.all():
+                return True
+
+        return False
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not (
