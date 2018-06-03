@@ -721,12 +721,21 @@ def upload_server_set(request, name, uuid, computer, data):
 def get_computer_tags(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
 
+    available_tags = {}
     selected_tags = []
     for tag in computer.tags.all():
         selected_tags.append(tag.__str__())
 
+        # if tag is a domain, includes all domain's tags
+        if tag.property_att.prefix=="DMN":
+            for tag_dmn in Domain.objects.get(name=tag.value.split('.')[0]).get_tags():
+                if tag_dmn.property_att.name not in available_tags:
+                    available_tags[tag_dmn.property_att.name] = []
+                value = tag_dmn.__str__()
+                if value not in available_tags[tag_dmn.property_att.name]:
+                    available_tags[tag_dmn.property_att.name].append(value)
+
     # DEPLOYMENT TAGS
-    available_tags = {}
     for deploy in Deployment.objects.filter(
         project=computer.project,
         enabled=True
