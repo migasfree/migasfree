@@ -2,7 +2,7 @@
 
 from django.db.models import Q
 from django.conf import settings
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, Group
 from django.utils.html import escape
 
 from ajax_select import register, LookupChannel
@@ -38,6 +38,19 @@ class UserProfileLookup(LookupChannel):
             )
 
         return obj.link()
+
+    def format_match(self, obj):
+        return escape("%s (%s)" % (obj.__str__(), u' '.join(filter(None, [obj.first_name, obj.last_name]))))
+
+
+@register('domain_admin')
+class DomainAdminLookup(UserProfileLookup):
+    def get_query(self, q, request):
+        domain_admin = Group.objects.get(name="Domain Admin")
+        return self.model.objects.filter(
+            Q(username__icontains=q) | Q(first_name__icontains=q) | Q(last_name__icontains=q),
+            groups__in=[domain_admin]
+        ).order_by('username')
 
 
 @register('permission')

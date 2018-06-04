@@ -472,7 +472,7 @@ class DomainForm(forms.ModelForm):
     )
 
     users = MigasAutoCompleteSelectMultipleField(
-        'user_profile', required=False,
+        'domain_admin', required=False,
         label=_('Users'), show_help_text=False
     )
 
