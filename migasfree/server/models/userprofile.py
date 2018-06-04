@@ -51,13 +51,17 @@ class UserProfile(UserSystem, MigasLink):
         if self.domain_preference:
             sql_domain = """
 (
-SELECT distinct computer_id  from server_computer_sync_attributes
-WHERE attribute_id IN ( SELECT attribute_id
-FROM server_domain_included_attributes WHERE domain_id = %(domain)s )
-EXCEPT
-SELECT distinct computer_id  from server_computer_sync_attributes
-WHERE attribute_id IN ( SELECT attribute_id
-FROM server_domain_excluded_attributes WHERE domain_id = %(domain)s)
+    SELECT DISTINCT computer_id FROM server_computer_sync_attributes
+    WHERE attribute_id IN (
+        SELECT attribute_id
+        FROM server_domain_included_attributes WHERE domain_id=%(domain)s
+    )
+    EXCEPT
+    SELECT DISTINCT computer_id FROM server_computer_sync_attributes
+    WHERE attribute_id IN (
+        SELECT attribute_id
+        FROM server_domain_excluded_attributes WHERE domain_id=%(domain)s
+    )
 )
 """ % ctx
         else:
@@ -66,13 +70,17 @@ FROM server_domain_excluded_attributes WHERE domain_id = %(domain)s)
         if self.scope_preference:
             sql_scope = """
 (
-SELECT distinct computer_id  from server_computer_sync_attributes
-WHERE attribute_id IN ( SELECT attribute_id
-FROM server_scope_included_attributes WHERE scope_id = %(scope)s )
-EXCEPT
-SELECT distinct computer_id  from server_computer_sync_attributes
-WHERE attribute_id IN ( SELECT attribute_id
-FROM server_scope_excluded_attributes WHERE scope_id = %(scope)s )
+    SELECT DISTINCT computer_id FROM server_computer_sync_attributes
+    WHERE attribute_id IN (
+        SELECT attribute_id
+        FROM server_scope_included_attributes WHERE scope_id=%(scope)s
+    )
+    EXCEPT
+    SELECT DISTINCT computer_id FROM server_computer_sync_attributes
+    WHERE attribute_id IN (
+        SELECT attribute_id
+        FROM server_scope_excluded_attributes WHERE scope_id=%(scope)s
+    )
 )
 """ % ctx
         else:
@@ -102,7 +110,7 @@ SELECT ARRAY(
         if computers:
             cursor = connection.cursor()
             cursor.execute("""
-                SELECT array(
+                SELECT ARRAY(
                     SELECT DISTINCT attribute_id FROM server_computer_sync_attributes WHERE computer_id IN %s
                 ) AS attributes""" % ("(" + ",".join(str(e) for e in computers) + ")"))
             attributes = cursor.fetchall()[0][0]
@@ -116,7 +124,7 @@ SELECT ARRAY(
 
             cursor = connection.cursor()
             cursor.execute(
-                """SELECT array(
+                """SELECT ARRAY(
                     SELECT serverattribute_id FROM server_domain_tags WHERE domain_id=%s
                 ) AS attributes """ % self.domain_preference.id
             )
@@ -130,7 +138,7 @@ SELECT ARRAY(
         computers = self.get_computers()
         if computers:
             cursor.execute(
-                """SELECT array(
+                """SELECT ARRAY(
                     SELECT DISTINCT project_id FROM server_computer WHERE id IN %s
                 ) AS projects""" % ("(" + ",".join(str(e) for e in computers) + ")")
             )
