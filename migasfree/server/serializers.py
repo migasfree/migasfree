@@ -97,6 +97,14 @@ class ComputerSerializer(serializers.ModelSerializer):
 
 
 class ComputerWriteSerializer(serializers.ModelSerializer):
+    def is_valid(self, raise_exception=False):
+        data = self.get_initial()
+        if data.get('tags')[0] == '':
+            self.instance.tags.clear()
+            del self.fields['tags']
+
+        return super(ComputerWriteSerializer, self).is_valid(raise_exception)
+
     class Meta:
         model = models.Computer
         fields = (

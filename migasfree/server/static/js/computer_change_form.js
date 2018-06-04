@@ -13,7 +13,7 @@ $(function(){
             return (x !== (undefined || null || ""));
         });
 
-        return tmp.map(Number);
+        return (tmp.length > 0) ? tmp.map(Number) : null;
     };
 
     $.ajaxSetup({
