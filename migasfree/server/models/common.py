@@ -157,6 +157,39 @@ class MigasLink(object):
 
             return action_data, related_data
 
+        # DOMAIN === ATTRIBUTE
+        if self._meta.model_name == 'domain' or \
+                (self._meta.model_name == 'serverattribute' and self.property_att.prefix == 'DMN'):
+            if self._meta.model_name == 'domain':
+                from . import Attribute
+                domain = self
+                try:
+                    att = Attribute.objects.get(
+                        value=str(self.name),
+                        property_att__prefix='DMN'
+                    )
+                except ObjectDoesNotExist:
+                    att = None
+            else:
+                from . import Domain
+                att = self
+                try:
+                    domain = Domain.objects.get(name=self.value)
+                except ObjectDoesNotExist:
+                    domain = None
+            if att:
+                att_action_data, att_related_data = att.get_relations(user)
+            else:
+                att_action_data = []
+                att_related_data = []
+
+            if domain:
+                set_action_data, set_related_data = domain.get_relations(user)
+                action_data = set_action_data + att_action_data
+                related_data = set_related_data + att_related_data
+
+            return action_data, related_data
+
         # ATTRIBUTESET === ATTRIBUTE
         if self._meta.model_name == 'attributeset' \
                 or (self._meta.model_name == 'attribute' and self.pk > 1) \
@@ -297,6 +330,13 @@ class MigasLink(object):
                     self = AttributeSet.objects.get(name=self.value)
                 except ObjectDoesNotExist:
                     pass
+            elif self.property_att.prefix == 'DMN':
+                from . import Domain
+                try:
+                    self = Domain.objects.get(name=self.value)
+                except ObjectDoesNotExist:
+                    pass
+
 
         url = u'admin:{}_{}_change'.format(
             self._meta.app_label,
@@ -321,6 +361,9 @@ class MigasLink(object):
         if self._meta.model_name == 'computer':
             lnk['status'] = self.status
             lnk['trans_status'] = ugettext(self.status)
+        elif self._meta.model_name == 'domain':
+            lnk['status'] = 'domain'
+            lnk['trans_status'] = ugettext(self._meta.verbose_name)
         elif self._meta.model_name == 'serverattribute' \
                 or (self._meta.model_name == 'attribute' and self.property_att.sort == 'server'):
             lnk['status'] = 'tag'
