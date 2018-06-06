@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.core.exceptions import PermissionDenied
 
 from ..models import Domain, UserProfile
 
@@ -20,7 +20,7 @@ def change_domain(request):
         user_profile = UserProfile.objects.get(id=request.user.id)
 
         if user_profile.is_domain_admin():
-            if domain==0 or domain not in user_profile.domains.all():
+            if domain == 0 or domain not in user_profile.domains.all():
                 raise PermissionDenied
 
         user_profile.update_domain(domain)
