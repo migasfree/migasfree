@@ -1,6 +1,6 @@
 /*!
- * Font Awesome Free 5.0.2 by @fontawesome - http://fontawesome.com
- * License - http://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ * Font Awesome Free 5.0.13 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
  */
 svg:not(:root).svg-inline--fa {
   overflow: visible; }
@@ -79,7 +79,7 @@ svg:not(:root).svg-inline--fa {
   height: 1em;
   position: relative;
   text-align: center;
-  vertical-align: -12.5%;
+  vertical-align: -.125em;
   width: 1em; }
   .fa-layers svg.svg-inline--fa {
     -webkit-transform-origin: center center;
@@ -101,6 +101,8 @@ svg:not(:root).svg-inline--fa {
 .fa-layers-counter {
   background-color: #ff253a;
   border-radius: 1em;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   color: #fff;
   height: 1.5em;
   line-height: 1;
