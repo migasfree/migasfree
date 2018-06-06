@@ -21,6 +21,7 @@ swagger_schema_view = get_swagger_view(
 )
 
 urlpatterns = [
+    url(r'^', include('django.contrib.auth.urls')),
     url(r'^docs/', swagger_schema_view, name='docs'),
     url(r'^token-auth/$', views.obtain_auth_token),
     url(r'^rest-auth/', include('rest_auth.urls')),
