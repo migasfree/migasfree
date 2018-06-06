@@ -13,7 +13,10 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 from django.template import Context, Template
 from django.conf import settings
 
-from ..utils import swap_m2m, remove_empty_elements_from_dict, strfdelta, list_difference
+from ..utils import (
+    swap_m2m, remove_empty_elements_from_dict,
+    strfdelta, list_difference, html_label,
+)
 
 from . import (
     Project, DeviceLogical, User,
@@ -604,42 +607,66 @@ class Computer(models.Model, MigasLink):
     def unchecked_errors(self):
         from .error import Error
         count = Error.unchecked.filter(computer__pk=self.pk).count()
-        if not count:
-            return format_html(
-                '<span class="label label-default">{}</span>'.format(count)
-            )
 
-        return format_html(
-            '<a class="label label-danger" '
-            'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
+        return html_label(
+            count=count,
+            title=_('Unchecked Errors'),
+            link='{}?computer__id__exact={}&checked__exact={}'.format(
                 reverse('admin:server_error_changelist'),
                 self.pk,
                 0,
-                count
-            )
+            ),
+            level='danger'
         )
 
     unchecked_errors.short_description = _('Unchecked Errors')
 
-    def unchecked_faults(self):
-        from .fault import Fault
-        count = Fault.unchecked.filter(computer__pk=self.pk).count()
-        if not count:
-            return format_html(
-                '<span class="label label-default">{}</span>'.format(count)
-            )
+    def errors(self):
+        from .error import Error
+        count = Error.objects.filter(computer__pk=self.pk).count()
 
-        return format_html(
-            '<a class="label label-danger" '
-            'href="{}?computer__id__exact={}&checked__exact={}">{}</a>'.format(
-                reverse('admin:server_fault_changelist'),
+        return html_label(
+            count=count,
+            title=_('Errors'),
+            link='{}?computer__id__exact={}'.format(
+                reverse('admin:server_error_changelist'),
                 self.pk,
-                0,
-                count
             )
         )
 
+    errors.short_description = _('Errors')
+
+    def unchecked_faults(self):
+        from .fault import Fault
+        count = Fault.unchecked.filter(computer__pk=self.pk).count()
+
+        return html_label(
+            count=count,
+            title=_('Unchecked Faults'),
+            link='{}?computer__id__exact={}&checked__exact={}'.format(
+                reverse('admin:server_fault_changelist'),
+                self.pk,
+                0,
+            ),
+            level='danger'
+        )
+
     unchecked_faults.short_description = _('Unchecked Faults')
+
+    def faults(self):
+        from .fault import Fault
+        count = Fault.objects.filter(computer__pk=self.pk).count()
+
+        return html_label(
+            count=count,
+            title=_('Faults'),
+            link='{}?computer__id__exact={}'.format(
+                reverse('admin:server_fault_changelist'),
+                self.pk,
+            )
+        )
+
+    faults.short_description = _('Faults')
 
     def last_sync_time(self):
         if not self.sync_start_date:
