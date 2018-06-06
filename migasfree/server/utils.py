@@ -6,6 +6,7 @@ import tempfile
 from datetime import datetime, timedelta
 
 from django.conf import settings
+from django.utils.html import format_html
 
 
 def write_file(filename, content):
@@ -200,3 +201,22 @@ def to_list(text):
     Converts text with new lines and spaces to list (space delimiter)
     """
     return text.replace('\r', ' ').replace('\n', ' ').split() if text else []
+
+
+def html_label(count, title='', link='#', level='default'):
+    if not count:
+        return format_html(
+            '<span class="label label-default" title="{}">{}</span>'.format(
+                title,
+                count
+            )
+        )
+
+    return format_html(
+        '<a class="label label-{}" title="{}" href="{}">{}</a>'.format(
+            level,
+            title,
+            link,
+            count
+        )
+    )
