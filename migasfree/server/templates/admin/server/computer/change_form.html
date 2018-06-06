@@ -188,13 +188,15 @@
                 {% endif %}
                 <div class="col-md-12">
                     <div class="col-md-6 col-xs-6">
-                        <p title="{% trans 'Unchecked Errors' %}" class="lead text-center">
-                            <span class="fas fa-bug fa-lg"></span>&nbsp; {{ original.unchecked_errors }}
+                        <p title="{% trans 'Errors' %}" class="lead text-center">
+                            <span class="fas fa-bug fa-lg"></span>&nbsp;
+                            {{ original.unchecked_errors }} / {{ original.errors }}
                         </p>
                     </div>
                     <div class="col-md-6 col-xs-6">
-                        <p title="{% trans 'Unchecked Faults' %}" class="lead text-center">
-                            <span class="fas fa-bomb fa-lg"></span>&nbsp; {{ original.unchecked_faults }}
+                        <p title="{% trans 'Faults' %}" class="lead text-center">
+                            <span class="fas fa-bomb fa-lg"></span>&nbsp;
+                            {{ original.unchecked_faults }} / {{ original.faults }}
                         </p>
                     </div>
                 </div>
