@@ -23,6 +23,7 @@ swagger_schema_view = get_swagger_view(
 urlpatterns = [
     url(r'^docs/', swagger_schema_view, name='docs'),
     url(r'^token-auth/$', views.obtain_auth_token),
+    url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^api/v1/token/', include(router.urls)),
     url(r'^api/v1/token/', include(stats_router.urls)),
     url(r'^api/v1/token/devices/', include(device_router.urls)),

@@ -112,6 +112,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'rest_framework_filters',
     'rest_framework_swagger',
+    'rest_auth',
     'django_filters',
     'form_utils',
     'markdownx',
@@ -144,6 +145,10 @@ SWAGGER_SETTINGS = {
         }
     },
     'VALIDATOR_URL': None,
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'migasfree.server.serializers.UserProfileSerializer',
 }
 
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'

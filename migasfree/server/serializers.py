@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
+from rest_auth.serializers import UserDetailsSerializer
 
 from . import models, tasks
 from .utils import to_list
@@ -533,6 +535,12 @@ class DomainWriteSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ScopeInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Scope
+        fields = ('id', 'name')
+
+
 class ScopeSerializer(serializers.ModelSerializer):
     included_attributes = AttributeInfoSerializer(many=True, read_only=True)
     excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
@@ -669,3 +677,41 @@ class ModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.DeviceModel
         fields = '__all__'
+
+
+class UserProfileSerializer(UserDetailsSerializer):
+    domains = DomainInfoSerializer(many=True, read_only=True, source='userprofile.domains')
+    domain_preference = serializers.IntegerField(source='userprofile.domain_preference.id', allow_null=True)
+    scope_preference = serializers.IntegerField(source='userprofile.scope_preference.id', allow_null=True)
+
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('userprofile', {})
+        domain_preference = profile_data.get('domain_preference')
+        scope_preference = profile_data.get('scope_preference')
+
+        instance = super(UserProfileSerializer, self).update(instance, validated_data)
+
+        # get and update user profile
+        profile = instance.userprofile
+        if domain_preference:
+            pk = domain_preference.get('id', 0)
+            if pk:
+                domain = get_object_or_404(models.Domain, pk=pk)
+                if domain.id in list(profile.domains.values_list('id', flat=True)):
+                    profile.update_domain(domain)
+            else:
+                profile.update_domain(0)
+        if scope_preference:
+            pk = scope_preference.get('id', 0)
+            if pk:
+                scope = get_object_or_404(models.Scope, pk=pk)
+                profile.update_scope(scope)
+            else:
+                profile.update_scope(0)
+
+        return instance
+
+    class Meta(UserDetailsSerializer.Meta):
+        fields = UserDetailsSerializer.Meta.fields + (
+            'domains', 'domain_preference', 'scope_preference'
+        )
