@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.contrib.auth.models import Group, Permission
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -679,7 +680,21 @@ class ModelSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PermissionInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = ('id', 'name')
+
+
+class GroupInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = ('id', 'name')
+
+
 class UserProfileSerializer(UserDetailsSerializer):
+    groups = GroupInfoSerializer(many=True, read_only=True)
+    user_permissions = PermissionInfoSerializer(many=True, read_only=True)
     domains = DomainInfoSerializer(many=True, read_only=True, source='userprofile.domains')
     domain_preference = serializers.IntegerField(source='userprofile.domain_preference.id', allow_null=True)
     scope_preference = serializers.IntegerField(source='userprofile.scope_preference.id', allow_null=True)
@@ -713,5 +728,6 @@ class UserProfileSerializer(UserDetailsSerializer):
 
     class Meta(UserDetailsSerializer.Meta):
         fields = UserDetailsSerializer.Meta.fields + (
-            'domains', 'domain_preference', 'scope_preference'
+            'domains', 'domain_preference', 'scope_preference',
+            'groups', 'user_permissions', 'is_superuser',
         )
