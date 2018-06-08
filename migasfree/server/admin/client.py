@@ -542,7 +542,7 @@ class StatusLogAdmin(MigasAdmin):
 class SynchronizationAdmin(MigasAdmin):
     list_display = ('created_at', 'user_link', 'computer_link', 'project_link')
     list_display_links = ('created_at',)
-    list_filter = ('created_at',)
+    list_filter = ('created_at', 'project')
     search_fields = add_computer_search_fields(['created_at', 'user__name'])
     readonly_fields = (
         'computer_link', 'user_link', 'project_link', 'created_at',
