@@ -66,6 +66,11 @@ $(document).ready(function() {
             <input type="hidden" name="this_is_the_login_form" value="1" />
             <input type="hidden" name="next" value="{{ next }}" />
             <input class="btn btn-primary" type="submit" value="{% trans 'Log in' %}" />
+            {% if EMAIL_HOST_USER %}
+                <a class="pull-right btn btn-default" href="{% url 'password_reset' %}">
+                    {% trans "Password reset" %}
+                </a>
+            {% endif %}
         </div>
     </form>
 </div>
