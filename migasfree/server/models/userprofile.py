@@ -86,6 +86,9 @@ class UserProfile(UserSystem, MigasLink):
         else:
             sql_scope = ""
 
+        if not sql_domain and not sql_scope:
+            return []
+
         sql = """
 SELECT ARRAY(
 %(sql_domain)s
@@ -97,9 +100,6 @@ SELECT ARRAY(
             'sql_scope': sql_scope,
             'operator': " INTERSECT" if (self.domain_preference and self.scope_preference) else ""
         }
-
-        if not sql_domain and not sql_scope:
-            return []
 
         cursor.execute(sql)
         computers = cursor.fetchall()[0][0]
