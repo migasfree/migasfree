@@ -7,6 +7,12 @@
                 <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1&project__id__exact={{ current_project.id }}">{% trans 'Deployments' %}</a>
             </li>
         {% endif %}
+        {% if perms.server.change_schedule %}
+            <li>
+                <a href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a>
+            </li>
+        {% endif %}
+        <li role="separator" class="divider"></li>
         {% if perms.server.change_store %}
             <li>
                 <a href="{% url 'admin:server_store_changelist' %}?project__id__exact={{ current_project.id }}">{% trans 'Stores' %}</a>
@@ -23,6 +29,12 @@
                 <a href="{% url 'admin:server_deployment_changelist' %}?enabled__exact=1">{% trans 'Deployments' %}</a>
             </li>
         {% endif %}
+        {% if perms.server.change_schedule %}
+            <li>
+                <a href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a>
+            </li>
+        {% endif %}
+        <li role="separator" class="divider"></li>
         {% if perms.server.change_store %}
             <li>
                 <a href="{% url 'admin:server_store_changelist' %}">{% trans 'Stores' %}</a>
@@ -33,11 +45,6 @@
                 <a href="{% url 'admin:server_package_changelist' %}">{% trans 'Packages/Sets' %}</a>
             </li>
         {% endif %}
-    {% endif %}
-    {% if perms.server.change_schedule %}
-        <li>
-            <a href="{% url 'admin:server_schedule_changelist' %}">{% trans 'Schedules' %}</a>
-        </li>
     {% endif %}
     <li>
         <a href="{% url 'package_info' '' %}">{% trans 'Packages information' %}</a>
