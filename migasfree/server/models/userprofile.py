@@ -98,6 +98,9 @@ SELECT ARRAY(
             'operator': " INTERSECT" if (self.domain_preference and self.scope_preference) else ""
         }
 
+        if not sql_domain and not sql_scope:
+            return []
+
         cursor.execute(sql)
         computers = cursor.fetchall()[0][0]
         cursor.close()

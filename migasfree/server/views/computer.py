@@ -26,7 +26,8 @@ from ..api import upload_computer_info
 
 
 def check_scope(computer_id, user):
-    if computer_id not in user.userprofile.get_computers():
+    computers = user.userprofile.get_computers()
+    if computers and computer_id not in computers:
         raise PermissionDenied
 
 
