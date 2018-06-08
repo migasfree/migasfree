@@ -78,6 +78,7 @@ TEMPLATES = [
                 'migasfree.server.context_processors.domain_names',
                 'migasfree.server.context_processors.scope_names',
                 'migasfree.server.context_processors.migasfree_version',
+                'migasfree.server.context_processors.global_settings',
             ],
         },
     },

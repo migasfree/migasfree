@@ -2,6 +2,7 @@
 
 from .. import __version__
 
+from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Domain, Scope, Query
@@ -70,3 +71,10 @@ def domain_names(request):
 
 def migasfree_version(request):
     return {'migasfree_version': __version__}
+
+
+def global_settings(request):
+    # return any necessary values
+    return {
+        'EMAIL_HOST_USER': settings.EMAIL_HOST_USER,
+    }
