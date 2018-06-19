@@ -121,6 +121,7 @@ def get_query(request, query_id):
             {
                 'form': form,
                 'title': query.name,
+                'description': query.description,
             }
         )
     except:

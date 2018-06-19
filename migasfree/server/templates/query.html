@@ -10,6 +10,10 @@
 {% block bodyclass %}query-result{% endblock %}
 
 {% block content %}
+    {% if description %}
+        <p class="lead">{{ description }}</p>
+    {% endif %}
+
     {% include 'includes/parameters.html' %}
 
     {% if query %}
