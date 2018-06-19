@@ -2,6 +2,7 @@
 
 from django.db.models import Q
 from django.conf import settings
+from django.http import QueryDict
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import viewsets, exceptions, status, mixins, filters
@@ -138,10 +139,10 @@ class ComputerViewSet(viewsets.ModelViewSet):
         return serializers.ComputerSerializer
 
     def partial_update(self, request, *args, **kwargs):
-        if isinstance(request.data, dict):
-            data = request.data
-        else:
+        if isinstance(request.data, QueryDict):
             data = dict(request.data.iterlists())
+        else:
+            data = request.data
 
         devices = data.get(
             'assigned_logical_devices_to_cid[]',
