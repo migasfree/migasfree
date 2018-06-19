@@ -102,7 +102,7 @@ class ComputerSerializer(serializers.ModelSerializer):
 class ComputerWriteSerializer(serializers.ModelSerializer):
     def is_valid(self, raise_exception=False):
         data = self.get_initial()
-        if data.get('tags')[0] == '':
+        if data.get('tags') and data.get('tags')[0] == '':
             self.instance.tags.clear()
             del self.fields['tags']
 
