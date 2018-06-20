@@ -19,6 +19,10 @@
 {% endblock content_title %}
 
 {% block content %}
+    <p title="{% trans 'Date of entry into the migasfree system' %}">
+        <span class="far fa-calendar-plus"></span> {{ computer.created_at }}
+    </p>
+
     <div id="select-data" class="btn-group" role="group">
         <button id="display-sync" type="button" class="btn btn-default active">{% trans 'Synchronizations' %} ({{ syncs_count }})</button>
 
@@ -108,7 +112,7 @@
 
                     $.getJSON(url, function(data) {
                         if (data.count > 0) {
-                            var html = "<h2>" + dayStart + ": " + nb;
+                            var html = "<h2>" + dayStart + ": <span class='label label-info'>" + nb;
                             switch(dataset) {
                                 case "syncs":
                                     html += (nb > 1 ? " {% trans 'syncs' %}" : " {% trans 'sync' %}");
@@ -126,7 +130,7 @@
                                     html += (nb > 1 ? " {% trans 'migrations' %}" : " {% trans 'migration' %}");
                                     break;
                             };
-                            html += "</h2>";
+                            html += "</span></h2>";
 
                             html += "<ul class='list-group'>";
                             data.results.forEach(function(item) {
