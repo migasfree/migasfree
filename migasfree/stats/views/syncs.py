@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import pygal
-
 from datetime import timedelta, datetime, date, time
 from dateutil.relativedelta import relativedelta
 
@@ -20,11 +18,33 @@ from migasfree.server.models import (
 )
 from migasfree.server.utils import to_heatmap, to_timestamp
 
-from . import (
-    JS_FILE, MONTHLY_RANGE, DAILY_RANGE,
-    LABEL_ROTATION, WIDTH, HEIGHT,
-    DEFAULT_STYLE, BAR_STYLE
-)
+from . import MONTHLY_RANGE, DAILY_RANGE
+
+
+def render_table(axis, data):
+    html = u'<table>'
+
+    html += u'<tr><th></th>'
+    for k in data.keys():
+        html += u'<th>{}</th>'.format(k)
+
+    html += u'</tr>'
+
+    for index, item in enumerate(axis):
+        html += u'<tr><th>{}</th>'.format(item)
+        for k in data:
+            value = ''
+            try:
+                value = data[k][index]
+            except IndexError:
+                pass
+            html += u'<td>{}</td>'.format(value)
+
+        html += u'</tr>'
+
+    html += u'</table>'
+
+    return html
 
 
 def get_syncs_time_range(start_date, end_date, platform=0, range_name='month', user=None):
@@ -155,15 +175,6 @@ class SyncStatsViewSet(viewsets.ViewSet):
 
 @login_required
 def synchronized_monthly(request):
-    line_chart = pygal.Line(
-        no_data_text=_('There are no synchronizations'),
-        x_label_rotation=LABEL_ROTATION,
-        style=DEFAULT_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
-
     labels = {
         'total': _("Totals")
     }
@@ -171,6 +182,7 @@ def synchronized_monthly(request):
     data = {}
     new_data = {}
     total = []
+    chart_data = {}
 
     delta = relativedelta(months=+1)
     end_date = date.today() + delta
@@ -209,35 +221,27 @@ def synchronized_monthly(request):
 
         total.append(total_month)
 
-    line_chart.x_labels = x_axe
-
-    line_chart.add(labels['total'], total)
+    chart_data[labels['total']] = total
     for item in new_data:
-        line_chart.add(labels[item], new_data[item])
+        chart_data[labels[item]] = new_data[item]
 
     return render(
         request,
         'lines.html',
         {
             'title': _("Synchronized Computers / Month"),
-            'chart': line_chart.render_data_uri(),
-            'tabular_data': line_chart.render_table(),
+            'data': chart_data,
+            'x_labels': x_axe,
+            'tabular_data': render_table(x_axe, chart_data),
         }
     )
 
 
 @login_required
 def synchronized_daily(request):
-    line_chart = pygal.Bar(
-        no_data_text=_('There are no synchronizations'),
-        show_legend=False,
-        x_label_rotation=LABEL_ROTATION,
-        style=BAR_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
     data = []
+    labels = []
+    chart_data = {}
 
     client = APIClient()
     client.force_authenticate(user=request.user)
@@ -248,16 +252,16 @@ def synchronized_daily(request):
 
     if hasattr(response, 'data') and response.status_code == status.HTTP_200_OK:
         labels, data = zip(*response.data)
-        line_chart.x_labels = labels
 
-    line_chart.add(_('Computers'), data)
+    chart_data[_('Computers')] = list(data)
 
     return render(
         request,
         'lines.html',
         {
             'title': _("Synchronized Computers / Day"),
-            'chart': line_chart.render_data_uri(),
-            'tabular_data': line_chart.render_table(),
+            'data': chart_data,
+            'x_labels': list(labels),
+            'tabular_data': render_table(labels, chart_data),
         }
     )
