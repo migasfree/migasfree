@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from django import template
 from django.contrib.auth.models import User as UserSystem
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.safestring import mark_safe
 
 from ..models import UserProfile
 
@@ -98,3 +101,8 @@ def submit_row(context):
         'is_popup': is_popup,
         'show_save': context['add'] or can_save,
     }
+
+
+@register.filter
+def as_json(data):
+    return mark_safe(json.dumps(data))
