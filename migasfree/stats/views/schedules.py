@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import pygal
-
 from datetime import timedelta, datetime
 
 from django.db.models import Q
@@ -15,13 +13,14 @@ from migasfree.server.models import (
 )
 from migasfree.server.utils import time_horizon
 
-from . import LABEL_ROTATION, DEFAULT_STYLE, JS_FILE, WIDTH, HEIGHT, BAR_STYLE
+from .syncs import render_table
 
 
 @login_required
 def project_schedule_delays(request, project_name=None):
     title = _("Provided Computers / Delay")
     project_selection = Project.get_project_names()
+    chart_data = {}
 
     if project_name is None:
         return render(
@@ -35,16 +34,6 @@ def project_schedule_delays(request, project_name=None):
 
     project = get_object_or_404(Project, name=project_name)
     title += ' [{}]'.format(project.name)
-
-    line_chart = pygal.Line(
-        no_data_text=_('There are no synchronizations'),
-        x_label_rotation=LABEL_ROTATION,
-        legend_at_bottom=True,
-        style=DEFAULT_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
 
     maximum_delay = 0
     for schedule in Schedule.objects.all():
@@ -81,13 +70,11 @@ def project_schedule_delays(request, project_name=None):
             lst_attributes += lst_att_delay
 
         maximum_delay = max(maximum_delay, d)
-        line_chart.add(schedule.name, [row[1] for row in line])
+        chart_data[schedule.name] = [row[1] for row in line]
 
     labels = []
     for i in range(0, maximum_delay + 1):
         labels.append(_('%d days') % i)
-
-    line_chart.x_labels = labels
 
     return render(
         request,
@@ -96,8 +83,9 @@ def project_schedule_delays(request, project_name=None):
             'title': title,
             'project_selection': project_selection,
             'current_project': project.name,
-            'chart': line_chart.render_data_uri(),
-            'tabular_data': line_chart.render_table(),
+            'data': chart_data,
+            'x_labels': list(labels),
+            'tabular_data': render_table(labels, chart_data),
         }
     )
 
@@ -107,19 +95,10 @@ def provided_computers_by_delay(request):
     deploy = get_object_or_404(Deployment, pk=request.GET.get('id'))
     rolling_date = deploy.start_date
 
-    line_chart = pygal.Line(
-        no_data_text=_('There are no data'),
-        show_legend=False,
-        x_label_rotation=LABEL_ROTATION,
-        style=BAR_STYLE,
-        js=[JS_FILE],
-        width=WIDTH,
-        height=HEIGHT,
-    )
-
     available_data = []
     provided_data = []
     labels = []
+    chart_data = {}
 
     lst_attributes = []
     value = 0
@@ -185,14 +164,14 @@ def provided_computers_by_delay(request):
         lst_attributes += lst_att_delay
         rolling_date = end_horizon.date()
 
-    line_chart.add(_('Provided'), provided_data)
-    line_chart.add(_('Available'), available_data)
-    line_chart.x_labels = labels
+    chart_data[_('Provided')] = provided_data
+    chart_data[_('Available')] = available_data
 
     return render(
         request,
         'includes/line_chart.html',
         {
-            'chart': line_chart.render_data_uri(),
+            'data': chart_data,
+            'x_labels': list(labels),
         }
     )
