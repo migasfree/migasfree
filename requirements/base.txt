@@ -15,7 +15,6 @@ django-filter==1.1.0
 djangorestframework-filters==0.10.2
 django-rest-auth==0.9.3
 django-rest-swagger==2.2.0
-pygal==2.4.0
 lxml==4.1.1
 Pillow==5.1.0
 django-markdownx==2.0.23
