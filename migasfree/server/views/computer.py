@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import AnonymousUser
 from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist, PermissionDenied
+from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.views.generic import DeleteView
@@ -23,12 +23,6 @@ from ..models import (
 )
 from ..utils import d2s, to_heatmap
 from ..api import upload_computer_info
-
-
-def check_scope(computer_id, user):
-    computers = user.userprofile.get_computers()
-    if computers and computer_id not in computers:
-        raise PermissionDenied
 
 
 class ComputerDelete(LoginRequiredMixin, DeleteView):
@@ -132,7 +126,7 @@ def computer_replacement(request):
 @login_required
 def computer_events(request, pk):
     computer = get_object_or_404(Computer, pk=pk)
-    check_scope(int(pk), request.user)
+    request.user.userprofile.check_scope(int(pk))
 
     now = datetime.now()
 
@@ -185,7 +179,7 @@ def computer_events(request, pk):
 def computer_simulate_sync(request, pk):
     user = request.user
     computer = get_object_or_404(Computer, pk=pk)
-    check_scope(int(pk), user)
+    user.userprofile.check_scope(int(pk))
     project = Project.objects.get(id=computer.project.id)
 
     # do not use the user logged. Change to AnonymousUser

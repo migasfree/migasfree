@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models, connection
+from django.core.exceptions import PermissionDenied
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import (
     User as UserSystem,
@@ -149,6 +150,11 @@ SELECT ARRAY(
             cursor.close()
 
         return projects
+
+    def check_scope(self, computer_id):
+        computers = self.get_computers()
+        if computers and computer_id not in computers:
+            raise PermissionDenied
 
     def update_scope(self, value):
         self.scope_preference = value if value > 0 else None
