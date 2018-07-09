@@ -92,6 +92,14 @@ def get_computer(name, uuid):
     except Computer.DoesNotExist:
         pass
 
+    computer = Computer.objects.filter(mac_address__icontains=uuid[-12:])
+    if computer.count() == 1 and uuid[0:8] == '0'*8:
+        logger.debug('computer found by mac_address (in uuid format)')
+
+        return computer.first()
+
+    computer = None  # reset result to continue searching
+
     # DEPRECATED This Block. Only for compatibility with client <= 2
     message = 'computer found by name. compatibility mode'
     if len(uuid.split("-")) == 5:  # search for uuid (client >= 3)
