@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-30 07:55+0200\n"
+"POT-Creation-Date: 2018-07-13 12:32+0200\n"
 "PO-Revision-Date: 2018-02-16 09:15+0200\n"
 "Last-Translator: Rafa Gaioso <rrgaioso@gmail.com>\n"
 "Language-Team: Concello de Santiago de Compostela\n"
@@ -19,13 +19,13 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: migasfree/catalog/admin.py:31 migasfree/catalog/models.py:152
-#: migasfree/server/models/computer.py:173
+#: migasfree/server/models/computer.py:176
 #: migasfree/server/models/deployment.py:59
 #: migasfree/server/models/device_driver.py:29
 #: migasfree/server/models/error.py:61 migasfree/server/models/fault.py:71
 #: migasfree/server/models/migration.py:35
 #: migasfree/server/models/package.py:50 migasfree/server/models/store.py:53
-#: migasfree/server/models/synchronization.py:44
+#: migasfree/server/models/synchronization.py:43
 #: migasfree/server/templates/admin/server/deployment/change_form.html:50
 msgid "project"
 msgstr "proxecto"
@@ -33,43 +33,46 @@ msgstr "proxecto"
 #: migasfree/catalog/admin.py:108 migasfree/catalog/admin.py:171
 #: migasfree/catalog/forms.py:29 migasfree/catalog/forms.py:44
 #: migasfree/catalog/models.py:202 migasfree/catalog/models.py:306
-#: migasfree/server/admin/client.py:410 migasfree/server/admin/core.py:629
-#: migasfree/server/admin/core.py:663 migasfree/server/forms.py:85
-#: migasfree/server/forms.py:339 migasfree/server/forms.py:358
-#: migasfree/server/forms.py:409 migasfree/server/forms.py:436
+#: migasfree/server/admin/client.py:410 migasfree/server/admin/core.py:631
+#: migasfree/server/admin/core.py:665 migasfree/server/forms.py:86
+#: migasfree/server/forms.py:349 migasfree/server/forms.py:368
+#: migasfree/server/forms.py:435 migasfree/server/forms.py:462
 #: migasfree/server/models/attribute_set.py:40
 #: migasfree/server/models/deployment.py:101
-#: migasfree/server/models/domain.py:35
+#: migasfree/server/models/domain.py:39
 #: migasfree/server/models/fault_definition.py:57
 #: migasfree/server/models/fault_definition.py:78
-#: migasfree/server/models/scope.py:58
+#: migasfree/server/models/scope.py:59
 #: migasfree/server/templates/admin/server/deployment/change_form.html:107
+#: migasfree/server/templates/admin/server/domain/change_form.html:61
 msgid "included attributes"
 msgstr "atributos incluidos"
 
 #: migasfree/catalog/admin.py:112 migasfree/catalog/admin.py:175
 #: migasfree/catalog/forms.py:33 migasfree/catalog/forms.py:48
 #: migasfree/catalog/models.py:209 migasfree/catalog/models.py:313
-#: migasfree/server/admin/client.py:414 migasfree/server/admin/core.py:632
-#: migasfree/server/admin/core.py:666 migasfree/server/forms.py:89
-#: migasfree/server/forms.py:343 migasfree/server/forms.py:362
-#: migasfree/server/forms.py:413 migasfree/server/forms.py:440
+#: migasfree/server/admin/client.py:414 migasfree/server/admin/core.py:634
+#: migasfree/server/admin/core.py:668 migasfree/server/forms.py:90
+#: migasfree/server/forms.py:353 migasfree/server/forms.py:372
+#: migasfree/server/forms.py:439 migasfree/server/forms.py:466
 #: migasfree/server/models/attribute_set.py:47
 #: migasfree/server/models/deployment.py:108
-#: migasfree/server/models/domain.py:42
+#: migasfree/server/models/domain.py:46
 #: migasfree/server/models/fault_definition.py:64
 #: migasfree/server/models/fault_definition.py:83
-#: migasfree/server/models/scope.py:65
+#: migasfree/server/models/scope.py:66
 #: migasfree/server/templates/admin/server/deployment/change_form.html:117
+#: migasfree/server/templates/admin/server/domain/change_form.html:71
 msgid "excluded attributes"
 msgstr "atributos excluidos"
 
 #: migasfree/catalog/admin.py:150 migasfree/server/admin/client.py:90
 #: migasfree/server/admin/client.py:392 migasfree/server/admin/core.py:241
 #: migasfree/server/admin/core.py:269 migasfree/server/admin/core.py:328
-#: migasfree/server/admin/core.py:569 migasfree/server/admin/core.py:608
-#: migasfree/server/admin/core.py:643
+#: migasfree/server/admin/core.py:571 migasfree/server/admin/core.py:610
+#: migasfree/server/admin/core.py:645
 #: migasfree/server/templates/admin/server/deployment/change_form.html:24
+#: migasfree/server/templates/admin/server/domain/change_form.html:20
 msgid "General"
 msgstr "Xeral"
 
@@ -78,7 +81,7 @@ msgid "Application Area"
 msgstr "Área de aplicación"
 
 #: migasfree/catalog/forms.py:15 migasfree/catalog/models.py:127
-#: migasfree/server/forms.py:471 migasfree/server/models/device.py:40
+#: migasfree/server/forms.py:518 migasfree/server/models/device.py:40
 msgid "available for attributes"
 msgstr "dispoñible para os atributos"
 
@@ -90,7 +93,7 @@ msgstr "aplicación"
 #: migasfree/catalog/models.py:62 migasfree/server/admin/client.py:170
 #: migasfree/server/admin/client.py:452 migasfree/server/filters.py:101
 #: migasfree/server/models/user.py:53
-#: migasfree/server/templates/admin/server/computer/change_form.html:227
+#: migasfree/server/templates/admin/server/computer/change_form.html:229
 #: migasfree/server/templates/computer_simulate_sync.html:43
 #: migasfree/server/templates/includes/computer_messages_result.html:15
 msgid "User"
@@ -158,7 +161,7 @@ msgstr "Acceso universal"
 
 #: migasfree/catalog/models.py:84 migasfree/catalog/models.py:176
 #: migasfree/server/models/attribute_set.py:21
-#: migasfree/server/models/computer.py:155
+#: migasfree/server/models/computer.py:158
 #: migasfree/server/models/deployment.py:53
 #: migasfree/server/models/device.py:20
 #: migasfree/server/models/device_connection.py:13
@@ -167,7 +170,7 @@ msgstr "Acceso universal"
 #: migasfree/server/models/device_manufacturer.py:12
 #: migasfree/server/models/device_model.py:13
 #: migasfree/server/models/device_type.py:11
-#: migasfree/server/models/domain.py:22
+#: migasfree/server/models/domain.py:25
 #: migasfree/server/models/fault_definition.py:27
 #: migasfree/server/models/hw_capability.py:31
 #: migasfree/server/models/hw_configuration.py:31
@@ -175,9 +178,10 @@ msgstr "Acceso universal"
 #: migasfree/server/models/package.py:43 migasfree/server/models/platform.py:34
 #: migasfree/server/models/pms.py:27 migasfree/server/models/project.py:48
 #: migasfree/server/models/property.py:49 migasfree/server/models/query.py:11
-#: migasfree/server/models/schedule.py:13 migasfree/server/models/scope.py:43
+#: migasfree/server/models/schedule.py:13 migasfree/server/models/scope.py:44
 #: migasfree/server/models/store.py:46 migasfree/server/models/user.py:32
 #: migasfree/server/templates/admin/server/deployment/change_form.html:38
+#: migasfree/server/templates/admin/server/domain/change_form.html:26
 msgid "name"
 msgstr "nome"
 
@@ -226,7 +230,7 @@ msgid "Application"
 msgstr "Aplicación"
 
 #: migasfree/catalog/models.py:136
-#: migasfree/server/templates/includes/software_menu.html:48
+#: migasfree/server/templates/includes/software_menu.html:55
 msgid "Applications"
 msgstr "Aplicacións"
 
@@ -263,12 +267,13 @@ msgstr ""
 msgid "exclusive"
 msgstr "exclusivo"
 
-#: migasfree/catalog/models.py:193 migasfree/server/models/computer.py:306
+#: migasfree/catalog/models.py:193 migasfree/server/models/computer.py:309
 #: migasfree/server/models/deployment.py:63
-#: migasfree/server/models/domain.py:26
+#: migasfree/server/models/domain.py:30
 #: migasfree/server/templates/admin/server/computer/change_form.html:162
 #: migasfree/server/templates/admin/server/computer/change_form.html:177
 #: migasfree/server/templates/admin/server/deployment/change_form.html:84
+#: migasfree/server/templates/admin/server/domain/change_form.html:38
 msgid "comment"
 msgstr "comentario"
 
@@ -277,7 +282,7 @@ msgid "Policy"
 msgstr "Política"
 
 #: migasfree/catalog/models.py:284
-#: migasfree/server/templates/includes/software_menu.html:53
+#: migasfree/server/templates/includes/software_menu.html:60
 msgid "Policies"
 msgstr "Políticas"
 
@@ -303,7 +308,7 @@ msgid "Current Situation"
 msgstr "Situación actual"
 
 #: migasfree/server/admin/client.py:109 migasfree/server/models/device.py:144
-#: migasfree/server/templates/admin/server/computer/change_form.html:265
+#: migasfree/server/templates/admin/server/computer/change_form.html:267
 #: migasfree/server/templates/base.html:130
 #: migasfree/server/templates/base.html:132
 #: migasfree/server/templates/computer_simulate_sync.html:141
@@ -315,17 +320,17 @@ msgid "Devices"
 msgstr "Dispositivos"
 
 #: migasfree/server/admin/client.py:116
-#: migasfree/server/models/synchronization.py:58
-#: migasfree/server/templates/admin/server/computer/change_form.html:215
+#: migasfree/server/models/synchronization.py:57
+#: migasfree/server/templates/admin/server/computer/change_form.html:217
 msgid "Synchronization"
 msgstr "Sincronización"
 
 #: migasfree/server/admin/client.py:126
-#: migasfree/server/templates/admin/server/computer/change_form.html:249
+#: migasfree/server/templates/admin/server/computer/change_form.html:251
 msgid "Software"
 msgstr "Software"
 
-#: migasfree/server/admin/client.py:130 migasfree/server/models/common.py:247
+#: migasfree/server/admin/client.py:130 migasfree/server/models/common.py:280
 #: migasfree/server/templates/admin/server/computer/change_form.html:78
 msgid "Hardware"
 msgstr "Hardware"
@@ -334,8 +339,8 @@ msgstr "Hardware"
 msgid "Product"
 msgstr "Produto"
 
-#: migasfree/server/admin/client.py:174 migasfree/server/models/computer.py:251
-#: migasfree/server/templates/admin/server/computer/change_form.html:232
+#: migasfree/server/admin/client.py:174 migasfree/server/models/computer.py:254
+#: migasfree/server/templates/admin/server/computer/change_form.html:234
 msgid "sync attributes"
 msgstr "Atributos da sincronización"
 
@@ -358,10 +363,12 @@ msgstr "Erro truncado"
 msgid "Checked %s"
 msgstr "%s comprobado/s"
 
-#: migasfree/server/admin/client.py:298 migasfree/server/models/error.py:89
-#: migasfree/server/templates/computer_events.html:25
+#: migasfree/server/admin/client.py:298 migasfree/server/models/computer.py:630
+#: migasfree/server/models/computer.py:637 migasfree/server/models/error.py:89
+#: migasfree/server/templates/admin/server/computer/change_form.html:191
+#: migasfree/server/templates/computer_events.html:29
 #: migasfree/server/templates/includes/mining_menu.html:27
-#: migasfree/stats/views/dashboard.py:515
+#: migasfree/stats/views/dashboard.py:521
 msgid "Errors"
 msgstr "Erros"
 
@@ -370,11 +377,13 @@ msgstr "Erros"
 msgid "Checking is O.K."
 msgstr "A comprobación é correcta"
 
-#: migasfree/server/admin/client.py:358 migasfree/server/models/computer.py:561
-#: migasfree/server/models/fault.py:98
-#: migasfree/server/templates/computer_events.html:27
+#: migasfree/server/admin/client.py:358 migasfree/server/models/computer.py:564
+#: migasfree/server/models/computer.py:662
+#: migasfree/server/models/computer.py:669 migasfree/server/models/fault.py:98
+#: migasfree/server/templates/admin/server/computer/change_form.html:197
+#: migasfree/server/templates/computer_events.html:31
 #: migasfree/server/templates/includes/mining_menu.html:30
-#: migasfree/stats/views/dashboard.py:516
+#: migasfree/stats/views/dashboard.py:522
 msgid "Faults"
 msgstr "Fallos"
 
@@ -384,22 +393,25 @@ msgid "Code"
 msgstr "Código"
 
 #: migasfree/server/admin/client.py:398 migasfree/server/admin/core.py:347
-#: migasfree/server/admin/core.py:614 migasfree/server/admin/core.py:648
-#: migasfree/server/models/attribute.py:184
-#: migasfree/server/models/attribute.py:232
+#: migasfree/server/admin/core.py:616 migasfree/server/admin/core.py:650
+#: migasfree/server/models/attribute.py:186
+#: migasfree/server/models/attribute.py:234
+#: migasfree/server/templates/admin/server/domain/change_form.html:56
 #: migasfree/server/templates/computer_simulate_sync.html:49
 #: migasfree/server/templates/computer_simulate_sync.html:51
 #: migasfree/server/templates/includes/mining_menu.html:15
 msgid "Attributes"
 msgstr "Atributos"
 
-#: migasfree/server/admin/client.py:401 migasfree/server/models/user.py:54
+#: migasfree/server/admin/client.py:401 migasfree/server/forms.py:476
+#: migasfree/server/models/user.py:54
+#: migasfree/server/templates/admin/server/domain/change_form.html:123
 #: migasfree/server/templates/includes/mining_menu.html:9
 msgid "Users"
 msgstr "Usuarios"
 
-#: migasfree/server/admin/client.py:444 migasfree/server/models/computer.py:558
-#: migasfree/server/models/computer.py:688
+#: migasfree/server/admin/client.py:444 migasfree/server/models/computer.py:561
+#: migasfree/server/models/computer.py:715
 #: migasfree/server/templates/base.html:186
 #: migasfree/server/templates/base.html:187
 #: migasfree/server/templates/includes/computer_messages_result.html:12
@@ -423,7 +435,7 @@ msgstr "Notificacións"
 msgid "Hardware Node"
 msgstr "Nodo hardware"
 
-#: migasfree/server/admin/core.py:116 migasfree/server/models/attribute.py:226
+#: migasfree/server/admin/core.py:116 migasfree/server/models/attribute.py:228
 #: migasfree/server/models/property.py:147
 msgid "Formula"
 msgstr "Fórmula"
@@ -437,8 +449,8 @@ msgid "Packages"
 msgstr "Paquetes"
 
 #: migasfree/server/admin/core.py:339
-#: migasfree/server/templates/admin/server/computer/change_form.html:276
-#: migasfree/server/templates/admin/server/computer/change_form.html:281
+#: migasfree/server/templates/admin/server/computer/change_form.html:278
+#: migasfree/server/templates/admin/server/computer/change_form.html:283
 #: migasfree/server/templates/computer_simulate_sync.html:147
 msgid "Default"
 msgstr "Por defecto"
@@ -461,24 +473,25 @@ msgstr ""
 "cambios</a>)"
 
 #: migasfree/server/admin/core.py:535 migasfree/server/filters.py:63
-#: migasfree/server/models/attribute.py:203
+#: migasfree/server/models/attribute.py:205
 #: migasfree/server/models/property.py:133
 msgid "Tag Category"
 msgstr "Categoría de etiqueta"
 
-#: migasfree/server/admin/core.py:558
+#: migasfree/server/admin/core.py:560
 msgid "Inflicted Computers"
 msgstr "Ordenadores inferidos"
 
-#: migasfree/server/admin/core.py:579
+#: migasfree/server/admin/core.py:581
 msgid "Authorizations"
 msgstr "Autorizacións"
 
-#: migasfree/server/admin/core.py:589
+#: migasfree/server/admin/core.py:591
 msgid "Preferences"
 msgstr "Preferencias"
 
-#: migasfree/server/admin/core.py:654
+#: migasfree/server/admin/core.py:656
+#: migasfree/server/templates/admin/server/domain/change_form.html:89
 #, fuzzy
 #| msgid "Available"
 msgid "Available tags"
@@ -524,27 +537,27 @@ msgstr "Plataforma [%s] rexistrada polo ordenador [%s]."
 msgid "Project [%s] with P.M.S. [%s] registered by computer [%s]."
 msgstr "Proxecto [%s] con PMS [%s] rexistrado polo ordenador [%s]."
 
-#: migasfree/server/api.py:868
+#: migasfree/server/api.py:885
 #, python-format
 msgid "New Computer added id=[%s]: NAME=[%s] UUID=[%s]"
 msgstr "Engadiuse un ordenador co id=[%s]: Nome=[%s] UUID=[%s]"
 
-#: migasfree/server/api.py:891
+#: migasfree/server/api.py:908
 #, python-format
 msgid "Computer id=[%s]: NAME [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: Nome [%s] cambiado por [%s]"
 
-#: migasfree/server/api.py:904
+#: migasfree/server/api.py:921
 #, python-format
 msgid "Computer id=[%s]: IP [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: IP [%s] cambiado por [%s]"
 
-#: migasfree/server/api.py:916
+#: migasfree/server/api.py:933
 #, python-format
 msgid "Computer id=[%s]: UUID [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: UUID [%s] cambiado por [%s]"
 
-#: migasfree/server/context_processors.py:10
+#: migasfree/server/context_processors.py:11
 #, fuzzy
 #| msgid "All"
 msgid "all"
@@ -606,7 +619,7 @@ msgstr "Pila da traza de execución"
 msgid "Generic error in server"
 msgstr "Erro xenérico no servidor"
 
-#: migasfree/server/filters.py:32 migasfree/server/models/computer.py:559
+#: migasfree/server/filters.py:32 migasfree/server/models/computer.py:562
 msgid "Status"
 msgstr "Estado"
 
@@ -614,11 +627,11 @@ msgstr "Estado"
 msgid "All"
 msgstr "Todos"
 
-#: migasfree/server/filters.py:42 migasfree/stats/views/dashboard.py:124
+#: migasfree/server/filters.py:42 migasfree/stats/views/dashboard.py:125
 msgid "Subscribed"
 msgstr "alta"
 
-#: migasfree/server/filters.py:43 migasfree/stats/views/dashboard.py:231
+#: migasfree/server/filters.py:43 migasfree/stats/views/dashboard.py:233
 msgid "Productive"
 msgstr "Produtivo"
 
@@ -634,7 +647,7 @@ msgstr "reservado"
 msgid "unknown"
 msgstr "descoñecido"
 
-#: migasfree/server/filters.py:47 migasfree/stats/views/dashboard.py:241
+#: migasfree/server/filters.py:47 migasfree/stats/views/dashboard.py:243
 msgid "Unproductive"
 msgstr "Improdutivo"
 
@@ -678,41 +691,45 @@ msgstr "sen data"
 msgid "%d days ago"
 msgstr "hai %d días"
 
-#: migasfree/server/forms.py:47 migasfree/server/forms.py:60
-#: migasfree/server/forms.py:73
+#: migasfree/server/forms.py:48 migasfree/server/forms.py:61
+#: migasfree/server/forms.py:74
 msgid "Source"
 msgstr "Orixe"
 
-#: migasfree/server/forms.py:52 migasfree/server/forms.py:65
-#: migasfree/server/forms.py:78
+#: migasfree/server/forms.py:53 migasfree/server/forms.py:66
+#: migasfree/server/forms.py:79
 msgid "Target"
 msgstr "Destino"
 
-#: migasfree/server/forms.py:93 migasfree/server/models/deployment.py:71
+#: migasfree/server/forms.py:94 migasfree/server/models/deployment.py:71
 #: migasfree/server/templates/admin/server/deployment/change_form.html:140
 msgid "available packages"
 msgstr "paquetes dispoñibles"
 
-#: migasfree/server/forms.py:126 migasfree/server/serializers.py:376
+#: migasfree/server/forms.py:127 migasfree/server/serializers.py:387
 #, python-format
 msgid "It is not possible to assign an inactive computer (%s) as an attribute"
 msgstr "Non é posible asignar un ordenador inactivo (%s) como atributo"
 
-#: migasfree/server/forms.py:135
+#: migasfree/server/forms.py:136
 msgid "Project is required"
 msgstr "O proxecto é obligatorio"
 
-#: migasfree/server/forms.py:141 migasfree/server/serializers.py:384
+#: migasfree/server/forms.py:142 migasfree/server/serializers.py:395
 #, python-format
 msgid "Package %s must belong to the project %s"
 msgstr "O paquete %s debe pertencer ao proxecto %s"
 
-#: migasfree/server/forms.py:217 migasfree/server/models/device_logical.py:53
+#: migasfree/server/forms.py:161
+msgid "Domain can not be empty"
+msgstr ""
+
+#: migasfree/server/forms.py:227 migasfree/server/models/device_logical.py:53
 #: migasfree/server/models/schedule_delay.py:41
 msgid "attributes"
 msgstr "atributos"
 
-#: migasfree/server/forms.py:260 migasfree/server/models/computer.py:689
+#: migasfree/server/forms.py:270 migasfree/server/models/computer.py:716
 #: migasfree/server/templates/computer_change_status.html:9
 #: migasfree/server/templates/computer_confirm_delete.html:9
 #: migasfree/server/templates/computer_confirm_delete_selected.html:9
@@ -721,13 +738,13 @@ msgstr "atributos"
 #: migasfree/server/templates/computer_hardware_resume.html:7
 #: migasfree/server/templates/computer_simulate_sync.html:7
 #: migasfree/server/templates/includes/mining_menu.html:5
-#: migasfree/stats/views/syncs.py:251
+#: migasfree/stats/views/syncs.py:256
 msgid "Computers"
 msgstr "Ordenadores"
 
-#: migasfree/server/forms.py:296 migasfree/server/forms.py:445
-#: migasfree/server/models/attribute.py:209
-#: migasfree/server/models/computer.py:560
+#: migasfree/server/forms.py:306 migasfree/server/forms.py:471
+#: migasfree/server/models/attribute.py:211
+#: migasfree/server/models/computer.py:563
 #: migasfree/server/templates/admin_doc/template_tag_index.html:9
 #: migasfree/server/templates/computer_simulate_sync.html:60
 #: migasfree/server/templates/computer_simulate_sync.html:62
@@ -735,19 +752,27 @@ msgstr "Ordenadores"
 msgid "Tags"
 msgstr "Etiquetas"
 
-#: migasfree/server/forms.py:303
+#: migasfree/server/forms.py:313
 msgid "Assigned Logical Devices to CID attribute"
 msgstr "Dispositivos lóxicos asignados ao atributo CID"
 
-#: migasfree/server/forms.py:380
+#: migasfree/server/forms.py:390
 msgid "User Permissions"
 msgstr "Permisos de usuario"
 
-#: migasfree/server/forms.py:389
+#: migasfree/server/forms.py:399
 msgid "Change Password"
 msgstr "Cambiar contrasinal"
 
-#: migasfree/server/forms.py:504
+#: migasfree/server/forms.py:410
+msgid "This user must be one domain at least"
+msgstr ""
+
+#: migasfree/server/forms.py:414
+msgid "Domain preference not in selected Domains"
+msgstr ""
+
+#: migasfree/server/forms.py:551
 #, python-format
 msgid ""
 "Error in feature %s for assign computer %s. There is no driver defined for "
@@ -772,25 +797,25 @@ msgstr ""
 msgid "value"
 msgstr "valor"
 
-#: migasfree/server/models/attribute.py:124
+#: migasfree/server/models/attribute.py:126
 #: migasfree/server/models/schedule_delay.py:70
 msgid "Total computers"
 msgstr "Ordenadores totais"
 
-#: migasfree/server/models/attribute.py:183
-#: migasfree/server/models/attribute.py:231
+#: migasfree/server/models/attribute.py:185
+#: migasfree/server/models/attribute.py:233
 msgid "Attribute"
 msgstr "Atributo"
 
-#: migasfree/server/models/attribute.py:208
+#: migasfree/server/models/attribute.py:210
 msgid "Tag"
 msgstr "Etiqueta"
 
-#: migasfree/server/models/attribute.py:303
+#: migasfree/server/models/attribute.py:305
 msgid "Basic Attribute"
 msgstr "Atributo básico"
 
-#: migasfree/server/models/attribute.py:304
+#: migasfree/server/models/attribute.py:306
 msgid "Basic Attributes"
 msgstr "Atributos básicos"
 
@@ -833,274 +858,277 @@ msgid "computer"
 msgstr "ordenador"
 
 #: migasfree/server/models/common.py:154
-#: migasfree/server/models/computer.py:256
+#: migasfree/server/models/computer.py:259
 #: migasfree/server/models/hw_node.py:126
 msgid "product"
 msgstr "produto"
 
-#: migasfree/server/models/common.py:232
+#: migasfree/server/models/common.py:265
 #: migasfree/server/templates/admin/server/computer/change_form.html:63
 #: migasfree/server/templates/computer_events.html:13
 #: migasfree/server/templates/computer_events.html:18
-#: migasfree/server/views/computer.py:160
+#: migasfree/server/views/computer.py:162
 msgid "Events"
 msgstr "Sucesos"
 
-#: migasfree/server/models/common.py:239
+#: migasfree/server/models/common.py:272
 #: migasfree/server/templates/admin/server/computer/change_form.html:66
 #: migasfree/server/templates/computer_simulate_sync.html:9
 #: migasfree/server/templates/computer_simulate_sync.html:14
 msgid "Simulate sync"
 msgstr "Simular sincronización"
 
-#: migasfree/server/models/common.py:255
+#: migasfree/server/models/common.py:288
 #: migasfree/server/templates/admin/server/computer/change_form.html:69
 msgid "Label"
 msgstr "Etiqueta"
 
-#: migasfree/server/models/computer.py:120
+#: migasfree/server/models/computer.py:123
 msgid "Intended"
 msgstr "Asignado"
 
-#: migasfree/server/models/computer.py:121
+#: migasfree/server/models/computer.py:124
 msgid "Reserved"
 msgstr "Reservado"
 
-#: migasfree/server/models/computer.py:122
+#: migasfree/server/models/computer.py:125
 msgid "Unknown"
 msgstr "Descoñecido"
 
-#: migasfree/server/models/computer.py:123
+#: migasfree/server/models/computer.py:126
 msgid "In repair"
 msgstr "En reparación"
 
-#: migasfree/server/models/computer.py:124
-#: migasfree/stats/views/schedules.py:189
+#: migasfree/server/models/computer.py:127
+#: migasfree/stats/views/schedules.py:168
 msgid "Available"
 msgstr "Dispoñible"
 
-#: migasfree/server/models/computer.py:125
-#: migasfree/stats/views/dashboard.py:164
+#: migasfree/server/models/computer.py:128
+#: migasfree/stats/views/dashboard.py:165
 msgid "Unsubscribed"
 msgstr "Baixa"
 
-#: migasfree/server/models/computer.py:133
+#: migasfree/server/models/computer.py:136
 #: migasfree/server/templates/admin/server/computer/change_form.html:81
 #: migasfree/server/templates/computer_hardware_resume.html:21
-#: migasfree/stats/views/dashboard.py:112
-#: migasfree/stats/views/dashboard.py:152
+#: migasfree/stats/views/dashboard.py:113
+#: migasfree/stats/views/dashboard.py:153
 msgid "Physical"
 msgstr "Física"
 
-#: migasfree/server/models/computer.py:134
+#: migasfree/server/models/computer.py:137
 #: migasfree/server/templates/admin/server/computer/change_form.html:81
 #: migasfree/server/templates/computer_hardware_resume.html:21
-#: migasfree/stats/views/dashboard.py:99 migasfree/stats/views/dashboard.py:139
+#: migasfree/stats/views/dashboard.py:100
+#: migasfree/stats/views/dashboard.py:140
 msgid "Virtual"
 msgstr "Virtual"
 
-#: migasfree/server/models/computer.py:138
+#: migasfree/server/models/computer.py:141
 #: migasfree/server/templates/computer_simulate_sync.html:31
 msgid "uuid"
 msgstr "uuid"
 
-#: migasfree/server/models/computer.py:147
+#: migasfree/server/models/computer.py:150
 #: migasfree/server/models/status_log.py:30
 #: migasfree/server/templates/admin/server/computer/change_form.html:158
 #: migasfree/server/templates/admin/server/computer/change_form.html:171
 msgid "status"
 msgstr "estado"
 
-#: migasfree/server/models/computer.py:163
+#: migasfree/server/models/computer.py:166
 #: migasfree/server/templates/admin/server/computer/change_form.html:28
 msgid "full qualified domain name"
 msgstr "nome de dominio completo"
 
-#: migasfree/server/models/computer.py:178
+#: migasfree/server/models/computer.py:181
 msgid "entry date"
 msgstr "data de entrada"
 
-#: migasfree/server/models/computer.py:179
+#: migasfree/server/models/computer.py:182
 #: migasfree/server/templates/admin/server/computer/change_form.html:38
+#: migasfree/server/templates/computer_events.html:22
 msgid "Date of entry into the migasfree system"
 msgstr "Data de entrada do ordenador en migasfree"
 
-#: migasfree/server/models/computer.py:184
+#: migasfree/server/models/computer.py:187
 #: migasfree/server/templates/admin/server/computer/change_form.html:45
 msgid "ip address"
 msgstr "enderezo IP"
 
-#: migasfree/server/models/computer.py:191
+#: migasfree/server/models/computer.py:194
 #: migasfree/server/templates/admin/server/computer/change_form.html:50
 msgid "forwarded ip address"
 msgstr "enderezo IP reenviado"
 
-#: migasfree/server/models/computer.py:198
-#: migasfree/server/templates/admin/server/computer/change_form.html:251
+#: migasfree/server/models/computer.py:201
+#: migasfree/server/templates/admin/server/computer/change_form.html:253
 msgid "software inventory"
 msgstr "inventario de software"
 
-#: migasfree/server/models/computer.py:204
-#: migasfree/server/templates/admin/server/computer/change_form.html:255
+#: migasfree/server/models/computer.py:207
+#: migasfree/server/templates/admin/server/computer/change_form.html:257
 msgid "software history"
 msgstr "historial de software"
 
-#: migasfree/server/models/computer.py:215
+#: migasfree/server/models/computer.py:218
 msgid "default logical device"
 msgstr "dispositivo lóxico por defecto"
 
-#: migasfree/server/models/computer.py:219
+#: migasfree/server/models/computer.py:222
 #: migasfree/server/templates/admin/server/computer/change_form.html:124
 #: migasfree/server/templates/admin/server/computer/change_form.html:135
 #: migasfree/server/templates/computer_hardware_resume.html:63
 msgid "last hardware capture"
 msgstr "data da última actualización do hardware"
 
-#: migasfree/server/models/computer.py:227 migasfree/server/models/domain.py:48
+#: migasfree/server/models/computer.py:230 migasfree/server/models/domain.py:52
 #: migasfree/server/templates/admin/server/computer/change_form.html:166
 #: migasfree/server/templates/admin/server/computer/change_form.html:181
+#: migasfree/server/templates/admin/server/domain/change_form.html:94
 msgid "tags"
 msgstr "etiquetas"
 
-#: migasfree/server/models/computer.py:232
-#: migasfree/server/templates/admin/server/computer/change_form.html:220
+#: migasfree/server/models/computer.py:235
+#: migasfree/server/templates/admin/server/computer/change_form.html:222
 msgid "sync start date"
 msgstr "Data de inicio da sincronización"
 
-#: migasfree/server/models/computer.py:237
-#: migasfree/server/templates/admin/server/computer/change_form.html:221
+#: migasfree/server/models/computer.py:240
+#: migasfree/server/templates/admin/server/computer/change_form.html:223
 msgid "sync end date"
 msgstr "Data de fin da sincronización"
 
-#: migasfree/server/models/computer.py:244
+#: migasfree/server/models/computer.py:247
 msgid "sync user"
 msgstr "usuario da sincronización"
 
-#: migasfree/server/models/computer.py:252
+#: migasfree/server/models/computer.py:255
 msgid "attributes sent"
 msgstr "atributos enviados"
 
-#: migasfree/server/models/computer.py:264
+#: migasfree/server/models/computer.py:267
 msgid "machine"
 msgstr "máquina"
 
-#: migasfree/server/models/computer.py:272
+#: migasfree/server/models/computer.py:275
 #: migasfree/server/templates/admin/server/computer/change_form.html:94
 #: migasfree/server/templates/computer_hardware_resume.html:34
 msgid "CPU"
 msgstr "Procesador"
 
-#: migasfree/server/models/computer.py:280
+#: migasfree/server/models/computer.py:283
 #: migasfree/server/templates/admin/server/computer/change_form.html:100
 #: migasfree/server/templates/computer_hardware_resume.html:40
 msgid "RAM"
 msgstr "RAM"
 
-#: migasfree/server/models/computer.py:286
+#: migasfree/server/models/computer.py:289
 msgid "storage"
 msgstr "almacenamento"
 
-#: migasfree/server/models/computer.py:292
+#: migasfree/server/models/computer.py:295
 msgid "disks"
 msgstr "discos"
 
-#: migasfree/server/models/computer.py:298
+#: migasfree/server/models/computer.py:301
 #: migasfree/server/templates/admin/server/computer/change_form.html:115
 #: migasfree/server/templates/computer_hardware_resume.html:55
 msgid "MAC address"
 msgstr "Enderezo MAC"
 
-#: migasfree/server/models/computer.py:439
+#: migasfree/server/models/computer.py:442
 msgid "Logical Devices"
 msgstr "Dispositivos lóxicos"
 
-#: migasfree/server/models/computer.py:446
+#: migasfree/server/models/computer.py:449
 msgid "Inflected Logical Devices"
 msgstr "Dispositivos lóxicos inferidos"
 
-#: migasfree/server/models/computer.py:451
+#: migasfree/server/models/computer.py:454
 msgid "Assigned Logical Devices to CID"
 msgstr "Dispositivos lóxicos asignados ao CID"
 
-#: migasfree/server/models/computer.py:564
+#: migasfree/server/models/computer.py:567
 #: migasfree/server/models/deployment.py:307
 #: migasfree/server/templates/computer_simulate_sync.html:105
 #: migasfree/server/templates/computer_simulate_sync.html:107
 #: migasfree/server/templates/includes/software_menu.html:7
-#: migasfree/server/templates/includes/software_menu.html:23
+#: migasfree/server/templates/includes/software_menu.html:29
 msgid "Deployments"
 msgstr "Despregues"
 
-#: migasfree/server/models/computer.py:567
+#: migasfree/server/models/computer.py:570
 msgid "Deployments (excluded)"
 msgstr "Despregues (excluidos)"
 
-#: migasfree/server/models/computer.py:570
+#: migasfree/server/models/computer.py:573
 #: migasfree/server/templates/computer_simulate_sync.html:71
 #: migasfree/server/templates/computer_simulate_sync.html:73
 msgid "Sets"
 msgstr "Conxuntos"
 
-#: migasfree/server/models/computer.py:573
+#: migasfree/server/models/computer.py:576
 msgid "Sets (excluded)"
 msgstr "Conxuntos (excluidos)"
 
-#: migasfree/server/models/computer.py:576
+#: migasfree/server/models/computer.py:579
 msgid "Delays"
 msgstr "Atrasos"
 
-#: migasfree/server/models/computer.py:579
+#: migasfree/server/models/computer.py:582
 #: migasfree/server/models/device.py:132
 msgid "Logical devices"
 msgstr "Dispositivos lóxicos"
 
-#: migasfree/server/models/computer.py:582
+#: migasfree/server/models/computer.py:585
 msgid "Default logical device"
 msgstr "Dispositivo lóxico por defecto"
 
-#: migasfree/server/models/computer.py:583
+#: migasfree/server/models/computer.py:586
 msgid "Policies (included)"
 msgstr "Políticas (incluidos)"
 
-#: migasfree/server/models/computer.py:586
+#: migasfree/server/models/computer.py:589
 msgid "Policies (excluded)"
 msgstr "Políticas (excluidos)"
 
-#: migasfree/server/models/computer.py:589
+#: migasfree/server/models/computer.py:592
 msgid "Policy Groups (included)"
 msgstr "Grupos de políticas (incluidos)"
 
-#: migasfree/server/models/computer.py:592
+#: migasfree/server/models/computer.py:595
 msgid "Policy Groups (excluded)"
 msgstr "Grupos de políticas (excluidos)"
 
-#: migasfree/server/models/computer.py:622
-#: migasfree/server/templates/admin/server/computer/change_form.html:191
-#: migasfree/stats/tasks.py:65 migasfree/stats/views/dashboard.py:307
+#: migasfree/server/models/computer.py:613
+#: migasfree/server/models/computer.py:622 migasfree/stats/tasks.py:65
+#: migasfree/stats/views/dashboard.py:310
 msgid "Unchecked Errors"
 msgstr "Erros sen comprobar"
 
-#: migasfree/server/models/computer.py:642
-#: migasfree/server/templates/admin/server/computer/change_form.html:196
-#: migasfree/stats/tasks.py:52 migasfree/stats/views/dashboard.py:365
+#: migasfree/server/models/computer.py:645
+#: migasfree/server/models/computer.py:654 migasfree/stats/tasks.py:52
+#: migasfree/stats/views/dashboard.py:369
 msgid "Unchecked Faults"
 msgstr "Fallos sen comprobar"
 
-#: migasfree/server/models/computer.py:663
+#: migasfree/server/models/computer.py:690
 msgid "Delayed Computer"
 msgstr "Ordenador atrasado"
 
-#: migasfree/server/models/computer.py:664
+#: migasfree/server/models/computer.py:691
 #, python-brace-format
 msgid "{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}"
 msgstr "{days} días, {hours:02d}:{minutes:02d}:{seconds:02d}"
 
-#: migasfree/server/models/computer.py:672
+#: migasfree/server/models/computer.py:699
 msgid "Updating..."
 msgstr "Actualizando..."
 
-#: migasfree/server/models/computer.py:678
-#: migasfree/server/templates/admin/server/computer/change_form.html:222
+#: migasfree/server/models/computer.py:705
+#: migasfree/server/templates/admin/server/computer/change_form.html:224
 msgid "Last Update Time"
 msgstr "Tempo da última actualización"
 
@@ -1127,8 +1155,8 @@ msgstr "paquetes a desinstalar"
 msgid "Mandatory packages to remove each time"
 msgstr "Paquetes a desinstalar obrigatoriamente cada vez"
 
-#: migasfree/server/models/deployment.py:92 migasfree/server/models/scope.py:48
-#: migasfree/server/models/userprofile.py:25
+#: migasfree/server/models/deployment.py:92 migasfree/server/models/scope.py:49
+#: migasfree/server/models/userprofile.py:26
 msgid "domain"
 msgstr ""
 
@@ -1292,11 +1320,11 @@ msgstr "Tipo"
 msgid "Types"
 msgstr "Tipos"
 
-#: migasfree/server/models/domain.py:82
+#: migasfree/server/models/domain.py:121
 msgid "Domain"
 msgstr ""
 
-#: migasfree/server/models/domain.py:83
+#: migasfree/server/models/domain.py:122
 #: migasfree/server/templates/includes/config_menu.html:47
 msgid "Domains"
 msgstr ""
@@ -1455,7 +1483,7 @@ msgid "dev"
 msgstr "dispositivo"
 
 #: migasfree/server/models/hw_node.py:286
-#: migasfree/server/templates/computer_events.html:117
+#: migasfree/server/templates/computer_events.html:121
 msgid "error"
 msgstr "erro"
 
@@ -1481,9 +1509,9 @@ msgid "Migration"
 msgstr "Migración"
 
 #: migasfree/server/models/migration.py:48
-#: migasfree/server/templates/computer_events.html:31
+#: migasfree/server/templates/computer_events.html:35
 #: migasfree/server/templates/includes/mining_menu.html:36
-#: migasfree/stats/views/dashboard.py:517
+#: migasfree/stats/views/dashboard.py:523
 msgid "Migrations"
 msgstr "Migracións"
 
@@ -1517,8 +1545,8 @@ msgid "Package/Set"
 msgstr "Paquete/Conxunto"
 
 #: migasfree/server/models/package.py:139
-#: migasfree/server/templates/includes/software_menu.html:17
-#: migasfree/server/templates/includes/software_menu.html:33
+#: migasfree/server/templates/includes/software_menu.html:23
+#: migasfree/server/templates/includes/software_menu.html:45
 msgid "Packages/Sets"
 msgstr "Paquetes/Conxuntos"
 
@@ -1707,7 +1735,8 @@ msgid "Queries"
 msgstr "Consultas"
 
 #: migasfree/server/models/schedule.py:33
-#: migasfree/server/templates/includes/software_menu.html:39
+#: migasfree/server/templates/includes/software_menu.html:12
+#: migasfree/server/templates/includes/software_menu.html:34
 msgid "Schedules"
 msgstr "Calendarios"
 
@@ -1732,16 +1761,16 @@ msgid "Schedule Delays"
 msgstr "Atrasos do calendario"
 
 #: migasfree/server/models/scope.py:37
-#: migasfree/server/models/synchronization.py:38
+#: migasfree/server/models/synchronization.py:37
 msgid "user"
 msgstr "usuario"
 
-#: migasfree/server/models/scope.py:79
-#: migasfree/server/models/userprofile.py:33
+#: migasfree/server/models/scope.py:80
+#: migasfree/server/models/userprofile.py:34
 msgid "Scope"
 msgstr ""
 
-#: migasfree/server/models/scope.py:80
+#: migasfree/server/models/scope.py:81
 #: migasfree/server/templates/includes/config_menu.html:50
 msgid "Scopes"
 msgstr ""
@@ -1751,9 +1780,9 @@ msgid "Status Log"
 msgstr "Rexistro de Estados"
 
 #: migasfree/server/models/status_log.py:42
-#: migasfree/server/templates/computer_events.html:29
+#: migasfree/server/templates/computer_events.html:33
 #: migasfree/server/templates/includes/mining_menu.html:33
-#: migasfree/stats/views/dashboard.py:518
+#: migasfree/stats/views/dashboard.py:524
 msgid "Status Logs"
 msgstr "Rexistros de Estados"
 
@@ -1762,15 +1791,15 @@ msgid "Store"
 msgstr "Almacén"
 
 #: migasfree/server/models/store.py:111
-#: migasfree/server/templates/includes/software_menu.html:12
-#: migasfree/server/templates/includes/software_menu.html:28
+#: migasfree/server/templates/includes/software_menu.html:18
+#: migasfree/server/templates/includes/software_menu.html:40
 msgid "Stores"
 msgstr "Almacéns"
 
-#: migasfree/server/models/synchronization.py:59
-#: migasfree/server/templates/computer_events.html:23
+#: migasfree/server/models/synchronization.py:58
+#: migasfree/server/templates/computer_events.html:27
 #: migasfree/server/templates/includes/mining_menu.html:24
-#: migasfree/stats/views/dashboard.py:514
+#: migasfree/stats/views/dashboard.py:520
 msgid "Synchronizations"
 msgstr "Sincronizacións"
 
@@ -1778,15 +1807,15 @@ msgstr "Sincronizacións"
 msgid "fullname"
 msgstr "nome completo"
 
-#: migasfree/server/models/userprofile.py:18
+#: migasfree/server/models/userprofile.py:19
 msgid "domains"
 msgstr ""
 
-#: migasfree/server/models/userprofile.py:161
+#: migasfree/server/models/userprofile.py:186
 msgid "User Profile"
 msgstr "Perfil de usuario"
 
-#: migasfree/server/models/userprofile.py:162
+#: migasfree/server/models/userprofile.py:187
 #: migasfree/server/templates/includes/config_menu.html:41
 msgid "User Profiles"
 msgstr "Perfís de usuario"
@@ -1858,6 +1887,7 @@ msgstr "Os campos en <strong>negrita</strong> son obrigatorios."
 #: migasfree/server/templates/admin/change_list.html:106
 #: migasfree/server/templates/admin/login.html:28
 #: migasfree/server/templates/admin/server/deployment/change_form.html:10
+#: migasfree/server/templates/admin/server/domain/change_form.html:10
 #: migasfree/server/templates/registration/password_change_form.html:18
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
@@ -1867,6 +1897,7 @@ msgstr[1] "Por favor, corrixa os erros abaixo indicados."
 #: migasfree/server/templates/admin/change_form.html:50
 #: migasfree/server/templates/admin/change_list.html:106
 #: migasfree/server/templates/admin/server/deployment/change_form.html:10
+#: migasfree/server/templates/admin/server/domain/change_form.html:10
 #: migasfree/server/templates/registration/password_change_form.html:18
 msgid "Please correct the errors below."
 msgstr "Por favor, corrixa os erros abaixo indicados."
@@ -1892,10 +1923,10 @@ msgstr "Eliminar"
 #: migasfree/server/templates/admin/server/computer/change_form.html:17
 #: migasfree/server/templates/admin/server/computer/change_form.html:140
 #: migasfree/server/templates/admin/server/computer/change_form.html:142
-#: migasfree/server/templates/admin/server/computer/change_form.html:204
 #: migasfree/server/templates/admin/server/computer/change_form.html:206
-#: migasfree/server/templates/admin/server/computer/change_form.html:296
+#: migasfree/server/templates/admin/server/computer/change_form.html:208
 #: migasfree/server/templates/admin/server/computer/change_form.html:298
+#: migasfree/server/templates/admin/server/computer/change_form.html:300
 msgid "Save"
 msgstr "Gardar"
 
@@ -1937,6 +1968,7 @@ msgstr "Eliminar"
 #: migasfree/server/templates/admin/login.html:24
 #: migasfree/server/templates/admin/login.html:68
 #: migasfree/server/templates/base.html:254
+#: migasfree/server/templates/registration/password_reset_complete.html:17
 msgid "Log in"
 msgstr "Iniciar sesión"
 
@@ -1947,6 +1979,16 @@ msgstr "Nome de usuario:"
 #: migasfree/server/templates/admin/login.html:58
 msgid "Password:"
 msgstr "Contrasinal:"
+
+#: migasfree/server/templates/admin/login.html:71
+#: migasfree/server/templates/registration/password_reset_confirm.html:11
+#: migasfree/server/templates/registration/password_reset_confirm.html:12
+#: migasfree/server/templates/registration/password_reset_done.html:7
+#: migasfree/server/templates/registration/password_reset_form.html:7
+#: migasfree/server/templates/registration/password_reset_form.html:11
+#: migasfree/server/templates/registration/password_reset_form.html:12
+msgid "Password reset"
+msgstr "Cambiar contraseña"
 
 #: migasfree/server/templates/admin/server/computer/change_form.html:61
 #: migasfree/server/templates/includes/migas_link_menu.html:13
@@ -1968,15 +2010,15 @@ msgstr "Almacenamento"
 msgid "Disks"
 msgstr "Discos"
 
-#: migasfree/server/templates/admin/server/computer/change_form.html:268
+#: migasfree/server/templates/admin/server/computer/change_form.html:270
 msgid "Assigned"
 msgstr "Asignado"
 
-#: migasfree/server/templates/admin/server/computer/change_form.html:286
+#: migasfree/server/templates/admin/server/computer/change_form.html:288
 msgid "Inflected"
 msgstr "Inferidos"
 
-#: migasfree/server/templates/admin/server/computer/change_form.html:309
+#: migasfree/server/templates/admin/server/computer/change_form.html:311
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -2004,9 +2046,18 @@ msgstr "Cando (calendario)"
 
 #: migasfree/server/templates/admin/server/deployment/change_form.html:243
 #: migasfree/server/templates/includes/stats_menu.html:10
-#: migasfree/stats/views/schedules.py:23
+#: migasfree/stats/views/schedules.py:21
 msgid "Provided Computers / Delay"
 msgstr "Ordenadores previstos / atraso"
+
+#: migasfree/server/templates/admin/server/domain/change_form.html:106
+#: migasfree/server/templates/admin/server/domain/change_form.html:108
+msgid "Create Structure"
+msgstr ""
+
+#: migasfree/server/templates/admin/server/domain/change_form.html:118
+msgid "Domain Admins"
+msgstr ""
 
 #: migasfree/server/templates/admin/singletext_input_filter.html:4
 #, python-format
@@ -2199,83 +2250,83 @@ msgstr "¿Está seguro?"
 msgid "Are you sure you want to delete these computers?"
 msgstr "¿Está seguro de que quere eliminar estes ordenadores?"
 
-#: migasfree/server/templates/computer_events.html:39
-#: migasfree/server/templates/computer_events.html:41
+#: migasfree/server/templates/computer_events.html:43
+#: migasfree/server/templates/computer_events.html:45
 msgid "Input date"
 msgstr "Data de entrada"
 
-#: migasfree/server/templates/computer_events.html:44
-#: migasfree/server/templates/computer_events.html:46
+#: migasfree/server/templates/computer_events.html:48
+#: migasfree/server/templates/computer_events.html:50
 #: migasfree/server/templates/welcome.html:62
 msgid "Previous"
 msgstr "Anterior"
 
-#: migasfree/server/templates/computer_events.html:49
-#: migasfree/server/templates/computer_events.html:51
+#: migasfree/server/templates/computer_events.html:53
+#: migasfree/server/templates/computer_events.html:55
 #: migasfree/server/templates/welcome.html:67
 msgid "Next"
 msgstr "Seguinte"
 
-#: migasfree/server/templates/computer_events.html:54
-#: migasfree/server/templates/computer_events.html:56
+#: migasfree/server/templates/computer_events.html:58
+#: migasfree/server/templates/computer_events.html:60
 msgid "Today"
 msgstr "Hoxe"
 
-#: migasfree/server/templates/computer_events.html:114
+#: migasfree/server/templates/computer_events.html:118
 msgid "syncs"
 msgstr "sincronizacións"
 
-#: migasfree/server/templates/computer_events.html:114
+#: migasfree/server/templates/computer_events.html:118
 msgid "sync"
 msgstr "sincronización"
 
-#: migasfree/server/templates/computer_events.html:117
+#: migasfree/server/templates/computer_events.html:121
 msgid "errors"
 msgstr "erros"
 
-#: migasfree/server/templates/computer_events.html:120
+#: migasfree/server/templates/computer_events.html:124
 msgid "faults"
 msgstr "fallos"
 
-#: migasfree/server/templates/computer_events.html:120
+#: migasfree/server/templates/computer_events.html:124
 msgid "fault"
 msgstr "fallo"
 
-#: migasfree/server/templates/computer_events.html:123
+#: migasfree/server/templates/computer_events.html:127
 msgid "status logs"
 msgstr "rexistros de estados"
 
-#: migasfree/server/templates/computer_events.html:123
+#: migasfree/server/templates/computer_events.html:127
 msgid "status log"
 msgstr "rexistro de estados"
 
-#: migasfree/server/templates/computer_events.html:126
+#: migasfree/server/templates/computer_events.html:130
 msgid "migrations"
 msgstr "migracións"
 
-#: migasfree/server/templates/computer_events.html:126
+#: migasfree/server/templates/computer_events.html:130
 msgid "migration"
 msgstr "migración"
 
-#: migasfree/server/templates/computer_events.html:172
+#: migasfree/server/templates/computer_events.html:176
 msgid "event"
 msgstr "evento"
 
-#: migasfree/server/templates/computer_events.html:172
+#: migasfree/server/templates/computer_events.html:176
 msgid "events"
 msgstr "eventos"
 
-#: migasfree/server/templates/computer_events.html:178
+#: migasfree/server/templates/computer_events.html:182
 #, python-brace-format
 msgid "less than {min} {name}"
 msgstr "menos de {min} {name}"
 
-#: migasfree/server/templates/computer_events.html:179
+#: migasfree/server/templates/computer_events.html:183
 #, python-brace-format
 msgid "between {down} and {up} {name}"
 msgstr "entre {down} e {up} {name}"
 
-#: migasfree/server/templates/computer_events.html:180
+#: migasfree/server/templates/computer_events.html:184
 #, python-brace-format
 msgid "more than {max} {name}"
 msgstr "máis de {max} {name}"
@@ -2283,7 +2334,7 @@ msgstr "máis de {max} {name}"
 #: migasfree/server/templates/computer_hardware_extract.html:9
 #: migasfree/server/templates/computer_hardware_resume.html:9
 #: migasfree/server/templates/computer_hardware_resume.html:14
-#: migasfree/server/views/hardware.py:35 migasfree/server/views/hardware.py:64
+#: migasfree/server/views/hardware.py:36 migasfree/server/views/hardware.py:65
 msgid "Hardware Information"
 msgstr "Información do hardware"
 
@@ -2327,8 +2378,10 @@ msgid "Computers Replacement"
 msgstr "Substitución de ordenadores"
 
 #: migasfree/server/templates/computer_replacement.html:12
-msgid ""
-"This procedure changes status, labels and devices between two computers."
+#, fuzzy
+#| msgid ""
+#| "This procedure changes status, labels and devices between two computers."
+msgid "This procedure changes status, tags and devices between two computers."
 msgstr ""
 "Este procedemento cambia o estado, etiquetas e dispositivos entre dous "
 "ordenadores."
@@ -2375,19 +2428,6 @@ msgstr "Substitución de dispositivos"
 msgid "This procedure replaces two devices."
 msgstr "Este procedemento substitúe dous dispositivos."
 
-#: migasfree/server/templates/devices_summary.html:20
-#: migasfree/server/templates/devices_summary.html:29
-#: migasfree/server/templates/devices_summary.html:40
-#: migasfree/server/templates/devices_summary.html:49
-#: migasfree/server/templates/stats_dashboard.html:20
-#: migasfree/server/templates/stats_dashboard.html:29
-#: migasfree/server/templates/stats_dashboard.html:38
-#: migasfree/server/templates/stats_dashboard.html:49
-#: migasfree/server/templates/stats_dashboard.html:58
-#: migasfree/server/templates/stats_dashboard.html:67
-msgid "Total"
-msgstr "Total"
-
 #: migasfree/server/templates/error.html:12
 msgid "File"
 msgstr "Ficheiro"
@@ -2401,7 +2441,7 @@ msgid "Add"
 msgstr "Engadir"
 
 #: migasfree/server/templates/includes/computer_messages_result.html:5
-#: migasfree/server/templates/query.html:16
+#: migasfree/server/templates/query.html:20
 msgid "results"
 msgstr "resultados"
 
@@ -2417,7 +2457,7 @@ msgstr "Non hai mensaxes para amosar"
 msgid "Groups"
 msgstr "Grupos"
 
-#: migasfree/server/templates/includes/config_menu.html:53
+#: migasfree/server/templates/includes/config_menu.html:54
 msgid "Site administration"
 msgstr "Administración do sitio"
 
@@ -2428,13 +2468,17 @@ msgid "%(percent)s%% completed"
 msgstr "%(percent)s%% completado"
 
 #: migasfree/server/templates/includes/deployment_timeline.html:26
-#: migasfree/server/templates/includes/migas_link.html:22
+#: migasfree/server/templates/includes/migas_link.html:23
 msgid "Toggle Dropdown"
 msgstr "Activar/Desactivar despregable"
 
 #: migasfree/server/templates/includes/migas_link_menu.html:4
 msgid "Actions"
 msgstr "Accións"
+
+#: migasfree/server/templates/includes/multipie_chart.html:11
+msgid "Total"
+msgstr "Total"
 
 #: migasfree/server/templates/includes/parameters.html:7
 msgid "Parameters"
@@ -2444,27 +2488,27 @@ msgstr "Parámetros"
 msgid "Submit"
 msgstr "Enviar"
 
-#: migasfree/server/templates/includes/software_menu.html:43
+#: migasfree/server/templates/includes/software_menu.html:50
 msgid "Packages information"
 msgstr "Información de paquetes"
 
 #: migasfree/server/templates/includes/stats_menu.html:4
-#: migasfree/stats/views/dashboard.py:485
+#: migasfree/stats/views/dashboard.py:491
 msgid "Dashboard"
 msgstr "Cadro de mando"
 
 #: migasfree/server/templates/includes/stats_menu.html:6
-#: migasfree/stats/views/syncs.py:257
+#: migasfree/stats/views/syncs.py:262
 msgid "Synchronized Computers / Day"
 msgstr "Ordenadores sincronizados / día"
 
 #: migasfree/server/templates/includes/stats_menu.html:7
-#: migasfree/stats/views/syncs.py:220
+#: migasfree/stats/views/syncs.py:232
 msgid "Synchronized Computers / Month"
 msgstr "Ordenadores sincronizados / mes"
 
 #: migasfree/server/templates/includes/stats_menu.html:13
-#: migasfree/stats/views/devices.py:144
+#: migasfree/stats/views/devices.py:148
 #, fuzzy
 #| msgid "Devices"
 msgid "Devices Summary"
@@ -2514,7 +2558,7 @@ msgstr "Elimimar proxecto"
 msgid "Are you sure you want to delete this project?"
 msgstr "¿Está seguro de que quere eliminar este proxecto?"
 
-#: migasfree/server/templates/query.html:43
+#: migasfree/server/templates/query.html:47
 msgid "No results for query"
 msgstr "Non hai resultados para a consulta"
 
@@ -2528,6 +2572,10 @@ msgstr "Iniciar sesión de novo"
 
 #: migasfree/server/templates/registration/password_change_done.html:6
 #: migasfree/server/templates/registration/password_change_form.html:6
+#: migasfree/server/templates/registration/password_reset_complete.html:6
+#: migasfree/server/templates/registration/password_reset_confirm.html:6
+#: migasfree/server/templates/registration/password_reset_done.html:6
+#: migasfree/server/templates/registration/password_reset_form.html:6
 msgid "Home"
 msgstr "Inicio"
 
@@ -2549,8 +2597,84 @@ msgstr ""
 "que está ben escrito."
 
 #: migasfree/server/templates/registration/password_change_form.html:62
+#: migasfree/server/templates/registration/password_reset_confirm.html:40
 msgid "Change my password"
 msgstr "Modificar o meu contrasinal"
+
+#: migasfree/server/templates/registration/password_reset_complete.html:7
+#: migasfree/server/templates/registration/password_reset_complete.html:11
+#: migasfree/server/templates/registration/password_reset_complete.html:12
+msgid "Password reset complete"
+msgstr "Cambio de contraseña completo"
+
+#: migasfree/server/templates/registration/password_reset_complete.html:15
+msgid "Your password has been set.  You may go ahead and log in now."
+msgstr ""
+"La contraseña ha sido establecida. Ahora puede entrar en la aplicación."
+
+#: migasfree/server/templates/registration/password_reset_confirm.html:7
+msgid "Password reset confirmation"
+msgstr "Confirmación de cambio de contraseña"
+
+#: migasfree/server/templates/registration/password_reset_confirm.html:16
+msgid "Enter new password"
+msgstr "Nueva contraseña"
+
+#: migasfree/server/templates/registration/password_reset_confirm.html:18
+msgid ""
+"Please enter your new password twice so we can verify you typed it in "
+"correctly."
+msgstr ""
+"Por favor, introduzca su contraseña actual por razones de seguridad, y "
+"después introduzca la nueva contraseña dos veces para que se pueda verificar "
+"que está bien escrita."
+
+#: migasfree/server/templates/registration/password_reset_confirm.html:23
+msgid "New password:"
+msgstr "Nueva contraseña:"
+
+#: migasfree/server/templates/registration/password_reset_confirm.html:32
+msgid "Confirm password:"
+msgstr "Confirmar contraseña:"
+
+#: migasfree/server/templates/registration/password_reset_confirm.html:44
+msgid "Password reset unsuccessful"
+msgstr "La contraseña no ha sido cambiada"
+
+#: migasfree/server/templates/registration/password_reset_confirm.html:46
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a new password reset."
+msgstr ""
+
+#: migasfree/server/templates/registration/password_reset_done.html:11
+#: migasfree/server/templates/registration/password_reset_done.html:12
+msgid "Password reset successful"
+msgstr "La contraseña ha sido cambiada"
+
+#: migasfree/server/templates/registration/password_reset_done.html:16
+msgid ""
+"We've emailed you instructions for setting your password to the email "
+"address you submitted. You should be receiving it shortly."
+msgstr ""
+
+#: migasfree/server/templates/registration/password_reset_form.html:16
+msgid ""
+"Forgotten your password? Enter your email address below, and we'll email "
+"instructions for setting a new one."
+msgstr ""
+"¿Ha olvidado la contraseña? Introduzca su dirección de correo y le "
+"enviaremos instrucciones para establecer una nueva."
+
+#: migasfree/server/templates/registration/password_reset_form.html:21
+#, fuzzy
+#| msgid "ip address"
+msgid "Email address:"
+msgstr "enderezo IP"
+
+#: migasfree/server/templates/registration/password_reset_form.html:30
+msgid "Reset my password"
+msgstr "Cambiar mi contraseña"
 
 #: migasfree/server/templates/welcome.html:4
 #: migasfree/server/templates/welcome.html:19
@@ -2618,12 +2742,12 @@ msgstr "¡Os ordenadores %s, modificaron o seu estado!"
 msgid "Replacement done."
 msgstr "Substitución realizada."
 
-#: migasfree/server/views/computer.py:187
+#: migasfree/server/views/computer.py:189
 #, python-format
 msgid "Simulate sync: %s"
 msgstr "Simular sincronización: %s"
 
-#: migasfree/server/views/computer.py:195
+#: migasfree/server/views/computer.py:197
 msgid ""
 "Error: This computer, with unsubscribed status, is not allowed to "
 "synchronize!"
@@ -2631,7 +2755,7 @@ msgstr ""
 "¡Erro: este ordenador, con estado de baixa, non ten permitida a "
 "sincronización!"
 
-#: migasfree/server/views/computer.py:201
+#: migasfree/server/views/computer.py:203
 msgid "Error: This computer does not have any synchronization!"
 msgstr "¡Erro: este ordenador non ten ningunha sincronización!"
 
@@ -2644,7 +2768,7 @@ msgstr ""
 "A substitución non é posible. Por favor, elimina a asignación de "
 "funcionalidades en [%s]."
 
-#: migasfree/server/views/hardware.py:135
+#: migasfree/server/views/hardware.py:136
 #, python-format
 msgid "Error: Hardware dictionary is not valid in computer [%s]."
 msgstr "Erro: O dicionario co hardware non é válido no ordenador [%s]."
@@ -2676,15 +2800,15 @@ msgstr "¡Proxecto %s eliminado!"
 msgid "Error in field 'code' of query:"
 msgstr "Erro no campo 'code' da consulta:"
 
-#: migasfree/server/views/queries.py:131
+#: migasfree/server/views/queries.py:132
 msgid "Error in field 'parameters' of query:"
 msgstr "Erro no campo 'parameters' da consulta:"
 
-#: migasfree/server/views/queries.py:183
+#: migasfree/server/views/queries.py:184
 msgid "Computer Messages"
 msgstr "Mensaxes de ordenadores"
 
-#: migasfree/server/views/timeline.py:18 migasfree/stats/views/dashboard.py:388
+#: migasfree/server/views/timeline.py:18 migasfree/stats/views/dashboard.py:393
 msgid "Without schedule"
 msgstr "Sen calendario"
 
@@ -2697,7 +2821,7 @@ msgstr "%s (sen atrasos)"
 msgid "timeline"
 msgstr "liña temporal"
 
-#: migasfree/server/views/token.py:204
+#: migasfree/server/views/token.py:214
 #, python-format
 msgid "Status must have one of the values: %s"
 msgstr "O estado debe ter un dos seguintes valores: %s"
@@ -2740,107 +2864,107 @@ msgstr "Despregues con calendario finalizado"
 msgid "Productive Computers"
 msgstr "Ordenadores produtivos"
 
-#: migasfree/stats/views/dashboard.py:176
+#: migasfree/stats/views/dashboard.py:177
 msgid "Computers / Machine"
 msgstr "Ordenadores / máquina"
 
-#: migasfree/stats/views/dashboard.py:253
+#: migasfree/stats/views/dashboard.py:255
 msgid "Subscribed Computers / Status"
 msgstr "Ordenadores de alta / estado"
 
-#: migasfree/stats/views/dashboard.py:413
+#: migasfree/stats/views/dashboard.py:418
 msgid "With schedule"
 msgstr "Con calendario"
 
-#: migasfree/stats/views/dashboard.py:451
+#: migasfree/stats/views/dashboard.py:456
 msgid "Enabled Deployments"
 msgstr "Despregues habilitados"
 
-#: migasfree/stats/views/dashboard.py:487 migasfree/stats/views/devices.py:146
+#: migasfree/stats/views/dashboard.py:493 migasfree/stats/views/devices.py:150
 msgid "There are no data to show"
 msgstr "Non hai datos para amosar"
 
-#: migasfree/stats/views/dashboard.py:488 migasfree/stats/views/devices.py:147
+#: migasfree/stats/views/dashboard.py:494 migasfree/stats/views/devices.py:151
 msgid "Reset Zoom"
 msgstr "Reiniciar zoom"
 
-#: migasfree/stats/views/dashboard.py:490
+#: migasfree/stats/views/dashboard.py:496
 msgid "January"
 msgstr "xaneiro"
 
-#: migasfree/stats/views/dashboard.py:490
+#: migasfree/stats/views/dashboard.py:496
 msgid "February"
 msgstr "febreiro"
 
-#: migasfree/stats/views/dashboard.py:490
+#: migasfree/stats/views/dashboard.py:496
 msgid "March"
 msgstr "marzo"
 
-#: migasfree/stats/views/dashboard.py:491
+#: migasfree/stats/views/dashboard.py:497
 msgid "April"
 msgstr "abril"
 
-#: migasfree/stats/views/dashboard.py:491
+#: migasfree/stats/views/dashboard.py:497
 msgid "May"
 msgstr "maio"
 
-#: migasfree/stats/views/dashboard.py:491
+#: migasfree/stats/views/dashboard.py:497
 msgid "June"
 msgstr "xuño"
 
-#: migasfree/stats/views/dashboard.py:492
+#: migasfree/stats/views/dashboard.py:498
 msgid "July"
 msgstr "xullo"
 
-#: migasfree/stats/views/dashboard.py:492
+#: migasfree/stats/views/dashboard.py:498
 msgid "August"
 msgstr "agosto"
 
-#: migasfree/stats/views/dashboard.py:492
+#: migasfree/stats/views/dashboard.py:498
 msgid "September"
 msgstr "setembro"
 
-#: migasfree/stats/views/dashboard.py:493
+#: migasfree/stats/views/dashboard.py:499
 msgid "October"
 msgstr "outubro"
 
-#: migasfree/stats/views/dashboard.py:493
+#: migasfree/stats/views/dashboard.py:499
 msgid "November"
 msgstr "novembro"
 
-#: migasfree/stats/views/dashboard.py:493
+#: migasfree/stats/views/dashboard.py:499
 msgid "December"
 msgstr "decembro"
 
-#: migasfree/stats/views/dashboard.py:496
+#: migasfree/stats/views/dashboard.py:502
 msgid "Sunday"
 msgstr "domingo"
 
-#: migasfree/stats/views/dashboard.py:496
+#: migasfree/stats/views/dashboard.py:502
 msgid "Monday"
 msgstr "luns"
 
-#: migasfree/stats/views/dashboard.py:496
+#: migasfree/stats/views/dashboard.py:502
 msgid "Tuesday"
 msgstr "martes"
 
-#: migasfree/stats/views/dashboard.py:496
+#: migasfree/stats/views/dashboard.py:502
 msgid "Wednesday"
 msgstr "mércores"
 
-#: migasfree/stats/views/dashboard.py:497
+#: migasfree/stats/views/dashboard.py:503
 msgid "Thursday"
 msgstr "xoves"
 
-#: migasfree/stats/views/dashboard.py:497
+#: migasfree/stats/views/dashboard.py:503
 msgid "Friday"
 msgstr "venres"
 
-#: migasfree/stats/views/dashboard.py:497
+#: migasfree/stats/views/dashboard.py:503
 msgid "Saturday"
 msgstr "sábado"
 
-#: migasfree/stats/views/dashboard.py:507
+#: migasfree/stats/views/dashboard.py:513
 #, python-format
 msgid "History of events in the last %d hours"
 msgstr "Histórico de eventos nas últimas %d horas"
@@ -2851,45 +2975,42 @@ msgstr "Histórico de eventos nas últimas %d horas"
 msgid "Devices / Connection"
 msgstr "Conexión de dispositivo"
 
-#: migasfree/stats/views/devices.py:70
+#: migasfree/stats/views/devices.py:71
 #, fuzzy
 #| msgid "Device Model"
 msgid "Devices / Model"
 msgstr "Modelo del dispositivo"
 
-#: migasfree/stats/views/devices.py:101
+#: migasfree/stats/views/devices.py:103
 #, fuzzy
 #| msgid "Device (Manufacturer)"
 msgid "Devices / Manufacturer"
 msgstr "Dispositivo (fabricante)"
 
-#: migasfree/stats/views/devices.py:132
+#: migasfree/stats/views/devices.py:135
 #, fuzzy
 #| msgid "Manufacturer"
 msgid "Models / Manufacturer"
 msgstr "Fabricante"
 
-#: migasfree/stats/views/schedules.py:40 migasfree/stats/views/syncs.py:157
-#: migasfree/stats/views/syncs.py:230
-msgid "There are no synchronizations"
-msgstr "Non hai sincronizacións"
-
-#: migasfree/stats/views/schedules.py:88
+#: migasfree/stats/views/schedules.py:77
 #, python-format
 msgid "%d days"
 msgstr "%d días"
 
-#: migasfree/stats/views/schedules.py:111
-msgid "There are no data"
-msgstr "Non hai datos"
-
-#: migasfree/stats/views/schedules.py:188
+#: migasfree/stats/views/schedules.py:167
 msgid "Provided"
 msgstr "Previsto"
 
-#: migasfree/stats/views/syncs.py:166
+#: migasfree/stats/views/syncs.py:179
 msgid "Totals"
 msgstr "Totais"
+
+#~ msgid "There are no synchronizations"
+#~ msgstr "Non hai sincronizacións"
+
+#~ msgid "There are no data"
+#~ msgstr "Non hai datos"
 
 #~ msgid "%s (total %s)"
 #~ msgstr "%s (total %s)"
@@ -3518,52 +3639,6 @@ msgstr "Totais"
 
 #~ msgid "New password"
 #~ msgstr "Nueva contraseña"
-
-#~ msgid "Password reset complete"
-#~ msgstr "Cambio de contraseña completo"
-
-#~ msgid "Your password has been set.  You may go ahead and log in now."
-#~ msgstr ""
-#~ "La contraseña ha sido establecida. Ahora puede entrar en la aplicación."
-
-#~ msgid "Password reset confirmation"
-#~ msgstr "Confirmación de cambio de contraseña"
-
-#~ msgid "Password reset"
-#~ msgstr "Cambiar contraseña"
-
-#~ msgid "Enter new password"
-#~ msgstr "Nueva contraseña"
-
-#~ msgid ""
-#~ "Please enter your new password twice so we can verify you typed it in "
-#~ "correctly."
-#~ msgstr ""
-#~ "Por favor, introduzca su contraseña actual por razones de seguridad, y "
-#~ "después introduzca la nueva contraseña dos veces para que se pueda "
-#~ "verificar que está bien escrita."
-
-#~ msgid "New password:"
-#~ msgstr "Nueva contraseña:"
-
-#~ msgid "Confirm password:"
-#~ msgstr "Confirmar contraseña:"
-
-#~ msgid "Password reset unsuccessful"
-#~ msgstr "La contraseña no ha sido cambiada"
-
-#~ msgid "Password reset successful"
-#~ msgstr "La contraseña ha sido cambiada"
-
-#~ msgid ""
-#~ "Forgotten your password? Enter your email address below, and we'll email "
-#~ "instructions for setting a new one."
-#~ msgstr ""
-#~ "¿Ha olvidado la contraseña? Introduzca su dirección de correo y le "
-#~ "enviaremos instrucciones para establecer una nueva."
-
-#~ msgid "Reset my password"
-#~ msgstr "Cambiar mi contraseña"
 
 #~ msgid "desktop is not valid name for this computer: IP=%(ip)s"
 #~ msgstr "desktop no es un nombre válido para el ordenador: IP=%(ip)s"
