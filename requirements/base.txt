@@ -1,5 +1,5 @@
 Django==1.11.13
-pycrypto==2.6.1
+pycryptodome==3.6.4
 pygpgme==0.3
 django-ajax-selects==1.7.0
 python-dateutil==2.7.3
