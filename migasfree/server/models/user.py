@@ -42,6 +42,10 @@ class User(models.Model, MigasLink):
 
     objects = UserManager()
 
+    def update_fullname(self, fullname):
+        self.fullname = fullname
+        self.save()
+
     def __str__(self):
         if self.fullname != '':
             return u'{} ({})'.format(self.name, self.fullname.strip())
