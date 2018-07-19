@@ -389,12 +389,14 @@ def upload_computer_info(request, name, uuid, computer, data):
             add_notification_project(project, pms, computer)
 
         # if not exists the user, we add it
+        user_fullname = computer_info.get('user_fullname', '')
         user, _ = User.objects.get_or_create(
-            name=computer_info.get("user"),
+            name=computer_info.get('user'),
             defaults={
-                'fullname': computer_info.get("user_fullname", "")
+                'fullname': user_fullname
             }
         )
+        user.update_fullname(user_fullname)
 
         computer.update_sync_user(user)
         computer.sync_attributes.clear()
