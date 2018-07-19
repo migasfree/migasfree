@@ -153,7 +153,7 @@ SELECT ARRAY(
 
     def check_scope(self, computer_id):
         computers = self.get_computers()
-        if computers and computer_id not in computers:
+        if computers and int(computer_id) not in computers:
             raise PermissionDenied
 
     def update_scope(self, value):

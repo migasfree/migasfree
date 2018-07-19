@@ -126,7 +126,7 @@ def computer_replacement(request):
 @login_required
 def computer_events(request, pk):
     computer = get_object_or_404(Computer, pk=pk)
-    request.user.userprofile.check_scope(int(pk))
+    request.user.userprofile.check_scope(pk)
 
     now = datetime.now()
 
@@ -179,7 +179,7 @@ def computer_events(request, pk):
 def computer_simulate_sync(request, pk):
     user = request.user
     computer = get_object_or_404(Computer, pk=pk)
-    user.userprofile.check_scope(int(pk))
+    user.userprofile.check_scope(pk)
     project = Project.objects.get(id=computer.project.id)
 
     # do not use the user logged. Change to AnonymousUser
