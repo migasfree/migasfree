@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-13 12:32+0200\n"
-"PO-Revision-Date: 2018-02-16 09:15+0200\n"
-"Last-Translator: Rafa Gaioso <rrgaioso@gmail.com>\n"
+"POT-Creation-Date: 2018-07-20 13:10+0200\n"
+"PO-Revision-Date: 2018-07-20 13:11+0200\n"
+"Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: Concello de Santiago de Compostela\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #: migasfree/catalog/admin.py:31 migasfree/catalog/models.py:152
@@ -92,7 +92,7 @@ msgstr "aplicación"
 
 #: migasfree/catalog/models.py:62 migasfree/server/admin/client.py:170
 #: migasfree/server/admin/client.py:452 migasfree/server/filters.py:101
-#: migasfree/server/models/user.py:53
+#: migasfree/server/models/user.py:57
 #: migasfree/server/templates/admin/server/computer/change_form.html:229
 #: migasfree/server/templates/computer_simulate_sync.html:43
 #: migasfree/server/templates/includes/computer_messages_result.html:15
@@ -404,7 +404,7 @@ msgid "Attributes"
 msgstr "Atributos"
 
 #: migasfree/server/admin/client.py:401 migasfree/server/forms.py:476
-#: migasfree/server/models/user.py:54
+#: migasfree/server/models/user.py:58
 #: migasfree/server/templates/admin/server/domain/change_form.html:123
 #: migasfree/server/templates/includes/mining_menu.html:9
 msgid "Users"
@@ -537,22 +537,22 @@ msgstr "Plataforma [%s] rexistrada polo ordenador [%s]."
 msgid "Project [%s] with P.M.S. [%s] registered by computer [%s]."
 msgstr "Proxecto [%s] con PMS [%s] rexistrado polo ordenador [%s]."
 
-#: migasfree/server/api.py:885
+#: migasfree/server/api.py:887
 #, python-format
 msgid "New Computer added id=[%s]: NAME=[%s] UUID=[%s]"
 msgstr "Engadiuse un ordenador co id=[%s]: Nome=[%s] UUID=[%s]"
 
-#: migasfree/server/api.py:908
+#: migasfree/server/api.py:910
 #, python-format
 msgid "Computer id=[%s]: NAME [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: Nome [%s] cambiado por [%s]"
 
-#: migasfree/server/api.py:921
+#: migasfree/server/api.py:923
 #, python-format
 msgid "Computer id=[%s]: IP [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: IP [%s] cambiado por [%s]"
 
-#: migasfree/server/api.py:933
+#: migasfree/server/api.py:935
 #, python-format
 msgid "Computer id=[%s]: UUID [%s] changed by [%s]"
 msgstr "Ordenador id=[%s]: UUID [%s] cambiado por [%s]"
