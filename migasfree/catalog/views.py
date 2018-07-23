@@ -42,7 +42,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         )
 
     @action(methods=['get'], detail=False)
-    def availables(self, request):
+    def available(self, request):
         """
         :param request:
             cid (computer Id) int,
