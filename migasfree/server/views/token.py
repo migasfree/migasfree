@@ -796,17 +796,21 @@ class LogicalViewSet(viewsets.ModelViewSet):
         :param request:
             cid (computer Id) int,
             q string (name or data contains...),
+            did (device Id) int,
             page int
         :return: DeviceLogicalSerializer set
         """
         computer = get_object_or_404(models.Computer, pk=request.GET.get('cid', 0))
         query = request.GET.get('q', '')
+        device = request.GET.get('did', 0)
 
         results = models.DeviceLogical.objects.filter(
             device__available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True)
         ).order_by('device__name', 'feature__name')
         if query:
             results = results.filter(Q(device__name__icontains=query) | Q(device__data__icontains=query))
+        if device:
+            results = results.filter(device__id=device)
 
         page = self.paginate_queryset(results)
         if page is not None:
