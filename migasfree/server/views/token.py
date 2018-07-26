@@ -170,6 +170,16 @@ class ComputerViewSet(viewsets.ModelViewSet):
 
         return qs
 
+    @action(methods=['get'], detail=True, url_name='devices')
+    def devices(self, request, pk=None):
+        computer = get_object_or_404(models.Computer, pk=pk)
+        serializer = serializers.ComputerDevicesSerializer(computer, context={'request': request})
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
     @action(methods=['get'], detail=True, url_path='software/inventory', url_name='software_inventory')
     def software_inventory(self, request, pk=None):
         """
