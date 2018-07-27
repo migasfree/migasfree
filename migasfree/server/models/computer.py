@@ -441,15 +441,15 @@ class Computer(models.Model, MigasLink):
 
     logical_devices.short_description = _('Logical Devices')
 
-    def inflected_logical_devices(self):
+    def inflicted_logical_devices(self):
         return self.logical_devices().exclude(
             attributes__in=[self.get_cid_attribute().pk]
         )
 
-    inflected_logical_devices.short_description = _('Inflected Logical Devices')
+    inflicted_logical_devices.short_description = _('Inflicted Logical Devices')
 
     def assigned_logical_devices_to_cid(self):
-        return self.logical_devices().difference(self.inflected_logical_devices())
+        return self.logical_devices().difference(self.inflicted_logical_devices())
 
     assigned_logical_devices_to_cid.short_description = _('Assigned Logical Devices to CID')
 

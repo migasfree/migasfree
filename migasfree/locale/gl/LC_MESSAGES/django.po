@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-07-20 13:10+0200\n"
-"PO-Revision-Date: 2018-07-20 13:11+0200\n"
+"POT-Creation-Date: 2018-07-27 07:46+0200\n"
+"PO-Revision-Date: 2018-07-27 07:47+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: Concello de Santiago de Compostela\n"
 "Language: gl\n"
@@ -1043,7 +1043,7 @@ msgid "Logical Devices"
 msgstr "Dispositivos lóxicos"
 
 #: migasfree/server/models/computer.py:449
-msgid "Inflected Logical Devices"
+msgid "Inflicted Logical Devices"
 msgstr "Dispositivos lóxicos inferidos"
 
 #: migasfree/server/models/computer.py:454
@@ -2821,7 +2821,7 @@ msgstr "%s (sen atrasos)"
 msgid "timeline"
 msgstr "liña temporal"
 
-#: migasfree/server/views/token.py:214
+#: migasfree/server/views/token.py:224
 #, python-format
 msgid "Status must have one of the values: %s"
 msgstr "O estado debe ter un dos seguintes valores: %s"

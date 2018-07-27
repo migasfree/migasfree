@@ -76,7 +76,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
         'storage',
         'disks',
         'mac_address',
-        'inflected_logical_devices_link',
+        'inflicted_logical_devices_link',
         'sync_user_link',
         'sync_attributes_link',
         'sync_start_date',
@@ -110,7 +110,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': (
                 'assigned_logical_devices_to_cid',
                 'default_logical_device',
-                'inflected_logical_devices_link',
+                'inflicted_logical_devices_link',
             )
         }),
         (_('Synchronization'), {
@@ -162,8 +162,8 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     hw_link = MigasFields.objects_link(
         model=Computer, name='hwnode_set', description=_('Product')
     )
-    inflected_logical_devices_link = MigasFields.objects_link(
-        model=Computer, name='inflected_logical_devices'
+    inflicted_logical_devices_link = MigasFields.objects_link(
+        model=Computer, name='inflicted_logical_devices'
     )
     sync_user_link = MigasFields.link(
         model=Computer, name='sync_user__name',

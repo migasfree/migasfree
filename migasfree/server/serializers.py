@@ -663,14 +663,14 @@ class LogicalWriteSerializer(serializers.ModelSerializer):
 
 class ComputerDevicesSerializer(serializers.ModelSerializer):
     assigned_logical_devices_to_cid = LogicalInfoSerializer(many=True, read_only=True)
-    inflected_logical_devices = LogicalInfoSerializer(many=True, read_only=True)
+    inflicted_logical_devices = LogicalInfoSerializer(many=True, read_only=True)
 
     class Meta:
         model = models.Computer
         fields = (
             'default_logical_device',
             'assigned_logical_devices_to_cid',
-            'inflected_logical_devices'
+            'inflicted_logical_devices'
         )
 
 
