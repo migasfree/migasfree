@@ -30,7 +30,11 @@ class DomainComputerManager(models.Manager):
         qs = super(DomainComputerManager, self).get_queryset()
         if not user.is_view_all():
             qs = qs.filter(id__in=user.get_computers())
-        return qs.defer("software_inventory", "software_history")
+
+        return qs.defer(
+            'software_inventory',
+            'software_history'
+        )
 
 
 class ProductiveManager(DomainComputerManager):
@@ -106,12 +110,12 @@ class InactiveManager(DomainComputerManager):
 
 
 class ComputerManager(DomainComputerManager):
-    def create(self, name, project, uuid, ip=None):
+    def create(self, name, project, uuid, ip_address=None):
         obj = Computer()
         obj.name = name
         obj.project = project
         obj.uuid = uuid
-        obj.ip = ip
+        obj.ip_address = ip_address
         obj.save()
 
         return obj
