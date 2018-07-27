@@ -3,7 +3,7 @@
 from django.db import models, transaction
 from django.db.models import Q
 from django.db.models.signals import post_save
-
+from django.dispatch import receiver
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -123,8 +123,9 @@ class Domain(models.Model, MigasLink):
         permissions = (("can_save_domain", "Can save Domain"),)
 
 
+@receiver(post_save, sender=Domain)
 def set_m2m_domain(sender, instance, created, **kwargs):
-    property, _ = Property.objects.get_or_create(
+    property_att, _ = Property.objects.get_or_create(
         prefix='DMN', sort='server',
         defaults={'name': 'DOMAIN', 'kind': 'L'}
     )
@@ -132,12 +133,10 @@ def set_m2m_domain(sender, instance, created, **kwargs):
     att_dmn, _ = Attribute.objects.get_or_create(
         value=instance.name,
         description='',
-        property_att=property
+        property_att=property_att
     )
 
-    # Add the domain attrribute
+    # Add the domain attribute
     transaction.on_commit(
-	             lambda: instance.included_attributes.add(att_dmn)
-	        )
-
-post_save.connect(set_m2m_domain, sender=Domain)
+        lambda: instance.included_attributes.add(att_dmn)
+    )
