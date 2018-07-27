@@ -7,6 +7,7 @@ from django.views.i18n import JavaScriptCatalog
 
 from ajax_select import urls as ajax_select_urls
 from rest_framework.authtoken import views
+from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
 
 from server.routers import router, device_router
@@ -16,13 +17,14 @@ from stats.routers import router as stats_router
 from django.contrib import admin
 admin.autodiscover()
 
-swagger_schema_view = get_swagger_view(
-    title='Migasfree REST API',
-)
+TITLE = 'Migasfree REST API'
+
+swagger_schema_view = get_swagger_view(title=TITLE)
 
 urlpatterns = [
     url(r'^', include('django.contrib.auth.urls')),
     url(r'^docs/', swagger_schema_view, name='docs'),
+    url(r'^api-docs/', include_docs_urls(title=TITLE)),
     url(r'^token-auth/$', views.obtain_auth_token),
     url(r'^rest-auth/', include('rest_auth.urls')),
     url(r'^api/v1/token/', include(router.urls)),
