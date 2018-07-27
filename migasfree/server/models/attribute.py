@@ -20,7 +20,11 @@ class DomainAttributeManager(models.Manager):
                 Q(id__in=user.get_attributes()) |
                 Q(id__in=user.get_domain_tags())
             )
-        return qs.defer("computer__software_inventory", "computer__software_history")
+
+        return qs.defer(
+            'computer__software_inventory',
+            'computer__software_history'
+        )
 
 
 class AttributeManager(DomainAttributeManager):
@@ -60,7 +64,8 @@ class AttributeManager(DomainAttributeManager):
 
         if original_value != obj.value:
             Notification.objects.create(
-                _('The value of the attribute [%s] has more than %d characters. The original value is truncated: %s') % (
+                _('The value of the attribute [%s] has more than %d characters. '
+                  'The original value is truncated: %s') % (
                     '<a href="{}">{}</a>'.format(
                         reverse('admin:server_attribute_change', args=(obj.id,)),
                         obj
@@ -190,12 +195,9 @@ class Attribute(models.Model, MigasLink):
 
 
 class ServerAttributeManager(DomainAttributeManager):
-
     def scope(self, user):
         qs = super(ServerAttributeManager, self).scope(user)
-        return qs.filter(
-            Q(property_att__sort='server')
-        )
+        return qs.filter(property_att__sort='server')
 
 
 class ServerAttribute(Attribute):  # Tag
@@ -238,9 +240,7 @@ class ClientAttribute(Attribute):  # Feature
 class BasicAttributeManager(DomainAttributeManager):
     def scope(self, user):
         qs = super(BasicAttributeManager, self).scope(user)
-        return qs.filter(
-            Q(property_att__sort='basic')
-        )
+        return qs.filter(property_att__sort='basic')
 
 
 class BasicAttribute(Attribute):

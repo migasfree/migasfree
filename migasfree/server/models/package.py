@@ -47,13 +47,13 @@ class Package(models.Model, MigasLink):
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
-        verbose_name=_("project")
+        verbose_name=_('project')
     )
 
     store = models.ForeignKey(
         Store,
         on_delete=models.CASCADE,
-        verbose_name=_("store")
+        verbose_name=_('store')
     )
 
     objects = PackageManager()
@@ -116,7 +116,7 @@ class Package(models.Model, MigasLink):
         if not hasattr(self, 'project'):
             return False
 
-        if self.store.project.id != self.project.id:
+        if self.store and self.store.project.id != self.project.id:
             raise ValidationError(_('Store must belong to the project'))
 
         queryset = Package.objects.filter(

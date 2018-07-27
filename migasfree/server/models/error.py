@@ -17,6 +17,7 @@ class DomainErrorManager(models.Manager):
                 project_id__in=user.get_projects(),
                 computer_id__in=user.get_computers()
             )
+
         return qs
 
 

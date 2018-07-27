@@ -10,7 +10,7 @@ from . import MigasLink
 @python_2_unicode_compatible
 class Schedule(models.Model, MigasLink):
     name = models.CharField(
-        verbose_name=_("name"),
+        verbose_name=_('name'),
         max_length=50,
         null=False,
         blank=False,
@@ -19,7 +19,7 @@ class Schedule(models.Model, MigasLink):
     )
 
     description = models.TextField(
-        verbose_name=_("description"),
+        verbose_name=_('description'),
         null=True,
         blank=True
     )
@@ -29,6 +29,6 @@ class Schedule(models.Model, MigasLink):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Schedule")
-        verbose_name_plural = _("Schedules")
+        verbose_name = _('Schedule')
+        verbose_name_plural = _('Schedules')
         permissions = (("can_save_schedule", "Can save Schedule"),)

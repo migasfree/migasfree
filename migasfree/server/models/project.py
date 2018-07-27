@@ -80,11 +80,17 @@ class Project(models.Model, MigasLink):
 
     @staticmethod
     def repositories_path(name):
-        return os.path.join(Project.path(name), Project.REPOSITORY_TRAILING_PATH)
+        return os.path.join(
+            Project.path(name),
+            Project.REPOSITORY_TRAILING_PATH
+        )
 
     @staticmethod
     def stores_path(name):
-        return os.path.join(Project.path(name), Project.STORE_TRAILING_PATH)
+        return os.path.join(
+            Project.path(name),
+            Project.STORE_TRAILING_PATH
+        )
 
     def _create_dirs(self):
         repos = self.repositories_path(self.name)
@@ -97,7 +103,7 @@ class Project(models.Model, MigasLink):
 
     @staticmethod
     def get_project_names():
-        return Project.objects.all().order_by('name').values_list('id', 'name')
+        return Project.objects.values_list('id', 'name').order_by('name')
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.name = self.name.replace(" ", "-")

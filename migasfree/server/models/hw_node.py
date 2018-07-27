@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from django.db import models
 from django.db.models import Sum, Q
 from django.urls import reverse
@@ -8,8 +10,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
 from . import Computer, MigasLink
-
-import re
 
 
 def validate_mac(mac):
@@ -23,6 +23,7 @@ class DomainHwNodeManager(models.Manager):
         qs = super(DomainHwNodeManager, self).get_queryset()
         if not user.is_view_all():
             qs = qs.filter(computer_id__in=user.get_computers())
+
         return qs
 
 

@@ -31,7 +31,7 @@ class Platform(models.Model, MigasLink):
     """
 
     name = models.CharField(
-        verbose_name=_("name"),
+        verbose_name=_('name'),
         max_length=50,
         unique=True
     )
@@ -43,6 +43,6 @@ class Platform(models.Model, MigasLink):
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Platform")
-        verbose_name_plural = _("Platforms")
+        verbose_name = _('Platform')
+        verbose_name_plural = _('Platforms')
         permissions = (("can_save_platform", "Can save Platform"),)

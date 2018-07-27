@@ -14,6 +14,7 @@ class DomainMigrationManager(models.Manager):
         if not user.is_view_all():
             qs = qs.filter(project_id__in=user.get_projects())
             qs = qs.filter(computer_id__in=user.get_computers())
+
         return qs
 
 

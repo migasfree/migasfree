@@ -44,8 +44,7 @@ class Deployment(models.Model, MigasLink):
     enabled = models.BooleanField(
         verbose_name=_('enabled'),
         default=True,
-        help_text=_("if you uncheck this field, deployment is disabled for all"
-                    " computers.")
+        help_text=_('if you uncheck this field, deployment is disabled for all computers.')
     )
 
     name = models.CharField(
@@ -56,11 +55,11 @@ class Deployment(models.Model, MigasLink):
     project = models.ForeignKey(
         Project,
         on_delete=models.CASCADE,
-        verbose_name=_("project")
+        verbose_name=_('project')
     )
 
     comment = models.TextField(
-        verbose_name=_("comment"),
+        verbose_name=_('comment'),
         null=True,
         blank=True
     )
@@ -69,19 +68,18 @@ class Deployment(models.Model, MigasLink):
         Package,
         blank=True,
         verbose_name=_('available packages'),
-        help_text=_('If a computer has installed one of these packages it will'
-                    ' be updated')
+        help_text=_('If a computer has installed one of these packages it will be updated')
     )
 
     packages_to_install = models.TextField(
-        verbose_name=_("packages to install"),
+        verbose_name=_('packages to install'),
         null=True,
         blank=True,
         help_text=_('Mandatory packages to install each time')
     )
 
     packages_to_remove = models.TextField(
-        verbose_name=_("packages to remove"),
+        verbose_name=_('packages to remove'),
         null=True,
         blank=True,
         help_text=_('Mandatory packages to remove each time')
@@ -89,7 +87,7 @@ class Deployment(models.Model, MigasLink):
 
     domain = models.ForeignKey(
         Domain,
-        verbose_name=_("domain"),
+        verbose_name=_('domain'),
         null=True,
         blank=True,
         on_delete=models.SET_NULL
@@ -98,14 +96,14 @@ class Deployment(models.Model, MigasLink):
     included_attributes = models.ManyToManyField(
         Attribute,
         blank=True,
-        verbose_name=_("included attributes")
+        verbose_name=_('included attributes')
     )
 
     excluded_attributes = models.ManyToManyField(
         Attribute,
-        related_name="ExcludeAttribute",
+        related_name='ExcludeAttribute',
         blank=True,
-        verbose_name=_("excluded attributes")
+        verbose_name=_('excluded attributes')
     )
 
     schedule = models.ForeignKey(
@@ -122,19 +120,19 @@ class Deployment(models.Model, MigasLink):
     )
 
     default_preincluded_packages = models.TextField(
-        verbose_name=_("default pre-included packages"),
+        verbose_name=_('default pre-included packages'),
         null=True,
         blank=True
     )
 
     default_included_packages = models.TextField(
-        verbose_name=_("default included packages"),
+        verbose_name=_('default included packages'),
         null=True,
         blank=True
     )
 
     default_excluded_packages = models.TextField(
-        verbose_name=_("default excluded packages"),
+        verbose_name=_('default excluded packages'),
         null=True,
         blank=True
     )
