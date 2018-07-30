@@ -23,6 +23,7 @@ class DomainPackagesByProjectManager(models.Manager):
         qs = super(DomainPackagesByProjectManager, self).get_queryset()
         if not user.is_view_all():
             qs = qs.filter(project__in=user.get_projects())
+
         return qs
 
 
