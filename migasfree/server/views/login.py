@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from django.utils.translation import ugettext as _
 from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.translation import ugettext as _
+
 from ..models import UserProfile
+
 
 def login(request):
     if request.method == 'GET':
