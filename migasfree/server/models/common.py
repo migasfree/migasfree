@@ -337,7 +337,6 @@ class MigasLink(object):
                 except ObjectDoesNotExist:
                     pass
 
-
         url = u'admin:{}_{}_change'.format(
             self._meta.app_label,
             self._meta.model_name
