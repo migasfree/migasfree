@@ -79,8 +79,8 @@ class Domain(models.Model, MigasLink):
 
     def get_tags(self):
         tags = []
-        tags.append(Attribute.objects.get(property_att__prefix="DMN",value=self.name))
-        for tag in Attribute.objects.filter(property_att__prefix="DMN",value__startswith=self.name+"."):
+        tags.append(Attribute.objects.get(property_att__prefix="DMN", value=self.name))
+        for tag in Attribute.objects.filter(property_att__prefix="DMN", value__startswith=self.name + "."):
             tags.append(tag)
 
         for tag in self.tags.all():
