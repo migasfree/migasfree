@@ -737,7 +737,7 @@ def get_computer_tags(request, name, uuid, computer, data):
         selected_tags.append(tag.__str__())
 
         # if tag is a domain, includes all domain's tags
-        if tag.property_att.prefix=="DMN":
+        if tag.property_att.prefix == 'DMN':
             for tag_dmn in Domain.objects.get(name=tag.value.split('.')[0]).get_tags():
                 if tag_dmn.property_att.name not in available_tags:
                     available_tags[tag_dmn.property_att.name] = []
