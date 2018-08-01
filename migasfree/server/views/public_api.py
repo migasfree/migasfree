@@ -120,3 +120,21 @@ class RepositoriesUrlTemplateView(views.APIView):
             ),
             content_type='text/plain'
         )
+
+
+@permission_classes((permissions.AllowAny,))
+class ServerInfoView(views.APIView):
+    def post(self, request, format=None):
+        """
+        Returns server info
+        """
+        from ... import __version__, __author__, __contact__, __homepage__
+
+        info = {
+            'version': __version__,
+            'author': __author__,
+            'contact': __contact__,
+            'homepage': __homepage__,
+        }
+
+        return Response(info)

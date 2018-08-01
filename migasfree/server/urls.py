@@ -9,6 +9,7 @@ from .views import *
 
 public_patterns = [
     url(r'repository-url-template/', RepositoriesUrlTemplateView.as_view()),
+    url(r'server/info/', ServerInfoView.as_view()),
 ]
 
 urlpatterns = [
