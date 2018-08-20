@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals
-
 import inspect
 import datetime
 
@@ -227,11 +225,11 @@ class MigasChangeList(ChangeList):
                     for key, value in iteritems(x.used_parameters):
                         lookup_type = key.split('__')[1]
                         if lookup_type == 'isnull':
-                            element += '{}'.format(
+                            element += u'{}'.format(
                                 _('empty') if value else _('not empty')
                             )
                         else:
-                            element += '{}={}'.format(lookup_type, value)
+                            element += u'{}={}'.format(lookup_type, value)
                         params.pop(key, None)
                     self.append(x.title, element, x.lookup_kwarg)
                 elif isinstance(x.lookup_choices[0][0], int):
@@ -277,7 +275,7 @@ class MigasChangeList(ChangeList):
                     elements = []
                     for i in x.lookup_val.split(','):
                         elements.append(
-                            choices[int(i)] if isinstance(x.field, IntegerField) else choices[i]
+                            unicode(choices[int(i)] if isinstance(x.field, IntegerField) else choices[i])
                         )
                     self.append(x.title, ', '.join(elements), x.lookup_kwarg)
                     params.pop(x.lookup_kwarg, None)
@@ -346,24 +344,24 @@ class MigasChangeList(ChangeList):
                     self.append(k, params[k], k)
 
         _filter = ", ".join(
-            "{}: {}".format(
+            u"{}: {}".format(
                 k["name"].capitalize(),
-                k["value"]
+                unicode(k["value"])
             )
             for k in self.filter_description
         )
         if _filter:
-            _filter = "({})".format(_filter)
+            _filter = u"({})".format(_filter)
 
-        self.title = "{} {}".format(
+        self.title = u"{} {}".format(
             self.model._meta.verbose_name_plural,
             _filter
         )
 
     def append(self, name, value, param=None, aux_param=None):
         self.filter_description.append({
-            "name": _(name),
-            "value": value,
+            "name": _(unicode(name)),
+            "value": unicode(value),
             "param": param,
             "aux_param": aux_param,
         })
