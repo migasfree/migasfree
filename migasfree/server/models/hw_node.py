@@ -2,6 +2,8 @@
 
 import re
 
+from past.builtins import basestring
+
 from django.db import models
 from django.db.models import Sum, Q
 from django.urls import reverse
