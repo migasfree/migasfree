@@ -4,6 +4,7 @@ import os
 import inspect
 
 from datetime import datetime, timedelta
+from six import iteritems
 
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -413,7 +414,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         )
 
         # client attributes
-        for prefix, value in client_attributes.iteritems():
+        for prefix, value in iteritems(client_attributes):
             client_property = Property.objects.get(prefix=prefix)
             if client_property.sort == 'client':
                 computer.sync_attributes.add(
@@ -510,7 +511,7 @@ def upload_computer_faults(request, name, uuid, computer, data):
     faults = data.get(cmd).get("faults")
 
     try:
-        for name, result in faults.iteritems():
+        for name, result in iteritems(faults):
             try:
                 if result:
                     Fault.objects.create(
