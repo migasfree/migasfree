@@ -15,6 +15,7 @@ django-url-tools==0.0.9
 djangorestframework==3.8.2
 djangorestframework-filters==0.10.2
 docutils==0.14
+future==0.16.0
 lxml==4.1.1
 Pillow==5.2.0
 psycopg2-binary==2.7.5
