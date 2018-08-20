@@ -4,6 +4,7 @@ import sys
 import inspect
 
 from datetime import datetime, timedelta
+from six import iteritems, iterkeys
 
 from django import forms  # for execute_query function
 from django.db.models import Q  # for execute_query function
@@ -29,7 +30,7 @@ def execute_query(request, parameters, form_param=None):
 
         if 'fields' not in locals():
             fields = []
-            for key in query.values()[0].iterkeys():
+            for key in iterkeys(query.values()[0]):
                 fields.append(key)
 
         if 'titles' not in locals():
@@ -93,7 +94,7 @@ def get_query(request, query_id):
     }
 
     if request.method == 'POST':
-        default_parameters.update(dict(request.POST.iteritems()))
+        default_parameters.update(dict(iteritems(request.POST)))
 
     if not query.parameters:
         return execute_query(request, default_parameters)
