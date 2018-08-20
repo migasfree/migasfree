@@ -18,7 +18,7 @@ def secret_key(path):
                 "%s%s%s" % (string.ascii_letters, string.digits, string.punctuation)
             ) for i in range(50)]
         )
-        with file(_file, 'w') as outfile:
+        with open(_file, 'w') as outfile:
             outfile.write(_key)
 
     return _key
