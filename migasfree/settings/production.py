@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from past.builtins import execfile
+
 from .migasfree import *
 from .base import *
 from .functions import secret_key
