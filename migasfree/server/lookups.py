@@ -113,8 +113,7 @@ class AttributeLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
-    def get_objects(self, objects):
-        ids = [obj.pk for obj in objects]
+    def get_objects(self, ids):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != "id":
             return self.model.objects.filter(
                 pk__in=ids
@@ -159,8 +158,7 @@ class PackageLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
-    def get_objects(self, objects):
-        ids = [obj.pk for obj in objects]
+    def get_objects(self, ids):
         return self.model.objects.filter(pk__in=ids).order_by('name')
 
 
@@ -191,8 +189,7 @@ class TagLookup(LookupChannel):
     def can_add(self, user, model):
         return False
 
-    def get_objects(self, objects):
-        ids = [obj.pk for obj in objects]
+    def get_objects(self, ids):
         return self.model.objects.filter(
             pk__in=ids
         ).order_by(
@@ -251,18 +248,9 @@ class ComputerLookup(LookupChannel):
             pk__in=ids
         ).order_by(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0])]
 
-    def get_objects(self, objects):
-        ids = [obj.pk for obj in objects]
-
-        lst = []
-        for item in ids:
-            if item.__class__.__name__ == "Computer":
-                lst.append(int(item.pk))
-            else:
-                lst.append(int(item))
-
-        things = self.model.objects.in_bulk(lst)
+    def get_objects(self, ids):
+        things = self.model.objects.in_bulk(ids)
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == "id":
-            return [things[aid] for aid in lst if aid in things]
+            return [things[aid] for aid in ids if aid in things]
 
-        return [things[aid] for aid in self.reorder(lst) if aid in things]
+        return [things[aid] for aid in self.reorder(ids) if aid in things]
