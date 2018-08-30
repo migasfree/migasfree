@@ -1,7 +1,7 @@
 $(function(){
-    var successMsg = function(msg) {
+    var showMsg = function(msg, level = "success") {
         $("article[role='main']").prepend(
-            '<div class="alert alert-success alert-dismissible" role="alert">' +
+            '<div class="alert alert-' + level + ' alert-dismissible" role="alert">' +
             '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
             '<span aria-hidden="true">&times;</span></button>' + msg + '</div>'
         );
@@ -19,7 +19,7 @@ $(function(){
     $.ajaxSetup({
         headers: {"X-CSRFToken": Cookies.get("csrftoken")},  // FIXME setting
         url: "/api/v1/token/computers/" + $("input#computer-id").val() + "/",
-        error: function( jqXHR, textStatus, errorThrown ) {
+        error: function(jqXHR, textStatus, errorThrown) {
             if (jqXHR.status === 0) {
                 console.log("Not connect: Verify Network.");
             } else if (jqXHR.status === 404) {
@@ -48,7 +48,7 @@ $(function(){
             dataType: "json",
             success: (result) => {
                 $("#id_name").val(result.name);
-                successMsg(gettext("Name has been changed!"));
+                showMsg(gettext("Name has been changed!"));
             }
         });
         $(this).prop("disabled", false);
@@ -63,7 +63,7 @@ $(function(){
             },
             dataType: "json",
             success: (result) => {
-                successMsg(gettext("Last hardware capture has been changed!"));
+                showMsg(gettext("Last hardware capture has been changed!"));
             }
         });
         $(this).prop("disabled", false);
@@ -81,7 +81,7 @@ $(function(){
             dataType: "json",
             traditional: true,
             success: (result) => {
-                successMsg(gettext("Current Situation has been changed!"));
+                showMsg(gettext("Current Situation has been changed!"));
             }
         });
         $(this).prop("disabled", false);
@@ -97,7 +97,10 @@ $(function(){
             },
             dataType: "json",
             success: (result) => {
-                successMsg(gettext("Devices have been changed!"));
+                showMsg(gettext("Devices have been changed!"));
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                showMsg(jqXHR.responseText.replace(/\"/g, ""), "danger");
             }
         });
         $(this).prop("disabled", false);
