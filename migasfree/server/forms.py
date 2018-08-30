@@ -323,6 +323,30 @@ class ComputerForm(forms.ModelForm):
         assigned_logical_devices_to_cid = self.cleaned_data.get('assigned_logical_devices_to_cid', [])
         if assigned_logical_devices_to_cid:
             assigned_logical_devices_to_cid = list(assigned_logical_devices_to_cid.values_list('id', flat=True))
+            for item in assigned_logical_devices_to_cid:
+                logical_device = DeviceLogical.objects.get(pk=item)
+                model = DeviceModel.objects.get(device=logical_device.device)
+                if not DeviceDriver.objects.filter(
+                        feature=logical_device.feature,
+                        model=model,
+                        project=self.instance.project
+                ):
+                    raise ValidationError(mark_safe(
+                        _('Error in feature %s for assign computer %s.'
+                          ' There is no driver defined for project %s in model %s.') % (
+                            logical_device.feature,
+                            self.instance,
+                            self.instance.project,
+                            '<a href="{}">{}</a>'.format(
+                                reverse(
+                                    'admin:server_devicemodel_change',
+                                    args=(model.pk,)
+                                ),
+                                model
+                            )
+                        )
+                    ))
+
             self.instance.update_logical_devices(assigned_logical_devices_to_cid)
 
         return super(ComputerForm, self).save(commit=commit)
