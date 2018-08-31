@@ -90,8 +90,10 @@ class MigasLink(object):
                         count = related_model.objects.scope(user).filter(
                             **{related_object.field.name: self.id}
                         ).count()
-                    except:
-                        count = 0
+                    except AttributeError:
+                        count = related_model.objects.filter(
+                            **{related_object.field.name: self.id}
+                        ).count()
 
                     if count:
                         related_link = reverse(
