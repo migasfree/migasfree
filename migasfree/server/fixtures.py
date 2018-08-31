@@ -255,7 +255,7 @@ def sequence_reset():
     django.core.management.call_command(
         'sqlsequencereset',
         'server',
-        stdout=commands
+        stdout=unicode(commands)
     )
 
     if settings.DATABASES.get('default').get('ENGINE') == \
