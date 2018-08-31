@@ -6,7 +6,10 @@ import tempfile
 
 import django.core.management
 
-from io import StringIO
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from django.contrib.auth.models import Group, Permission
 from django.conf import settings
@@ -255,7 +258,7 @@ def sequence_reset():
     django.core.management.call_command(
         'sqlsequencereset',
         'server',
-        stdout=unicode(commands)
+        stdout=commands
     )
 
     if settings.DATABASES.get('default').get('ENGINE') == \
