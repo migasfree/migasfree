@@ -215,9 +215,9 @@ class AttributeFilter(django_filters.FilterSet):
 
 class ComputerFilter(django_filters.FilterSet):
     platform = django_filters.NumberFilter(field_name='project__platform__id')
-    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr=['gte'])
+    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr='gte')
     mac_address = django_filters.CharFilter(
-        field_name='mac_address', lookup_expr=['icontains']
+        field_name='mac_address', lookup_expr='icontains'
     )
 
     class Meta:
@@ -229,8 +229,8 @@ class ComputerFilter(django_filters.FilterSet):
 
 
 class ErrorFilter(django_filters.FilterSet):
-    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr=['gte'])
-    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr=['lt'])
+    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr='gte')
+    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr='lt')
     platform = django_filters.NumberFilter(field_name='project__platform__id')
 
     class Meta:
@@ -248,8 +248,8 @@ class FaultDefinitionFilter(django_filters.FilterSet):
 
 
 class FaultFilter(django_filters.FilterSet):
-    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr=['gte'])
-    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr=['lt'])
+    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr='gte')
+    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr='lt')
 
     class Meta:
         model = Fault
@@ -259,8 +259,8 @@ class FaultFilter(django_filters.FilterSet):
 
 
 class MigrationFilter(django_filters.FilterSet):
-    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr=['gte'])
-    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr=['lt'])
+    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr='gte')
+    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr='lt')
 
     class Meta:
         model = Migration
@@ -279,7 +279,7 @@ class NodeFilter(django_filters.FilterSet):
 
 
 class NotificationFilter(django_filters.FilterSet):
-    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr=['gte'])
+    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr='gte')
 
     class Meta:
         model = Notification
@@ -300,13 +300,13 @@ class PropertyFilter(django_filters.FilterSet):
 
 class DeploymentFilter(django_filters.FilterSet):
     included_attributes = django_filters.CharFilter(
-        field_name='included_attributes__value', lookup_expr=['icontains']
+        field_name='included_attributes__value', lookup_expr='icontains'
     )
     excluded_attributes = django_filters.CharFilter(
-        field_name='excluded_attributes__value', lookup_expr=['icontains']
+        field_name='excluded_attributes__value', lookup_expr='icontains'
     )
     available_packages = django_filters.CharFilter(
-        field_name='available_packages__name', lookup_expr=['icontains']
+        field_name='available_packages__name', lookup_expr='icontains'
     )
 
     class Meta:
@@ -315,8 +315,8 @@ class DeploymentFilter(django_filters.FilterSet):
 
 
 class StatusLogFilter(django_filters.FilterSet):
-    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr=['gte'])
-    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr=['lt'])
+    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr='gte')
+    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr='lt')
 
     class Meta:
         model = StatusLog
@@ -330,8 +330,8 @@ class StoreFilter(django_filters.FilterSet):
 
 
 class SynchronizationFilter(django_filters.FilterSet):
-    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr=['gte'])
-    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr=['lt'])
+    created_at = django_filters.DateFilter(field_name='created_at', lookup_expr='gte')
+    created_at__lt = django_filters.DateFilter(field_name='created_at', lookup_expr='lt')
 
     class Meta:
         model = Synchronization
