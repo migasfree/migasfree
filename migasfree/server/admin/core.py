@@ -381,7 +381,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
         user = request.user.userprofile
 
-        if user.domain_preference:
+        if user.domain_preference and user.domain_preference == obj.domain:
             if not obj.name.startswith(user.domain_preference.name.lower()):
                 obj.name = u'{}_{}'.format(user.domain_preference.name.lower(), obj.name)
 
