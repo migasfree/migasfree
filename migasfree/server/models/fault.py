@@ -8,9 +8,9 @@ from .event import Event
 
 
 class DomainFaultManager(models.Manager):
-    def scope(self, user):
+    def scope(self, user=None):
         qs = super(DomainFaultManager, self).get_queryset()
-        if not user.is_view_all():
+        if user and not user.is_view_all():
             qs = qs.filter(project_id__in=user.get_projects())
             qs = qs.filter(computer_id__in=user.get_computers())
 
@@ -23,7 +23,7 @@ class UncheckedManager(DomainFaultManager):
             checked=0
         )
 
-    def scope(self, user):
+    def scope(self, user=None):
         return super(UncheckedManager, self).scope(user).filter(
             checked=0
         )
@@ -76,7 +76,7 @@ class Fault(Event):
     unchecked = UncheckedManager()
 
     @staticmethod
-    def unchecked_count(user):
+    def unchecked_count(user=None):
         queryset = Fault.unchecked.scope(user)
         if user:
             queryset = queryset.filter(
