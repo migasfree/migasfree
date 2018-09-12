@@ -231,7 +231,6 @@ class MigasChangeList(ChangeList):
                         else:
                             element += u'{}={}'.format(lookup_type, value)
                         params.pop(key, None)
-                    self.append(x.title, element, x.lookup_kwarg)
                 elif isinstance(x.lookup_choices[0][0], int):
                     element = dict(
                         x.lookup_choices
@@ -275,7 +274,7 @@ class MigasChangeList(ChangeList):
                     elements = []
                     for i in x.lookup_val.split(','):
                         elements.append(
-                            unicode(choices[int(i)] if isinstance(x.field, IntegerField) else choices[i])
+                            u'{}'.format(choices[int(i)] if isinstance(x.field, IntegerField) else choices[i])
                         )
                     self.append(x.title, ', '.join(elements), x.lookup_kwarg)
                     params.pop(x.lookup_kwarg, None)
@@ -341,12 +340,32 @@ class MigasChangeList(ChangeList):
                 )
             else:
                 if k not in remove:
-                    self.append(k, params[k], k)
+                    name, lookup_type = k.split('__')
+                    if lookup_type == 'isnull':
+                        self.append(
+                            name,
+                            _('empty') if params[k] == 'True' else _('not empty'),
+                            k
+                        )
+                    elif lookup_type == 'lt':
+                        self.append(
+                            name,
+                            '< {}'.format(params[k]),
+                            k
+                        )
+                    elif lookup_type == 'gt':
+                        self.append(
+                            name,
+                            '> {}'.format(params[k]),
+                            k
+                        )
+                    else:
+                        self.append(k, params[k], k)
 
         _filter = ", ".join(
             u"{}: {}".format(
                 k["name"].capitalize(),
-                unicode(k["value"])
+                u'{}'.format(k["value"])
             )
             for k in self.filter_description
         )
@@ -360,8 +379,8 @@ class MigasChangeList(ChangeList):
 
     def append(self, name, value, param=None, aux_param=None):
         self.filter_description.append({
-            "name": _(unicode(name)),
-            "value": unicode(value),
+            "name": u'{}'.format(_(name)),
+            "value": u'{}'.format(value),
             "param": param,
             "aux_param": aux_param,
         })
