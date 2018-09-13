@@ -315,8 +315,8 @@ def unchecked_errors(user):
 
 
 def unchecked_faults(user):
-    total = Fault.unchecked_count()
-    link = '{}?checked__exact=0&_REPLACE_'.format(
+    total = Fault.unchecked_count(user)
+    link = '{}?checked__exact=0&user=me&_REPLACE_'.format(
         reverse('admin:server_fault_changelist')
     )
 
