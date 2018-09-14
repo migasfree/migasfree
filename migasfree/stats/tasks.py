@@ -114,6 +114,7 @@ def generating_repositories(user):
                 repos = os.path.join(
                     settings.MIGASFREE_PUBLIC_DIR,
                     project.name,
+                    project.pms.slug,  # FIXME duplicated path
                     'TMP',  # FIXME hardcoded string!!!
                     project.pms.slug
                 )
