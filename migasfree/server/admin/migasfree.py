@@ -304,8 +304,10 @@ class MigasChangeList(ChangeList):
                     _name = 'excluded attributes'
 
                 if not hasattr(self.model, _classname):
-                    if _classname == "attribute":
-                        _app = "server"
+                    if _classname == 'attribute':
+                        _app = 'server'
+                    elif _classname == 'application':
+                        _app = 'catalog'
                     else:
                         _app = self.model._meta.app_label
                     model = apps.get_model(_app, _classname)
