@@ -342,26 +342,29 @@ class MigasChangeList(ChangeList):
                 )
             else:
                 if k not in remove:
-                    name, lookup_type = k.split('__')
-                    if lookup_type == 'isnull':
-                        self.append(
-                            name,
-                            _('empty') if params[k] == 'True' else _('not empty'),
-                            k
-                        )
-                    elif lookup_type == 'lt':
-                        self.append(
-                            name,
-                            '< {}'.format(params[k]),
-                            k
-                        )
-                    elif lookup_type == 'gt':
-                        self.append(
-                            name,
-                            '> {}'.format(params[k]),
-                            k
-                        )
-                    else:
+                    try:
+                        name, lookup_type = k.split('__')
+                        if lookup_type == 'isnull':
+                            self.append(
+                                name,
+                                _('empty') if params[k] == 'True' else _('not empty'),
+                                k
+                            )
+                        elif lookup_type == 'lt':
+                            self.append(
+                                name,
+                                '< {}'.format(params[k]),
+                                k
+                            )
+                        elif lookup_type == 'gt':
+                            self.append(
+                                name,
+                                '> {}'.format(params[k]),
+                                k
+                            )
+                        else:
+                            self.append(k, params[k], k)
+                    except ValueError:
                         self.append(k, params[k], k)
 
         _filter = ", ".join(
