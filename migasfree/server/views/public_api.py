@@ -3,7 +3,6 @@
 import json
 
 from django.conf import settings
-from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render
 
