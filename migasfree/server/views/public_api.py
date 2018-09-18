@@ -84,8 +84,7 @@ def computer_label(request, uuid=None):
         uuid = request.GET.get('uuid', '')
 
     computer_info = json.loads(get_computer_info(request, uuid).content)
-    if computer_info['id'] not in request.user.userprofile.get_computers():
-        raise PermissionDenied
+    request.user.userprofile.check_scope(computer_info['id'])
 
     return render(
         request,
