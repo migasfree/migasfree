@@ -1,22 +1,22 @@
 [
-{
-    "pk": 1,
-    "model": "server.scheduledelay",
-    "fields": {
-        "delay": 0,
-        "attributes": [1],
-        "duration": 10,
-        "schedule": 1
+    {
+        "pk": 1,
+        "model": "server.scheduledelay",
+        "fields": {
+            "delay": 0,
+            "attributes": [1],
+            "duration": 10,
+            "schedule": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "server.scheduledelay",
+        "fields": {
+            "delay": 0,
+            "attributes": [1],
+            "duration": 20,
+            "schedule": 2
+        }
     }
-},
-{
-    "pk": 2,
-    "model": "server.scheduledelay",
-    "fields": {
-        "delay": 0,
-        "attributes": [1],
-        "duration": 20,
-        "schedule": 2
-    }
-}
 ]
