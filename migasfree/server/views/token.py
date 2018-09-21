@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from django.db.models import Q
 from django.conf import settings
 from django.http import QueryDict
@@ -216,7 +218,9 @@ class ComputerViewSet(viewsets.ModelViewSet):
         computer = get_object_or_404(models.Computer, pk=pk)
         data = []
         if computer.software_inventory:
-            data = computer.software_inventory.replace('+', '').split('\n')
+            data = re.sub(r'^\+', '', computer.software_inventory, flags=re.MULTILINE)
+            data = re.sub(r'^-', '', data, flags=re.MULTILINE)
+            data = data.rstrip().split('\n')
 
         return Response(
             data,
