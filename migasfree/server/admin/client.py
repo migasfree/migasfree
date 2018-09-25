@@ -289,7 +289,7 @@ class ErrorAdmin(MigasAdmin):
             return obj.description[:250] + " ..."
 
     truncated_desc.short_description = _("Truncated error")
-    truncated_desc.admin_order_field = 'error'
+    truncated_desc.admin_order_field = 'description'
 
     def checked_ok(self, request, queryset):
         for item in queryset:
