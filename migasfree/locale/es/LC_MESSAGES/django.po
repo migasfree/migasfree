@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-07-27 07:46+0200\n"
-"PO-Revision-Date: 2018-07-27 07:47+0200\n"
+"PO-Revision-Date: 2018-09-26 13:36+0200\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: migasfree/catalog/admin.py:31 migasfree/catalog/models.py:152
 #: migasfree/server/models/computer.py:176
@@ -98,7 +98,7 @@ msgstr "aplicación"
 #: migasfree/server/templates/computer_simulate_sync.html:43
 #: migasfree/server/templates/includes/computer_messages_result.html:15
 msgid "User"
-msgstr "Usuario"
+msgstr "Usuario/a"
 
 #: migasfree/catalog/models.py:63
 msgid "Admin"
@@ -409,7 +409,7 @@ msgstr "Atributos"
 #: migasfree/server/templates/admin/server/domain/change_form.html:123
 #: migasfree/server/templates/includes/mining_menu.html:9
 msgid "Users"
-msgstr "Usuarios"
+msgstr "Usuarios/as"
 
 #: migasfree/server/admin/client.py:444 migasfree/server/models/computer.py:561
 #: migasfree/server/models/computer.py:715
@@ -481,7 +481,7 @@ msgstr "Categoría de etiqueta"
 
 #: migasfree/server/admin/core.py:560
 msgid "Inflicted Computers"
-msgstr "Ordenadores inferidos"
+msgstr "Ordenadores heredados"
 
 #: migasfree/server/admin/core.py:581
 msgid "Authorizations"
@@ -566,11 +566,11 @@ msgstr "Sin errores"
 
 #: migasfree/server/errmfs.py:28
 msgid "User unauthenticated"
-msgstr "Usuario no autenticado"
+msgstr "Usuario/a no autenticado/a"
 
 #: migasfree/server/errmfs.py:29
 msgid "User can not register computers"
-msgstr "El usuario no puede registrar ordenadores"
+msgstr "El/la usuario/a no puede registrar ordenadores"
 
 #: migasfree/server/errmfs.py:30
 msgid "Method GET not allowed"
@@ -598,7 +598,7 @@ msgstr "Proyecto no encontrado"
 
 #: migasfree/server/errmfs.py:36
 msgid "User does not have permission"
-msgstr "El usuario no tiene permisos"
+msgstr "El/la usuario/a no tiene permisos"
 
 #: migasfree/server/errmfs.py:37
 msgid "Unsubscribed computer"
@@ -755,7 +755,7 @@ msgstr "Dispositivos lógicos asignados al atributo CID"
 
 #: migasfree/server/forms.py:390
 msgid "User Permissions"
-msgstr "Permisos de usuario"
+msgstr "Permisos de usuario/a"
 
 #: migasfree/server/forms.py:399
 msgid "Change Password"
@@ -763,7 +763,7 @@ msgstr "Cambiar contraseña"
 
 #: migasfree/server/forms.py:410
 msgid "This user must be one domain at least"
-msgstr "Este usuario debe tener, al menos, un dominio"
+msgstr "Este/a usuario/a debe tener, al menos, un dominio"
 
 #: migasfree/server/forms.py:414
 msgid "Domain preference not in selected Domains"
@@ -1001,7 +1001,7 @@ msgstr "Fecha de fin de la sincronización"
 
 #: migasfree/server/models/computer.py:247
 msgid "sync user"
-msgstr "usuario de la sincronización"
+msgstr "usuario/a de la sincronización"
 
 #: migasfree/server/models/computer.py:255
 msgid "attributes sent"
@@ -1609,8 +1609,8 @@ msgstr "auto registrar ordenadores"
 msgid ""
 "Is not needed a user for register computers in database and get the keys."
 msgstr ""
-"No es necesario un usuario para registrar ordenadores en la base de datos y "
-"obtener las claves."
+"No es necesario un/a usuario/a para registrar ordenadores en la base de "
+"datos y obtener las claves."
 
 #: migasfree/server/models/project.py:69
 msgid "platform"
@@ -1765,7 +1765,7 @@ msgstr "Demoras del calendario"
 #: migasfree/server/models/scope.py:37
 #: migasfree/server/models/synchronization.py:37
 msgid "user"
-msgstr "usuario"
+msgstr "usuario/a"
 
 #: migasfree/server/models/scope.py:80
 #: migasfree/server/models/userprofile.py:34
@@ -1815,12 +1815,12 @@ msgstr "dominios"
 
 #: migasfree/server/models/userprofile.py:186
 msgid "User Profile"
-msgstr "Perfil de usuario"
+msgstr "Perfil de usuario/a"
 
 #: migasfree/server/models/userprofile.py:187
 #: migasfree/server/templates/includes/config_menu.html:41
 msgid "User Profiles"
-msgstr "Perfiles de usuario"
+msgstr "Perfiles de usuario/a"
 
 #: migasfree/server/tasks.py:62
 #, python-format
@@ -1973,7 +1973,7 @@ msgstr "Iniciar sesión"
 
 #: migasfree/server/templates/admin/login.html:50
 msgid "Username:"
-msgstr "Nombre de usuario:"
+msgstr "Nombre:"
 
 #: migasfree/server/templates/admin/login.html:58
 msgid "Password:"
@@ -2015,7 +2015,7 @@ msgstr "Asignado"
 
 #: migasfree/server/templates/admin/server/computer/change_form.html:288
 msgid "Inflected"
-msgstr "Inferidos"
+msgstr "Heredados"
 
 #: migasfree/server/templates/admin/server/computer/change_form.html:311
 msgid "Delete"
@@ -2762,7 +2762,7 @@ msgstr ""
 
 #: migasfree/server/views/login.py:24
 msgid "Credentials not valid"
-msgstr "Los credenciales no son válidos"
+msgstr "Las credenciales no son válidas"
 
 #: migasfree/server/views/packages.py:91
 msgid "No package information exists"
