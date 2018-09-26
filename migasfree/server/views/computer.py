@@ -184,7 +184,7 @@ def pack_attributes(attributes):
     for att in attributes:
         if att[0] in packed:
             if att[1] == '-':  # list
-                packed[att[0]] = '{},{}'.format(packed[att[0]], att[2])
+                packed[att[0]] = u'{},{}'.format(packed[att[0]], att[2])
             elif att[1] == 'L' or att[1] == 'R':  # add to left or right
                 if len(att[2]) > len(packed[att[0]]):
                     packed[att[0]] = att[2]
