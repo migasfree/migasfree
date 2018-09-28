@@ -284,7 +284,10 @@ class MigasChangeList(ChangeList):
         params.pop("date__lt", None)
         for k in params:
             if k.endswith("__id__exact"):
-                _classname = k.split("__")[0]
+                try:
+                    _classname = k.split("__")[-3]
+                except IndexError:
+                    _classname = k.split("__")[0]
                 _name = ugettext(_classname.capitalize())
 
                 if _classname == "ExcludeAttribute":
