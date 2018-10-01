@@ -32,6 +32,9 @@ from ..filters import (
     ProjectFilterAdmin, PlatformFilterAdmin,
     DomainFilter
 )
+
+from ..resources import AttributeResource
+
 from ..utils import compare_list_values
 from ..tasks import (
     create_repository_metadata,
@@ -80,6 +83,8 @@ class AttributeAdmin(MigasAdmin):
         order='property_att__name'
     )
 
+    resource_class = AttributeResource
+
     def get_queryset(self, request):
         sql = Attribute.TOTAL_COMPUTER_QUERY
         user = request.user.userprofile
@@ -115,6 +120,8 @@ class ClientAttributeAdmin(MigasAdmin):
         order='property_att__name',
         description=_('Formula')
     )
+
+    resource_class = AttributeResource
 
     def get_queryset(self, request):
         sql = Attribute.TOTAL_COMPUTER_QUERY
@@ -535,6 +542,8 @@ class ServerAttributeAdmin(MigasAdmin):
         description=_('Tag Category')
     )
     value_link = MigasFields.link(model=ServerAttribute, name='value')
+
+    resource_class = AttributeResource
 
     def get_queryset(self, request):
         sql = Attribute.TOTAL_COMPUTER_QUERY
