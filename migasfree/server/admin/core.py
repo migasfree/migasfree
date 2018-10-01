@@ -45,13 +45,13 @@ from ..tasks import (
 @admin.register(AttributeSet)
 class AttributeSetAdmin(MigasAdmin):
     form = AttributeSetForm
-    list_display = ('name_link',)
+    list_display = ('name_link', 'my_enabled')
     list_filter = ('enabled',)
-    list_display_links = ('name_link',)
     ordering = ('name',)
     search_fields = ('name', 'included_attributes__value', 'excluded_attributes__value')
 
     name_link = MigasFields.link(model=AttributeSet, name='name')
+    my_enabled = MigasFields.boolean(model=AttributeSet, name='enabled')
 
     def get_queryset(self, request):
         return super(AttributeSetAdmin, self).get_queryset(
