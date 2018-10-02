@@ -1,6 +1,10 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
+    <li>
+        <a href="{% url 'liberation_dashboard' %}">{% trans 'Summary' %}</a>
+    </li>
+    <li role="separator" class="divider"></li>
     {% if current_project.id != None %}
         {% if perms.server.change_deployment %}
             <li>
