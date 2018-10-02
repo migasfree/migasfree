@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
+{% endblock extrahead %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Liberation' %}</li>
+        <li>{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+<div class="row text-center">
+    {% include 'includes/multipie_chart.html' with item=deployment_by_enabled id='deployment-enabled' %}
+
+    {% include 'includes/multipie_chart.html' with item=deployment_by_schedule id='deployment-schedule' %}
+
+    {% include 'includes/multipie_chart.html' with item=store_by_project id='store-project' %}
+</div>
+
+<div class="row text-center">
+    {% include 'includes/multipie_chart.html' with item=package_by_store id='package-store' %}
+
+    {% include 'includes/multipie_chart.html' with item=application_by_category id='application-category' %}
+
+    {% include 'includes/multipie_chart.html' with item=application_by_level id='application-level' %}
+</div>
+{% endblock content %}
+
+{% block extrabody %}
+<script type="text/javascript">
+Highcharts.setOptions({
+    lang: {
+        noData: '{{ chart_options.no_data }}',
+        resetZoom: '{{ chart_options.reset_zoom }}',
+        months: {{ chart_options.months|safe }},
+        weekdays: {{ chart_options.weekdays|safe }}
+    }
+});
+
+var colors = [
+    '#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
+    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1',
+    '#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce'
+];
+
+function loadDatum(data) {
+    var dataLen, i;
+    var serie = [];
+
+    dataLen = data.length;
+    for (i = 0; i < dataLen; i += 1) {
+        serie.push({
+            name: data[i].name + ' (' + data[i].value + ')',
+            y: data[i].y,
+            color: colors[i],
+            url: data[i].url
+        });
+    }
+
+    return serie;
+}
+
+function loadData(data) {
+    var dataLen, drillDataLen, brightness, i, j;
+    var serie1 = [], serie2 = [];
+
+    dataLen = data.length;
+    for (i = 0; i < dataLen; i += 1) {
+        serie1.push({
+            name: data[i].name + ' (' + data[i].value + ')',
+            y: data[i].y,
+            color: colors[i],
+            url: data[i].url
+        });
+
+        drillDataLen = data[i].data.length;
+        for (j = 0; j < drillDataLen; j += 1) {
+            brightness = 0.2 - (j / drillDataLen) / 5;
+            serie2.push({
+                name: data[i].data[j].name + ' (' + data[i].data[j].value + ')',
+                y: data[i].data[j].y,
+                color: Highcharts.Color(colors[i]).brighten(brightness).get(),
+                url: data[i].data[j].url
+            });
+        }
+    }
+
+    return [serie1, serie2]
+}
+
+// Default options
+var options = {
+    credits: {
+        enabled: false
+    },
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: null
+    },
+    plotOptions: {
+        pie: {
+            shadow: false,
+            center: ['50%', '50%']
+        },
+        series: {
+            cursor: 'pointer',
+            point: {
+                events: {
+                    click: function() {
+                        if (typeof this.options.url != 'undefined') {
+                            window.open(this.options.url, "_self");
+                        }
+                    }
+                }
+            }
+        }
+    },
+    tooltip: {
+        valueSuffix: '%',
+        headerFormat: '{point.key}',
+        pointFormat: ': <strong>{point.y}</strong>'
+    },
+    series: [{
+        size: '100%',
+        dataLabels: {
+            formatter: function () {
+                return this.y > 5 ? this.point.name : null;
+            },
+            color: '#fff',
+            distance: -30
+        }
+    }]
+};
+
+// Default options
+var optionsMulti = {
+    credits: {
+        enabled: false
+    },
+    chart: {
+        type: 'pie'
+    },
+    title: {
+        text: null
+    },
+    plotOptions: {
+        pie: {
+            shadow: false,
+            center: ['50%', '50%']
+        },
+        series: {
+            cursor: 'pointer',
+            point: {
+                events: {
+                    click: function() {
+                        if (typeof this.options.url != 'undefined') {
+                            window.open(this.options.url, "_self");
+                        }
+                    }
+                }
+            }
+        }
+    },
+    tooltip: {
+        valueSuffix: '%',
+        headerFormat: '{point.key}',
+        pointFormat: ': <strong>{point.y}</strong>'
+    },
+    series: [{
+        size: '60%',
+        dataLabels: {
+            formatter: function () {
+                return this.y > 5 ? this.point.name : null;
+            },
+            color: '#fff',
+            distance: -30
+        }
+    }, {
+        size: '100%',
+        innerSize: '60%',
+        dataLabels: {
+            enabled: false
+        }
+    }]
+};
+
+var series;
+
+var deploymentEnabled = {{ deployment_by_enabled.data|safe }};
+series = loadData(deploymentEnabled);
+var deploymentEnabledOptions = {
+    chart: {
+        renderTo: 'deployment-enabled'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+deploymentEnabledOptions = jQuery.extend(true, {}, optionsMulti, deploymentEnabledOptions);
+var deploymentEnabledChart = new Highcharts.Chart(deploymentEnabledOptions);
+
+var deploymentSchedule = {{ deployment_by_schedule.data|safe }};
+series = loadData(deploymentSchedule);
+var deploymentScheduleOptions = {
+    chart: {
+        renderTo: 'deployment-schedule'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+deploymentScheduleOptions = jQuery.extend(true, {}, optionsMulti, deploymentScheduleOptions);
+var deploymentScheduleChart = new Highcharts.Chart(deploymentScheduleOptions);
+
+var storeProject = {{ store_by_project.data|safe }};
+var storeProjectOptions = {
+    chart: {
+        renderTo: 'store-project'
+    },
+    series: [{
+        data: loadDatum(storeProject)
+    }]
+};
+storeProjectOptions = jQuery.extend(true, {}, options, storeProjectOptions);
+var storeProjectChart = new Highcharts.Chart(storeProjectOptions);
+
+var packageStore = {{ package_by_store.data|safe }};
+series = loadData(packageStore);
+var packageStoreOptions = {
+    chart: {
+        renderTo: 'package-store'
+    },
+    series: [{
+        data: series[0]
+    }, {
+        data: series[1]
+    }]
+};
+packageStoreOptions = jQuery.extend(true, {}, optionsMulti, packageStoreOptions);
+var packageStoreChart = new Highcharts.Chart(packageStoreOptions);
+
+var applicationCategory = {{ application_by_category.data|safe }};
+var applicationCategoryOptions = {
+    chart: {
+        renderTo: 'application-category'
+    },
+    series: [{
+        data: loadDatum(applicationCategory)
+    }]
+};
+applicationCategoryOptions = jQuery.extend(true, {}, options, applicationCategoryOptions);
+var applicationCategoryChart = new Highcharts.Chart(applicationCategoryOptions);
+
+var applicationLevel = {{ application_by_level.data|safe }};
+var applicationLevelOptions = {
+    chart: {
+        renderTo: 'application-level'
+    },
+    series: [{
+        data: loadDatum(applicationLevel)
+    }]
+};
+applicationLevelOptions = jQuery.extend(true, {}, options, applicationLevelOptions);
+var applicationLevelChart = new Highcharts.Chart(applicationLevelOptions);
+</script>
+{% endblock extrabody %}
