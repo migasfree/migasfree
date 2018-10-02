@@ -6,6 +6,7 @@ from .views import (
     alerts, synchronized_daily, synchronized_monthly,
     project_schedule_delays, stats_dashboard,
     provided_computers_by_delay, devices_summary,
+    liberation_dashboard,
 )
 
 urlpatterns = [
@@ -44,5 +45,10 @@ urlpatterns = [
         r'^stats/devices/$',
         devices_summary,
         name='devices_summary'
+    ),
+    url(
+        r'^liberation/dashboard/$',
+        liberation_dashboard,
+        name='liberation_dashboard'
     ),
 ]
