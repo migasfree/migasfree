@@ -7,7 +7,7 @@
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
-        <li>{% trans 'Stats' %}</li>
+        <li>{% trans 'Devices' %}</li>
         <li>{{ title }}</li>
     </ul>
 {% endblock %}
@@ -37,10 +37,11 @@ Highcharts.setOptions({
 
 var colors = [
     '#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
-    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'
+    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1',
+    '#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce'
 ];
 
-function loadData(data) {
+function loadDatum(data) {
     var dataLen, i;
     var serie = [];
 
@@ -109,7 +110,7 @@ var devicesConnectionOptions = {
         renderTo: 'devices-connection'
     },
     series: [{
-        data: loadData(devicesConnection)
+        data: loadDatum(devicesConnection)
     }]
 };
 devicesConnectionOptions = jQuery.extend(true, {}, options, devicesConnectionOptions);
@@ -121,7 +122,7 @@ var devicesModelOptions = {
         renderTo: 'devices-model'
     },
     series: [{
-        data: loadData(devicesModel)
+        data: loadDatum(devicesModel)
     }]
 };
 devicesModelOptions = jQuery.extend(true, {}, options, devicesModelOptions);
@@ -133,7 +134,7 @@ var devicesManufacturerOptions = {
         renderTo: 'devices-manufacturer'
     },
     series: [{
-        data: loadData(devicesManufacturer)
+        data: loadDatum(devicesManufacturer)
     }]
 };
 devicesManufacturerOptions = jQuery.extend(true, {}, options, devicesManufacturerOptions);
@@ -145,7 +146,7 @@ var modelsManufacturerOptions = {
         renderTo: 'models-manufacturer'
     },
     series: [{
-        data: loadData(modelsManufacturer)
+        data: loadDatum(modelsManufacturer)
     }]
 };
 modelsManufacturerOptions = jQuery.extend(true, {}, options, modelsManufacturerOptions);
