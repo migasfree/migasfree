@@ -1,6 +1,10 @@
 {% load i18n %}
 
 <ul id="devices" class="dropdown-menu">
+    {% if perms.server.change_device %}
+        <li><a href="{% url 'devices_summary' %}">{% trans 'Summary' %}</a></li>
+        <li role="separator" class="divider"></li>
+    {% endif %}
     {% if perms.server.change_devicemanufacturer %}
         <li><a href="{% url 'admin:server_devicemanufacturer_changelist' %}">{% trans 'Manufacturers' %}</a></li>
     {% endif %}
