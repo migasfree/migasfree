@@ -56,7 +56,8 @@ Highcharts.setOptions({
 
 var colors = [
     '#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
-    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'
+    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1',
+    '#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce'
 ];
 
 function loadData(data) {
@@ -88,7 +89,7 @@ function loadData(data) {
 }
 
 // Default options
-var options = {
+var optionsMulti = {
     credits: {
         enabled: false
     },
@@ -154,7 +155,7 @@ var platformProjectOptions = {
         data: series[1]
     }]
 };
-platformProjectOptions = jQuery.extend(true, {}, options, platformProjectOptions);
+platformProjectOptions = jQuery.extend(true, {}, optionsMulti, platformProjectOptions);
 var platformProjectChart = new Highcharts.Chart(platformProjectOptions);
 
 var computerMachine = {{ computers_by_machine.data|safe }};
@@ -169,7 +170,7 @@ var computerMachineOptions = {
         data: series[1]
     }]
 };
-computerMachineOptions = jQuery.extend(true, {}, options, computerMachineOptions);
+computerMachineOptions = jQuery.extend(true, {}, optionsMulti, computerMachineOptions);
 var computerMachineChart = new Highcharts.Chart(computerMachineOptions);
 
 var computerStatus = {{ computers_by_status.data|safe }};
@@ -184,7 +185,7 @@ var computerStatusOptions = {
         data: series[1]
     }]
 };
-computerStatusOptions = jQuery.extend(true, {}, options, computerStatusOptions);
+computerStatusOptions = jQuery.extend(true, {}, optionsMulti, computerStatusOptions);
 var computerStatusChart = new Highcharts.Chart(computerStatusOptions);
 
 var uncheckedErrors = {{ unchecked_errors.data|safe }};
@@ -199,7 +200,7 @@ var uncheckedErrorsOptions = {
         data: series[1]
     }]
 };
-uncheckedErrorsOptions = jQuery.extend(true, {}, options, uncheckedErrorsOptions);
+uncheckedErrorsOptions = jQuery.extend(true, {}, optionsMulti, uncheckedErrorsOptions);
 var uncheckedErrorsChart = new Highcharts.Chart(uncheckedErrorsOptions);
 
 var uncheckedFaults =  {{ unchecked_faults.data|safe }};
@@ -214,7 +215,7 @@ var uncheckedFaultsOptions = {
         data: series[1]
     }]
 };
-uncheckedFaultsOptions = jQuery.extend(true, {}, options, uncheckedFaultsOptions);
+uncheckedFaultsOptions = jQuery.extend(true, {}, optionsMulti, uncheckedFaultsOptions);
 var uncheckedFaultsChart = new Highcharts.Chart(uncheckedFaultsOptions);
 
 var enabledDeployments = {{ enabled_deployments.data|safe }};
@@ -229,7 +230,7 @@ var enabledDeploymentsOptions = {
         data: series[1]
     }]
 };
-enabledDeploymentsOptions = jQuery.extend(true, {}, options, enabledDeploymentsOptions);
+enabledDeploymentsOptions = jQuery.extend(true, {}, optionsMulti, enabledDeploymentsOptions);
 var enabledDeploymentsChart = new Highcharts.Chart(enabledDeploymentsOptions);
 
 var pointStart = Date.UTC(
