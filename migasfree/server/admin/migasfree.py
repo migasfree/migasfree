@@ -182,6 +182,7 @@ class MigasFields(object):
 class MigasAdmin(ExportActionModelAdmin):
     list_display_links = None
     filter_description = ''
+    list_per_page = 10
 
     def get_changelist(self, request, **kwargs):
         return MigasChangeList
