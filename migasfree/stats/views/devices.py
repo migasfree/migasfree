@@ -145,7 +145,7 @@ def devices_summary(request):
         request,
         'devices_summary.html',
         {
-            'title': _('Devices Summary'),
+            'title': _('Summary'),
             'chart_options': {
                 'no_data': _('There are no data to show'),
                 'reset_zoom': _('Reset Zoom'),
