@@ -42,7 +42,7 @@ urlpatterns = [
         name='provided_computers',
     ),
     url(
-        r'^stats/devices/$',
+        r'^devices/dashboard/$',
         devices_summary,
         name='devices_summary'
     ),
