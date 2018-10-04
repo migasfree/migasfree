@@ -162,6 +162,7 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
     hw_link = MigasFields.objects_link(
         model=Computer, name='hwnode_set', description=_('Product')
     )
+    hw_link.admin_order_field = 'product'
     inflicted_logical_devices_link = MigasFields.objects_link(
         model=Computer, name='inflicted_logical_devices'
     )
