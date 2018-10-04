@@ -323,7 +323,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     form = DeploymentForm
     list_display = (
         'name_link', 'project_link', 'domain_link',
-        'my_enabled', 'start_date', 'schedule_link', 'timeline',
+        'my_enabled', 'start_date', 'schedule_link', 'timeline', 'computers',
     )
     list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
     search_fields = ('name', 'available_packages__name')
@@ -371,6 +371,13 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     )
     my_enabled = MigasFields.boolean(model=Deployment, name='enabled')
     timeline = MigasFields.timeline()
+
+    def computers(self, obj):
+        related_objects = obj.related_objects('computer',self.user.userprofile)
+        if related_objects:
+            return related_objects.count()
+        return 0
+    computers.short_description = _('Computers')
 
     def regenerate_metadata(self, request, objects):
         if not self.has_change_permission(request):
@@ -420,6 +427,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         )
 
     def get_queryset(self, request):
+        self.user = request.user
         return super(DeploymentAdmin, self).get_queryset(
             request
         ).extra(
