@@ -64,7 +64,7 @@ class Store(models.Model, MigasLink):
             name
         )
 
-    def menu_link(self, user):
+    def menu_link(self, request):
         if self.id:
             info_link = reverse(
                 'package_info',
@@ -89,7 +89,7 @@ class Store(models.Model, MigasLink):
                 [ugettext('Download'), download_link]
             ]
 
-        return super(Store, self).menu_link(user)
+        return super(Store, self).menu_link(request)
 
     def _create_dir(self):
         path = self.path(self.project.name, self.name)

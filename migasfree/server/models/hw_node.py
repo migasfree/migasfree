@@ -195,7 +195,7 @@ class HwNode(models.Model, MigasLink):
     def __str__(self):
         return self.get_product() or self.name
 
-    def menu_link(self, user):
+    def menu_link(self, request):
         if self.id:
             self._exclude_links = [
                 "hwnode - parent__id__exact",
@@ -205,7 +205,7 @@ class HwNode(models.Model, MigasLink):
             ]
             self._include_links = ["computer - product"]
 
-        return super(HwNode, self).menu_link(user)
+        return super(HwNode, self).menu_link(request)
 
     def link(self):
         return render_to_string(

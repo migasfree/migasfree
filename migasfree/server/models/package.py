@@ -58,7 +58,7 @@ class Package(models.Model, MigasLink):
 
     objects = PackageManager()
 
-    def menu_link(self, user):
+    def menu_link(self, request):
         if self.id:
             info_link = reverse(
                 'package_info',
@@ -84,7 +84,7 @@ class Package(models.Model, MigasLink):
                 [ugettext('Package Information'), info_link],
                 [ugettext('Download'), download_link]
             ]
-        return super(Package, self).menu_link(user)
+        return super(Package, self).menu_link(request)
 
     @staticmethod
     def orphan_count(user):

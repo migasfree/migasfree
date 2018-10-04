@@ -1,21 +1,68 @@
 # -*- coding: utf-8 -*-
 
+import json
 from django.urls import reverse
 from django.utils.translation import ugettext
 from django.utils.html import format_html
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 from ..utils import escape_format_string
 
 
 class MigasLink(object):
+
+    PROTOCOL = "mea"
+
     def __init__(self):
         self._actions = None
         self._exclude_links = []
         self._include_links = []
 
-    def get_relations(self, user):
+    @staticmethod
+    def related_title(related_objects):
+        if related_objects:
+            first=related_objects[0]
+            if related_objects.count() == 1:
+                return first._meta.verbose_name
+            return first._meta.verbose_name_plural
+        return ""
+
+    @staticmethod
+    def get_description(action):
+        if "description" in action:
+            return action["description"]
+        return ""
+
+    def is_related(self, action):
+        model = self._meta.model_name.lower()
+        if "related" in action:
+
+            # COMPUTER === CID ATTRIBUTE
+            if self._meta.model_name == 'computer' or (
+                        (
+                         self._meta.model_name in ['attribute','clientattribute']
+                        ) and self.property_att.prefix == 'CID'
+            ):
+                model = "computer"
+
+            # ATTRIBUTESET === ATTRIBUTE
+            elif self._meta.model_name == 'attributeset' \
+                    or (self._meta.model_name == 'attribute' and self.pk > 1) \
+                            and self.property_att.prefix == 'SET':
+                model = "attributeset"
+
+            # DOMAIN === ATTRIBUTE
+            elif self._meta.model_name == 'domain' or \
+                    (self._meta.model_name in ['attribute', 'serverattribute'] and self.property_att.prefix == 'DMN'):
+                model = "domain"
+
+        return (not "related" in action or model in action["related"])
+
+    def get_relations(self, request):
+        user=request.user.userprofile
+        SERVER = request.META.get('HTTP_HOST')
         related_objects = [
             (f, f.model if f.model != self else None)
             for f in self._meta.get_fields()
@@ -33,12 +80,49 @@ class MigasLink(object):
             if f.many_to_many and not f.auto_created
         ]
 
-        action_data = []
+        actions = []
+        data = []
         if self._actions is not None and any(self._actions):
             for item in self._actions:
-                action_data.append({'url': item[1], 'text': item[0]})
+                actions.append({
+                    "url": item[1],
+                    "title": item[0],
+                    "description": item[2] if len(item)==3 else "",
+                })
 
-        related_data = []
+        if self._meta.model_name.lower() in settings.MIGASFREE_EXTERNAL_ACTIONS:
+            element = settings.MIGASFREE_EXTERNAL_ACTIONS[self._meta.model_name.lower()]
+            for action in element:
+                if self.is_related(element[action]):
+                    action_info = {
+                            "name": action,
+                            "model": self._meta.model_name,
+                            'id': self.id,
+                            "related_model": self._meta.model_name,
+                            "related_ids": [self.id],
+                            "server": SERVER
+                        }
+
+                    actions.append({
+                        "url": "{}://{}".format(self.PROTOCOL, json.dumps(action_info)),
+                        "title": element[action]["title"],
+                        "description": self.get_description(element[action]),
+                    })
+
+        data.append({
+            'url': reverse(
+                u'admin:{}_{}_changelist'.format(
+                    self._meta.app_label,
+                    self._meta.model_name
+                )
+            )+ str(self.id),
+            'text': "{} {}".format( self._meta.verbose_name, self.__str__()),
+            'count': 1,
+            'actions': actions
+        })
+
+
+
         for obj, _ in objs:
             if obj.remote_field.field.remote_field.parent_link:
                 _name = obj.remote_field.field.remote_field.parent_model.__name__.lower()
@@ -53,13 +137,14 @@ class MigasLink(object):
                 break
 
             if hasattr(obj, 'scope'):
-                count = obj.remote_field.model.objects.scope(user).filter(
+                rel_objects =obj.remote_field.model.objects.scope(user).filter(
                     **{obj.remote_field.name: self.id}
-                ).count()
+                )
             else:
-                count = obj.remote_field.model.objects.filter(
+                rel_objects = obj.remote_field.model.objects.filter(
                     **{obj.remote_field.name: self.id}
-                ).count()
+                )
+            count = rel_objects.count()
 
             if count:
                 related_link = reverse(
@@ -69,51 +154,142 @@ class MigasLink(object):
                     )
                 )
 
-                related_data.append({
+                actions = []
+                if _name in settings.MIGASFREE_EXTERNAL_ACTIONS:
+                    element = settings.MIGASFREE_EXTERNAL_ACTIONS[_name]
+                    for action in element:
+                        if not "many" in element[action] or element[action]["many"] or count == 1:
+                            if self.is_related(element[action]):
+                                info_action={
+                                    "name": action,
+                                    "model": self._meta.model_name,
+                                    'id': self.id,
+                                    "related_model": _name,
+                                    "related_ids": list(rel_objects.values_list("id", flat=True)),
+                                    "server": SERVER,
+                                }
+
+                                actions.append({
+                                    "url": "{}://{}".format(self.PROTOCOL, json.dumps(info_action)),
+                                    "title": element[action]["title"],
+                                    "description": self.get_description(element[action]),
+                                })
+
+
+                data.append({
                     'url': u'{}?{}__id__exact={}'.format(
                         related_link,
                         obj.remote_field.name if _name != 'serverattribute' else 'computer',
                         self.pk
                     ),
                     'text': ugettext(obj.remote_field.field.verbose_name),
-                    'count': count
+                    'count': count,
+                    'actions': actions
                 })
+
 
         for related_object, _ in related_objects:
             related_model, _field = self.transmodel(related_object)
             if related_model:
-                if not u'{} - {}'.format(
-                    related_model._meta.model_name,
-                    _field
-                ) in self._exclude_links:
-                    try:
-                        count = related_model.objects.scope(user).filter(
-                            **{related_object.field.name: self.id}
-                        ).count()
-                    except AttributeError:
-                        count = related_model.objects.filter(
-                            **{related_object.field.name: self.id}
-                        ).count()
+                # EXCLUIMOS CID
+                if related_model.__name__.lower() != "computer" or not (self._meta.model_name == "attribute" and self.property_att.prefix=='CID'):
+                    if not u'{} - {}'.format(
+                        related_model._meta.model_name,
+                        _field
+                    ) in self._exclude_links:
 
-                    if count:
-                        related_link = reverse(
-                            u'admin:{}_{}_changelist'.format(
-                                related_model._meta.app_label,
-                                related_model.__name__.lower()
+                        if hasattr(related_model.objects, 'scope'):
+                            rel_objects = related_model.objects.scope(user).filter(
+                                **{related_object.field.name: self.id}
                             )
-                        )
-                        related_data.append({
-                            'url': u'{}?{}={}'.format(
-                                related_link,
-                                _field,
-                                self.id
-                            ),
-                            'text': u'{} [{}]'.format(
-                                ugettext(related_model._meta.verbose_name_plural),
-                                ugettext(related_object.field.verbose_name)
-                            ),
-                            'count': count
-                        })
+                        else:
+                            rel_objects = related_model.objects.filter(
+                                **{related_object.field.name: self.id}
+                            )
+
+                        count = rel_objects.count()
+                        if count:
+                            related_link = reverse(
+                                u'admin:{}_{}_changelist'.format(
+                                    related_model._meta.app_label,
+                                    related_model.__name__.lower()
+                                )
+                            )
+
+                            actions=[]
+                            if related_model.__name__.lower() in settings.MIGASFREE_EXTERNAL_ACTIONS:
+                                element = settings.MIGASFREE_EXTERNAL_ACTIONS[related_model.__name__.lower()]
+                                for action in element:
+                                    if not "many" in element[action] or element[action]["many"] or count==1:
+                                        if self.is_related(element[action]):
+                                            info_action = {
+                                                "name": action,
+                                                "model": self._meta.model_name,
+                                                'id': self.id,
+                                                "related_model": related_model.__name__.lower(),
+                                                "related_ids": list(rel_objects.values_list("id", flat=True)),
+                                                "server": SERVER,
+                                            }
+
+                                            actions.append({
+                                                "url": "{}://{}".format(self.PROTOCOL, json.dumps(info_action)),
+                                                "title": element[action]["title"],
+                                                "description": self.get_description(element[action]),
+                                            })
+
+                            data.append({
+                                'url': u'{}?{}={}'.format(
+                                    related_link,
+                                    _field,
+                                    self.id
+                                ),
+                                'text': u'{} [{}]'.format(
+                                    ugettext(related_model._meta.verbose_name_plural),
+                                    ugettext(related_object.field.verbose_name)
+                                ),
+                                'count': count,
+                                'actions': actions
+                            })
+
+        # ESPECIAL RELATIONS. (The model must have a related_objects method).
+        # Actually: device and deployment relation with computer
+        actions=[]
+        if self._meta.model_name.lower() in ["device", "deployment"]:
+            rel_objects = self.related_objects("computer", user)
+            if rel_objects.exists():
+                if "computer" in settings.MIGASFREE_EXTERNAL_ACTIONS:
+                    element = settings.MIGASFREE_EXTERNAL_ACTIONS["computer"]
+                    for action in element:
+                        if not "many" in element[action] or element[action]["many"] or rel_objects.count()==1:
+                            if self.is_related(element[action]):
+                                info_action = {
+                                    "name": action,
+                                    "model": self._meta.model_name,
+                                    'id': self.id,
+                                    "related_model": "computer",
+                                    "related_ids": list(rel_objects.values_list("id", flat=True)),
+                                    "server": SERVER,
+                                }
+
+                                actions.append({
+                                    "url": "{}://{}".format(self.PROTOCOL, json.dumps(info_action)),
+                                    "title": element[action]["title"],
+                                    "description": self.get_description(element[action]),
+                                })
+
+                    data.append({
+                        'url': u'{}?{}={}'.format(
+                            '/admin/server/{}/'.format('computer'),
+                            'id__in',
+                            str(list(rel_objects.values_list("id", flat=True))).replace(" ", "").replace("[", "").replace(
+                                "]", "")
+                        ),
+                        'text': u'{}'.format(
+                            ugettext(self.related_title(rel_objects)
+                                     )),
+                        'count': rel_objects.count(),
+                        'actions': actions
+                    })
 
         for _include in self._include_links:
             try:
@@ -124,7 +300,7 @@ class MigasLink(object):
                         _model_name
                     )
                 )
-                related_data.append({
+                data.append({
                     'url': u'{}?{}__id__exact={}'.format(
                         related_link,
                         _field_name,
@@ -138,14 +314,14 @@ class MigasLink(object):
             except ValueError:
                 pass
 
-        return action_data, related_data
+        return data
 
-    def relations(self, user):
-        action_data = []
-        related_data = []
+    def relations(self, request):
+        data = []
 
         if self._meta.model_name == 'hwnode':
-            related_data.append({
+            from . import Computer
+            data.append({
                 'url': u'{}?{}={}'.format(
                     reverse('admin:server_computer_changelist'),
                     'product',
@@ -154,10 +330,11 @@ class MigasLink(object):
                 'text': u'{} [{}]'.format(
                     ugettext('computer'),
                     ugettext('product')
-                )
+                ),
+                'count': Computer.objects.scope(request.user.userprofile).filter(product=self.computer.product).count()
             })
 
-            return action_data, related_data
+            return data
 
         # DOMAIN === ATTRIBUTE
         if self._meta.model_name == 'domain' or \
@@ -180,17 +357,15 @@ class MigasLink(object):
                 except ObjectDoesNotExist:
                     domain = None
             if att:
-                att_action_data, att_related_data = att.get_relations(user)
+                att_data = att.get_relations(request)
             else:
-                att_action_data = []
-                att_related_data = []
+                att_data = []
 
             if domain:
-                set_action_data, set_related_data = domain.get_relations(user)
-                action_data = set_action_data + att_action_data
-                related_data = set_related_data + att_related_data
+                set_data = domain.get_relations(request)
+                data = set_data + att_data
 
-            return action_data, related_data
+            return data
 
         # ATTRIBUTESET === ATTRIBUTE
         if self._meta.model_name == 'attributeset' \
@@ -215,17 +390,15 @@ class MigasLink(object):
                     attribute_set = None
 
             if att:
-                att_action_data, att_related_data = att.get_relations(user)
+                att_data = att.get_relations(request)
             else:
-                att_action_data = []
-                att_related_data = []
+                att_data = []
 
             if attribute_set:
-                set_action_data, set_related_data = attribute_set.get_relations(user)
-                action_data = set_action_data + att_action_data
-                related_data = set_related_data + att_related_data
+                set_data = attribute_set.get_relations(request)
+                data = set_data + att_data
 
-            return action_data, related_data
+            return data
 
         # COMPUTER === CID ATTRIBUTE
         if self._meta.model_name == 'computer' or (
@@ -249,55 +422,21 @@ class MigasLink(object):
                 cid = self
                 computer = Computer.objects.get(pk=int(self.value))
 
-            computer_action_data, \
-                computer_related_data = computer.get_relations(user)
+            computer_data = computer.get_relations(request)
 
             if cid:
-                cid_action_data, cid_related_data = cid.get_relations(user)
+                cid_data = cid.get_relations(request)
             else:
-                cid_action_data = []
-                cid_related_data = []
+                cid_data = []
 
-            action_data = computer_action_data + cid_action_data
-            related_data = computer_related_data + cid_related_data
+            data = computer_data + cid_data
 
-            related_data.append({
-                'url': reverse('computer_events', args=(computer.id,)),
-                'text': u'{} [{}]'.format(
-                    ugettext('Events'),
-                    ugettext(computer._meta.model_name)
-                )
-            })
-            related_data.append({
-                'url': reverse('computer_simulate_sync', args=(computer.id,)),
-                'text': u'{} [{}]'.format(
-                    ugettext('Simulate sync'),
-                    ugettext(computer._meta.model_name)
-                )
-            })
-
-            related_data.append({
-                'url': reverse('hardware_resume', args=(computer.id,)),
-                'text': u'{} [{}]'.format(
-                    ugettext('Hardware'),
-                    ugettext(computer._meta.model_name)
-                )
-            })
-
-            related_data.append({
-                'url': reverse('computer_label', args=(computer.uuid,)),
-                'text': u'{} [{}]'.format(
-                    ugettext('Label'),
-                    ugettext(computer._meta.model_name)
-                )
-            })
-
-            return action_data, related_data
+            return data
         else:
-            return self.get_relations(user)
+            return self.get_relations(request)
 
-    def menu_link(self, user):
-        action_data, related_data = self.relations(user)
+    def menu_link(self, request):
+        data = self.relations(request)
 
         return render_to_string(
             'includes/migas_link_menu.html',
@@ -311,8 +450,7 @@ class MigasLink(object):
                         args=(self.id,)
                     ),
                     'text': self.__str__(),
-                    'actions': action_data,
-                    'related': related_data
+                    'related': data
                 }
             }
         )

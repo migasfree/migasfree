@@ -331,6 +331,8 @@ class Computer(models.Model, MigasLink):
             return
 
         self._actions = []
+
+        # DEPRECATED MIGASFREE_REMOTE_ADMIN_LINK
         template = Template(' '.join(settings.MIGASFREE_REMOTE_ADMIN_LINK))
         context = {'computer': self}
         for node in template.nodelist:
@@ -350,6 +352,7 @@ class Computer(models.Model, MigasLink):
         for element in remote_admin.split(' '):
             protocol = element.split('://')[0]
             self._actions.append([protocol, element])
+        # END DEPRECATED
 
     def get_all_attributes(self):
         return list(self.tags.values_list('id', flat=True)) \
@@ -707,6 +710,28 @@ class Computer(models.Model, MigasLink):
         return strfdelta(diff, '{hours:02d}:{minutes:02d}:{seconds:02d}')
 
     last_sync_time.short_description = _('Last Update Time')
+
+    def menu_link(self, request):
+        if self.id:
+            events_link = reverse('computer_events', args=(self.id,))
+            simulate_link = reverse('computer_simulate_sync', args=(self.id,))
+            hw_link = reverse('hardware_resume', args=(self.id,))
+            label_link = reverse('computer_label', args=(self.uuid,))
+
+            self._actions = [
+                [ugettext('Events'), events_link, "{}, {}, {}, {}, {}".format(
+                    ugettext('Synchronizations'),
+                    ugettext('Errors'),
+                    ugettext('Faults'),
+                    ugettext('Status Log'),
+                    ugettext('Migrations')
+                )],
+                [ugettext('SIM'), simulate_link, ugettext('Simulate sync')],
+                [ugettext('HW'), hw_link, ugettext('Hardware')],
+                [ugettext('ID'), label_link, ugettext('Label')],
+            ]
+
+        return super(Computer, self).menu_link(request)
 
     def __str__(self):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == 'id':
