@@ -1,7 +1,7 @@
 {% spaceless %}
 {% load i18n %}
 <div class="btn-group btn-group-xs nowrap">
-    <a href="{{ lnk.url }}" class="btn btn-default btn-role" role="button" aria-label="{{ lnk.text }}"
+    <a href="{{ lnk.url }}" class="btn btn-default btn-role nounderline" role="button" aria-label="{{ lnk.text }}"
     {% if lnk.status %}title="{{ lnk.trans_status }}"{% endif %}>
         {% if lnk.status %}
             <span class="{% if lnk.status == 'intended' %}fas fa-heartbeat{% endif %}

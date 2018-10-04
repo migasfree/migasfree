@@ -1,22 +1,21 @@
 {% load i18n %}
-
-{% if lnk.actions %}
-    <li role="presentation" class="dropdown-header">{% trans 'Actions' %}</li>
-    {% for item in lnk.actions %}
-        <li><a href="{{ item.url }}">{{ item.text }}</a></li>
-    {% endfor %}
-{% endif %}
-{% if lnk.actions and lnk.related %}
-    <li role="presentation" class="divider"></li>
-{% endif %}
 {% if lnk.related %}
-    <li role="presentation" class="dropdown-header">{% trans 'Related data' %}</li>
     {% for item in lnk.related %}
         <li>
-            <a href="{{ item.url }}">
-                <span class="label label-{% if item.count > 0 %}primary{% else %}default{% endif %}">{{item.count}}</span>
+            <p>
+                <a class="nounderline" href="{{ item.url }}">
+                    <span  class="label label-{% if item.count > 0 %}primary{% else %}default{% endif %}">{{item.count}}</span>
+                </a>
                 {{ item.text }}
-            </a>
+                {% if item.actions %}
+                        {% for action in item.actions %}
+                            <a  class="nounderline" href="{{ action.url }}" title="{{action.description}}">
+                                 <span class="label label-default">{{ action.title }}</span>
+                            </a>
+                        {% endfor %}
+
+                {% endif %}
+            </p>
         </li>
     {% endfor %}
 {% endif %}
