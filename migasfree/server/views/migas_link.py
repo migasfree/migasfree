@@ -12,5 +12,5 @@ def link(request):
     _pk = request.GET.get('pk', None)
 
     return HttpResponse(
-        apps.get_model(_app, _model).objects.get(pk=_pk).menu_link(request.user.userprofile)
+        apps.get_model(_app, _model).objects.get(pk=_pk).menu_link(request)
     )
