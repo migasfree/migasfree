@@ -312,6 +312,14 @@ footer {
     height: 50px;
 }
 
+a.nounderline:link {
+    text-decoration:none;
+} 
+
+.dropdown-menu  li p {
+    padding: 0 20px;
+}
+
 @media screen and (max-width: 960px) {
     body {
         font-size: 12px !important;
@@ -379,3 +387,4 @@ footer {
         content: attr(data-th);
     }
 }
+
