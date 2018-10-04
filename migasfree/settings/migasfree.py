@@ -22,7 +22,7 @@ MIGASFREE_APP_DIR = BASE_DIR
 MIGASFREE_PROJECT_DIR = os.path.dirname(MIGASFREE_APP_DIR)
 MIGASFREE_TMP_DIR = '/tmp'
 
-# MIGASFREE_REMOTE_ADMIN_LINK
+# MIGASFREE_REMOTE_ADMIN_LINK # DEPRECATED
 # Variables can be: {{computer.<FIELD>}} and {{<<PROPERTYPREFIX>>}}
 # Samples:
 #    MIGASFREE_REMOTE_ADMIN_LINK = [
@@ -33,6 +33,25 @@ MIGASFREE_TMP_DIR = '/tmp'
 #        "vnc://{{computer.ip_address}}"
 #    ]
 MIGASFREE_REMOTE_ADMIN_LINK = []
+
+"""
+MIGASFREE_EXTERNAL_ACTIONS
+Sample:
+
+    MIGASFREE_EXTERNAL_ACTIONS = {
+        "computer": {
+            "ping": {"title": "PING", "description": "check conectivity"},
+            "ssh": {"title": "SSH", "description": "remote control vía ssh"},
+            "vnc": {"title": "VNC", "description": "remote control vnc", "many": False},
+            "sync": {"title": "SYNC", "description": "ssh -> run migasfree -u"},
+            "install": {"title": "INSTALL", "description": "ssh -> install a package", "related": ["deployment", "computer"]},
+        },
+        "error": {
+            "clean": {"title": "delete", "description":"delete errors"},
+        }
+}
+"""
+MIGASFREE_EXTERNAL_ACTIONS = {}
 
 MIGASFREE_INVALID_UUID = [
     '03000200-0400-0500-0006-000700080008',  # ASROCK
