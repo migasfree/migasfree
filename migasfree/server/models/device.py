@@ -46,7 +46,7 @@ class Device(models.Model, MigasLink):
         default="{}"
     )
 
-    def menu_link(self, user):
+    def menu_link(self, request):
         if self.id:
             data = json.loads(self.data)
             ip = data.get('IP', None)
@@ -62,10 +62,10 @@ class Device(models.Model, MigasLink):
 
             if address:
                 self._actions = [
-                    [ugettext('Go to %s' % self.model), address]
+                    [ugettext('HTTP'), address, _('web access to the device')]
                 ]
 
-        return super(Device, self).menu_link(user)
+        return super(Device, self).menu_link(request)
 
     def location(self):
         data = json.loads(self.data)
@@ -137,6 +137,20 @@ class Device(models.Model, MigasLink):
                 for x in self.devicelogical_set.all().order_by('feature')
             ),
         })
+
+
+    def related_objects(self, model, user):
+        """
+        Return Queryset with the related computers based in devicelogical_attributes
+        """
+        from migasfree.server.models import Computer, Attribute
+        if model == 'computer':
+
+            return Computer.productive.scope(user).filter(
+                sync_attributes__in=Attribute.objects.filter(devicelogical__device__id=self.id)
+            )
+
+        return None
 
     class Meta:
         app_label = 'server'
