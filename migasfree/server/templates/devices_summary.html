@@ -27,6 +27,8 @@
 {% endblock content %}
 
 {% block extrabody %}
+<script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
+
 <script type="text/javascript">
 Highcharts.setOptions({
     lang: {
@@ -34,75 +36,6 @@ Highcharts.setOptions({
         resetZoom: '{{ chart_options.reset_zoom }}'
     }
 });
-
-var colors = [
-    '#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
-    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1',
-    '#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce'
-];
-
-function loadDatum(data) {
-    var dataLen, i;
-    var serie = [];
-
-    dataLen = data.length;
-    for (i = 0; i < dataLen; i += 1) {
-        serie.push({
-            name: data[i].name + ' (' + data[i].value + ')',
-            y: data[i].y,
-            color: colors[i],
-            url: data[i].url
-        });
-    }
-
-    return serie;
-}
-
-// Default options
-var options = {
-    credits: {
-        enabled: false
-    },
-    chart: {
-        type: 'pie'
-    },
-    title: {
-        text: null
-    },
-    plotOptions: {
-        pie: {
-            shadow: false,
-            center: ['50%', '50%']
-        },
-        series: {
-            cursor: 'pointer',
-            point: {
-                events: {
-                    click: function() {
-                        if (typeof this.options.url != 'undefined') {
-                            window.open(this.options.url, "_self");
-                        }
-                    }
-                }
-            }
-        }
-    },
-    tooltip: {
-        valueSuffix: '%',
-        headerFormat: '{point.key}',
-        pointFormat: ': <strong>{point.y}</strong>'
-    },
-    series: [{
-        size: '100%',
-        dataLabels: {
-            formatter: function () {
-                return this.y > 5 ? this.point.name : null;
-            },
-            color: '#fff',
-            distance: -30
-        }
-    }]
-};
 
 var devicesConnection = {{ devices_by_connection.data|safe }};
 var devicesConnectionOptions = {
