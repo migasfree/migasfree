@@ -50,19 +50,15 @@ def get_computer_info(request, uuid=None):
         'name': computer.__str__(),
         'helpdesk': settings.MIGASFREE_HELP_DESK,
         'server': request.META.get('HTTP_HOST'),
+        'tags': [u"{}-{}".format(tag.property_att.prefix, tag.value) for tag in computer.tags.all()],
+        'available_tags': {},
     }
     result["search"] = result[settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
 
-    element = []
-    for tag in computer.tags.all():
-        element.append(u"{}-{}".format(tag.property_att.prefix, tag.value))
-    result["tags"] = element
-
-    result["available_tags"] = {}
-    for deploy in Deployment.objects.all().filter(
+    for deploy in Deployment.objects.filter(
         project=computer.project, enabled=True
     ):
-        for tag in deploy.included_attributes.all().filter(
+        for tag in deploy.included_attributes.filter(
             property_att__sort='server', property_att__enabled=True
         ):
             if tag.property_att.name not in result["available_tags"]:
