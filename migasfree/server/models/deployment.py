@@ -17,6 +17,7 @@ from django.core.exceptions import ValidationError
 from ..utils import time_horizon
 
 from . import (
+    Computer,
     Domain,
     Project,
     Package,
@@ -279,6 +280,50 @@ class Deployment(models.Model, MigasLink):
         ).order_by('name')
 
         return deployments
+
+
+    def related_objects(self, model, user):
+        """
+        Return Queryset with the related computers based in attributes and schedule
+        """
+        if model == 'computer':
+
+            if self.enabled and (self.start_date <= datetime.datetime.now().date()) :
+                # by attributes asigned
+                computers = Computer.productive.scope(user).filter(
+                            project_id=self.project.id
+                        ).filter(
+                            Q(sync_attributes__in=self.included_attributes.all())
+                        )
+
+                # by schedule
+                if self.schedule:
+                    for delay in self.schedule.delays.all():
+                        delay_attributes=list(delay.attributes.all().values_list("id", flat=True))
+                        for duration in range(0, delay.duration):
+                            if time_horizon(
+                                    self.start_date, delay.delay + duration -1
+                            ) <= datetime.datetime.now().date():
+
+                                computers_schedule = Computer.productive.scope(user).filter(
+                                    project_id=self.project.id).filter(
+                                    Q(sync_attributes__id__in=delay_attributes)).extra(
+                                    where=["mod(server_computer.id, {}) = {}".format(delay.duration, duration)])
+
+                                computers = (computers|computers_schedule)
+
+                            else:
+                                break
+
+
+                # excuded attributes
+                computers = computers.exclude(
+                            Q(sync_attributes__in=self.excluded_attributes.all())
+                        )
+                return computers.distinct()
+
+        return None
+
 
     def path(self, name=None):
         return os.path.join(
