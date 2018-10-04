@@ -129,7 +129,7 @@ class DeviceLogicalInline(admin.TabularInline):
 @admin.register(Device)
 class DeviceAdmin(MigasAdmin):
     form = DeviceForm
-    list_display = ('name_link', 'location', 'model_link', 'connection_link')
+    list_display = ('name_link', 'location', 'model_link', 'connection_link', 'computers')
     list_filter = (ModelFilter, 'connection', 'model__manufacturer')
     search_fields = (
         'name',
@@ -148,6 +148,15 @@ class DeviceAdmin(MigasAdmin):
     connection_link = MigasFields.link(
         model=Device, name='connection', order="connection__name"
     )
+
+
+    def computers(self, obj):
+        related_objects = obj.related_objects('computer', self.user.userprofile)
+        if related_objects:
+            return related_objects.count()
+        return 0
+    computers.short_description = _('Computers')
+
 
     class Media:
         js = ('js/device_admin.js',)
@@ -169,6 +178,7 @@ class DeviceAdmin(MigasAdmin):
                 )
 
     def get_queryset(self, request):
+        self.user = request.user
         return super(DeviceAdmin, self).get_queryset(
             request
         ).select_related(
