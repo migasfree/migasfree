@@ -1,7 +1,7 @@
 var colors = [
-    '#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9',
-    '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1',
-    '#2f7ed8', '#0d233a', '#8bbc21', '#910000', '#1aadce'
+    "#7cb5ec", "#434348", "#90ed7d", "#f7a35c", "#8085e9",
+    "#f15c80", "#e4d354", "#2b908f", "#f45b5b", "#91e8e1",
+    "#2f7ed8", "#0d233a", "#8bbc21", "#910000", "#1aadce"
 ];
 
 function loadDatum(data) {
@@ -11,7 +11,7 @@ function loadDatum(data) {
     dataLen = data.length;
     for (i = 0; i < dataLen; i += 1) {
         serie.push({
-            name: data[i].name + ' (' + data[i].value + ')',
+            name: data[i].name + " (" + data[i].value + ")",
             y: data[i].y,
             color: colors[i],
             url: data[i].url
@@ -28,7 +28,7 @@ function loadData(data) {
     dataLen = data.length;
     for (i = 0; i < dataLen; i += 1) {
         serie1.push({
-            name: data[i].name + ' (' + data[i].value + ')',
+            name: data[i].name + " (" + data[i].value + ")",
             y: data[i].y,
             color: colors[i],
             url: data[i].url
@@ -38,7 +38,7 @@ function loadData(data) {
         for (j = 0; j < drillDataLen; j += 1) {
             brightness = 0.2 - (j / drillDataLen) / 5;
             serie2.push({
-                name: data[i].data[j].name + ' (' + data[i].data[j].value + ')',
+                name: data[i].data[j].name + " (" + data[i].data[j].value + ")",
                 y: data[i].data[j].y,
                 color: Highcharts.Color(colors[i]).brighten(brightness).get(),
                 url: data[i].data[j].url
@@ -46,7 +46,7 @@ function loadData(data) {
         }
     }
 
-    return [serie1, serie2]
+    return [serie1, serie2];
 }
 
 var options = {
@@ -54,7 +54,7 @@ var options = {
         enabled: false
     },
     chart: {
-        type: 'pie'
+        type: "pie"
     },
     title: {
         text: null
@@ -62,14 +62,14 @@ var options = {
     plotOptions: {
         pie: {
             shadow: false,
-            center: ['50%', '50%']
+            center: ["50%", "50%"]
         },
         series: {
-            cursor: 'pointer',
+            cursor: "pointer",
             point: {
                 events: {
                     click: function() {
-                        if (typeof this.options.url != 'undefined') {
+                        if (typeof this.options.url != "undefined") {
                             window.open(this.options.url, "_self");
                         }
                     }
@@ -78,17 +78,17 @@ var options = {
         }
     },
     tooltip: {
-        valueSuffix: '%',
-        headerFormat: '{point.key}',
-        pointFormat: ': <strong>{point.y}</strong>'
+        valueSuffix: "%",
+        headerFormat: "{point.key}",
+        pointFormat: ": <strong>{point.y}</strong>"
     },
     series: [{
-        size: '100%',
+        size: "100%",
         dataLabels: {
             formatter: function () {
                 return this.y > 5 ? this.point.name : null;
             },
-            color: '#fff',
+            color: "#fff",
             distance: -30
         }
     }]
@@ -99,7 +99,7 @@ var optionsMulti = {
         enabled: false
     },
     chart: {
-        type: 'pie'
+        type: "pie"
     },
     title: {
         text: null
@@ -107,14 +107,14 @@ var optionsMulti = {
     plotOptions: {
         pie: {
             shadow: false,
-            center: ['50%', '50%']
+            center: ["50%", "50%"]
         },
         series: {
-            cursor: 'pointer',
+            cursor: "pointer",
             point: {
                 events: {
                     click: function() {
-                        if (typeof this.options.url != 'undefined') {
+                        if (typeof this.options.url != "undefined") {
                             window.open(this.options.url, "_self");
                         }
                     }
@@ -123,22 +123,22 @@ var optionsMulti = {
         }
     },
     tooltip: {
-        valueSuffix: '%',
-        headerFormat: '{point.key}',
-        pointFormat: ': <strong>{point.y}</strong>'
+        valueSuffix: "%",
+        headerFormat: "{point.key}",
+        pointFormat: ": <strong>{point.y}</strong>"
     },
     series: [{
-        size: '60%',
+        size: "60%",
         dataLabels: {
             formatter: function () {
                 return this.y > 5 ? this.point.name : null;
             },
-            color: '#fff',
+            color: "#fff",
             distance: -30
         }
     }, {
-        size: '100%',
-        innerSize: '60%',
+        size: "100%",
+        innerSize: "60%",
         dataLabels: {
             enabled: false
         }
