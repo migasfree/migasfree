@@ -22,18 +22,6 @@ MIGASFREE_APP_DIR = BASE_DIR
 MIGASFREE_PROJECT_DIR = os.path.dirname(MIGASFREE_APP_DIR)
 MIGASFREE_TMP_DIR = '/tmp'
 
-# MIGASFREE_REMOTE_ADMIN_LINK # DEPRECATED
-# Variables can be: {{computer.<FIELD>}} and {{<<PROPERTYPREFIX>>}}
-# Samples:
-#    MIGASFREE_REMOTE_ADMIN_LINK = [
-#        "https://myserver/?computer={{computer.name}}&port={{PRT}}"
-#    ]
-#    MIGASFREE_REMOTE_ADMIN_LINK = [
-#        "ssh://user@{{computer.ip_address}}",
-#        "vnc://{{computer.ip_address}}"
-#    ]
-MIGASFREE_REMOTE_ADMIN_LINK = []
-
 """
 MIGASFREE_EXTERNAL_ACTIONS
 Sample:

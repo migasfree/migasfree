@@ -323,37 +323,6 @@ class Computer(models.Model, MigasLink):
     active = ActiveManager()
     inactive = InactiveManager()
 
-    def __init__(self, *args, **kwargs):
-        super(Computer, self).__init__(*args, **kwargs)
-
-        if not settings.MIGASFREE_REMOTE_ADMIN_LINK:
-            self._actions = None
-            return
-
-        self._actions = []
-
-        # DEPRECATED MIGASFREE_REMOTE_ADMIN_LINK
-        template = Template(' '.join(settings.MIGASFREE_REMOTE_ADMIN_LINK))
-        context = {'computer': self}
-        for node in template.nodelist:
-            try:
-                token = node.filter_expression.token
-                if not token.startswith('computer'):
-                    context[token] = ','.join(list(
-                        self.sync_attributes.filter(
-                            property_att__prefix=token
-                        ).values_list('value', flat=True)
-                    ))
-            except:
-                pass
-
-        remote_admin = template.render(Context(context))
-
-        for element in remote_admin.split(' '):
-            protocol = element.split('://')[0]
-            self._actions.append([protocol, element])
-        # END DEPRECATED
-
     def get_all_attributes(self):
         return list(self.tags.values_list('id', flat=True)) \
             + list(self.sync_attributes.values_list('id', flat=True))
