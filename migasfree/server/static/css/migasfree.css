@@ -186,6 +186,11 @@ span[data-value] {
     padding: 3px;
 }
 
+.filter-value:after {
+    content: ' ';
+    white-space: pre;
+}
+
 h1.change-list-title {
     margin-top: 0 !important;
     margin-right: 10px;
@@ -314,7 +319,7 @@ footer {
 
 a.nounderline:link {
     text-decoration:none;
-} 
+}
 
 .dropdown-menu  li p {
     padding: 0 20px;
