@@ -136,7 +136,7 @@ class MigasLink(object):
             if _name == 'permission':
                 break
 
-            if hasattr(obj, 'scope'):
+            if hasattr(obj.remote_field.model.objects, 'scope'):
                 rel_objects =obj.remote_field.model.objects.scope(user).filter(
                     **{obj.remote_field.name: self.id}
                 )
