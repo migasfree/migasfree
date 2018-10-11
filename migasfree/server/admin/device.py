@@ -32,7 +32,6 @@ class DeviceTypeAdmin(MigasAdmin):
 @admin.register(DeviceFeature)
 class DeviceFeatureAdmin(MigasAdmin):
     list_display = ('name_link',)
-    list_display_links = ('name_link',)
     ordering = ('name',)
     search_fields = ('name',)
 
@@ -42,7 +41,6 @@ class DeviceFeatureAdmin(MigasAdmin):
 @admin.register(DeviceManufacturer)
 class DeviceManufacturerAdmin(MigasAdmin):
     list_display = ('name_link',)
-    list_display_links = ('name_link',)
     ordering = ('name',)
     search_fields = ('name',)
 
@@ -92,10 +90,10 @@ class DeviceLogicalAdmin(MigasAdmin):
     device_logical_link.admin_order_field = 'id'
 
     device_link = MigasFields.link(
-        model=DeviceLogical, name='device', order="device__name"
+        model=DeviceLogical, name='device', order='device__name'
     )
     feature_link = MigasFields.link(
-        model=DeviceLogical, name='feature', order="feature__name"
+        model=DeviceLogical, name='feature', order='feature__name'
     )
 
 
@@ -143,23 +141,20 @@ class DeviceAdmin(MigasAdmin):
 
     name_link = MigasFields.link(model=Device, name='name')
     model_link = MigasFields.link(
-        model=Device, name='model', order="model__name"
+        model=Device, name='model', order='model__name'
     )
     connection_link = MigasFields.link(
-        model=Device, name='connection', order="connection__name"
+        model=Device, name='connection', order='connection__name'
     )
-
 
     def computers(self, obj):
         related_objects = obj.related_objects('computer', self.user.userprofile)
         if related_objects:
             return related_objects.count()
+
         return 0
+
     computers.short_description = _('Computers')
-
-
-    class Media:
-        js = ('js/device_admin.js',)
 
     def save_related(self, request, form, formsets, change):
         super(DeviceAdmin, self).save_related(request, form, formsets, change)
@@ -185,8 +180,11 @@ class DeviceAdmin(MigasAdmin):
             'connection', 'connection__device_type',
             'model', 'model__manufacturer', 'model__device_type',
         ).prefetch_related(
-            "devicelogical_set"
+            'devicelogical_set'
         )
+
+    class Media:
+        js = ('js/device_admin.js',)
 
 
 class DeviceDriverInline(admin.TabularInline):
@@ -210,7 +208,6 @@ class DeviceDriverInline(admin.TabularInline):
 class DeviceModelAdmin(MigasAdmin):
     form = DeviceModelForm
     list_display = ('name_link', 'manufacturer_link', 'device_type')
-    list_display_links = ('name_link',)
     list_filter = ('device_type', 'manufacturer')
     ordering = ('device_type__name', 'manufacturer__name', 'name')
     search_fields = (
@@ -222,5 +219,5 @@ class DeviceModelAdmin(MigasAdmin):
 
     name_link = MigasFields.link(model=DeviceModel, name='name')
     manufacturer_link = MigasFields.link(
-        model=DeviceModel, name='manufacturer', order="manufacturer__name"
+        model=DeviceModel, name='manufacturer', order='manufacturer__name'
     )
