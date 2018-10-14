@@ -100,8 +100,25 @@ def provided_computers_by_delay(request):
     labels = []
     chart_data = {}
 
-    lst_attributes = []
-    value = 0
+    if deploy.domain:
+        q_in_domain = ~Q(sync_attributes__id__in=deploy.domain.included_attributes.all())
+        q_ex_domain = Q(sync_attributes__id__in=deploy.domain.excluded_attributes.all())
+    else:
+        q_in_domain = Q()
+        q_ex_domain = Q()
+
+    lst_attributes = list(deploy.included_attributes.all().values_list('id', flat=True))
+    value = Computer.productive.scope(request.user.userprofile).filter(
+                    Q(sync_attributes__id__in=lst_attributes) &
+                    Q(project__id=deploy.project.id)
+                ).exclude(
+                    Q(sync_attributes__id__in=deploy.excluded_attributes.all())
+                ).exclude(
+                    q_in_domain
+                ).exclude(
+                    q_ex_domain
+                ).values('id').distinct().count()
+
     date_format = "%Y-%m-%d"
     now = datetime.now()
 
@@ -128,13 +145,6 @@ def provided_computers_by_delay(request):
                 date_format
             )
 
-        if deploy.domain:
-            q_in_domain = ~Q(sync_attributes__id__in=deploy.domain.included_attributes.all())
-            q_ex_domain = Q(sync_attributes__id__in=deploy.domain.excluded_attributes.all())
-        else:
-            q_in_domain = Q()
-            q_ex_domain = Q()
-
         duration = 0
         for real_days in range(0, (end_horizon - start_horizon).days):
             loop_date = start_horizon + timedelta(days=real_days)
@@ -150,10 +160,12 @@ def provided_computers_by_delay(request):
                     Q(sync_attributes__id__in=lst_att_delay) &
                     Q(project__id=deploy.project.id)
                 ).exclude(
+                    Q(sync_attributes__id__in=deploy.excluded_attributes.all())
+                ).exclude(
                     q_in_domain
                 ).exclude(
                     q_ex_domain
-                ).values('id').count()
+                ).values('id').distinct().count()
                 duration += 1
 
             labels.append(loop_date.strftime(date_format))
