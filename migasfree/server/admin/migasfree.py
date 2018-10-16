@@ -328,8 +328,30 @@ class MigasChangeList(ChangeList):
                         self.append(_name, model.objects.get(pk=params[k]), k)
                     except ObjectDoesNotExist:
                         pass
-            elif k == "id__in":
-                _classname = self.model.__name__
+
+            elif k.endswith("id__in"):
+                try:
+                    _classname = k.split("__")[-3]
+                except IndexError:
+                    _classname = self.model.__name__
+                _name = ugettext(_classname.capitalize())
+
+                if _classname == "ExcludeAttribute":
+                    _classname = "deployment"
+                    _name = "excluded attributes"
+                if _classname == "ExcludedAttributesGroup":
+                    _classname = ugettext("attributeset")
+                    _name = "excluded attributes"
+                if _classname == 'sync_attributes':
+                    _classname = 'attribute'
+                    _name = 'sync attributes'
+                if _classname == 'included_attributes':
+                    _classname = 'attribute'
+                    _name = 'included attributes'
+                if _classname == 'excluded_attributes':
+                    _classname = 'attribute'
+                    _name = 'excluded attributes'
+
                 _app = self.model._meta.app_label
                 model = apps.get_model(_app, _classname)
                 _list = []
@@ -340,7 +362,7 @@ class MigasChangeList(ChangeList):
                         ).__str__()
                     )
                 self.append(
-                    _classname,
+                    _name,
                     ", ".join(_list) + "..." if len(_list) == 10 else ", ".join(_list),
                     k
                 )

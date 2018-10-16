@@ -302,7 +302,7 @@ class Deployment(models.Model, MigasLink):
                         delay_attributes=list(delay.attributes.all().values_list("id", flat=True))
                         for duration in range(0, delay.duration):
                             if time_horizon(
-                                    self.start_date, delay.delay + duration -1
+                                    self.start_date, delay.delay + duration
                             ) <= datetime.datetime.now().date():
 
                                 computers_schedule = Computer.productive.scope(user).filter(

@@ -15,6 +15,16 @@ from . import (
 )
 
 
+class AttributeSetManager(models.Manager):
+    def scope(self, user):
+        qs = super(AttributeSetManager, self).get_queryset()
+        if not user.is_view_all():
+            atts=user.get_attributes()
+            qs = qs.filter(included_attributes__in=atts).distinct()
+
+        return qs
+
+
 @python_2_unicode_compatible
 class AttributeSet(models.Model, MigasLink):
     name = models.CharField(
@@ -47,8 +57,24 @@ class AttributeSet(models.Model, MigasLink):
         verbose_name=_("excluded attributes"),
     )
 
+    objects = AttributeSetManager()
+
     def __str__(self):
         return self.name
+
+    def related_objects(self, model, user):
+        """
+        Return Queryset with the related computers based in attributes
+        """
+        from migasfree.server.models import Computer
+        if model == 'computer':
+            return Computer.productive.scope(user).filter(
+                sync_attributes__in=self.included_attributes.all()
+            ).exclude(
+                sync_attributes__in=self.excluded_attributes.all()
+            ).distinct()
+
+        return None
 
     def clean(self):
         super(AttributeSet, self).clean()

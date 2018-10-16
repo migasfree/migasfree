@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from django.db import models
+from django.db.models import Prefetch
 from django.urls import resolve
 from django.utils.translation import ugettext_lazy as _
 
@@ -9,7 +10,7 @@ from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
     DeviceType, DeviceFeature, DeviceManufacturer, DeviceConnection,
-    DeviceDriver, DeviceLogical, DeviceModel, Device
+    DeviceDriver, DeviceLogical, DeviceModel, Device, Attribute
 )
 from ..forms import (
     DeviceLogicalForm, DeviceModelForm,
@@ -96,6 +97,15 @@ class DeviceLogicalAdmin(MigasAdmin):
         model=DeviceLogical, name='feature', order='feature__name'
     )
 
+    def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(DeviceLogicalAdmin, self).get_queryset(
+            request
+        ).prefetch_related(
+            Prefetch('attributes', queryset=qs),
+            'attributes__property_att',
+        )
+
 
 class DeviceLogicalInline(admin.TabularInline):
     model = DeviceLogical
@@ -121,6 +131,15 @@ class DeviceLogicalInline(admin.TabularInline):
 
         return super(DeviceLogicalInline, self).formfield_for_foreignkey(
             db_field, request, **kwargs
+        )
+
+    def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(DeviceLogicalInline, self).get_queryset(
+            request
+        ).prefetch_related(
+            Prefetch('attributes', queryset=qs),
+            'attributes__property_att',
         )
 
 
@@ -174,13 +193,17 @@ class DeviceAdmin(MigasAdmin):
 
     def get_queryset(self, request):
         self.user = request.user
+        qs = Attribute.objects.scope(request.user.userprofile)
         return super(DeviceAdmin, self).get_queryset(
             request
         ).select_related(
             'connection', 'connection__device_type',
             'model', 'model__manufacturer', 'model__device_type',
         ).prefetch_related(
-            'devicelogical_set'
+            Prefetch('devicelogical_set__attributes', queryset=qs),
+            'devicelogical_set__attributes__property_att',
+            Prefetch('available_for_attributes', queryset=qs),
+            "devicelogical_set"
         )
 
     class Media:

@@ -2,12 +2,13 @@
 
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
+from django.db.models import Prefetch
 
 from ajax_select import make_ajax_form
 
 from migasfree.server.admin.migasfree import MigasAdmin, MigasFields
 
-from .models import Application, PackagesByProject, Policy, PolicyGroup
+from .models import Application, PackagesByProject, Policy, PolicyGroup, Attribute
 from .forms import ApplicationForm, PolicyForm, PolicyGroupForm
 
 
@@ -78,6 +79,14 @@ class ApplicationAdmin(MigasAdmin):
         model=Application, name='project', order='project__name'
     )
 
+    def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(ApplicationAdmin, self).get_queryset(
+            request
+        ).prefetch_related(
+            Prefetch('available_for_attributes', queryset=qs)
+        )
+
     def __str__(self):
         return self.name
 
@@ -113,12 +122,13 @@ class PolicyGroupAdmin(MigasAdmin):
     )
 
     def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
         return super(PolicyGroupAdmin, self).get_queryset(
             request
         ).prefetch_related(
-            'included_attributes',
+            Prefetch('included_attributes', queryset=qs),
             'included_attributes__property_att',
-            'excluded_attributes',
+            Prefetch('excluded_attributes', queryset=qs),
             'excluded_attributes__property_att'
         )
 
@@ -132,6 +142,17 @@ class PolicyGroupLine(admin.TabularInline):
     )
     ordering = ('priority',)
     extra = 0
+
+    def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(PolicyGroupLine, self).get_queryset(
+            request
+        ).prefetch_related(
+            Prefetch('included_attributes', queryset=qs),
+            'included_attributes__property_att',
+            Prefetch('excluded_attributes', queryset=qs),
+            'excluded_attributes__property_att'
+        )
 
 
 @admin.register(Policy)
@@ -176,3 +197,14 @@ class PolicyAdmin(MigasAdmin):
     )
     my_enabled = MigasFields.boolean(model=Policy, name='enabled')
     my_exclusive = MigasFields.boolean(model=Policy, name='exclusive')
+
+    def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(PolicyAdmin, self).get_queryset(
+            request
+        ).prefetch_related(
+            Prefetch('included_attributes', queryset=qs),
+            'included_attributes__property_att',
+            Prefetch('excluded_attributes', queryset=qs),
+            'excluded_attributes__property_att'
+        )

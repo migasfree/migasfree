@@ -199,9 +199,14 @@ class MigasLink(object):
                     ) in self._exclude_links:
 
                         if hasattr(related_model.objects, 'scope'):
-                            rel_objects = related_model.objects.scope(user).filter(
-                                **{related_object.field.name: self.id}
-                            )
+                            if related_model.__name__.lower() == "computer":
+                                rel_objects = related_model.productive.scope(user).filter(
+                                    **{related_object.field.name: self.id}
+                                )
+                            else:
+                                rel_objects = related_model.objects.scope(user).filter(
+                                    **{related_object.field.name: self.id}
+                                )
                         else:
                             rel_objects = related_model.objects.filter(
                                 **{related_object.field.name: self.id}
@@ -237,24 +242,43 @@ class MigasLink(object):
                                                 "description": self.get_description(element[action]),
                                             })
 
-                            data.append({
-                                'url': u'{}?{}={}'.format(
-                                    related_link,
-                                    _field,
-                                    self.id
-                                ),
-                                'text': u'{} [{}]'.format(
-                                    ugettext(related_model._meta.verbose_name_plural),
-                                    ugettext(related_object.field.verbose_name)
-                                ),
-                                'count': count,
-                                'actions': actions
-                            })
+                            if related_model.__name__.lower() == "computer":
+                                data.append({
+                                    'url': u'{}?{}={}&status__in=intended,reserved,unknown'.format(
+                                        related_link,
+                                        _field,
+                                        self.id
+                                    ),
+                                    'text': u'{} [{}]'.format(
+                                        ugettext(related_model._meta.verbose_name_plural),
+                                        ugettext(related_object.field.verbose_name)
+                                    ),
+                                    'count': count,
+                                    'actions': actions
+                                })
 
-        # ESPECIAL RELATIONS. (The model must have a related_objects method).
-        # Actually: device and deployment relation with computer
+
+                            else:
+                                data.append({
+                                    'url': u'{}?{}={}'.format(
+                                        related_link,
+                                        _field,
+                                        self.id
+                                    ),
+                                    'text': u'{} [{}]'.format(
+                                        ugettext(related_model._meta.verbose_name_plural),
+                                        ugettext(related_object.field.verbose_name)
+                                    ),
+                                    'count': count,
+                                    'actions': actions
+                                })
+
+
+
+
+        # ESPECIAL RELATIONS. (The model must have a method named: 'related_objects').
         actions=[]
-        if self._meta.model_name.lower() in ["device", "deployment"]:
+        if self._meta.model_name.lower() in ['device', 'deployment', 'scope', 'domain', 'attributeset', 'faultdefinition', 'platform']:
             rel_objects = self.related_objects("computer", user)
             if rel_objects.exists():
                 if "computer" in settings.MIGASFREE_EXTERNAL_ACTIONS:
@@ -277,19 +301,59 @@ class MigasLink(object):
                                     "description": self.get_description(element[action]),
                                 })
 
-                    data.append({
-                        'url': u'{}?{}={}'.format(
-                            '/admin/server/{}/'.format('computer'),
-                            'id__in',
-                            str(list(rel_objects.values_list("id", flat=True))).replace(" ", "").replace("[", "").replace(
-                                "]", "")
-                        ),
-                        'text': u'{}'.format(
-                            ugettext(self.related_title(rel_objects)
-                                     )),
-                        'count': rel_objects.count(),
-                        'actions': actions
-                    })
+                    if self._meta.model_name.lower() == 'platform':
+                        data.append({
+                            'url': u'{}?{}={}'.format(
+                                '/admin/server/{}/'.format('computer'),
+                                'project__platform__id__exact',
+                                str(self.id)
+                            ),
+                            'text': u'{}'.format(
+                                ugettext(self.related_title(rel_objects)
+                                         )),
+                            'count': rel_objects.count(),
+                            'actions': actions
+                        })
+
+                    elif self._meta.model_name.lower() == 'device':
+                        from migasfree.server.models import Attribute
+                        data.append({
+                            'url': u'{}?{}={}&status__in=intended,reserved,unknown'.format(
+                                '/admin/server/{}/'.format('computer'),
+                                'sync_attributes__id__in',
+                                str(list(
+                                    Attribute.objects.scope(
+                                        request.user.userprofile
+                                    ).filter(
+                                        devicelogical__device__id=self.id
+                                    ).values_list("id", flat=True)
+                                )).replace(" ", "").replace("[", "").replace(
+                                    "]", "")
+                            ),
+                            'text': u'{}'.format(
+                                ugettext(self.related_title(rel_objects)
+                                         )),
+                            'count': rel_objects.count(),
+                            'actions': actions
+                        })
+
+                    else:
+                        data.append({
+                            'url': u'{}?{}={}'.format(
+                                '/admin/server/{}/'.format('computer'),
+                                'id__in',
+                                str(list(rel_objects.values_list("id", flat=True))).replace(" ", "").replace("[", "").replace(
+                                    "]", "")
+                            ),
+                            'text': u'{}'.format(
+                                ugettext(self.related_title(rel_objects)
+                                         )),
+                            'count': rel_objects.count(),
+                            'actions': actions
+                        })
+
+
+
 
         for _include in self._include_links:
             try:
@@ -331,7 +395,7 @@ class MigasLink(object):
                     ugettext('computer'),
                     ugettext('product')
                 ),
-                'count': Computer.objects.scope(request.user.userprofile).filter(product=self.computer.product).count()
+                'count': Computer.productive.scope(request.user.userprofile).filter(product=self.computer.product).count()
             })
 
             return data

@@ -233,22 +233,6 @@ class DeviceLogicalForm(forms.ModelForm):
             self.fields['attributes'].initial = \
                 self.instance.attributes.values_list('id', flat=True)
 
-    def save(self, commit=True):
-        instance = forms.ModelForm.save(self, False)
-        old_save_m2m = self.save_m2m
-
-        def save_m2m():
-            old_save_m2m()
-            instance.attributes.clear()
-            for attribute in self.cleaned_data['attributes']:
-                instance.attributes.add(attribute)
-
-        self.save_m2m = save_m2m
-        if commit:
-            instance.save()
-            self.save_m2m()
-        return instance
-
     class Meta:
         model = DeviceLogical
         fields = '__all__'

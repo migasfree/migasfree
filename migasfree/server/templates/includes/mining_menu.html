@@ -2,7 +2,7 @@
 
 <ul class="dropdown-menu">
     {% if perms.server.change_computer %}
-        <li><a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown,available,in repair">{% trans 'Computers' %}</a></li>
+        <li><a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown">{% trans 'Computers' %}</a></li>
         <li><a href="{% url 'computer_replacement' %}">{% trans 'Computers Replacement' %}</a></li>
     {% endif %}
     {% if perms.server.change_user %}

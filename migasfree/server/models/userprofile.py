@@ -47,16 +47,19 @@ class UserProfile(UserSystem, MigasLink):
 
     def get_computers(self):
         cursor = connection.cursor()
-        ctx = {"domain": self.domain_preference_id, 'scope': self.scope_preference_id}
-
+        ctx = {"domain": self.domain_preference_id,
+               'scope': self.scope_preference_id,
+               'status': "('intended', 'reserved', 'unknown')"
+               }
         if self.domain_preference:
             sql_domain = """
 (
     SELECT DISTINCT computer_id FROM server_computer_sync_attributes
+       INNER JOIN server_computer ON server_computer.id=server_computer_sync_attributes.computer_id
     WHERE attribute_id IN (
         SELECT attribute_id
         FROM server_domain_included_attributes WHERE domain_id=%(domain)s
-    )
+    ) AND server_computer.status in %(status)s
     EXCEPT
     SELECT DISTINCT computer_id FROM server_computer_sync_attributes
     WHERE attribute_id IN (
@@ -72,10 +75,11 @@ class UserProfile(UserSystem, MigasLink):
             sql_scope = """
 (
     SELECT DISTINCT computer_id FROM server_computer_sync_attributes
+       INNER JOIN server_computer ON server_computer.id=server_computer_sync_attributes.computer_id
     WHERE attribute_id IN (
         SELECT attribute_id
         FROM server_scope_included_attributes WHERE scope_id=%(scope)s
-    )
+    ) AND server_computer.status in %(status)s
     EXCEPT
     SELECT DISTINCT computer_id FROM server_computer_sync_attributes
     WHERE attribute_id IN (

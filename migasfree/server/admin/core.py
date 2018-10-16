@@ -54,12 +54,13 @@ class AttributeSetAdmin(MigasAdmin):
     my_enabled = MigasFields.boolean(model=AttributeSet, name='enabled')
 
     def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
         return super(AttributeSetAdmin, self).get_queryset(
             request
         ).prefetch_related(
-            'included_attributes',
+            Prefetch('included_attributes', queryset=qs),
             'included_attributes__property_att',
-            'excluded_attributes',
+            Prefetch('excluded_attributes', queryset=qs),
             'excluded_attributes__property_att'
         )
 
@@ -428,8 +429,14 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def get_queryset(self, request):
         self.user = request.user
+        qs = Attribute.objects.scope(request.user.userprofile)
         return super(DeploymentAdmin, self).get_queryset(
             request
+        ).prefetch_related(
+            Prefetch('included_attributes', queryset=qs),
+            'included_attributes__property_att',
+            Prefetch('excluded_attributes', queryset=qs),
+            'excluded_attributes__property_att',
         ).extra(
             select={
                 'schedule_begin': '(SELECT delay FROM server_scheduledelay '
@@ -465,23 +472,29 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
 class ScheduleDelayLine(admin.TabularInline):
     model = ScheduleDelay
-    fields = ('delay', 'attributes', 'total_computers', 'duration')
+    fields = ('delay', 'attributes', 'computers', 'duration')
     form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute'})
     ordering = ('delay',)
-    readonly_fields = ('total_computers',)
+    readonly_fields = ('computers',)
     extra = 0
 
+    def computers(self, obj):
+        related_objects = obj.related_objects('computer',self.request.user.userprofile)
+        if related_objects:
+            return related_objects.count()
+        return 0
+    computers.short_description = _('Computers')
+
+
     def get_queryset(self, request):
-        sql = ScheduleDelay.TOTAL_COMPUTER_QUERY
-        user = request.user.userprofile
-        if not user.is_view_all():
-            computers = user.get_computers()
-            if computers:
-                sql += " AND server_computer_sync_attributes.computer_id in " \
-                    + "(" + ",".join(str(x) for x in computers) + ")"
-            qs = ScheduleDelay.objects.scope(user).extra(select={'total_computers': sql})
-        else:
-            qs = ScheduleDelay.objects.all()
+        self.request = request
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(ScheduleDelayLine, self).get_queryset(
+            request
+        ).prefetch_related(
+            Prefetch('attributes', queryset=qs),
+            'attributes__property_att',
+        )
 
         return qs
 
@@ -496,6 +509,12 @@ class ScheduleAdmin(MigasAdmin):
 
     name_link = MigasFields.link(model=Schedule, name='name')
 
+    def get_queryset(self, request):
+        self.request = request
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(ScheduleAdmin, self).get_queryset(
+            request
+        )
 
 @admin.register(Store)
 class StoreAdmin(MigasAdmin):
@@ -650,6 +669,17 @@ class ScopeAdmin(MigasAdmin):
     excluded_attributes_link = MigasFields.objects_link(
         model=AttributeSet, name='excluded_attributes', description=_('excluded attributes')
     )
+
+    def get_queryset(self, request):
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(ScopeAdmin, self).get_queryset(
+            request
+        ).prefetch_related(
+            Prefetch('included_attributes', queryset=qs),
+            'included_attributes__property_att',
+            Prefetch('excluded_attributes', queryset=qs),
+            'excluded_attributes__property_att'
+        )
 
 
 @admin.register(Domain)

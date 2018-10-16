@@ -13,6 +13,14 @@ from ..utils import (
     remove_empty_elements_from_dict
 )
 
+class DeviceManager(models.Manager):
+    def scope(self, user):
+        qs = super(DeviceManager, self).get_queryset()
+        if not user.is_view_all():
+            atts=user.get_attributes()
+            qs = qs.filter(devicelogical__attributes__in=atts).distinct()
+
+        return qs
 
 @python_2_unicode_compatible
 class Device(models.Model, MigasLink):
@@ -45,6 +53,8 @@ class Device(models.Model, MigasLink):
         null=True,
         default="{}"
     )
+
+    objects = DeviceManager()
 
     def menu_link(self, request):
         if self.id:
@@ -148,7 +158,7 @@ class Device(models.Model, MigasLink):
 
             return Computer.productive.scope(user).filter(
                 sync_attributes__in=Attribute.objects.filter(devicelogical__device__id=self.id)
-            )
+            ).distinct()
 
         return None
 

@@ -49,26 +49,6 @@ class ScheduleDelay(models.Model):
 
     objects = ScheduleDelayManager()
 
-    # computers with productive status
-    TOTAL_COMPUTER_QUERY = "SELECT DISTINCT COUNT(server_computer.id) \
-        FROM server_computer, server_computer_sync_attributes \
-        WHERE server_scheduledelay_attributes.attribute_id=server_computer_sync_attributes.attribute_id \
-        AND server_computer_sync_attributes.computer_id=server_computer.id \
-        AND server_computer.status IN ('intended', 'reserved', 'unknown')"
-
-    def total_computers(self, user=None):
-        if user and not user.userprofile.is_view_all():
-            queryset = Computer.productive.scope(user.userprofile).filter(
-                sync_attributes__id__in=self.attributes.values_list('id')
-            )
-        else:
-            queryset = Computer.productive.filter(
-                sync_attributes__id__in=self.attributes.values_list('id')
-            )
-        return queryset.annotate(total=Count('id')).count()
-
-    total_computers.short_description = _('Total computers')
-
     def __str__(self):
         return u'{} ({})'.format(self.schedule.name, self.delay)
 
@@ -78,6 +58,17 @@ class ScheduleDelay(models.Model):
         )
 
     attribute_list.short_description = _("attribute list")
+
+    def related_objects(self, model, user):
+        """
+        Return Queryset with the related computers based in attributes
+        """
+        from migasfree.server.models import Computer
+        if model == 'computer':
+            return Computer.productive.scope(user).filter(
+                sync_attributes__in=self.attributes.all()
+            ).distinct()
+        return None
 
     class Meta:
         app_label = 'server'

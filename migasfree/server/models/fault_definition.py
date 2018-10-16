@@ -14,11 +14,9 @@ class DomainFaultDefinitionManager(models.Manager):
         qs = super(DomainFaultDefinitionManager, self).get_queryset()
         if not user.is_view_all():
             atts = user.get_attributes()
-            qs = qs.filter(included_attributes__in=atts)
-            qs = qs.exclude(excluded_attributes__in=atts)
-            qs = qs.distinct()
+            qs = qs.filter(included_attributes__id__in=atts)
 
-        return qs
+        return qs.distinct()
 
 
 @python_2_unicode_compatible
@@ -102,6 +100,20 @@ class FaultDefinition(models.Model, MigasLink):
             })
 
         return fault_definitions
+
+    def related_objects(self, model, user):
+        """
+        Return Queryset with the related computers based in attributes
+        """
+        from migasfree.server.models import Computer
+        if model == 'computer':
+            return Computer.productive.scope(user).filter(
+                sync_attributes__in=self.included_attributes.all()
+            ).exclude(
+                sync_attributes__in=self.excluded_attributes.all()
+            ).distinct()
+
+        return None
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.code = self.code.replace("\r\n", "\n")

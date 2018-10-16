@@ -26,6 +26,14 @@ class DeviceLogicalManager(models.Manager):
 
         return obj
 
+    def scope(self, user):
+        qs = super(DeviceLogicalManager, self).get_queryset()
+        if not user.is_view_all():
+            atts=user.get_attributes()
+            qs = qs.filter(attributes__in=atts).distinct()
+
+        return qs
+
 
 @python_2_unicode_compatible
 class DeviceLogical(models.Model, MigasLink):
