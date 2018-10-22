@@ -284,10 +284,10 @@
                     <span class="fas fa-asterisk"></span>&nbsp; {{ original.default_logical_device }}
                 </div>
                 {% endif %}
-                {% if original.inflected_logical_devices.count %}
-                    <p class="clearfix" title="{% trans 'Inflected' %}">
+                {% if original.inflicted_logical_devices.count %}
+                    <p class="clearfix" title="{% trans 'Inflicted' %}">
                         <span class="fas fa-magic"></span>
-                        {% for device in original.inflected_logical_devices.all %}
+                        {% for device in original.inflicted_logical_devices.all %}
                             {{ device.link }}<br />
                         {% endfor %}
                     </p>
