@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
+from django.template.defaultfilters import date as _date
 from django.utils.translation import ugettext as _
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -166,7 +167,7 @@ class SyncStatsViewSet(viewsets.ViewSet):
         data = []
         labels = []
         for item in datetime_iterator(begin, end, delta):
-            labels.append(item.strftime('%Y-%m-%d'))
+            labels.append(_date(item, 'Y-m-d (D)'))
             index = str(to_timestamp(datetime.combine(item, time.min)))
             data.append(updates_time_range[index] if index in updates_time_range else 0)
 
