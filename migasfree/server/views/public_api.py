@@ -79,7 +79,6 @@ def computer_label(request, uuid=None):
         uuid = request.GET.get('uuid', '')
 
     computer_info = json.loads(get_computer_info(request, uuid).content)
-    request.user.userprofile.check_scope(computer_info['id'])
 
     return render(
         request,
