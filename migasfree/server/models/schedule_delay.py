@@ -2,12 +2,11 @@
 
 from django.db import models
 from django.db.models import Q
-from django.db.models import Count
 from django.core.validators import MinValueValidator
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
-from . import Schedule, Attribute, Computer
+from . import Schedule, Attribute
 
 
 class ScheduleDelayManager(models.Manager):
