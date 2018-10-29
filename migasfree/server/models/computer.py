@@ -10,7 +10,6 @@ from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import format_html
 from django.utils.translation import ugettext, ugettext_lazy as _
-from django.template import Context, Template
 from django.conf import settings
 
 from ..utils import (
