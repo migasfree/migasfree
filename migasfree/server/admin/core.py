@@ -485,18 +485,16 @@ class ScheduleDelayLine(admin.TabularInline):
         return 0
     computers.short_description = _('Computers')
 
-
     def get_queryset(self, request):
         self.request = request
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(ScheduleDelayLine, self).get_queryset(
             request
         ).prefetch_related(
             Prefetch('attributes', queryset=qs),
             'attributes__property_att',
         )
-
-        return qs
 
 
 @admin.register(Schedule)
