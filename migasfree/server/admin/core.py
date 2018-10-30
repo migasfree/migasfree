@@ -509,7 +509,7 @@ class ScheduleAdmin(MigasAdmin):
 
     def get_queryset(self, request):
         self.request = request
-        qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(ScheduleAdmin, self).get_queryset(
             request
         )
