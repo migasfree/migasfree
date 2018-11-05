@@ -5,7 +5,7 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 from django.utils.html import format_html
 from django.db.models import Prefetch
 
@@ -417,7 +417,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
                 remove_repository_metadata(request, obj, form.initial.get('name'))
 
         Notification.objects.create(
-            _('Deployment [%s] modified by user [%s] (<a href="%s">review changes</a>)') % (
+            ugettext('Deployment [%s] modified by user [%s] (<a href="%s">review changes</a>)') % (
                 '<a href="{}">{}</a>'.format(
                     reverse('admin:server_deployment_change', args=(obj.id,)),
                     obj.name
