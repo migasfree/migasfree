@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext, ugettext_lazy as _
 
 from . import Property, MigasLink
 from .notification import Notification
@@ -64,7 +64,7 @@ class AttributeManager(DomainAttributeManager):
 
         if original_value != obj.value:
             Notification.objects.create(
-                _('The value of the attribute [%s] has more than %d characters. '
+                ugettext('The value of the attribute [%s] has more than %d characters. '
                   'The original value is truncated: %s') % (
                     '<a href="{}">{}</a>'.format(
                         reverse('admin:server_attribute_change', args=(obj.id,)),
