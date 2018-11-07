@@ -6,7 +6,12 @@ from .views import (
     alerts, synchronized_daily, synchronized_monthly,
     project_schedule_delays, stats_dashboard,
     provided_computers_by_delay, devices_summary,
-    liberation_dashboard,
+    computers_summary, stores_summary,
+    packages_summary, applications_summary,
+    deployments_summary, device_models_summary,
+    attributes_summary, tags_summary,
+    syncs_summary, migrations_summary,
+    status_logs_summary,
 )
 
 urlpatterns = [
@@ -42,13 +47,63 @@ urlpatterns = [
         name='provided_computers',
     ),
     url(
-        r'^devices/dashboard/$',
+        r'^devices/$',
         devices_summary,
         name='devices_summary'
     ),
     url(
-        r'^liberation/dashboard/$',
-        liberation_dashboard,
-        name='liberation_dashboard'
+        r'^stores/$',
+        stores_summary,
+        name='stores_summary'
+    ),
+    url(
+        r'^packages/$',
+        packages_summary,
+        name='packages_summary'
+    ),
+    url(
+        r'^applications/$',
+        applications_summary,
+        name='applications_summary'
+    ),
+    url(
+        r'^computers/$',
+        computers_summary,
+        name='computers_summary'
+    ),
+    url(
+        r'^deployments/$',
+        deployments_summary,
+        name='deployments_summary'
+    ),
+    url(
+        r'^devicemodels/$',
+        device_models_summary,
+        name='device_models_summary'
+    ),
+    url(
+        r'^attributes/$',
+        attributes_summary,
+        name='attributes_summary'
+    ),
+    url(
+        r'^tags/$',
+        tags_summary,
+        name='tags_summary'
+    ),
+    url(
+        r'^synchronizations/$',
+        syncs_summary,
+        name='syncs_summary'
+    ),
+    url(
+        r'^migrations/$',
+        migrations_summary,
+        name='migrations_summary'
+    ),
+    url(
+        r'^statuslogs/$',
+        status_logs_summary,
+        name='status_logs_summary'
     ),
 ]
