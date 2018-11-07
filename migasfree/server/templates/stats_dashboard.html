@@ -14,19 +14,11 @@
 
 {% block content %}
 <div class="row text-center">
-    {% include 'includes/multipie_chart.html' with item=computers_by_machine id='computer-machine' %}
-
-    {% include 'includes/multipie_chart.html' with item=computers_by_status id='computer-status' %}
-
     {% include 'includes/multipie_chart.html' with item=productive_computers_by_platform id='platform-project' %}
-</div>
 
-<div class="row text-center">
     {% include 'includes/multipie_chart.html' with item=unchecked_errors id='unchecked-errors' label='danger' %}
 
     {% include 'includes/multipie_chart.html' with item=unchecked_faults id='unchecked-faults' label='danger' %}
-
-    {% include 'includes/multipie_chart.html' with item=enabled_deployments id='enabled-deployments' %}
 </div>
 
 <div class="row text-center">
@@ -72,36 +64,6 @@ var platformProjectOptions = {
 platformProjectOptions = jQuery.extend(true, {}, optionsMulti, platformProjectOptions);
 var platformProjectChart = new Highcharts.Chart(platformProjectOptions);
 
-var computerMachine = {{ computers_by_machine.data|safe }};
-series = loadData(computerMachine);
-var computerMachineOptions = {
-    chart: {
-        renderTo: 'computer-machine'
-    },
-    series: [{
-        data: series[0]
-    }, {
-        data: series[1]
-    }]
-};
-computerMachineOptions = jQuery.extend(true, {}, optionsMulti, computerMachineOptions);
-var computerMachineChart = new Highcharts.Chart(computerMachineOptions);
-
-var computerStatus = {{ computers_by_status.data|safe }};
-series = loadData(computerStatus);
-var computerStatusOptions = {
-    chart: {
-        renderTo: 'computer-status'
-    },
-    series: [{
-        data: series[0]
-    }, {
-        data: series[1]
-    }]
-};
-computerStatusOptions = jQuery.extend(true, {}, optionsMulti, computerStatusOptions);
-var computerStatusChart = new Highcharts.Chart(computerStatusOptions);
-
 var uncheckedErrors = {{ unchecked_errors.data|safe }};
 series = loadData(uncheckedErrors);
 var uncheckedErrorsOptions = {
@@ -131,21 +93,6 @@ var uncheckedFaultsOptions = {
 };
 uncheckedFaultsOptions = jQuery.extend(true, {}, optionsMulti, uncheckedFaultsOptions);
 var uncheckedFaultsChart = new Highcharts.Chart(uncheckedFaultsOptions);
-
-var enabledDeployments = {{ enabled_deployments.data|safe }};
-series = loadData(enabledDeployments);
-var enabledDeploymentsOptions = {
-    chart: {
-        renderTo: 'enabled-deployments'
-    },
-    series: [{
-        data: series[0]
-    }, {
-        data: series[1]
-    }]
-};
-enabledDeploymentsOptions = jQuery.extend(true, {}, optionsMulti, enabledDeploymentsOptions);
-var enabledDeploymentsChart = new Highcharts.Chart(enabledDeploymentsOptions);
 
 var pointStart = Date.UTC(
     {{ last_day_events.start_date.year }},
