@@ -2,7 +2,7 @@
 
 <ul class="dropdown-menu">
     {% if perms.server.change_computer %}
-        <li><a href="{% url 'admin:server_computer_changelist' %}?status__in=intended,reserved,unknown">{% trans 'Computers' %}</a></li>
+        <li><a href="{% url 'computers_summary' %}">{% trans 'Computers' %}</a></li>
         <li><a href="{% url 'computer_replacement' %}">{% trans 'Computers Replacement' %}</a></li>
     {% endif %}
     {% if perms.server.change_user %}
@@ -12,16 +12,16 @@
         <li role="separator" class="divider"></li>
 
     {% if perms.server.change_clientattribute %}
-        <li><a href="{% url 'admin:server_clientattribute_changelist' %}">{% trans 'Attributes' %}</a></li>
+        <li><a href="{% url 'attributes_summary' %}">{% trans 'Attributes' %}</a></li>
     {% endif %}
     {% if perms.server.change_serverattribute %}
-        <li><a href="{% url 'admin:server_serverattribute_changelist' %}">{% trans 'Tags' %}</a></li>
+        <li><a href="{% url 'tags_summary' %}">{% trans 'Tags' %}</a></li>
     {% endif %}
 
         <li role="separator" class="divider"></li>
 
     {% if perms.server.change_synchronization %}
-        <li><a href="{% url 'admin:server_synchronization_changelist' %}">{% trans 'Synchronizations' %}</a></li>
+        <li><a href="{% url 'syncs_summary' %}">{% trans 'Synchronizations' %}</a></li>
     {% endif %}
     {% if perms.server.change_error %}
         <li><a href="{% url 'admin:server_error_changelist' %}?checked__exact=0">{% trans 'Errors' %}</a></li>
@@ -30,10 +30,10 @@
         <li><a href="{% url 'admin:server_fault_changelist' %}?checked__exact=0">{% trans 'Faults' %}</a></li>
     {% endif %}
     {% if perms.server.change_statuslog %}
-        <li><a href="{% url 'admin:server_statuslog_changelist' %}">{% trans 'Status Logs' %}</a></li>
+        <li><a href="{% url 'status_logs_summary' %}">{% trans 'Status Logs' %}</a></li>
     {% endif %}
     {% if perms.server.change_migration %}
-        <li><a href="{% url 'admin:server_migration_changelist' %}">{% trans 'Migrations' %}</a></li>
+        <li><a href="{% url 'migrations_summary' %}">{% trans 'Migrations' %}</a></li>
     {% endif %}
 
         <li role="separator" class="divider"></li>
