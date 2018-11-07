@@ -18,7 +18,7 @@
 
 from django.db import models
 from django.db.models.aggregates import Count
-from django.db.models.functions import TruncDay, TruncHour
+from django.db.models.functions import TruncDay, TruncHour, ExtractMonth, ExtractYear
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -58,6 +58,17 @@ class Event(models.Model):
         ).order_by('hour').values('hour').annotate(
             count=Count('computer_id', distinct=True)
         )
+
+    @classmethod
+    def stacked_by_month(cls, user, start_date, field='project_id'):
+        return list(cls.objects.scope(user).filter(
+            created_at__gte=start_date
+        ).annotate(
+            year=ExtractYear('created_at'),
+            month=ExtractMonth('created_at')
+        ).order_by('year', 'month', field).values('year', 'month', field).annotate(
+            count=Count('id')
+        ))
 
     def __str__(self):
         return u'{} ({:%Y-%m-%d %H:%M:%S})'.format(self.computer, self.created_at)
