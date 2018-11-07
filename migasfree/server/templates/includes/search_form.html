@@ -1,0 +1,18 @@
+{% load i18n %}
+
+<div class="row clearfix">
+    <form action="{% url url_name %}" method="get" class="navbar-form navbar-left" role="search">
+        <div class="input-group">
+            <label for="search-input" class="sr-only">{% trans 'Search' %}:</label>
+            <input type="text" id="search-input" name="q" size="25" placeholder="{% trans 'Search' %}"
+                   class="input-sm" title="{% trans 'Search' %}" />
+
+            <div class="input-group-btn">
+                <button class="btn btn-default btn-sm" type="submit" title="{% trans 'Search' %}">
+                    <span class="fas fa-search"></span>
+                    <span class="sr-only">{% trans 'Search' %}</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

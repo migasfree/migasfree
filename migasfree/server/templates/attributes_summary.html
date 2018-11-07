@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
+{% endblock extrahead %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Data' %}</li>
+        <li>{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    {% include 'includes/search_form.html' with url_name='admin:server_clientattribute_changelist' %}
+
+    <div class="row text-center">
+        {% include 'includes/multipie_chart.html' with item=attribute_by_property id='attribute-property' col=6 %}
+    </div>
+{% endblock content %}
+
+{% block extrabody %}
+    <script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
+
+    <script type="text/javascript">
+    Highcharts.setOptions({
+        lang: {
+            noData: '{{ chart_options.no_data }}',
+            resetZoom: '{{ chart_options.reset_zoom }}',
+        }
+    });
+
+    var attributeProperty = {{ attribute_by_property.data|safe }};
+    var attributePropertyOptions = {
+        chart: {
+            renderTo: 'attribute-property'
+        },
+        series: [{
+            data: loadDatum(attributeProperty)
+        }]
+    };
+    attributePropertyOptions = jQuery.extend(true, {}, options, attributePropertyOptions);
+    var attributePropertyChart = new Highcharts.Chart(attributePropertyOptions);
+    </script>
+{% endblock extrabody %}

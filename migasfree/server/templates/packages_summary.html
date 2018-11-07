@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
+{% endblock extrahead %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Liberation' %}</li>
+        <li>{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block content_title %}
+    {% if title %}<h1 class="change-list-title pull-left">{{ title }}</h1>{% endif %}
+
+    {% if perms.server.add_package %}
+        <div id="add-button" class="pull-left">
+            <a role="button" href="{% url 'admin:server_package_add' %}" class="btn btn-primary"
+               title="{% trans 'Add Package/Set' %}">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    {% endif %}
+{% endblock content_title %}
+
+{% block content %}
+    {% include 'includes/search_form.html' with url_name='admin:server_package_changelist' %}
+
+    <div class="row text-center">
+        {% include 'includes/multipie_chart.html' with item=package_by_store id='package-store' col=6 %}
+    </div>
+{% endblock content %}
+
+{% block extrabody %}
+    <script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
+
+    <script type="text/javascript">
+    Highcharts.setOptions({
+        lang: {
+            noData: '{{ chart_options.no_data }}',
+            resetZoom: '{{ chart_options.reset_zoom }}',
+        }
+    });
+
+    var packageStore = {{ package_by_store.data|safe }};
+    series = loadData(packageStore);
+    var packageStoreOptions = {
+        chart: {
+            renderTo: 'package-store'
+        },
+        series: [{
+            data: series[0]
+        }, {
+            data: series[1]
+        }]
+    };
+    packageStoreOptions = jQuery.extend(true, {}, optionsMulti, packageStoreOptions);
+    var packageStoreChart = new Highcharts.Chart(packageStoreOptions);
+    </script>
+{% endblock extrabody %}

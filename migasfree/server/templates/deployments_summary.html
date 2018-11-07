@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
+{% endblock extrahead %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Liberation' %}</li>
+        <li>{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block content_title %}
+    {% if title %}<h1 class="change-list-title pull-left">{{ title }}</h1>{% endif %}
+
+    {% if perms.server.add_deployment %}
+        <div id="add-button" class="pull-left">
+            <a role="button" href="{% url 'admin:server_deployment_add' %}" class="btn btn-primary"
+               title="{% trans 'Add Deployment' %}">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    {% endif %}
+{% endblock content_title %}
+
+{% block content %}
+    {% include 'includes/search_form.html' with url_name='admin:server_deployment_changelist' %}
+
+    <div class="row text-center">
+        {% include 'includes/multipie_chart.html' with item=enabled_deployments id='enabled-deployments' %}
+
+        {% include 'includes/multipie_chart.html' with item=deployment_by_enabled id='deployment-enabled' %}
+
+        {% include 'includes/multipie_chart.html' with item=deployment_by_schedule id='deployment-schedule' %}
+    </div>
+{% endblock content %}
+
+{% block extrabody %}
+    <script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
+
+    <script type="text/javascript">
+    Highcharts.setOptions({
+        lang: {
+            noData: '{{ chart_options.no_data }}',
+            resetZoom: '{{ chart_options.reset_zoom }}',
+        }
+    });
+
+    var enabledDeployments = {{ enabled_deployments.data|safe }};
+    series = loadData(enabledDeployments);
+    var enabledDeploymentsOptions = {
+        chart: {
+            renderTo: 'enabled-deployments'
+        },
+        series: [{
+            data: series[0]
+        }, {
+            data: series[1]
+        }]
+    };
+    enabledDeploymentsOptions = jQuery.extend(true, {}, optionsMulti, enabledDeploymentsOptions);
+    var enabledDeploymentsChart = new Highcharts.Chart(enabledDeploymentsOptions);
+
+    var deploymentEnabled = {{ deployment_by_enabled.data|safe }};
+    series = loadData(deploymentEnabled);
+    var deploymentEnabledOptions = {
+        chart: {
+            renderTo: 'deployment-enabled'
+        },
+        series: [{
+            data: series[0]
+        }, {
+            data: series[1]
+        }]
+    };
+    deploymentEnabledOptions = jQuery.extend(true, {}, optionsMulti, deploymentEnabledOptions);
+    var deploymentEnabledChart = new Highcharts.Chart(deploymentEnabledOptions);
+
+    var deploymentSchedule = {{ deployment_by_schedule.data|safe }};
+    series = loadData(deploymentSchedule);
+    var deploymentScheduleOptions = {
+        chart: {
+            renderTo: 'deployment-schedule'
+        },
+        series: [{
+            data: series[0]
+        }, {
+            data: series[1]
+        }]
+    };
+    deploymentScheduleOptions = jQuery.extend(true, {}, optionsMulti, deploymentScheduleOptions);
+    var deploymentScheduleChart = new Highcharts.Chart(deploymentScheduleOptions);
+    </script>
+{% endblock extrabody %}

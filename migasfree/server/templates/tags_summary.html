@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
+{% endblock extrahead %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Data' %}</li>
+        <li>{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block content_title %}
+    {% if title %}<h1 class="change-list-title pull-left">{{ title }}</h1>{% endif %}
+
+    {% if perms.server.add_serverattribute %}
+        <div id="add-button" class="pull-left">
+            <a role="button" href="{% url 'admin:server_serverattribute_add' %}" class="btn btn-primary"
+               title="{% trans 'Add Tag' %}">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    {% endif %}
+{% endblock content_title %}
+
+{% block content %}
+    {% include 'includes/search_form.html' with url_name='admin:server_serverattribute_changelist' %}
+
+    <div class="row text-center">
+        {% include 'includes/multipie_chart.html' with item=tag_by_category id='tag-category' col=6 %}
+    </div>
+{% endblock content %}
+
+{% block extrabody %}
+    <script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
+
+    <script type="text/javascript">
+    Highcharts.setOptions({
+        lang: {
+            noData: '{{ chart_options.no_data }}',
+            resetZoom: '{{ chart_options.reset_zoom }}',
+        }
+    });
+
+    var tagCategory = {{ tag_by_category.data|safe }};
+    var tagCategoryOptions = {
+        chart: {
+            renderTo: 'tag-category'
+        },
+        series: [{
+            data: loadDatum(tagCategory)
+        }]
+    };
+    tagCategoryOptions = jQuery.extend(true, {}, options, tagCategoryOptions);
+    var tagCategoryChart = new Highcharts.Chart(tagCategoryOptions);
+    </script>
+{% endblock extrabody %}
