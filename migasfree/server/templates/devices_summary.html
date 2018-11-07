@@ -12,77 +12,76 @@
     </ul>
 {% endblock %}
 
+{% block content_title %}
+    {% if title %}<h1 class="change-list-title pull-left">{{ title }}</h1>{% endif %}
+
+    {% if perms.server.add_device %}
+        <div id="add-button" class="pull-left">
+            <a role="button" href="{% url 'admin:server_device_add' %}" class="btn btn-primary"
+               title="{% trans 'Add Device' %}">
+                <span class="glyphicon glyphicon-plus"></span>
+            </a>
+        </div>
+    {% endif %}
+{% endblock content_title %}
+
 {% block content %}
-<div class="row text-center">
-    {% include 'includes/multipie_chart.html' with item=devices_by_connection id='devices-connection' col=6 %}
+    {% include 'includes/search_form.html' with url_name='admin:server_device_changelist' %}
 
-    {% include 'includes/multipie_chart.html' with item=devices_by_model id='devices-model' col=6 %}
-</div>
+    <div class="row text-center">
+        {% include 'includes/multipie_chart.html' with item=devices_by_connection id='devices-connection' %}
 
-<div class="row text-center">
-    {% include 'includes/multipie_chart.html' with item=devices_by_manufacturer id='devices-manufacturer' col=6 %}
+        {% include 'includes/multipie_chart.html' with item=devices_by_model id='devices-model' %}
 
-    {% include 'includes/multipie_chart.html' with item=models_by_manufacturer id='models-manufacturer' col=6 %}
-</div>
+        {% include 'includes/multipie_chart.html' with item=devices_by_manufacturer id='devices-manufacturer' %}
+    </div>
 {% endblock content %}
 
 {% block extrabody %}
-<script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
 
-<script type="text/javascript">
-Highcharts.setOptions({
-    lang: {
-        noData: '{{ chart_options.no_data }}',
-        resetZoom: '{{ chart_options.reset_zoom }}'
-    }
-});
+    <script type="text/javascript">
+    Highcharts.setOptions({
+        lang: {
+            noData: '{{ chart_options.no_data }}',
+            resetZoom: '{{ chart_options.reset_zoom }}'
+        }
+    });
 
-var devicesConnection = {{ devices_by_connection.data|safe }};
-var devicesConnectionOptions = {
-    chart: {
-        renderTo: 'devices-connection'
-    },
-    series: [{
-        data: loadDatum(devicesConnection)
-    }]
-};
-devicesConnectionOptions = jQuery.extend(true, {}, options, devicesConnectionOptions);
-var devicesConnectionChart = new Highcharts.Chart(devicesConnectionOptions);
+    var devicesConnection = {{ devices_by_connection.data|safe }};
+    var devicesConnectionOptions = {
+        chart: {
+            renderTo: 'devices-connection'
+        },
+        series: [{
+            data: loadDatum(devicesConnection)
+        }]
+    };
+    devicesConnectionOptions = jQuery.extend(true, {}, options, devicesConnectionOptions);
+    var devicesConnectionChart = new Highcharts.Chart(devicesConnectionOptions);
 
-var devicesModel = {{ devices_by_model.data|safe }};
-var devicesModelOptions = {
-    chart: {
-        renderTo: 'devices-model'
-    },
-    series: [{
-        data: loadDatum(devicesModel)
-    }]
-};
-devicesModelOptions = jQuery.extend(true, {}, options, devicesModelOptions);
-var devicesModelChart = new Highcharts.Chart(devicesModelOptions);
+    var devicesModel = {{ devices_by_model.data|safe }};
+    var devicesModelOptions = {
+        chart: {
+            renderTo: 'devices-model'
+        },
+        series: [{
+            data: loadDatum(devicesModel)
+        }]
+    };
+    devicesModelOptions = jQuery.extend(true, {}, options, devicesModelOptions);
+    var devicesModelChart = new Highcharts.Chart(devicesModelOptions);
 
-var devicesManufacturer = {{ devices_by_manufacturer.data|safe }};
-var devicesManufacturerOptions = {
-    chart: {
-        renderTo: 'devices-manufacturer'
-    },
-    series: [{
-        data: loadDatum(devicesManufacturer)
-    }]
-};
-devicesManufacturerOptions = jQuery.extend(true, {}, options, devicesManufacturerOptions);
-var devicesManufacturerChart = new Highcharts.Chart(devicesManufacturerOptions);
-
-var modelsManufacturer = {{ models_by_manufacturer.data|safe }};
-var modelsManufacturerOptions = {
-    chart: {
-        renderTo: 'models-manufacturer'
-    },
-    series: [{
-        data: loadDatum(modelsManufacturer)
-    }]
-};
-modelsManufacturerOptions = jQuery.extend(true, {}, options, modelsManufacturerOptions);
-var modelsManufacturerChart = new Highcharts.Chart(modelsManufacturerOptions);
-</script>
+    var devicesManufacturer = {{ devices_by_manufacturer.data|safe }};
+    var devicesManufacturerOptions = {
+        chart: {
+            renderTo: 'devices-manufacturer'
+        },
+        series: [{
+            data: loadDatum(devicesManufacturer)
+        }]
+    };
+    devicesManufacturerOptions = jQuery.extend(true, {}, options, devicesManufacturerOptions);
+    var devicesManufacturerChart = new Highcharts.Chart(devicesManufacturerOptions);
+    </script>
 {% endblock extrabody %}
