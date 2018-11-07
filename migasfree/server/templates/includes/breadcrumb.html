@@ -19,7 +19,34 @@
             <li>{% trans 'Liberation' %}</li>
         {% endif %}
 
-        <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
+        {% if opts.object_name.lower == 'computer' %}
+            <li><a href="{% url 'computers_summary' %}">{% trans 'Computers' %}</a></li>
+        {% elif opts.object_name.lower == 'deployment' %}
+            <li><a href="{% url 'deployments_summary' %}">{% trans 'Deployments' %}</a></li>
+        {% elif opts.object_name.lower == 'store' %}
+            <li><a href="{% url 'stores_summary' %}">{% trans 'Stores' %}</a></li>
+        {% elif opts.object_name.lower == 'package' %}
+            <li><a href="{% url 'packages_summary' %}">{% trans 'Packages/Sets' %}</a></li>
+        {% elif opts.object_name.lower == 'application' %}
+            <li><a href="{% url 'applications_summary' %}">{% trans 'Applications' %}</a></li>
+        {% elif opts.object_name.lower == 'device' %}
+            <li><a href="{% url 'devices_summary' %}">{% trans 'Devices' %}</a></li>
+        {% elif opts.object_name.lower == 'devicemodel' %}
+            <li><a href="{% url 'device_models_summary' %}">{% trans 'Models' %}</a></li>
+        {% elif opts.object_name.lower == 'clientattribute' %}
+            <li><a href="{% url 'attributes_summary' %}">{% trans 'Attributes' %}</a></li>
+        {% elif opts.object_name.lower == 'serverattribute' %}
+            <li><a href="{% url 'tags_summary' %}">{% trans 'Tags' %}</a></li>
+        {% elif opts.object_name.lower == 'synchronization' %}
+            <li><a href="{% url 'syncs_summary' %}">{% trans 'Synchronizations' %}</a></li>
+        {% elif opts.object_name.lower == 'migration' %}
+            <li><a href="{% url 'migrations_summary' %}">{% trans 'Migrations' %}</a></li>
+        {% elif opts.object_name.lower == 'statuslog' %}
+            <li><a href="{% url 'status_logs_summary' %}">{% trans 'Status Logs' %}</a></li>
+        {% else %}
+            <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
+        {% endif %}
+        <li>{% trans 'Results' %}</li>
 
         {% if original %}
             <li>
