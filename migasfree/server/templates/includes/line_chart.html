@@ -1,4 +1,4 @@
-{% load i18n admin_static server_tags %}
+{% load i18n admin_static %}
 
 {% block extrahead %}
     <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
@@ -15,54 +15,5 @@
 {% endif %}
 
 {% block extrabody %}
-<script type="text/javascript">
-Highcharts.chart("container", {
-    credits: {
-        enabled: false
-    },
-    chart: {
-        type: "spline"
-    },
-    title: {
-        text: null
-    },
-    yAxis: {
-        title: {
-            text: null
-        }
-    },
-    xAxis: {
-        categories: {{ x_labels|as_json|safe }}
-    },
-    plotOptions: {
-        series: {
-            label: {
-                connectorAllowed: false
-            },
-        }
-    },
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 800
-            },
-            chartOptions: {
-                legend: {
-                    layout: "horizontal",
-                    align: "center",
-                    verticalAlign: "bottom"
-                }
-            }
-        }]
-    },
-    series: [
-        {% for k, v in data.items %}
-        {
-            name: {{ k|as_json|safe }},
-            data: {{ v|safe }}
-        },
-        {% endfor %}
-    ]
-});
-</script>
+    {% include 'includes/spline_js.html' with x_labels=x_labels data=data id='container' %}
 {% endblock extrabody %}
