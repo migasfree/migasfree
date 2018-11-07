@@ -145,7 +145,7 @@ def devices_summary(request):
         request,
         'devices_summary.html',
         {
-            'title': _('Summary'),
+            'title': _('Devices'),
             'chart_options': {
                 'no_data': _('There are no data to show'),
                 'reset_zoom': _('Reset Zoom'),
@@ -153,6 +153,21 @@ def devices_summary(request):
             'devices_by_connection': devices_by_connection(),
             'devices_by_model': devices_by_model(),
             'devices_by_manufacturer': devices_by_manufacturer(),
+        }
+    )
+
+
+@login_required
+def device_models_summary(request):
+    return render(
+        request,
+        'device_models_summary.html',
+        {
+            'title': _('Models'),
+            'chart_options': {
+                'no_data': _('There are no data to show'),
+                'reset_zoom': _('Reset Zoom'),
+            },
             'models_by_manufacturer': models_by_manufacturer(),
         }
     )
