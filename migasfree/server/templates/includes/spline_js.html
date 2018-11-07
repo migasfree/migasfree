@@ -1,0 +1,52 @@
+{% load server_tags %}
+
+<script type="text/javascript">
+Highcharts.chart({{ id }}, {
+    credits: {
+        enabled: false
+    },
+    chart: {
+        type: "spline"
+    },
+    title: {
+        text: null
+    },
+    yAxis: {
+        title: {
+            text: null
+        }
+    },
+    xAxis: {
+        categories: {{ x_labels|as_json|safe }}
+    },
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            },
+        }
+    },
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 800
+            },
+            chartOptions: {
+                legend: {
+                    layout: "horizontal",
+                    align: "center",
+                    verticalAlign: "bottom"
+                }
+            }
+        }]
+    },
+    series: [
+        {% for k, v in data.items %}
+        {
+            name: {{ k|as_json|safe }},
+            data: {{ v|safe }}
+        },
+        {% endfor %}
+    ]
+});
+</script>
