@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load i18n admin_static %}
+
+{% block extrahead %}
+    <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
+{% endblock extrahead %}
+
+{% block breadcrumbs %}
+    <ul class="breadcrumb">
+        <li>{% trans 'Data' %}</li>
+        <li>{{ title }}</li>
+    </ul>
+{% endblock %}
+
+{% block content %}
+    {% include 'includes/search_form.html' with url_name='admin:server_notification_changelist' %}
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {% trans 'Notifications / Month' %}
+            </div>
+            <div class="panel-body">
+                <div id="container"></div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block extrabody %}
+    <script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
+
+   {% include 'includes/spline_js.html' with x_labels=notification_by_month.x_labels data=notification_by_month.data id='container' %}
+{% endblock extrabody %}
