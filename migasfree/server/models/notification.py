@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.db.models.aggregates import Count
+from django.db.models.functions import ExtractMonth, ExtractYear
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -39,6 +41,17 @@ class Notification(models.Model):
     @staticmethod
     def unchecked_count():
         return Notification.objects.filter(checked=0).count()
+
+    @classmethod
+    def stacked_by_month(cls, start_date):
+        return list(cls.objects.filter(
+            created_at__gte=start_date
+        ).annotate(
+            year=ExtractYear('created_at'),
+            month=ExtractMonth('created_at')
+        ).order_by('year', 'month', 'checked').values('year', 'month', 'checked').annotate(
+            count=Count('id')
+        ))
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.message = self.message.replace("\r\n", "\n")
