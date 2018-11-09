@@ -14,7 +14,7 @@ from django.utils.translation import ugettext as _
 
 from migasfree.server.models import (
     Synchronization, Migration, Platform, Project, StatusLog,
-    Computer, Error, Fault,
+    Computer, Error, Fault, Notification,
 )
 from .syncs import month_year_iter
 from . import MONTHLY_RANGE
@@ -42,6 +42,11 @@ def event_by_month(data, begin_date, end_date, field='project_id'):
         for status in Computer.STATUS_CHOICES:
             new_data[status[0]] = []
             labels[status[0]] = unicode(status[1])
+    elif field == 'checked':
+        new_data[True] = []
+        new_data[False] = []
+        labels[True] = _('Checked')
+        labels[False] = _('Unchecked')
 
     # shuffle data series
     x_axe = []
@@ -62,6 +67,11 @@ def event_by_month(data, begin_date, end_date, field='project_id'):
                 if value:
                     count = filter(lambda item: item['status'] == status[0], value)
                     new_data[status[0]].append(count[0]['count'] if count else 0)
+        elif field == 'checked':
+            for val in [True, False]:
+                if value:
+                    count = filter(lambda item: item['checked'] == val, value)
+                    new_data[val].append(count[0]['count'] if count else 0)
 
     for item in new_data:
         chart_data[labels[item]] = new_data[item]
@@ -549,5 +559,31 @@ def faults_summary(request):
             'unchecked_faults': unchecked_faults(user),
             'fault_by_definition': fault_by_definition(user),
             'fault_by_month': fault_by_month(user),
+        }
+    )
+
+
+def notification_by_month():
+    begin_date, end_date = month_interval()
+
+    return event_by_month(
+        Notification.stacked_by_month(begin_date),
+        begin_date,
+        end_date,
+        field='checked'
+    )
+
+
+@login_required
+def notifications_summary(request):
+    return render(
+        request,
+        'notifications_summary.html',
+        {
+            'title': _('Notifications'),
+            'chart_options': {
+                'no_data': _('There are no data to show'),
+            },
+            'notification_by_month': notification_by_month(),
         }
     )
