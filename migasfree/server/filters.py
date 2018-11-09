@@ -204,7 +204,7 @@ class PlatformFilterAdmin(RelatedFieldListFilter):
 class AttributeSetFilter(django_filters.FilterSet):
     class Meta:
         model = AttributeSet
-        fields = ['id', 'enabled']
+        fields = ['id', 'name', 'enabled']
 
 
 class AttributeFilter(django_filters.FilterSet):
@@ -242,7 +242,7 @@ class FaultDefinitionFilter(django_filters.FilterSet):
     class Meta:
         model = FaultDefinition
         fields = [
-            'id', 'enabled',
+            'id', 'name', 'enabled',
             'included_attributes__id', 'excluded_attributes'
         ]
 
@@ -289,13 +289,13 @@ class NotificationFilter(django_filters.FilterSet):
 class PackageFilter(django_filters.FilterSet):
     class Meta:
         model = Package
-        fields = ['id', 'project__id', 'store__id']
+        fields = ['id', 'name', 'project__id', 'store__id']
 
 
 class PropertyFilter(django_filters.FilterSet):
     class Meta:
         model = Property
-        fields = ['id', 'enabled', 'sort']
+        fields = ['id', 'name', 'enabled', 'sort']
 
 
 class DeploymentFilter(django_filters.FilterSet):
@@ -311,7 +311,7 @@ class DeploymentFilter(django_filters.FilterSet):
 
     class Meta:
         model = Deployment
-        fields = ['id', 'project__id', 'enabled', 'schedule__id']
+        fields = ['id', 'name', 'project__id', 'enabled', 'schedule__id']
 
 
 class StatusLogFilter(django_filters.FilterSet):
@@ -326,7 +326,7 @@ class StatusLogFilter(django_filters.FilterSet):
 class StoreFilter(django_filters.FilterSet):
     class Meta:
         model = Store
-        fields = ['id', 'project__id']
+        fields = ['id', 'name', 'project__id']
 
 
 class SynchronizationFilter(django_filters.FilterSet):
