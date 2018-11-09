@@ -14,7 +14,7 @@ from django.utils.translation import ugettext as _
 
 from migasfree.server.models import (
     Synchronization, Migration, Platform, Project, StatusLog,
-    Computer,
+    Computer, Error, Fault,
 )
 from .syncs import month_year_iter
 from . import MONTHLY_RANGE
@@ -290,5 +290,264 @@ def status_logs_summary(request):
             },
             'status_log_by_status': status_log_by_status(user),
             'status_log_by_month': status_log_by_month(user),
+        }
+    )
+
+
+def unchecked_errors(user):
+    total = Error.unchecked_count(user)
+    link = '{}?checked__exact=0&_REPLACE_'.format(
+        reverse('admin:server_error_changelist')
+    )
+
+    values = defaultdict(list)
+    for item in Error.unchecked.scope(user).values(
+        'project__platform__id',
+        'project__id',
+        'project__name',
+    ).annotate(
+        count=Count('id')
+    ).order_by('project__id', '-count'):
+        percent = float(item.get('count')) / total * 100
+        values[item.get('project__platform__id')].append(
+            {
+                'name': item.get('project__name'),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}'.format(
+                        item.get('project__id')
+                    )
+                ),
+            }
+        )
+
+    data = []
+    for platform in Platform.objects.scope(user).all():
+        if platform.id in values:
+            count = sum(item['value'] for item in values[platform.id])
+            percent = float(count) / total * 100
+            data.append(
+                {
+                    'name': platform.name,
+                    'value': count,
+                    'y': float('{:.2f}'.format(percent)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'project__platform__id__exact={}'.format(platform.id)
+                    ),
+                    'data': values[platform.id]
+                }
+            )
+
+    return {
+        'title': _('Unchecked Errors'),
+        'total': total,
+        'data': json.dumps(data),
+        'url': link.replace('&_REPLACE_', ''),
+    }
+
+
+def error_by_month(user):
+    begin_date, end_date = month_interval()
+
+    return event_by_month(
+        Error.stacked_by_month(user, begin_date),
+        begin_date,
+        end_date,
+    )
+
+
+def error_by_project(user):
+    total = Error.objects.scope(user).count()
+    link = '{}?_REPLACE_'.format(
+        reverse('admin:server_error_changelist')
+    )
+
+    values = defaultdict(list)
+    for item in Error.objects.scope(user).values(
+        'computer__status',
+        'project__id',
+        'project__name',
+    ).annotate(
+        count=Count('id')
+    ).order_by('project__id', '-count'):
+        percent = float(item.get('count')) / total * 100
+        values[item.get('computer__status')].append(
+            {
+                'name': item.get('project__name'),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}&computer__status__in={}'.format(
+                        item.get('project__id'),
+                        item.get('computer__status')
+                    )
+                ),
+            }
+        )
+
+    data = []
+    for status in Computer.STATUS_CHOICES:
+        if status[0] in values:
+            count = sum(item['value'] for item in values[status[0]])
+            percent = float(count) / total * 100
+            data.append(
+                {
+                    'name': unicode(status[1]),
+                    'value': count,
+                    'y': float('{:.2f}'.format(percent)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'computer__status__in={}'.format(status[0])
+                    ),
+                    'data': values[status[0]]
+                }
+            )
+
+    return {
+        'title': _('Errors / Project / Status'),
+        'total': total,
+        'data': json.dumps(data),
+        'url': link.replace('&_REPLACE_', ''),
+    }
+
+
+@login_required
+def errors_summary(request):
+    user = request.user.userprofile
+
+    return render(
+        request,
+        'errors_summary.html',
+        {
+            'title': _('Errors'),
+            'chart_options': {
+                'no_data': _('There are no data to show'),
+            },
+            'unchecked_errors': unchecked_errors(user),
+            'error_by_project': error_by_project(user),
+            'error_by_month': error_by_month(user),
+        }
+    )
+
+
+def unchecked_faults(user):
+    total = Fault.unchecked_count(user)
+    link = '{}?checked__exact=0&user=me&_REPLACE_'.format(
+        reverse('admin:server_fault_changelist')
+    )
+
+    values = defaultdict(list)
+    for item in Fault.unchecked.scope(user).values(
+        'project__platform__id',
+        'project__id',
+        'project__name',
+    ).annotate(
+        count=Count('id')
+    ).order_by('project__id', '-count'):
+        percent = 0
+        if total:
+            percent = float(item.get('count')) / total * 100
+        values[item.get('project__platform__id')].append(
+            {
+                'name': item.get('project__name'),
+                'value': item.get('count'),
+                'y': float('{:.2f}'.format(percent)),
+                'url': link.replace(
+                    '_REPLACE_',
+                    'project__id__exact={}'.format(
+                        item.get('project__id')
+                    )
+                ),
+            }
+        )
+
+    data = []
+    for platform in Platform.objects.scope(user).all():
+        if platform.id in values:
+            count = sum(item['value'] for item in values[platform.id])
+            percent = 0
+            if total:
+                percent = float(count) / total * 100
+            data.append(
+                {
+                    'name': platform.name,
+                    'value': count,
+                    'y': float('{:.2f}'.format(percent)),
+                    'url': link.replace(
+                        '_REPLACE_',
+                        'project__platform__id__exact={}'.format(platform.id)
+                    ),
+                    'data': values[platform.id]
+                }
+            )
+
+    return {
+        'title': _('Unchecked Faults'),
+        'total': total,
+        'data': json.dumps(data),
+        'url': link.replace('&_REPLACE_', ''),
+    }
+
+
+def fault_by_month(user):
+    begin_date, end_date = month_interval()
+
+    return event_by_month(
+        Fault.stacked_by_month(user, begin_date),
+        begin_date,
+        end_date,
+    )
+
+
+def fault_by_definition(user):
+    total = Fault.objects.scope(user).count()
+    link = '{}?_REPLACE_'.format(
+        reverse('admin:server_fault_changelist')
+    )
+
+    data = []
+    for item in Fault.objects.scope(user).values(
+        'fault_definition__id', 'fault_definition__name'
+    ).annotate(
+        count=Count('fault_definition__id')
+    ).order_by('-count'):
+        percent = float(item.get('count')) / total * 100
+        data.append({
+            'name': item.get('fault_definition__name'),
+            'value': item.get('count'),
+            'y': float('{:.2f}'.format(percent)),
+            'url': link.replace(
+                '_REPLACE_',
+                'Tag={}'.format(item.get('fault_definition__id'))
+            ),
+        })
+
+    return {
+        'title': _('Faults / Fault Definition'),
+        'total': total,
+        'data': json.dumps(data),
+        'url': link.replace('?_REPLACE_', ''),
+    }
+
+
+@login_required
+def faults_summary(request):
+    user = request.user.userprofile
+
+    return render(
+        request,
+        'faults_summary.html',
+        {
+            'title': _('Faults'),
+            'chart_options': {
+                'no_data': _('There are no data to show'),
+            },
+            'unchecked_faults': unchecked_faults(user),
+            'fault_by_definition': fault_by_definition(user),
+            'fault_by_month': fault_by_month(user),
         }
     )
