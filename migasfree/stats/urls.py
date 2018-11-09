@@ -12,7 +12,7 @@ from .views import (
     attributes_summary, tags_summary,
     syncs_summary, migrations_summary,
     status_logs_summary, faults_summary,
-    errors_summary,
+    errors_summary, notifications_summary,
 )
 
 urlpatterns = [
@@ -116,5 +116,10 @@ urlpatterns = [
         r'^errors/$',
         errors_summary,
         name='errors_summary'
+    ),
+    url(
+        r'^notifications/$',
+        notifications_summary,
+        name='notifications_summary'
     ),
 ]
