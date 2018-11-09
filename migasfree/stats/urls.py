@@ -11,7 +11,8 @@ from .views import (
     deployments_summary, device_models_summary,
     attributes_summary, tags_summary,
     syncs_summary, migrations_summary,
-    status_logs_summary,
+    status_logs_summary, faults_summary,
+    errors_summary,
 )
 
 urlpatterns = [
@@ -105,5 +106,15 @@ urlpatterns = [
         r'^statuslogs/$',
         status_logs_summary,
         name='status_logs_summary'
+    ),
+    url(
+        r'^faults/$',
+        faults_summary,
+        name='faults_summary'
+    ),
+    url(
+        r'^errors/$',
+        errors_summary,
+        name='errors_summary'
     ),
 ]

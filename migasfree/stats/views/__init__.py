@@ -22,4 +22,7 @@ from .deployments import deployments_summary
 
 from .attributes import attributes_summary, tags_summary
 
-from .events import syncs_summary, migrations_summary, status_logs_summary
+from .events import (
+    syncs_summary, migrations_summary, status_logs_summary,
+    faults_summary, errors_summary,
+)
