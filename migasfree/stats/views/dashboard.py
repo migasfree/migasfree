@@ -2,19 +2,15 @@
 
 import json
 
-from collections import defaultdict
 from datetime import timedelta, datetime
 
-from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
 from migasfree.server.models import (
     Error, Fault,
-    Platform,
     Migration, StatusLog,
     Synchronization
 )
@@ -22,120 +18,7 @@ from migasfree.server.models import (
 from . import HOURLY_RANGE
 from .syncs import datetime_iterator
 from .computers import productive_computers_by_platform
-
-
-def unchecked_errors(user):
-    total = Error.unchecked_count(user)
-    link = '{}?checked__exact=0&_REPLACE_'.format(
-        reverse('admin:server_error_changelist')
-    )
-
-    values = defaultdict(list)
-    for item in Error.unchecked.scope(user).values(
-        'project__platform__id',
-        'project__id',
-        'project__name',
-    ).annotate(
-        count=Count('id')
-    ).order_by('project__id', '-count'):
-        percent = float(item.get('count')) / total * 100
-        values[item.get('project__platform__id')].append(
-            {
-                'name': item.get('project__name'),
-                'value': item.get('count'),
-                'y': float('{:.2f}'.format(percent)),
-                'url': link.replace(
-                    '_REPLACE_',
-                    'project__id__exact={}'.format(
-                        item.get('project__id')
-                    )
-                ),
-            }
-        )
-
-    data = []
-    for platform in Platform.objects.scope(user).all():
-        if platform.id in values:
-            count = sum(item['value'] for item in values[platform.id])
-            percent = float(count) / total * 100
-            data.append(
-                {
-                    'name': platform.name,
-                    'value': count,
-                    'y': float('{:.2f}'.format(percent)),
-                    'url': link.replace(
-                        '_REPLACE_',
-                        'project__platform__id__exact={}'.format(platform.id)
-                    ),
-                    'data': values[platform.id]
-                }
-            )
-
-    return {
-        'title': _('Unchecked Errors'),
-        'total': total,
-        'data': json.dumps(data),
-        'url': link.replace('&_REPLACE_', ''),
-    }
-
-
-def unchecked_faults(user):
-    total = Fault.unchecked_count(user)
-    link = '{}?checked__exact=0&user=me&_REPLACE_'.format(
-        reverse('admin:server_fault_changelist')
-    )
-
-    values = defaultdict(list)
-    for item in Fault.unchecked.scope(user).values(
-        'project__platform__id',
-        'project__id',
-        'project__name',
-    ).annotate(
-        count=Count('id')
-    ).order_by('project__id', '-count'):
-        percent = 0
-        if total:
-            percent = float(item.get('count')) / total * 100
-        values[item.get('project__platform__id')].append(
-            {
-                'name': item.get('project__name'),
-                'value': item.get('count'),
-                'y': float('{:.2f}'.format(percent)),
-                'url': link.replace(
-                    '_REPLACE_',
-                    'project__id__exact={}'.format(
-                        item.get('project__id')
-                    )
-                ),
-            }
-        )
-
-    data = []
-    for platform in Platform.objects.scope(user).all():
-        if platform.id in values:
-            count = sum(item['value'] for item in values[platform.id])
-            percent = 0
-            if total:
-                percent = float(count) / total * 100
-            data.append(
-                {
-                    'name': platform.name,
-                    'value': count,
-                    'y': float('{:.2f}'.format(percent)),
-                    'url': link.replace(
-                        '_REPLACE_',
-                        'project__platform__id__exact={}'.format(platform.id)
-                    ),
-                    'data': values[platform.id]
-                }
-            )
-
-    return {
-        'title': _('Unchecked Faults'),
-        'total': total,
-        'data': json.dumps(data),
-        'url': link.replace('&_REPLACE_', ''),
-    }
+from .events import unchecked_errors, unchecked_faults
 
 
 @login_required
