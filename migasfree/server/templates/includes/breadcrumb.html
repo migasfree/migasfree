@@ -43,6 +43,10 @@
             <li><a href="{% url 'migrations_summary' %}">{% trans 'Migrations' %}</a></li>
         {% elif opts.object_name.lower == 'statuslog' %}
             <li><a href="{% url 'status_logs_summary' %}">{% trans 'Status Logs' %}</a></li>
+        {% elif opts.object_name.lower == 'fault' %}
+            <li><a href="{% url 'faults_summary' %}">{% trans 'Faults' %}</a></li>
+        {% elif opts.object_name.lower == 'error' %}
+            <li><a href="{% url 'errors_summary' %}">{% trans 'Errors' %}</a></li>
         {% else %}
             <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
         {% endif %}
