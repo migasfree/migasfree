@@ -24,10 +24,10 @@
         <li><a href="{% url 'syncs_summary' %}">{% trans 'Synchronizations' %}</a></li>
     {% endif %}
     {% if perms.server.change_error %}
-        <li><a href="{% url 'admin:server_error_changelist' %}?checked__exact=0">{% trans 'Errors' %}</a></li>
+        <li><a href="{% url 'errors_summary' %}">{% trans 'Errors' %}</a></li>
     {% endif %}
     {% if perms.server.change_fault %}
-        <li><a href="{% url 'admin:server_fault_changelist' %}?checked__exact=0">{% trans 'Faults' %}</a></li>
+        <li><a href="{% url 'faults_summary' %}">{% trans 'Faults' %}</a></li>
     {% endif %}
     {% if perms.server.change_statuslog %}
         <li><a href="{% url 'status_logs_summary' %}">{% trans 'Status Logs' %}</a></li>
