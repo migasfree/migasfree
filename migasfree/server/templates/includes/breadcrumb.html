@@ -47,6 +47,8 @@
             <li><a href="{% url 'faults_summary' %}">{% trans 'Faults' %}</a></li>
         {% elif opts.object_name.lower == 'error' %}
             <li><a href="{% url 'errors_summary' %}">{% trans 'Errors' %}</a></li>
+        {% elif opts.object_name.lower == 'notification' %}
+            <li><a href="{% url 'notifications_summary' %}">{% trans 'Notifications' %}</a></li>
         {% else %}
             <li><a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a></li>
         {% endif %}

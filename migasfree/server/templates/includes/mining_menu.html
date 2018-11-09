@@ -39,6 +39,6 @@
         <li role="separator" class="divider"></li>
 
     {% if perms.server.change_notification %}
-        <li><a href="{% url 'admin:server_notification_changelist' %}?checked__exact=0">{% trans 'Notifications' %}</a></li>
+        <li><a href="{% url 'notifications_summary' %}">{% trans 'Notifications' %}</a></li>
     {% endif %}
 </ul>
