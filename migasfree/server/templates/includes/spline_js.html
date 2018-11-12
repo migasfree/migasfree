@@ -24,6 +24,16 @@ Highcharts.chart({{ id }}, {
             label: {
                 connectorAllowed: false
             },
+            cursor: "pointer",
+            point: {
+                events: {
+                    click: function() {
+                        if (typeof this.options.url != "undefined") {
+                            window.open(this.options.url, "_self");
+                        }
+                    }
+                }
+            }
         }
     },
     responsive: {

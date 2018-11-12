@@ -3,13 +3,14 @@
 import json
 
 from collections import defaultdict
-from datetime import date
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.http import urlencode
 from django.utils.translation import ugettext as _
 
 from migasfree.server.models import (
@@ -28,10 +29,11 @@ def month_interval():
     return begin_date, end_date
 
 
-def event_by_month(data, begin_date, end_date, field='project_id'):
+def event_by_month(data, begin_date, end_date, model, field='project_id'):
     labels = {}
     new_data = {}
     chart_data = {}
+    url = reverse('admin:server_{}_changelist'.format(model))
 
     if field == 'project_id':
         projects = Project.objects.only('id', 'name')
@@ -54,6 +56,13 @@ def event_by_month(data, begin_date, end_date, field='project_id'):
         begin_date.month, begin_date.year,
         end_date.month, end_date.year
     ):
+        start_date = date(monthly[0], monthly[1], 1)
+        final_date = start_date + relativedelta(months=+1)
+        querystring = {
+            'created_at__gte': start_date.strftime("%Y-%m-%d"),
+            'created_at__lt': final_date.strftime("%Y-%m-%d")
+        }
+
         key = '%d-%02d' % (monthly[0], monthly[1])
         x_axe.append(key)
         value = filter(lambda item: item['year'] == monthly[0] and item['month'] == monthly[1], data)
@@ -61,17 +70,29 @@ def event_by_month(data, begin_date, end_date, field='project_id'):
             for project in projects:
                 if value:
                     count = filter(lambda item: item['project_id'] == project.id, value)
-                    new_data[project.id].append(count[0]['count'] if count else 0)
+                    querystring['project__id__exact'] = project.id
+                    new_data[project.id].append({
+                        'y': count[0]['count'] if count else 0,
+                        'url': '{}?{}'.format(url, urlencode(querystring))
+                    })
         elif field == 'status':
             for status in Computer.STATUS_CHOICES:
                 if value:
                     count = filter(lambda item: item['status'] == status[0], value)
-                    new_data[status[0]].append(count[0]['count'] if count else 0)
+                    querystring['status__in'] = status[0]
+                    new_data[status[0]].append({
+                        'y': count[0]['count'] if count else 0,
+                        'url': '{}?{}'.format(url, urlencode(querystring))
+                    })
         elif field == 'checked':
             for val in [True, False]:
                 if value:
                     count = filter(lambda item: item['checked'] == val, value)
-                    new_data[val].append(count[0]['count'] if count else 0)
+                    querystring['checked__exact'] = 1 if val else 0
+                    new_data[val].append({
+                        'y': count[0]['count'] if count else 0,
+                        'url': '{}?{}'.format(url, urlencode(querystring))
+                    })
 
     for item in new_data:
         chart_data[labels[item]] = new_data[item]
@@ -113,7 +134,11 @@ def sync_by_project(user):
 def sync_by_month(user):
     begin_date, end_date = month_interval()
 
-    return event_by_month(Synchronization.stacked_by_month(user, begin_date), begin_date, end_date)
+    return event_by_month(
+        Synchronization.stacked_by_month(user, begin_date),
+        begin_date, end_date,
+        'synchronization'
+    )
 
 
 @login_required
@@ -190,7 +215,11 @@ def migration_by_project(user):
 def migration_by_month(user):
     begin_date, end_date = month_interval()
 
-    return event_by_month(Migration.stacked_by_month(user, begin_date), begin_date, end_date)
+    return event_by_month(
+        Migration.stacked_by_month(user, begin_date),
+        begin_date, end_date,
+        'migration'
+    )
 
 
 @login_required
@@ -218,6 +247,7 @@ def status_log_by_month(user):
         StatusLog.stacked_by_month(user, begin_date, field='status'),
         begin_date,
         end_date,
+        'statuslog',
         field='status'
     )
 
@@ -366,6 +396,7 @@ def error_by_month(user):
         Error.stacked_by_month(user, begin_date),
         begin_date,
         end_date,
+        'error'
     )
 
 
@@ -510,6 +541,7 @@ def fault_by_month(user):
         Fault.stacked_by_month(user, begin_date),
         begin_date,
         end_date,
+        'fault'
     )
 
 
@@ -570,6 +602,7 @@ def notification_by_month():
         Notification.stacked_by_month(begin_date),
         begin_date,
         end_date,
+        'notification',
         field='checked'
     )
 
