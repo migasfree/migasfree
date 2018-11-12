@@ -258,7 +258,7 @@ def status_log_by_status(user):
         {
             'name': _('Subscribed'),
             'value': subscribed,
-            'y': float('{:.2f}'.format(float(subscribed) / total * 100)),
+            'y': float('{:.2f}'.format(float(subscribed) / total * 100)) if subscribed else 0,
             'url': link.replace(
                 '_REPLACE_',
                 'status__in=intended,reserved,unknown,available,in repair'
@@ -269,7 +269,7 @@ def status_log_by_status(user):
         {
             'name': _('unsubscribed'),
             'value': unsubscribed,
-            'y': float('{:.2f}'.format(float(unsubscribed) / total * 100)),
+            'y': float('{:.2f}'.format(float(unsubscribed) / total * 100)) if unsubscribed else 0,
             'url': link.replace(
                 '_REPLACE_',
                 'status__in=unsubscribed'
