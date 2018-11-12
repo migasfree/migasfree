@@ -382,10 +382,22 @@ class MigasChangeList(ChangeList):
                                 '< {}'.format(params[k]),
                                 k
                             )
+                        elif lookup_type == 'lte':
+                            self.append(
+                                name,
+                                '<= {}'.format(params[k]),
+                                k
+                            )
                         elif lookup_type == 'gt':
                             self.append(
                                 name,
                                 '> {}'.format(params[k]),
+                                k
+                            )
+                        elif lookup_type == 'gte':
+                            self.append(
+                                name,
+                                '>= {}'.format(params[k]),
                                 k
                             )
                         else:
