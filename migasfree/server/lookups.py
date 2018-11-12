@@ -224,12 +224,8 @@ class ComputerLookup(LookupChannel):
             return self.model.objects.scope(request.user.userprofile).filter(id__exact=q)
         else:
             return self.model.objects.scope(request.user.userprofile).filter(
-                Q(id__exact=q) |
-                Q(**{
-                    '{}__icontains'.format(
-                        settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]
-                    ): q
-                })
+                Q(id__exact=q) if isinstance(q, int) else Q() |
+                Q(**{'{}__icontains'.format(settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]): q})
             ).filter(
                 ~Q(status__in=['available', 'unsubscribed'])
             )
