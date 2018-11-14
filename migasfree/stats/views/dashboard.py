@@ -38,7 +38,7 @@ def stats_dashboard(request):
     data_migrations = []
     data_status = []
 
-    for item in datetime_iterator(begin_date, end_date, delta=timedelta(hours=1)):
+    for item in datetime_iterator(begin_date, end_date - timedelta(hours=1), delta=timedelta(hours=1)):
         data_syncs.append(syncs[item]['count'] if item in syncs else 0)
         data_errors.append(errors[item]['count'] if item in errors else 0)
         data_faults.append(faults[item]['count'] if item in faults else 0)
