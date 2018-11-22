@@ -129,8 +129,10 @@ class AttributeSet(models.Model, MigasLink):
             sets = AttributeSet.item_at_index(sets, item.id)
 
             for subset in item.included_attributes.filter(
-                ~Q(property_att__sort='basic')
-            ).filter(property_att__prefix='SET').filter(~Q(value=item.name)):
+                    id__gt=1 # <> ALL SYSTEMS
+            ).filter(
+                property_att__id=1
+            ).filter(~Q(value=item.name)):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -138,8 +140,10 @@ class AttributeSet(models.Model, MigasLink):
                 )
 
             for subset in item.excluded_attributes.filter(
-                ~Q(property_att__sort='basic')
-            ).filter(property_att__prefix='SET').filter(~Q(value=item.name)):
+                    id__gt=1 # <> ALL SYSTEMS
+            ).filter(
+                property_att__id=1
+            ).filter(~Q(value=item.name)):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -163,6 +167,8 @@ class AttributeSet(models.Model, MigasLink):
             ).distinct():
                 att = Attribute.objects.create(property_set, att_set.name)
                 att_id.append(att.id)
+                # IMPORTANT: appends attribute to attributes list
+                attributes.append(att.id)
 
         return att_id
 
