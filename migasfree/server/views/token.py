@@ -784,7 +784,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
 
         results = models.Device.objects.filter(
             available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True)
-        ).order_by('name', 'model__name')
+        ).order_by('name', 'model__name').distinct()
         if query:
             results = results.filter(Q(name__icontains=query) | Q(data__icontains=query))
 
@@ -848,7 +848,7 @@ class LogicalViewSet(viewsets.ModelViewSet):
 
         results = models.DeviceLogical.objects.filter(
             device__available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True)
-        ).order_by('device__name', 'feature__name')
+        ).order_by('device__name', 'feature__name').distinct()
         if query:
             results = results.filter(Q(device__name__icontains=query) | Q(device__data__icontains=query))
         if device:

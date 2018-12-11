@@ -60,7 +60,7 @@ class ApplicationViewSet(viewsets.ModelViewSet):
         results = models.Application.objects.filter(
             available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True),
             packages_by_project__project=computer.project
-        ).order_by('-score', 'name')
+        ).order_by('-score', 'name').distinct()
         if category:
             results = results.filter(category=category)
         if level:
