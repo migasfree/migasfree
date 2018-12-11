@@ -26,7 +26,7 @@
 {% endblock content_title %}
 
 {% block content %}
-    {% include 'includes/search_form.html' with url_name='admin:server_device_changelist' %}
+    {% include 'includes/search_form.html' with url_name='admin:server_devicemodel_changelist' %}
 
     <div class="row text-center">
         {% include 'includes/multipie_chart.html' with item=models_by_manufacturer id='models-manufacturer' col=6 %}
