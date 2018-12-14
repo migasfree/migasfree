@@ -65,6 +65,7 @@ var options = {
             center: ["50%", "50%"]
         },
         series: {
+            animation: false,
             cursor: "pointer",
             point: {
                 events: {
@@ -110,6 +111,7 @@ var optionsMulti = {
             center: ["50%", "50%"]
         },
         series: {
+            animation: false,
             cursor: "pointer",
             point: {
                 events: {
