@@ -3,7 +3,7 @@
 import json
 
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import date
 from dateutil.relativedelta import relativedelta
 
 from django.db.models import Count
