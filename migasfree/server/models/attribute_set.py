@@ -8,19 +8,16 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import pre_delete, pre_save
 from django.dispatch import receiver
 
-from . import (
-    Property,
-    Attribute,
-    MigasLink
-)
+from . import Property, Attribute, MigasLink
 
 
 class AttributeSetManager(models.Manager):
     def scope(self, user):
         qs = super(AttributeSetManager, self).get_queryset()
         if not user.is_view_all():
-            atts=user.get_attributes()
-            qs = qs.filter(included_attributes__in=atts).distinct()
+            qs = qs.filter(
+                included_attributes__in=user.get_attributes()
+            ).distinct()
 
         return qs
 
@@ -129,10 +126,12 @@ class AttributeSet(models.Model, MigasLink):
             sets = AttributeSet.item_at_index(sets, item.id)
 
             for subset in item.included_attributes.filter(
-                    id__gt=1 # <> ALL SYSTEMS
+                ~Q(value='ALL SYSTEMS')
             ).filter(
-                property_att__id=1
-            ).filter(~Q(value=item.name)):
+                property_att__prefix='SET'
+            ).filter(
+                ~Q(value=item.name)
+            ):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -140,10 +139,12 @@ class AttributeSet(models.Model, MigasLink):
                 )
 
             for subset in item.excluded_attributes.filter(
-                    id__gt=1 # <> ALL SYSTEMS
+                ~Q(value='ALL SYSTEMS')
             ).filter(
-                property_att__id=1
-            ).filter(~Q(value=item.name)):
+                property_att__prefix='SET'
+            ).filter(
+                ~Q(value=item.name)
+            ):
                 sets = AttributeSet.item_at_index(
                     sets,
                     AttributeSet.objects.get(name=subset.value).id,
@@ -167,7 +168,7 @@ class AttributeSet(models.Model, MigasLink):
             ).distinct():
                 att = Attribute.objects.create(property_set, att_set.name)
                 att_id.append(att.id)
-                # IMPORTANT: appends attribute to attributes list
+                # IMPORTANT: appends attribute to attribute list
                 attributes.append(att.id)
 
         return att_id
