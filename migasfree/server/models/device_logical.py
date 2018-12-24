@@ -1,5 +1,7 @@
 # -*- coding: utf-8 *-*
 
+import json
+
 from past.builtins import basestring
 
 from django.db import models
@@ -29,8 +31,9 @@ class DeviceLogicalManager(models.Manager):
     def scope(self, user):
         qs = super(DeviceLogicalManager, self).get_queryset()
         if not user.is_view_all():
-            atts=user.get_attributes()
-            qs = qs.filter(attributes__in=atts).distinct()
+            qs = qs.filter(
+                attributes__in=user.get_attributes()
+            ).distinct()
 
         return qs
 
@@ -102,12 +105,19 @@ class DeviceLogical(models.Model, MigasLink):
         return ret
 
     def __str__(self):
-        return u'{}__{}__{}__{}__{}'.format(
+        data = json.loads(self.device.data)
+        if 'NAME' in data and not (data['NAME'] == 'undefined' or data['NAME'] == ''):
+            return u'{}__{}__{}'.format(
+                data['NAME'],
+                self.get_name(),
+                self.device.name,
+            )
+
+        return u'{}__{}__{}__{}'.format(
             self.device.model.manufacturer.name,
             self.device.model.name,
-            self.feature.name,
+            self.get_name(),
             self.device.name,
-            self.id
         )
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
