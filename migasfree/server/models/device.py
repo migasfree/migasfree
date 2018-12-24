@@ -13,14 +13,17 @@ from ..utils import (
     remove_empty_elements_from_dict
 )
 
+
 class DeviceManager(models.Manager):
     def scope(self, user):
         qs = super(DeviceManager, self).get_queryset()
         if not user.is_view_all():
-            atts=user.get_attributes()
-            qs = qs.filter(devicelogical__attributes__in=atts).distinct()
+            qs = qs.filter(
+                devicelogical__attributes__in=user.get_attributes()
+            ).distinct()
 
         return qs
+
 
 @python_2_unicode_compatible
 class Device(models.Model, MigasLink):
@@ -147,7 +150,6 @@ class Device(models.Model, MigasLink):
                 for x in self.devicelogical_set.all().order_by('feature')
             ),
         })
-
 
     def related_objects(self, model, user):
         """
