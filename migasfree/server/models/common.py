@@ -5,6 +5,7 @@ import json
 from django.urls import reverse
 from django.utils.translation import ugettext
 from django.utils.html import format_html
+from django.utils.http import urlencode
 from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
@@ -374,10 +375,9 @@ class MigasLink(object):
         if self._meta.model_name == 'hwnode':
             from . import Computer
             data.append({
-                'url': u'{}?{}={}'.format(
+                'url': u'{}?{}'.format(
                     reverse('admin:server_computer_changelist'),
-                    'product',
-                    self.computer.product,
+                    urlencode({'product': self.computer.product}),
                 ),
                 'text': u'{} [{}]'.format(
                     ugettext('computer'),
