@@ -112,10 +112,9 @@ def get_sourcefile(request):
     _path = request.get_full_path()
     project_name = _path.split("/")[2]
     source_name = _path.split("/")[4]
-    entrypoint = "/" +_path.split("/")[1] + "/"  # "/src/" or "/get_sourcefile/"
-    resource = _path.split( entrypoint + project_name+"/SOURCES/"+source_name+"/")[1]
+    resource = _path.split( "/src/" + project_name+"/SOURCES/"+source_name+"/")[1]
 
-    _file_local = os.path.join(settings.MIGASFREE_PUBLIC_DIR, _path.split(entrypoint)[1])
+    _file_local = os.path.join(settings.MIGASFREE_PUBLIC_DIR, _path.split("/src/")[1])
 
     if not (_file_local.endswith(".deb") or _file_local.endswith(".rpm")): # is a metadata file
         # get source
