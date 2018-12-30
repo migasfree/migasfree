@@ -442,7 +442,25 @@ def upload_computer_info(request, name, uuid, computer, data):
         # deployments
         deploys = Deployment.available_deployments(computer, computer.get_all_attributes())
         for d in deploys:
-            lst_deploys.append({"name": d.name})
+            if d.suite:  # is a Source
+                lst_deploys.append({
+                    "name": d.name,
+                    "suite": d.suite,
+                    "media": "/src/",
+                    "type": "SOURCES",
+                    "components": d.components,
+                    "options": d.options if d.options else ""
+                })
+            else:  # is a Deployment
+                lst_deploys.append({
+                    "name": d.name,
+                    "suite": "",
+                    "media": settings.MEDIA_URL,
+                    "type": "REPOSITORIES",
+                    "components": "PKGS",
+                    "options": ""
+                })
+
             if d.packages_to_remove:
                 for p in to_list(d.packages_to_remove):
                     if p != "":

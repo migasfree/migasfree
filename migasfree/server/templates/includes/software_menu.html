@@ -1,6 +1,9 @@
 {% load i18n %}
 
 <ul class="dropdown-menu">
+    {% if perms.server.change_source %}
+        <li><a href="{% url 'sources_summary' %}">{% trans 'Sources' %}</a></li>
+    {% endif %}
     {% if perms.server.change_deployment %}
         <li><a href="{% url 'deployments_summary' %}">{% trans 'Deployments' %}</a></li>
     {% endif %}

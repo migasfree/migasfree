@@ -8,7 +8,7 @@ from .views import (
     provided_computers_by_delay, devices_summary,
     computers_summary, stores_summary,
     packages_summary, applications_summary,
-    deployments_summary, device_models_summary,
+    deployments_summary, sources_summary, device_models_summary,
     attributes_summary, tags_summary,
     syncs_summary, migrations_summary,
     status_logs_summary, faults_summary,
@@ -71,6 +71,11 @@ urlpatterns = [
         r'^computers/$',
         computers_summary,
         name='computers_summary'
+    ),
+    url(
+        r'^sources/$',
+        sources_summary,
+        name='sources_summary'
     ),
     url(
         r'^deployments/$',

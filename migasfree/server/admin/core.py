@@ -16,13 +16,13 @@ from .migasfree import MigasAdmin, MigasFields
 
 from ..models import (
     Attribute, AttributeSet, ClientProperty, ClientAttribute, Computer,
-    Notification, Package, Platform, Pms, Property, Query, Deployment, Schedule,
+    Notification, Package, Platform, Pms, Property, Query, Deployment, Source, Schedule,
     ScheduleDelay, Store, ServerAttribute, ServerProperty, UserProfile, Project,
     Domain, Scope,
 )
 
 from ..forms import (
-    PropertyForm, DeploymentForm, ServerAttributeForm,
+    PropertyForm, DeploymentForm, SourceForm, ServerAttributeForm,
     AttributeSetForm, StoreForm, PackageForm, UserProfileForm,
     DomainForm, ScopeForm
 )
@@ -317,6 +317,112 @@ class QueryAdmin(MigasAdmin):
             return redirect(reverse('query', args=(query.id,)))
 
     run_query.short_description = _("Run Query")
+
+@admin.register(Source)
+class SourceAdmin(AjaxSelectAdmin, MigasAdmin):
+    form = SourceForm
+    list_display = (
+        'name_link', 'project_link', 'domain_link',
+        'my_enabled', 'start_date', 'schedule_link', 'timeline', 'computers',
+    )
+    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
+    search_fields = ('name', 'available_packages__name')
+    list_select_related = ("project",)
+    actions = ['regenerate_metadata']
+    readonly_fields = ('timeline',)
+
+    fieldsets = (
+        (_('General'), {
+            'fields': ('name', 'project', 'enabled', 'comment',)
+        }),
+        (_('Remote'), {
+            'fields': ( 'base', 'suite', 'components', 'options' ,'frozen', 'expire',)
+        }),
+        (_('Packages'), {
+            'classes': ('collapse',),
+            'fields': (
+                'packages_to_install',
+                'packages_to_remove',
+            )
+        }),
+        (_('Default'), {
+            'classes': ('collapse',),
+            'fields': (
+                'default_preincluded_packages',
+                'default_included_packages',
+                'default_excluded_packages',
+            )
+        }),
+        (_('Attributes'), {
+            'fields': ('domain', 'included_attributes', 'excluded_attributes')
+        }),
+        (_('Schedule'), {
+            'fields': ('start_date', 'schedule', 'timeline')
+        }),
+    )
+
+    name_link = MigasFields.link(model=Source, name='name')
+    project_link = MigasFields.link(
+        model=Source, name='project', order='project__name'
+    )
+    domain_link = MigasFields.link(
+        model=Source, name='domain', order='domain__name'
+    )
+    schedule_link = MigasFields.link(
+        model=Source, name='schedule', order='schedule__name'
+    )
+    my_enabled = MigasFields.boolean(model=Source, name='enabled')
+    timeline = MigasFields.timeline()
+
+    def computers(self, obj):
+        related_objects = obj.related_objects('computer',self.user.userprofile)
+        if related_objects:
+            return related_objects.count()
+        return 0
+    computers.short_description = _('Computers')
+
+    def get_queryset(self, request):
+        self.user = request.user
+        qs = Attribute.objects.scope(request.user.userprofile)
+        return super(SourceAdmin, self).get_queryset(
+            request
+        ).prefetch_related(
+            Prefetch('included_attributes', queryset=qs),
+            'included_attributes__property_att',
+            Prefetch('excluded_attributes', queryset=qs),
+            'excluded_attributes__property_att',
+        ).extra(
+            select={
+                'schedule_begin': '(SELECT delay FROM server_scheduledelay '
+                                  'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
+                                  'ORDER BY server_scheduledelay.delay LIMIT 1)',
+                'schedule_end': '(SELECT delay+duration FROM server_scheduledelay '
+                                'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
+                                'ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
+            }
+        ).select_related("project", "schedule")
+
+    def response_add(self, request, obj, post_url_continue=None):
+        return HttpResponseRedirect(
+            '{}?enabled__exact={}&project__id__exact={}'.format(
+                reverse('admin:server_source_changelist'),
+                obj.enabled,
+                obj.project.id
+            )
+        )
+
+    def response_change(self, request, obj):
+        if request.POST.get('_save', None):
+            return HttpResponseRedirect(
+                '{}?enabled__exact={}&project__id__exact={}'.format(
+                    reverse('admin:server_source_changelist'),
+                    obj.enabled,
+                    obj.project.id
+                )
+            )
+
+        return super(SourceAdmin, self).response_change(request, obj)
+
 
 
 @admin.register(Deployment)

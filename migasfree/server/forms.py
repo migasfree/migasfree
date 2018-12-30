@@ -14,7 +14,7 @@ from datetimewidget.widgets import DateWidget, DateTimeWidget
 
 from .fields import MigasAutoCompleteSelectMultipleField
 from .models import (
-    Deployment, UserProfile, Computer, Device, DeviceLogical,
+    Deployment, Source, UserProfile, Computer, Device, DeviceLogical,
     Property, ServerAttribute, ServerProperty, Attribute,
     AttributeSet, Store, Package, FaultDefinition, DeviceModel,
     DeviceDriver, DeviceFeature, Domain, Scope, Project,
@@ -78,6 +78,112 @@ class AppendDevicesFromComputerForm(forms.Form):
         widget=autocomplete.ModelSelect2Multiple('attribute_autocomplete'),
         label=_('Target')
     )
+
+class SourceForm(forms.ModelForm):
+    included_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('included attributes'), show_help_text=False
+    )
+    excluded_attributes = MigasAutoCompleteSelectMultipleField(
+        'attribute', required=False,
+        label=_('excluded attributes'), show_help_text=False
+    )
+    available_packages = MigasAutoCompleteSelectMultipleField(
+        'package', required=False,
+        label=_('available packages'), show_help_text=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", None)
+        super(SourceForm, self).__init__(*args, **kwargs)
+        #user = self.request.user.userprofile
+
+        self.fields['start_date'].initial = datetime.date.today()
+
+        """
+        try:
+            if Project.objects.scope(user).count() == 1:
+                self.fields['project'].initial = Project.objects.scope(user).first().id
+
+            self.fields['project'].queryset = Project.objects.scope(user)
+        except AttributeError:
+            pass
+
+        if not self.instance.id and user.domain_preference:
+            self.fields['domain'].initial = user.domain_preference
+
+        domains = user.domains.all()
+        if domains.count() == 0:
+            self.fields['domain'].queryset = Domain.objects.all()
+        else:
+            self.fields['domain'].queryset = domains
+        """
+
+
+    def _validate_active_computers(self, att_list):
+        for att_id in att_list:
+            attribute = Attribute.objects.get(pk=att_id)
+            if attribute.property_att.prefix == 'CID':
+                computer = Computer.objects.get(pk=int(attribute.value))
+                if computer.status not in Computer.ACTIVE_STATUS:
+                    raise ValidationError(
+                        _('It is not possible to assign an inactive computer (%s) as an attribute')
+                        % computer
+                    )
+
+    def clean(self):
+        # http://stackoverflow.com/questions/7986510/django-manytomany-model-validation
+        cleaned_data = super(SourceForm, self).clean()
+
+        if 'project' not in cleaned_data:
+            raise ValidationError(_('Project is required'))
+
+        for pkg_id in cleaned_data.get('available_packages', []):
+            pkg = Package.objects.get(pk=pkg_id)
+            if pkg.project.id != cleaned_data['project'].id:
+                raise ValidationError(
+                    _('Package %s must belong to the project %s') % (
+                        pkg, cleaned_data['project']
+                    )
+                )
+
+        self._validate_active_computers(
+            cleaned_data.get('included_attributes', [])
+        )
+        self._validate_active_computers(
+            cleaned_data.get('excluded_attributes', [])
+        )
+
+        """
+        if not cleaned_data['domain']:
+            domain_admin_group = Group.objects.filter(name='Domain Admin')
+            if domain_admin_group:
+                domain_admin_group = domain_admin_group[0]
+                if domain_admin_group.id in list(
+                    self.request.user.userprofile.groups.values_list('id', flat=True)
+                ):
+                    raise ValidationError(_('Domain can not be empty'))
+        """
+
+    class Meta:
+        model = Source
+        fields = '__all__'
+        widgets = {
+            'comment': NormalTextarea,
+            'packages_to_install': NormalTextarea,
+            'packages_to_remove': NormalTextarea,
+            'default_preincluded_packages': NormalTextarea,
+            'default_included_packages': NormalTextarea,
+            'default_excluded_packages': NormalTextarea,
+            'start_date': DateWidget(
+                usel10n=True,
+                bootstrap_version=3,
+                options={
+                    'format': 'yyyy-mm-dd',
+                    'autoclose': True,
+                }
+            ),
+        }
 
 
 class DeploymentForm(forms.ModelForm):

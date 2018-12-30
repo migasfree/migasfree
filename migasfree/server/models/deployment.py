@@ -36,7 +36,7 @@ class DeploymentManager(models.Manager):
             domain = user.domain_preference
             if domain:
                 qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
-
+        qs = qs.filter(suite__isnull=True)
         return qs
 
 
@@ -136,6 +136,46 @@ class Deployment(models.Model, MigasLink):
         verbose_name=_('default excluded packages'),
         null=True,
         blank=True
+    )
+
+    base = models.CharField(
+        max_length=100,
+        verbose_name=_('base url'),
+        null=True,
+        blank=True
+    )
+
+    # https://manpages.debian.org/stretch/apt/sources.list.5.en.html
+    # https://linux.die.net/man/5/yum.conf
+    options = models.CharField(
+        max_length=250,
+        verbose_name=_('options'),
+        null=True,
+        blank=True
+    )
+
+    suite = models.CharField(
+        max_length=50,
+        verbose_name=_('suite'),
+        null=True,
+        blank=True
+    )
+
+    components = models.CharField(
+        max_length=100,
+        verbose_name=_('components'),
+        null=True,
+        blank=True
+    )
+
+    frozen = models.BooleanField(
+        verbose_name=_('frozen'),
+        default=True
+    )
+
+    expire = models.IntegerField(
+        verbose_name=_('metadata cache minutes. Default 1440 minutes = 1 day'),
+        default=1440 # 60 * 24 = 1 day
     )
 
     objects = DeploymentManager()
@@ -366,3 +406,28 @@ def pre_delete_deployment(sender, instance, **kwargs):
     path = instance.path()
     if os.path.exists(path):
         shutil.rmtree(path)
+
+
+class SourceManager(models.Manager):
+    def scope(self, user):
+        qs = super(SourceManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+            domain = user.domain_preference
+            if domain:
+                qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
+        qs = qs.exclude(suite__isnull=True)
+        return qs
+
+
+class Source(Deployment):
+    objects = SourceManager()
+
+    def __init__(self, *args, **kwargs):
+        super(Source, self).__init__(*args, **kwargs)
+
+    class Meta:
+        app_label = 'server'
+        verbose_name = _("Source")
+        verbose_name_plural = _("Sources")
+        proxy = True
