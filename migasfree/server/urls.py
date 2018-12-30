@@ -16,6 +16,8 @@ urlpatterns = [
 
     url(r'^src/', get_sourcefile, name='get_sourcefile'),
 
+    url(r'^get_sourcefile/', get_sourcefile, name='get_sourcefile'),
+
     url(r'^accounts/login/$', login, name='login'),
 
     url(
