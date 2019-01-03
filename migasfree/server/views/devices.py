@@ -81,6 +81,7 @@ def device_replacement(request):
         'device_replacement.html',
         {
             'title': _('Devices Replacement'),
-            'form': form
+            'form': form,
+            'help': 'devicereplacement',
         }
     )

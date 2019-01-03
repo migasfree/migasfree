@@ -35,7 +35,8 @@ def hardware_resume(request, pk):
         {
             'title': u'{}: {}'.format(_("Hardware Information"), computer),
             'computer': computer,
-            'data': data
+            'data': data,
+            'help': 'hardwareresume',
         }
     )
 

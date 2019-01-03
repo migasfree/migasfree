@@ -119,6 +119,7 @@ def computer_replacement(request):
         {
             'title': _('Computers Replacement'),
             'form': form,
+            'help': 'computerreplacement',
         }
     )
 
@@ -171,6 +172,7 @@ def computer_events(request, pk):
             'status_count': status_count,
             'migrations': migrations,
             'migrations_count': migrations_count,
+            'help': 'computerevents',
         }
     )
 
@@ -207,7 +209,8 @@ def computer_simulate_sync(request, pk):
     result = {
         'title': _('Simulate sync: %s') % computer,
         'computer': computer,
-        'project': project
+        'project': project,
+        'help': 'computersimulatesync',
     }
 
     if computer.status == 'unsubscribed':
