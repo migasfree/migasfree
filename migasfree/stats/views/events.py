@@ -155,6 +155,7 @@ def syncs_summary(request):
             },
             'sync_by_project': sync_by_project(user),
             'sync_by_month': sync_by_month(user),
+            'opts': Synchronization._meta,
         }
     )
 
@@ -236,6 +237,7 @@ def migrations_summary(request):
             },
             'migration_by_project': migration_by_project(user),
             'migration_by_month': migration_by_month(user),
+            'opts': Migration._meta,
         }
     )
 
@@ -330,6 +332,7 @@ def status_logs_summary(request):
             },
             'status_log_by_status': status_log_by_status(user),
             'status_log_by_month': status_log_by_month(user),
+            'opts': StatusLog._meta,
         }
     )
 
@@ -471,6 +474,7 @@ def errors_summary(request):
             'unchecked_errors': unchecked_errors(user),
             'error_by_project': error_by_project(user),
             'error_by_month': error_by_month(user),
+            'opts': Error._meta,
         }
     )
 
@@ -591,6 +595,7 @@ def faults_summary(request):
             'unchecked_faults': unchecked_faults(user),
             'fault_by_definition': fault_by_definition(user),
             'fault_by_month': fault_by_month(user),
+            'opts': Fault._meta,
         }
     )
 
@@ -618,5 +623,6 @@ def notifications_summary(request):
                 'no_data': _('There are no data to show'),
             },
             'notification_by_month': notification_by_month(),
+            'opts': Notification._meta,
         }
     )

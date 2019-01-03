@@ -286,5 +286,6 @@ def sources_summary(request):
             'enabled_sources': enabled_sources(user),
             'source_by_enabled': source_by_enabled(user),
             'source_by_schedule': source_by_schedule(user),
+            'opts': Source._meta
         }
     )

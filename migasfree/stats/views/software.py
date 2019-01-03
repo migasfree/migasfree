@@ -176,6 +176,7 @@ def stores_summary(request):
                 'reset_zoom': _('Reset Zoom'),
             },
             'store_by_project': store_by_project(user),
+            'opts': Store._meta,
         }
     )
 
@@ -194,6 +195,7 @@ def packages_summary(request):
                 'reset_zoom': _('Reset Zoom'),
             },
             'package_by_store': package_by_store(user),
+            'opts': Package._meta,
         }
     )
 
@@ -211,5 +213,6 @@ def applications_summary(request):
             },
             'application_by_category': application_by_category(),
             'application_by_level': application_by_level(),
+            'opts': Application._meta,
         }
     )

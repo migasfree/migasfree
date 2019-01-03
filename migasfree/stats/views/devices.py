@@ -153,6 +153,7 @@ def devices_summary(request):
             'devices_by_connection': devices_by_connection(),
             'devices_by_model': devices_by_model(),
             'devices_by_manufacturer': devices_by_manufacturer(),
+            'opts': Device._meta,
         }
     )
 
@@ -169,5 +170,6 @@ def device_models_summary(request):
                 'reset_zoom': _('Reset Zoom'),
             },
             'models_by_manufacturer': models_by_manufacturer(),
+            'opts': DeviceModel._meta,
         }
     )

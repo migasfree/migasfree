@@ -86,6 +86,7 @@ def attributes_summary(request):
                 'no_data': _('There are no data to show'),
             },
             'attribute_by_property': attribute_by_property(user),
+            'opts': ClientAttribute._meta,
         }
     )
 
@@ -103,5 +104,6 @@ def tags_summary(request):
                 'no_data': _('There are no data to show'),
             },
             'tag_by_category': tag_by_category(user),
+            'opts': ServerAttribute._meta,
         }
     )

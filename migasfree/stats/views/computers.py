@@ -264,5 +264,6 @@ def computers_summary(request):
             'productive_computers_by_platform': productive_computers_by_platform(user),
             'computers_by_machine': computers_by_machine(user),
             'computers_by_status': computers_by_status(user),
+            'opts': Computer._meta,
         }
     )

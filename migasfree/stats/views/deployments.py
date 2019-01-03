@@ -286,5 +286,6 @@ def deployments_summary(request):
             'enabled_deployments': enabled_deployments(user),
             'deployment_by_enabled': deployment_by_enabled(user),
             'deployment_by_schedule': deployment_by_schedule(user),
+            'opts': Deployment._meta,
         }
     )
