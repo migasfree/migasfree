@@ -104,7 +104,7 @@ def get_sourcefile(request):
     from urllib2 import urlopen, URLError, HTTPError
     from wsgiref.util import FileWrapper
     from django.http import HttpResponse
-    from migasfree.server.models import Source
+    from migasfree.server.models import ExternalSource
     import time
 
     source = None
@@ -112,13 +112,13 @@ def get_sourcefile(request):
     _path = request.get_full_path()
     project_name = _path.split("/")[2]
     source_name = _path.split("/")[4]
-    resource = _path.split( "/src/" + project_name+"/SOURCES/"+source_name+"/")[1]
+    resource = _path.split( "/src/" + project_name+"/EXTERNAL/"+source_name+"/")[1]
 
     _file_local = os.path.join(settings.MIGASFREE_PUBLIC_DIR, _path.split("/src/")[1])
 
     if not (_file_local.endswith(".deb") or _file_local.endswith(".rpm")): # is a metadata file
         # get source
-        source = Source.objects.get(project__name=project_name, name=source_name)
+        source = ExternalSource.objects.get(project__name=project_name, name=source_name)
 
         if not source.frozen:
             # expired metadata
@@ -133,7 +133,7 @@ def get_sourcefile(request):
             os.makedirs(os.path.dirname(_file_local))  # Make path local
 
         if not source:
-            source = Source.objects.get(project__name=project_name, name=source_name)
+            source = ExternalSource.objects.get(project__name=project_name, name=source_name)
 
         url = "{}/{}".format(str(source.base), resource)
 

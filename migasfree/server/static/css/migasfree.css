@@ -402,3 +402,6 @@ a.nounderline:link {
     }
 }
 
+.vTextField {
+     width: 100% !important;
+}

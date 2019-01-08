@@ -17,11 +17,18 @@
 
     {% if perms.server.add_deployment %}
         <div id="add-button" class="pull-left">
-            <a role="button" href="{% url 'admin:server_deployment_add' %}" class="btn btn-primary"
-               title="{% trans 'Add Deployment' %}">
-                <span class="glyphicon glyphicon-plus"></span>
+            <a role="button" href="{% url 'admin:server_internalsource_add' %}" class="btn btn-primary"
+               title="{% trans 'Add Internal Source' %}">
+                <span class="glyphicon glyphicon-plus"> Internal Source </span>
             </a>
         </div>
+        <div id="add-button" class="pull-left">
+            <a role="button" href="{% url 'admin:server_externalsource_add' %}" class="btn btn-primary"
+               title="{% trans 'Add External Source' %}">
+                <span class="glyphicon glyphicon-plus"> External Source</span>
+            </a>
+        </div>
+
     {% endif %}
 {% endblock content_title %}
 

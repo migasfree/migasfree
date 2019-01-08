@@ -45,12 +45,31 @@
 {% block object-tools %}
     {% block object-tools-items %}
         {% if has_add_permission %}
-            <div id="add-button" class="pull-left">
-                {% url cl.opts|admin_urlname:'add' as add_url %}
-                <a role="button" href="{% add_preserved_filters add_url is_popup %}" class="btn btn-primary" title="{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </a>
-            </div>
+
+            {% if cl.opts|stringformat:"s" == "server.deployment" %}
+                <div id="add-button" class="pull-left">
+                    <a role="button" href="{% url 'admin:server_internalsource_add' %}" class="btn btn-primary"
+                       title="{% trans 'Add Internal Source' %}">
+                        <span class="glyphicon glyphicon-plus"> Internal Source </span>
+                    </a>
+                </div>
+                <div id="add-button" class="pull-left">
+                    <a role="button" href="{% url 'admin:server_externalsource_add' %}" class="btn btn-primary"
+                       title="{% trans 'Add External Source' %}">
+                        <span class="glyphicon glyphicon-plus"> External Source</span>
+                    </a>
+                </div>
+            {% else %}
+                <div id="add-button" class="pull-left">
+                    {% url cl.opts|admin_urlname:'add' as add_url %}
+                    <a role="button" href="{% add_preserved_filters add_url is_popup %}" class="btn btn-primary" title="{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+            {% endif %}
+
+
+
         {% endif %}
     {% endblock %}
 

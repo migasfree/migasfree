@@ -36,12 +36,19 @@ class DeploymentManager(models.Manager):
             domain = user.domain_preference
             if domain:
                 qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
-        qs = qs.filter(suite__isnull=True)
         return qs
 
 
 @python_2_unicode_compatible
 class Deployment(models.Model, MigasLink):
+    SOURCE_INTERNAL = 'I'
+    SOURCE_EXTERNAL = 'E'
+
+    SOURCE_CHOICES = (
+        (SOURCE_INTERNAL, _('Internal')),
+        (SOURCE_EXTERNAL, _('External')),
+    )
+
     enabled = models.BooleanField(
         verbose_name=_('enabled'),
         default=True,
@@ -136,6 +143,14 @@ class Deployment(models.Model, MigasLink):
         verbose_name=_('default excluded packages'),
         null=True,
         blank=True
+    )
+
+    source = models.CharField(
+        verbose_name=_('source'),
+        max_length=1,
+        null=False,
+        choices=SOURCE_CHOICES,
+        default=SOURCE_INTERNAL
     )
 
     base = models.CharField(
@@ -408,26 +423,55 @@ def pre_delete_deployment(sender, instance, **kwargs):
         shutil.rmtree(path)
 
 
-class SourceManager(models.Manager):
+class InternalSourceManager(models.Manager):
     def scope(self, user):
-        qs = super(SourceManager, self).get_queryset()
+        qs = super(InternalSourceManager, self).get_queryset()
         if not user.is_view_all():
             qs = qs.filter(project__in=user.get_projects())
             domain = user.domain_preference
             if domain:
                 qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
-        qs = qs.exclude(suite__isnull=True)
+        qs = qs.filter(source=Deployment.SOURCE_INTERNAL)
         return qs
 
 
-class Source(Deployment):
-    objects = SourceManager()
+class InternalSource(Deployment):
+    objects = InternalSourceManager()
 
     def __init__(self, *args, **kwargs):
-        super(Source, self).__init__(*args, **kwargs)
+        super(InternalSource, self).__init__(*args, **kwargs)
+        self.source = Deployment.SOURCE_INTERNAL
+
 
     class Meta:
         app_label = 'server'
-        verbose_name = _("Source")
-        verbose_name_plural = _("Sources")
+        verbose_name = _("Deployment (internal source)")
+        verbose_name_plural = _("Deployments (internal source)")
+        proxy = True
+
+
+
+class ExternalSourceManager(models.Manager):
+    def scope(self, user):
+        qs = super(ExternalSourceManager, self).get_queryset()
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+            domain = user.domain_preference
+            if domain:
+                qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
+        qs = qs.filter(source=Deployment.SOURCE_EXTERNAL)
+        return qs
+
+
+class ExternalSource(Deployment):
+    objects = ExternalSourceManager()
+
+    def __init__(self, *args, **kwargs):
+        super(ExternalSource, self).__init__(*args, **kwargs)
+        self.source = Deployment.SOURCE_EXTERNAL
+
+    class Meta:
+        app_label = 'server'
+        verbose_name = _("Deployment (external source)")
+        verbose_name_plural = _("Deployments (external source)")
         proxy = True

@@ -20,8 +20,6 @@ from .computers import computers_summary
 
 from .deployments import deployments_summary
 
-from .sources import sources_summary
-
 from .attributes import attributes_summary, tags_summary
 
 from .events import (

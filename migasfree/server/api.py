@@ -442,16 +442,16 @@ def upload_computer_info(request, name, uuid, computer, data):
         # deployments
         deploys = Deployment.available_deployments(computer, computer.get_all_attributes())
         for d in deploys:
-            if d.suite:  # is a Source
+            if d.source==Deployment.SOURCE_EXTERNAL:
                 lst_deploys.append({
                     "name": d.name,
                     "suite": d.suite,
                     "media": "/src/",
-                    "type": "SOURCES",
+                    "type": "EXTERNAL",
                     "components": d.components,
                     "options": d.options if d.options else ""
                 })
-            else:  # is a Deployment
+            elif d.source==Deployment.SOURCE_INTERNAL:
                 lst_deploys.append({
                     "name": d.name,
                     "suite": "",
