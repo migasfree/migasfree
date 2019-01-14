@@ -45,19 +45,18 @@
 {% block object-tools %}
     {% block object-tools-items %}
         {% if has_add_permission %}
-
             {% if cl.opts|stringformat:"s" == "server.deployment" %}
-                <div id="add-button" class="pull-left">
-                    <a role="button" href="{% url 'admin:server_internalsource_add' %}" class="btn btn-primary"
-                       title="{% trans 'Add Internal Source' %}">
-                        <span class="glyphicon glyphicon-plus"> Internal Source </span>
-                    </a>
-                </div>
-                <div id="add-button" class="pull-left">
-                    <a role="button" href="{% url 'admin:server_externalsource_add' %}" class="btn btn-primary"
-                       title="{% trans 'Add External Source' %}">
-                        <span class="glyphicon glyphicon-plus"> External Source</span>
-                    </a>
+                <div class="dropdown pull-left">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="add-deployment"
+                          data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"
+                          title="{% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}">
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp;
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="add-deployment">
+                        <li><a href="{% url 'admin:server_internalsource_add' %}">{% trans 'Internal Source' %}</a></li>
+                        <li><a href="{% url 'admin:server_externalsource_add' %}">{% trans 'External Source' %}</a></li>
+                    </ul>
                 </div>
             {% else %}
                 <div id="add-button" class="pull-left">
@@ -67,9 +66,6 @@
                     </a>
                 </div>
             {% endif %}
-
-
-
         {% endif %}
     {% endblock %}
 
