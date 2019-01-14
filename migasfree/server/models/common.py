@@ -12,7 +12,6 @@ from django.conf import settings
 
 from ..utils import escape_format_string
 
-from migasfree.server.models import Deployment
 
 class MigasLink(object):
     PROTOCOL = "mea"
@@ -544,6 +543,7 @@ class MigasLink(object):
                 url = u'admin:{}_clientattribute_change'.format(self._meta.app_label)
 
         if self._meta.model_name == 'deployment':
+            from . import Deployment
             if self.source == Deployment.SOURCE_INTERNAL:
                 url = u'admin:{}_internalsource_change'.format(self._meta.app_label)
             elif self.source == Deployment.SOURCE_EXTERNAL:
