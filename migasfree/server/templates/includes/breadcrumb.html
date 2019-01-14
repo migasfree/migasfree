@@ -15,7 +15,7 @@
             <li>{% trans 'Devices' %}</li>
         {% endif %}
 
-        {% if opts.object_name.lower == 'deployment' or opts.object_name.lower == 'schedule' or opts.object_name.lower == 'package' or opts.object_name.lower == 'store' or opts.object_name.lower == 'policy' or opts.object_name.lower == 'application' %}
+        {% if opts.object_name.lower == 'deployment' or opts.object_name.lower == 'schedule' or opts.object_name.lower == 'package' or opts.object_name.lower == 'store' or opts.object_name.lower == 'policy' or opts.object_name.lower == 'application' or opts.object_name.lower == 'internalsource' or opts.object_name.lower == 'externalsource' %}
             <li>{% trans 'Liberation' %}</li>
         {% endif %}
 
