@@ -1,4 +1,4 @@
-Django==1.11.15
+Django==1.11.18
 coreapi==2.3.3
 django-admin-bootstrapped==2.5.7
 django-ajax-selects==1.7.0
