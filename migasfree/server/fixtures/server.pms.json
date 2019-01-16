@@ -4,7 +4,7 @@
         "model": "server.pms",
         "fields": {
             "info": "echo ****INFO****\nrpm -qp --info $PACKAGE\necho\necho\necho ****REQUIRES****\nrpm -qp --requires $PACKAGE\necho\necho\necho ****PROVIDES****\nrpm -qp --provides $PACKAGE\necho\necho\necho ****OBSOLETES****\nrpm -qp --obsoletes $PACKAGE\necho\necho\necho ****SCRIPTS****\nrpm -qp --scripts $PACKAGE\necho\necho\necho ****CHANGELOG****\nrpm -qp --changelog $PACKAGE\necho\necho\necho ****FILES****\nrpm -qp --list $PACKAGE\necho\n",
-            "createrepo": "_DIR=%PATH%/%REPONAME%\nrm -rf $_DIR/repodata\nrm -rf $_DIR/checksum\ncreaterepo -c checksum $_DIR\n",
+            "createrepo": "_DIR=%PATH%/%REPONAME%\nrm -rf $_DIR/repodata\nrm -rf $_DIR/checksum\ncreaterepo -c checksum $_DIR\ngpg -u migasfree-repository --homedir %KEYS%/.gnupg --detach-sign --armor $_DIR/repodata/repomd.xml\n",
             "name": "yum",
             "slug": "REPOSITORIES"
         }
@@ -14,7 +14,7 @@
         "model": "server.pms",
         "fields": {
             "info": "echo ****INFO****\nrpm -qp --info $PACKAGE\necho\necho\necho ****REQUIRES****\nrpm -qp --requires $PACKAGE\necho\necho\necho ****PROVIDES****\nrpm -qp --provides $PACKAGE\necho\necho\necho ****OBSOLETES****\nrpm -qp --obsoletes $PACKAGE\necho\necho\necho ****SCRIPTS****\nrpm -qp --scripts $PACKAGE\necho\necho\necho ****CHANGELOG****\nrpm -qp --changelog $PACKAGE\necho\necho\necho ****FILES****\nrpm -qp --list $PACKAGE\necho\n",
-            "createrepo": "_DIR=%PATH%/%REPONAME%\nrm -rf $_DIR/repodata\nrm -rf $_DIR/checksum\ncreaterepo -c checksum $_DIR\n",
+            "createrepo": "_DIR=%PATH%/%REPONAME%\nrm -rf $_DIR/repodata\nrm -rf $_DIR/checksum\ncreaterepo -c checksum $_DIR\ngpg -u migasfree-repository --homedir %KEYS%/.gnupg --detach-sign --armor $_DIR/repodata/repomd.xml\n",
             "name": "zypper",
             "slug": "REPOSITORIES"
         }
