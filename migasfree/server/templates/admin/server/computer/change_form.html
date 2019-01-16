@@ -186,6 +186,20 @@
                     </div>
                 </div>
                 {% endif %}
+
+                {% if original.get_attribute_sets.count %}
+                    <div class="row" id="attribute-sets">
+                        <div class="col-md-12 col-xs-12" title="{% trans 'attribute sets' %}">
+                            <span class="far fa-circle fa-lg"></span>
+                            <div class="compact-content">
+                                {% for att in original.get_attribute_sets.all %}
+                                    {{ att.link }}<br />
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
                 <div class="col-md-12">
                     <div class="col-md-6 col-xs-6">
                         <p title="{% trans 'Errors' %}" class="lead text-center">
@@ -234,7 +248,7 @@
                     <div class="col-md-12 col-xs-12" title="{% trans 'sync attributes' %}">
                         <span class="fas fa-hashtag fa-lg"></span>
                         <div class="compact-content">
-                            {% for att in original.sync_attributes.all %}
+                            {% for att in original.get_only_attributes.all %}
                                 {{ att.link }}<br />
                             {% endfor %}
                         </div>

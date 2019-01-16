@@ -326,6 +326,12 @@ class Computer(models.Model, MigasLink):
         return list(self.tags.values_list('id', flat=True)) \
             + list(self.sync_attributes.values_list('id', flat=True))
 
+    def get_attribute_sets(self):
+        return self.sync_attributes.filter(property_att__prefix='SET')
+
+    def get_only_attributes(self):
+        return self.sync_attributes.exclude(property_att__prefix='SET')
+
     def login(self):
         return u'{} ({})'.format(
             self.sync_user.name,
