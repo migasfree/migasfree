@@ -92,6 +92,10 @@
                         });
                     }
                 });
+
+                $("#search-objects a").click(function () {
+                    this.href += "?q=" + $("#search-text").val();
+                });
             });
         //]]>
         </script>
@@ -181,21 +185,39 @@
                         </li>
                     </ul>
 
-                    <div class="col-sm-1">
-                        <form action="{% url 'admin:server_computer_changelist' %}" method="get" class="navbar-form navbar-left" role="search">
-                            <div class="input-group">
-                                <label for="search-computer" class="sr-only">{% trans 'Computer' %}:</label>
-                                <input type="text" id="search-computer" name="q" size="8" placeholder="{% trans 'Computer' %}" class="input-sm" title="{% trans 'Computer' %}" />
-
-                                <div class="input-group-btn">
-                                    <button class="btn btn-default btn-sm" type="submit" title="{% trans 'Search' %}">
-                                        <span class="fas fa-search"></span>
-                                        <span class="sr-only">{% trans 'Search' %}</span>
-                                    </button>
-                                </div>
+                    <form action="{% url 'admin:server_computer_changelist' %}" method="get" class="navbar-form navbar-left" role="search">
+                        <div class="input-group">
+                            <input type="text" id="search-text" name="q" size="8"
+                                   placeholder="{% trans 'Search' %}" class="form-control input-sm"
+                                   title="{% trans 'Search' %}" />
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default btn-sm dropdown-toggle"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="fas fa-search"></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" id="search-objects">
+                                    <li><a href="{% url 'admin:server_computer_changelist' %}">
+                                        {% trans 'Computer' %}
+                                    </a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{% url 'admin:server_deployment_changelist' %}">
+                                        {% trans 'Deployment' %}
+                                    </a></li>
+                                    <li><a href="{% url 'admin:server_package_changelist' %}">
+                                        {% trans 'Package/Set' %}
+                                    </a></li>
+                                    <li><a href="{% url 'admin:catalog_application_changelist' %}">
+                                        {% trans 'Application' %}
+                                    </a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="{% url 'admin:server_device_changelist' %}">
+                                        {% trans 'Device' %}
+                                    </a></li>
+                                </ul>
                             </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
 
                     <ul class="nav navbar-nav navbar-right navbar-user">
                         {% if user.is_staff %}
