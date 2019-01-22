@@ -318,6 +318,7 @@ class QueryAdmin(MigasAdmin):
 
     run_query.short_description = _("Run Query")
 
+
 @admin.register(ExternalSource)
 class ExternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
     form = ExternalSourceForm
@@ -326,16 +327,21 @@ class ExternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
         'my_enabled', 'start_date', 'schedule_link', 'timeline', 'computers',
     )
     list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
-    search_fields = ('name', 'available_packages__name')
-    list_select_related = ("project",)
+    search_fields = ('name',)
+    list_select_related = ('project',)
     readonly_fields = ('timeline',)
 
     fieldsets = (
         (_('General'), {
-            'fields': ('name', 'project', 'enabled', 'comment',)
+            'fields': (
+                'name',
+                'project',
+                'enabled',
+                'comment',
+            )
         }),
         (_('Source'), {
-            'fields': ( 'base', 'suite', 'components', 'options' ,'frozen', 'expire',)
+            'fields': ('base_url', 'suite', 'components', 'options', 'frozen', 'expire',)
         }),
         (_('Packages'), {
             'classes': ('collapse',),
@@ -353,10 +359,18 @@ class ExternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
             )
         }),
         (_('Attributes'), {
-            'fields': ('domain', 'included_attributes', 'excluded_attributes')
+            'fields': (
+                'domain',
+                'included_attributes',
+                'excluded_attributes'
+            )
         }),
         (_('Schedule'), {
-            'fields': ('start_date', 'schedule', 'timeline')
+            'fields': (
+                'start_date',
+                'schedule',
+                'timeline'
+            )
         }),
     )
 
@@ -374,15 +388,18 @@ class ExternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
     timeline = MigasFields.timeline()
 
     def computers(self, obj):
-        related_objects = obj.related_objects('computer',self.user.userprofile)
+        related_objects = obj.related_objects('computer', self.user.userprofile)
         if related_objects:
             return related_objects.count()
+
         return 0
+
     computers.short_description = _('Computers')
 
     def get_queryset(self, request):
         self.user = request.user
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(ExternalSourceAdmin, self).get_queryset(
             request
         ).prefetch_related(
@@ -432,7 +449,7 @@ class InternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
     )
     list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
     search_fields = ('name', 'available_packages__name')
-    list_select_related = ("project",)
+    list_select_related = ('project',)
     actions = ['regenerate_metadata']
     readonly_fields = ('timeline',)
 
@@ -478,10 +495,12 @@ class InternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
     timeline = MigasFields.timeline()
 
     def computers(self, obj):
-        related_objects = obj.related_objects('computer',self.user.userprofile)
+        related_objects = obj.related_objects('computer', self.user.userprofile)
         if related_objects:
             return related_objects.count()
+
         return 0
+
     computers.short_description = _('Computers')
 
     def regenerate_metadata(self, request, objects):
@@ -534,6 +553,7 @@ class InternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
     def get_queryset(self, request):
         self.user = request.user
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(InternalSourceAdmin, self).get_queryset(
             request
         ).prefetch_related(
@@ -581,9 +601,9 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         'name_link', 'project_link', 'domain_link', 'source',
         'my_enabled', 'start_date', 'schedule_link', 'timeline', 'computers',
     )
-    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter,'source')
+    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter, 'source')
     search_fields = ('name', 'available_packages__name')
-    list_select_related = ("project",)
+    list_select_related = ('project',)
     actions = ['regenerate_metadata']
     readonly_fields = ('timeline',)
 
@@ -632,10 +652,12 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     timeline = MigasFields.timeline()
 
     def computers(self, obj):
-        related_objects = obj.related_objects('computer',self.user.userprofile)
+        related_objects = obj.related_objects('computer', self.user.userprofile)
         if related_objects:
             return related_objects.count()
+
         return 0
+
     computers.short_description = _('Computers')
 
     def regenerate_metadata(self, request, objects):
@@ -738,10 +760,12 @@ class ScheduleDelayLine(admin.TabularInline):
     extra = 0
 
     def computers(self, obj):
-        related_objects = obj.related_objects('computer',self.request.user.userprofile)
+        related_objects = obj.related_objects('computer', self.request.user.userprofile)
         if related_objects:
             return related_objects.count()
+
         return 0
+
     computers.short_description = _('Computers')
 
     def get_queryset(self, request):
@@ -772,6 +796,7 @@ class ScheduleAdmin(MigasAdmin):
         return super(ScheduleAdmin, self).get_queryset(
             request
         )
+
 
 @admin.register(Store)
 class StoreAdmin(MigasAdmin):
