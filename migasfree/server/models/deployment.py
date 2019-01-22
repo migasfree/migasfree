@@ -36,6 +36,7 @@ class DeploymentManager(models.Manager):
             domain = user.domain_preference
             if domain:
                 qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
+
         return qs
 
 
@@ -66,17 +67,18 @@ class Deployment(models.Model, MigasLink):
         verbose_name=_('project')
     )
 
+    domain = models.ForeignKey(
+        Domain,
+        verbose_name=_('domain'),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
     comment = models.TextField(
         verbose_name=_('comment'),
         null=True,
         blank=True
-    )
-
-    available_packages = models.ManyToManyField(
-        Package,
-        blank=True,
-        verbose_name=_('available packages'),
-        help_text=_('If a computer has installed one of these packages it will be updated')
     )
 
     packages_to_install = models.TextField(
@@ -91,14 +93,6 @@ class Deployment(models.Model, MigasLink):
         null=True,
         blank=True,
         help_text=_('Mandatory packages to remove each time')
-    )
-
-    domain = models.ForeignKey(
-        Domain,
-        verbose_name=_('domain'),
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL
     )
 
     included_attributes = models.ManyToManyField(
@@ -153,7 +147,14 @@ class Deployment(models.Model, MigasLink):
         default=SOURCE_INTERNAL
     )
 
-    base = models.CharField(
+    available_packages = models.ManyToManyField(
+        Package,
+        blank=True,
+        verbose_name=_('available packages'),
+        help_text=_('If a computer has installed one of these packages it will be updated')
+    )
+
+    base_url = models.CharField(
         max_length=100,
         verbose_name=_('base url'),
         null=True,
@@ -190,7 +191,7 @@ class Deployment(models.Model, MigasLink):
 
     expire = models.IntegerField(
         verbose_name=_('metadata cache minutes. Default 1440 minutes = 1 day'),
-        default=1440 # 60 * 24 = 1 day
+        default=1440  # 60m * 24h = 1 day
     )
 
     objects = DeploymentManager()
@@ -336,49 +337,45 @@ class Deployment(models.Model, MigasLink):
 
         return deployments
 
-
     def related_objects(self, model, user):
         """
         Return Queryset with the related computers based in attributes and schedule
         """
         if model == 'computer':
-
-            if self.enabled and (self.start_date <= datetime.datetime.now().date()) :
-                # by attributes asigned
+            if self.enabled and (self.start_date <= datetime.datetime.now().date()):
+                # by assigned attributes
                 computers = Computer.productive.scope(user).filter(
-                            project_id=self.project.id
-                        ).filter(
-                            Q(sync_attributes__in=self.included_attributes.all())
-                        )
+                    project_id=self.project.id
+                ).filter(
+                    Q(sync_attributes__in=self.included_attributes.all())
+                )
 
                 # by schedule
                 if self.schedule:
                     for delay in self.schedule.delays.all():
-                        delay_attributes=list(delay.attributes.all().values_list("id", flat=True))
+                        delay_attributes = list(delay.attributes.values_list('id', flat=True))
                         for duration in range(0, delay.duration):
                             if time_horizon(
                                     self.start_date, delay.delay + duration
                             ) <= datetime.datetime.now().date():
-
                                 computers_schedule = Computer.productive.scope(user).filter(
                                     project_id=self.project.id).filter(
-                                    Q(sync_attributes__id__in=delay_attributes)).extra(
-                                    where=["mod(server_computer.id, {}) = {}".format(delay.duration, duration)])
+                                        Q(sync_attributes__id__in=delay_attributes)
+                                ).extra(
+                                    where=["mod(server_computer.id, {}) = {}".format(delay.duration, duration)]
+                                )
 
-                                computers = (computers|computers_schedule)
-
+                                computers = (computers | computers_schedule)
                             else:
                                 break
 
-
-                # excuded attributes
+                # excluded attributes
                 computers = computers.exclude(
                             Q(sync_attributes__in=self.excluded_attributes.all())
                         )
                 return computers.distinct()
 
         return None
-
 
     def path(self, name=None):
         return os.path.join(
@@ -391,12 +388,14 @@ class Deployment(models.Model, MigasLink):
         if user.has_perm("server.can_save_deployment"):
             if len(user.userprofile.domains.all()) == 0 or self.domain == user.userprofile.domain_preference:
                 return True
+
         return False
 
     def can_delete(self, user):
         if user.has_perm("server.delete_deployment"):
             if len(user.userprofile.domains.all()) == 0 or self.domain == user.userprofile.domain_preference:
                 return True
+
         return False
 
     class Meta:
@@ -430,8 +429,12 @@ class InternalSourceManager(models.Manager):
             qs = qs.filter(project__in=user.get_projects())
             domain = user.domain_preference
             if domain:
-                qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
+                qs = qs.filter(
+                    Q(domain_id=domain.id) | Q(domain_id=None)
+                )
+
         qs = qs.filter(source=Deployment.SOURCE_INTERNAL)
+
         return qs
 
 
@@ -442,13 +445,11 @@ class InternalSource(Deployment):
         super(InternalSource, self).__init__(*args, **kwargs)
         self.source = Deployment.SOURCE_INTERNAL
 
-
     class Meta:
         app_label = 'server'
         verbose_name = _("Deployment (internal source)")
         verbose_name_plural = _("Deployments (internal source)")
         proxy = True
-
 
 
 class ExternalSourceManager(models.Manager):
@@ -458,8 +459,12 @@ class ExternalSourceManager(models.Manager):
             qs = qs.filter(project__in=user.get_projects())
             domain = user.domain_preference
             if domain:
-                qs = qs.filter(Q(domain_id=domain.id) | Q(domain_id=None))
+                qs = qs.filter(
+                    Q(domain_id=domain.id) | Q(domain_id=None)
+                )
+
         qs = qs.filter(source=Deployment.SOURCE_EXTERNAL)
+
         return qs
 
 
