@@ -693,7 +693,7 @@ class Computer(models.Model, MigasLink):
             label_link = reverse('computer_label', args=(self.uuid,))
 
             self._actions = [
-                [ugettext('Events'), events_link, "{}, {}, {}, {}, {}".format(
+                [ugettext('Events'), events_link, u"{}, {}, {}, {}, {}".format(
                     ugettext('Synchronizations'),
                     ugettext('Errors'),
                     ugettext('Faults'),
