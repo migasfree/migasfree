@@ -23,109 +23,80 @@
             <div class="panel-heading">
                 {% trans 'General' %}
             </div>
+
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
-                        <div class="row">
-                            <div class="col-md-1 col-xs-1">
-
-                            </div>
-                            <div class="col-md-11 col-xs-11">
-                                {% dab_field_rendering adminform.form.enabled %}
-                                <label for="id_enabled">{% trans 'enabled' %}</label>&nbsp;
-                            </div>
-                        </div>
+                        <p>
+                            <label for="id_enabled">{% trans 'enabled' %}</label>&nbsp;
+                            {% dab_field_rendering adminform.form.enabled %}
+                        </p>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-12 col-xs-12{% if adminform.errors.name %} has-error{% endif %}">
-                        <div class="row">
-                            <div class="col-md-1 col-xs-1">
-                                <label class="control-label required" for="id_name" title="{% trans 'name' %}">
-                                    <span class="fas fa-info">  </span>
-                                </label>
-                            </div>
-                            <div class="col-md-11 col-xs-11">
-                                {% dab_field_rendering adminform.form.name %}
-                                {% if adminform.errors.name %}
-                                    <span class="text-danger">{{ adminform.errors.name|striptags }}</span>
-                                {% endif %}
-                            </div>
-                        </div>
+                        <p>
+                            <label class="control-label required" for="id_name" title="{% trans 'name' %}">
+                                <span class="fas fa-info"></span>
+                            </label>
+                            {% dab_field_rendering adminform.form.name %}
+                            {% if adminform.errors.name %}
+                                <span class="text-danger">{{ adminform.errors.name|striptags }}</span>
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-12 col-xs-12{% if adminform.errors.project %} has-error{% endif %}">
-                        <div class="row">
+                        <p title="{% trans 'project' %}">
                             {% if original.id %}
-                                <div class="col-md-1 col-xs-1">
-                                    <span class="fas fa-sitemap" title="{% trans 'project' %}"></span>
-                                </div>
-                                <div class="col-md-11 col-xs-11">
-                                    {{ original.project.link }}
-                                    <input type="hidden" id="id_project" name="project" value="{{ original.project.id }}" />
-                                </div>
+                                <span class="fas fa-sitemap"></span>&nbsp; {{ original.project.link }}
+                                <input type="hidden" id="id_project" name="project" value="{{ original.project.id }}" />
                             {% else %}
-                                <div class="col-md-1 col-xs-1">
-                                     <label class="control-label required" for="id_project">
+                                    <label class="control-label required" for="id_project">
                                         <span class="fas fa-sitemap"></span>
                                     </label>
-                                </div>
-                                <div class="col-md-11 col-xs-11">
                                     {% dab_field_rendering adminform.form.project %}
                                     {% if adminform.errors.project %}
                                         <span class="text-danger">{{ adminform.errors.project|striptags }}</span>
                                     {% endif %}
-                                </div>
                             {% endif %}
-
-                        </div>
+                        </p>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
-                        <div class="row">
+                        <p title="{% trans 'editable by domain administrators' %}">
                             {% if original.id and original.domain %}
-                                <div class="col-md-1 col-xs-1">
-                                    <span class="fas fa-globe" title="{% trans 'editable by domain administrators' %}"></span>
-                                </div>
-                                <div class="col-md-11 col-xs-11">
-                                    {{ original.domain.link }}
-                                     <span class="hidden">
-                                        {% dab_field_rendering adminform.form.domain %}
-                                    </span>
-                                </div>
-
-                            {% else %}
-                                <div class="col-md-1 col-xs-1">
-                                    <span class="fas fa-globe" title="{% trans 'editable by domain administrators' %}"></span>
-                                </div>
-                                <div class="col-md-11 col-xs-11">
+                                <span class="fas fa-globe"></span>&nbsp;
+                                {{ original.domain.link }}
+                                <span class="hidden">
                                     {% dab_field_rendering adminform.form.domain %}
-                                </div>
+                                </span>
+                            {% else %}
+                                <span class="fas fa-globe"></span>
+                                {% dab_field_rendering adminform.form.domain %}
                             {% endif %}
-                        </div>
+                        </p>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12 col-xs-12{% if adminform.errors.comment %} has-error{% endif %}">
-                        <div class="row">
-                            <div class="col-md-1 col-xs-1">
-                                <label class="control-label" for="id_comment">
-                                    <span class="fas fa-comment" title="{% trans 'comment' %}"  ></span>
-                                </label>
-                            </div>
-                            <div class="col-md-11 col-xs-11">
-                                {% dab_field_rendering adminform.form.comment %}
-                                {% if adminform.errors.comment %}
-                                    <span class="text-danger">{{ adminform.errors.comment|striptags }}</span>
-                                {% endif %}
-                            </div>
-                        </div>
+                        <p title="{% trans 'comment' %}">
+                            <label class="control-label" for="id_comment">
+                                <span class="fas fa-comment"></span>
+                            </label>
+                            {% dab_field_rendering adminform.form.comment %}
+                            {% if adminform.errors.comment %}
+                                <span class="text-danger">{{ adminform.errors.comment|striptags }}</span>
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -138,30 +109,23 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
-                        <div class="row" title="{% trans 'included attributes' %}">
-                            <div class="col-md-1 col-xs-1">
-                                <label class="control-label" for="id_included_attributes_text">
-                                    <span class="fas fa-plus"></span>
-                                </label>
-                            </div>
-                            <div class="col-md-11 col-xs-11">
-                                {% dab_field_rendering adminform.form.included_attributes %}
-                            </div>
-                        </div>
+                        <p title="{% trans 'included attributes' %}">
+                            <label class="control-label" for="id_included_attributes_text">
+                                <span class="fas fa-hashtag fa-lg"></span>
+                            </label>
+                            {% dab_field_rendering adminform.form.included_attributes %}
+                        </p>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
-                        <div class="row" title="{% trans 'excluded attributes' %}">
-                            <div class="col-md-1 col-xs-1">
-                                <label class="control-label" for="id_excluded_attributes_text">
-                                    <span class="fas fa-minus"></span>
-                                </label>
-                            </div>
-                            <div class="col-md-11 col-xs-11">
-                                {% dab_field_rendering adminform.form.excluded_attributes %}
-                            </div>
-                        </div>
+                        <p title="{% trans 'excluded attributes' %}">
+                            <label class="control-label" for="id_excluded_attributes_text">
+                                <span class="fas fa-hashtag fa-lg"></span>
+                                <span class="fas fa-minus fa-xs" data-fa-transform="shrink-3 up-8 right-4"></span>
+                            </label>
+                            {% dab_field_rendering adminform.form.excluded_attributes %}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -175,24 +139,19 @@
             <div class="panel-heading">
                 {% trans 'What (Packages)' %}
             </div>
+
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
-                         <div class="row" title="{% trans 'available packages' %}">
-                            <div class="col-md-1 col-xs-1">
-                                <label class="control-label" for="id_available_packages_text">
-                                    <span class="fas fa-archive"></span>
-                                </label>
-                            </div>
-                            <div class="col-md-11 col-xs-11">
-                                {% dab_field_rendering adminform.form.available_packages %}
-                            </div>
-                        </div>
-
-
+                        <p title="{% trans 'available packages' %}">
+                            <label class="control-label" for="id_available_packages_text">
+                                <span class="fas fa-archive"></span>
+                            </label>
+                            {% dab_field_rendering adminform.form.available_packages %}
+                        </p>
                     </div>
                 </div>
-             </div>
+            </div>
         </div>
     </div>
 
@@ -201,9 +160,8 @@
             <div class="panel-heading">
                 {% trans 'Actions' %}
             </div>
+
             <div class="panel-body">
-
-
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'packages to install' %}">
@@ -214,6 +172,7 @@
                         </p>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <p title="{% trans 'packages to remove' %}">
@@ -225,10 +184,6 @@
                     </div>
                 </div>
 
-
-
-
-
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <p>
@@ -239,6 +194,7 @@
                         </p>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <p>
@@ -249,6 +205,7 @@
                         </p>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <p>
@@ -270,6 +227,7 @@
             <div class="panel-heading">
                 {% trans 'When (Schedule)' %}
             </div>
+
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-4 col-xs-4 text-center{% if adminform.errors.start_date %} has-error{% endif %}" title="{% trans 'start date' %}">
@@ -291,6 +249,7 @@
                     </div>
                     {% endif %}
                 </div>
+
                 {% if original.schedule %}
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
