@@ -71,17 +71,17 @@ class FaultDefinition(models.Model, MigasLink):
     objects = DomainFaultDefinitionManager()
 
     def list_included_attributes(self):
-        return self.included_attributes.all().values_list('value', flat=True)
+        return self.included_attributes.values_list('value', flat=True)
 
     list_included_attributes.short_description = _("included attributes")
 
     def list_excluded_attributes(self):
-        return self.excluded_attributes.all().values_list('value', flat=True)
+        return self.excluded_attributes.values_list('value', flat=True)
 
     list_excluded_attributes.short_description = _("excluded attributes")
 
     def list_users(self):
-        return self.users.all().values_list('username', flat=True)
+        return self.users.values_list('username', flat=True)
 
     list_users.short_description = _("users")
 
