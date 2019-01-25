@@ -5,6 +5,7 @@ import shutil
 import datetime
 
 from django.db import models
+from django.conf import settings
 from django.template.defaultfilters import slugify
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -384,16 +385,86 @@ class Deployment(models.Model, MigasLink):
             name if name else self.name
         )
 
+    def get_source_template(self):
+        # FIXME technical debt!!! (until PMS will be code based)
+        if self.source == self.SOURCE_INTERNAL:
+            if self.project.pms.name.startswith('apt'):
+                return 'deb {{protocol}}://{{server}}{}{}/{} {} PKGS\n'.format(
+                    settings.MEDIA_URL,
+                    self.project.name,
+                    Project.REPOSITORY_TRAILING_PATH,
+                    self.name
+                )
+            elif self.project.pms.name.startswith('yum') or self.project.pms.name.startswith('zypper'):
+                return """[REPO-{repo}]
+name=REPO-{repo}
+baseurl={{protocol}}://{{server}}{}/{}/{repo}
+enabled=1
+http_caching=none
+repo_gpgcheck=1
+gpgcheck=0
+gpgkey=file://{{keys_path}}/{{server}}/repositories.pub
+
+""".format(settings.MEDIA_URL, self.project.name, repo=self.name)
+        elif self.source == self.SOURCE_EXTERNAL:
+            if self.project.pms.name.startswith('apt'):
+                return 'deb {} {{protocol}}://{{server}}/{}/{}/EXTERNAL/{} {} {}\n'.format(
+                    self.options,
+                    'src',
+                    self.project.name,
+                    self.name,
+                    self.suite,
+                    self.components
+                )
+            elif self.project.pms.name.startswith('yum') or self.project.pms.name.startswith('zypper'):
+                normal_template = """[EXTERNAL-{repo}]
+name=EXTERNAL-{repo}
+baseurl={{protocol}}://{{server}}{media}{project}/EXTERNAL/{name}/{suite}/$basearch/
+{options}
+
+"""
+                components_template = """[EXTERNAL-{repo}-{component}]
+name=EXTERNAL-{repo}-{component}
+baseurl={{protocol}}://{{server}}{media}{project}/EXTERNAL/{name}/{suite}/{component}/$basearch/
+{options}
+
+"""
+                if self.components:
+                    template = ''
+                    for component in self.components.split(' '):
+                        template += components_template.format(
+                            repo=self.name,
+                            media=settings.MEDIA_URL,
+                            project=self.project.name,
+                            name=self.name,
+                            suite=self.suite,
+                            options=self.options,
+                            component=component
+                        )
+
+                    return template
+                else:
+                    return normal_template.format(
+                        repo=self.name,
+                        media=settings.MEDIA_URL,
+                        project=self.project.name,
+                        name=self.name,
+                        suite=self.suite,
+                        options=self.options
+                    )
+
+        return ''
+
     def can_save(self, user):
         if user.has_perm("server.can_save_deployment"):
-            if len(user.userprofile.domains.all()) == 0 or self.domain == user.userprofile.domain_preference:
+            if user.userprofile.domains.count() == 0 or self.domain == user.userprofile.domain_preference:
                 return True
 
         return False
 
     def can_delete(self, user):
         if user.has_perm("server.delete_deployment"):
-            if len(user.userprofile.domains.all()) == 0 or self.domain == user.userprofile.domain_preference:
+            if user.userprofile.domains.count() == 0 or self.domain == user.userprofile.domain_preference:
                 return True
 
         return False
