@@ -128,7 +128,7 @@ class Device(models.Model, MigasLink):
         return features
 
     def logical_devices_allocated(self):
-        return self.devicelogical_set.all().exclude(attributes=None)
+        return self.devicelogical_set.exclude(attributes=None)
 
     @staticmethod
     def replacement(source, target):
@@ -147,7 +147,7 @@ class Device(models.Model, MigasLink):
                 str(x.feature) + ': ' + ', '.join(
                     c.link() for c in x.attributes.all()
                 )
-                for x in self.devicelogical_set.all().order_by('feature')
+                for x in self.devicelogical_set.order_by('feature')
             ),
         })
 
