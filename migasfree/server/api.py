@@ -298,7 +298,7 @@ def upload_computer_info(request, name, uuid, computer, data):
                     },
                     ...
                 ],
-                "repositories": [ {"name": "REPONAME" }, ...],
+                "repositories": [ {"name": "REPONAME", "source_template": "template" }, ...],
                 "packages": {
                     "install": ["pkg1","pkg2","pkg3", ...],
                     "remove": ["pkg1","pkg2","pkg3", ...]
@@ -425,7 +425,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         computer.sync_attributes.add(*Domain.process(computer.get_all_attributes()))
 
         # Tags (server attributes) (not running on clients!!!)
-        for tag in computer.tags.all().filter(property_att__enabled=True):
+        for tag in computer.tags.filter(property_att__enabled=True):
             computer.sync_attributes.add(
                 *Attribute.process_kind_property(tag.property_att, tag.value)
             )
@@ -442,24 +442,7 @@ def upload_computer_info(request, name, uuid, computer, data):
         # deployments
         deploys = Deployment.available_deployments(computer, computer.get_all_attributes())
         for d in deploys:
-            if d.source==Deployment.SOURCE_EXTERNAL:
-                lst_deploys.append({
-                    "name": d.name,
-                    "suite": d.suite,
-                    "media": "/src/",
-                    "type": "EXTERNAL",
-                    "components": d.components,
-                    "options": d.options if d.options else ""
-                })
-            elif d.source==Deployment.SOURCE_INTERNAL:
-                lst_deploys.append({
-                    "name": d.name,
-                    "suite": "",
-                    "media": settings.MEDIA_URL,
-                    "type": "REPOSITORIES",
-                    "components": "PKGS",
-                    "options": ""
-                })
+            lst_deploys.append({'name': d.name, 'source_template': d.get_source_template()})
 
             if d.packages_to_remove:
                 for p in to_list(d.packages_to_remove):
