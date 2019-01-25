@@ -228,7 +228,7 @@ def computer_simulate_sync(request, pk):
             data = {
                 "upload_computer_info": {
                     "attributes": pack_attributes(
-                        computer.sync_attributes.all().values_list(
+                        computer.sync_attributes.values_list(
                             'property_att__prefix', 'property_att__kind', 'value'
                         )
                     ),
@@ -261,7 +261,7 @@ def computer_simulate_sync(request, pk):
             transaction.rollback()  # only simulate sync... not real sync!
             transaction.set_autocommit(True)
 
-            result["attributes"] = computer.sync_attributes.all().filter(
+            result["attributes"] = computer.sync_attributes.filter(
                 property_att__sort='client'
             )
 
