@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 
+import os
+import time
 import json
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse, Http404
 from django.shortcuts import render
 
+from urllib2 import urlopen, URLError, HTTPError
+from wsgiref.util import FileWrapper
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, views
 from rest_framework.response import Response
 from rest_framework import status
 
-from ..models import Platform, Project, Deployment
+from ..models import Platform, Project, Deployment, ExternalSource
 from ..api import get_computer
 from ..utils import uuid_validate
 from ..secure import gpg_get_key
@@ -98,26 +102,18 @@ def get_key_repositories(request):
     )
 
 
-def get_sourcefile(request):
-    from django.conf import settings
-    import os
-    from urllib2 import urlopen, URLError, HTTPError
-    from wsgiref.util import FileWrapper
-    from django.http import HttpResponse
-    from migasfree.server.models import ExternalSource
-    import time
-
+def get_source_file(request):
     source = None
 
     _path = request.get_full_path()
-    project_name = _path.split("/")[2]
-    source_name = _path.split("/")[4]
-    resource = _path.split( "/src/" + project_name+"/EXTERNAL/"+source_name+"/")[1]
+    project_name = _path.split('/')[2]
+    source_name = _path.split('/')[4]
+    resource = _path.split('/src/{}/EXTERNAL/{}/'.format(project_name, source_name))[1]
 
-    _file_local = os.path.join(settings.MIGASFREE_PUBLIC_DIR, _path.split("/src/")[1])
+    _file_local = os.path.join(settings.MIGASFREE_PUBLIC_DIR, _path.split('/src/')[1])
 
-    if not (_file_local.endswith(".deb") or _file_local.endswith(".rpm")): # is a metadata file
-        # get source
+    # FIXME PMS dependency
+    if not (_file_local.endswith('.deb') or _file_local.endswith('.rpm')):  # is a metadata file
         source = ExternalSource.objects.get(project__name=project_name, name=source_name)
 
         if not source.frozen:
@@ -130,41 +126,37 @@ def get_sourcefile(request):
 
     if not os.path.exists(_file_local):
         if not os.path.exists(os.path.dirname(_file_local)):
-            os.makedirs(os.path.dirname(_file_local))  # Make path local
+            os.makedirs(os.path.dirname(_file_local))  # Make local path
 
         if not source:
             source = ExternalSource.objects.get(project__name=project_name, name=source_name)
 
-        url = "{}/{}".format(str(source.base), resource)
+        url = '{}/{}'.format(source.base_url, resource)
 
         try:
             f = urlopen(url)
-
             # Open our local file for writing
             with open(_file_local, "wb") as local_file:
-                contenido = f.read()
-                local_file.write(contenido)
-
-        #handle errors
+                local_file.write(f.read())
+        # handle errors
         except HTTPError, e:
-            return HttpResponse("HTTP Error:"+ str(e.code) + ' ' + url, status=e.code)
-
-
+            return HttpResponse('HTTP Error: {} {}'.format(e.code, url), status=e.code)
         except URLError, e:
-            return HttpResponse("URL Error:"+ str(e.reason) + ' ' + url, status=e.code)
+            return HttpResponse('URL Error: {} {}'.format(e.reason, url), status=e.code)
 
     if os.path.isfile(_file_local):
         wrapper = FileWrapper(file(_file_local))
-        response = HttpResponse(wrapper, content_type="application/octet-stream")
-        response["Content-Disposition"] = "attachment; filename=%s" % os.path.basename(_file_local)
+        response = HttpResponse(wrapper, content_type='application/octet-stream')
+        response['Content-Disposition'] = u'attachment; filename={}'.format(os.path.basename(_file_local))
         response['Content-Length'] = os.path.getsize(_file_local)
     else:
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
     return response
 
 
 @permission_classes((permissions.AllowAny,))
-class RepositoriesUrlTemplateView(views.APIView): # compatibility for migasfree-clients <= 4.16
+class RepositoriesUrlTemplateView(views.APIView):  # compatibility for migasfree-clients <= 4.16
     def post(self, request, format=None):
         """
         Returns the repositories URL template
