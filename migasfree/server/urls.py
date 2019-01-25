@@ -8,13 +8,12 @@ from django.conf import settings
 from .views import *
 
 public_patterns = [
-    url(r'repository-url-template/', RepositoriesUrlTemplateView.as_view()), # compatibility for migasfree-clients <= 4.16
+    url(r'repository-url-template/', RepositoriesUrlTemplateView.as_view()),  # valid until migasfree-client 4.16
     url(r'server/info/', ServerInfoView.as_view()),
 ]
 
 urlpatterns = [
-
-    url(r'^src/', get_sourcefile, name='get_sourcefile'),
+    url(r'^src/', get_source_file, name='get_source_file'),
 
     url(r'^accounts/login/$', login, name='login'),
 
