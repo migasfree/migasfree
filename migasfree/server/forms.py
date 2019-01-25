@@ -96,29 +96,8 @@ class ExternalSourceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
         super(ExternalSourceForm, self).__init__(*args, **kwargs)
-        #user = self.request.user.userprofile
 
         self.fields['start_date'].initial = datetime.date.today()
-
-        """
-        try:
-            if Project.objects.scope(user).count() == 1:
-                self.fields['project'].initial = Project.objects.scope(user).first().id
-
-            self.fields['project'].queryset = Project.objects.scope(user)
-        except AttributeError:
-            pass
-
-        if not self.instance.id and user.domain_preference:
-            self.fields['domain'].initial = user.domain_preference
-
-        domains = user.domains.all()
-        if domains.count() == 0:
-            self.fields['domain'].queryset = Domain.objects.all()
-        else:
-            self.fields['domain'].queryset = domains
-        """
-
 
     def _validate_active_computers(self, att_list):
         for att_id in att_list:
@@ -204,29 +183,8 @@ class InternalSourceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
         super(InternalSourceForm, self).__init__(*args, **kwargs)
-        #user = self.request.user.userprofile
 
         self.fields['start_date'].initial = datetime.date.today()
-
-        """
-        try:
-            if Project.objects.scope(user).count() == 1:
-                self.fields['project'].initial = Project.objects.scope(user).first().id
-
-            self.fields['project'].queryset = Project.objects.scope(user)
-        except AttributeError:
-            pass
-
-        if not self.instance.id and user.domain_preference:
-            self.fields['domain'].initial = user.domain_preference
-
-        domains = user.domains.all()
-        if domains.count() == 0:
-            self.fields['domain'].queryset = Domain.objects.all()
-        else:
-            self.fields['domain'].queryset = domains
-        """
-
 
     def _validate_active_computers(self, att_list):
         for att_id in att_list:
@@ -701,7 +659,7 @@ class DomainForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(DomainForm, self).__init__(*args, **kwargs)
         if self.instance.id:
-            self.fields['users'].initial = self.instance.domains.all().values_list('id', flat=True)
+            self.fields['users'].initial = self.instance.domains.values_list('id', flat=True)
         else:
             self.fields['users'].initial = []
 
