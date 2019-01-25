@@ -53,7 +53,7 @@ def domain_names(request):
     lst = []
     try:
         user = request.user.userprofile
-        if user.is_superuser or len(user.domains.all()) == 0:
+        if user.is_superuser or user.domains.count() == 0:
             lst.append([0, ALL_RANGE.upper()])
             for domain in list(Domain.objects.order_by('name').values_list('id', 'name')):
                 lst.append(domain)
