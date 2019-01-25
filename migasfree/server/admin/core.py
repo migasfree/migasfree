@@ -422,7 +422,7 @@ class ExternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
         return HttpResponseRedirect(
             '{}?enabled__exact={}&project__id__exact={}'.format(
                 reverse('admin:server_externalsource_changelist'),
-                obj.enabled,
+                1 if obj.enabled else 0,
                 obj.project.id
             )
         )
@@ -432,7 +432,7 @@ class ExternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
             return HttpResponseRedirect(
                 '{}?enabled__exact={}&project__id__exact={}'.format(
                     reverse('admin:server_externalsource_changelist'),
-                    obj.enabled,
+                    1 if obj.enabled else 0,
                     obj.project.id
                 )
             )
@@ -576,7 +576,7 @@ class InternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
         return HttpResponseRedirect(
             '{}?enabled__exact={}&project__id__exact={}'.format(
                 reverse('admin:server_internalsource_changelist'),
-                obj.enabled,
+                1 if obj.enabled else 0,
                 obj.project.id
             )
         )
@@ -586,7 +586,7 @@ class InternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
             return HttpResponseRedirect(
                 '{}?enabled__exact={}&project__id__exact={}'.format(
                     reverse('admin:server_internalsource_changelist'),
-                    obj.enabled,
+                    1 if obj.enabled else 0,
                     obj.project.id
                 )
             )
@@ -733,7 +733,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         return HttpResponseRedirect(
             '{}?enabled__exact={}&project__id__exact={}'.format(
                 reverse('admin:server_deployment_changelist'),
-                obj.enabled,
+                1 if obj.enabled else 0,
                 obj.project.id
             )
         )
@@ -743,7 +743,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
             return HttpResponseRedirect(
                 '{}?enabled__exact={}&project__id__exact={}'.format(
                     reverse('admin:server_deployment_changelist'),
-                    obj.enabled,
+                    1 if obj.enabled else 0,
                     obj.project.id
                 )
             )
