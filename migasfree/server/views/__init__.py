@@ -8,7 +8,7 @@ from .client_api import api
 from .public_api import (
     get_projects, get_computer_info, computer_label,
     get_key_repositories, RepositoriesUrlTemplateView,
-    ServerInfoView, get_sourcefile
+    ServerInfoView, get_source_file
 )
 from .packages import info
 from .login import login
