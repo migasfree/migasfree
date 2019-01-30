@@ -398,19 +398,23 @@ class Deployment(models.Model, MigasLink):
             elif self.project.pms.name.startswith('yum') or self.project.pms.name.startswith('zypper'):
                 return """[REPO-{repo}]
 name=REPO-{repo}
-baseurl={{protocol}}://{{server}}{}/{}/{repo}
+baseurl={{protocol}}://{{server}}{}{}/{}/{repo}
 enabled=1
 http_caching=none
 repo_gpgcheck=1
 gpgcheck=0
 gpgkey=file://{{keys_path}}/{{server}}/repositories.pub
 
-""".format(settings.MEDIA_URL, self.project.name, repo=self.name)
+""".format(
+                    settings.MEDIA_URL,
+                    self.project.name,
+                    Project.REPOSITORY_TRAILING_PATH,
+                    repo=self.name
+                )
         elif self.source == self.SOURCE_EXTERNAL:
             if self.project.pms.name.startswith('apt'):
-                return 'deb {} {{protocol}}://{{server}}/{}/{}/EXTERNAL/{} {} {}\n'.format(
+                return 'deb {} {{protocol}}://{{server}}/src/{}/EXTERNAL/{} {} {}\n'.format(
                     self.options,
-                    'src',
                     self.project.name,
                     self.name,
                     self.suite,
@@ -419,13 +423,13 @@ gpgkey=file://{{keys_path}}/{{server}}/repositories.pub
             elif self.project.pms.name.startswith('yum') or self.project.pms.name.startswith('zypper'):
                 normal_template = """[EXTERNAL-{repo}]
 name=EXTERNAL-{repo}
-baseurl={{protocol}}://{{server}}{media}{project}/EXTERNAL/{name}/{suite}/$basearch/
+baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/$basearch/
 {options}
 
 """
                 components_template = """[EXTERNAL-{repo}-{component}]
 name=EXTERNAL-{repo}-{component}
-baseurl={{protocol}}://{{server}}{media}{project}/EXTERNAL/{name}/{suite}/{component}/$basearch/
+baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/{component}/$basearch/
 {options}
 
 """
@@ -434,11 +438,10 @@ baseurl={{protocol}}://{{server}}{media}{project}/EXTERNAL/{name}/{suite}/{compo
                     for component in self.components.split(' '):
                         template += components_template.format(
                             repo=self.name,
-                            media=settings.MEDIA_URL,
                             project=self.project.name,
                             name=self.name,
                             suite=self.suite,
-                            options=self.options,
+                            options=self.options.replace(' ', '\n'),
                             component=component
                         )
 
@@ -446,11 +449,10 @@ baseurl={{protocol}}://{{server}}{media}{project}/EXTERNAL/{name}/{suite}/{compo
                 else:
                     return normal_template.format(
                         repo=self.name,
-                        media=settings.MEDIA_URL,
                         project=self.project.name,
                         name=self.name,
                         suite=self.suite,
-                        options=self.options
+                        options=self.options.replace(' ', '\n')
                     )
 
         return ''
