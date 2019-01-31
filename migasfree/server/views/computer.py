@@ -271,21 +271,16 @@ def computer_simulate_sync(request, pk):
                 list(result["attributes"].values_list('id', flat=True))
             )
 
-            result["sets"] = Attribute.objects.filter(id__in=[1] + set_ids)
+            result["sets"] = Attribute.objects.filter(id__in=[1] + set_ids)  # FIXME constant
 
-            deployments = []
-            for item in result.get("repositories", []):
-                deployments.append(
-                    Deployment.objects.get(
-                        project__id=project.id, name=item['name']
-                    )
-                )
-            result["repositories"] = deployments
+            result["repositories"] = Deployment.objects.filter(
+                project__id=project.id,
+                name__in=[item['name'] for item in result.get("repositories", []) if 'name' in item]
+            )
 
-            fault_definitions = []
-            for item in result.get("faultsdef", []):
-                fault_definitions.append(FaultDefinition.objects.get(name=item['name']))
-            result["faultsdef"] = fault_definitions
+            result["faultsdef"] = FaultDefinition.objects.filter(
+                name__in=[item['name'] for item in result.get("faultsdef", []) if 'name' in item]
+            )
 
             result["default_device"] = result.get("devices", {}).get("default", 0)
             devices = []
