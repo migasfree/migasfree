@@ -163,7 +163,6 @@ class PolicyAdmin(MigasAdmin):
         'included_attributes_link', 'excluded_attributes_link'
     )
     list_filter = ('enabled', 'exclusive')
-    list_display_links = ('name_link',)
     search_fields = (
         'name', 'included_attributes__value', 'excluded_attributes__value'
     )
