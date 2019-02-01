@@ -573,6 +573,9 @@ class MigasLink(object):
                 or (self._meta.model_name in ['clientattribute', 'attribute'] and self.id == 1):
             lnk['status'] = 'set'
             lnk['trans_status'] = ugettext(self._meta.verbose_name)
+        elif self._meta.model_name == 'policy':
+            lnk['status'] = 'policy'
+            lnk['trans_status'] = ugettext(self._meta.verbose_name)
 
         return format_html(
             render_to_string(
