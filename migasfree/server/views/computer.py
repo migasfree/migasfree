@@ -14,6 +14,8 @@ from django.views.generic import DeleteView
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
+from migasfree.catalog.models import Policy
+
 from ..forms import ComputerReplacementForm
 from ..models import (
     Computer, Synchronization, Error, Fault,
@@ -287,6 +289,9 @@ def computer_simulate_sync(request, pk):
             for device in result.get("devices", {}).get("logical", []):
                 devices.append(DeviceLogical.objects.get(pk=device['PRINTER']['id']))
             result["devices"] = devices
+
+            policy_pkg_to_install, policy_pkg_to_remove = Policy.get_packages(computer)
+            result['policies'] = {'to_install': policy_pkg_to_install, 'to_remove': policy_pkg_to_remove}
 
             request.user = user  # return to logged user
 
