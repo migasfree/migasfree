@@ -12,7 +12,8 @@
             {% if lnk.status == 'unsubscribed' %}fas fa-recycle{% endif %}
             {% if lnk.status == 'set' %}far fa-circle{% endif %}
             {% if lnk.status == 'tag' %}fas fa-tag{% endif %}
-            {% if lnk.status == 'domain' %}fas fa-globe{% endif %}"></span>
+            {% if lnk.status == 'domain' %}fas fa-globe{% endif %}
+            {% if lnk.status == 'policy' %}fab fa-empire{% endif %}"></span>
         {% endif %}
         {{ lnk.text }}
     </a>
