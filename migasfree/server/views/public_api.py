@@ -126,40 +126,44 @@ def get_source_file(request):
 
     if not os.path.exists(_file_local):
         if not os.path.exists(os.path.dirname(_file_local)):
-            os.makedirs(os.path.dirname(_file_local))  # Make local path
+            os.makedirs(os.path.dirname(_file_local))
 
         if not source:
             source = ExternalSource.objects.get(project__name=project_name, name=source_name)
 
-        url = '{}/{}'.format(source.base_url, resource)
+        url = u'{}/{}'.format(source.base_url, resource)
 
         try:
             f = urlopen(url)
-            # Open our local file for writing
             with open(_file_local, "wb") as local_file:
                 local_file.write(f.read())
-        # handle errors
-        except HTTPError, e:
-            return HttpResponse('HTTP Error: {} {}'.format(e.code, url), status=e.code)
-        except URLError, e:
-            return HttpResponse('URL Error: {} {}'.format(e.reason, url), status=e.code)
+        except HTTPError as e:
+            return HttpResponse(
+                u'HTTP Error: {} {}'.format(e.code, url),
+                status=e.code
+            )
+        except URLError as e:
+            return HttpResponse(
+                u'URL Error: {} {}'.format(e.reason, url),
+                status=status.HTTP_404_NOT_FOUND
+            )
 
-    if os.path.isfile(_file_local):
-        wrapper = FileWrapper(file(_file_local))
-        response = HttpResponse(wrapper, content_type='application/octet-stream')
-        response['Content-Disposition'] = u'attachment; filename={}'.format(os.path.basename(_file_local))
-        response['Content-Length'] = os.path.getsize(_file_local)
-    else:
+    if not os.path.isfile(_file_local):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+
+    response = HttpResponse(FileWrapper(open(_file_local, 'r')), content_type='application/octet-stream')
+    response['Content-Disposition'] = u'attachment; filename={}'.format(os.path.basename(_file_local))
+    response['Content-Length'] = os.path.getsize(_file_local)
 
     return response
 
 
 @permission_classes((permissions.AllowAny,))
-class RepositoriesUrlTemplateView(views.APIView):  # compatibility for migasfree-clients <= 4.16
+class RepositoriesUrlTemplateView(views.APIView):
     def post(self, request, format=None):
         """
         Returns the repositories URL template
+        (compatibility for migasfree-client <= 4.16)
         """
         protocol = 'https' if request.is_secure() else 'http'
 
