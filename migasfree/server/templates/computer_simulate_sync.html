@@ -120,7 +120,11 @@
                     </h3>
                     <div class="compact-content">
                         {% for item in packages.install %}
-                            {{ item }}<br />
+                            {{ item }}
+                            {% if item in policies.to_install %}
+                                &nbsp;<span title="{% trans 'by policy' %}" class="fab fa-empire"></span>
+                            {% endif %}
+                            <br />
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -132,7 +136,11 @@
                     </h3>
                     <div class="compact-content">
                         {% for item in packages.remove %}
-                            {{ item }}<br />
+                            {{ item }}
+                            {% if item in policies.to_remove %}
+                                &nbsp;<span title="{% trans 'by policy' %}" class="fab fa-empire"></span>
+                            {% endif %}
+                            <br />
                         {% endfor %}
                     </div>
                 {% endif %}
