@@ -542,9 +542,9 @@ class PropertyViewSet(viewsets.ModelViewSet):
         return serializers.PropertySerializer
 
 
-class DeploymentViewSet(viewsets.ModelViewSet):
-    queryset = models.Deployment.objects.all()
-    serializer_class = serializers.DeploymentSerializer
+class InternalSourceViewSet(viewsets.ModelViewSet):
+    queryset = models.InternalSource.objects.all()
+    serializer_class = serializers.InternalSourceSerializer
     filter_class = DeploymentFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
@@ -552,7 +552,7 @@ class DeploymentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user.userprofile
-        qs = self.queryset
+        qs = self.queryset.filter(source=models.Deployment.SOURCE_INTERNAL)
         if not user.is_view_all():
             qs = qs.filter(project__in=user.get_projects())
             if user.domain_preference:
@@ -563,19 +563,48 @@ class DeploymentViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update' \
                 or self.action == 'partial_update':
-            return serializers.DeploymentWriteSerializer
+            return serializers.InternalSourceWriteSerializer
 
-        return serializers.DeploymentSerializer
+        return serializers.InternalSourceSerializer
 
     @action(methods=['get'], detail=True)
     def metadata(self, request, pk=None):
-        get_object_or_404(models.Deployment, pk=pk)
+        """
+        Creates repository metadata
+        """
+        get_object_or_404(models.InternalSource, pk=pk)
         ret = create_repository_metadata(pk)
 
         return Response(
             {'detail': ret},
             status=status.HTTP_200_OK
         )
+
+
+class ExternalSourceViewSet(viewsets.ModelViewSet):
+    queryset = models.ExternalSource.objects.all()
+    serializer_class = serializers.ExternalSourceSerializer
+    filter_class = DeploymentFilter
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    ordering_fields = '__all__'
+    ordering = ('-start_date',)
+
+    def get_queryset(self):
+        user = self.request.user.userprofile
+        qs = self.queryset.filter(source=models.Deployment.SOURCE_EXTERNAL)
+        if not user.is_view_all():
+            qs = qs.filter(project__in=user.get_projects())
+            if user.domain_preference:
+                qs = qs.filter(domain=user.domain_preference)
+
+        return qs
+
+    def get_serializer_class(self):
+        if self.action == 'create' or self.action == 'update' \
+                or self.action == 'partial_update':
+            return serializers.ExternalSourceWriteSerializer
+
+        return serializers.ExternalSourceSerializer
 
 
 class ScheduleDelayViewSet(viewsets.ModelViewSet):
