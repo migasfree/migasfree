@@ -282,7 +282,6 @@ class ScheduleInfoSerializer(serializers.ModelSerializer):
 class DeploymentSerializer(serializers.ModelSerializer):
     project = ProjectInfoSerializer(many=False, read_only=True)
     schedule = ScheduleInfoSerializer(many=False, read_only=True)
-    available_packages = PackageInfoSerializer(many=True, read_only=True)
     included_attributes = AttributeInfoSerializer(many=True, read_only=True)
     excluded_attributes = AttributeInfoSerializer(many=True, read_only=True)
 
@@ -312,12 +311,41 @@ class DeploymentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class InternalSourceSerializer(DeploymentSerializer):
+    available_packages = PackageInfoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = models.InternalSource
+        fields = (
+            'enabled', 'project', 'domain', 'name', 'comment',
+            'available_packages',
+            'included_attributes', 'excluded_attributes',
+            'packages_to_install', 'packages_to_remove',
+            'default_preincluded_packages', 'default_included_packages', 'default_excluded_packages',
+            'schedule', 'start_date'
+        )
+
+
+class ExternalSourceSerializer(DeploymentSerializer):
+    class Meta:
+        model = models.ExternalSource
+        fields = (
+            'enabled', 'project', 'domain', 'name', 'comment',
+            'included_attributes', 'excluded_attributes',
+            'packages_to_install', 'packages_to_remove',
+            'default_preincluded_packages', 'default_included_packages', 'default_excluded_packages',
+            'schedule', 'start_date',
+            'base_url', 'options', 'suite', 'components', 'frozen', 'expire'
+        )
+
+
 class DeploymentWriteSerializer(serializers.ModelSerializer):
     def to_internal_value(self, data):
         """
         :param data: {
             "enabled": true,
             "project": id,
+            "domain": id,
             "name": "string",
             "comment": "string",
             "available_packages": ["string", ...],
@@ -350,36 +378,6 @@ class DeploymentWriteSerializer(serializers.ModelSerializer):
 
         return super(DeploymentWriteSerializer, self).to_internal_value(data)
 
-    def create(self, validated_data):
-        deploy = super(DeploymentWriteSerializer, self).create(validated_data)
-        tasks.create_repository_metadata(deploy)
-        return deploy
-
-    def update(self, instance, validated_data):
-        old_obj = self.Meta.model.objects.get(id=instance.id)
-        old_pkgs = sorted(
-            old_obj.available_packages.values_list('id', flat=True)
-        )
-        old_name = old_obj.name
-
-        # https://github.com/tomchristie/django-rest-framework/issues/2442
-        instance = super(DeploymentWriteSerializer, self).update(
-            instance, validated_data
-        )
-        new_pkgs = sorted(
-            instance.available_packages.values_list('id', flat=True)
-        )
-
-        if cmp(old_pkgs, new_pkgs) != 0 or old_name != validated_data['name']:
-            tasks.create_repository_metadata(instance)
-
-            if old_name != validated_data['name']:
-                tasks.remove_repository_metadata(
-                    {}, instance, old_name
-                )
-
-        return instance
-
     def _validate_active_computers(self, att_list):
         for attribute in att_list:
             if attribute.property_att.prefix == 'CID':
@@ -407,6 +405,62 @@ class DeploymentWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Deployment
         fields = '__all__'
+
+
+class InternalSourceWriteSerializer(DeploymentWriteSerializer):
+    def create(self, validated_data):
+        deploy = super(InternalSourceWriteSerializer, self).create(validated_data)
+        tasks.create_repository_metadata(deploy)
+        return deploy
+
+    def update(self, instance, validated_data):
+        old_obj = self.Meta.model.objects.get(id=instance.id)
+        old_pkgs = sorted(
+            old_obj.available_packages.values_list('id', flat=True)
+        )
+        old_name = old_obj.name
+
+        # https://github.com/tomchristie/django-rest-framework/issues/2442
+        instance = super(InternalSourceWriteSerializer, self).update(
+            instance, validated_data
+        )
+        new_pkgs = sorted(
+            instance.available_packages.values_list('id', flat=True)
+        )
+
+        if cmp(old_pkgs, new_pkgs) != 0 or old_name != validated_data['name']:
+            tasks.create_repository_metadata(instance)
+
+            if old_name != validated_data['name']:
+                tasks.remove_repository_metadata(
+                    {}, instance, old_name
+                )
+
+        return instance
+
+    class Meta:
+        model = models.InternalSource
+        fields = (
+            'enabled', 'project', 'domain', 'name', 'comment',
+            'available_packages',
+            'included_attributes', 'excluded_attributes',
+            'packages_to_install', 'packages_to_remove',
+            'default_preincluded_packages', 'default_included_packages', 'default_excluded_packages',
+            'schedule', 'start_date'
+        )
+
+
+class ExternalSourceWriteSerializer(DeploymentWriteSerializer):
+    class Meta:
+        model = models.ExternalSource
+        fields = (
+            'enabled', 'project', 'domain', 'name', 'comment',
+            'included_attributes', 'excluded_attributes',
+            'packages_to_install', 'packages_to_remove',
+            'default_preincluded_packages', 'default_included_packages', 'default_excluded_packages',
+            'schedule', 'start_date',
+            'base_url', 'options', 'suite', 'components', 'frozen', 'expire'
+        )
 
 
 class ScheduleDelayWriteSerializer(serializers.ModelSerializer):
