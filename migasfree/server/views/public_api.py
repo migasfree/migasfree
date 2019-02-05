@@ -135,7 +135,7 @@ def get_source_file(request):
 
         try:
             f = urlopen(url)
-            with open(_file_local, "wb") as local_file:
+            with open(_file_local, 'wb') as local_file:
                 local_file.write(f.read())
         except HTTPError as e:
             return HttpResponse(
@@ -151,7 +151,7 @@ def get_source_file(request):
     if not os.path.isfile(_file_local):
         return HttpResponse(status=status.HTTP_204_NO_CONTENT)
 
-    response = HttpResponse(FileWrapper(open(_file_local, 'r')), content_type='application/octet-stream')
+    response = HttpResponse(FileWrapper(open(_file_local, 'rb').read()), content_type='application/octet-stream')
     response['Content-Disposition'] = u'attachment; filename={}'.format(os.path.basename(_file_local))
     response['Content-Length'] = os.path.getsize(_file_local)
 
