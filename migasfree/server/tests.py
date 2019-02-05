@@ -7,11 +7,12 @@ from datetime import datetime
 
 from django.test import TransactionTestCase
 from django.urls import reverse
-from .models import *
+
+from .models import InternalSource, Platform, Project, Pms
 from .fixtures import create_initial_data, sequence_reset
 
 
-class RepositoryTestCase(TransactionTestCase):
+class InternalSourceTestCase(TransactionTestCase):
     def setUp(self):  # pylint: disable-msg=C0103
         create_initial_data()
         sequence_reset()
@@ -24,7 +25,7 @@ class RepositoryTestCase(TransactionTestCase):
             platform
         )
 
-        self.test1 = Deployment()
+        self.test1 = InternalSource()
         self.test1.name = "TEST 1 2"
         self.test1.enabled = True
         self.test1.project = project
@@ -33,10 +34,10 @@ class RepositoryTestCase(TransactionTestCase):
         self.test1.packages_to_remove = ""
         self.test1.save()  # FIXME remove
 
-    def test_deployment_name(self):
+    def test_name(self):
         self.assertEqual(self.test1.name, 'test-1-2')
 
-    def test_login_site(self):
+    def test_login(self):
         result = self.client.login(username='admin', password='admin')
         self.assertEqual(result, True)
 
@@ -44,6 +45,6 @@ class RepositoryTestCase(TransactionTestCase):
         self.assertEqual(response.status_code, 200)
 
         response = self.client.get(
-            reverse('admin:server_deployment_changelist')
+            reverse('admin:server_internalsource_changelist')
         )
         self.assertEqual(response.status_code, 200)
