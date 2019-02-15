@@ -1,4 +1,4 @@
-Django==1.11.18
+Django==1.11.20
 coreapi==2.3.3
 django-admin-bootstrapped==2.5.7
 django-ajax-selects==1.7.0
@@ -13,7 +13,7 @@ django-rest-auth==0.9.3
 django-rest-swagger==2.2.0
 # django-url-tools==0.0.9
 git+https://bitbucket.org/nlaurance/django-url-tools@17352a923541c610c9c6e7932f1caca7c3beaa02#egg=django-url-tools
-djangorestframework==3.8.2
+djangorestframework==3.9.1
 djangorestframework-filters==0.10.2
 docutils==0.14
 future==0.16.0
