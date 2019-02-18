@@ -12,7 +12,7 @@ router.register(r'computers', views.ComputerViewSet)
 router.register(
     r'computers',
     views.HardwareComputerViewSet,
-    base_name='computers-hardware'
+    basename='computers-hardware'
 )
 router.register(r'deployments/internal-sources', views.InternalSourceViewSet)
 router.register(r'deployments/external-sources', views.ExternalSourceViewSet)

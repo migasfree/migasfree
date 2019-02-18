@@ -6,4 +6,4 @@ from .views import SyncStatsViewSet
 
 router = routers.DefaultRouter()
 
-router.register(r'stats/syncs', SyncStatsViewSet, base_name='stats-syncs')
+router.register(r'stats/syncs', SyncStatsViewSet, basename='stats-syncs')
