@@ -224,7 +224,7 @@ class ComputerFilter(django_filters.FilterSet):
         model = Computer
         fields = [
             'id', 'project__id', 'status', 'name', 'uuid',
-            'sync_attributes__id', 'tags__id'
+            'sync_attributes__id', 'tags__id', 'machine'
         ]
 
 
