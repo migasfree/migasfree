@@ -2,6 +2,8 @@
 
 import re
 
+from datetime import datetime
+
 from django.db.models import Q
 from django.conf import settings
 from django.http import QueryDict
@@ -311,6 +313,50 @@ class ComputerViewSet(viewsets.ModelViewSet):
         serializer = serializers.ComputerSyncSerializer(computer, context={'request': request})
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['get'], detail=True)
+    def situation(self, request, pk=None):
+        """
+        :param request
+            date
+        :param pk: computer id
+        :return:
+            {
+                "platform": {
+                    "id": x,
+                    "name": "xxx"
+                },
+                "project": {
+                    "id": x,
+                    "name": "xxx"
+                },
+                "status": "xxx"
+            }
+        """
+        user = request.user.userprofile
+        computer = get_object_or_404(models.Computer, pk=pk)
+        date = request.GET.get('date', datetime.now())
+
+        migration = models.Migration.situation(computer.id, date, user)
+        status_log = models.StatusLog.situation(computer.id, date, user)
+
+        response = {}
+        if migration:
+            serializer = serializers.PlatformSerializer(migration.project.platform, context={'request': request})
+            response['platform'] = serializer.data
+
+            serializer = serializers.ProjectInfoSerializer(migration.project, context={'request': request})
+            response['project'] = serializer.data
+
+        if status_log:
+            response['status'] = status_log.status
+        else:
+            if isinstance(date, basestring):
+                date = datetime.strptime(date, '%Y-%m-%d')
+                if date >= computer.created_at:
+                    response['status'] = settings.MIGASFREE_DEFAULT_COMPUTER_STATUS
+
+        return Response(response, status=status.HTTP_200_OK)
 
 
 class ErrorViewSet(
