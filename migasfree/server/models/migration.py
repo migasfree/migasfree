@@ -12,8 +12,10 @@ class DomainMigrationManager(models.Manager):
     def scope(self, user):
         qs = super(DomainMigrationManager, self).get_queryset()
         if not user.is_view_all():
-            qs = qs.filter(project_id__in=user.get_projects())
-            qs = qs.filter(computer_id__in=user.get_computers())
+            qs = qs.filter(
+                project_id__in=user.get_projects(),
+                computer_id__in=user.get_computers()
+            )
 
         return qs
 
