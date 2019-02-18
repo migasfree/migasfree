@@ -70,6 +70,14 @@ class Event(models.Model):
             count=Count('id')
         ))
 
+    @classmethod
+    def situation(cls, computer_id, date, user):
+        return cls.objects.scope(user).filter(
+            computer__id=computer_id, created_at__lte=date
+        ).order_by(
+            '-created_at'
+        ).first()
+
     def __str__(self):
         return u'{} ({:%Y-%m-%d %H:%M:%S})'.format(self.computer, self.created_at)
 
