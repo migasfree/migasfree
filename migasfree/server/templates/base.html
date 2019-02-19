@@ -53,9 +53,9 @@
         //<![CDATA[
             $(document).ready(function() {
                 $('#alerts').load("{% url 'alerts' %}");
-                setInterval(function() {
-                    $('#alerts').load("{% url 'alerts' %}");
-                }, 10000);
+                $('#alerts').click(function () {
+                    $(this).load("{% url 'alerts' %}");
+                });
 
                 $('.controls input[type="text"]').addClass('form-control');
                 $('.controls input[type="password"]').addClass('form-control');
