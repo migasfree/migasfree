@@ -73,7 +73,7 @@ def add_perms_only_modify(group, tables=None):
     if tables is None:
         tables = []
 
-    perms = ['change_{}', 'can_save_{}']
+    perms = ['add_{}', 'change_{}', 'can_save_{}']
 
     for table in tables:
         app, name = table.split('.')
