@@ -17,9 +17,9 @@ class Migration(migrations.Migration):
             fields=[
             ],
             options={
-                'verbose_name': 'External Source',
+                'verbose_name': 'Deployment (external source)',
                 'proxy': True,
-                'verbose_name_plural': 'External Sources',
+                'verbose_name_plural': 'Deployments (external source)',
                 'indexes': [],
             },
             bases=('server.deployment',),
@@ -29,9 +29,9 @@ class Migration(migrations.Migration):
             fields=[
             ],
             options={
-                'verbose_name': 'Internal Source',
+                'verbose_name': 'Deployment (internal source)',
                 'proxy': True,
-                'verbose_name_plural': 'Internal Sources',
+                'verbose_name_plural': 'Deployments (internal source)',
                 'indexes': [],
             },
             bases=('server.deployment',),
