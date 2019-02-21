@@ -6,6 +6,7 @@ import datetime
 from six import iteritems
 
 from import_export.admin import ExportActionModelAdmin
+from django.contrib import admin
 from django.contrib.admin.views.main import ChangeList
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.utils.html import format_html
@@ -209,6 +210,22 @@ class MigasAdmin(ExportActionModelAdmin):
             return self.model.objects.scope(request.user.userprofile)
         else:
             return super(MigasAdmin, self).get_queryset(request)
+
+    @property
+    def media(self):
+        media = super(MigasAdmin, self).media
+        media._js = filter(lambda i: not i.startswith('admin/js/vendor/jquery/jquery'), media._js)
+
+        return media
+
+
+class MigasTabularInline(admin.TabularInline):
+    @property
+    def media(self):
+        media = super(MigasTabularInline, self).media
+        media._js = filter(lambda i: not i.startswith('admin/js/vendor/jquery/jquery'), media._js)
+
+        return media
 
 
 class MigasChangeList(ChangeList):
