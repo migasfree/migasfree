@@ -12,7 +12,7 @@ from django.db.models import Prefetch
 from ajax_select import make_ajax_form
 from ajax_select.admin import AjaxSelectAdmin
 
-from .migasfree import MigasAdmin, MigasFields
+from .migasfree import MigasAdmin, MigasFields, MigasTabularInline
 
 from ..models import (
     Attribute, AttributeSet, ClientProperty, ClientAttribute, Computer,
@@ -751,7 +751,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         return super(DeploymentAdmin, self).response_change(request, obj)
 
 
-class ScheduleDelayLine(admin.TabularInline):
+class ScheduleDelayLine(MigasTabularInline):
     model = ScheduleDelay
     fields = ('delay', 'attributes', 'computers', 'duration')
     form = make_ajax_form(ScheduleDelay, {'attributes': 'attribute'})
