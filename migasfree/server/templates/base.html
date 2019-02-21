@@ -39,8 +39,7 @@
         //]]>
         </script>
 
-        <script src="{% static 'admin/js/jquery-1.9.1.min.js' %}" type="text/javascript"></script>
-        <script src="{% static 'admin/js/jquery-migrate-1.2.1.min.js' %}" type="text/javascript"></script>
+        <script src="{% static 'admin/js/vendor/jquery/jquery.js' %}" type="text/javascript"></script>
         <script src="{% static 'ajax-select/jquery-ui.min.js' %}" type="text/javascript"></script>
         <script src="{% static 'bootstrap/js/bootstrap.min.js' %}" type="text/javascript"></script>
         <script src="{% static 'js/migas_link.js' %}" type="text/javascript"></script>
@@ -52,9 +51,16 @@
         <script type="text/javascript">
         //<![CDATA[
             $(document).ready(function() {
+                var alertsIntervalId = 0;
                 $('#alerts').load("{% url 'alerts' %}");
-                $('#alerts').click(function () {
+                $('#alerts').on('show.bs.dropdown', function () {
                     $(this).load("{% url 'alerts' %}");
+                    alertsIntervalId = setInterval(function() {
+                        $(this).load("{% url 'alerts' %}");
+                    }, 10000);
+                });
+                $('#alerts').on('hide.bs.dropdown', function () {
+                    clearInterval(alertsIntervalId);
                 });
 
                 $('.controls input[type="text"]').addClass('form-control');
