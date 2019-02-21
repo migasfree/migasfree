@@ -6,7 +6,7 @@ from django.db.models import Prefetch
 
 from ajax_select import make_ajax_form
 
-from migasfree.server.admin.migasfree import MigasAdmin, MigasFields
+from migasfree.server.admin.migasfree import MigasAdmin, MigasFields, MigasTabularInline
 
 from .models import Application, PackagesByProject, Policy, PolicyGroup, Attribute
 from .forms import ApplicationForm, PolicyForm, PolicyGroupForm
@@ -38,7 +38,7 @@ class PackagesByProjectAdmin(MigasAdmin):
         ).prefetch_related('project')
 
 
-class PackagesByProjectLine(admin.TabularInline):
+class PackagesByProjectLine(MigasTabularInline):
     model = PackagesByProject
     fields = ('project', 'packages_to_install')
     ordering = ('project',)
@@ -133,7 +133,7 @@ class PolicyGroupAdmin(MigasAdmin):
         )
 
 
-class PolicyGroupLine(admin.TabularInline):
+class PolicyGroupLine(MigasTabularInline):
     form = PolicyGroupForm
     model = PolicyGroup
     fields = (
