@@ -6,7 +6,7 @@ from django.db.models import Prefetch
 from django.urls import resolve
 from django.utils.translation import ugettext_lazy as _
 
-from .migasfree import MigasAdmin, MigasFields
+from .migasfree import MigasAdmin, MigasFields, MigasTabularInline
 
 from ..models import (
     DeviceType, DeviceFeature, DeviceManufacturer, DeviceConnection,
@@ -107,7 +107,7 @@ class DeviceLogicalAdmin(MigasAdmin):
         )
 
 
-class DeviceLogicalInline(admin.TabularInline):
+class DeviceLogicalInline(MigasTabularInline):
     model = DeviceLogical
     form = DeviceLogicalForm
     fields = ('feature', 'alternative_feature_name', 'attributes')
@@ -210,7 +210,7 @@ class DeviceAdmin(MigasAdmin):
         js = ('js/device_admin.js',)
 
 
-class DeviceDriverInline(admin.TabularInline):
+class DeviceDriverInline(MigasTabularInline):
     model = DeviceDriver
     formfield_overrides = {models.TextField: {'widget': ExtraThinTextarea}}
     fields = ('project', 'feature', 'name', 'packages_to_install')
