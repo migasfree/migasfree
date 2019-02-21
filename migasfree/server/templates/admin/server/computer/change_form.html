@@ -1,5 +1,13 @@
 {% extends "admin/change_form.html" %}
-{% load admin_urls i18n server_tags bootstrapped_goodies_tags mac_address_list %}
+{% load admin_urls admin_static i18n server_tags bootstrapped_goodies_tags mac_address_list %}
+
+{% block extrastyle %}
+    <link href="{% static 'css/datetimepicker.css' %}" type="text/css" media="all" rel="stylesheet">
+{% endblock %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="{% static 'js/bootstrap-datetimepicker.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <input type="hidden" id="computer-id" value="{{ original.id }}" />
