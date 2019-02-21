@@ -1,5 +1,16 @@
 {% extends "admin/change_form.html" %}
-{% load admin_urls i18n server_tags bootstrapped_goodies_tags %}
+{% load admin_urls admin_static i18n server_tags bootstrapped_goodies_tags %}
+
+{% block extrastyle %}
+    <link href="{% static 'ajax_select/css/ajax_select.css' %}" type="text/css" media="all" rel="stylesheet">
+    <link href="{% static 'css/datetimepicker.css' %}" type="text/css" media="all" rel="stylesheet">
+{% endblock %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="{% static 'ajax_select/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ajax_select/js/ajax_select.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap-datetimepicker.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <form class="form-horizontal" {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post" id="{{ opts.model_name }}_form" novalidate>
