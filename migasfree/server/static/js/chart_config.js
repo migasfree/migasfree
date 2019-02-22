@@ -69,7 +69,7 @@ var options = {
             cursor: "pointer",
             point: {
                 events: {
-                    click: function() {
+                    click() {
                         if (typeof this.options.url != "undefined") {
                             window.open(this.options.url, "_self");
                         }
@@ -86,7 +86,7 @@ var options = {
     series: [{
         size: "100%",
         dataLabels: {
-            formatter: function () {
+            formatter() {
                 return this.y > 5 ? this.point.name : null;
             },
             color: "#fff",
