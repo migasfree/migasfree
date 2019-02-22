@@ -79,6 +79,7 @@ class AppendDevicesFromComputerForm(forms.Form):
         label=_('Target')
     )
 
+
 class ExternalSourceForm(forms.ModelForm):
     included_attributes = MigasAutoCompleteSelectMultipleField(
         'attribute', required=False,
@@ -133,17 +134,6 @@ class ExternalSourceForm(forms.ModelForm):
             cleaned_data.get('excluded_attributes', [])
         )
 
-        """
-        if not cleaned_data['domain']:
-            domain_admin_group = Group.objects.filter(name='Domain Admin')
-            if domain_admin_group:
-                domain_admin_group = domain_admin_group[0]
-                if domain_admin_group.id in list(
-                    self.request.user.userprofile.groups.values_list('id', flat=True)
-                ):
-                    raise ValidationError(_('Domain can not be empty'))
-        """
-
     class Meta:
         model = ExternalSource
         fields = '__all__'
@@ -163,7 +153,6 @@ class ExternalSourceForm(forms.ModelForm):
                 }
             ),
         }
-
 
 
 class InternalSourceForm(forms.ModelForm):
@@ -219,17 +208,6 @@ class InternalSourceForm(forms.ModelForm):
         self._validate_active_computers(
             cleaned_data.get('excluded_attributes', [])
         )
-
-        """
-        if not cleaned_data['domain']:
-            domain_admin_group = Group.objects.filter(name='Domain Admin')
-            if domain_admin_group:
-                domain_admin_group = domain_admin_group[0]
-                if domain_admin_group.id in list(
-                    self.request.user.userprofile.groups.values_list('id', flat=True)
-                ):
-                    raise ValidationError(_('Domain can not be empty'))
-        """
 
     class Meta:
         model = InternalSource
