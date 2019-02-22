@@ -115,7 +115,7 @@ var optionsMulti = {
             cursor: "pointer",
             point: {
                 events: {
-                    click: function() {
+                    click() {
                         if (typeof this.options.url != "undefined") {
                             window.open(this.options.url, "_self");
                         }
@@ -132,7 +132,7 @@ var optionsMulti = {
     series: [{
         size: "60%",
         dataLabels: {
-            formatter: function () {
+            formatter() {
                 return this.y > 5 ? this.point.name : null;
             },
             color: "#fff",
