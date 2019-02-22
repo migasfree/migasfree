@@ -1,4 +1,4 @@
-$(function(){
+$(function() {
     var showMsg = function(msg, level = "success") {
         $("article[role='main']").prepend(
             '<div class="alert alert-' + level + ' alert-dismissible" role="alert">' +
@@ -19,7 +19,7 @@ $(function(){
     $.ajaxSetup({
         headers: {"X-CSRFToken": Cookies.get("csrftoken")},  // FIXME setting
         url: "/api/v1/token/computers/" + $("input#computer-id").val() + "/",
-        error: function(jqXHR, textStatus, errorThrown) {
+        error(jqXHR, textStatus, errorThrown) {
             if (jqXHR.status === 0) {
                 console.log("Not connect: Verify Network.");
             } else if (jqXHR.status === 404) {
@@ -99,7 +99,7 @@ $(function(){
             success: (result) => {
                 showMsg(gettext("Devices have been changed!"));
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error(jqXHR, textStatus, errorThrown) {
                 showMsg(jqXHR.responseText.replace(/\"/g, ""), "danger");
             }
         });
