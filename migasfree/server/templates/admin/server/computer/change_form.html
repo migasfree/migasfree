@@ -2,10 +2,19 @@
 {% load admin_urls admin_static i18n server_tags bootstrapped_goodies_tags mac_address_list %}
 
 {% block extrastyle %}
-    <link href="{% static 'css/datetimepicker.css' %}" type="text/css" media="all" rel="stylesheet">
+    <link href="{% static 'autocomplete_light/vendor/select2/dist/css/select2.css' %}"
+          type="text/css" media="all" rel="stylesheet" />
+    <link href="{% static 'autocomplete_light/select2.css' %}" type="text/css" media="all" rel="stylesheet" />
+    <link href="{% static 'css/datetimepicker.css' %}" type="text/css" media="all" rel="stylesheet" />
 {% endblock %}
 
 {% block extrahead %}
+    <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'autocomplete_light/vendor/select2/dist/js/select2.full.js' %}"></script>
+    <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
+
     <script type="text/javascript" src="{% static 'js/bootstrap-datetimepicker.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/default_logical_device.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/computer_change_form.js' %}"></script>
