@@ -25,14 +25,18 @@ from ..models import (
     HwNode, Attribute,
 )
 
-admin.site.register(AutoCheckError)
-
 
 def add_computer_search_fields(fields_list):
     for field in settings.MIGASFREE_COMPUTER_SEARCH_FIELDS:
         fields_list.append("computer__%s" % field)
 
     return tuple(fields_list)
+
+
+@admin.register(AutoCheckError)
+class AutoCheckErrorAdmin(MigasAdmin):
+    list_display = ('message',)
+    list_display_links = ('message',)
 
 
 @admin.register(Computer)
