@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n admin_static %}
+{% load i18n admin_static server_tags %}
 
 {% block extrahead %}
     <script src="{% static 'js/highcharts.js' %}" type="text/javascript"></script>
@@ -7,7 +7,6 @@
 
 {% block breadcrumbs %}
     <ul class="breadcrumb">
-        <li>{% trans 'Stats' %}</li>
         <li>{{ title }}</li>
     </ul>
 {% endblock %}
@@ -23,19 +22,133 @@
 
 <div class="row text-center">
     <div class="cold-md-12 col-sm-12 col-xs-12">
-        <div class="panel panel-default">
-            <div class="panel-heading text-center lead">
-                {{ last_day_events.title }}
-            </div>
-            <div class="panel-body">
-                <div id="last-day-events"></div>
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p class="lead">
+                        {% hourly_range as hours %}
+                        {% blocktrans %}
+                            Event History in the last {{ hours }} hours
+                        {% endblocktrans %}
+                        <button id="load-event-history" class="btn btn-primary" type="button"
+                                data-toggle="collapse" data-target="#collapse-event-history"
+                                aria-expanded="false" aria-controls="collapse-event-history">
+                            <i class="fas fa-angle-double-down"></i>
+                        </button>
+                    </p>
+                </div>
+                <div id="collapse-event-history" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <div id="event-history">
+                            <span class="fas fa-4x fa-sync-alt fa-spin"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+{% if perms.server.change_synchronization %}
+    <div class="row text-center">
+        <div class="cold-md-12 col-sm-12 col-xs-12">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <p class="lead">
+                            {% trans 'Synchronized Computers / Day' %}
+                            <button id="load-syncs-daily" class="btn btn-primary" type="button"
+                                    data-toggle="collapse" data-target="#collapse-syncs-daily"
+                                    aria-expanded="false" aria-controls="collapse-syncs-daily">
+                                <i class="fas fa-angle-double-down"></i>
+                            </button>
+                        </p>
+                    </div>
+                    <div id="collapse-syncs-daily" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div id="syncs-daily">
+                                <span class="fas fa-4x fa-sync-alt fa-spin"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center">
+        <div class="cold-md-12 col-sm-12 col-xs-12">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <p class="lead">
+                            {% trans 'Synchronized Computers / Month' %}
+                            <button id="load-syncs-monthly" class="btn btn-primary" type="button"
+                                    data-toggle="collapse" data-target="#collapse-syncs-monthly"
+                                    aria-expanded="false" aria-controls="collapse-syncs-monthly">
+                                <i class="fas fa-angle-double-down"></i>
+                            </button>
+                        </p>
+                    </div>
+                    <div id="collapse-syncs-monthly" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div id="syncs-monthly">
+                                <span class="fas fa-4x fa-sync-alt fa-spin"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
 {% endblock content %}
 
 {% block extrabody %}
+<script type="text/javascript">
+function toggleIcon(element) {
+    if ($(element).find('svg').attr('data-icon') == 'angle-double-down' ) {
+        $(element).find('svg').attr('data-icon', 'angle-double-up');
+    } else {
+        $(element).find('svg').attr('data-icon', 'angle-double-down');
+    }
+}
+
+$(document).ready(function() {
+    $("#load-event-history").click(function () {
+        toggleIcon(this);
+
+        if ($("#event-history .highcharts-container").length == 0) {
+            $.get("/stats/event-history/", function (data) {
+                $("body").append(data);
+            });
+        }
+    });
+
+    {% if perms.server.change_synchronization %}
+    $("#load-syncs-daily").click(function () {
+        toggleIcon(this);
+
+        if ($("#syncs-daily .highcharts-container").length == 0) {
+            $.get("/stats/syncs/daily/", function (data) {
+                $("body").append(data);
+            });
+        }
+    });
+
+    $("#load-syncs-monthly").click(function () {
+        toggleIcon(this);
+
+        if ($("#syncs-monthly .highcharts-container").length == 0) {
+            $.get("/stats/syncs/monthly/", function (data) {
+                $("body").append(data);
+            });
+        }
+    });
+    {% endif %}
+});
+</script>
+
 <script type="text/javascript" src="{% static 'js/chart_config.js' %}"></script>
 
 <script type="text/javascript">
@@ -93,76 +206,5 @@ var uncheckedFaultsOptions = {
 };
 uncheckedFaultsOptions = jQuery.extend(true, {}, optionsMulti, uncheckedFaultsOptions);
 var uncheckedFaultsChart = new Highcharts.Chart(uncheckedFaultsOptions);
-
-var pointStart = Date.UTC(
-    {{ last_day_events.start_date.year }},
-    {{ last_day_events.start_date.month }},
-    {{ last_day_events.start_date.day }},
-    {{ last_day_events.start_date.hour }}
-);
-var lastDayEventsOptions = {
-    credits: {
-        enabled: false
-    },
-    chart: {
-        renderTo: 'last-day-events',
-        zoomType: 'xy'
-    },
-    title: {
-        text: null
-    },
-    xAxis: {
-      type: 'datetime'
-    },
-    yAxis: {
-        title: {
-            text: null
-        }
-    },
-    plotOptions: {
-        series: {
-            marker: {
-                enabled: false
-            }
-        }
-    },
-    series: [{
-        type: 'spline',
-        color: '#7cb5ec',
-        name: '{{ last_day_events.sync.name }}',
-        data: {{ last_day_events.sync.data|safe }},
-        pointStart: pointStart,
-        pointInterval: 3600000
-    }, {
-        type: 'spline',
-        color: '#e4d354',
-        name: '{{ last_day_events.fault.name }}',
-        data: {{ last_day_events.fault.data|safe }},
-        pointStart: pointStart,
-        pointInterval: 3600000
-    }, {
-        type: 'spline',
-        color: '#ff7474',
-        name: '{{ last_day_events.error.name }}',
-        data: {{ last_day_events.error.data|safe }},
-        pointStart: pointStart,
-        pointInterval: 3600000
-    }, {
-        type: 'spline',
-        color: '#f7a35c',
-        name: '{{ last_day_events.migration.name }}',
-        data: {{ last_day_events.migration.data|safe }},
-        pointStart: pointStart,
-        pointInterval: 3600000
-    }, {
-        type: 'spline',
-        color: '#434348',
-        name: '{{ last_day_events.status_log.name }}',
-        data: {{ last_day_events.status_log.data|safe }},
-        pointStart: pointStart,
-        pointInterval: 3600000
-    }]
-};
-var lastDayEventsChart = new Highcharts.Chart(lastDayEventsOptions);
 </script>
 {% endblock extrabody %}
