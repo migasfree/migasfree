@@ -1,0 +1,72 @@
+<script type="text/javascript">
+var pointStart = Date.UTC(
+    {{ start_date.year }},
+    {{ start_date.month }},
+    {{ start_date.day }},
+    {{ start_date.hour }}
+);
+var eventHistoryOptions = {
+    credits: {
+        enabled: false
+    },
+    chart: {
+        renderTo: '{{ id }}',
+        zoomType: 'xy'
+    },
+    title: {
+        text: null
+    },
+    xAxis: {
+      type: 'datetime'
+    },
+    yAxis: {
+        title: {
+            text: null
+        }
+    },
+    plotOptions: {
+        series: {
+            marker: {
+                enabled: false
+            }
+        }
+    },
+    series: [{
+        type: 'spline',
+        color: '#7cb5ec',
+        name: '{{ sync.name }}',
+        data: {{ sync.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }, {
+        type: 'spline',
+        color: '#e4d354',
+        name: '{{ fault.name }}',
+        data: {{ fault.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }, {
+        type: 'spline',
+        color: '#ff7474',
+        name: '{{ error.name }}',
+        data: {{ error.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }, {
+        type: 'spline',
+        color: '#f7a35c',
+        name: '{{ migration.name }}',
+        data: {{ migration.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }, {
+        type: 'spline',
+        color: '#434348',
+        name: '{{ status_log.name }}',
+        data: {{ status_log.data|safe }},
+        pointStart: pointStart,
+        pointInterval: 3600000
+    }]
+};
+var eventHistoryChart = new Highcharts.Chart(eventHistoryOptions);
+</script>
