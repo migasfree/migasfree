@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import include, url
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import RedirectView
 from django.urls import reverse_lazy
 from django.conf import settings
 
+from migasfree.stats.views import stats_dashboard
 from .views import *
 
 public_patterns = [
@@ -19,7 +20,7 @@ urlpatterns = [
 
     url(
         r'^$',
-        TemplateView.as_view(template_name='welcome.html'),
+        stats_dashboard,
         name='bootstrap'
     ),
 
