@@ -312,6 +312,10 @@ li .btn-group {
     vertical-align: middle !important;
 }
 
+.panel-heading .lead {
+    margin-bottom: 0;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
