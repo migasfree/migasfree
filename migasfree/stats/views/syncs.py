@@ -228,12 +228,11 @@ def synchronized_monthly(request):
 
     return render(
         request,
-        'lines.html',
+        'includes/spline_js.html',
         {
-            'title': _("Synchronized Computers / Month"),
             'data': chart_data,
             'x_labels': x_axe,
-            'tabular_data': render_table(x_axe, chart_data),
+            'id': 'syncs-monthly',
         }
     )
 
@@ -258,11 +257,10 @@ def synchronized_daily(request):
 
     return render(
         request,
-        'lines.html',
+        'includes/spline_js.html',
         {
-            'title': _("Synchronized Computers / Day"),
             'data': chart_data,
             'x_labels': list(labels),
-            'tabular_data': render_table(labels, chart_data),
+            'id': 'syncs-daily',
         }
     )
