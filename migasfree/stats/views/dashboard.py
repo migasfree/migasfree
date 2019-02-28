@@ -22,16 +22,19 @@ from .events import unchecked_errors, unchecked_faults
 
 
 @login_required
-def stats_dashboard(request):
+def event_history(request):
+    user = request.user.userprofile
+
     now = timezone.now()
     end_date = datetime(now.year, now.month, now.day, now.hour) + timedelta(hours=1)
     begin_date = end_date - timedelta(days=HOURLY_RANGE)
-    user = request.user.userprofile
+
     syncs = dict((i['hour'], i) for i in Synchronization.by_hour(begin_date, end_date, user))
     errors = dict((i['hour'], i) for i in Error.by_hour(begin_date, end_date, user))
     faults = dict((i['hour'], i) for i in Fault.by_hour(begin_date, end_date, user))
     migrations = dict((i['hour'], i) for i in Migration.by_hour(begin_date, end_date, user))
     status_logs = dict((i['hour'], i) for i in StatusLog.by_hour(begin_date, end_date, user))
+
     data_syncs = []
     data_errors = []
     data_faults = []
@@ -44,6 +47,30 @@ def stats_dashboard(request):
         data_faults.append(faults[item]['count'] if item in faults else 0)
         data_migrations.append(migrations[item]['count'] if item in migrations else 0)
         data_status.append(status_logs[item]['count'] if item in status_logs else 0)
+
+    return render(
+        request,
+        'includes/event_history.html',
+        {
+            'id': 'event-history',
+            'start_date': {
+                'year': begin_date.year,
+                'month': begin_date.month - 1,  # JavaScript cast
+                'day': begin_date.day,
+                'hour': begin_date.hour,
+            },
+            'sync': {'name': _('Synchronizations'), 'data': json.dumps(data_syncs)},
+            'error': {'name': _('Errors'), 'data': json.dumps(data_errors)},
+            'fault': {'name': _('Faults'), 'data': json.dumps(data_faults)},
+            'migration': {'name': _('Migrations'), 'data': json.dumps(data_migrations)},
+            'status_log': {'name': _('Status Logs'), 'data': json.dumps(data_status)},
+        }
+    )
+
+
+@login_required
+def stats_dashboard(request):
+    user = request.user.userprofile
 
     return render(
         request,
@@ -67,19 +94,5 @@ def stats_dashboard(request):
             'productive_computers_by_platform': productive_computers_by_platform(user),
             'unchecked_errors': unchecked_errors(user),
             'unchecked_faults': unchecked_faults(user),
-            'last_day_events': {
-                'title': _('History of events in the last %d hours') % (HOURLY_RANGE * 24),
-                'start_date': {
-                    'year': begin_date.year,
-                    'month': begin_date.month - 1,  # JavaScript cast
-                    'day': begin_date.day,
-                    'hour': begin_date.hour,
-                },
-                'sync': {'name': _('Synchronizations'), 'data': json.dumps(data_syncs)},
-                'error': {'name': _('Errors'), 'data': json.dumps(data_errors)},
-                'fault': {'name': _('Faults'), 'data': json.dumps(data_faults)},
-                'migration': {'name': _('Migrations'), 'data': json.dumps(data_migrations)},
-                'status_log': {'name': _('Status Logs'), 'data': json.dumps(data_status)},
-            },
         }
     )
