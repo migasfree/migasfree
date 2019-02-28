@@ -14,6 +14,7 @@ from .views import (
     syncs_summary, migrations_summary,
     status_logs_summary, faults_summary,
     errors_summary, notifications_summary,
+    event_history,
 )
 
 urlpatterns = [
@@ -27,6 +28,11 @@ urlpatterns = [
         r'^stats/syncs/monthly/$',
         synchronized_monthly,
         name='stats_syncs_monthly'
+    ),
+    url(
+        r'^stats/event-history/$',
+        event_history,
+        name='event_history'
     ),
     url(
         r'^stats/schedule-delays/$',
