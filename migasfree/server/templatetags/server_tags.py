@@ -8,19 +8,15 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 
+from migasfree.stats.views import HOURLY_RANGE
 from ..models import UserProfile
 
 register = template.Library()
 
 
-class TemplateOrganization(template.Node):
-    def render(self, context):
-        return settings.MIGASFREE_ORGANIZATION
-
-
-@register.tag
-def organization(parser, token):
-    return TemplateOrganization()
+@register.simple_tag
+def organization():
+    return settings.MIGASFREE_ORGANIZATION
 
 
 class TemplateProject(template.Node):
@@ -106,3 +102,8 @@ def submit_row(context):
 @register.filter
 def as_json(data):
     return mark_safe(json.dumps(data))
+
+
+@register.simple_tag
+def hourly_range():
+    return HOURLY_RANGE * 24
