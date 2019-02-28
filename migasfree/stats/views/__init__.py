@@ -6,7 +6,7 @@ MONTHLY_RANGE = 18  # months
 
 from .checkings import alerts
 
-from .dashboard import stats_dashboard
+from .dashboard import stats_dashboard, event_history
 
 from .devices import devices_summary, device_models_summary
 
