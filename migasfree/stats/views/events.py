@@ -75,6 +75,11 @@ def event_by_month(data, begin_date, end_date, model, field='project_id'):
                         'y': count[0]['count'] if count else 0,
                         'url': '{}?{}'.format(url, urlencode(querystring))
                     })
+                else:
+                    new_data[project.id].append({
+                        'y': 0,
+                        'url': '#'
+                    })
         elif field == 'status':
             for status in Computer.STATUS_CHOICES:
                 if value:
@@ -84,6 +89,11 @@ def event_by_month(data, begin_date, end_date, model, field='project_id'):
                         'y': count[0]['count'] if count else 0,
                         'url': '{}?{}'.format(url, urlencode(querystring))
                     })
+                else:
+                    new_data[status[0]].append({
+                        'y': 0,
+                        'url': '#'
+                    })
         elif field == 'checked':
             for val in [True, False]:
                 if value:
@@ -92,6 +102,11 @@ def event_by_month(data, begin_date, end_date, model, field='project_id'):
                     new_data[val].append({
                         'y': count[0]['count'] if count else 0,
                         'url': '{}?{}'.format(url, urlencode(querystring))
+                    })
+                else:
+                    new_data[val].append({
+                        'y': 0,
+                        'url': '#'
                     })
 
     for item in new_data:
