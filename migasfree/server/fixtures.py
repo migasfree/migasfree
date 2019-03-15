@@ -249,7 +249,6 @@ def configure_default_users():
     configure_user("liberator", [reader, liberator])
     configure_user("checker", [reader, checker])
     configure_user("reader", [reader])
-    configure_user("migasfree-play", [reader])
 
     # default user permissions
     user = UserProfile.objects.get(username="migasfree-play")
