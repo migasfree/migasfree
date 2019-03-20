@@ -82,6 +82,6 @@ For example: You want change the Firefox homepage in all PCs in a range of IPs.
 Documentation
 =============
 
-[Fun with migasfree](http://fun-with-migasfree.readthedocs.org/en/master/index.html) (spanish)
+[Fun with migasfree](https://fun-with-migasfree.readthedocs.io/es/master/) (spanish)
 
 *That's all folks!!!*
