@@ -11,7 +11,7 @@ from .pms import Pms
 from .property import Property, ServerProperty, ClientProperty, BasicProperty
 
 from .attribute import Attribute, ServerAttribute, ClientAttribute, BasicAttribute
-from .attribute_set import AttributeSet
+from .attribute_set import AttributeSet, prevent_circular_dependencies
 
 from .domain import Domain
 from .scope import Scope
