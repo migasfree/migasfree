@@ -2,6 +2,7 @@
 
 import os
 import tempfile
+import copy
 
 from datetime import datetime, timedelta
 from six import iteritems
@@ -221,3 +222,28 @@ def html_label(count, title='', link='#', level='default'):
             count
         )
     )
+
+
+def sort_depends(data):
+    # if something fails, ask @agacias
+    ret = []
+    data_copy = copy.deepcopy(data)
+
+    def sort():
+        for i, s in data_copy.items():
+            if not s:
+                if data_copy:
+                    ret.append(i)
+                    del data_copy[i]
+                    for m, n in data_copy.items():
+                        if i in n:
+                            n.remove(i)
+
+                    sort()
+
+        if data_copy:
+            raise ValueError(data_copy)
+        else:
+            return ret
+
+    return sort()
