@@ -111,7 +111,6 @@ class Domain(models.Model, MigasLink):
                 except UserProfile.DoesNotExist:
                     pass
 
-
     def related_objects(self, model, user):
         """
         Return Queryset with the related computers based in attributes
