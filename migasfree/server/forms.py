@@ -18,6 +18,7 @@ from .models import (
     Property, ServerAttribute, ServerProperty, Attribute,
     AttributeSet, Store, Package, FaultDefinition, DeviceModel,
     DeviceDriver, DeviceFeature, Domain, Scope, Project,
+    prevent_circular_dependencies,
 )
 
 
@@ -514,6 +515,34 @@ class AttributeSetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
         super(AttributeSetForm, self).__init__(*args, **kwargs)
+
+    def clean_included_attributes(self):
+        included_attributes = self.cleaned_data.get('included_attributes', [])
+        if included_attributes:
+            prevent_circular_dependencies(
+                sender=self.instance.included_attributes,
+                instance=self.instance,
+                action='pre_add',
+                reverse=False,
+                model=self.instance.included_attributes.model,
+                pk_set=included_attributes
+        )
+
+        return included_attributes
+
+    def clean_excluded_attributes(self):
+        excluded_attributes = self.cleaned_data.get('excluded_attributes', [])
+        if excluded_attributes:
+            prevent_circular_dependencies(
+                sender=self.instance.excluded_attributes,
+                instance=self.instance,
+                action='pre_add',
+                reverse=False,
+                model=self.instance.excluded_attributes.model,
+                pk_set=excluded_attributes
+        )
+
+        return excluded_attributes
 
     class Meta:
         model = AttributeSet
