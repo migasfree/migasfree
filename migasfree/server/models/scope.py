@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.db import models
+from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
@@ -19,6 +20,7 @@ class ScopeManager(models.Manager):
         obj.included_attributes = included_attributes
         obj.excluded_attributes = excluded_attributes
         obj.save()
+
         return obj
 
     def scope(self, user):
@@ -28,8 +30,7 @@ class ScopeManager(models.Manager):
             qs = qs.filter(domain=user.domain_preference)
 
         if not user.is_view_all():
-            atts=user.get_attributes()
-            qs = qs.filter(included_attributes__in=atts).distinct()
+            qs = qs.filter(included_attributes__in=user.get_attributes()).distinct()
 
         return qs
 
@@ -80,24 +81,37 @@ class Scope(models.Model, MigasLink):
         Return Queryset with the related computers based in attributes
         """
         from migasfree.server.models import Computer, Attribute
+
         if model == 'computer':
             qs = Computer.productive.scope(user)
             if self.domain:
-                atts_domain=Attribute.objects.filter(id__in=self.domain.included_attributes.all())
-                atts_domain = atts_domain.exclude(id__in=self.domain.excluded_attributes.all())
-                qs = qs.filter(sync_attributes__in=atts_domain)
+                qs = qs.filter(
+                    sync_attributes__in=Attribute.objects.filter(
+                        id__in=self.domain.included_attributes.all()
+                    ).exclude(
+                        id__in=self.domain.excluded_attributes.all()
+                    )
+                )
 
             qs = qs.filter(
                 sync_attributes__in=self.included_attributes.all()
-            )
-
-            qs = qs.exclude(
+            ).exclude(
                 sync_attributes__in=self.excluded_attributes.all()
-            )
+            ).distinct()
 
-            return qs.distinct()
+            return qs
 
         return None
+
+    def validate_unique(self, exclude=None):
+        if Scope.objects.exclude(id=self.id).filter(
+                name=self.name,
+                user=self.user,
+                domain__isnull=True
+        ).exists():
+            raise ValidationError(_("Duplicated name"))
+
+        super(Scope, self).validate_unique(exclude)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.name = slugify(self.name)
@@ -107,4 +121,5 @@ class Scope(models.Model, MigasLink):
         app_label = 'server'
         verbose_name = _("Scope")
         verbose_name_plural = _("Scopes")
+        unique_together = (('name', 'domain', 'user'),)
         permissions = (("can_save_scope", "Can save Scope"),)
