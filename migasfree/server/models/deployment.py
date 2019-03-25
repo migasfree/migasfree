@@ -423,13 +423,13 @@ gpgkey=file://{{keys_path}}/{{server}}/repositories.pub
             elif self.project.pms.name.startswith('yum') or self.project.pms.name.startswith('zypper'):
                 normal_template = """[EXTERNAL-{repo}]
 name=EXTERNAL-{repo}
-baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/$basearch/
+baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/
 {options}
 
 """
-                components_template = """[EXTERNAL-{repo}-{component}]
-name=EXTERNAL-{repo}-{component}
-baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/{component}/$basearch/
+                components_template = """[EXTERNAL-{repo}]
+name=EXTERNAL-{repo}
+baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/{component}
 {options}
 
 """
@@ -437,11 +437,11 @@ baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/{compone
                     template = ''
                     for component in self.components.split(' '):
                         template += components_template.format(
-                            repo=self.name,
+                            repo="{}-{}".format(self.name, component.replace("/","-")),
                             project=self.project.name,
                             name=self.name,
                             suite=self.suite,
-                            options=self.options.replace(' ', '\n'),
+                            options=self.options.replace(' ', '\n') if self.options else '',
                             component=component
                         )
 
@@ -452,7 +452,7 @@ baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/{compone
                         project=self.project.name,
                         name=self.name,
                         suite=self.suite,
-                        options=self.options.replace(' ', '\n')
+                        options=self.options.replace(' ', '\n') if self.options else ''
                     )
 
         return ''
