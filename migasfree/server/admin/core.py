@@ -541,9 +541,10 @@ class InternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
 
         Notification.objects.create(
             ugettext('Deployment [%s] modified by user [%s] (<a href="%s">review changes</a>)') % (
-                '<a href="{}">{}</a>'.format(
+                u'<a href="{}">{}@{}</a>'.format(
                     reverse('admin:server_deployment_change', args=(obj.id,)),
-                    obj.name
+                    obj.name,
+                    obj.project.name
                 ),
                 request.user,
                 reverse('admin:server_deployment_history', args=(obj.id,))
@@ -699,9 +700,10 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
         Notification.objects.create(
             ugettext('Deployment [%s] modified by user [%s] (<a href="%s">review changes</a>)') % (
-                '<a href="{}">{}</a>'.format(
+                u'<a href="{}">{}@{}</a>'.format(
                     reverse('admin:server_deployment_change', args=(obj.id,)),
-                    obj.name
+                    obj.name,
+                    obj.project.name
                 ),
                 request.user,
                 reverse('admin:server_deployment_history', args=(obj.id,))
