@@ -54,9 +54,10 @@
                 var alertsIntervalId = 0;
                 $('#alerts').load("{% url 'alerts' %}");
                 $('#alerts').on('show.bs.dropdown', function () {
-                    $(this).load("{% url 'alerts' %}");
+                    $('#alerts').load("{% url 'alerts' %}");
                     alertsIntervalId = setInterval(function() {
-                        $(this).load("{% url 'alerts' %}");
+                        $('#alerts').load("{% url 'alerts' %}");
+                        // console.log(this);
                     }, 10000);
                 });
                 $('#alerts').on('hide.bs.dropdown', function () {
