@@ -208,14 +208,14 @@ def to_list(text):
 def html_label(count, title='', link='#', level='default'):
     if not count:
         return format_html(
-            '<span class="label label-default" title="{}">{}</span>'.format(
+            u'<span class="label label-default" title="{}">{}</span>'.format(
                 title,
                 count
             )
         )
 
     return format_html(
-        '<a class="label label-{}" title="{}" href="{}">{}</a>'.format(
+        u'<a class="label label-{}" title="{}" href="{}">{}</a>'.format(
             level,
             title,
             link,
@@ -235,7 +235,7 @@ def sort_depends(data):
                 if data_copy:
                     ret.append(i)
                     del data_copy[i]
-                    for m, n in data_copy.items():
+                    for _, n in data_copy.items():
                         if i in n:
                             n.remove(i)
 
