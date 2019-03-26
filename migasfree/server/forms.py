@@ -518,7 +518,7 @@ class AttributeSetForm(forms.ModelForm):
 
     def clean_included_attributes(self):
         included_attributes = self.cleaned_data.get('included_attributes', [])
-        if included_attributes:
+        if included_attributes and self.instance.id:
             prevent_circular_dependencies(
                 sender=self.instance.included_attributes,
                 instance=self.instance,
@@ -532,7 +532,7 @@ class AttributeSetForm(forms.ModelForm):
 
     def clean_excluded_attributes(self):
         excluded_attributes = self.cleaned_data.get('excluded_attributes', [])
-        if excluded_attributes:
+        if excluded_attributes and self.instance.id:
             prevent_circular_dependencies(
                 sender=self.instance.excluded_attributes,
                 instance=self.instance,
