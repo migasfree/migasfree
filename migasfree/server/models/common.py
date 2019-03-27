@@ -561,7 +561,12 @@ class MigasLink(object):
         }
         if self._meta.model_name == 'computer':
             lnk['status'] = self.status
-            lnk['trans_status'] = ugettext(self.status)
+            lnk['trans_status'] = '{}, {}, {}, {}'.format(
+                ugettext(self.status),
+                self.project,
+                self.ip_address,
+                self.sync_user
+            )
         elif self._meta.model_name == 'domain':
             lnk['status'] = 'domain'
             lnk['trans_status'] = ugettext(self._meta.verbose_name)
