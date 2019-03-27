@@ -561,7 +561,7 @@ class MigasLink(object):
         }
         if self._meta.model_name == 'computer':
             lnk['status'] = self.status
-            lnk['trans_status'] = '{}, {}, {}, {}'.format(
+            lnk['trans_status'] = u'{}, {}, {}, {}'.format(
                 ugettext(self.status),
                 self.project,
                 self.ip_address,
