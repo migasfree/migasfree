@@ -64,9 +64,10 @@ class AttributeManager(DomainAttributeManager):
 
         if original_value != obj.value:
             Notification.objects.create(
-                ugettext('The value of the attribute [%s] has more than %d characters. '
-                  'The original value is truncated: %s') % (
-                    '<a href="{}">{}</a>'.format(
+                ugettext(
+                    'The value of the attribute [%s] has more than %d characters. '
+                    'The original value is truncated: %s') % (
+                    u'<a href="{}">{}</a>'.format(
                         reverse('admin:server_attribute_change', args=(obj.id,)),
                         obj
                     ),
