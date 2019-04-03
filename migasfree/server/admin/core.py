@@ -92,8 +92,9 @@ class AttributeAdmin(MigasAdmin):
         if not user.is_view_all():
             computers = user.get_computers()
             if computers:
-                sql += " AND server_computer_sync_attributes.computer_id in " \
+                sql += " AND server_computer_sync_attributes.computer_id IN " \
                     + "(" + ",".join(str(x) for x in computers) + ")"
+
         return Attribute.objects.scope(user).extra(
             select={'total_computers': sql}
         )
@@ -103,17 +104,7 @@ class AttributeAdmin(MigasAdmin):
 
 
 @admin.register(ClientAttribute)
-class ClientAttributeAdmin(MigasAdmin):
-    list_display = (
-        'value_link', 'description', 'total_computers', 'property_link'
-    )
-    list_select_related = ('property_att',)
-    list_filter = (ClientAttributeFilter,)
-    fields = ('property_link', 'value', 'description')
-    ordering = ('property_att', 'value')
-    search_fields = ('value', 'description')
-    readonly_fields = ('property_link', 'value')
-
+class ClientAttributeAdmin(AttributeAdmin):
     value_link = MigasFields.link(model=ClientAttribute, name='value')
     property_link = MigasFields.link(
         model=ClientAttribute,
@@ -122,7 +113,34 @@ class ClientAttributeAdmin(MigasAdmin):
         description=_('Formula')
     )
 
-    resource_class = AttributeResource
+    def get_queryset(self, request):
+        sql = Attribute.TOTAL_COMPUTER_QUERY
+        user = request.user.userprofile
+        if not user.is_view_all():
+            computers = user.get_computers()
+            if computers:
+                sql += " AND server_computer_sync_attributes.computer_id IN " \
+                    + "(" + ",".join(str(x) for x in computers) + ")"
+
+        return ClientAttribute.objects.scope(user).extra(
+            select={'total_computers': sql}
+        )
+
+
+@admin.register(ServerAttribute)
+class ServerAttributeAdmin(AttributeAdmin):
+    form = ServerAttributeForm
+    fields = ('property_att', 'value', 'description', 'computers', 'inflicted_computers')
+    list_filter = (ServerAttributeFilter,)
+    readonly_fields = ('inflicted_computers',)
+
+    property_link = MigasFields.link(
+        model=ServerAttribute,
+        name='property_att',
+        order='property_att__name',
+        description=_('Tag Category')
+    )
+    value_link = MigasFields.link(model=ServerAttribute, name='value')
 
     def get_queryset(self, request):
         sql = Attribute.TOTAL_COMPUTER_QUERY
@@ -130,14 +148,23 @@ class ClientAttributeAdmin(MigasAdmin):
         if not user.is_view_all():
             computers = user.get_computers()
             if computers:
-                sql += " AND server_computer_sync_attributes.computer_id in " \
+                sql += " AND server_computer_sync_attributes.computer_id IN " \
                     + "(" + ",".join(str(x) for x in computers) + ")"
-        return ClientAttribute.objects.scope(user).extra(
+
+        return ServerAttribute.objects.scope(user).extra(
             select={'total_computers': sql}
         )
 
-    def has_add_permission(self, request):
-        return False
+    def inflicted_computers(self, obj):
+        ret = [
+            c.link() for c in Computer.productive.filter(
+                sync_attributes__in=[obj.pk]
+            ).exclude(tags__in=[obj.pk])
+        ]
+
+        return format_html('<br />'.join(ret))
+
+    inflicted_computers.short_description = _('Inflicted Computers')
 
 
 @admin.register(Package)
@@ -319,282 +346,6 @@ class QueryAdmin(MigasAdmin):
     run_query.short_description = _("Run Query")
 
 
-@admin.register(ExternalSource)
-class ExternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
-    form = ExternalSourceForm
-    list_display = (
-        'name_link', 'project_link', 'domain_link',
-        'my_enabled', 'start_date', 'schedule_link', 'timeline', 'computers',
-    )
-    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
-    search_fields = ('name',)
-    list_select_related = ('project',)
-    readonly_fields = ('timeline',)
-
-    fieldsets = (
-        (_('General'), {
-            'fields': (
-                'name',
-                'project',
-                'enabled',
-                'comment',
-            )
-        }),
-        (_('Source'), {
-            'fields': ('base_url', 'suite', 'components', 'options', 'frozen', 'expire',)
-        }),
-        (_('Packages'), {
-            'classes': ('collapse',),
-            'fields': (
-                'packages_to_install',
-                'packages_to_remove',
-            )
-        }),
-        (_('Default'), {
-            'classes': ('collapse',),
-            'fields': (
-                'default_preincluded_packages',
-                'default_included_packages',
-                'default_excluded_packages',
-            )
-        }),
-        (_('Attributes'), {
-            'fields': (
-                'domain',
-                'included_attributes',
-                'excluded_attributes'
-            )
-        }),
-        (_('Schedule'), {
-            'fields': (
-                'start_date',
-                'schedule',
-                'timeline'
-            )
-        }),
-    )
-
-    name_link = MigasFields.link(model=ExternalSource, name='name')
-    project_link = MigasFields.link(
-        model=ExternalSource, name='project', order='project__name'
-    )
-    domain_link = MigasFields.link(
-        model=ExternalSource, name='domain', order='domain__name'
-    )
-    schedule_link = MigasFields.link(
-        model=ExternalSource, name='schedule', order='schedule__name'
-    )
-    my_enabled = MigasFields.boolean(model=ExternalSource, name='enabled')
-    timeline = MigasFields.timeline()
-
-    def computers(self, obj):
-        related_objects = obj.related_objects('computer', self.user.userprofile)
-        if related_objects:
-            return related_objects.count()
-
-        return 0
-
-    computers.short_description = _('Computers')
-
-    def get_queryset(self, request):
-        self.user = request.user
-        qs = Attribute.objects.scope(request.user.userprofile)
-
-        return super(ExternalSourceAdmin, self).get_queryset(
-            request
-        ).prefetch_related(
-            Prefetch('included_attributes', queryset=qs),
-            'included_attributes__property_att',
-            Prefetch('excluded_attributes', queryset=qs),
-            'excluded_attributes__property_att',
-        ).extra(
-            select={
-                'schedule_begin': '(SELECT delay FROM server_scheduledelay '
-                                  'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
-                                  'ORDER BY server_scheduledelay.delay LIMIT 1)',
-                'schedule_end': '(SELECT delay+duration FROM server_scheduledelay '
-                                'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
-                                'ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
-            }
-        ).select_related("project", "schedule")
-
-    def response_add(self, request, obj, post_url_continue=None):
-        return HttpResponseRedirect(
-            '{}?enabled__exact={}&project__id__exact={}'.format(
-                reverse('admin:server_externalsource_changelist'),
-                1 if obj.enabled else 0,
-                obj.project.id
-            )
-        )
-
-    def response_change(self, request, obj):
-        if request.POST.get('_save', None):
-            return HttpResponseRedirect(
-                '{}?enabled__exact={}&project__id__exact={}'.format(
-                    reverse('admin:server_externalsource_changelist'),
-                    1 if obj.enabled else 0,
-                    obj.project.id
-                )
-            )
-
-        return super(ExternalSourceAdmin, self).response_change(request, obj)
-
-
-@admin.register(InternalSource)
-class InternalSourceAdmin(AjaxSelectAdmin, MigasAdmin):
-    form = InternalSourceForm
-    list_display = (
-        'name_link', 'project_link', 'domain_link',
-        'my_enabled', 'start_date', 'schedule_link', 'timeline', 'computers',
-    )
-    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
-    search_fields = ('name', 'available_packages__name')
-    list_select_related = ('project',)
-    actions = ['regenerate_metadata']
-    readonly_fields = ('timeline',)
-
-    fieldsets = (
-        (_('General'), {
-            'fields': ('name', 'project', 'enabled', 'comment',)
-        }),
-        (_('Packages'), {
-            'classes': ('collapse',),
-            'fields': (
-                'available_packages',
-                'packages_to_install',
-                'packages_to_remove',
-            )
-        }),
-        (_('Default'), {
-            'classes': ('collapse',),
-            'fields': (
-                'default_preincluded_packages',
-                'default_included_packages',
-                'default_excluded_packages',
-            )
-        }),
-        (_('Attributes'), {
-            'fields': ('domain', 'included_attributes', 'excluded_attributes')
-        }),
-        (_('Schedule'), {
-            'fields': ('start_date', 'schedule', 'timeline')
-        }),
-    )
-
-    name_link = MigasFields.link(model=InternalSource, name='name')
-    project_link = MigasFields.link(
-        model=InternalSource, name='project', order='project__name'
-    )
-    domain_link = MigasFields.link(
-        model=InternalSource, name='domain', order='domain__name'
-    )
-    schedule_link = MigasFields.link(
-        model=InternalSource, name='schedule', order='schedule__name'
-    )
-    my_enabled = MigasFields.boolean(model=InternalSource, name='enabled')
-    timeline = MigasFields.timeline()
-
-    def computers(self, obj):
-        related_objects = obj.related_objects('computer', self.user.userprofile)
-        if related_objects:
-            return related_objects.count()
-
-        return 0
-
-    computers.short_description = _('Computers')
-
-    def regenerate_metadata(self, request, objects):
-        if not self.has_change_permission(request):
-            raise PermissionDenied
-
-        for deploy in objects:
-            create_repository_metadata(deploy, request=request)
-
-    regenerate_metadata.short_description = _("Regenerate metadata")
-
-    def save_model(self, request, obj, form, change):
-        is_new = (obj.pk is None)
-        has_name_changed = form.initial.get('name') != obj.name
-        packages_after = map(int, form.cleaned_data.get('available_packages'))
-
-        user = request.user.userprofile
-
-        if user.domain_preference and user.domain_preference == obj.domain:
-            if not obj.name.startswith(user.domain_preference.name.lower()):
-                obj.name = u'{}_{}'.format(user.domain_preference.name.lower(), obj.name)
-
-        super(InternalSourceAdmin, self).save_model(request, obj, form, change)
-
-        # create physical repository when packages have been changed
-        # or repository does not have packages at first time
-        # or name has been changed (to avoid client errors)
-        if ((is_new and len(packages_after) == 0)
-                or compare_list_values(
-                    obj.available_packages.values_list('id', flat=True),  # packages before
-                    packages_after
-                ) is False) or has_name_changed:
-            create_repository_metadata(obj, packages_after, request)
-
-            # delete old repository by name change
-            if has_name_changed and not is_new:
-                remove_repository_metadata(request, obj, form.initial.get('name'))
-
-        Notification.objects.create(
-            ugettext('Deployment [%s] modified by user [%s] (<a href="%s">review changes</a>)') % (
-                u'<a href="{}">{}@{}</a>'.format(
-                    reverse('admin:server_deployment_change', args=(obj.id,)),
-                    obj.name,
-                    obj.project.name
-                ),
-                request.user,
-                reverse('admin:server_deployment_history', args=(obj.id,))
-            )
-        )
-
-    def get_queryset(self, request):
-        self.user = request.user
-        qs = Attribute.objects.scope(request.user.userprofile)
-
-        return super(InternalSourceAdmin, self).get_queryset(
-            request
-        ).prefetch_related(
-            Prefetch('included_attributes', queryset=qs),
-            'included_attributes__property_att',
-            Prefetch('excluded_attributes', queryset=qs),
-            'excluded_attributes__property_att',
-        ).extra(
-            select={
-                'schedule_begin': '(SELECT delay FROM server_scheduledelay '
-                                  'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
-                                  'ORDER BY server_scheduledelay.delay LIMIT 1)',
-                'schedule_end': '(SELECT delay+duration FROM server_scheduledelay '
-                                'WHERE server_deployment.schedule_id = server_scheduledelay.schedule_id '
-                                'ORDER BY server_scheduledelay.delay DESC LIMIT 1)'
-            }
-        ).select_related("project", "schedule")
-
-    def response_add(self, request, obj, post_url_continue=None):
-        return HttpResponseRedirect(
-            '{}?enabled__exact={}&project__id__exact={}'.format(
-                reverse('admin:server_internalsource_changelist'),
-                1 if obj.enabled else 0,
-                obj.project.id
-            )
-        )
-
-    def response_change(self, request, obj):
-        if request.POST.get('_save', None):
-            return HttpResponseRedirect(
-                '{}?enabled__exact={}&project__id__exact={}'.format(
-                    reverse('admin:server_internalsource_changelist'),
-                    1 if obj.enabled else 0,
-                    obj.project.id
-                )
-            )
-
-        return super(InternalSourceAdmin, self).response_change(request, obj)
-
-
 @admin.register(Deployment)
 class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     form = DeploymentForm
@@ -613,7 +364,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
             'fields': ('name', 'project', 'enabled', 'comment',)
         }),
         (_('Source'), {
-            'fields': ('base', 'suite', 'components', 'options', 'frozen', 'expire',)
+            'fields': ('base_url', 'suite', 'components', 'options', 'frozen', 'expire',)
         }),
         (_('Packages'), {
             'classes': ('collapse',),
@@ -687,26 +438,33 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         # create physical repository when packages have been changed
         # or repository does not have packages at first time
         # or name has been changed (to avoid client errors)
-        if ((is_new and len(packages_after) == 0)
-                or compare_list_values(
-                    obj.available_packages.values_list('id', flat=True),  # packages before
-                    packages_after
-                ) is False) or has_name_changed:
+        if obj.source == Deployment.SOURCE_INTERNAL and (
+                ((is_new and len(packages_after) == 0)
+                    or compare_list_values(
+                        obj.available_packages.values_list('id', flat=True),  # packages before
+                        packages_after
+                    ) is False) or has_name_changed
+        ):
             create_repository_metadata(obj, packages_after, request)
 
             # delete old repository by name change
             if has_name_changed and not is_new:
                 remove_repository_metadata(request, obj, form.initial.get('name'))
 
+        if obj.source == Deployment.SOURCE_INTERNAL:
+            model = 'internalsource'
+        else:
+            model = 'externalsource'
+
         Notification.objects.create(
             ugettext('Deployment [%s] modified by user [%s] (<a href="%s">review changes</a>)') % (
                 u'<a href="{}">{}@{}</a>'.format(
-                    reverse('admin:server_deployment_change', args=(obj.id,)),
+                    reverse('admin:server_{}_change'.format(model), args=(obj.id,)),
                     obj.name,
                     obj.project.name
                 ),
                 request.user,
-                reverse('admin:server_deployment_history', args=(obj.id,))
+                reverse('admin:server_{}_history'.format(model), args=(obj.id,))
             )
         )
 
@@ -732,9 +490,14 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
         ).select_related("project", "schedule")
 
     def response_add(self, request, obj, post_url_continue=None):
+        if obj.source == Deployment.SOURCE_INTERNAL:
+            model = 'internalsource'
+        else:
+            model = 'externalsource'
+
         return HttpResponseRedirect(
             '{}?enabled__exact={}&project__id__exact={}'.format(
-                reverse('admin:server_deployment_changelist'),
+                reverse('admin:server_{}_changelist'.format(model)),
                 1 if obj.enabled else 0,
                 obj.project.id
             )
@@ -742,15 +505,136 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
     def response_change(self, request, obj):
         if request.POST.get('_save', None):
+            if obj.source == Deployment.SOURCE_INTERNAL:
+                model = 'internalsource'
+            else:
+                model = 'externalsource'
+
             return HttpResponseRedirect(
                 '{}?enabled__exact={}&project__id__exact={}'.format(
-                    reverse('admin:server_deployment_changelist'),
+                    reverse('admin:server_{}_changelist'.format(model)),
                     1 if obj.enabled else 0,
                     obj.project.id
                 )
             )
 
         return super(DeploymentAdmin, self).response_change(request, obj)
+
+
+@admin.register(InternalSource)
+class InternalSourceAdmin(DeploymentAdmin):
+    form = InternalSourceForm
+    list_display = (
+        'name_link', 'project_link', 'domain_link',
+        'my_enabled', 'start_date', 'schedule_link', 'timeline', 'computers',
+    )
+    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
+
+    fieldsets = (
+        (_('General'), {
+            'fields': ('name', 'project', 'enabled', 'comment',)
+        }),
+        (_('Packages'), {
+            'classes': ('collapse',),
+            'fields': (
+                'available_packages',
+                'packages_to_install',
+                'packages_to_remove',
+            )
+        }),
+        (_('Default'), {
+            'classes': ('collapse',),
+            'fields': (
+                'default_preincluded_packages',
+                'default_included_packages',
+                'default_excluded_packages',
+            )
+        }),
+        (_('Attributes'), {
+            'fields': ('domain', 'included_attributes', 'excluded_attributes')
+        }),
+        (_('Schedule'), {
+            'fields': ('start_date', 'schedule', 'timeline')
+        }),
+    )
+
+    name_link = MigasFields.link(model=InternalSource, name='name')
+    project_link = MigasFields.link(
+        model=InternalSource, name='project', order='project__name'
+    )
+    domain_link = MigasFields.link(
+        model=InternalSource, name='domain', order='domain__name'
+    )
+    schedule_link = MigasFields.link(
+        model=InternalSource, name='schedule', order='schedule__name'
+    )
+    my_enabled = MigasFields.boolean(model=InternalSource, name='enabled')
+
+
+@admin.register(ExternalSource)
+class ExternalSourceAdmin(DeploymentAdmin):
+    form = ExternalSourceForm
+    list_display = (
+        'name_link', 'project_link', 'domain_link',
+        'my_enabled', 'start_date', 'schedule_link', 'timeline', 'computers',
+    )
+    list_filter = ('enabled', ('project', ProjectFilterAdmin), DomainFilter)
+    search_fields = ('name',)
+
+    fieldsets = (
+        (_('General'), {
+            'fields': (
+                'name',
+                'project',
+                'enabled',
+                'comment',
+            )
+        }),
+        (_('Source'), {
+            'fields': ('base_url', 'suite', 'components', 'options', 'frozen', 'expire',)
+        }),
+        (_('Packages'), {
+            'classes': ('collapse',),
+            'fields': (
+                'packages_to_install',
+                'packages_to_remove',
+            )
+        }),
+        (_('Default'), {
+            'classes': ('collapse',),
+            'fields': (
+                'default_preincluded_packages',
+                'default_included_packages',
+                'default_excluded_packages',
+            )
+        }),
+        (_('Attributes'), {
+            'fields': (
+                'domain',
+                'included_attributes',
+                'excluded_attributes'
+            )
+        }),
+        (_('Schedule'), {
+            'fields': (
+                'start_date',
+                'schedule',
+                'timeline'
+            )
+        }),
+    )
+
+    name_link = MigasFields.link(model=ExternalSource, name='name')
+    project_link = MigasFields.link(
+        model=ExternalSource, name='project', order='project__name'
+    )
+    domain_link = MigasFields.link(
+        model=ExternalSource, name='domain', order='domain__name'
+    )
+    schedule_link = MigasFields.link(
+        model=ExternalSource, name='schedule', order='schedule__name'
+    )
+    my_enabled = MigasFields.boolean(model=ExternalSource, name='enabled')
 
 
 class ScheduleDelayLine(MigasTabularInline):
@@ -763,10 +647,8 @@ class ScheduleDelayLine(MigasTabularInline):
 
     def computers(self, obj):
         related_objects = obj.related_objects('computer', self.request.user.userprofile)
-        if related_objects:
-            return related_objects.count()
 
-        return 0
+        return related_objects.count() if related_objects else 0
 
     computers.short_description = _('Computers')
 
@@ -831,53 +713,6 @@ class StoreAdmin(MigasAdmin):
         return super(StoreAdmin, self).get_queryset(
             request
         ).select_related("project")
-
-
-@admin.register(ServerAttribute)
-class ServerAttributeAdmin(MigasAdmin):
-    form = ServerAttributeForm
-    list_display = (
-        'value_link', 'description', 'total_computers', 'property_link'
-    )
-    list_select_related = ('property_att',)
-    fields = ('property_att', 'value', 'description', 'computers', 'inflicted_computers')
-    list_filter = (ServerAttributeFilter,)
-    ordering = ('property_att', 'value',)
-    search_fields = ('value', 'description')
-    readonly_fields = ('inflicted_computers',)
-
-    property_link = MigasFields.link(
-        model=ServerAttribute,
-        name='property_att',
-        order='property_att__name',
-        description=_('Tag Category')
-    )
-    value_link = MigasFields.link(model=ServerAttribute, name='value')
-
-    resource_class = AttributeResource
-
-    def get_queryset(self, request):
-        sql = Attribute.TOTAL_COMPUTER_QUERY
-        user = request.user.userprofile
-        if not user.is_view_all():
-            computers = user.get_computers()
-            if computers:
-                sql += " AND server_computer_sync_attributes.computer_id in " \
-                    + "(" + ",".join(str(x) for x in computers) + ")"
-        return ServerAttribute.objects.scope(user).extra(
-            select={'total_computers': sql}
-        )
-
-    def inflicted_computers(self, obj):
-        ret = [
-            c.link() for c in Computer.productive.filter(
-                sync_attributes__in=[obj.pk]
-            ).exclude(tags__in=[obj.pk])
-        ]
-
-        return format_html('<br />'.join(ret))
-
-    inflicted_computers.short_description = _('Inflicted Computers')
 
 
 @admin.register(UserProfile)
@@ -1002,6 +837,7 @@ class DomainAdmin(MigasAdmin):
     def get_queryset(self, request):
         user_profile = UserProfile.objects.get(id=request.user.id)
         user_profile.update_scope(0)
+
         return super(DomainAdmin, self).get_queryset(request)
 
 
