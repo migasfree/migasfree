@@ -81,156 +81,6 @@ class AppendDevicesFromComputerForm(forms.Form):
     )
 
 
-class ExternalSourceForm(forms.ModelForm):
-    included_attributes = MigasAutoCompleteSelectMultipleField(
-        'attribute', required=False,
-        label=_('included attributes'), show_help_text=False
-    )
-    excluded_attributes = MigasAutoCompleteSelectMultipleField(
-        'attribute', required=False,
-        label=_('excluded attributes'), show_help_text=False
-    )
-    available_packages = MigasAutoCompleteSelectMultipleField(
-        'package', required=False,
-        label=_('available packages'), show_help_text=False
-    )
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request", None)
-        super(ExternalSourceForm, self).__init__(*args, **kwargs)
-
-        self.fields['start_date'].initial = datetime.date.today()
-
-    def _validate_active_computers(self, att_list):
-        for att_id in att_list:
-            attribute = Attribute.objects.get(pk=att_id)
-            if attribute.property_att.prefix == 'CID':
-                computer = Computer.objects.get(pk=int(attribute.value))
-                if computer.status not in Computer.ACTIVE_STATUS:
-                    raise ValidationError(
-                        _('It is not possible to assign an inactive computer (%s) as an attribute')
-                        % computer
-                    )
-
-    def clean(self):
-        # http://stackoverflow.com/questions/7986510/django-manytomany-model-validation
-        cleaned_data = super(ExternalSourceForm, self).clean()
-
-        if 'project' not in cleaned_data:
-            raise ValidationError(_('Project is required'))
-
-        for pkg_id in cleaned_data.get('available_packages', []):
-            pkg = Package.objects.get(pk=pkg_id)
-            if pkg.project.id != cleaned_data['project'].id:
-                raise ValidationError(
-                    _('Package %s must belong to the project %s') % (
-                        pkg, cleaned_data['project']
-                    )
-                )
-
-        self._validate_active_computers(
-            cleaned_data.get('included_attributes', [])
-        )
-        self._validate_active_computers(
-            cleaned_data.get('excluded_attributes', [])
-        )
-
-    class Meta:
-        model = ExternalSource
-        fields = '__all__'
-        widgets = {
-            'comment': NormalTextarea,
-            'packages_to_install': NormalTextarea,
-            'packages_to_remove': NormalTextarea,
-            'default_preincluded_packages': NormalTextarea,
-            'default_included_packages': NormalTextarea,
-            'default_excluded_packages': NormalTextarea,
-            'start_date': DateWidget(
-                usel10n=True,
-                bootstrap_version=3,
-                options={
-                    'format': 'yyyy-mm-dd',
-                    'autoclose': True,
-                }
-            ),
-        }
-
-
-class InternalSourceForm(forms.ModelForm):
-    included_attributes = MigasAutoCompleteSelectMultipleField(
-        'attribute', required=False,
-        label=_('included attributes'), show_help_text=False
-    )
-    excluded_attributes = MigasAutoCompleteSelectMultipleField(
-        'attribute', required=False,
-        label=_('excluded attributes'), show_help_text=False
-    )
-    available_packages = MigasAutoCompleteSelectMultipleField(
-        'package', required=False,
-        label=_('available packages'), show_help_text=False
-    )
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request", None)
-        super(InternalSourceForm, self).__init__(*args, **kwargs)
-
-        self.fields['start_date'].initial = datetime.date.today()
-
-    def _validate_active_computers(self, att_list):
-        for att_id in att_list:
-            attribute = Attribute.objects.get(pk=att_id)
-            if attribute.property_att.prefix == 'CID':
-                computer = Computer.objects.get(pk=int(attribute.value))
-                if computer.status not in Computer.ACTIVE_STATUS:
-                    raise ValidationError(
-                        _('It is not possible to assign an inactive computer (%s) as an attribute')
-                        % computer
-                    )
-
-    def clean(self):
-        # http://stackoverflow.com/questions/7986510/django-manytomany-model-validation
-        cleaned_data = super(InternalSourceForm, self).clean()
-
-        if 'project' not in cleaned_data:
-            raise ValidationError(_('Project is required'))
-
-        for pkg_id in cleaned_data.get('available_packages', []):
-            pkg = Package.objects.get(pk=pkg_id)
-            if pkg.project.id != cleaned_data['project'].id:
-                raise ValidationError(
-                    _('Package %s must belong to the project %s') % (
-                        pkg, cleaned_data['project']
-                    )
-                )
-
-        self._validate_active_computers(
-            cleaned_data.get('included_attributes', [])
-        )
-        self._validate_active_computers(
-            cleaned_data.get('excluded_attributes', [])
-        )
-
-    class Meta:
-        model = InternalSource
-        fields = '__all__'
-        widgets = {
-            'comment': NormalTextarea,
-            'packages_to_install': NormalTextarea,
-            'packages_to_remove': NormalTextarea,
-            'default_preincluded_packages': NormalTextarea,
-            'default_included_packages': NormalTextarea,
-            'default_excluded_packages': NormalTextarea,
-            'start_date': DateWidget(
-                usel10n=True,
-                bootstrap_version=3,
-                options={
-                    'format': 'yyyy-mm-dd',
-                    'autoclose': True,
-                }
-            ),
-        }
-
-
 class DeploymentForm(forms.ModelForm):
     included_attributes = MigasAutoCompleteSelectMultipleField(
         'attribute', required=False,
@@ -313,6 +163,56 @@ class DeploymentForm(forms.ModelForm):
 
     class Meta:
         model = Deployment
+        fields = '__all__'
+        widgets = {
+            'comment': NormalTextarea,
+            'packages_to_install': NormalTextarea,
+            'packages_to_remove': NormalTextarea,
+            'default_preincluded_packages': NormalTextarea,
+            'default_included_packages': NormalTextarea,
+            'default_excluded_packages': NormalTextarea,
+            'start_date': DateWidget(
+                usel10n=True,
+                bootstrap_version=3,
+                options={
+                    'format': 'yyyy-mm-dd',
+                    'autoclose': True,
+                }
+            ),
+        }
+
+
+class InternalSourceForm(DeploymentForm):
+    def __init__(self, *args, **kwargs):
+        super(DeploymentForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = InternalSource
+        fields = '__all__'
+        widgets = {
+            'comment': NormalTextarea,
+            'packages_to_install': NormalTextarea,
+            'packages_to_remove': NormalTextarea,
+            'default_preincluded_packages': NormalTextarea,
+            'default_included_packages': NormalTextarea,
+            'default_excluded_packages': NormalTextarea,
+            'start_date': DateWidget(
+                usel10n=True,
+                bootstrap_version=3,
+                options={
+                    'format': 'yyyy-mm-dd',
+                    'autoclose': True,
+                }
+            ),
+        }
+
+
+class ExternalSourceForm(DeploymentForm):
+    def __init__(self, *args, **kwargs):
+        super(DeploymentForm, self).__init__(*args, **kwargs)
+
+    class Meta:
+        model = ExternalSource
         fields = '__all__'
         widgets = {
             'comment': NormalTextarea,
