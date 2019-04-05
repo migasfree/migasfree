@@ -522,6 +522,7 @@ class InternalSource(Deployment):
         app_label = 'server'
         verbose_name = _("Deployment (internal source)")
         verbose_name_plural = _("Deployments (internal source)")
+        permissions = (("can_save_internalsource", "Can save Internal Source"),)
         proxy = True
 
 
@@ -552,4 +553,5 @@ class ExternalSource(Deployment):
         app_label = 'server'
         verbose_name = _("Deployment (external source)")
         verbose_name_plural = _("Deployments (external source)")
+        permissions = (("can_save_externalsource", "Can save External Source"),)
         proxy = True
