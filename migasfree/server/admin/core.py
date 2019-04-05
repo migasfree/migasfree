@@ -471,6 +471,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     def get_queryset(self, request):
         self.user = request.user
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(DeploymentAdmin, self).get_queryset(
             request
         ).prefetch_related(
