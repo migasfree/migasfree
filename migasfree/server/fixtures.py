@@ -105,7 +105,8 @@ def configure_default_users():
         "server.autocheckerror", "server.notification",
         "server.faultdefinition", "server.synchronization",
         "server.message", "server.migration", "server.statuslog",
-        "server.package", "server.deployment", "server.store",
+        "server.package", "server.store",
+        "server.deployment", "server.internalsource", "server.externalsource",
         "server.platform", "server.project", "server.pms",
         "server.schedule", "server.scheduledelay",
         "server.user", "server.userprofile",
@@ -134,7 +135,8 @@ def configure_default_users():
         liberator = liberator[0]
 
     tables = [
-        "server.deployment", "server.schedule", "server.scheduledelay",
+        "server.deployment", "server.internalsource", "server.externalsource",
+        "server.schedule", "server.scheduledelay",
         "catalog.policy", "catalog.policygroup",
         "catalog.application", "catalog.packagesbyproject",
     ]
@@ -232,7 +234,7 @@ def configure_default_users():
         domain_admin = domain_admin[0]
 
     tables = [
-        "server.scope", "server.deployment",
+        "server.scope", "server.deployment", "server.internalsource",
     ]
     domain_admin.permissions.clear()
     add_perms(domain_admin, tables)
