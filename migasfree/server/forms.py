@@ -98,9 +98,14 @@ class DeploymentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", None)
         super(DeploymentForm, self).__init__(*args, **kwargs)
-        user = self.request.user.userprofile
 
         self.fields['start_date'].initial = datetime.date.today()
+
+        if not self.request:
+            return
+
+        user = self.request.user.userprofile
+
         try:
             if Project.objects.scope(user).count() == 1:
                 self.fields['project'].initial = Project.objects.scope(user).first().id
@@ -113,10 +118,7 @@ class DeploymentForm(forms.ModelForm):
             self.fields['domain'].initial = user.domain_preference
 
         domains = user.domains.all()
-        if domains.count() == 0:
-            self.fields['domain'].queryset = Domain.objects.all()
-        else:
-            self.fields['domain'].queryset = domains
+        self.fields['domain'].queryset = domains if domains.count() else Domain.objects.all()
 
     def _validate_active_computers(self, att_list):
         for att_id in att_list:
@@ -183,9 +185,6 @@ class DeploymentForm(forms.ModelForm):
 
 
 class InternalSourceForm(DeploymentForm):
-    def __init__(self, *args, **kwargs):
-        super(DeploymentForm, self).__init__(*args, **kwargs)
-
     class Meta:
         model = InternalSource
         fields = '__all__'
@@ -208,9 +207,6 @@ class InternalSourceForm(DeploymentForm):
 
 
 class ExternalSourceForm(DeploymentForm):
-    def __init__(self, *args, **kwargs):
-        super(DeploymentForm, self).__init__(*args, **kwargs)
-
     class Meta:
         model = ExternalSource
         fields = '__all__'
@@ -426,7 +422,7 @@ class AttributeSetForm(forms.ModelForm):
                 reverse=False,
                 model=self.instance.included_attributes.model,
                 pk_set=included_attributes
-        )
+            )
 
         return included_attributes
 
@@ -440,7 +436,7 @@ class AttributeSetForm(forms.ModelForm):
                 reverse=False,
                 model=self.instance.excluded_attributes.model,
                 pk_set=excluded_attributes
-        )
+            )
 
         return excluded_attributes
 
