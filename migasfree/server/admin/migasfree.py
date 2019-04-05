@@ -195,12 +195,16 @@ class MigasAdmin(ExportActionModelAdmin):
             form.base_fields[field].widget.can_add_related = False
             form.base_fields[field].widget.can_delete_related = False
 
-        if self.model.__name__ in ['Store', 'Package', 'Deployment', 'Scope']:
-            # adding request to ModelForm
+        if self.model.__name__ in [
+            'Store', 'Package', 'Deployment', 'Scope', 'InternalSource', 'ExternalSource'
+        ]:
             class ModelFormMetaClass(forms.ModelForm):
+                # adding request to ModelForm
                 def __new__(cls, *args, **kwargs):
                     kwargs['request'] = request
+
                     return form(*args, **kwargs)
+
             return ModelFormMetaClass
 
         return form
