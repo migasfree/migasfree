@@ -88,7 +88,7 @@ class HwNode(models.Model, MigasLink):
 
     level = models.IntegerField(verbose_name=_("level"))
 
-    width = models.IntegerField(
+    width = models.BigIntegerField(
         verbose_name=_("width"),
         null=True
     )
