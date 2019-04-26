@@ -510,7 +510,7 @@ class MigasLink(object):
             }
         )
 
-    def link(self):
+    def badge(self):
         if self._meta.model_name == 'clientattribute' \
                 or self._meta.model_name == 'attribute':
             if self.property_att.prefix == 'CID':
@@ -582,12 +582,13 @@ class MigasLink(object):
             lnk['status'] = 'policy'
             lnk['trans_status'] = ugettext(self._meta.verbose_name)
 
+        return lnk
+
+    def link(self):
         return format_html(
             render_to_string(
                 'includes/migas_link.html',
-                {
-                    'lnk': lnk
-                }
+                {'lnk': self.badge()}
             )
         )
 
