@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import json
 import re
 
 from datetime import datetime
 
+from django.apps import apps
 from django.db.models import Q
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import QueryDict
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -27,7 +30,29 @@ from ..filters import (
 from ..tasks import create_repository_metadata
 
 
-class AttributeSetViewSet(viewsets.ModelViewSet):
+class MigasViewSet(viewsets.ViewSet):
+    @action(methods=['get'], detail=True)
+    def relations(self, request, pk=None):
+        app = self.queryset.model._meta.app_label
+        model = self.queryset.model._meta.model_name
+        try:
+            response = apps.get_model(app, model).objects.get(pk=pk).relations(request)
+            return Response(response, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    @action(methods=['get'], detail=True)
+    def badge(self, request, pk=None):
+        app = self.queryset.model._meta.app_label
+        model = self.queryset.model._meta.model_name
+        try:
+            response = apps.get_model(app, model).objects.get(pk=pk).badge()
+            return Response(response, status=status.HTTP_200_OK)
+        except ObjectDoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class AttributeSetViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.AttributeSet.objects.all()
     serializer_class = serializers.AttributeSetSerializer
     filter_class = AttributeSetFilter
@@ -42,7 +67,7 @@ class AttributeSetViewSet(viewsets.ModelViewSet):
         return serializers.AttributeSetSerializer
 
 
-class AttributeViewSet(viewsets.ModelViewSet):
+class AttributeViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Attribute.objects.all()
     serializer_class = serializers.AttributeSerializer
     filter_class = AttributeFilter
@@ -130,7 +155,7 @@ class AttributeViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_201_CREATED)
 
 
-class ComputerViewSet(viewsets.ModelViewSet):
+class ComputerViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Computer.objects.all()
     serializer_class = serializers.ComputerSerializer
     filter_class = ComputerFilter
@@ -362,7 +387,7 @@ class ComputerViewSet(viewsets.ModelViewSet):
 class ErrorViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin, mixins.DestroyModelMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet, MigasViewSet
 ):
     queryset = models.Error.objects.all()
     serializer_class = serializers.ErrorSerializer
@@ -389,7 +414,7 @@ class ErrorViewSet(
         return serializers.ErrorSerializer
 
 
-class FaultDefinitionViewSet(viewsets.ModelViewSet):
+class FaultDefinitionViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.FaultDefinition.objects.all()
     serializer_class = serializers.FaultDefinitionSerializer
     filter_class = FaultDefinitionFilter
@@ -408,7 +433,7 @@ class FaultDefinitionViewSet(viewsets.ModelViewSet):
 class FaultViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin, mixins.DestroyModelMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet, MigasViewSet
 ):
     queryset = models.Fault.objects.all()
     serializer_class = serializers.FaultSerializer
@@ -451,7 +476,8 @@ class HardwareComputerViewSet(viewsets.ViewSet):
 
 
 class HardwareViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    mixins.ListModelMixin, mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet, MigasViewSet
 ):
     queryset = models.HwNode.objects.all()
     serializer_class = serializers.NodeSerializer
@@ -471,7 +497,7 @@ class HardwareViewSet(
 
 class MigrationViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin, viewsets.GenericViewSet
+    mixins.DestroyModelMixin, viewsets.GenericViewSet, MigasViewSet
 ):
     queryset = models.Migration.objects.all()
     serializer_class = serializers.MigrationSerializer
@@ -495,7 +521,7 @@ class MigrationViewSet(
 class NotificationViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin, mixins.DestroyModelMixin,
-    viewsets.GenericViewSet
+    viewsets.GenericViewSet, MigasViewSet
 ):
     queryset = models.Notification.objects.all()
     serializer_class = serializers.NotificationSerializer
@@ -511,7 +537,7 @@ class NotificationViewSet(
         return serializers.NotificationSerializer
 
 
-class PackageViewSet(viewsets.ModelViewSet):
+class PackageViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Package.objects.all()
     serializer_class = serializers.PackageSerializer
     filter_class = PackageFilter
@@ -550,7 +576,7 @@ class PackageViewSet(viewsets.ModelViewSet):
         )
 
 
-class PlatformViewSet(viewsets.ModelViewSet):
+class PlatformViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Platform.objects.all()
     serializer_class = serializers.PlatformSerializer
     ordering_fields = '__all__'
@@ -565,14 +591,14 @@ class PlatformViewSet(viewsets.ModelViewSet):
         return qs
 
 
-class PmsViewSet(viewsets.ModelViewSet):
+class PmsViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Pms.objects.all()
     serializer_class = serializers.PmsSerializer
     ordering_fields = '__all__'
     ordering = ('name',)
 
 
-class PropertyViewSet(viewsets.ModelViewSet):
+class PropertyViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Property.objects.all()
     serializer_class = serializers.PropertySerializer
     filter_class = PropertyFilter
@@ -588,7 +614,7 @@ class PropertyViewSet(viewsets.ModelViewSet):
         return serializers.PropertySerializer
 
 
-class InternalSourceViewSet(viewsets.ModelViewSet):
+class InternalSourceViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.InternalSource.objects.all()
     serializer_class = serializers.InternalSourceSerializer
     filter_class = DeploymentFilter
@@ -627,7 +653,7 @@ class InternalSourceViewSet(viewsets.ModelViewSet):
         )
 
 
-class ExternalSourceViewSet(viewsets.ModelViewSet):
+class ExternalSourceViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.ExternalSource.objects.all()
     serializer_class = serializers.ExternalSourceSerializer
     filter_class = DeploymentFilter
@@ -653,7 +679,7 @@ class ExternalSourceViewSet(viewsets.ModelViewSet):
         return serializers.ExternalSourceSerializer
 
 
-class ScheduleDelayViewSet(viewsets.ModelViewSet):
+class ScheduleDelayViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.ScheduleDelay.objects.all()
     serializer_class = serializers.ScheduleDelaySerializer
     filter_class = ScheduleDelayFilter
@@ -669,7 +695,7 @@ class ScheduleDelayViewSet(viewsets.ModelViewSet):
         return serializers.ScheduleDelaySerializer
 
 
-class ScheduleViewSet(viewsets.ModelViewSet):
+class ScheduleViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Schedule.objects.all()
     serializer_class = serializers.ScheduleSerializer
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
@@ -686,7 +712,7 @@ class ScheduleViewSet(viewsets.ModelViewSet):
 
 class StatusLogViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin, viewsets.GenericViewSet
+    mixins.DestroyModelMixin, viewsets.GenericViewSet, MigasViewSet
 ):
     queryset = models.StatusLog.objects.all()
     serializer_class = serializers.StatusLogSerializer
@@ -704,7 +730,7 @@ class StatusLogViewSet(
         return qs
 
 
-class StoreViewSet(viewsets.ModelViewSet):
+class StoreViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Store.objects.all()
     serializer_class = serializers.StoreSerializer
     filter_class = StoreFilter
@@ -730,7 +756,7 @@ class StoreViewSet(viewsets.ModelViewSet):
 
 class SynchronizationViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin, viewsets.GenericViewSet
+    mixins.DestroyModelMixin, viewsets.GenericViewSet, MigasViewSet
 ):
     queryset = models.Synchronization.objects.all()
     serializer_class = serializers.SynchronizationSerializer
@@ -753,7 +779,7 @@ class SynchronizationViewSet(
 
 class UserViewSet(
     mixins.ListModelMixin, mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin, viewsets.GenericViewSet
+    mixins.DestroyModelMixin, viewsets.GenericViewSet, MigasViewSet
 ):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
@@ -769,7 +795,7 @@ class UserViewSet(
         return qs
 
 
-class ProjectViewSet(viewsets.ModelViewSet):
+class ProjectViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Project.objects.all()
     serializer_class = serializers.ProjectSerializer
     filter_class = ProjectFilter
@@ -793,7 +819,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return serializers.ProjectSerializer
 
 
-class DomainViewSet(viewsets.ModelViewSet):
+class DomainViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Domain.objects.all()
     serializer_class = serializers.DomainSerializer
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
@@ -808,7 +834,7 @@ class DomainViewSet(viewsets.ModelViewSet):
         return serializers.DomainSerializer
 
 
-class ScopeViewSet(viewsets.ModelViewSet):
+class ScopeViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Scope.objects.all()
     serializer_class = serializers.ScopeSerializer
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
@@ -823,14 +849,14 @@ class ScopeViewSet(viewsets.ModelViewSet):
         return serializers.ScopeSerializer
 
 
-class ConnectionViewSet(viewsets.ModelViewSet):
+class ConnectionViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.DeviceConnection.objects.all()
     serializer_class = serializers.ConnectionSerializer
     ordering_fields = '__all__'
     ordering = ('id',)
 
 
-class DeviceViewSet(viewsets.ModelViewSet):
+class DeviceViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Device.objects.all()
     serializer_class = serializers.DeviceSerializer
     filter_class = DeviceFilter
@@ -872,7 +898,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class DriverViewSet(viewsets.ModelViewSet):
+class DriverViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.DeviceDriver.objects.all()
     serializer_class = serializers.DriverSerializer
     filter_class = DriverFilter
@@ -887,14 +913,14 @@ class DriverViewSet(viewsets.ModelViewSet):
         return serializers.DriverSerializer
 
 
-class FeatureViewSet(viewsets.ModelViewSet):
+class FeatureViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.DeviceFeature.objects.all()
     serializer_class = serializers.FeatureSerializer
     ordering_fields = '__all__'
     ordering = ('name',)
 
 
-class LogicalViewSet(viewsets.ModelViewSet):
+class LogicalViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.DeviceLogical.objects.all()
     serializer_class = serializers.LogicalSerializer
     ordering_fields = '__all__'
@@ -938,14 +964,14 @@ class LogicalViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class ManufacturerViewSet(viewsets.ModelViewSet):
+class ManufacturerViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.DeviceManufacturer.objects.all()
     serializer_class = serializers.ManufacturerSerializer
     ordering_fields = '__all__'
     ordering = ('name',)
 
 
-class ModelViewSet(viewsets.ModelViewSet):
+class ModelViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.DeviceModel.objects.all()
     serializer_class = serializers.ModelSerializer
     ordering_fields = '__all__'
@@ -959,7 +985,7 @@ class ModelViewSet(viewsets.ModelViewSet):
         return serializers.ModelSerializer
 
 
-class TypeViewSet(viewsets.ModelViewSet):
+class TypeViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.DeviceType.objects.all()
     serializer_class = serializers.TypeSerializer
     ordering_fields = '__all__'
