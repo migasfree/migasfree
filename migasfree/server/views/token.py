@@ -196,7 +196,7 @@ class ComputerViewSet(viewsets.ModelViewSet, MigasViewSet):
                 ):
                     return Response(
                         _('Error in feature %s for assign computer %s.'
-                                       ' There is no driver defined for project %s in model %s.') % (
+                            ' There is no driver defined for project %s in model %s.') % (
                                 logical_device.feature,
                                 computer,
                                 computer.project,
