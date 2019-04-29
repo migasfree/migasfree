@@ -9,11 +9,12 @@ from rest_framework.response import Response
 
 from migasfree.server.permissions import PublicPermission
 from migasfree.server.models import Computer
+from migasfree.server.views import MigasViewSet
 from . import models, serializers
 from .filters import ApplicationFilter, PackagesByProjectFilter, PolicyFilter
 
 
-class ApplicationViewSet(viewsets.ModelViewSet):
+class ApplicationViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Application.objects.all()
     serializer_class = serializers.ApplicationSerializer
     filter_class = ApplicationFilter
@@ -92,7 +93,7 @@ class PackagesByProjectViewSet(viewsets.ModelViewSet):
         return serializers.PackagesByProjectSerializer
 
 
-class PolicyViewSet(viewsets.ModelViewSet):
+class PolicyViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Policy.objects.all()
     serializer_class = serializers.PolicySerializer
     filter_class = PolicyFilter
