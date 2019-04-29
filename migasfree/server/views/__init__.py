@@ -45,7 +45,7 @@ from .token import (
     ConnectionViewSet, DeviceViewSet, DriverViewSet,
     FeatureViewSet, LogicalViewSet, ManufacturerViewSet,
     ModelViewSet, TypeViewSet, ScheduleDelayViewSet,
-    DomainViewSet, ScopeViewSet,
+    DomainViewSet, ScopeViewSet, MigasViewSet,
 )
 from .domain import change_domain
 from .scope import change_scope
