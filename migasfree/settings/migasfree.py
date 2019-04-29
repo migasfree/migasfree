@@ -28,16 +28,20 @@ Sample:
 
     MIGASFREE_EXTERNAL_ACTIONS = {
         "computer": {
-            "ping": {"title": "PING", "description": "check conectivity"},
-            "ssh": {"title": "SSH", "description": "remote control vía ssh"},
+            "ping": {"title": "PING", "description": "check connectivity"},
+            "ssh": {"title": "SSH", "description": "remote control via ssh"},
             "vnc": {"title": "VNC", "description": "remote control vnc", "many": False},
             "sync": {"title": "SYNC", "description": "ssh -> run migasfree -u"},
-            "install": {"title": "INSTALL", "description": "ssh -> install a package", "related": ["deployment", "computer"]},
+            "install": {
+                "title": "INSTALL",
+                "description": "ssh -> install a package",
+                "related": ["deployment", "computer"]
+            },
         },
         "error": {
-            "clean": {"title": "delete", "description":"delete errors"},
-        }
-}
+            "clean": {"title": "delete", "description": "delete errors"},
+        },
+    }
 """
 MIGASFREE_EXTERNAL_ACTIONS = {}
 
