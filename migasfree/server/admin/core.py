@@ -184,7 +184,7 @@ class PackageAdmin(MigasAdmin):
     list_display = (
         'name_link', 'project_link', 'store_link', 'deployments_link'
     )
-    list_filter = (('project', ProjectFilterAdmin), 'store', 'deployment')
+    list_filter = ('project__platform', ('project', ProjectFilterAdmin), 'store', 'deployment')
     list_select_related = ('project', 'store')
     search_fields = ('name', 'store__name')
     ordering = ('name',)
