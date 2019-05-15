@@ -4,10 +4,14 @@ import os
 import time
 import json
 import ssl
+import tempfile
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse, Http404
+from django.http.response import StreamingHttpResponse
 from django.shortcuts import render
+from django.urls import reverse
+from django.utils.translation import ugettext as _
 
 from urllib2 import urlopen, URLError, HTTPError
 from wsgiref.util import FileWrapper
@@ -16,7 +20,7 @@ from rest_framework import permissions, views
 from rest_framework.response import Response
 from rest_framework import status
 
-from ..models import Platform, Project, Deployment, ExternalSource
+from ..models import Platform, Project, Deployment, ExternalSource, Notification
 from ..api import get_computer
 from ..utils import uuid_validate
 from ..secure import gpg_get_key
@@ -103,6 +107,33 @@ def get_key_repositories(request):
     )
 
 
+def add_notification_get_source_file(error, deployment, resource, remote):
+    Notification.objects.create(
+        _("Deployment (external source) [%s]: [%s] resource: [%s] remote file: [%s].") % (
+            '<a href="{}">{}</a>'.format(
+                reverse('admin:server_externalsource_change', args=(deployment.id,)),
+                deployment
+            ),
+            error,
+            resource,
+            remote
+        )
+)
+
+def read_remote_chunks(local_file, remote, chunk_size=8192):
+    _, tmp = tempfile.mkstemp()
+    with open(tmp, 'wb') as tmp_file:
+        while True:
+            data = remote.read(chunk_size)
+            if not data:
+                break
+            yield data
+            tmp_file.write(data)
+        tmp_file.flush()
+        os.fsync(tmp_file)
+    os.rename(tmp, local_file)
+
+
 def get_source_file(request):
     source = None
 
@@ -136,28 +167,33 @@ def get_source_file(request):
 
         try:
             ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
-            f = urlopen(url, context=ctx)
-            with open(_file_local, 'wb') as local_file:
-                local_file.write(f.read())
+            remote_file = urlopen(url, context=ctx)
+            stream = read_remote_chunks(_file_local, remote_file)
+            response = StreamingHttpResponse(stream, status=200, content_type='text/event-stream')
+            response['Cache-Control'] = 'no-cache'
+            return response
+
         except HTTPError as e:
+            add_notification_get_source_file("HTTP Error: {}".format(e.code), source, _path, url)
             return HttpResponse(
                 u'HTTP Error: {} {}'.format(e.code, url),
                 status=e.code
             )
         except URLError as e:
+            add_notification_get_source_file("URL error: {}".format(e.reason), source, _path, url)
             return HttpResponse(
                 u'URL Error: {} {}'.format(e.reason, url),
                 status=status.HTTP_404_NOT_FOUND
             )
 
-    if not os.path.isfile(_file_local):
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT)
-
-    response = HttpResponse(FileWrapper(open(_file_local, 'rb')), content_type='application/octet-stream')
-    response['Content-Disposition'] = u'attachment; filename={}'.format(os.path.basename(_file_local))
-    response['Content-Length'] = os.path.getsize(_file_local)
-
-    return response
+    else:
+        if not os.path.isfile(_file_local):
+            return HttpResponse(status=status.HTTP_204_NO_CONTENT)
+        else:
+            response = HttpResponse(FileWrapper(open(_file_local, 'rb')), content_type='application/octet-stream')
+            response['Content-Disposition'] = u'attachment; filename={}'.format(os.path.basename(_file_local))
+            response['Content-Length'] = os.path.getsize(_file_local)
+            return response
 
 
 @permission_classes((permissions.AllowAny,))
