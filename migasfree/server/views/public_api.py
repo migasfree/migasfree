@@ -5,6 +5,7 @@ import time
 import json
 import ssl
 import tempfile
+import shutil
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse, Http404
@@ -131,7 +132,7 @@ def read_remote_chunks(local_file, remote, chunk_size=8192):
             tmp_file.write(data)
         tmp_file.flush()
         os.fsync(tmp_file)
-    os.rename(tmp, local_file)
+    shutil.move(tmp, local_file)
 
 
 def get_source_file(request):
