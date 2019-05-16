@@ -121,6 +121,7 @@ def add_notification_get_source_file(error, deployment, resource, remote):
         )
 )
 
+
 def read_remote_chunks(local_file, remote, chunk_size=8192):
     _, tmp = tempfile.mkstemp()
     with open(tmp, 'wb') as tmp_file:
@@ -128,10 +129,13 @@ def read_remote_chunks(local_file, remote, chunk_size=8192):
             data = remote.read(chunk_size)
             if not data:
                 break
+
             yield data
             tmp_file.write(data)
-        tmp_file.flush()
-        os.fsync(tmp_file)
+            tmp_file.flush()
+
+        os.fsync(tmp_file.fileno())
+
     shutil.move(tmp, local_file)
 
 
@@ -169,11 +173,16 @@ def get_source_file(request):
         try:
             ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
             remote_file = urlopen(url, context=ctx)
-            stream = read_remote_chunks(_file_local, remote_file)
-            response = StreamingHttpResponse(stream, status=200, content_type='text/event-stream')
-            response['Cache-Control'] = 'no-cache'
-            return response
 
+            stream = read_remote_chunks(_file_local, remote_file)
+            response = StreamingHttpResponse(
+                stream,
+                status=status.HTTP_206_PARTIAL_CONTENT,
+                content_type='application/octet-stream'
+            )
+            response['Cache-Control'] = 'no-cache'
+
+            return response
         except HTTPError as e:
             add_notification_get_source_file("HTTP Error: {}".format(e.code), source, _path, url)
             return HttpResponse(
@@ -186,7 +195,6 @@ def get_source_file(request):
                 u'URL Error: {} {}'.format(e.reason, url),
                 status=status.HTTP_404_NOT_FOUND
             )
-
     else:
         if not os.path.isfile(_file_local):
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
