@@ -9,7 +9,6 @@ import shutil
 
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse, Http404
-from django.http.response import StreamingHttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import ugettext as _
@@ -175,7 +174,7 @@ def get_source_file(request):
             remote_file = urlopen(url, context=ctx)
 
             stream = read_remote_chunks(_file_local, remote_file)
-            response = StreamingHttpResponse(
+            response = HttpResponse(
                 stream,
                 status=status.HTTP_206_PARTIAL_CONTENT,
                 content_type='application/octet-stream'
