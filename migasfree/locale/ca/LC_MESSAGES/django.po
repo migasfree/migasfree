@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-16 13:34+0200\n"
-"PO-Revision-Date: 2019-05-22 14:06+0200\n"
+"PO-Revision-Date: 2019-05-22 14:21+0200\n"
 "Last-Translator: OPL UAB <pr.opl@uab.cat>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: ca_ES\n"
@@ -484,9 +484,8 @@ msgid "Inflicted Computers"
 msgstr "Ordinadors heretats"
 
 #: migasfree/server/admin/core.py:346
-#, fuzzy
 msgid "Run Query"
-msgstr "Ejecutar consulta"
+msgstr "Executar consulta"
 
 #: migasfree/server/admin/core.py:366 migasfree/server/admin/core.py:594
 #: migasfree/server/forms.py:49 migasfree/server/forms.py:62
@@ -497,7 +496,7 @@ msgstr "Origen"
 #: migasfree/server/admin/core.py:369 migasfree/server/admin/core.py:538
 #: migasfree/server/admin/core.py:597
 msgid "Packages"
-msgstr "Paquetes"
+msgstr "Paquets"
 
 #: migasfree/server/admin/core.py:377 migasfree/server/admin/core.py:546
 #: migasfree/server/admin/core.py:604
@@ -505,7 +504,7 @@ msgstr "Paquetes"
 #: migasfree/server/templates/admin/server/computer/change_form.html:319
 #: migasfree/server/templates/computer_simulate_sync.html:155
 msgid "Default"
-msgstr "Por defecto"
+msgstr "Per defecte"
 
 #: migasfree/server/admin/core.py:388 migasfree/server/admin/core.py:557
 #: migasfree/server/admin/core.py:619 migasfree/server/models/schedule.py:32
@@ -513,7 +512,7 @@ msgstr "Por defecto"
 #: migasfree/server/templates/admin/server/externalsource/change_form.html:323
 #: migasfree/server/templates/admin/server/internalsource/change_form.html:251
 msgid "Schedule"
-msgstr "Calendario"
+msgstr "Calendari"
 
 #: migasfree/server/admin/core.py:413 migasfree/server/admin/core.py:654
 #: migasfree/server/admin/device.py:176 migasfree/server/forms.py:301
@@ -529,37 +528,37 @@ msgstr "Calendario"
 #: migasfree/server/templates/includes/mining_menu.html:5
 #: migasfree/stats/views/computers.py:260 migasfree/stats/views/syncs.py:256
 msgid "Computers"
-msgstr "Ordenadores"
+msgstr "Ordinadors"
 
 #: migasfree/server/admin/core.py:423
 msgid "Regenerate metadata"
-msgstr "Regenerar metadatos"
+msgstr "Regenerar metadades"
 
 #: migasfree/server/admin/core.py:460
 #, python-format
 msgid ""
 "Deployment [%s] modified by user [%s] (<a href=\"%s\">review changes</a>)"
 msgstr ""
-"El despliegue [%s] ha sido modificado por el usuario [%s] (<a href=\"%s"
-"\">revisar cambios</a>)"
+"El desplegament [%s] ha estat modificat per l'usuari [%s] (<a href=\"%s"
+"\">revisar canvis</a>)"
 
 #: migasfree/server/admin/core.py:737
 msgid "Authorizations"
-msgstr "Autorizaciones"
+msgstr "Autoritzacions"
 
 #: migasfree/server/admin/core.py:747
 msgid "Preferences"
-msgstr "Preferencias"
+msgstr "Preferencies"
 
 #: migasfree/server/admin/core.py:823
 #: migasfree/server/templates/admin/server/domain/change_form.html:89
 msgid "Available tags"
-msgstr "Etiquetas disponibles"
+msgstr "Etiquetes disponibles"
 
 #: migasfree/server/admin/device.py:90
 #: migasfree/server/models/device_logical.py:131
 msgid "Device Logical"
-msgstr "Dispositivo lógico"
+msgstr "Dispositiu lògic"
 
 #: migasfree/server/admin/migasfree.py:25
 #: migasfree/server/admin/migasfree.py:290
@@ -578,29 +577,29 @@ msgstr "No"
 #: migasfree/server/templates/admin/server/externalsource/change_form.html:330
 #: migasfree/server/templates/admin/server/internalsource/change_form.html:257
 msgid "time line"
-msgstr "línea temporal"
+msgstr "línia temporal"
 
 #: migasfree/server/admin/migasfree.py:251
 #: migasfree/server/admin/migasfree.py:397
 msgid "empty"
-msgstr "vacío"
+msgstr "buit"
 
 #: migasfree/server/admin/migasfree.py:251
 #: migasfree/server/admin/migasfree.py:397
 msgid "not empty"
-msgstr "no vacío"
+msgstr "no buit"
 
 #: migasfree/server/admin/migasfree.py:364
 msgid "attributeset"
-msgstr "conjunto de atributos"
+msgstr "conjunt d'atributs"
 
 #: migasfree/server/api.py:41
 #, python-format
 msgid "Platform [%s] registered by computer [%s]."
-msgstr "Plataforma [%s] registrada por el ordenador [%s]."
+msgstr "Plataforma [%s] registrada per l'ordinador [%s]."
 
 #: migasfree/server/api.py:56
-#, python-format
+#, fuzzy, python-format
 msgid "Project [%s] with P.M.S. [%s] registered by computer [%s]."
 msgstr "Proyecto [%s] con PMS [%s] registrado por el ordenador [%s]."
 
