@@ -121,7 +121,7 @@ class MigasLink(object):
                     self._meta.model_name
                 )
             ) + str(self.id),
-            'text': u"{} {}".format(self._meta.verbose_name, self.__str__()),
+            'text': u"{} {}".format(self._meta.verbose_name, unicode(self.__str__(), errors='ignore')),
             'count': 1,
             'actions': actions
         })
