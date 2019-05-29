@@ -577,7 +577,11 @@ class MigasLink(object):
         elif self._meta.model_name == 'attributeset' \
                 or (self._meta.model_name in ['clientattribute', 'attribute'] and self.id == 1):
             lnk['status'] = 'set'
-            lnk['trans_status'] = ugettext(self._meta.verbose_name)
+            lnk['trans_status'] = u'({}) {}'.format(ugettext(self._meta.verbose_name), self.description)
+        elif self._meta.model_name == 'clientattribute' \
+                or (self._meta.model_name == 'attribute' and self.property_att.sort == 'client'):
+            lnk['status'] = 'attribute'
+            lnk['trans_status'] = self.description
         elif self._meta.model_name == 'policy':
             lnk['status'] = 'policy'
             lnk['trans_status'] = ugettext(self._meta.verbose_name)
