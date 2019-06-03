@@ -166,6 +166,9 @@ class ServerAttributeAdmin(AttributeAdmin):
 
     inflicted_computers.short_description = _('Inflicted Computers')
 
+    def has_add_permission(self, request):
+        return True
+
 
 @admin.register(Package)
 class PackageAdmin(MigasAdmin):
