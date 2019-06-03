@@ -304,9 +304,9 @@ class ServerAttributeForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ServerAttributeForm, self).__init__(*args, **kwargs)
         if self.instance and self.instance.pk:
-            self.fields['computers'].initial = \
-                self.instance.tags.all()
+            self.fields['computers'].initial = self.instance.tags.all()
 
+        self.fields['property_att'].label = _('Tag Category')
         self.fields['property_att'].queryset = ServerProperty.objects.all()
 
     def save(self, commit=True):
