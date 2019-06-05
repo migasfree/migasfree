@@ -291,9 +291,15 @@ class HwNode(models.Model, MigasLink):
     @staticmethod
     def get_mac_address(computer_id):
         query = HwNode.objects.filter(
-            computer=computer_id,
-            name__icontains='network',
-            class_name='network'
+            computer=computer_id
+        ).filter(
+            Q(
+                name__icontains='network',
+                class_name='network'
+            ) | Q(
+                name__icontains='bridge',
+                class_name='bridge'
+            )
         )
         lst = []
         for iface in query:
