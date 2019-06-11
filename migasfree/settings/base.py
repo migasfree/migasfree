@@ -156,6 +156,8 @@ REST_AUTH_SERIALIZERS = {
 
 DAB_FIELD_RENDERER = 'django_admin_bootstrapped.renderers.BootstrapFieldRenderer'
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 # http://docs.python.org/2/howto/logging-cookbook.html
 # http://docs.python.org/2/library/logging.html#logrecord-attributes
 LOGGING = {
