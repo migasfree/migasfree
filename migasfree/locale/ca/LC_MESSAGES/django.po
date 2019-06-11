@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-05-16 13:34+0200\n"
-"PO-Revision-Date: 2019-05-27 15:48+0200\n"
+"PO-Revision-Date: 2019-06-09 01:48+0200\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.1\n"
 "Last-Translator: \n"
 "Language: ca\n"
 
@@ -1740,7 +1740,7 @@ msgstr "slug"
 
 #: migasfree/server/models/pms.py:41
 msgid "create repository"
-msgstr "crear repositori"
+msgstr "crear dipòsit"
 
 #: migasfree/server/models/pms.py:44
 msgid ""
@@ -3358,40 +3358,40 @@ msgid "Totals"
 msgstr "Totals"
 
 msgid "History of events in the last %d hours"
-msgstr "Histórico de sucesos en las últimas %d horas"
+msgstr "Històric de successos en les últimes %d hores"
 
 msgid "Packages by default"
-msgstr "Paquetes por defecto"
+msgstr "Paquets per defecte"
 
 msgid "Add Deployment"
-msgstr "Despliegue"
+msgstr "Desplegament"
 
 msgid "Go to %s"
-msgstr "Ir a %s"
+msgstr "Anar a %s"
 
 msgid "Summary"
-msgstr "Resumen"
+msgstr "Resum"
 
 msgid "There are no synchronizations"
-msgstr "No hay sincronizaciones"
+msgstr "No hi ha sincronitzacions"
 
 msgid "There are no data"
-msgstr "No hay datoss"
+msgstr "No hi ha dades"
 
 msgid "%s (total %s)"
 msgstr "%s (total %s)"
 
 msgid "Filter project for deployments, stores and packages"
-msgstr "Filtro de proyecto en despliegues, almacenes y paquetes"
+msgstr "Filtrar el projecte per desplegaments, magatzems i paquets"
 
 msgid "Before selecting a project, you must create at least one."
-msgstr "Antes de seleccionar una versión, debes crear al menos una."
+msgstr "Abans de seleccionar una versió, has de crear almenys una."
 
 msgid "Preferences changed"
-msgstr "Las preferencias han sido cambiadas"
+msgstr "Les preferències han canviat"
 
 msgid "Update"
-msgstr "Actualizar"
+msgstr "Actualitzar"
 
 msgid "Login"
 msgstr "Login"
@@ -3562,7 +3562,7 @@ msgid "Date initial for distribute."
 msgstr "Fecha inicial para la distribución."
 
 msgid "Repository"
-msgstr "Repositorio"
+msgstr "Dipòsit"
 
 msgid "Updates"
 msgstr "Actualizaciones"
@@ -3652,31 +3652,31 @@ msgid "alert"
 msgstr "alerta"
 
 msgid "login"
-msgstr "login"
+msgstr "iniciar sessió"
 
 msgid "Ready computers to reinstall devices"
-msgstr "Ordenadores preparados para reinstalar dispositivos"
+msgstr "Ordinadors preparats per a reinstal·lar dispositius"
 
 msgid "Reinstall devices"
-msgstr "Reinstalar dispositivos"
+msgstr "Reinstal·lar dispositius"
 
 msgid "devices copy"
-msgstr "copia de dispositivos"
+msgstr "còpia de dispositius"
 
 msgid "This procedure appends devices from one computer to another."
-msgstr "Este procedimiento agrega los dispositivos de un ordenador a otros."
+msgstr "Aquest procediment afegeix els dispositius d'un ordinador a un altre."
 
 msgid "Append"
-msgstr "Agregar"
+msgstr "Afegir"
 
 msgid "Append done."
-msgstr "Agregamiento realizado."
+msgstr "Addició realitzada."
 
 msgid "Choose a version before continue"
-msgstr "Selecciona una versión antes de continuar"
+msgstr "Selecciona una versió abans de continuar"
 
 msgid "There are no defined schedules"
-msgstr "No hay calendarios definidos"
+msgstr "No hi ha calendaris definits"
 
 msgid "Server error"
 msgstr "Error del servidor"
@@ -3685,123 +3685,123 @@ msgid "Server Error <em>(500)</em>"
 msgstr "Error del servidor <em>(500)</em>"
 
 msgid "Welcome,"
-msgstr "Bienvenido,"
+msgstr "Benvingut,"
 
 msgid "Log out"
-msgstr "Salir"
+msgstr "Desconnectar"
 
 msgid "Recent Actions"
-msgstr "Acciones recientes"
+msgstr "Accions recents"
 
 msgid "Unknown content"
-msgstr "Contenido desconocido"
+msgstr "Contingut desconegut"
 
 msgid "None available"
-msgstr "Ninguno disponible"
+msgstr "Cap disponible"
 
 msgid "Django site admin"
-msgstr "Sitio de administración de Django"
+msgstr "Lloc d'administració de Django"
 
 msgid "History"
 msgstr "Historial"
 
 msgid "Models available in the %(name)s application."
-msgstr "Los modelos están disponibles en la aplicación %(name)s."
+msgstr "Els models estan disponibles en l'aplicació %(name)s."
 
 msgid "You don't have permission to edit anything."
-msgstr "No tiene permisos para modificar nada."
+msgstr "No té permisos per a modificar res."
 
 msgid "Forgotten your password or username?"
-msgstr "¿Ha olvidado su nombre de usuario o la contraseña?"
+msgstr "Ha oblidat el seu nom d'usuari o la contrasenya?"
 
 msgid "Date/time"
-msgstr "Fecha/hora"
+msgstr "Data/hora"
 
 msgid "Action"
-msgstr "Acción"
+msgstr "Acció"
 
 msgid "Save as new"
-msgstr "Grabar como nuevo"
+msgstr "Anomenar i desar com a nou"
 
 msgid "Save and add another"
-msgstr "Grabar y añadir otro"
+msgstr "Desar i afegir un altre"
 
 msgid "Save and continue editing"
-msgstr "Grabar y continuar modificando"
+msgstr "Desar i continuar modificant"
 
 msgid "Show all"
-msgstr "Mostrar todo"
+msgstr "Mostrar tot"
 
 msgid "%(counter)s result"
 msgid_plural "%(counter)s results"
-msgstr[0] "%(counter)s resultado"
-msgstr[1] "%(counter)s resultados"
+msgstr[0] "%(counter)s resultat"
+msgstr[1] "%(counter)s resultats"
 
 msgid ""
 "First, enter a username and password. Then, you'll be able to edit more user "
 "options."
 msgstr ""
-"Primero, introduzca un nombre de usuario y una contraseña. Entonces, podrá "
-"modificar más opciones del usuario."
+"Primer, introdueixi un nom d'usuari i una contrasenya. Llavors, podrà "
+"modificar més opcions de l'usuari."
 
 msgid "Enter a username and password."
-msgstr "Introduzca un nombre de usuario y una contraseña."
+msgstr "Introdueixi un nom d'usuari i una contrasenya."
 
 msgid "Enter a new password for the user <strong>%(username)s</strong>."
 msgstr ""
-"Introduzca una nueva contraseña para el usuario <strong>%(username)s</"
+"Introdueixi una nova contrasenya per a l'usuari <strong>%(username)s</"
 "strong>."
 
 msgid "Password"
-msgstr "Contraseña"
+msgstr "Contrasenya"
 
 msgid "Password (again)"
-msgstr "Nueva contraseña (confirmación)"
+msgstr "Contrasenya (de nou)"
 
 msgid "Enter the same password as above, for verification."
-msgstr "Introduzca la misma contraseña que arriba, para verificarla."
+msgstr "Introdueixi la mateixa contrasenya que a dalt, per a verificar-la."
 
 msgid "Approve page deletion"
-msgstr "Aprobar la eliminación de la página"
+msgstr "Aprovar l'eliminació de la pàgina"
 
 msgid "(you can perform actions on this page directly)"
-msgstr "(puede realizar acciones directamente en esta página)"
+msgstr "(pot realitzar accions directament en aquesta pàgina)"
 
 msgid "Approve delete"
-msgstr "Aprobar eliminación"
+msgstr "Aprova l'eliminació"
 
 msgid "Approve"
-msgstr "Aprobar"
+msgstr "Aprovar"
 
 msgid "draft"
-msgstr "borrador"
+msgstr "esborrany"
 
 msgid "Preview"
-msgstr "Previsualización"
+msgstr "Previsualització"
 
 msgid "All permissions"
-msgstr "Todos los permisos"
+msgstr "Tots els permisos"
 
 msgid "List of pages"
-msgstr "Lista de páginas"
+msgstr "Llista de pàgines"
 
 msgid "Recover deleted %(name)s"
-msgstr "Recuperar %(name)s borrado"
+msgstr "Recuperar %(name)s eliminat"
 
 msgid "Pages on:"
-msgstr "Página sobre:"
+msgstr "Pàgina sobre:"
 
 msgid "Successfully moved"
-msgstr "Movido correctamente"
+msgstr "Mogut correctament"
 
 msgid "An error occured. Please reload the page"
-msgstr "Ha ocurrido un error. Por favor, recargue la página"
+msgstr "Ha ocorregut un error. Si us plau, recarregui la pàgina"
 
 msgid "select this page"
-msgstr "seleccionar esta página"
+msgstr "seleccionar aquesta pàgina"
 
 msgid "edit this page"
-msgstr "editar esta página"
+msgstr "editar aquesta pàgina"
 
 msgid "edit"
 msgstr "editar"
@@ -3816,16 +3816,16 @@ msgid "insert inside"
 msgstr "inseriu dins"
 
 msgid "home"
-msgstr "inicio"
+msgstr "inici"
 
 msgid "Edit this page in %(language)s "
-msgstr "Editar esta página en %(language)s "
+msgstr "Editar aquesta pàgina en %(language)s "
 
 msgid "Cut"
-msgstr "Cortar"
+msgstr "Tallar"
 
 msgid "cut"
-msgstr "cortar"
+msgstr "tallar"
 
 msgid "Copy"
 msgstr "Copiar"
@@ -3834,225 +3834,225 @@ msgid "copy"
 msgstr "copiar"
 
 msgid "Add Child"
-msgstr "Añadir hijo"
+msgstr "Afegir fill"
 
 msgid "add child"
-msgstr "añadir hijo"
+msgstr "afegir fill"
 
 msgid "delete"
 msgstr "eliminar"
 
 msgid "Approve directly"
-msgstr "Aprobar directamente"
+msgstr "Aprovar directament"
 
 msgid "view"
-msgstr "ver"
+msgstr "veure"
 
 msgid "Unpublish"
-msgstr "Despublicar"
+msgstr "Eliminar publicació"
 
 msgid "Publish"
 msgstr "Publicar"
 
 msgid "View on page"
-msgstr "Ver en el sitio"
+msgstr "Veure a la pàgina"
 
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr "Cancel · lar"
 
 msgid "Available Plugins"
-msgstr "Plugins disponibles"
+msgstr "Connectors disponibles"
 
 msgid "Generic"
-msgstr "Genérico"
+msgstr "Genèric"
 
 msgid "Add Plugin"
-msgstr "Añadir plugin"
+msgstr "Afegir connector"
 
 msgid "From Language"
-msgstr "Desde el idioma"
+msgstr "Des del llenguatge"
 
 msgid "Copy Plugins"
-msgstr "Copiar plugins"
+msgstr "Copiar els connectors"
 
 msgid "Go back to admin homepage"
-msgstr "Volver a la página de inicio de administración"
+msgstr "Tornar a la pàgina d'administració"
 
 msgid "Go back to root folder"
-msgstr "Volver a la carpeta principal"
+msgstr "Tornar al directori arrel"
 
 msgid "root"
-msgstr "raíz"
+msgstr "arrel"
 
 msgid "duplicates"
-msgstr "duplicados"
+msgstr "duplicats"
 
 msgid "Go back to"
-msgstr "Volver a"
+msgstr "Tornar a"
 
 msgid "admin homepage"
-msgstr "página de inicio de administración"
+msgstr "pàgina d'administració"
 
 msgid "folder"
 msgstr "carpeta"
 
 msgid "Folder Icon"
-msgstr "Carpeta del icono"
+msgstr "Icona de carpeta"
 
 msgid "Adds a new Folder"
-msgstr "Añade una nueva carpeta"
+msgstr "Afegeix una carpeta nova"
 
 msgid "New Folder"
-msgstr "Nueva carpeta"
+msgstr "Carpeta nova"
 
 msgid "upload files"
-msgstr "subir ficheros"
+msgstr "pujar fitxers"
 
 msgid "Upload"
-msgstr "Subir"
+msgstr "Pujar"
 
 msgid "Go back to the parent folder"
-msgstr "Volver a la carpeta superior"
+msgstr "Tornar a la carpeta superior"
 
 msgid "1 folder"
 msgid_plural "%(counter)s folders"
 msgstr[0] "%(counter)s carpeta"
-msgstr[1] "%(counter)s carpetas"
+msgstr[1] "%(counter)s carpetes"
 
 msgid "1 file"
 msgid_plural "%(counter)s files"
-msgstr[0] "%(counter)s fichero"
-msgstr[1] "%(counter)s ficheros"
+msgstr[0] "%(counter)s fitxer"
+msgstr[1] "%(counter)s fitxers"
 
 msgid "Change current folder details"
-msgstr "Cambiar detalles de la carpeta actual"
+msgstr "Canviar els detalls de la carpeta actual"
 
 msgid "Owner"
-msgstr "Propietario"
+msgstr "Propietari"
 
 msgid "Select this file"
-msgstr "Seleccionar este fichero"
+msgstr "Seleccionar aquest fitxer"
 
 msgid "Delete '%(item_label)s'"
 msgstr "Eliminar '%(item_label)s'"
 
 msgid "Move to clipboard"
-msgstr "Mover al portapapeles"
+msgstr "Moure al porta-retalls"
 
 msgid "there are no files or subfolders"
-msgstr "no hay archivos o carpetas"
+msgstr "no hi ha arxius o carpetes"
 
 msgid "next"
-msgstr "siguiente"
+msgstr "següent"
 
 msgid "Full size preview"
-msgstr "Previsualización a tamaño completo"
+msgstr "Previsualització a grandària completa"
 
 msgid "Enter your search phrase here"
-msgstr "Introduzca su búsqueda aquí"
+msgstr "Introduïu aquí la vostra frase de cerca"
 
 msgid "Check it to"
-msgstr "Comprobar para"
+msgstr "Comprovar per a"
 
 msgid "limit the search to current folder"
-msgstr "limitar la búsqueda a la carpeta actual"
+msgstr "limitar la cerca a la carpeta actual"
 
 msgid "search the current folder"
-msgstr "buscar la carpeta actual"
+msgstr "cercar la carpeta actual"
 
 msgid "found"
-msgstr "encontrado"
+msgstr "trobat"
 
 msgid "and"
-msgstr "y"
+msgstr "i"
 
 msgid "cancel search"
-msgstr "cancelar búsqueda"
+msgstr "cancel·lar la cerca"
 
 msgid "Clipboard"
-msgstr "Portapapeles"
+msgstr "Porta-retalls"
 
 msgid "Paste all items here"
-msgstr "Pegar todos los elementos aquí"
+msgstr "Enganxa tots els elements aquí"
 
 msgid "Move all clipboard files to"
-msgstr "Mover todos los ficheros del portapapeles a"
+msgstr "Moure tots els fitxers del porta-retalls a"
 
 msgid "discard"
 msgstr "descartar"
 
 msgid "the clipboard is empty"
-msgstr "el portapapeles está vacío"
+msgstr "el porta-retalls està buit"
 
 msgid "Old password"
-msgstr "Contraseña actual"
+msgstr "Contrasenya antiga"
 
 msgid "New password"
-msgstr "Nueva contraseña"
+msgstr "Nova contrasenya"
 
 msgid "desktop is not valid name for this computer: IP=%(ip)s"
-msgstr "desktop no es un nombre válido para el ordenador: IP=%(ip)s"
+msgstr "desktop no és un nom vàlid per a l'ordinador: IP=%(ip)\\s"
 
 msgid "Time:"
 msgstr "Hora:"
 
 msgid "Device (Connections)"
-msgstr "Conexiones de dispositivo"
+msgstr "Dispositiu (Connexions)"
 
 msgid "Device (Driver)"
-msgstr "Dispositivo (Controlador)"
+msgstr "Dispositiu (Controlador)"
 
 msgid "Device (Feature)"
-msgstr "Dispositivo (prestación)"
+msgstr "Dispositiu (Característica)"
 
 msgid "Device (Logical)"
-msgstr "Dispositivo (lógico)"
+msgstr "Dispositiu (lògic)"
 
 msgid "Device (Manufacturers)"
-msgstr "Dispositivo (fabricantes)"
+msgstr "Dispositiu (Fabricants)"
 
 msgid "Device (Model)"
-msgstr "Dispositivo (modelo)"
+msgstr "Dispositiu (Model)"
 
 msgid "Device (Models)"
-msgstr "Dispositivo (modelos)"
+msgstr "Dispositiu (Models)"
 
 msgid "Device (Type)"
-msgstr "Dispositivo (tipo)"
+msgstr "Dispositiu (Tipus)"
 
 msgid "Device (Types)"
-msgstr "Dispositivo (tipos)"
+msgstr "Dispositiu (Tipus)"
 
 msgid ""
 "Text of error that is only a warning. You can copy/paste from the field "
 "'error' of a Error."
 msgstr ""
-"Texto del error que es sólo un aviso. Puede copiar/pegar desde el campo "
-"'error' de un Error."
+"Text de l'error que és només un avís. Pot copiar/pegar des del camp 'error' "
+"d'un Error."
 
 msgid "Property of attribute"
-msgstr "Propiedad de atributo"
+msgstr "Propietat de l’atribut"
 
 msgid "information"
-msgstr "información"
+msgstr "informació"
 
 msgid "Relations"
-msgstr "Relaciones"
+msgstr "Relacions"
 
 msgid "Audit"
-msgstr "Auditoría"
+msgstr "Auditoria"
 
 msgid "Last login"
-msgstr "Último login"
+msgstr "Últim inici de sessió"
 
 msgid "VERSION: %s"
-msgstr "Versión: %s"
+msgstr "Versió: %s"
 
 msgid "Windows Computers"
-msgstr "Ordenadores Windows"
+msgstr "Ordinadors Windows"
 
 msgid "Linux Computers"
-msgstr "Ordenadores Linux"
+msgstr "Ordinadors Linux"
 
 msgid "Month"
 msgstr "Mes"
@@ -4061,146 +4061,143 @@ msgid "of"
 msgstr "de"
 
 msgid "devices modified"
-msgstr "dispositivos modificados"
+msgstr "dispositius modificats"
 
 msgid "Opens a SSH connection"
-msgstr "Abre una conexión SSH"
+msgstr "Obre una connexió SSH"
 
 msgid "Port"
-msgstr "Puerto"
+msgstr "Port"
 
 msgid "Identification number"
-msgstr "Número de identificación"
+msgstr "Número d'identificació"
 
 msgid "Alias"
-msgstr "Alias"
+msgstr "Àlies"
 
 msgid "uri"
 msgstr "uri"
 
 msgid "install"
-msgstr "instalar"
+msgstr "instal·lar"
 
 msgid "Device (Files)"
-msgstr "Ficheros de dispositivo"
+msgstr "Dispositiu (Fitxers)"
 
 msgid "pre-install"
-msgstr "preinstalación"
+msgstr "preinstal·lar"
 
 msgid "post-install"
-msgstr "postinstalación"
+msgstr "postinstal·lar"
 
 msgid "pre-remove"
-msgstr "predesinstalación"
+msgstr "eliminar prèviament"
 
 msgid "post-remove"
-msgstr "postdesinstalación"
+msgstr "eliminar posteriorment"
 
 msgid "repository definition"
-msgstr "definición de repositorio"
+msgstr "definició del dipòsit"
 
 msgid "Define the content of source list file of repositories for the client."
 msgstr ""
-"Define el contenido del fichero con la lista de orígenes de repositorios "
-"para el cliente."
+"Defineix el contingut del fitxer de la llista de fonts dels repositoris del "
+"client."
 
 msgid "modified"
-msgstr "modificado"
+msgstr "modificat"
 
 msgid "All O.K."
 msgstr "Tot correcte."
 
 msgid "Warning"
-msgstr "Alerta"
+msgstr "Avís"
 
 msgid "Information of Package"
-msgstr "Información del paquete"
+msgstr "Informació del paquet"
 
 msgid "Parameters for Query: %s"
-msgstr "Parámetros de la consulta: %s"
+msgstr "Paràmetres per a la consulta: %s"
 
 msgid "Analyzing the repositories to create files for version: %s"
-msgstr ""
-"Analizando los repositorios para crear los ficheros para la versión: %s"
+msgstr "Analitzant els depòsits per crear fitxers per a la versió: %s"
 
 msgid "Expand menu"
-msgstr "Mostrar menú"
+msgstr "Ampliar el menú"
 
 msgid "Collapse menu"
-msgstr "Ocultar menú"
+msgstr "Reduir el menú"
 
 msgid "Data Model Documentation"
-msgstr "Documentación del modelo de datos"
+msgstr "Documentació del model de dades"
 
 msgid "Files"
-msgstr "Ficheros"
+msgstr "Fitxers"
 
 msgid "Packaging"
-msgstr "Empaquetado"
+msgstr "Empaquetant"
 
 msgid "Upload changes of software"
-msgstr "Subir cambios de software"
+msgstr "Carregar els canvis de programari"
 
 msgid "Creating Repositories File"
-msgstr "Crear ficheros de los repositorios"
+msgstr "Creant fitxers de dipòsits"
 
 msgid "Getting data"
-msgstr "Obteniendo datos"
+msgstr "Obtenint dades"
 
 msgid "Checking packages to remove"
-msgstr "Comprobando aplicaciones a desinstalar"
+msgstr "Comprovant paquets per eliminar"
 
 msgid "Removing packages"
-msgstr "Desinstalando aplicaciones"
+msgstr "Eliminant paquets"
 
 msgid "Checking packages to install"
-msgstr "Comprobando aplicaciones a instalar"
+msgstr "Comprovant paquets per instal·lar"
 
 msgid "Installing packages"
-msgstr "Instalando aplicaciones"
+msgstr "Instal·lant paquets"
 
 msgid "Upload inventory software"
-msgstr "Subiendo inventario de aplicaciones"
+msgstr "Carregar l'inventari de programari"
 
 msgid "Upload inventory hardware"
-msgstr "Subiendo inventario hardware"
+msgstr "Carregar l'inventari de maquinari"
 
 msgid "System is updated"
-msgstr "El sistema está actualizado"
+msgstr "El sistema està actualitzat"
 
 msgid "differences of packages respect the software base of the version"
-msgstr ""
-"diferencia de aplicaciones respecto a las aplicaciones base de la versión"
+msgstr "diferències de paquets respecte a la base de programari de la versió"
 
 msgid "before insert"
-msgstr "antes de insertar"
+msgstr "abans d'inserir"
 
 msgid ""
 "Code django. This code will execute before insert the attribute in the "
 "server. You can modify the value of attribute here, using the variable "
 "'data'."
 msgstr ""
-"Código en django. Este código será ejecutado antes de insertar el atributo "
-"en el servidor. Puede modificar el valor del atributo aquí usando la "
-"variable 'data'."
+"Codi en django. Aquest codi serà executat abans d'inserir l'atribut en el "
+"servidor. Pot modificar el valor de l'atribut aquí usant la variable 'data'."
 
 msgid "after insert"
-msgstr "después de insertar"
+msgstr "després d'inserir"
 
 msgid ""
 "Code django. This code will execute after insert the attribute in the server."
 msgstr ""
-"Código en django. Este código será ejecutado después de insertar el atributo "
-"en el servidor."
+"Codi en django. Aquest codi serà executat després d'inserir l'atribut en el "
+"servidor."
 
 msgid "No version to find info"
-msgstr "No hay versión de la que buscar información"
+msgstr "No hi ha versió de la qual cercar informació"
 
 msgid "No version to find info."
-msgstr "No hay versión de la que buscar información."
+msgstr "No hi ha versió de la qual cercar informació."
 
 msgid "Users Profile"
-msgstr "Perfil de usuarios"
+msgstr "Perfil dels usuaris"
 
 msgid "Mining"
-msgstr "Gestión"
+msgstr "Explotant"
