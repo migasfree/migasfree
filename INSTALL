@@ -1,33 +1,5 @@
 Thanks for downloading migasfree server.
 
-Create migasfree-server package:
-
-1.- Execute bin/create-package script
-
-    $ cd bin
-    $ ./create-package
-
-
-2.- Install package and its dependencies:
-
-    # dpkg -i migasfree-server_x.x-x_all.deb
-    # apt-get -f install
-
-
-3.- Check migasfree/settings.py (/usr/shared/pyshared/migasfree/settings.py):
-
-    * Database parameters
-    * Secret key
-    * Organization name
-    * Time zone
-    * ...
-
-    Override or include settings at /etc/migasfree-server/settings.py
-
-
-4.- Execute this script to create initial data (default superuser is admin:admin):
-
-    # migasfree-server-from-scratch
-
+Follow instructions from https://github.com/migasfree/migasfree-docker
 
 And enjoy migasfree experience!!!
