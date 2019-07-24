@@ -440,7 +440,7 @@ class MessageAdmin(MigasAdmin):
     list_select_related = ('computer',)
     list_filter = ('updated_at', 'computer__project', 'computer__project__platform')
     ordering = ('-updated_at',)
-    search_fields = ('computer', 'text', 'updated_at')
+    search_fields = add_computer_search_fields(['updated_at', 'text'])
     readonly_fields = ('computer_link', 'text', 'updated_at')
     exclude = ('computer',)
 
