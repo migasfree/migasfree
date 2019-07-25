@@ -15,12 +15,21 @@
 {% block content %}
     {% include 'includes/search_form.html' with url_name='admin:server_computer_changelist' %}
 
-    <div class="row text-center">
-        {% include 'includes/multipie_chart.html' with item=computers_by_machine id='computer-machine' %}
+    {% include 'includes/multipie_chart.html' with item=computers_by_machine id='computer-machine' %}
 
-        {% include 'includes/multipie_chart.html' with item=computers_by_status id='computer-status' %}
+    {% include 'includes/multipie_chart.html' with item=computers_by_status id='computer-status' %}
 
-        {% include 'includes/multipie_chart.html' with item=productive_computers_by_platform id='platform-project' %}
+    {% include 'includes/multipie_chart.html' with item=productive_computers_by_platform id='platform-project' %}
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {% trans 'New Computers / Month' %}
+            </div>
+            <div class="panel-body">
+                <div id="container"></div>
+            </div>
+        </div>
     </div>
 {% endblock content %}
 
@@ -31,6 +40,7 @@
     Highcharts.setOptions({
         lang: {
             noData: '{{ chart_options.no_data }}',
+            resetZoom: '{{ chart_options.reset_zoom }}',
         }
     });
 
@@ -80,5 +90,6 @@
     computerStatusOptions = jQuery.extend(true, {}, optionsMulti, computerStatusOptions);
     var computerStatusChart = new Highcharts.Chart(computerStatusOptions);
     </script>
-{% endblock extrabody %}
 
+    {% include 'includes/spline_js.html' with x_labels=new_computers_by_month.x_labels data=new_computers_by_month.data id='container' %}
+{% endblock extrabody %}
