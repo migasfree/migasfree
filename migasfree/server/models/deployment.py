@@ -414,7 +414,7 @@ gpgkey=file://{{keys_path}}/{{server}}/repositories.pub
         elif self.source == self.SOURCE_EXTERNAL:
             if self.project.pms.name.startswith('apt'):
                 return 'deb {} {{protocol}}://{{server}}/src/{}/EXTERNAL/{} {} {}\n'.format(
-                    self.options,
+                    self.options if self.options else '',
                     self.project.name,
                     self.name,
                     self.suite,
