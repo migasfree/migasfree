@@ -27,16 +27,15 @@ Requirements
 ============
 
 * Server:
-    + Web server with WSGI
-    + Python 2.7
-    + Django 1.11
-    + PostgreSQL 9.3
+    + Docker
+    + Haveged
 
 * Clients:
     + a Linux distribution (Debian, Fedora, openSUSE, Ubuntu, ...)
     + Python >= 2.6
         - pycurl >= 7.19
         - python-notify (optional)
+        - pycups (optional)
     + lshw >= B.02.15
     + dmidecode
 
@@ -56,13 +55,16 @@ Behaviour
 
 How can you change the software configuration of machines with migasfree?
 
-When migasfree client is running, queries the migasfree Server and it responds with a code survey to execute in the client, created *ad hoc* for this client after consulting the database.
+When migasfree client is running, queries migasfree Server and it responds with a list of repositories and 
+mandatory packages to install/uninstall, created *ad hoc* for this client after consulting the database.
 
-This code survey is executed in the client and basically configures the repositories of packages (rpm or deb). Previously, these repositories have been created in the server.
+A deployment in migasfree server defines the packages that should be installed, updated or removed in the clients
+ in function of attributes of client computer: **HOSTNAME**, **USER**, **LDAP CONTEXT**, **VIDEO CARD**, ... (the 
+administrator defines the formulas that she/he wants to use in his organization).
 
-A repository in migasfree server defines the packages that should be installed, updated or removed in the clients in function of attributes of client computer: **HOSTNAME**, **USER**, **LDAP CONTEXT**, **VIDEO CARD**, ... (the administrator defines the properties that he wants to use in his organization).
-
-All changes of configuration in the clients are made through packages. Therefore it is necessary that you know how create packages in order to change the configuration of the machines that you want administrate. You can consider hiring a professional, this is the hard work, you were warned!
+All changes of configuration in the clients are made through packages. Therefore it is necessary that you know how 
+create packages in order to change the configuration of the machines that you want administrate. You can consider 
+hiring a professional, this is the hard work, you were warned!
 
 
 Use
@@ -70,13 +72,16 @@ Use
 
 For example: You want change the Firefox homepage in all PCs in a range of IPs.
 
-1. You must create a package (for example ``myorg-firefox-1-0.rpm`` or ``myorg-firefox-1-0.deb``). You must investigate which files need to be modified and allow the package to perform the task of changing the configuration. This is hard work!
+1. You must create a package (for example ``myorg-firefox-1-0.rpm`` or ``myorg-firefox-1-0.deb``). 
+   You must investigate which files need to be modified and allow the package to perform the task of changing the
+   configuration. This is hard work!
 
 2. You must upload your package to the server. This is simple!
 
-3. You must create a repository in migasfree server. Add your package ``myorg-firefox-1-0`` and define the range of IPs. This is easy!
+3. You must create a deployment in migasfree server. Add your package ``myorg-firefox-1-0`` and define the range 
+   of IPs. This is easy!
 
-4. *Voilà!* When migasfree client is executed and his IP is in range, the package is installed.
+4. *Voilà!* When migasfree client is executed and its IP is in range, the package is installed.
 
 
 Documentation
