@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.utils.translation import ugettext as _
 
 from migasfree.server.models import Computer, Platform
+from .events import month_interval, event_by_month
 
 
 def productive_computers_by_platform(user):
@@ -249,6 +250,17 @@ def computers_by_status(user):
     }
 
 
+def new_computers_by_month(user):
+    begin_date, end_date = month_interval()
+
+    return event_by_month(
+        Computer.stacked_by_month(user, begin_date),
+        begin_date,
+        end_date,
+        'computer'
+    )
+
+
 @login_required
 def computers_summary(request):
     user = request.user.userprofile
@@ -264,6 +276,7 @@ def computers_summary(request):
             'productive_computers_by_platform': productive_computers_by_platform(user),
             'computers_by_machine': computers_by_machine(user),
             'computers_by_status': computers_by_status(user),
+            'new_computers_by_month': new_computers_by_month(user),
             'opts': Computer._meta,
         }
     )
