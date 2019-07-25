@@ -3,6 +3,8 @@
 from datetime import datetime, timedelta
 
 from django.db import models
+from django.db.models.aggregates import Count
+from django.db.models.functions import ExtractMonth, ExtractYear
 from django.db.models.signals import pre_save, post_save, pre_delete
 from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
@@ -321,6 +323,17 @@ class Computer(models.Model, MigasLink):
     unsubscribed = UnsubscribedManager()
     active = ActiveManager()
     inactive = InactiveManager()
+
+    @classmethod
+    def stacked_by_month(cls, user, start_date, field='project_id'):
+        return list(cls.objects.scope(user).filter(
+            created_at__gte=start_date
+        ).annotate(
+            year=ExtractYear('created_at'),
+            month=ExtractMonth('created_at')
+        ).order_by('year', 'month', field).values('year', 'month', field).annotate(
+            count=Count('id')
+        ))
 
     def get_all_attributes(self):
         return list(self.tags.values_list('id', flat=True)) \
