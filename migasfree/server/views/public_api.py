@@ -118,7 +118,7 @@ def add_notification_get_source_file(error, deployment, resource, remote):
             resource,
             remote
         )
-)
+    )
 
 
 def read_remote_chunks(local_file, remote, chunk_size=8192):
