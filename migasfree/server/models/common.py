@@ -46,7 +46,7 @@ class MigasLink(object):
             # COMPUTER === CID ATTRIBUTE
             if self._meta.model_name == 'computer' or (
                         (
-                         self._meta.model_name in ['attribute','clientattribute']
+                         self._meta.model_name in ['attribute', 'clientattribute']
                         ) and self.property_att.prefix == 'CID'
             ):
                 model = "computer"
