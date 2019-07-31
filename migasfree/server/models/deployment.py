@@ -437,7 +437,7 @@ baseurl={{protocol}}://{{server}}/src/{project}/EXTERNAL/{name}/{suite}/{compone
                     template = ''
                     for component in self.components.split(' '):
                         template += components_template.format(
-                            repo="{}-{}".format(self.name, component.replace("/","-")),
+                            repo="{}-{}".format(self.name, component.replace("/", "-")),
                             project=self.project.name,
                             name=self.name,
                             suite=self.suite,
