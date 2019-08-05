@@ -167,12 +167,6 @@ setup(
             'MANIFEST.in',
             'README.md',
         ]),
-        ('/usr/share/migasfree-server/setup', [
-            'setup/common.sh',
-            'setup/db_server.sh',
-            'setup/web_server.sh',
-            'setup/from_scratch.sh',
-        ]),
     ],
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
