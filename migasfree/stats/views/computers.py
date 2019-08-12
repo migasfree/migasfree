@@ -3,6 +3,7 @@
 import json
 
 from collections import defaultdict
+from datetime import date
 
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
@@ -12,6 +13,7 @@ from django.utils.translation import ugettext as _
 
 from migasfree.server.models import Computer, Platform
 from .events import month_interval, event_by_month
+from .syncs import month_year_iter
 
 
 def productive_computers_by_platform(user):
@@ -261,6 +263,28 @@ def new_computers_by_month(user):
     )
 
 
+def computers_average_age(user):
+    data = []
+    labels = []
+    begin_date, end_date = month_interval()
+
+    for monthly in month_year_iter(
+        begin_date.month, begin_date.year,
+        end_date.month, end_date.year
+    ):
+        labels.append('%d-%02d' % (monthly[0], monthly[1]))
+        data.append(
+            float('{:.2f}'.format(
+                Computer.average_age(user, date(monthly[0], monthly[1], 1)))
+            )
+        )
+
+    return {
+        'x_labels': labels,
+        'data': {_('Years'): data}
+    }
+
+
 @login_required
 def computers_summary(request):
     user = request.user.userprofile
@@ -277,6 +301,7 @@ def computers_summary(request):
             'computers_by_machine': computers_by_machine(user),
             'computers_by_status': computers_by_status(user),
             'new_computers_by_month': new_computers_by_month(user),
+            'computers_average_age': computers_average_age(user),
             'opts': Computer._meta,
         }
     )
