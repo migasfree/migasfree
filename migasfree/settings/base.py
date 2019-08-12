@@ -42,7 +42,7 @@ FILE_UPLOAD_TEMP_DIR = MIGASFREE_TMP_DIR
 LOGIN_REDIRECT_URL = '/'
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
+    os.path.join(BASE_DIR, 'i18n'),
 )
 
 ADMIN_SITE_ROOT_URL = '/admin/'

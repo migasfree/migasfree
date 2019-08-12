@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011-2018 Jose Antonio Chavarría <jachavar@gmail.com>
+# Copyright (c) 2011-2019 Jose Antonio Chavarría <jachavar@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -139,7 +139,7 @@ setup(
     },
     package_data={
         'migasfree': [
-            'locale/*/LC_MESSAGES/*.mo',
+            'i18n/*/LC_MESSAGES/*.mo',
             'server/fixtures/*',
             'server/static/ajax-select/*.css',
             'server/static/ajax-select/*.js',
