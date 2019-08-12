@@ -337,7 +337,7 @@ class Computer(models.Model, MigasLink):
 
     @classmethod
     def average_age(cls, user, date):
-        result = cls.objects.scope(user).extra(
+        result = cls.productive.scope(user).extra(
             select={'average': "avg(to_date('{}', 'YYYY-MM-DD') - created_at)".format(date)}
         ).values('average')
         result = result[0].get('average')
