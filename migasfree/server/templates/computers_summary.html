@@ -31,6 +31,17 @@
             </div>
         </div>
     </div>
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading text-left lead">
+                {% trans 'Average Age of Computers' %}
+            </div>
+            <div class="panel-body">
+                <div id="average-age"></div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
 
 {% block extrabody %}
@@ -92,4 +103,6 @@
     </script>
 
     {% include 'includes/spline_js.html' with x_labels=new_computers_by_month.x_labels data=new_computers_by_month.data id='container' %}
+
+{% include 'includes/spline_js.html' with x_labels=computers_average_age.x_labels data=computers_average_age.data id='average-age' %}
 {% endblock extrabody %}
