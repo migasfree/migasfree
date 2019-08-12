@@ -335,6 +335,15 @@ class Computer(models.Model, MigasLink):
             count=Count('id')
         ))
 
+    @classmethod
+    def average_age(cls, user, date):
+        result = cls.objects.scope(user).extra(
+            select={'average': "avg(to_date('{}', 'YYYY-MM-DD') - created_at)".format(date)}
+        ).values('average')
+        result = result[0].get('average')
+
+        return result.days / 365.25
+
     def get_all_attributes(self):
         return list(self.tags.values_list('id', flat=True)) \
             + list(self.sync_attributes.values_list('id', flat=True))
