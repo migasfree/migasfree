@@ -3,17 +3,16 @@
 import json
 
 from collections import defaultdict
-from datetime import date
 
 from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.http import urlencode
 from django.utils.translation import ugettext as _
 
 from migasfree.server.models import Computer, Platform
 from .events import month_interval, event_by_month
-from .syncs import month_year_iter
 
 
 def productive_computers_by_platform(user):
@@ -263,25 +262,30 @@ def new_computers_by_month(user):
     )
 
 
-def computers_average_age(user):
-    data = []
-    labels = []
-    begin_date, end_date = month_interval()
+def computers_entry_year(user):
+    url = '{}?machine__exact=P&_REPLACE_'.format(
+        reverse('admin:server_computer_changelist')
+    )
+    results = Computer.entry_year(user)
+    data = [x['count'] for x in results]
+    labels = [x['year'] for x in results]
 
-    for monthly in month_year_iter(
-        begin_date.month, begin_date.year,
-        end_date.month, end_date.year
-    ):
-        labels.append('%d-%02d' % (monthly[0], monthly[1]))
-        data.append(
-            float('{:.2f}'.format(
-                Computer.average_age(user, date(monthly[0], monthly[1], 1)))
+    for i in range(len(labels)):
+        querystring = {
+            'created_at__gte': '{}-01-01'.format(labels[i]),
+            'created_at__lt': '{}-01-01'.format(labels[i] + 1)
+        }
+        data[i] = {
+            'y': data[i],
+            'url': url.replace(
+                '_REPLACE_',
+                urlencode(querystring)
             )
-        )
+        }
 
     return {
         'x_labels': labels,
-        'data': {_('Years'): data}
+        'data': {_('Computers'): data}
     }
 
 
@@ -301,7 +305,7 @@ def computers_summary(request):
             'computers_by_machine': computers_by_machine(user),
             'computers_by_status': computers_by_status(user),
             'new_computers_by_month': new_computers_by_month(user),
-            'computers_average_age': computers_average_age(user),
+            'computers_entry_year': computers_entry_year(user),
             'opts': Computer._meta,
         }
     )
