@@ -237,11 +237,6 @@ td ul {
 
 td .btn-group {
     display: flex;
-    class: btn-group-xs;
-}
-
-h1 .btn-group {
-   class: btn-group-lg;
 }
 
 li .btn-group {
