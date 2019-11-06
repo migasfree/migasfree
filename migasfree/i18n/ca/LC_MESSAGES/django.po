@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-05-16 13:34+0200\n"
-"PO-Revision-Date: 2019-06-09 01:48+0200\n"
+"POT-Creation-Date: 2019-11-06 08:57+0100\n"
+"PO-Revision-Date: 2019-11-06 09:02+0100\n"
+"Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 2.2.1\n"
-"Last-Translator: \n"
-"Language: ca\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: migasfree/catalog/admin.py:32 migasfree/catalog/models.py:153
-#: migasfree/server/models/computer.py:179
+#: migasfree/server/models/computer.py:181
 #: migasfree/server/models/deployment.py:68
 #: migasfree/server/models/device_driver.py:29
 #: migasfree/server/models/error.py:62 migasfree/server/models/fault.py:77
@@ -37,8 +37,8 @@ msgstr "projecte"
 #: migasfree/catalog/admin.py:117 migasfree/catalog/admin.py:191
 #: migasfree/catalog/forms.py:29 migasfree/catalog/forms.py:44
 #: migasfree/catalog/models.py:203 migasfree/catalog/models.py:307
-#: migasfree/server/admin/client.py:415 migasfree/server/admin/core.py:787
-#: migasfree/server/admin/core.py:832 migasfree/server/forms.py:87
+#: migasfree/server/admin/client.py:415 migasfree/server/admin/core.py:790
+#: migasfree/server/admin/core.py:835 migasfree/server/forms.py:87
 #: migasfree/server/forms.py:404 migasfree/server/forms.py:451
 #: migasfree/server/forms.py:518 migasfree/server/forms.py:545
 #: migasfree/server/models/attribute_set.py:48
@@ -57,8 +57,8 @@ msgstr "atributs inclosos"
 #: migasfree/catalog/admin.py:121 migasfree/catalog/admin.py:195
 #: migasfree/catalog/forms.py:33 migasfree/catalog/forms.py:48
 #: migasfree/catalog/models.py:210 migasfree/catalog/models.py:314
-#: migasfree/server/admin/client.py:419 migasfree/server/admin/core.py:790
-#: migasfree/server/admin/core.py:835 migasfree/server/forms.py:91
+#: migasfree/server/admin/client.py:419 migasfree/server/admin/core.py:793
+#: migasfree/server/admin/core.py:838 migasfree/server/forms.py:91
 #: migasfree/server/forms.py:408 migasfree/server/forms.py:455
 #: migasfree/server/forms.py:522 migasfree/server/forms.py:549
 #: migasfree/server/models/attribute_set.py:55
@@ -75,11 +75,11 @@ msgid "excluded attributes"
 msgstr "atributs exclosos"
 
 #: migasfree/catalog/admin.py:170 migasfree/server/admin/client.py:94
-#: migasfree/server/admin/client.py:397 migasfree/server/admin/core.py:276
-#: migasfree/server/admin/core.py:304 migasfree/server/admin/core.py:363
-#: migasfree/server/admin/core.py:535 migasfree/server/admin/core.py:586
-#: migasfree/server/admin/core.py:727 migasfree/server/admin/core.py:766
-#: migasfree/server/admin/core.py:812
+#: migasfree/server/admin/client.py:397 migasfree/server/admin/core.py:279
+#: migasfree/server/admin/core.py:307 migasfree/server/admin/core.py:366
+#: migasfree/server/admin/core.py:538 migasfree/server/admin/core.py:589
+#: migasfree/server/admin/core.py:730 migasfree/server/admin/core.py:769
+#: migasfree/server/admin/core.py:815
 #: migasfree/server/templates/admin/server/deployment/change_form.html:35
 #: migasfree/server/templates/admin/server/domain/change_form.html:20
 #: migasfree/server/templates/admin/server/externalsource/change_form.html:35
@@ -172,7 +172,7 @@ msgstr "Accés universal"
 
 #: migasfree/catalog/models.py:85 migasfree/catalog/models.py:177
 #: migasfree/server/models/attribute_set.py:29
-#: migasfree/server/models/computer.py:161
+#: migasfree/server/models/computer.py:163
 #: migasfree/server/models/deployment.py:62
 #: migasfree/server/models/device.py:31
 #: migasfree/server/models/device_connection.py:13
@@ -286,7 +286,7 @@ msgstr ""
 msgid "exclusive"
 msgstr "exclusiu"
 
-#: migasfree/catalog/models.py:194 migasfree/server/models/computer.py:312
+#: migasfree/catalog/models.py:194 migasfree/server/models/computer.py:314
 #: migasfree/server/models/deployment.py:80
 #: migasfree/server/models/domain.py:30
 #: migasfree/server/templates/admin/server/computer/change_form.html:184
@@ -355,7 +355,7 @@ msgstr "Sincronització"
 msgid "Software"
 msgstr "Software"
 
-#: migasfree/server/admin/client.py:134 migasfree/server/models/computer.py:704
+#: migasfree/server/admin/client.py:134 migasfree/server/models/computer.py:733
 #: migasfree/server/templates/admin/server/computer/change_form.html:100
 msgid "Hardware"
 msgstr "Maquinari"
@@ -364,12 +364,12 @@ msgstr "Maquinari"
 msgid "Product"
 msgstr "Producte"
 
-#: migasfree/server/admin/client.py:179 migasfree/server/models/computer.py:257
+#: migasfree/server/admin/client.py:179 migasfree/server/models/computer.py:259
 #: migasfree/server/templates/admin/server/computer/change_form.html:270
 msgid "sync attributes"
 msgstr "atributs de la sincronització"
 
-#: migasfree/server/admin/client.py:195 migasfree/server/admin/core.py:254
+#: migasfree/server/admin/client.py:195 migasfree/server/admin/core.py:257
 #, python-format
 msgid "Delete selected %(verbose_name_plural)s"
 msgstr "Eliminar %(verbose_name_plural)s seleccionat/s"
@@ -388,9 +388,9 @@ msgstr "Error truncat"
 msgid "Checked %s"
 msgstr "%s comprovat/s"
 
-#: migasfree/server/admin/client.py:303 migasfree/server/models/computer.py:611
-#: migasfree/server/models/computer.py:618
-#: migasfree/server/models/computer.py:698 migasfree/server/models/error.py:90
+#: migasfree/server/admin/client.py:303 migasfree/server/models/computer.py:640
+#: migasfree/server/models/computer.py:647
+#: migasfree/server/models/computer.py:727 migasfree/server/models/error.py:90
 #: migasfree/server/templates/admin/server/computer/change_form.html:227
 #: migasfree/server/templates/computer_events.html:29
 #: migasfree/server/templates/includes/breadcrumb.html:49
@@ -404,10 +404,10 @@ msgstr "Errors"
 msgid "Checking is O.K."
 msgstr "La comprovació és correcta."
 
-#: migasfree/server/admin/client.py:363 migasfree/server/models/computer.py:545
-#: migasfree/server/models/computer.py:643
-#: migasfree/server/models/computer.py:650
-#: migasfree/server/models/computer.py:699 migasfree/server/models/fault.py:104
+#: migasfree/server/admin/client.py:363 migasfree/server/models/computer.py:574
+#: migasfree/server/models/computer.py:672
+#: migasfree/server/models/computer.py:679
+#: migasfree/server/models/computer.py:728 migasfree/server/models/fault.py:104
 #: migasfree/server/templates/admin/server/computer/change_form.html:233
 #: migasfree/server/templates/computer_events.html:31
 #: migasfree/server/templates/includes/breadcrumb.html:47
@@ -416,14 +416,14 @@ msgstr "La comprovació és correcta."
 msgid "Faults"
 msgstr "Falles"
 
-#: migasfree/server/admin/client.py:400 migasfree/server/admin/core.py:285
-#: migasfree/server/admin/core.py:314
+#: migasfree/server/admin/client.py:400 migasfree/server/admin/core.py:288
+#: migasfree/server/admin/core.py:317
 msgid "Code"
 msgstr "Codi"
 
-#: migasfree/server/admin/client.py:403 migasfree/server/admin/core.py:385
-#: migasfree/server/admin/core.py:554 migasfree/server/admin/core.py:612
-#: migasfree/server/admin/core.py:772 migasfree/server/admin/core.py:817
+#: migasfree/server/admin/client.py:403 migasfree/server/admin/core.py:388
+#: migasfree/server/admin/core.py:557 migasfree/server/admin/core.py:615
+#: migasfree/server/admin/core.py:775 migasfree/server/admin/core.py:820
 #: migasfree/server/models/attribute.py:192
 #: migasfree/server/models/attribute.py:237
 #: migasfree/server/templates/admin/server/domain/change_form.html:56
@@ -442,8 +442,8 @@ msgstr "Atributs"
 msgid "Users"
 msgstr "Usuaris/es"
 
-#: migasfree/server/admin/client.py:449 migasfree/server/models/computer.py:542
-#: migasfree/server/models/computer.py:718
+#: migasfree/server/admin/client.py:449 migasfree/server/models/computer.py:571
+#: migasfree/server/models/computer.py:747
 #: migasfree/server/templates/base.html:200
 #: migasfree/server/templates/includes/computer_messages_result.html:12
 msgid "Computer"
@@ -464,7 +464,7 @@ msgstr "Projecte"
 msgid "Notifications"
 msgstr "Notificacions"
 
-#: migasfree/server/admin/client.py:603 migasfree/server/models/hw_node.py:320
+#: migasfree/server/admin/client.py:603 migasfree/server/models/hw_node.py:326
 msgid "Hardware Node"
 msgstr "Node de maquinari"
 
@@ -474,7 +474,7 @@ msgid "Formula"
 msgstr "Fórmula"
 
 #: migasfree/server/admin/core.py:141 migasfree/server/filters.py:63
-#: migasfree/server/models/attribute.py:208
+#: migasfree/server/forms.py:309 migasfree/server/models/attribute.py:208
 #: migasfree/server/models/property.py:133
 msgid "Tag Category"
 msgstr "Categoria d'etiqueta"
@@ -483,40 +483,40 @@ msgstr "Categoria d'etiqueta"
 msgid "Inflicted Computers"
 msgstr "Ordinadors heretats"
 
-#: migasfree/server/admin/core.py:346
+#: migasfree/server/admin/core.py:349
 msgid "Run Query"
 msgstr "Executar consulta"
 
-#: migasfree/server/admin/core.py:366 migasfree/server/admin/core.py:594
+#: migasfree/server/admin/core.py:369 migasfree/server/admin/core.py:597
 #: migasfree/server/forms.py:49 migasfree/server/forms.py:62
 #: migasfree/server/forms.py:75
 msgid "Source"
 msgstr "Font"
 
-#: migasfree/server/admin/core.py:369 migasfree/server/admin/core.py:538
-#: migasfree/server/admin/core.py:597
+#: migasfree/server/admin/core.py:372 migasfree/server/admin/core.py:541
+#: migasfree/server/admin/core.py:600
 msgid "Packages"
 msgstr "Paquets"
 
-#: migasfree/server/admin/core.py:377 migasfree/server/admin/core.py:546
-#: migasfree/server/admin/core.py:604
+#: migasfree/server/admin/core.py:380 migasfree/server/admin/core.py:549
+#: migasfree/server/admin/core.py:607
 #: migasfree/server/templates/admin/server/computer/change_form.html:314
 #: migasfree/server/templates/admin/server/computer/change_form.html:319
 #: migasfree/server/templates/computer_simulate_sync.html:155
 msgid "Default"
 msgstr "Per defecte"
 
-#: migasfree/server/admin/core.py:388 migasfree/server/admin/core.py:557
-#: migasfree/server/admin/core.py:619 migasfree/server/models/schedule.py:32
+#: migasfree/server/admin/core.py:391 migasfree/server/admin/core.py:560
+#: migasfree/server/admin/core.py:622 migasfree/server/models/schedule.py:32
 #: migasfree/server/templates/admin/server/deployment/change_form.html:344
 #: migasfree/server/templates/admin/server/externalsource/change_form.html:323
 #: migasfree/server/templates/admin/server/internalsource/change_form.html:251
 msgid "Schedule"
 msgstr "Calendari"
 
-#: migasfree/server/admin/core.py:413 migasfree/server/admin/core.py:654
+#: migasfree/server/admin/core.py:416 migasfree/server/admin/core.py:657
 #: migasfree/server/admin/device.py:176 migasfree/server/forms.py:301
-#: migasfree/server/models/computer.py:719
+#: migasfree/server/models/computer.py:748
 #: migasfree/server/templates/computer_change_status.html:9
 #: migasfree/server/templates/computer_confirm_delete.html:9
 #: migasfree/server/templates/computer_confirm_delete_selected.html:9
@@ -526,15 +526,16 @@ msgstr "Calendari"
 #: migasfree/server/templates/computer_simulate_sync.html:7
 #: migasfree/server/templates/includes/breadcrumb.html:23
 #: migasfree/server/templates/includes/mining_menu.html:5
-#: migasfree/stats/views/computers.py:260 migasfree/stats/views/syncs.py:256
+#: migasfree/stats/views/computers.py:288
+#: migasfree/stats/views/computers.py:300 migasfree/stats/views/syncs.py:256
 msgid "Computers"
 msgstr "Ordinadors"
 
-#: migasfree/server/admin/core.py:423
+#: migasfree/server/admin/core.py:426
 msgid "Regenerate metadata"
 msgstr "Regenerar metadades"
 
-#: migasfree/server/admin/core.py:460
+#: migasfree/server/admin/core.py:463
 #, python-format
 msgid ""
 "Deployment [%s] modified by user [%s] (<a href=\"%s\">review changes</a>)"
@@ -542,15 +543,15 @@ msgstr ""
 "El desplegament [%s] ha estat modificat per l'usuari [%s] (<a href=\"%s"
 "\">revisar canvis</a>)"
 
-#: migasfree/server/admin/core.py:737
+#: migasfree/server/admin/core.py:740
 msgid "Authorizations"
 msgstr "Autoritzacions"
 
-#: migasfree/server/admin/core.py:747
+#: migasfree/server/admin/core.py:750
 msgid "Preferences"
 msgstr "Preferències"
 
-#: migasfree/server/admin/core.py:823
+#: migasfree/server/admin/core.py:826
 #: migasfree/server/templates/admin/server/domain/change_form.html:89
 msgid "Available tags"
 msgstr "Etiquetes disponibles"
@@ -683,7 +684,7 @@ msgstr "Pila de la traça d'execució"
 msgid "Generic error in server"
 msgstr "Error genèric en el servidor"
 
-#: migasfree/server/filters.py:32 migasfree/server/models/computer.py:543
+#: migasfree/server/filters.py:32 migasfree/server/models/computer.py:572
 msgid "Status"
 msgstr "Estat"
 
@@ -691,12 +692,12 @@ msgstr "Estat"
 msgid "All"
 msgstr "Tots"
 
-#: migasfree/server/filters.py:42 migasfree/stats/views/computers.py:115
+#: migasfree/server/filters.py:42 migasfree/stats/views/computers.py:117
 #: migasfree/stats/views/events.py:306
 msgid "Subscribed"
 msgstr "Alta"
 
-#: migasfree/server/filters.py:43 migasfree/stats/views/computers.py:223
+#: migasfree/server/filters.py:43 migasfree/stats/views/computers.py:225
 msgid "Productive"
 msgstr "Productiu"
 
@@ -712,7 +713,7 @@ msgstr "reservat"
 msgid "unknown"
 msgstr "desconegut"
 
-#: migasfree/server/filters.py:47 migasfree/stats/views/computers.py:233
+#: migasfree/server/filters.py:47 migasfree/stats/views/computers.py:235
 msgid "Unproductive"
 msgstr "Improductiu"
 
@@ -792,7 +793,7 @@ msgstr "atributs"
 
 #: migasfree/server/forms.py:337 migasfree/server/forms.py:554
 #: migasfree/server/models/attribute.py:214
-#: migasfree/server/models/computer.py:544
+#: migasfree/server/models/computer.py:573
 #: migasfree/server/templates/admin_doc/template_tag_index.html:9
 #: migasfree/server/templates/computer_simulate_sync.html:60
 #: migasfree/server/templates/computer_simulate_sync.html:62
@@ -916,178 +917,178 @@ msgid "computer"
 msgstr "ordinador"
 
 #: migasfree/server/models/common.py:384
-#: migasfree/server/models/computer.py:262
+#: migasfree/server/models/computer.py:264
 #: migasfree/server/models/hw_node.py:129
 msgid "product"
 msgstr "producte"
 
-#: migasfree/server/models/computer.py:126
+#: migasfree/server/models/computer.py:128
 msgid "Intended"
 msgstr "Assignat"
 
-#: migasfree/server/models/computer.py:127
+#: migasfree/server/models/computer.py:129
 msgid "Reserved"
 msgstr "Reservat"
 
-#: migasfree/server/models/computer.py:128
+#: migasfree/server/models/computer.py:130
 msgid "Unknown"
 msgstr "Desconegut"
 
-#: migasfree/server/models/computer.py:129
+#: migasfree/server/models/computer.py:131
 msgid "In repair"
 msgstr "En reparació"
 
-#: migasfree/server/models/computer.py:130
+#: migasfree/server/models/computer.py:132
 #: migasfree/stats/views/schedules.py:180
 msgid "Available"
 msgstr "Disponible"
 
-#: migasfree/server/models/computer.py:131
-#: migasfree/stats/views/computers.py:155
+#: migasfree/server/models/computer.py:133
+#: migasfree/stats/views/computers.py:157
 msgid "Unsubscribed"
 msgstr "Baixa"
 
-#: migasfree/server/models/computer.py:139
+#: migasfree/server/models/computer.py:141
 #: migasfree/server/templates/admin/server/computer/change_form.html:103
 #: migasfree/server/templates/computer_hardware_resume.html:21
-#: migasfree/stats/views/computers.py:103
-#: migasfree/stats/views/computers.py:143
+#: migasfree/stats/views/computers.py:105
+#: migasfree/stats/views/computers.py:145
 msgid "Physical"
 msgstr "Físic"
 
-#: migasfree/server/models/computer.py:140
+#: migasfree/server/models/computer.py:142
 #: migasfree/server/templates/admin/server/computer/change_form.html:103
 #: migasfree/server/templates/computer_hardware_resume.html:21
-#: migasfree/stats/views/computers.py:90 migasfree/stats/views/computers.py:130
+#: migasfree/stats/views/computers.py:92 migasfree/stats/views/computers.py:132
 msgid "Virtual"
 msgstr "Virtual"
 
-#: migasfree/server/models/computer.py:144
+#: migasfree/server/models/computer.py:146
 #: migasfree/server/templates/computer_simulate_sync.html:31
 msgid "uuid"
 msgstr "uuid"
 
-#: migasfree/server/models/computer.py:153
+#: migasfree/server/models/computer.py:155
 #: migasfree/server/models/status_log.py:31
 #: migasfree/server/templates/admin/server/computer/change_form.html:180
 #: migasfree/server/templates/admin/server/computer/change_form.html:193
 msgid "status"
 msgstr "estat"
 
-#: migasfree/server/models/computer.py:169
+#: migasfree/server/models/computer.py:171
 #: migasfree/server/templates/admin/server/computer/change_form.html:50
 msgid "full qualified domain name"
 msgstr "nom de domini complet"
 
-#: migasfree/server/models/computer.py:184
+#: migasfree/server/models/computer.py:186
 msgid "entry date"
 msgstr "data d'entrada"
 
-#: migasfree/server/models/computer.py:185
+#: migasfree/server/models/computer.py:187
 #: migasfree/server/templates/admin/server/computer/change_form.html:60
 #: migasfree/server/templates/computer_events.html:22
 msgid "Date of entry into the migasfree system"
 msgstr "Data d'entrada de l'ordinador en migasfree"
 
-#: migasfree/server/models/computer.py:190
+#: migasfree/server/models/computer.py:192
 #: migasfree/server/templates/admin/server/computer/change_form.html:67
 msgid "ip address"
 msgstr "adreça ip"
 
-#: migasfree/server/models/computer.py:197
+#: migasfree/server/models/computer.py:199
 #: migasfree/server/templates/admin/server/computer/change_form.html:72
 msgid "forwarded ip address"
 msgstr "adreça ip reenviada"
 
-#: migasfree/server/models/computer.py:204
+#: migasfree/server/models/computer.py:206
 #: migasfree/server/templates/admin/server/computer/change_form.html:289
 msgid "software inventory"
 msgstr "inventari de programari"
 
-#: migasfree/server/models/computer.py:210
+#: migasfree/server/models/computer.py:212
 #: migasfree/server/templates/admin/server/computer/change_form.html:293
 msgid "software history"
 msgstr "historial de programari"
 
-#: migasfree/server/models/computer.py:221
+#: migasfree/server/models/computer.py:223
 msgid "default logical device"
 msgstr "dispositiu lògic per defecte"
 
-#: migasfree/server/models/computer.py:225
+#: migasfree/server/models/computer.py:227
 #: migasfree/server/templates/admin/server/computer/change_form.html:146
 #: migasfree/server/templates/admin/server/computer/change_form.html:157
 #: migasfree/server/templates/computer_hardware_resume.html:63
 msgid "last hardware capture"
 msgstr "data de l'última actualització del maquinari"
 
-#: migasfree/server/models/computer.py:233 migasfree/server/models/domain.py:52
+#: migasfree/server/models/computer.py:235 migasfree/server/models/domain.py:52
 #: migasfree/server/templates/admin/server/computer/change_form.html:188
 #: migasfree/server/templates/admin/server/computer/change_form.html:203
 #: migasfree/server/templates/admin/server/domain/change_form.html:94
 msgid "tags"
 msgstr "etiquetes"
 
-#: migasfree/server/models/computer.py:238
+#: migasfree/server/models/computer.py:240
 #: migasfree/server/templates/admin/server/computer/change_form.html:258
 msgid "sync start date"
 msgstr "data d'inici de la sincronització"
 
-#: migasfree/server/models/computer.py:243
+#: migasfree/server/models/computer.py:245
 #: migasfree/server/templates/admin/server/computer/change_form.html:259
 msgid "sync end date"
 msgstr "data de fi de la sincronització"
 
-#: migasfree/server/models/computer.py:250
+#: migasfree/server/models/computer.py:252
 msgid "sync user"
 msgstr "usuari/a de la sincronització"
 
-#: migasfree/server/models/computer.py:258
+#: migasfree/server/models/computer.py:260
 msgid "attributes sent"
 msgstr "atributs enviats"
 
-#: migasfree/server/models/computer.py:270
+#: migasfree/server/models/computer.py:272
 msgid "machine"
 msgstr "màquina"
 
-#: migasfree/server/models/computer.py:278
+#: migasfree/server/models/computer.py:280
 #: migasfree/server/templates/admin/server/computer/change_form.html:116
 #: migasfree/server/templates/computer_hardware_resume.html:34
 msgid "CPU"
 msgstr "Processador"
 
-#: migasfree/server/models/computer.py:286
+#: migasfree/server/models/computer.py:288
 #: migasfree/server/templates/admin/server/computer/change_form.html:122
 #: migasfree/server/templates/computer_hardware_resume.html:40
 msgid "RAM"
 msgstr "RAM"
 
-#: migasfree/server/models/computer.py:292
+#: migasfree/server/models/computer.py:294
 msgid "storage"
 msgstr "emmagatzematge"
 
-#: migasfree/server/models/computer.py:298
+#: migasfree/server/models/computer.py:300
 msgid "disks"
 msgstr "discos"
 
-#: migasfree/server/models/computer.py:304
+#: migasfree/server/models/computer.py:306
 #: migasfree/server/templates/admin/server/computer/change_form.html:137
 #: migasfree/server/templates/computer_hardware_resume.html:55
 msgid "MAC address"
 msgstr "Adreça MAC"
 
-#: migasfree/server/models/computer.py:423
+#: migasfree/server/models/computer.py:452
 msgid "Logical Devices"
 msgstr "Dispositius lògics"
 
-#: migasfree/server/models/computer.py:430
+#: migasfree/server/models/computer.py:459
 msgid "Inflicted Logical Devices"
 msgstr "Dispositius lògics heretats"
 
-#: migasfree/server/models/computer.py:435
+#: migasfree/server/models/computer.py:464
 msgid "Assigned Logical Devices to CID"
 msgstr "Dispositius lògics assignats al CID"
 
-#: migasfree/server/models/computer.py:548
+#: migasfree/server/models/computer.py:577
 #: migasfree/server/models/deployment.py:477
 #: migasfree/server/templates/computer_simulate_sync.html:105
 #: migasfree/server/templates/computer_simulate_sync.html:107
@@ -1097,80 +1098,80 @@ msgstr "Dispositius lògics assignats al CID"
 msgid "Deployments"
 msgstr "Desplegaments"
 
-#: migasfree/server/models/computer.py:551
+#: migasfree/server/models/computer.py:580
 msgid "Deployments (excluded)"
 msgstr "Desplegaments (exclosos)"
 
-#: migasfree/server/models/computer.py:554
+#: migasfree/server/models/computer.py:583
 #: migasfree/server/templates/computer_simulate_sync.html:71
 #: migasfree/server/templates/computer_simulate_sync.html:73
 msgid "Sets"
 msgstr "Conjunts"
 
-#: migasfree/server/models/computer.py:557
+#: migasfree/server/models/computer.py:586
 msgid "Sets (excluded)"
 msgstr "Conjunts (exclosos)"
 
-#: migasfree/server/models/computer.py:560
+#: migasfree/server/models/computer.py:589
 msgid "Delays"
 msgstr "Retards"
 
-#: migasfree/server/models/computer.py:563
+#: migasfree/server/models/computer.py:592
 #: migasfree/server/models/device.py:145
 msgid "Logical devices"
 msgstr "Dispositius lògics"
 
-#: migasfree/server/models/computer.py:566
+#: migasfree/server/models/computer.py:595
 msgid "Default logical device"
 msgstr "Dispositiu lògic per defecte"
 
-#: migasfree/server/models/computer.py:567
+#: migasfree/server/models/computer.py:596
 msgid "Policies (included)"
 msgstr "Polítiques (incloses)"
 
-#: migasfree/server/models/computer.py:570
+#: migasfree/server/models/computer.py:599
 msgid "Policies (excluded)"
 msgstr "Polítiques (excloses)"
 
-#: migasfree/server/models/computer.py:573
+#: migasfree/server/models/computer.py:602
 msgid "Policy Groups (included)"
 msgstr "Grups de polítiques (inclosos)"
 
-#: migasfree/server/models/computer.py:576
+#: migasfree/server/models/computer.py:605
 msgid "Policy Groups (excluded)"
 msgstr "Grups de polítiques (exclosos)"
 
-#: migasfree/server/models/computer.py:594
-#: migasfree/server/models/computer.py:603 migasfree/stats/tasks.py:65
+#: migasfree/server/models/computer.py:623
+#: migasfree/server/models/computer.py:632 migasfree/stats/tasks.py:65
 #: migasfree/stats/views/events.py:403
 msgid "Unchecked Errors"
 msgstr "Errors sense comprovar"
 
-#: migasfree/server/models/computer.py:626
-#: migasfree/server/models/computer.py:635 migasfree/stats/tasks.py:52
+#: migasfree/server/models/computer.py:655
+#: migasfree/server/models/computer.py:664 migasfree/stats/tasks.py:52
 #: migasfree/stats/views/events.py:549
 msgid "Unchecked Faults"
 msgstr "Falles sense comprovar"
 
-#: migasfree/server/models/computer.py:671
+#: migasfree/server/models/computer.py:700
 msgid "Delayed Computer"
 msgstr "Ordinador retardat"
 
-#: migasfree/server/models/computer.py:672
+#: migasfree/server/models/computer.py:701
 #, python-brace-format
 msgid "{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}"
 msgstr "{days} dies, {hours:02d}:{minutes:02d}:{seconds:02d}"
 
-#: migasfree/server/models/computer.py:680
+#: migasfree/server/models/computer.py:709
 msgid "Updating..."
 msgstr "Actualitzant..."
 
-#: migasfree/server/models/computer.py:686
+#: migasfree/server/models/computer.py:715
 #: migasfree/server/templates/admin/server/computer/change_form.html:260
 msgid "Last Update Time"
 msgstr "Temps de l'última actualització"
 
-#: migasfree/server/models/computer.py:696
+#: migasfree/server/models/computer.py:725
 #: migasfree/server/templates/admin/server/computer/change_form.html:85
 #: migasfree/server/templates/computer_events.html:13
 #: migasfree/server/templates/computer_events.html:18
@@ -1178,7 +1179,7 @@ msgstr "Temps de l'última actualització"
 msgid "Events"
 msgstr "Esdeveniments"
 
-#: migasfree/server/models/computer.py:697
+#: migasfree/server/models/computer.py:726
 #: migasfree/server/models/synchronization.py:58
 #: migasfree/server/templates/computer_events.html:27
 #: migasfree/server/templates/includes/breadcrumb.html:41
@@ -1187,12 +1188,12 @@ msgstr "Esdeveniments"
 msgid "Synchronizations"
 msgstr "Sincronitzacions"
 
-#: migasfree/server/models/computer.py:700
+#: migasfree/server/models/computer.py:729
 #: migasfree/server/models/status_log.py:42
 msgid "Status Log"
 msgstr "Registres d'estat"
 
-#: migasfree/server/models/computer.py:701
+#: migasfree/server/models/computer.py:730
 #: migasfree/server/models/migration.py:51
 #: migasfree/server/templates/computer_events.html:35
 #: migasfree/server/templates/includes/breadcrumb.html:43
@@ -1201,26 +1202,26 @@ msgstr "Registres d'estat"
 msgid "Migrations"
 msgstr "Migracions"
 
-#: migasfree/server/models/computer.py:703
+#: migasfree/server/models/computer.py:732
 msgid "SIM"
 msgstr "SIM"
 
-#: migasfree/server/models/computer.py:703
+#: migasfree/server/models/computer.py:732
 #: migasfree/server/templates/admin/server/computer/change_form.html:88
 #: migasfree/server/templates/computer_simulate_sync.html:9
 #: migasfree/server/templates/computer_simulate_sync.html:14
 msgid "Simulate sync"
 msgstr "Simular sincronització"
 
-#: migasfree/server/models/computer.py:704
+#: migasfree/server/models/computer.py:733
 msgid "HW"
 msgstr "HW"
 
-#: migasfree/server/models/computer.py:705
+#: migasfree/server/models/computer.py:734
 msgid "ID"
 msgstr "ID"
 
-#: migasfree/server/models/computer.py:705
+#: migasfree/server/models/computer.py:734
 #: migasfree/server/templates/admin/server/computer/change_form.html:91
 msgid "Label"
 msgstr "Identificació"
@@ -1660,11 +1661,11 @@ msgid "dev"
 msgstr "dispositiu"
 
 #: migasfree/server/models/hw_node.py:289
-#: migasfree/server/templates/computer_events.html:121
+#: migasfree/server/templates/computer_events.html:120
 msgid "error"
 msgstr "error"
 
-#: migasfree/server/models/hw_node.py:321
+#: migasfree/server/models/hw_node.py:327
 msgid "Hardware Nodes"
 msgstr "Nodes de maquinai"
 
@@ -2499,61 +2500,61 @@ msgstr "Següent"
 msgid "Today"
 msgstr "Avui"
 
-#: migasfree/server/templates/computer_events.html:118
+#: migasfree/server/templates/computer_events.html:117
 msgid "syncs"
 msgstr "sincronitzacions"
 
-#: migasfree/server/templates/computer_events.html:118
+#: migasfree/server/templates/computer_events.html:117
 msgid "sync"
 msgstr "sincronització"
 
-#: migasfree/server/templates/computer_events.html:121
+#: migasfree/server/templates/computer_events.html:120
 msgid "errors"
 msgstr "errors"
 
-#: migasfree/server/templates/computer_events.html:124
+#: migasfree/server/templates/computer_events.html:123
 msgid "faults"
 msgstr "falles"
 
-#: migasfree/server/templates/computer_events.html:124
+#: migasfree/server/templates/computer_events.html:123
 msgid "fault"
 msgstr "falla"
 
-#: migasfree/server/templates/computer_events.html:127
+#: migasfree/server/templates/computer_events.html:126
 msgid "status logs"
 msgstr "registres d'estats"
 
-#: migasfree/server/templates/computer_events.html:127
+#: migasfree/server/templates/computer_events.html:126
 msgid "status log"
 msgstr "registres d'estat"
 
-#: migasfree/server/templates/computer_events.html:130
+#: migasfree/server/templates/computer_events.html:129
 msgid "migrations"
 msgstr "migracions"
 
-#: migasfree/server/templates/computer_events.html:130
+#: migasfree/server/templates/computer_events.html:129
 msgid "migration"
 msgstr "migració"
 
-#: migasfree/server/templates/computer_events.html:176
+#: migasfree/server/templates/computer_events.html:175
 msgid "event"
 msgstr "esdeveniment"
 
-#: migasfree/server/templates/computer_events.html:176
+#: migasfree/server/templates/computer_events.html:175
 msgid "events"
 msgstr "esdeveniments"
 
-#: migasfree/server/templates/computer_events.html:182
+#: migasfree/server/templates/computer_events.html:181
 #, python-brace-format
 msgid "less than {min} {name}"
 msgstr "menys de {min} {name}"
 
-#: migasfree/server/templates/computer_events.html:183
+#: migasfree/server/templates/computer_events.html:182
 #, python-brace-format
 msgid "between {down} and {up} {name}"
 msgstr "entre {down} i {up} {name}"
 
-#: migasfree/server/templates/computer_events.html:184
+#: migasfree/server/templates/computer_events.html:183
 #, python-brace-format
 msgid "more than {max} {name}"
 msgstr "més de {max} {name}"
@@ -2646,6 +2647,14 @@ msgstr "Paquets a desinstal·lar"
 #: migasfree/server/templates/computer_simulate_sync.html:165
 msgid "Hardware Capture"
 msgstr "Obtenció del maquinari"
+
+#: migasfree/server/templates/computers_summary.html:27
+msgid "New Computers / Month"
+msgstr "Nous ordinadors / Mes"
+
+#: migasfree/server/templates/computers_summary.html:38
+msgid "Physical computers entering the system per year"
+msgstr "Els ordinadors físics que entren al sistema per any"
 
 #: migasfree/server/templates/device_models_summary.html:21
 msgid "Add Model"
@@ -3069,7 +3078,7 @@ msgstr "Plataformes %s eliminades!"
 msgid "Project %s deleted!"
 msgstr "Projecte %s eliminat!"
 
-#: migasfree/server/views/public_api.py:113
+#: migasfree/server/views/public_api.py:112
 #, python-format
 msgid ""
 "Deployment (external source) [%s]: [%s] resource: [%s] remote file: [%s]."
@@ -3152,7 +3161,7 @@ msgstr "Etiquetes / Categoria d'etiqueta"
 
 #: migasfree/stats/views/attributes.py:86
 #: migasfree/stats/views/attributes.py:104
-#: migasfree/stats/views/computers.py:262 migasfree/stats/views/dashboard.py:81
+#: migasfree/stats/views/computers.py:302 migasfree/stats/views/dashboard.py:81
 #: migasfree/stats/views/deployments.py:283
 #: migasfree/stats/views/devices.py:150 migasfree/stats/views/devices.py:169
 #: migasfree/stats/views/events.py:169 migasfree/stats/views/events.py:251
@@ -3163,15 +3172,15 @@ msgstr "Etiquetes / Categoria d'etiqueta"
 msgid "There are no data to show"
 msgstr "No hi ha dades per a mostrar"
 
-#: migasfree/stats/views/computers.py:63
+#: migasfree/stats/views/computers.py:65
 msgid "Productive Computers"
 msgstr "Ordinadors en producció"
 
-#: migasfree/stats/views/computers.py:167
+#: migasfree/stats/views/computers.py:169
 msgid "Computers / Machine"
 msgstr "Ordinadors / Màquina"
 
-#: migasfree/stats/views/computers.py:245
+#: migasfree/stats/views/computers.py:247
 msgid "Subscribed Computers / Status"
 msgstr "Ordinadors d'alta / Estat"
 
@@ -3357,847 +3366,853 @@ msgstr "Magatzem / Projecte"
 msgid "Totals"
 msgstr "Totals"
 
-msgid "History of events in the last %d hours"
-msgstr "Històric de successos en les últimes %d hores"
+#~ msgid "History of events in the last %d hours"
+#~ msgstr "Històric de successos en les últimes %d hores"
 
-msgid "Packages by default"
-msgstr "Paquets per defecte"
+#~ msgid "Packages by default"
+#~ msgstr "Paquets per defecte"
 
-msgid "Add Deployment"
-msgstr "Desplegament"
+#~ msgid "Add Deployment"
+#~ msgstr "Desplegament"
 
-msgid "Go to %s"
-msgstr "Anar a %s"
+#~ msgid "Go to %s"
+#~ msgstr "Anar a %s"
 
-msgid "Summary"
-msgstr "Resum"
+#~ msgid "Summary"
+#~ msgstr "Resum"
 
-msgid "There are no synchronizations"
-msgstr "No hi ha sincronitzacions"
+#~ msgid "There are no synchronizations"
+#~ msgstr "No hi ha sincronitzacions"
 
-msgid "There are no data"
-msgstr "No hi ha dades"
+#~ msgid "There are no data"
+#~ msgstr "No hi ha dades"
 
-msgid "%s (total %s)"
-msgstr "%s (total %s)"
+#~ msgid "%s (total %s)"
+#~ msgstr "%s (total %s)"
 
-msgid "Filter project for deployments, stores and packages"
-msgstr "Filtrar el projecte per desplegaments, magatzems i paquets"
+#~ msgid "Filter project for deployments, stores and packages"
+#~ msgstr "Filtrar el projecte per desplegaments, magatzems i paquets"
 
-msgid "Before selecting a project, you must create at least one."
-msgstr "Abans de seleccionar una versió, has de crear almenys una."
+#~ msgid "Before selecting a project, you must create at least one."
+#~ msgstr "Abans de seleccionar una versió, has de crear almenys una."
 
-msgid "Preferences changed"
-msgstr "Les preferències han canviat"
+#~ msgid "Preferences changed"
+#~ msgstr "Les preferències han canviat"
 
-msgid "Update"
-msgstr "Actualitzar"
+#~ msgid "Update"
+#~ msgstr "Actualitzar"
 
-msgid "Login"
-msgstr "Login"
+#~ msgid "Login"
+#~ msgstr "Login"
 
-msgid "Uuid"
-msgstr "UUID"
+#~ msgid "Uuid"
+#~ msgstr "UUID"
 
-msgid "Machine"
-msgstr "Máquina"
+#~ msgid "Machine"
+#~ msgstr "Máquina"
 
-msgid "gap between software base packages and computer ones"
-msgstr "diferencia entre el conjunto de paquetes base y el del ordenador"
+#~ msgid "gap between software base packages and computer ones"
+#~ msgstr "diferencia entre el conjunto de paquetes base y el del ordenador"
 
-msgid "P.M.S."
-msgstr "P.M.S."
+#~ msgid "P.M.S."
+#~ msgstr "P.M.S."
 
-msgid ""
-"Django code. <br><b>VARIABLES TO SETTINGS:</b><br><b>result</b>: a number. "
-"If result<>0 the checking is show in the section Status. Default is "
-"0<br><b>alert</b>: type of alert. Default is 'info'. Enumeration value: "
-"{'info' | 'warning' | 'danger'}<br><b>url</b>: link. Default is "
-"'/'<br><b>msg</b>: The text to show. Default is the field name."
-"<br><b>target</b>: Enumeration value: {'computer' | 'server'}"
-msgstr ""
-"Código django. <br><b>Parámetros:</b><br><b>result</b>: un número. Si "
-"result<>0 la comprobación será mostrada en la sección de Estado. Por defecto "
-"es 0<br><b>alert</b>: tipo de alerta. Por defecto es 'info'. Valores "
-"posibles: {'info' | 'warning' | 'danger'}<br><b>url</b>: enlace. Por defecto "
-"es '/'<br><b>msg</b>: El texto a mostrar. Por defecto es el nombre del campo."
-"<br><b>target</b>: Valores posibles: {'computer' | 'server'}"
+#~ msgid ""
+#~ "Django code. <br><b>VARIABLES TO SETTINGS:</b><br><b>result</b>: a "
+#~ "number. If result<>0 the checking is show in the section Status. Default "
+#~ "is 0<br><b>alert</b>: type of alert. Default is 'info'. Enumeration "
+#~ "value: {'info' | 'warning' | 'danger'}<br><b>url</b>: link. Default is "
+#~ "'/'<br><b>msg</b>: The text to show. Default is the field name."
+#~ "<br><b>target</b>: Enumeration value: {'computer' | 'server'}"
+#~ msgstr ""
+#~ "Código django. <br><b>Parámetros:</b><br><b>result</b>: un número. Si "
+#~ "result<>0 la comprobación será mostrada en la sección de Estado. Por "
+#~ "defecto es 0<br><b>alert</b>: tipo de alerta. Por defecto es 'info'. "
+#~ "Valores posibles: {'info' | 'warning' | 'danger'}<br><b>url</b>: enlace. "
+#~ "Por defecto es '/'<br><b>msg</b>: El texto a mostrar. Por defecto es el "
+#~ "nombre del campo.<br><b>target</b>: Valores posibles: {'computer' | "
+#~ "'server'}"
 
-msgid "Checking"
-msgstr "Comprobación"
+#~ msgid "Checking"
+#~ msgstr "Comprobación"
 
-msgid "Checkings"
-msgstr "Comprobaciones"
+#~ msgid "Checkings"
+#~ msgstr "Comprobaciones"
 
-msgid "Error in field 'code' of Checking: %s"
-msgstr "Error en el campo 'code' de la comprobación: %s"
+#~ msgid "Error in field 'code' of Checking: %s"
+#~ msgstr "Error en el campo 'code' de la comprobación: %s"
 
-msgid "Apps Catalog"
-msgstr "Catálogo de aplicaciones"
+#~ msgid "Apps Catalog"
+#~ msgstr "Catálogo de aplicaciones"
 
-msgid "File: %(uploaded_file_name)s, exceeded maximum upload size."
-msgstr "Fichero: %(uploaded_file_name)s, excede el tamaño máximo permitido."
+#~ msgid "File: %(uploaded_file_name)s, exceeded maximum upload size."
+#~ msgstr "Fichero: %(uploaded_file_name)s, excede el tamaño máximo permitido."
 
-msgid "%s is not an acceptable file type"
-msgstr "%s no es un tipo de archivo aceptable"
+#~ msgid "%s is not an acceptable file type"
+#~ msgstr "%s no es un tipo de archivo aceptable"
 
-msgid "This value could not be validated for file type"
-msgstr "Este valor no puede ser validado para el tipo de archivo"
+#~ msgid "This value could not be validated for file type"
+#~ msgstr "Este valor no puede ser validado para el tipo de archivo"
 
-msgid "When more than one file is uploaded, name is required"
-msgstr "Cuando más de un fichero es subido, el nombre es necesario"
+#~ msgid "When more than one file is uploaded, name is required"
+#~ msgstr "Cuando más de un fichero es subido, el nombre es necesario"
 
-msgid "PMS must be one of %s"
-msgstr "PMS debe ser uno de estos: %s"
+#~ msgid "PMS must be one of %s"
+#~ msgstr "PMS debe ser uno de estos: %s"
 
-msgid "Version not found"
-msgstr "Versión no encontrada"
+#~ msgid "Version not found"
+#~ msgstr "Versión no encontrada"
 
-msgid "Status available can not have tags"
-msgstr "Estado disponible no puede tener etiquetas"
+#~ msgid "Status available can not have tags"
+#~ msgstr "Estado disponible no puede tener etiquetas"
 
-msgid "Status available can not have devices logical"
-msgstr "Estado disponible no puede tener dispositivos logicos"
+#~ msgid "Status available can not have devices logical"
+#~ msgstr "Estado disponible no puede tener dispositivos logicos"
 
-msgid "Synchronized Computers / Hour"
-msgstr "Ordenadores sincronizados / hora"
+#~ msgid "Synchronized Computers / Hour"
+#~ msgstr "Ordenadores sincronizados / hora"
 
-msgid "Blog"
-msgstr "Blog"
+#~ msgid "Blog"
+#~ msgstr "Blog"
 
-msgid "Rights"
-msgstr "Derechos de uso"
+#~ msgid "Rights"
+#~ msgstr "Derechos de uso"
 
-msgid "There are no computers"
-msgstr "No hay ordenadores"
+#~ msgid "There are no computers"
+#~ msgstr "No hay ordenadores"
 
-msgid "Actual line computer"
-msgstr "Línea actual  del ordenador"
+#~ msgid "Actual line computer"
+#~ msgstr "Línea actual  del ordenador"
 
-msgid "Computer with the actual line software"
-msgstr "Ordenador con la actual linea de software"
+#~ msgid "Computer with the actual line software"
+#~ msgstr "Ordenador con la actual linea de software"
 
-msgid "Actual line packages"
-msgstr "Lína actual de paquetes"
+#~ msgid "Actual line packages"
+#~ msgstr "Lína actual de paquetes"
 
-msgid "List ordered of packages of actual line computer"
-msgstr "List ordenada de paquetes de la linea actual del ordenador"
+#~ msgid "List ordered of packages of actual line computer"
+#~ msgstr "List ordenada de paquetes de la linea actual del ordenador"
 
-msgid "autoregister"
-msgstr "autoregistrado"
+#~ msgid "autoregister"
+#~ msgstr "autoregistrado"
 
-msgid "Version"
-msgstr "Versión"
+#~ msgid "Version"
+#~ msgstr "Versión"
 
-msgid "Versions"
-msgstr "Versiones"
+#~ msgid "Versions"
+#~ msgstr "Versiones"
 
-msgid "Delete Version"
-msgstr "Eliminar versión"
+#~ msgid "Delete Version"
+#~ msgstr "Eliminar versión"
 
-msgid "Atributtes"
-msgstr "Atributos"
+#~ msgid "Atributtes"
+#~ msgstr "Atributos"
 
-msgid "Tag Type"
-msgstr "Tipo de etiqueta"
+#~ msgid "Tag Type"
+#~ msgstr "Tipo de etiqueta"
 
-msgid "Attribute/Tag"
-msgstr "Atributo/Etiqueta"
+#~ msgid "Attribute/Tag"
+#~ msgstr "Atributo/Etiqueta"
 
-msgid "active"
-msgstr "habilitado"
+#~ msgid "active"
+#~ msgstr "habilitado"
 
-msgid "date input"
-msgstr "fecha de alta"
+#~ msgid "date input"
+#~ msgstr "fecha de alta"
 
-msgid "ip"
-msgstr "ip"
+#~ msgid "ip"
+#~ msgstr "ip"
 
-msgid "Repositories"
-msgstr "Repositorios"
+#~ msgid "Repositories"
+#~ msgstr "Repositorios"
 
-msgid "Logins"
-msgstr "Logins"
+#~ msgid "Logins"
+#~ msgstr "Logins"
 
-msgid "Message Server"
-msgstr "Mensaje del servidor"
+#~ msgid "Message Server"
+#~ msgstr "Mensaje del servidor"
 
-msgid "Messages Server"
-msgstr "Mensajes del servidor"
+#~ msgid "Messages Server"
+#~ msgstr "Mensajes del servidor"
 
-msgid "notification"
-msgstr "notificación"
+#~ msgid "notification"
+#~ msgstr "notificación"
 
-msgid "NORMAL"
-msgstr "NORMAL"
+#~ msgid "NORMAL"
+#~ msgstr "NORMAL"
 
-msgid "LIST"
-msgstr "LISTA"
+#~ msgid "LIST"
+#~ msgstr "LISTA"
 
-msgid "ADDS LEFT"
-msgstr "AGREGA POR LA IZQUIERDA"
+#~ msgid "ADDS LEFT"
+#~ msgstr "AGREGA POR LA IZQUIERDA"
 
-msgid "ADDS RIGHT"
-msgstr "AGREGA POR LA DERECHA"
+#~ msgid "ADDS RIGHT"
+#~ msgstr "AGREGA POR LA DERECHA"
 
-msgid "auto"
-msgstr "automático"
+#~ msgid "auto"
+#~ msgstr "automático"
 
-msgid "tag"
-msgstr "etiqueta"
+#~ msgid "tag"
+#~ msgstr "etiqueta"
 
-msgid "Property/TagType"
-msgstr "Propiedad/Tipo de etiqueta"
+#~ msgid "Property/TagType"
+#~ msgstr "Propiedad/Tipo de etiqueta"
 
-msgid "Properties/TagTypes"
-msgstr "Propiedades/Tipos de etiquetas"
+#~ msgid "Properties/TagTypes"
+#~ msgstr "Propiedades/Tipos de etiquetas"
 
-msgid "Tag Types"
-msgstr "Tipos de etiquetas"
+#~ msgid "Tag Types"
+#~ msgstr "Tipos de etiquetas"
 
-msgid "Assigned Packages"
-msgstr "Paquetes asignados"
+#~ msgid "Assigned Packages"
+#~ msgstr "Paquetes asignados"
 
-msgid "Date initial for distribute."
-msgstr "Fecha inicial para la distribución."
+#~ msgid "Date initial for distribute."
+#~ msgstr "Fecha inicial para la distribución."
 
-msgid "Repository"
-msgstr "Dipòsit"
+#~ msgid "Repository"
+#~ msgstr "Dipòsit"
 
-msgid "Updates"
-msgstr "Actualizaciones"
+#~ msgid "Updates"
+#~ msgstr "Actualizaciones"
 
-msgid "updates"
-msgstr "actualizaciones"
+#~ msgid "updates"
+#~ msgstr "actualizaciones"
 
-msgid "update"
-msgstr "actualización"
+#~ msgid "update"
+#~ msgstr "actualización"
 
-msgid "Updated Computers / Day"
-msgstr "Ordenadores actualizados/día"
+#~ msgid "Updated Computers / Day"
+#~ msgstr "Ordenadores actualizados/día"
 
-msgid "Productives Computers / Version"
-msgstr "Ordenadores Productivos / Versión"
+#~ msgid "Productives Computers / Version"
+#~ msgstr "Ordenadores Productivos / Versión"
 
-msgid "Server Messages"
-msgstr "Mensajes del servidor"
+#~ msgid "Server Messages"
+#~ msgstr "Mensajes del servidor"
 
-msgid "Elapsed Time Last Update"
-msgstr "Tiempo transcurrido en la última actualización"
+#~ msgid "Elapsed Time Last Update"
+#~ msgstr "Tiempo transcurrido en la última actualización"
 
-msgid "An administration tool computers."
-msgstr "Una herramienta de administración de ordenadores."
+#~ msgid "An administration tool computers."
+#~ msgstr "Una herramienta de administración de ordenadores."
 
-msgid "How does it administrate?"
-msgstr "¿Cómo hace esta administración?"
+#~ msgid "How does it administrate?"
+#~ msgstr "¿Cómo hace esta administración?"
 
-msgid ""
-"It manages dynamic software repositories. It distributes this software to "
-"clients, depending on characteristics of the computer (attributes) and in "
-"time (calendars)."
-msgstr ""
-"Gestionando repositorios dinámicos de software. Distribuye este software a "
-"los equipos, dependiendo de características del ordenador (atributos) y del "
-"instante temporal (calendarios)."
+#~ msgid ""
+#~ "It manages dynamic software repositories. It distributes this software to "
+#~ "clients, depending on characteristics of the computer (attributes) and in "
+#~ "time (calendars)."
+#~ msgstr ""
+#~ "Gestionando repositorios dinámicos de software. Distribuye este software "
+#~ "a los equipos, dependiendo de características del ordenador (atributos) y "
+#~ "del instante temporal (calendarios)."
 
-msgid ""
-"Clients are those systems with a package management system that ensures "
-"system integrity."
-msgstr ""
-"Los clientes son todos aquellos sistemas que tienen un sistema de gestión de "
-"paquetes que asegura la integridad del sistema."
+#~ msgid ""
+#~ "Clients are those systems with a package management system that ensures "
+#~ "system integrity."
+#~ msgstr ""
+#~ "Los clientes son todos aquellos sistemas que tienen un sistema de gestión "
+#~ "de paquetes que asegura la integridad del sistema."
 
-msgid "Why is it essential?"
-msgstr "¿Por qué es indispensable?"
+#~ msgid "Why is it essential?"
+#~ msgstr "¿Por qué es indispensable?"
 
-msgid ""
-"80%% of the time used in ICT is for maintenance. This consists of software "
-"updates, security patches, audits (software and hardware) and configuration "
-"changes."
-msgstr ""
-"El 80%% del tiempo del personal TIC se emplea en mantenimiento. Este "
-"consiste en actualizaciones, parches de seguridad, auditorías (software y "
-"hardware) y cambios de configuración."
+#~ msgid ""
+#~ "80%% of the time used in ICT is for maintenance. This consists of "
+#~ "software updates, security patches, audits (software and hardware) and "
+#~ "configuration changes."
+#~ msgstr ""
+#~ "El 80%% del tiempo del personal TIC se emplea en mantenimiento. Este "
+#~ "consiste en actualizaciones, parches de seguridad, auditorías (software y "
+#~ "hardware) y cambios de configuración."
 
-msgid "Why not use other options?"
-msgstr "¿Por qué no usar otras soluciones?"
+#~ msgid "Why not use other options?"
+#~ msgstr "¿Por qué no usar otras soluciones?"
 
-msgid ""
-"Because none is based directly on the packaging system. And the package "
-"works because, every day, millions of computers are updated in this way."
-msgstr ""
-"Porque ninguna otra se basa directamente en la paquetería. Y la paquetería "
-"está demostrado que funciona porque, diariamente, millones de ordenadores se "
-"actualizan de esta forma."
+#~ msgid ""
+#~ "Because none is based directly on the packaging system. And the package "
+#~ "works because, every day, millions of computers are updated in this way."
+#~ msgstr ""
+#~ "Porque ninguna otra se basa directamente en la paquetería. Y la "
+#~ "paquetería está demostrado que funciona porque, diariamente, millones de "
+#~ "ordenadores se actualizan de esta forma."
 
-msgid ""
-"Besides, migasfree also provides a controlled and customized distribution "
-"for each client (not all of them have to be the same, but you need to have "
-"every one of them controlled)."
-msgstr ""
-"Además, migasfree proporciona una distribución controlada y personalizada "
-"para cada cliente (no todos tienen por qué tener lo mismo, pero necesito "
-"tenerlos a todos controlados)."
+#~ msgid ""
+#~ "Besides, migasfree also provides a controlled and customized distribution "
+#~ "for each client (not all of them have to be the same, but you need to "
+#~ "have every one of them controlled)."
+#~ msgstr ""
+#~ "Además, migasfree proporciona una distribución controlada y personalizada "
+#~ "para cada cliente (no todos tienen por qué tener lo mismo, pero necesito "
+#~ "tenerlos a todos controlados)."
 
-msgid "News about the project"
-msgstr "Noticias sobre el proyecto"
+#~ msgid "News about the project"
+#~ msgstr "Noticias sobre el proyecto"
 
-msgid "Explore source code project"
-msgstr "Explora el código fuente del proyecto"
+#~ msgid "Explore source code project"
+#~ msgstr "Explora el código fuente del proyecto"
 
-msgid "Simulate"
-msgstr "Simular"
+#~ msgid "Simulate"
+#~ msgstr "Simular"
 
-msgid "alert"
-msgstr "alerta"
+#~ msgid "alert"
+#~ msgstr "alerta"
 
-msgid "login"
-msgstr "iniciar sessió"
+#~ msgid "login"
+#~ msgstr "iniciar sessió"
 
-msgid "Ready computers to reinstall devices"
-msgstr "Ordinadors preparats per a reinstal·lar dispositius"
+#~ msgid "Ready computers to reinstall devices"
+#~ msgstr "Ordinadors preparats per a reinstal·lar dispositius"
 
-msgid "Reinstall devices"
-msgstr "Reinstal·lar dispositius"
+#~ msgid "Reinstall devices"
+#~ msgstr "Reinstal·lar dispositius"
 
-msgid "devices copy"
-msgstr "còpia de dispositius"
+#~ msgid "devices copy"
+#~ msgstr "còpia de dispositius"
 
-msgid "This procedure appends devices from one computer to another."
-msgstr "Aquest procediment afegeix els dispositius d'un ordinador a un altre."
+#~ msgid "This procedure appends devices from one computer to another."
+#~ msgstr ""
+#~ "Aquest procediment afegeix els dispositius d'un ordinador a un altre."
 
-msgid "Append"
-msgstr "Afegir"
+#~ msgid "Append"
+#~ msgstr "Afegir"
 
-msgid "Append done."
-msgstr "Addició realitzada."
+#~ msgid "Append done."
+#~ msgstr "Addició realitzada."
 
-msgid "Choose a version before continue"
-msgstr "Selecciona una versió abans de continuar"
+#~ msgid "Choose a version before continue"
+#~ msgstr "Selecciona una versió abans de continuar"
 
-msgid "There are no defined schedules"
-msgstr "No hi ha calendaris definits"
+#~ msgid "There are no defined schedules"
+#~ msgstr "No hi ha calendaris definits"
 
-msgid "Server error"
-msgstr "Error del servidor"
+#~ msgid "Server error"
+#~ msgstr "Error del servidor"
 
-msgid "Server Error <em>(500)</em>"
-msgstr "Error del servidor <em>(500)</em>"
+#~ msgid "Server Error <em>(500)</em>"
+#~ msgstr "Error del servidor <em>(500)</em>"
 
-msgid "Welcome,"
-msgstr "Benvingut,"
+#~ msgid "Welcome,"
+#~ msgstr "Benvingut,"
 
-msgid "Log out"
-msgstr "Desconnectar"
+#~ msgid "Log out"
+#~ msgstr "Desconnectar"
 
-msgid "Recent Actions"
-msgstr "Accions recents"
+#~ msgid "Recent Actions"
+#~ msgstr "Accions recents"
 
-msgid "Unknown content"
-msgstr "Contingut desconegut"
+#~ msgid "Unknown content"
+#~ msgstr "Contingut desconegut"
 
-msgid "None available"
-msgstr "Cap disponible"
+#~ msgid "None available"
+#~ msgstr "Cap disponible"
 
-msgid "Django site admin"
-msgstr "Lloc d'administració de Django"
+#~ msgid "Django site admin"
+#~ msgstr "Lloc d'administració de Django"
 
-msgid "History"
-msgstr "Historial"
+#~ msgid "History"
+#~ msgstr "Historial"
 
-msgid "Models available in the %(name)s application."
-msgstr "Els models estan disponibles en l'aplicació %(name)s."
+#~ msgid "Models available in the %(name)s application."
+#~ msgstr "Els models estan disponibles en l'aplicació %(name)s."
 
-msgid "You don't have permission to edit anything."
-msgstr "No té permisos per a modificar res."
+#~ msgid "You don't have permission to edit anything."
+#~ msgstr "No té permisos per a modificar res."
 
-msgid "Forgotten your password or username?"
-msgstr "Ha oblidat el seu nom d'usuari o la contrasenya?"
+#~ msgid "Forgotten your password or username?"
+#~ msgstr "Ha oblidat el seu nom d'usuari o la contrasenya?"
 
-msgid "Date/time"
-msgstr "Data/hora"
+#~ msgid "Date/time"
+#~ msgstr "Data/hora"
 
-msgid "Action"
-msgstr "Acció"
+#~ msgid "Action"
+#~ msgstr "Acció"
 
-msgid "Save as new"
-msgstr "Anomenar i desar com a nou"
+#~ msgid "Save as new"
+#~ msgstr "Anomenar i desar com a nou"
 
-msgid "Save and add another"
-msgstr "Desar i afegir un altre"
+#~ msgid "Save and add another"
+#~ msgstr "Desar i afegir un altre"
 
-msgid "Save and continue editing"
-msgstr "Desar i continuar modificant"
+#~ msgid "Save and continue editing"
+#~ msgstr "Desar i continuar modificant"
 
-msgid "Show all"
-msgstr "Mostrar tot"
+#~ msgid "Show all"
+#~ msgstr "Mostrar tot"
 
-msgid "%(counter)s result"
-msgid_plural "%(counter)s results"
-msgstr[0] "%(counter)s resultat"
-msgstr[1] "%(counter)s resultats"
+#~ msgid "%(counter)s result"
+#~ msgid_plural "%(counter)s results"
+#~ msgstr[0] "%(counter)s resultat"
+#~ msgstr[1] "%(counter)s resultats"
 
-msgid ""
-"First, enter a username and password. Then, you'll be able to edit more user "
-"options."
-msgstr ""
-"Primer, introdueixi un nom d'usuari i una contrasenya. Llavors, podrà "
-"modificar més opcions de l'usuari."
+#~ msgid ""
+#~ "First, enter a username and password. Then, you'll be able to edit more "
+#~ "user options."
+#~ msgstr ""
+#~ "Primer, introdueixi un nom d'usuari i una contrasenya. Llavors, podrà "
+#~ "modificar més opcions de l'usuari."
 
-msgid "Enter a username and password."
-msgstr "Introdueixi un nom d'usuari i una contrasenya."
+#~ msgid "Enter a username and password."
+#~ msgstr "Introdueixi un nom d'usuari i una contrasenya."
 
-msgid "Enter a new password for the user <strong>%(username)s</strong>."
-msgstr ""
-"Introdueixi una nova contrasenya per a l'usuari <strong>%(username)s</"
-"strong>."
+#~ msgid "Enter a new password for the user <strong>%(username)s</strong>."
+#~ msgstr ""
+#~ "Introdueixi una nova contrasenya per a l'usuari <strong>%(username)s</"
+#~ "strong>."
 
-msgid "Password"
-msgstr "Contrasenya"
+#~ msgid "Password"
+#~ msgstr "Contrasenya"
 
-msgid "Password (again)"
-msgstr "Contrasenya (de nou)"
+#~ msgid "Password (again)"
+#~ msgstr "Contrasenya (de nou)"
 
-msgid "Enter the same password as above, for verification."
-msgstr "Introdueixi la mateixa contrasenya que a dalt, per a verificar-la."
+#~ msgid "Enter the same password as above, for verification."
+#~ msgstr "Introdueixi la mateixa contrasenya que a dalt, per a verificar-la."
 
-msgid "Approve page deletion"
-msgstr "Aprovar l'eliminació de la pàgina"
+#~ msgid "Approve page deletion"
+#~ msgstr "Aprovar l'eliminació de la pàgina"
 
-msgid "(you can perform actions on this page directly)"
-msgstr "(pot realitzar accions directament en aquesta pàgina)"
+#~ msgid "(you can perform actions on this page directly)"
+#~ msgstr "(pot realitzar accions directament en aquesta pàgina)"
 
-msgid "Approve delete"
-msgstr "Aprova l'eliminació"
+#~ msgid "Approve delete"
+#~ msgstr "Aprova l'eliminació"
 
-msgid "Approve"
-msgstr "Aprovar"
+#~ msgid "Approve"
+#~ msgstr "Aprovar"
 
-msgid "draft"
-msgstr "esborrany"
+#~ msgid "draft"
+#~ msgstr "esborrany"
 
-msgid "Preview"
-msgstr "Previsualització"
+#~ msgid "Preview"
+#~ msgstr "Previsualització"
 
-msgid "All permissions"
-msgstr "Tots els permisos"
+#~ msgid "All permissions"
+#~ msgstr "Tots els permisos"
 
-msgid "List of pages"
-msgstr "Llista de pàgines"
+#~ msgid "List of pages"
+#~ msgstr "Llista de pàgines"
 
-msgid "Recover deleted %(name)s"
-msgstr "Recuperar %(name)s eliminat"
+#~ msgid "Recover deleted %(name)s"
+#~ msgstr "Recuperar %(name)s eliminat"
 
-msgid "Pages on:"
-msgstr "Pàgina sobre:"
+#~ msgid "Pages on:"
+#~ msgstr "Pàgina sobre:"
 
-msgid "Successfully moved"
-msgstr "Mogut correctament"
+#~ msgid "Successfully moved"
+#~ msgstr "Mogut correctament"
 
-msgid "An error occured. Please reload the page"
-msgstr "Ha ocorregut un error. Si us plau, recarregui la pàgina"
+#~ msgid "An error occured. Please reload the page"
+#~ msgstr "Ha ocorregut un error. Si us plau, recarregui la pàgina"
 
-msgid "select this page"
-msgstr "seleccionar aquesta pàgina"
+#~ msgid "select this page"
+#~ msgstr "seleccionar aquesta pàgina"
 
-msgid "edit this page"
-msgstr "editar aquesta pàgina"
+#~ msgid "edit this page"
+#~ msgstr "editar aquesta pàgina"
 
-msgid "edit"
-msgstr "editar"
+#~ msgid "edit"
+#~ msgstr "editar"
 
-msgid "insert above"
-msgstr "inseriu damunt"
+#~ msgid "insert above"
+#~ msgstr "inseriu damunt"
 
-msgid "insert below"
-msgstr "inseriu a sota"
+#~ msgid "insert below"
+#~ msgstr "inseriu a sota"
 
-msgid "insert inside"
-msgstr "inseriu dins"
+#~ msgid "insert inside"
+#~ msgstr "inseriu dins"
 
-msgid "home"
-msgstr "inici"
+#~ msgid "home"
+#~ msgstr "inici"
 
-msgid "Edit this page in %(language)s "
-msgstr "Editar aquesta pàgina en %(language)s "
+#~ msgid "Edit this page in %(language)s "
+#~ msgstr "Editar aquesta pàgina en %(language)s "
 
-msgid "Cut"
-msgstr "Tallar"
+#~ msgid "Cut"
+#~ msgstr "Tallar"
 
-msgid "cut"
-msgstr "tallar"
+#~ msgid "cut"
+#~ msgstr "tallar"
 
-msgid "Copy"
-msgstr "Copiar"
+#~ msgid "Copy"
+#~ msgstr "Copiar"
 
-msgid "copy"
-msgstr "copiar"
+#~ msgid "copy"
+#~ msgstr "copiar"
 
-msgid "Add Child"
-msgstr "Afegir fill"
+#~ msgid "Add Child"
+#~ msgstr "Afegir fill"
 
-msgid "add child"
-msgstr "afegir fill"
+#~ msgid "add child"
+#~ msgstr "afegir fill"
 
-msgid "delete"
-msgstr "eliminar"
+#~ msgid "delete"
+#~ msgstr "eliminar"
 
-msgid "Approve directly"
-msgstr "Aprovar directament"
+#~ msgid "Approve directly"
+#~ msgstr "Aprovar directament"
 
-msgid "view"
-msgstr "veure"
+#~ msgid "view"
+#~ msgstr "veure"
 
-msgid "Unpublish"
-msgstr "Eliminar publicació"
+#~ msgid "Unpublish"
+#~ msgstr "Eliminar publicació"
 
-msgid "Publish"
-msgstr "Publicar"
+#~ msgid "Publish"
+#~ msgstr "Publicar"
 
-msgid "View on page"
-msgstr "Veure a la pàgina"
+#~ msgid "View on page"
+#~ msgstr "Veure a la pàgina"
 
-msgid "Cancel"
-msgstr "Cancel · lar"
+#~ msgid "Cancel"
+#~ msgstr "Cancel · lar"
 
-msgid "Available Plugins"
-msgstr "Connectors disponibles"
+#~ msgid "Available Plugins"
+#~ msgstr "Connectors disponibles"
 
-msgid "Generic"
-msgstr "Genèric"
+#~ msgid "Generic"
+#~ msgstr "Genèric"
 
-msgid "Add Plugin"
-msgstr "Afegir connector"
+#~ msgid "Add Plugin"
+#~ msgstr "Afegir connector"
 
-msgid "From Language"
-msgstr "Des del llenguatge"
+#~ msgid "From Language"
+#~ msgstr "Des del llenguatge"
 
-msgid "Copy Plugins"
-msgstr "Copiar els connectors"
+#~ msgid "Copy Plugins"
+#~ msgstr "Copiar els connectors"
 
-msgid "Go back to admin homepage"
-msgstr "Tornar a la pàgina d'administració"
+#~ msgid "Go back to admin homepage"
+#~ msgstr "Tornar a la pàgina d'administració"
 
-msgid "Go back to root folder"
-msgstr "Tornar al directori arrel"
+#~ msgid "Go back to root folder"
+#~ msgstr "Tornar al directori arrel"
 
-msgid "root"
-msgstr "arrel"
+#~ msgid "root"
+#~ msgstr "arrel"
 
-msgid "duplicates"
-msgstr "duplicats"
+#~ msgid "duplicates"
+#~ msgstr "duplicats"
 
-msgid "Go back to"
-msgstr "Tornar a"
+#~ msgid "Go back to"
+#~ msgstr "Tornar a"
 
-msgid "admin homepage"
-msgstr "pàgina d'administració"
+#~ msgid "admin homepage"
+#~ msgstr "pàgina d'administració"
 
-msgid "folder"
-msgstr "carpeta"
+#~ msgid "folder"
+#~ msgstr "carpeta"
 
-msgid "Folder Icon"
-msgstr "Icona de carpeta"
+#~ msgid "Folder Icon"
+#~ msgstr "Icona de carpeta"
 
-msgid "Adds a new Folder"
-msgstr "Afegeix una carpeta nova"
+#~ msgid "Adds a new Folder"
+#~ msgstr "Afegeix una carpeta nova"
 
-msgid "New Folder"
-msgstr "Carpeta nova"
+#~ msgid "New Folder"
+#~ msgstr "Carpeta nova"
 
-msgid "upload files"
-msgstr "pujar fitxers"
+#~ msgid "upload files"
+#~ msgstr "pujar fitxers"
 
-msgid "Upload"
-msgstr "Pujar"
+#~ msgid "Upload"
+#~ msgstr "Pujar"
 
-msgid "Go back to the parent folder"
-msgstr "Tornar a la carpeta superior"
+#~ msgid "Go back to the parent folder"
+#~ msgstr "Tornar a la carpeta superior"
 
-msgid "1 folder"
-msgid_plural "%(counter)s folders"
-msgstr[0] "%(counter)s carpeta"
-msgstr[1] "%(counter)s carpetes"
+#~ msgid "1 folder"
+#~ msgid_plural "%(counter)s folders"
+#~ msgstr[0] "%(counter)s carpeta"
+#~ msgstr[1] "%(counter)s carpetes"
 
-msgid "1 file"
-msgid_plural "%(counter)s files"
-msgstr[0] "%(counter)s fitxer"
-msgstr[1] "%(counter)s fitxers"
+#~ msgid "1 file"
+#~ msgid_plural "%(counter)s files"
+#~ msgstr[0] "%(counter)s fitxer"
+#~ msgstr[1] "%(counter)s fitxers"
 
-msgid "Change current folder details"
-msgstr "Canviar els detalls de la carpeta actual"
+#~ msgid "Change current folder details"
+#~ msgstr "Canviar els detalls de la carpeta actual"
 
-msgid "Owner"
-msgstr "Propietari"
+#~ msgid "Owner"
+#~ msgstr "Propietari"
 
-msgid "Select this file"
-msgstr "Seleccionar aquest fitxer"
+#~ msgid "Select this file"
+#~ msgstr "Seleccionar aquest fitxer"
 
-msgid "Delete '%(item_label)s'"
-msgstr "Eliminar '%(item_label)s'"
+#~ msgid "Delete '%(item_label)s'"
+#~ msgstr "Eliminar '%(item_label)s'"
 
-msgid "Move to clipboard"
-msgstr "Moure al porta-retalls"
+#~ msgid "Move to clipboard"
+#~ msgstr "Moure al porta-retalls"
 
-msgid "there are no files or subfolders"
-msgstr "no hi ha arxius o carpetes"
+#~ msgid "there are no files or subfolders"
+#~ msgstr "no hi ha arxius o carpetes"
 
-msgid "next"
-msgstr "següent"
+#~ msgid "next"
+#~ msgstr "següent"
 
-msgid "Full size preview"
-msgstr "Previsualització a grandària completa"
+#~ msgid "Full size preview"
+#~ msgstr "Previsualització a grandària completa"
 
-msgid "Enter your search phrase here"
-msgstr "Introduïu aquí la vostra frase de cerca"
+#~ msgid "Enter your search phrase here"
+#~ msgstr "Introduïu aquí la vostra frase de cerca"
 
-msgid "Check it to"
-msgstr "Comprovar per a"
+#~ msgid "Check it to"
+#~ msgstr "Comprovar per a"
 
-msgid "limit the search to current folder"
-msgstr "limitar la cerca a la carpeta actual"
+#~ msgid "limit the search to current folder"
+#~ msgstr "limitar la cerca a la carpeta actual"
 
-msgid "search the current folder"
-msgstr "cercar la carpeta actual"
+#~ msgid "search the current folder"
+#~ msgstr "cercar la carpeta actual"
 
-msgid "found"
-msgstr "trobat"
+#~ msgid "found"
+#~ msgstr "trobat"
 
-msgid "and"
-msgstr "i"
+#~ msgid "and"
+#~ msgstr "i"
 
-msgid "cancel search"
-msgstr "cancel·lar la cerca"
+#~ msgid "cancel search"
+#~ msgstr "cancel·lar la cerca"
 
-msgid "Clipboard"
-msgstr "Porta-retalls"
+#~ msgid "Clipboard"
+#~ msgstr "Porta-retalls"
 
-msgid "Paste all items here"
-msgstr "Enganxa tots els elements aquí"
+#~ msgid "Paste all items here"
+#~ msgstr "Enganxa tots els elements aquí"
 
-msgid "Move all clipboard files to"
-msgstr "Moure tots els fitxers del porta-retalls a"
+#~ msgid "Move all clipboard files to"
+#~ msgstr "Moure tots els fitxers del porta-retalls a"
 
-msgid "discard"
-msgstr "descartar"
+#~ msgid "discard"
+#~ msgstr "descartar"
 
-msgid "the clipboard is empty"
-msgstr "el porta-retalls està buit"
+#~ msgid "the clipboard is empty"
+#~ msgstr "el porta-retalls està buit"
 
-msgid "Old password"
-msgstr "Contrasenya antiga"
+#~ msgid "Old password"
+#~ msgstr "Contrasenya antiga"
 
-msgid "New password"
-msgstr "Nova contrasenya"
+#~ msgid "New password"
+#~ msgstr "Nova contrasenya"
 
-msgid "desktop is not valid name for this computer: IP=%(ip)s"
-msgstr "desktop no és un nom vàlid per a l'ordinador: IP=%(ip)\\s"
+#~ msgid "desktop is not valid name for this computer: IP=%(ip)s"
+#~ msgstr "desktop no és un nom vàlid per a l'ordinador: IP=%(ip)\\s"
 
-msgid "Time:"
-msgstr "Hora:"
+#~ msgid "Time:"
+#~ msgstr "Hora:"
 
-msgid "Device (Connections)"
-msgstr "Dispositiu (Connexions)"
+#~ msgid "Device (Connections)"
+#~ msgstr "Dispositiu (Connexions)"
 
-msgid "Device (Driver)"
-msgstr "Dispositiu (Controlador)"
+#~ msgid "Device (Driver)"
+#~ msgstr "Dispositiu (Controlador)"
 
-msgid "Device (Feature)"
-msgstr "Dispositiu (Característica)"
+#~ msgid "Device (Feature)"
+#~ msgstr "Dispositiu (Característica)"
 
-msgid "Device (Logical)"
-msgstr "Dispositiu (lògic)"
+#~ msgid "Device (Logical)"
+#~ msgstr "Dispositiu (lògic)"
 
-msgid "Device (Manufacturers)"
-msgstr "Dispositiu (Fabricants)"
+#~ msgid "Device (Manufacturers)"
+#~ msgstr "Dispositiu (Fabricants)"
 
-msgid "Device (Model)"
-msgstr "Dispositiu (Model)"
+#~ msgid "Device (Model)"
+#~ msgstr "Dispositiu (Model)"
 
-msgid "Device (Models)"
-msgstr "Dispositiu (Models)"
+#~ msgid "Device (Models)"
+#~ msgstr "Dispositiu (Models)"
 
-msgid "Device (Type)"
-msgstr "Dispositiu (Tipus)"
+#~ msgid "Device (Type)"
+#~ msgstr "Dispositiu (Tipus)"
 
-msgid "Device (Types)"
-msgstr "Dispositiu (Tipus)"
+#~ msgid "Device (Types)"
+#~ msgstr "Dispositiu (Tipus)"
 
-msgid ""
-"Text of error that is only a warning. You can copy/paste from the field "
-"'error' of a Error."
-msgstr ""
-"Text de l'error que és només un avís. Pot copiar/pegar des del camp 'error' "
-"d'un Error."
+#~ msgid ""
+#~ "Text of error that is only a warning. You can copy/paste from the field "
+#~ "'error' of a Error."
+#~ msgstr ""
+#~ "Text de l'error que és només un avís. Pot copiar/pegar des del camp "
+#~ "'error' d'un Error."
 
-msgid "Property of attribute"
-msgstr "Propietat de l’atribut"
+#~ msgid "Property of attribute"
+#~ msgstr "Propietat de l’atribut"
 
-msgid "information"
-msgstr "informació"
+#~ msgid "information"
+#~ msgstr "informació"
 
-msgid "Relations"
-msgstr "Relacions"
+#~ msgid "Relations"
+#~ msgstr "Relacions"
 
-msgid "Audit"
-msgstr "Auditoria"
+#~ msgid "Audit"
+#~ msgstr "Auditoria"
 
-msgid "Last login"
-msgstr "Últim inici de sessió"
+#~ msgid "Last login"
+#~ msgstr "Últim inici de sessió"
 
-msgid "VERSION: %s"
-msgstr "Versió: %s"
+#~ msgid "VERSION: %s"
+#~ msgstr "Versió: %s"
 
-msgid "Windows Computers"
-msgstr "Ordinadors Windows"
+#~ msgid "Windows Computers"
+#~ msgstr "Ordinadors Windows"
 
-msgid "Linux Computers"
-msgstr "Ordinadors Linux"
+#~ msgid "Linux Computers"
+#~ msgstr "Ordinadors Linux"
 
-msgid "Month"
-msgstr "Mes"
+#~ msgid "Month"
+#~ msgstr "Mes"
 
-msgid "of"
-msgstr "de"
+#~ msgid "of"
+#~ msgstr "de"
 
-msgid "devices modified"
-msgstr "dispositius modificats"
+#~ msgid "devices modified"
+#~ msgstr "dispositius modificats"
 
-msgid "Opens a SSH connection"
-msgstr "Obre una connexió SSH"
+#~ msgid "Opens a SSH connection"
+#~ msgstr "Obre una connexió SSH"
 
-msgid "Port"
-msgstr "Port"
+#~ msgid "Port"
+#~ msgstr "Port"
 
-msgid "Identification number"
-msgstr "Número d'identificació"
+#~ msgid "Identification number"
+#~ msgstr "Número d'identificació"
 
-msgid "Alias"
-msgstr "Àlies"
+#~ msgid "Alias"
+#~ msgstr "Àlies"
 
-msgid "uri"
-msgstr "uri"
+#~ msgid "uri"
+#~ msgstr "uri"
 
-msgid "install"
-msgstr "instal·lar"
+#~ msgid "install"
+#~ msgstr "instal·lar"
 
-msgid "Device (Files)"
-msgstr "Dispositiu (Fitxers)"
+#~ msgid "Device (Files)"
+#~ msgstr "Dispositiu (Fitxers)"
 
-msgid "pre-install"
-msgstr "preinstal·lar"
+#~ msgid "pre-install"
+#~ msgstr "preinstal·lar"
 
-msgid "post-install"
-msgstr "postinstal·lar"
+#~ msgid "post-install"
+#~ msgstr "postinstal·lar"
 
-msgid "pre-remove"
-msgstr "eliminar prèviament"
+#~ msgid "pre-remove"
+#~ msgstr "eliminar prèviament"
 
-msgid "post-remove"
-msgstr "eliminar posteriorment"
+#~ msgid "post-remove"
+#~ msgstr "eliminar posteriorment"
 
-msgid "repository definition"
-msgstr "definició del dipòsit"
+#~ msgid "repository definition"
+#~ msgstr "definició del dipòsit"
 
-msgid "Define the content of source list file of repositories for the client."
-msgstr ""
-"Defineix el contingut del fitxer de la llista de fonts dels repositoris del "
-"client."
+#~ msgid ""
+#~ "Define the content of source list file of repositories for the client."
+#~ msgstr ""
+#~ "Defineix el contingut del fitxer de la llista de fonts dels repositoris "
+#~ "del client."
 
-msgid "modified"
-msgstr "modificat"
+#~ msgid "modified"
+#~ msgstr "modificat"
 
-msgid "All O.K."
-msgstr "Tot correcte."
+#~ msgid "All O.K."
+#~ msgstr "Tot correcte."
 
-msgid "Warning"
-msgstr "Avís"
+#~ msgid "Warning"
+#~ msgstr "Avís"
 
-msgid "Information of Package"
-msgstr "Informació del paquet"
+#~ msgid "Information of Package"
+#~ msgstr "Informació del paquet"
 
-msgid "Parameters for Query: %s"
-msgstr "Paràmetres per a la consulta: %s"
+#~ msgid "Parameters for Query: %s"
+#~ msgstr "Paràmetres per a la consulta: %s"
 
-msgid "Analyzing the repositories to create files for version: %s"
-msgstr "Analitzant els depòsits per crear fitxers per a la versió: %s"
+#~ msgid "Analyzing the repositories to create files for version: %s"
+#~ msgstr "Analitzant els depòsits per crear fitxers per a la versió: %s"
 
-msgid "Expand menu"
-msgstr "Ampliar el menú"
+#~ msgid "Expand menu"
+#~ msgstr "Ampliar el menú"
 
-msgid "Collapse menu"
-msgstr "Reduir el menú"
+#~ msgid "Collapse menu"
+#~ msgstr "Reduir el menú"
 
-msgid "Data Model Documentation"
-msgstr "Documentació del model de dades"
+#~ msgid "Data Model Documentation"
+#~ msgstr "Documentació del model de dades"
 
-msgid "Files"
-msgstr "Fitxers"
+#~ msgid "Files"
+#~ msgstr "Fitxers"
 
-msgid "Packaging"
-msgstr "Empaquetant"
+#~ msgid "Packaging"
+#~ msgstr "Empaquetant"
 
-msgid "Upload changes of software"
-msgstr "Carregar els canvis de programari"
+#~ msgid "Upload changes of software"
+#~ msgstr "Carregar els canvis de programari"
 
-msgid "Creating Repositories File"
-msgstr "Creant fitxers de dipòsits"
+#~ msgid "Creating Repositories File"
+#~ msgstr "Creant fitxers de dipòsits"
 
-msgid "Getting data"
-msgstr "Obtenint dades"
+#~ msgid "Getting data"
+#~ msgstr "Obtenint dades"
 
-msgid "Checking packages to remove"
-msgstr "Comprovant paquets per eliminar"
+#~ msgid "Checking packages to remove"
+#~ msgstr "Comprovant paquets per eliminar"
 
-msgid "Removing packages"
-msgstr "Eliminant paquets"
+#~ msgid "Removing packages"
+#~ msgstr "Eliminant paquets"
 
-msgid "Checking packages to install"
-msgstr "Comprovant paquets per instal·lar"
+#~ msgid "Checking packages to install"
+#~ msgstr "Comprovant paquets per instal·lar"
 
-msgid "Installing packages"
-msgstr "Instal·lant paquets"
+#~ msgid "Installing packages"
+#~ msgstr "Instal·lant paquets"
 
-msgid "Upload inventory software"
-msgstr "Carregar l'inventari de programari"
+#~ msgid "Upload inventory software"
+#~ msgstr "Carregar l'inventari de programari"
 
-msgid "Upload inventory hardware"
-msgstr "Carregar l'inventari de maquinari"
+#~ msgid "Upload inventory hardware"
+#~ msgstr "Carregar l'inventari de maquinari"
 
-msgid "System is updated"
-msgstr "El sistema està actualitzat"
+#~ msgid "System is updated"
+#~ msgstr "El sistema està actualitzat"
 
-msgid "differences of packages respect the software base of the version"
-msgstr "diferències de paquets respecte a la base de programari de la versió"
+#~ msgid "differences of packages respect the software base of the version"
+#~ msgstr ""
+#~ "diferències de paquets respecte a la base de programari de la versió"
 
-msgid "before insert"
-msgstr "abans d'inserir"
+#~ msgid "before insert"
+#~ msgstr "abans d'inserir"
 
-msgid ""
-"Code django. This code will execute before insert the attribute in the "
-"server. You can modify the value of attribute here, using the variable "
-"'data'."
-msgstr ""
-"Codi en django. Aquest codi serà executat abans d'inserir l'atribut en el "
-"servidor. Pot modificar el valor de l'atribut aquí usant la variable 'data'."
+#~ msgid ""
+#~ "Code django. This code will execute before insert the attribute in the "
+#~ "server. You can modify the value of attribute here, using the variable "
+#~ "'data'."
+#~ msgstr ""
+#~ "Codi en django. Aquest codi serà executat abans d'inserir l'atribut en el "
+#~ "servidor. Pot modificar el valor de l'atribut aquí usant la variable "
+#~ "'data'."
 
-msgid "after insert"
-msgstr "després d'inserir"
+#~ msgid "after insert"
+#~ msgstr "després d'inserir"
 
-msgid ""
-"Code django. This code will execute after insert the attribute in the server."
-msgstr ""
-"Codi en django. Aquest codi serà executat després d'inserir l'atribut en el "
-"servidor."
+#~ msgid ""
+#~ "Code django. This code will execute after insert the attribute in the "
+#~ "server."
+#~ msgstr ""
+#~ "Codi en django. Aquest codi serà executat després d'inserir l'atribut en "
+#~ "el servidor."
 
-msgid "No version to find info"
-msgstr "No hi ha versió de la qual cercar informació"
+#~ msgid "No version to find info"
+#~ msgstr "No hi ha versió de la qual cercar informació"
 
-msgid "No version to find info."
-msgstr "No hi ha versió de la qual cercar informació."
+#~ msgid "No version to find info."
+#~ msgstr "No hi ha versió de la qual cercar informació."
 
-msgid "Users Profile"
-msgstr "Perfil dels usuaris"
+#~ msgid "Users Profile"
+#~ msgstr "Perfil dels usuaris"
 
-msgid "Mining"
-msgstr "Explotant"
+#~ msgid "Mining"
+#~ msgstr "Explotant"
