@@ -270,7 +270,7 @@ def computers_entry_year(user):
     data = [x['count'] for x in results]
     labels = [x['year'] for x in results]
 
-    for i in range(len(labels)):
+    for i, item in enumerate(labels):
         querystring = {
             'created_at__gte': '{}-01-01'.format(labels[i]),
             'created_at__lt': '{}-01-01'.format(labels[i] + 1)
