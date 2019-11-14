@@ -542,7 +542,7 @@ class PackageViewSet(viewsets.ModelViewSet, MigasViewSet):
     filter_class = PackageFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('name',)
+    ordering = ('name', 'project__name')
 
     def get_queryset(self):
         user = self.request.user.userprofile
@@ -619,7 +619,7 @@ class InternalSourceViewSet(viewsets.ModelViewSet, MigasViewSet):
     filter_class = DeploymentFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('-start_date',)
+    ordering = ('-start_date', 'name')
 
     def get_queryset(self):
         user = self.request.user.userprofile
@@ -658,7 +658,7 @@ class ExternalSourceViewSet(viewsets.ModelViewSet, MigasViewSet):
     filter_class = DeploymentFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('-start_date',)
+    ordering = ('-start_date', 'name')
 
     def get_queryset(self):
         user = self.request.user.userprofile
@@ -735,7 +735,7 @@ class StoreViewSet(viewsets.ModelViewSet, MigasViewSet):
     filter_class = StoreFilter
     filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
-    ordering = ('name',)
+    ordering = ('name', 'project__name')
 
     def get_queryset(self):
         user = self.request.user.userprofile
