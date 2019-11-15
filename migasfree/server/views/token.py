@@ -70,7 +70,8 @@ class AttributeViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Attribute.objects.all()
     serializer_class = serializers.AttributeSerializer
     filter_class = AttributeFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ['value', 'description']
 
     def get_queryset(self):
         user = self.request.user.userprofile
@@ -391,7 +392,8 @@ class ErrorViewSet(
     queryset = models.Error.objects.all()
     serializer_class = serializers.ErrorSerializer
     filter_class = ErrorFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ['created_at', 'description']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
@@ -437,7 +439,8 @@ class FaultViewSet(
     queryset = models.Fault.objects.all()
     serializer_class = serializers.FaultSerializer
     filter_class = FaultFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ['created_at', 'result']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
@@ -525,7 +528,8 @@ class NotificationViewSet(
     queryset = models.Notification.objects.all()
     serializer_class = serializers.NotificationSerializer
     filter_class = NotificationFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ['message']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
@@ -601,9 +605,10 @@ class PropertyViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Property.objects.all()
     serializer_class = serializers.PropertySerializer
     filter_class = PropertyFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ['name', 'language', 'code']
     ordering_fields = '__all__'
-    ordering = ('prefix', 'name',)
+    ordering = ('prefix', 'name')
 
     def get_serializer_class(self):
         if self.action == 'create' or self.action == 'update' \
@@ -716,7 +721,8 @@ class StatusLogViewSet(
     queryset = models.StatusLog.objects.all()
     serializer_class = serializers.StatusLogSerializer
     filter_class = StatusLogFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ['status']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
@@ -733,7 +739,8 @@ class StoreViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Store.objects.all()
     serializer_class = serializers.StoreSerializer
     filter_class = StoreFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ['name']
     ordering_fields = '__all__'
     ordering = ('name', 'project__name')
 
@@ -760,7 +767,8 @@ class SynchronizationViewSet(
     queryset = models.Synchronization.objects.all()
     serializer_class = serializers.SynchronizationSerializer
     filter_class = SynchronizationFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
+    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
+    search_fields = ['user__name', 'user__fullname']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
