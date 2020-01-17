@@ -268,7 +268,7 @@ class PmsAdmin(MigasAdmin):
 
 @admin.register(ClientProperty)
 class ClientPropertyAdmin(MigasAdmin):
-    list_display = ('name_link', 'my_enabled', 'kind', 'my_auto_add')
+    list_display = ('name_link', 'prefix', 'my_enabled', 'kind', 'my_auto_add')
     list_filter = ('enabled', 'kind', 'auto_add')
     ordering = ('name',)
     search_fields = ('name', 'prefix')
