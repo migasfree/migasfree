@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-__version__ = "4.18"
+__version__ = "4.19"
 __author__ = [
     'Alberto Gacías <alberto@migasfree.org>',
     'Jose Antonio Chavarría <jachavar@gmail.com>'
