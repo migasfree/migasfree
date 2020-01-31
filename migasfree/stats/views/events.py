@@ -21,12 +21,16 @@ from .syncs import month_year_iter
 from . import MONTHLY_RANGE
 
 
+def first_day_month(date_):
+    return date(date_.year, date_.month, 1)
+
+
 def month_interval():
     delta = relativedelta(months=+1)
     end_date = date.today() + delta
     begin_date = end_date - relativedelta(months=+MONTHLY_RANGE)
 
-    return begin_date, end_date
+    return first_day_month(begin_date), end_date
 
 
 def event_by_month(data, begin_date, end_date, model, field='project_id'):
