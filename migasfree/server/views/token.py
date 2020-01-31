@@ -200,7 +200,7 @@ class ComputerViewSet(viewsets.ModelViewSet, MigasViewSet):
                                 logical_device.feature,
                                 computer,
                                 computer.project,
-                                '<a href="{}">{}</a>'.format(
+                                "<a href='{}'>{}</a>".format(
                                     reverse(
                                         'admin:server_devicemodel_change',
                                         args=(model.pk,)
@@ -208,7 +208,8 @@ class ComputerViewSet(viewsets.ModelViewSet, MigasViewSet):
                                     model
                                 )
                             ),
-                        status=status.HTTP_400_BAD_REQUEST
+                        status=status.HTTP_400_BAD_REQUEST,
+                        content_type='text/plain'
                     )
 
             computer.update_logical_devices(assigned_logical_devices_to_cid)
