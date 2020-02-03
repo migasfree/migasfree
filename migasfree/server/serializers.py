@@ -441,7 +441,7 @@ class InternalSourceWriteSerializer(DeploymentWriteSerializer):
     class Meta:
         model = models.InternalSource
         fields = (
-            'enabled', 'project', 'domain', 'name', 'comment',
+            'id', 'enabled', 'project', 'domain', 'name', 'comment',
             'available_packages',
             'included_attributes', 'excluded_attributes',
             'packages_to_install', 'packages_to_remove',
@@ -454,7 +454,7 @@ class ExternalSourceWriteSerializer(DeploymentWriteSerializer):
     class Meta:
         model = models.ExternalSource
         fields = (
-            'enabled', 'project', 'domain', 'name', 'comment',
+            'id', 'enabled', 'project', 'domain', 'name', 'comment',
             'included_attributes', 'excluded_attributes',
             'packages_to_install', 'packages_to_remove',
             'default_preincluded_packages', 'default_included_packages', 'default_excluded_packages',
