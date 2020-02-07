@@ -170,7 +170,7 @@ class ComputerViewSet(viewsets.ModelViewSet, MigasViewSet):
 
     def partial_update(self, request, *args, **kwargs):
         if isinstance(request.data, QueryDict):
-            data = dict(request.data.iterlists())
+            data = dict(request.data.lists())
         else:
             data = request.data
 
@@ -377,7 +377,7 @@ class ComputerViewSet(viewsets.ModelViewSet, MigasViewSet):
         if status_log:
             response['status'] = status_log.status
         else:
-            if isinstance(date, basestring):
+            if isinstance(date, str):
                 date = datetime.strptime(date, '%Y-%m-%d')
                 if date >= computer.created_at:
                     response['status'] = settings.MIGASFREE_DEFAULT_COMPUTER_STATUS
