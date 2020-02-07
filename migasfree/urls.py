@@ -10,9 +10,9 @@ from rest_framework.authtoken import views
 from rest_framework.documentation import include_docs_urls
 from rest_framework_swagger.views import get_swagger_view
 
-from server.routers import router, device_router
-from catalog.routers import router as catalog_router
-from stats.routers import router as stats_router
+from .server.routers import router, device_router
+from .catalog.routers import router as catalog_router
+from .stats.routers import router as stats_router
 
 from django.contrib import admin
 admin.autodiscover()
