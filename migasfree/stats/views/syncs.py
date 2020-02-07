@@ -23,27 +23,27 @@ from . import MONTHLY_RANGE, DAILY_RANGE
 
 
 def render_table(axis, data):
-    html = u'<table>'
+    html = '<table>'
 
-    html += u'<tr><th></th>'
+    html += '<tr><th></th>'
     for k in data.keys():
-        html += u'<th>{}</th>'.format(k)
+        html += '<th>{}</th>'.format(k)
 
-    html += u'</tr>'
+    html += '</tr>'
 
     for index, item in enumerate(axis):
-        html += u'<tr><th>{}</th>'.format(item)
+        html += '<tr><th>{}</th>'.format(item)
         for k in data:
             value = ''
             try:
                 value = data[k][index]
             except IndexError:
                 pass
-            html += u'<td>{}</td>'.format(value)
+            html += '<td>{}</td>'.format(value)
 
-        html += u'</tr>'
+        html += '</tr>'
 
-    html += u'</table>'
+    html += '</table>'
 
     return html
 
@@ -134,7 +134,7 @@ class SyncStatsViewSet(viewsets.ViewSet):
             index = str(to_timestamp(datetime(monthly[0], monthly[1], 1)))
             data.append(updates_time_range[index] if index in updates_time_range else 0)
 
-        return Response(zip(labels, data), status=status.HTTP_200_OK)
+        return Response(list(zip(labels, data)), status=status.HTTP_200_OK)
 
     @action(methods=['get'], detail=False)
     def daily(self, request, format=None):
@@ -171,7 +171,7 @@ class SyncStatsViewSet(viewsets.ViewSet):
             index = str(to_timestamp(datetime.combine(item, time.min)))
             data.append(updates_time_range[index] if index in updates_time_range else 0)
 
-        return Response(zip(labels, data), status=status.HTTP_200_OK)
+        return Response(list(zip(labels, data)), status=status.HTTP_200_OK)
 
 
 @login_required
