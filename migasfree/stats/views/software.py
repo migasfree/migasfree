@@ -28,7 +28,7 @@ def application_by_category():
     ).order_by('-count'):
         percent = float(item.get('count')) / total * 100
         data.append({
-            'name': u'{}'.format(dict(Application.CATEGORIES)[item.get('category')]),
+            'name': '{}'.format(dict(Application.CATEGORIES)[item.get('category')]),
             'value': item.get('count'),
             'y': float('{:.2f}'.format(percent)),
             'url': link.replace(
@@ -59,7 +59,7 @@ def application_by_level():
     ).order_by('-count'):
         percent = float(item.get('count')) / total * 100
         data.append({
-            'name': u'{}'.format(dict(Application.LEVELS)[item.get('level')]),
+            'name': '{}'.format(dict(Application.LEVELS)[item.get('level')]),
             'value': item.get('count'),
             'y': float('{:.2f}'.format(percent)),
             'url': link.replace(
