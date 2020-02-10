@@ -161,11 +161,11 @@ SELECT ARRAY(
             raise PermissionDenied
 
     def update_scope(self, value):
-        self.scope_preference = value if value > 0 else None
+        self.scope_preference = value if value != 0 else None
         self.save()
 
     def update_domain(self, value):
-        self.domain_preference = value if value > 0 else None
+        self.domain_preference = value if value != 0 else None
         self.save()
 
     def is_domain_admin(self):
