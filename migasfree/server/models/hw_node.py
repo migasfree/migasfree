@@ -2,8 +2,6 @@
 
 import re
 
-from past.builtins import basestring
-
 from django.db import models
 from django.db.models import Sum, Q
 from django.urls import reverse
@@ -15,7 +13,7 @@ from . import Computer, MigasLink
 
 
 def validate_mac(mac):
-    return isinstance(mac, basestring) and \
+    return isinstance(mac, str) and \
         len(mac) == 17 and \
         len(re.findall(r':', mac)) == 5
 
