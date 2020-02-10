@@ -58,7 +58,6 @@ def error(number):
 
         fp = tempfile.NamedTemporaryFile(
             mode='w+b',
-            bufsize=-1,
             suffix='.html',
             prefix=str(evalue).replace(" ", "_").replace("\n", "_"),
             dir=dir_errors,
