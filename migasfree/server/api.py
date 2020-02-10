@@ -138,9 +138,14 @@ def get_computer(name, uuid):
 
 def upload_computer_hardware(request, name, uuid, computer, data):
     cmd = str(inspect.getframeinfo(inspect.currentframe()).function)
+
+    hw_data = data[cmd]
+    if isinstance(hw_data, list):
+        hw_data = hw_data[0]
+
     try:
         HwNode.objects.filter(computer=computer).delete()
-        load_hw(computer, data[cmd], None, 1)
+        load_hw(computer, hw_data, None, 1)
         computer.update_last_hardware_capture()
         computer.update_hardware_resume()
         ret = return_message(cmd, errmfs.ok())
