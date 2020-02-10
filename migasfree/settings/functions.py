@@ -11,7 +11,8 @@ def secret_key(path):
 
     _file = os.path.join(path, 'secret_key.txt')
     if os.path.exists(_file):
-        _key = open(_file).read().strip()
+        with open(_file) as fp:
+            _key = fp.read().strip()
     else:
         _key = ''.join(
             [random.SystemRandom().choice(
