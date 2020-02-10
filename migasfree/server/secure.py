@@ -37,8 +37,10 @@ def wrap(filename, data):
     """
     Creates a signed wrapper file around data
     """
+    data = json.dumps(data)
+    data = data.encode()
     with open(filename, 'wb') as fp:
-        json.dump(data, fp)
+        fp.write(data)
 
     sign(filename)
 
@@ -166,8 +168,8 @@ def get_keys_to_client(project):
     ))
 
     return {
-        settings.MIGASFREE_PUBLIC_KEY: server_public_key,
-        "migasfree-client.pri": project_private_key
+        settings.MIGASFREE_PUBLIC_KEY: server_public_key.decode(),
+        "migasfree-client.pri": project_private_key.decode()
     }
 
 
@@ -187,6 +189,6 @@ def get_keys_to_packager():
     )
 
     return {
-        settings.MIGASFREE_PUBLIC_KEY: server_public_key,
-        settings.MIGASFREE_PACKAGER_PRI_KEY: packager_private_key
+        settings.MIGASFREE_PUBLIC_KEY: server_public_key.decode(),
+        settings.MIGASFREE_PACKAGER_PRI_KEY: packager_private_key.decode()
     }
