@@ -41,7 +41,7 @@ class Migration(Event):
     objects = MigrationManager()
 
     def __str__(self):
-        return u'{} ({:%Y-%m-%d %H:%M:%S}) {}'.format(
+        return '{} ({:%Y-%m-%d %H:%M:%S}) {}'.format(
             self.computer, self.created_at, self.project
         )
 
