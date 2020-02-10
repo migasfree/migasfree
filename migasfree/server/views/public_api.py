@@ -13,7 +13,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
-from urllib2 import urlopen, URLError, HTTPError
+from urllib.request import urlopen
+from urllib.error import URLError, HTTPError
 from wsgiref.util import FileWrapper
 from rest_framework.decorators import permission_classes
 from rest_framework import permissions, views
@@ -60,7 +61,7 @@ def get_computer_info(request, uuid=None):
         'name': computer.__str__(),
         'helpdesk': settings.MIGASFREE_HELP_DESK,
         'server': request.META.get('HTTP_HOST'),
-        'tags': [u"{}-{}".format(tag.property_att.prefix, tag.value) for tag in computer.tags.all()],
+        'tags': ["{}-{}".format(tag.property_att.prefix, tag.value) for tag in computer.tags.all()],
         'available_tags': {},
     }
     result["search"] = result[settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0]]
@@ -74,7 +75,7 @@ def get_computer_info(request, uuid=None):
             if tag.property_att.name not in result["available_tags"]:
                 result["available_tags"][tag.property_att.name] = []
 
-            value = u"{}-{}".format(tag.property_att.prefix, tag.value)
+            value = "{}-{}".format(tag.property_att.prefix, tag.value)
             if value not in result["available_tags"][tag.property_att.name]:
                 result["available_tags"][tag.property_att.name].append(value)
 
@@ -167,7 +168,7 @@ def get_source_file(request):
         if not source:
             source = ExternalSource.objects.get(project__name=project_name, name=source_name)
 
-        url = u'{}/{}'.format(source.base_url, resource)
+        url = '{}/{}'.format(source.base_url, resource)
 
         try:
             ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
@@ -185,13 +186,13 @@ def get_source_file(request):
         except HTTPError as e:
             add_notification_get_source_file("HTTP Error: {}".format(e.code), source, _path, url)
             return HttpResponse(
-                u'HTTP Error: {} {}'.format(e.code, url),
+                'HTTP Error: {} {}'.format(e.code, url),
                 status=e.code
             )
         except URLError as e:
             add_notification_get_source_file("URL error: {}".format(e.reason), source, _path, url)
             return HttpResponse(
-                u'URL Error: {} {}'.format(e.reason, url),
+                'URL Error: {} {}'.format(e.reason, url),
                 status=status.HTTP_404_NOT_FOUND
             )
     else:
@@ -199,7 +200,7 @@ def get_source_file(request):
             return HttpResponse(status=status.HTTP_204_NO_CONTENT)
         else:
             response = HttpResponse(FileWrapper(open(_file_local, 'rb')), content_type='application/octet-stream')
-            response['Content-Disposition'] = u'attachment; filename={}'.format(os.path.basename(_file_local))
+            response['Content-Disposition'] = 'attachment; filename={}'.format(os.path.basename(_file_local))
             response['Content-Length'] = os.path.getsize(_file_local)
             return response
 
