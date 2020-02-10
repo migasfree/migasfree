@@ -301,7 +301,7 @@ class MigasChangeList(ChangeList):
                         elements.append(
                             choices[int(i)] if isinstance(x.field, IntegerField) else choices[i]
                         )
-                    self.append(x.title, ', '.join(elements), x.lookup_kwarg)
+                    self.append(x.title, ', '.join(map(str, elements)), x.lookup_kwarg)
                     params.pop(x.lookup_kwarg, None)
 
         # filters no standards
