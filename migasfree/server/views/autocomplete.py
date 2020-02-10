@@ -25,13 +25,13 @@ class AutocompleteModelBase(autocomplete.Select2QuerySetView):
         keyword argument.
         """
         if field_name.startswith('^'):
-            return u'{}__istartswith'.format(field_name[1:])
+            return '{}__istartswith'.format(field_name[1:])
         elif field_name.startswith('='):
-            return u'{}__iexact'.format(field_name[1:])
+            return '{}__iexact'.format(field_name[1:])
         elif field_name.startswith('@'):
-            return u'{}__search'.format(field_name[1:])
+            return '{}__search'.format(field_name[1:])
         else:
-            return u'{}__icontains'.format(field_name)
+            return '{}__icontains'.format(field_name)
 
     def choices_for_request_conditions(self, q, search_fields):
         """
@@ -103,7 +103,7 @@ class DeviceAutocomplete(AutocompleteModelBase):
         return qs
 
     def get_result_label(self, result):
-        return u'{} {} @ {}'.format(
+        return '{} {} @ {}'.format(
             result.__str__(),
             result.model.name,
             result.location()
@@ -182,7 +182,7 @@ class DeviceConnectionAutocomplete(AutocompleteModelBase):
         return qs.order_by('name')
 
     def get_result_label(self, result):
-        return u'{} ({})'.format(result.name, result.device_type.name)
+        return '{} ({})'.format(result.name, result.device_type.name)
 
 
 class DeviceModelAutocomplete(AutocompleteModelBase):
@@ -203,7 +203,7 @@ class DeviceModelAutocomplete(AutocompleteModelBase):
         return qs.order_by('name')
 
     def get_result_label(self, result):
-        return u'{} ({})'.format(result.name, result.manufacturer.name)
+        return '{} ({})'.format(result.name, result.manufacturer.name)
 
 
 class DeviceLogicalAutocomplete(AutocompleteModelBase):
