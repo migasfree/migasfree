@@ -161,7 +161,7 @@ class PackagesByProject(models.Model, MigasLink):
     objects = PackagesByProjectManager()
 
     def __str__(self):
-        return u'{}@{}'.format(self.application, self.project)
+        return '{}@{}'.format(self.application, self.project)
 
     class Meta:
         app_label = 'catalog'
@@ -321,7 +321,7 @@ class PolicyGroup(models.Model, MigasLink):
     )
 
     def __str__(self):
-        return u'{} ({})'.format(self.policy.name, self.priority)
+        return '{} ({})'.format(self.policy.name, self.priority)
 
     class Meta:
         app_label = 'catalog'
