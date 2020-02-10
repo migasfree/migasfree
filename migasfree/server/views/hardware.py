@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.core import serializers
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext as _
 
 from ..models import (
@@ -33,7 +32,7 @@ def hardware_resume(request, pk):
         request,
         'computer_hardware_resume.html',
         {
-            'title': u'{}: {}'.format(_("Hardware Information"), computer),
+            'title': '{}: {}'.format(_("Hardware Information"), computer),
             'computer': computer,
             'data': data,
             'help': 'hardwareresume',
@@ -57,13 +56,13 @@ def hardware_extract(request, pk):
     if not name:
         name = node.description
         if node.product:
-            name = u'{}: {}'.format(name, node.product)
+            name = '{}: {}'.format(name, node.product)
 
     return render(
         request,
         'computer_hardware_extract.html',
         {
-            'title': u'{}: {}'.format(_("Hardware Information"), smart_unicode(name)),
+            'title': '{}: {}'.format(_("Hardware Information"), name),
             'name': name,
             'computer': node.computer,
             'capability': capability,
@@ -74,9 +73,7 @@ def hardware_extract(request, pk):
 
 
 def load_hw(computer, node, parent, level):
-    size = node.get('size')
-    if size:
-        size = int(size)
+    size = int(node.get('size', 0))
 
     n = HwNode.objects.create({
         'parent': parent,
@@ -117,7 +114,7 @@ def load_hw(computer, node, parent, level):
             for x in node[e]:
                 HwConfiguration.objects.create(node=n, name=x, value=node[e][x])
         elif e == "logicalname":
-            if isinstance(node[e], unicode):
+            if isinstance(node[e], str):
                 HwLogicalName.objects.create(node=n, name=node[e])
             else:
                 for x in node[e]:
