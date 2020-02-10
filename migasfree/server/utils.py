@@ -19,7 +19,10 @@ def write_file(filename, content):
     _file = None
     try:
         _file = open(filename, 'wb')
-        _file.write(content)
+        try:
+            _file.write(bytes(content))
+        except TypeError:
+            _file.write(bytes(content, encoding='utf8'))
         _file.flush()
         os.fsync(_file.fileno())
         _file.close()
@@ -41,7 +44,7 @@ def read_file(filename):
 
 def d2s(dic):
     """Dictionary to String"""
-    return [u'{}: {}'.format(k, v) for (k, v) in list(dic.items())]
+    return ['{}: {}'.format(k, v) for (k, v) in list(dic.items())]
 
 
 def compare_list_values(l1, l2):
@@ -208,14 +211,14 @@ def to_list(text):
 def html_label(count, title='', link='#', level='default'):
     if not count:
         return format_html(
-            u'<span class="label label-default" title="{}">{}</span>'.format(
+            '<span class="label label-default" title="{}">{}</span>'.format(
                 title,
                 count
             )
         )
 
     return format_html(
-        u'<a class="label label-{}" title="{}" href="{}">{}</a>'.format(
+        '<a class="label label-{}" title="{}" href="{}">{}</a>'.format(
             level,
             title,
             link,
@@ -230,12 +233,12 @@ def sort_depends(data):
     data_copy = copy.deepcopy(data)
 
     def sort():
-        for i, s in data_copy.items():
+        for i, s in list(data_copy.items()):
             if not s:
                 if data_copy:
                     ret.append(i)
                     del data_copy[i]
-                    for _, n in data_copy.items():
+                    for _, n in list(data_copy.items()):
                         if i in n:
                             n.remove(i)
 
