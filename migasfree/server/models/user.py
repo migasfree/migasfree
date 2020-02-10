@@ -48,7 +48,7 @@ class User(models.Model, MigasLink):
 
     def __str__(self):
         if self.fullname != '':
-            return u'{} ({})'.format(self.name, self.fullname.strip())
+            return '{} ({})'.format(self.name, self.fullname.strip())
 
         return self.name
 
