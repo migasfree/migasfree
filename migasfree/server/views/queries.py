@@ -15,25 +15,26 @@ from django.shortcuts import render, get_object_or_404
 from django.utils.html import strip_tags
 from django.utils.translation import ugettext as _
 
-from ..models import *  # for execute_query function
+from ..models import Query, Message
 
 
 def execute_query(request, parameters, form_param=None):
     o_query = get_object_or_404(Query, id=parameters.get('id_query'))
-    fields = []
-    titles = []
-    query = []
 
     try:
-        exec(o_query.code.replace("\r", ""))
-        # after exec, new available variables are: query, fields, titles
+        namespace = {'Q': Q, 'parameters': parameters, 'request': request}
+        exec(o_query.code.replace("\r", ""), namespace)
 
-        if 'fields' not in locals():
-            fields = []
+        # after exec, new available variables are: query, fields, titles
+        query = namespace.get('query', [])
+        fields = namespace.get('fields', [])
+        titles = namespace.get('titles', [])
+
+        if not fields:
             for key in iterkeys(query.values()[0]):
                 fields.append(key)
 
-        if 'titles' not in locals():
+        if not titles:
             titles = fields
 
         results = []
@@ -105,7 +106,9 @@ def get_query(request, query_id):
         def form_params(request):
             pass
 
-        exec(query.parameters.replace("\r", ""))
+        namespace = {'forms': forms}
+        exec(query.parameters.replace("\r", ""), namespace)
+        form_params = namespace['form_params']
         form = form_params(request)(initial=default_parameters)
 
         if request.method == 'POST':
