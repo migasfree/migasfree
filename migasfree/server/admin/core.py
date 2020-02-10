@@ -428,13 +428,13 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
     def save_model(self, request, obj, form, change):
         is_new = (obj.pk is None)
         has_name_changed = form.initial.get('name') != obj.name
-        packages_after = map(int, form.cleaned_data.get('available_packages'))
+        packages_after = list(map(int, form.cleaned_data.get('available_packages')))
 
         user = request.user.userprofile
 
         if user.domain_preference and user.domain_preference == obj.domain:
             if not obj.name.startswith(user.domain_preference.name.lower()):
-                obj.name = u'{}_{}'.format(user.domain_preference.name.lower(), obj.name)
+                obj.name = '{}_{}'.format(user.domain_preference.name.lower(), obj.name)
 
         super(DeploymentAdmin, self).save_model(request, obj, form, change)
 
@@ -461,7 +461,7 @@ class DeploymentAdmin(AjaxSelectAdmin, MigasAdmin):
 
         Notification.objects.create(
             ugettext('Deployment [%s] modified by user [%s] (<a href="%s">review changes</a>)') % (
-                u'<a href="{}">{}@{}</a>'.format(
+                '<a href="{}">{}@{}</a>'.format(
                     reverse('admin:server_{}_change'.format(model), args=(obj.id,)),
                     obj.name,
                     obj.project.name
