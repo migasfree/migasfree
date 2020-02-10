@@ -48,7 +48,7 @@ class Message(models.Model):
         self.save()
 
     def __str__(self):
-        return u'{} ({:%Y-%m-%d %H:%M:%S})'.format(self.computer, self.updated_at)
+        return '{} ({:%Y-%m-%d %H:%M:%S})'.format(self.computer, self.updated_at)
 
     class Meta:
         app_label = 'server'
