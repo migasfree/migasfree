@@ -360,7 +360,7 @@ class Computer(models.Model, MigasLink):
         return self.sync_attributes.exclude(property_att__prefix='SET')
 
     def login(self):
-        return u'{} ({})'.format(
+        return '{} ({})'.format(
             self.sync_user.name,
             self.sync_user.fullname.strip()
         )
@@ -693,8 +693,8 @@ class Computer(models.Model, MigasLink):
 
         if self.sync_start_date < delayed_time and is_updating:
             return format_html(
-                u'<span class="label label-warning" title="{}">'
-                u'<i class="fas fa-exclamation-triangle"></i> {}</span>'.format(
+                '<span class="label label-warning" title="{}">'
+                '<i class="fas fa-exclamation-triangle"></i> {}</span>'.format(
                     _('Delayed Computer'),
                     strfdelta(diff, _('{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}'))
                 )
@@ -702,8 +702,8 @@ class Computer(models.Model, MigasLink):
 
         if is_updating:
             return format_html(
-                u'<span class="label label-info">'
-                u'<i class="fas fa-sync-alt"></i> {}</span>'.format(
+                '<span class="label label-info">'
+                '<i class="fas fa-sync-alt"></i> {}</span>'.format(
                     _('Updating...'),
                 )
             )
@@ -720,7 +720,7 @@ class Computer(models.Model, MigasLink):
             label_link = reverse('computer_label', args=(self.uuid,))
 
             self._actions = [
-                [ugettext('Events'), events_link, u"{}, {}, {}, {}, {}".format(
+                [ugettext('Events'), events_link, "{}, {}, {}, {}, {}".format(
                     ugettext('Synchronizations'),
                     ugettext('Errors'),
                     ugettext('Faults'),
@@ -736,9 +736,9 @@ class Computer(models.Model, MigasLink):
 
     def __str__(self):
         if settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] == 'id':
-            return u'CID-{}'.format(self.id)
+            return 'CID-{}'.format(self.id)
         else:
-            return u'{} (CID-{})'.format(self.get_cid_description(), self.id)
+            return '{} (CID-{})'.format(self.get_cid_description(), self.id)
 
     class Meta:
         app_label = 'server'
