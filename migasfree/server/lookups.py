@@ -32,15 +32,15 @@ class UserProfileLookup(LookupChannel):
 
     def format_item_display(self, obj):
         if obj.first_name or obj.last_name:
-            return u'{} ({})'.format(
+            return '{} ({})'.format(
                 obj.link(),
-                u' '.join(filter(None, [obj.first_name, obj.last_name]))
+                ' '.join(filter(None, [obj.first_name, obj.last_name]))
             )
 
         return obj.link()
 
     def format_match(self, obj):
-        return escape("%s (%s)" % (obj.__str__(), u' '.join(filter(None, [obj.first_name, obj.last_name]))))
+        return escape("%s (%s)" % (obj.__str__(), ' '.join(filter(None, [obj.first_name, obj.last_name]))))
 
 
 @register('domain_admin')
@@ -177,7 +177,7 @@ class TagLookup(LookupChannel):
         ).order_by('value')
 
     def format_match(self, obj):
-        return u'{}-{} {}'.format(
+        return '{}-{} {}'.format(
             escape(obj.property_att.prefix),
             escape(obj.value),
             escape(obj.description)
