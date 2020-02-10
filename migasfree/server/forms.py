@@ -477,7 +477,7 @@ class UserProfileForm(forms.ModelForm):
         super(UserProfileForm, self).__init__(*args, **kwargs)
         self.fields['groups'].help_text = ''
         if self.instance.id:
-            self.fields['username'].help_text += u'<p><a href="{}">{}</a></p>'.format(
+            self.fields['username'].help_text += '<p><a href="{}">{}</a></p>'.format(
                 reverse('admin:auth_user_password_change', args=(self.instance.id,)),
                 _('Change Password')
             )
