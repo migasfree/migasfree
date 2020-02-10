@@ -43,7 +43,7 @@ class HwCapability(models.Model):
     def __str__(self):
         ret = self.name
         if self.description:
-            ret += u': {}'.format(self.description)
+            ret += ': {}'.format(self.description)
 
         return ret
 
