@@ -47,7 +47,7 @@ def event_by_month(data, begin_date, end_date, model, field='project_id'):
     elif field == 'status':
         for status in Computer.STATUS_CHOICES:
             new_data[status[0]] = []
-            labels[status[0]] = unicode(status[1])
+            labels[status[0]] = _(status[1])
     elif field == 'checked':
         new_data[True] = []
         new_data[False] = []
@@ -69,11 +69,11 @@ def event_by_month(data, begin_date, end_date, model, field='project_id'):
 
         key = '%d-%02d' % (monthly[0], monthly[1])
         x_axe.append(key)
-        value = filter(lambda item: item['year'] == monthly[0] and item['month'] == monthly[1], data)
+        value = list(filter(lambda item: item['year'] == monthly[0] and item['month'] == monthly[1], data))
         if field == 'project_id':
             for project in projects:
                 if value:
-                    count = filter(lambda item: item['project_id'] == project.id, value)
+                    count = list(filter(lambda item: item['project_id'] == project.id, value))
                     querystring['project__id__exact'] = project.id
                     new_data[project.id].append({
                         'y': count[0]['count'] if count else 0,
@@ -87,7 +87,7 @@ def event_by_month(data, begin_date, end_date, model, field='project_id'):
         elif field == 'status':
             for status in Computer.STATUS_CHOICES:
                 if value:
-                    count = filter(lambda item: item['status'] == status[0], value)
+                    count = list(filter(lambda item: item['status'] == status[0], value))
                     querystring['status__in'] = status[0]
                     new_data[status[0]].append({
                         'y': count[0]['count'] if count else 0,
@@ -101,7 +101,7 @@ def event_by_month(data, begin_date, end_date, model, field='project_id'):
         elif field == 'checked':
             for val in [True, False]:
                 if value:
-                    count = filter(lambda item: item['checked'] == val, value)
+                    count = list(filter(lambda item: item['checked'] == val, value))
                     querystring['checked__exact'] = 1 if val else 0
                     new_data[val].append({
                         'y': count[0]['count'] if count else 0,
@@ -459,7 +459,7 @@ def error_by_project(user):
             percent = float(count) / total * 100
             data.append(
                 {
-                    'name': unicode(status[1]),
+                    'name': _(status[1]),
                     'value': count,
                     'y': float('{:.2f}'.format(percent)),
                     'url': link.replace(
