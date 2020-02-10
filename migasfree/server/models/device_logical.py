@@ -107,13 +107,13 @@ class DeviceLogical(models.Model, MigasLink):
     def __str__(self):
         data = json.loads(self.device.data)
         if 'NAME' in data and not (data['NAME'] == 'undefined' or data['NAME'] == ''):
-            return u'{}__{}__{}'.format(
+            return '{}__{}__{}'.format(
                 data['NAME'],
                 self.get_name(),
                 self.device.name,
             )
 
-        return u'{}__{}__{}__{}'.format(
+        return '{}__{}__{}__{}'.format(
             self.device.model.manufacturer.name,
             self.device.model.name,
             self.get_name(),
@@ -121,7 +121,7 @@ class DeviceLogical(models.Model, MigasLink):
         )
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if isinstance(self.alternative_feature_name, basestring):
+        if isinstance(self.alternative_feature_name, str):
             self.alternative_feature_name = self.alternative_feature_name.replace(" ", "_")
 
         super(DeviceLogical, self).save(force_insert, force_update, using, update_fields)
