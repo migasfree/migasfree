@@ -67,7 +67,7 @@ class AttributeManager(DomainAttributeManager):
                 ugettext(
                     'The value of the attribute [%s] has more than %d characters. '
                     'The original value is truncated: %s') % (
-                    u'<a href="{}">{}</a>'.format(
+                    '<a href="{}">{}</a>'.format(
                         reverse('admin:server_attribute_change', args=(obj.id,)),
                         obj
                     ),
@@ -114,9 +114,9 @@ class Attribute(models.Model, MigasLink):
             return self.value
         elif self.property_att.prefix == 'CID' and \
                 settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0] != 'id':
-            return u'{} (CID-{})'.format(self.description, self.value)
+            return '{} (CID-{})'.format(self.description, self.value)
         else:
-            return u'{}-{}'.format(self.property_att.prefix, self.value)
+            return '{}-{}'.format(self.property_att.prefix, self.value)
 
     def total_computers(self, user=None):
         from . import Computer
@@ -263,7 +263,7 @@ class BasicAttribute(Attribute):
             basic_attributes.append(obj.id)
 
         if 'CID' in properties.keys() and 'id' in kwargs:
-            description = u'{}'.format(kwargs['description'])
+            description = kwargs['description']
             obj, _ = Attribute.objects.get_or_create(
                 property_att=Property.objects.get(pk=properties['CID']),
                 value=str(kwargs['id']),
