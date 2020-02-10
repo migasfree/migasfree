@@ -162,7 +162,7 @@ def computer_events(request, pk):
         request,
         'computer_events.html',
         {
-            'title': u'{}: {}'.format(_('Events'), computer),
+            'title': '{}: {}'.format(_('Events'), computer),
             'computer': computer,
             'syncs': syncs,
             'syncs_count': syncs_count,
@@ -188,7 +188,7 @@ def pack_attributes(attributes):
     for att in attributes:
         if att[0] in packed:
             if att[1] == '-':  # list
-                packed[att[0]] = u'{},{}'.format(packed[att[0]], att[2])
+                packed[att[0]] = '{},{}'.format(packed[att[0]], att[2])
             elif att[1] == 'L' or att[1] == 'R':  # add to left or right
                 if len(att[2]) > len(packed[att[0]]):
                     packed[att[0]] = att[2]
