@@ -141,7 +141,7 @@ class Device(models.Model, MigasLink):
 
     def get_replacement_info(self):
         return remove_empty_elements_from_dict({
-            ugettext("Device"): u'{} - {}'.format(self.link(), self.location()),
+            ugettext("Device"): '{} - {}'.format(self.link(), self.location()),
             ugettext("Logical devices"): '<br />' +
             '<br />'.join(
                 str(x.feature) + ': ' + ', '.join(
