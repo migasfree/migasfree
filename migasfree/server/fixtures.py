@@ -6,10 +6,7 @@ import tempfile
 
 import django.core.management
 
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
+from io import StringIO
 
 from django.contrib.auth.models import Group, Permission
 from django.conf import settings
