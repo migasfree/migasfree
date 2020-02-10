@@ -49,7 +49,7 @@ class ScheduleDelay(models.Model):
     objects = ScheduleDelayManager()
 
     def __str__(self):
-        return u'{} ({})'.format(self.schedule.name, self.delay)
+        return '{} ({})'.format(self.schedule.name, self.delay)
 
     def attribute_list(self):
         return ', '.join(
