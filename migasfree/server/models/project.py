@@ -7,7 +7,6 @@ from django.db import models
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Pms, Platform, MigasLink
@@ -33,7 +32,6 @@ class ProjectManager(DomainProjectManager):
         return obj
 
 
-@python_2_unicode_compatible
 class Project(models.Model, MigasLink):
     """
     Your Distro: 'Ubuntu natty 32bit' or 'openSUSE 12.1' or 'Vitalinux'
