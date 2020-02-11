@@ -5,7 +5,6 @@ from django.db.models import Q
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from . import Property, MigasLink
@@ -79,7 +78,6 @@ class AttributeManager(DomainAttributeManager):
         return obj
 
 
-@python_2_unicode_compatible
 class Attribute(models.Model, MigasLink):
     VALUE_LEN = 250
 
