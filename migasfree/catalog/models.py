@@ -7,7 +7,6 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from markdownx.models import MarkdownxField
@@ -57,7 +56,6 @@ def upload_path_handler(instance, filename):
     return 'catalog_icons/app_{}{}'.format(instance.pk, ext)
 
 
-@python_2_unicode_compatible
 class Application(models.Model, MigasLink):
     LEVELS = (
         ('U', _('User')),
@@ -138,7 +136,6 @@ class Application(models.Model, MigasLink):
         permissions = (('can_save_application', 'Can save application'),)
 
 
-@python_2_unicode_compatible
 class PackagesByProject(models.Model, MigasLink):
     application = models.ForeignKey(
         Application,
@@ -171,7 +168,6 @@ class PackagesByProject(models.Model, MigasLink):
         permissions = (('can_save_packagesbyproject', 'Can save packages by project'),)
 
 
-@python_2_unicode_compatible
 class Policy(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
@@ -288,7 +284,6 @@ class Policy(models.Model, MigasLink):
         ordering = ['name']
 
 
-@python_2_unicode_compatible
 class PolicyGroup(models.Model, MigasLink):
     priority = models.IntegerField(
         verbose_name=_("priority")
