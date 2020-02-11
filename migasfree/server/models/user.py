@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 
 from . import MigasLink
 
@@ -26,7 +25,6 @@ class UserManager(DomainUserManager):
         return obj
 
 
-@python_2_unicode_compatible
 class User(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
