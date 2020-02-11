@@ -116,7 +116,7 @@ var optionsMulti = {
             point: {
                 events: {
                     click() {
-                        if (typeof this.options.url != "undefined") {
+                        if (typeof this.options.url !== "undefined") {
                             window.open(this.options.url, "_self");
                         }
                     }
