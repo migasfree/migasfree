@@ -5,7 +5,6 @@ import re
 from django.db import models
 from django.db.models import Sum, Q
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.template.loader import render_to_string
 
@@ -56,7 +55,6 @@ class HwNodeManager(DomainHwNodeManager):
         return obj
 
 
-@python_2_unicode_compatible
 class HwNode(models.Model, MigasLink):
     # Detect Virtual Machine with lshw:
     # http://techglimpse.com/xen-kvm-virtualbox-vm-detection-command/
