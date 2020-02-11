@@ -9,7 +9,6 @@ from django.db.models.signals import pre_save, post_save, pre_delete
 from django.core.exceptions import ObjectDoesNotExist
 from django.dispatch import receiver
 from django.urls import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.html import format_html
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.conf import settings
@@ -122,7 +121,6 @@ class ComputerManager(DomainComputerManager):
         return obj
 
 
-@python_2_unicode_compatible
 class Computer(models.Model, MigasLink):
     STATUS_CHOICES = (
         ('intended', _('Intended')),
