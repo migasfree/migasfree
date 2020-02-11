@@ -182,7 +182,7 @@ class ComputerViewSet(viewsets.ModelViewSet, MigasViewSet):
             computer = get_object_or_404(models.Computer, pk=kwargs['pk'])
 
             try:
-                assigned_logical_devices_to_cid = map(int, devices)
+                assigned_logical_devices_to_cid = list(map(int, devices))
             except ValueError:
                 assigned_logical_devices_to_cid = []
 
