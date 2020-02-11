@@ -31,10 +31,10 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
         self.lookup_val = request.GET.get(self.lookup_kwarg)
         self.title = _('Status')
 
-    def choices(self, cl):
+    def choices(self, changelist):
         yield {
             'selected': self.lookup_val is None,
-            'query_string': cl.get_query_string({}, [self.lookup_kwarg]),
+            'query_string': changelist.get_query_string({}, [self.lookup_kwarg]),
             'display': _('All')
         }
 
@@ -52,7 +52,7 @@ class ProductiveFilterSpec(ChoicesFieldListFilter):
         for item in status:
             yield {
                 'selected': self.lookup_val == item[0],
-                'query_string': cl.get_query_string(
+                'query_string': changelist.get_query_string(
                     {self.lookup_kwarg: item[0]}
                 ),
                 'display': item[1]
