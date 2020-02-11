@@ -568,7 +568,7 @@ class DomainForm(forms.ModelForm):
 
     def save(self, commit=True):
         users = self.cleaned_data.get('users', [])
-        self.instance.update_domain_admins(map(int, users))
+        self.instance.update_domain_admins(list(map(int, users)))
 
         return super(DomainForm, self).save(commit=commit)
 
