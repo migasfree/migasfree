@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models import Q
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 
 from . import Attribute, UserProfile, MigasLink
 
@@ -19,7 +18,6 @@ class DomainFaultDefinitionManager(models.Manager):
         return qs.distinct()
 
 
-@python_2_unicode_compatible
 class FaultDefinition(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
