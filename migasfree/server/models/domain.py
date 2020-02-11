@@ -5,7 +5,6 @@ from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from ..utils import list_difference
@@ -18,7 +17,6 @@ from . import (
 )
 
 
-@python_2_unicode_compatible
 class Domain(models.Model, MigasLink):
     name = models.CharField(
         max_length=50,
