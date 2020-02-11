@@ -3,7 +3,6 @@
 import json
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from . import DeviceConnection, DeviceModel, Attribute, MigasLink
@@ -25,7 +24,6 @@ class DeviceManager(models.Manager):
         return qs
 
 
-@python_2_unicode_compatible
 class Device(models.Model, MigasLink):
     name = models.CharField(
         verbose_name=_("name"),
