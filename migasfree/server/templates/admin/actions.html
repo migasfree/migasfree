@@ -1,15 +1,17 @@
 {% load i18n bootstrapped_goodies_tags %}
 <div class="actions form-group">
     {% for field in action_form %}
-        {% if field.label %}<span style="vertical-align:sub">{{ field.label }}</span> {% endif %}
+        <span class="actions form-group">
+        {% if field.label %}<span>{{ field.label }}</span> {% endif %}
         {% dab_field_rendering field %}
+        </span>
     {% endfor %}
-    <button type="submit" class="btn btn-default" title="{% trans "Run the selected action" %}" name="index" value="{{ action_index|default:0 }}">{% trans "Go" %}</button>
+    <button type="submit" class="btn btn-default" title="{% trans 'Run the selected action' %}" name="index" value="{{ action_index|default:0 }}">{% trans "Go" %}</button>
     {% if actions_selection_counter %}
         <span class="action-counter" data-actions-icnt="{{ cl.result_list|length }}" data-actionsIcnt="{{ cl.result_list|length }}">{{ selection_note }}</span>
         {% if cl.result_count != cl.result_list|length %}
-        <span class="all" style="vertical-align:sub">{{ selection_note_all }}</span>
-        <span class="question"><a class="btn btn-default" href="#" title="{% trans "Click here to select the objects across all pages" %}">{% blocktrans with cl.result_count as total_count %}Select all {{ total_count }} {{ module_name }}{% endblocktrans %}</a></span>
+        <span class="all">{{ selection_note_all }}</span>
+        <span class="question"><a class="btn btn-default" href="#" title="{% trans 'Click here to select the objects across all pages' %}">{% blocktrans with cl.result_count as total_count %}Select all {{ total_count }} {{ module_name }}{% endblocktrans %}</a></span>
         <span class="clear"><a class="btn btn-default" href="#">{% trans "Clear selection" %}</a></span>
         {% endif %}
     {% endif %}
