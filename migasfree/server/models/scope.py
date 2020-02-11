@@ -3,7 +3,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.template.defaultfilters import slugify
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from .attribute import Attribute
@@ -35,7 +34,6 @@ class ScopeManager(models.Manager):
         return qs
 
 
-@python_2_unicode_compatible
 class Scope(models.Model, MigasLink):
     user = models.ForeignKey(
         UserProfile,
