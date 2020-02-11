@@ -222,8 +222,7 @@ class MigasAdmin(ExportActionModelAdmin):
     def media(self):
         media = super(MigasAdmin, self).media
         media._js = list(filter(
-            lambda i: not i.startswith('admin/js/vendor/jquery/jquery')
-            and not i.startswith('import_export/action_formats'),
+            lambda i: not i.startswith('admin/js/vendor/jquery/jquery'),
             media._js
         ))
 
