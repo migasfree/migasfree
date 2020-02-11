@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# Copyright (c) 2016-2018 Jose Antonio Chavarría <jachavar@gmail.com>
-# Copyright (c) 2016-2018 Alberto Gacías <alberto@migasfree.org>
+# Copyright (c) 2016-2020 Jose Antonio Chavarría <jachavar@gmail.com>
+# Copyright (c) 2016-2020 Alberto Gacías <alberto@migasfree.org>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,12 +20,10 @@ from django.db import models
 from django.db.models.aggregates import Count
 from django.db.models.functions import TruncDay, TruncHour, ExtractMonth, ExtractYear
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 
 from .computer import Computer
 
 
-@python_2_unicode_compatible
 class Event(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
