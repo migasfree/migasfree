@@ -1,7 +1,6 @@
 # -*- coding: utf-8 *-*
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 
 from . import Project
@@ -30,7 +29,6 @@ class MigrationManager(DomainMigrationManager):
         return obj
 
 
-@python_2_unicode_compatible
 class Migration(Event):
     project = models.ForeignKey(
         Project,
