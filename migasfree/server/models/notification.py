@@ -4,7 +4,6 @@ from django.db import models
 from django.db.models.aggregates import Count
 from django.db.models.functions import ExtractMonth, ExtractYear
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 
 
 class NotificationManager(models.Manager):
@@ -16,7 +15,6 @@ class NotificationManager(models.Manager):
         return obj
 
 
-@python_2_unicode_compatible
 class Notification(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
