@@ -4,7 +4,6 @@ import os
 import shutil
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.utils.text import slugify
 from django.urls import reverse
@@ -36,7 +35,6 @@ class StoreManager(DomainStoreManager):
         return self.get_queryset().filter(project__id=project_id)
 
 
-@python_2_unicode_compatible
 class Store(models.Model, MigasLink):
     """
     Location where packages will be stored (p.e. /debian8/third/syntevo/)
