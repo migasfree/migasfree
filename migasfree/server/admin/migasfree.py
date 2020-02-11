@@ -262,11 +262,11 @@ class MigasChangeList(ChangeList):
                 elif isinstance(x.lookup_choices[0][0], int):
                     element = dict(
                         x.lookup_choices
-                    )[int(list(x.used_parameters.values())[0])]
+                    ).get(int(list(x.used_parameters.values())[0]), '')
                 else:
                     element = dict(
                         x.lookup_choices
-                    )[list(x.used_parameters.values())[0]]
+                    ).get(list(x.used_parameters.values())[0], '')
 
                 self.append(x.title, element, list(x.used_parameters.keys())[0])
                 for element in x.used_parameters:
