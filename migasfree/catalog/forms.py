@@ -6,7 +6,7 @@ from form_utils.widgets import ImageWidget
 
 from migasfree.server.fields import MigasAutoCompleteSelectMultipleField
 
-from .models import Application, Policy, PolicyGroup
+from .models import Application, Policy, PolicyGroup, PackagesByProject
 
 
 class ApplicationForm(forms.ModelForm):
@@ -55,3 +55,9 @@ class PolicyGroupForm(forms.ModelForm):
     class Meta:
         model = PolicyGroup
         fields = '__all__'
+
+
+class PackagesByProjectForm(forms.ModelForm):
+    class Meta:
+        model = PackagesByProject
+        fields = ('packages_to_install',)
