@@ -2,7 +2,6 @@
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from django.utils.encoding import python_2_unicode_compatible
 
 from . import HwNode
 
@@ -19,7 +18,6 @@ class HwCapabilityManager(models.Manager):
         return obj
 
 
-@python_2_unicode_compatible
 class HwCapability(models.Model):
     node = models.ForeignKey(
         HwNode,
