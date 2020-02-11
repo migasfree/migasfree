@@ -8,7 +8,6 @@ from django.db import models
 from django.conf import settings
 from django.template.defaultfilters import slugify
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext_lazy as _
 from django.db.models import Q
 from django.db.models.signals import pre_save, pre_delete
@@ -41,7 +40,6 @@ class DeploymentManager(models.Manager):
         return qs
 
 
-@python_2_unicode_compatible
 class Deployment(models.Model, MigasLink):
     SOURCE_INTERNAL = 'I'
     SOURCE_EXTERNAL = 'E'
