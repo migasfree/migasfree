@@ -9,15 +9,12 @@ from ajax_select import make_ajax_form
 from migasfree.server.admin.migasfree import MigasAdmin, MigasFields, MigasTabularInline
 
 from .models import Application, PackagesByProject, Policy, PolicyGroup, Attribute
-from .forms import ApplicationForm, PolicyForm, PolicyGroupForm
+from .forms import ApplicationForm, PolicyForm, PolicyGroupForm, PackagesByProjectForm
 
 
 @admin.register(PackagesByProject)
 class PackagesByProjectAdmin(MigasAdmin):
-    form = make_ajax_form(
-        PackagesByProject,
-        {'project': 'project'}
-    )
+    form = PackagesByProjectForm
 
     list_display = (
         'id', 'application_link', 'project_link', 'packages_to_install'
