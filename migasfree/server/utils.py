@@ -155,7 +155,7 @@ def swap_m2m(source_field, target_field):
 
 
 def remove_empty_elements_from_dict(dic):
-    return dict((k, v) for k, v in iteritems(dic) if v)
+    return dict((k, v) for k, v in dic.items() if v)
 
 
 def diff_month(d1, d2):
