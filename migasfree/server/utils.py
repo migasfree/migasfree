@@ -5,7 +5,6 @@ import tempfile
 import copy
 
 from datetime import datetime, timedelta
-from six import iteritems
 
 from django.conf import settings
 from django.utils.html import format_html
