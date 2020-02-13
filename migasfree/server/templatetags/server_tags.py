@@ -8,7 +8,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.safestring import mark_safe
 
-from migasfree.stats.views import HOURLY_RANGE
+from ...stats.views import HOURLY_RANGE
 from ..models import UserProfile
 
 register = template.Library()
@@ -22,9 +22,9 @@ def organization():
 class TemplateProject(template.Node):
     def render(self, context):
         try:
-            obj = UserProfile.objects.get(id=context["user"].id).project
+            obj = UserProfile.objects.get(id=context['user'].id).project
         except (AttributeError, IndexError, ObjectDoesNotExist):
-            obj = ""
+            obj = ''
 
         return obj
 
@@ -37,12 +37,12 @@ def project(parser, token):
 class TemplateLink(template.Node):
     def render(self, context):
         try:
-            obj = context["original"].link()
+            obj = context['original'].link()
         except (AttributeError, IndexError):
             try:
-                obj = context["original"].__str__()
+                obj = context['original'].__str__()
             except (AttributeError, IndexError):
-                obj = ""
+                obj = ''
 
         return obj
 
