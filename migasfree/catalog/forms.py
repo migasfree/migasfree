@@ -4,7 +4,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from form_utils.widgets import ImageWidget
 
-from migasfree.server.fields import MigasAutoCompleteSelectMultipleField
+from ..server.fields import MigasAutoCompleteSelectMultipleField
 
 from .models import Application, Policy, PolicyGroup, PackagesByProject
 
