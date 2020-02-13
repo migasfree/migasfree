@@ -10,7 +10,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import Project, Deployment
+from ...server.models import Project, Deployment
 
 
 def enabled_deployments(user):
@@ -278,7 +278,7 @@ def deployments_summary(request):
         request,
         'deployments_summary.html',
         {
-            'title': _("Deployments"),
+            'title': _('Deployments'),
             'chart_options': {
                 'no_data': _('There are no data to show'),
                 'reset_zoom': _('Reset Zoom'),

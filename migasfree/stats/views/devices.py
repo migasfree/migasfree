@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import Device, DeviceModel
+from ...server.models import Device, DeviceModel
 
 
 def devices_by_connection():

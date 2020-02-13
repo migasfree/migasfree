@@ -13,11 +13,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 
-from migasfree.server.models import (
+from ...server.models import (
     Platform,
     Synchronization
 )
-from migasfree.server.utils import to_heatmap, to_timestamp
+from ...server.utils import to_heatmap, to_timestamp
 
 from . import MONTHLY_RANGE, DAILY_RANGE
 
@@ -54,7 +54,7 @@ def get_syncs_time_range(start_date, end_date, platform=0, range_name='month', u
     ).extra(
         {range_name: "date_trunc('" + range_name + "', created_at)"}
     ).values(range_name).annotate(
-        count=Count("computer_id", distinct=True)
+        count=Count('computer_id', distinct=True)
     ).order_by('-' + range_name)
 
     if platform:
@@ -177,7 +177,7 @@ class SyncStatsViewSet(viewsets.ViewSet):
 @login_required
 def synchronized_monthly(request):
     labels = {
-        'total': _("Totals")
+        'total': _('Totals')
     }
     x_labels = {}
     data = {}
@@ -193,7 +193,7 @@ def synchronized_monthly(request):
     client.force_authenticate(user=request.user)
     url = '/api/v1/token/stats/syncs/monthly/'
 
-    platforms = Platform.objects.only("id", "name")
+    platforms = Platform.objects.only('id', 'name')
     for platform in platforms:
         new_data[platform.id] = []
         labels[platform.id] = platform.name

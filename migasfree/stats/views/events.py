@@ -13,7 +13,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import (
+from ...server.models import (
     Synchronization, Migration, Platform, Project, StatusLog,
     Computer, Error, Fault, Notification,
 )
@@ -63,8 +63,8 @@ def event_by_month(data, begin_date, end_date, model, field='project_id'):
         start_date = date(monthly[0], monthly[1], 1)
         final_date = start_date + relativedelta(months=+1)
         querystring = {
-            'created_at__gte': start_date.strftime("%Y-%m-%d"),
-            'created_at__lt': final_date.strftime("%Y-%m-%d")
+            'created_at__gte': start_date.strftime('%Y-%m-%d'),
+            'created_at__lt': final_date.strftime('%Y-%m-%d')
         }
 
         key = '%d-%02d' % (monthly[0], monthly[1])

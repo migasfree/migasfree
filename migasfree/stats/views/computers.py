@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import Computer, Platform
+from ...server.models import Computer, Platform
 from .events import month_interval, event_by_month
 
 

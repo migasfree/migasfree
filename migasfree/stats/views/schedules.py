@@ -7,11 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import (
+from ...server.models import (
     Computer, Project, Deployment,
     Schedule, ScheduleDelay,
 )
-from migasfree.server.utils import time_horizon
+from ...server.utils import time_horizon
 
 from .syncs import render_table
 
@@ -44,7 +44,7 @@ def project_schedule_delays(request, project_name=None):
 
         delays = ScheduleDelay.objects.filter(
             schedule__name=schedule.name
-        ).order_by("delay")
+        ).order_by('delay')
         for delay in delays:
             lst_att_delay = list(delay.attributes.values_list('id', flat=True))
             for i in range(d, delay.delay):
@@ -55,7 +55,7 @@ def project_schedule_delays(request, project_name=None):
                 value += Computer.productive.scope(request.user.userprofile).extra(
                     select={'deployment': 'id'},
                     where=[
-                        "computer_id %% {} = {}".format(delay.duration, duration)
+                        'computer_id %% {} = {}'.format(delay.duration, duration)
                     ]
                 ).filter(
                     ~Q(sync_attributes__id__in=lst_attributes) &
@@ -119,12 +119,12 @@ def provided_computers_by_delay(request):
         q_ex_domain
     ).values('id').distinct().count()
 
-    date_format = "%Y-%m-%d"
+    date_format = '%Y-%m-%d'
     now = datetime.now()
 
     delays = ScheduleDelay.objects.filter(
         schedule__id=deploy.schedule.id
-    ).order_by("delay")
+    ).order_by('delay')
     len_delays = len(delays)
 
     for i, item in enumerate(delays):
@@ -153,7 +153,7 @@ def provided_computers_by_delay(request):
                 value += Computer.productive.scope(request.user.userprofile).extra(
                     select={'deployment': 'id'},
                     where=[
-                        "computer_id %% {} = {}".format(item.duration, duration)
+                        'computer_id %% {} = {}'.format(item.duration, duration)
                     ]
                 ).filter(
                     ~ Q(sync_attributes__id__in=lst_attributes) &

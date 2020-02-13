@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import ClientAttribute, ServerAttribute
+from ...server.models import ClientAttribute, ServerAttribute
 
 
 def attribute_by_property(user):

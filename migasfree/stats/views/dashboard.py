@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import (
+from ...server.models import (
     Error, Fault,
     Migration, StatusLog,
     Synchronization

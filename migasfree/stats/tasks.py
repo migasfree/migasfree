@@ -8,7 +8,7 @@ from django.conf import settings
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.server.models import (
+from ..server.models import (
     Error, Fault, Message, Deployment,
     Notification, Package, Project,
 )
@@ -98,7 +98,7 @@ def delayed_computers(user):
         'result': Message.objects.scope(user).filter(updated_at__lt=t).count(),
         'url': '{}?updated_at__lt={}'.format(
             reverse('admin:server_message_changelist'),
-            t.strftime("%Y-%m-%d %H:%M:%S")
+            t.strftime('%Y-%m-%d %H:%M:%S')
         )
     }
 

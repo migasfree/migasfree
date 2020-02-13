@@ -10,8 +10,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
-from migasfree.server.models import Project, Store, Package
-from migasfree.catalog.models import Application
+from ...server.models import Project, Store, Package
+from ...catalog.models import Application
 
 
 def application_by_category():
@@ -170,7 +170,7 @@ def stores_summary(request):
         request,
         'stores_summary.html',
         {
-            'title': _("Stores"),
+            'title': _('Stores'),
             'chart_options': {
                 'no_data': _('There are no data to show'),
                 'reset_zoom': _('Reset Zoom'),
@@ -189,7 +189,7 @@ def packages_summary(request):
         request,
         'packages_summary.html',
         {
-            'title': _("Packages/Sets"),
+            'title': _('Packages/Sets'),
             'chart_options': {
                 'no_data': _('There are no data to show'),
                 'reset_zoom': _('Reset Zoom'),
@@ -206,7 +206,7 @@ def applications_summary(request):
         request,
         'applications_summary.html',
         {
-            'title': _("Applications"),
+            'title': _('Applications'),
             'chart_options': {
                 'no_data': _('There are no data to show'),
                 'reset_zoom': _('Reset Zoom'),
