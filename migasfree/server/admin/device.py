@@ -99,6 +99,7 @@ class DeviceLogicalAdmin(MigasAdmin):
 
     def get_queryset(self, request):
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(DeviceLogicalAdmin, self).get_queryset(
             request
         ).prefetch_related(
@@ -168,10 +169,8 @@ class DeviceAdmin(MigasAdmin):
 
     def computers(self, obj):
         related_objects = obj.related_objects('computer', self.user.userprofile)
-        if related_objects:
-            return related_objects.count()
 
-        return 0
+        return related_objects.count() if related_objects else 0
 
     computers.short_description = _('Computers')
 
@@ -194,6 +193,7 @@ class DeviceAdmin(MigasAdmin):
     def get_queryset(self, request):
         self.user = request.user
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(DeviceAdmin, self).get_queryset(
             request
         ).select_related(
