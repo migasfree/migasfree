@@ -11,8 +11,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from markdownx.models import MarkdownxField
 
-from migasfree.server.models import Project, Attribute, MigasLink
-from migasfree.server.utils import to_list
+from ..server.models import Project, Attribute, MigasLink
+from ..server.utils import to_list
 
 _UNSAVED_IMAGEFIELD = 'unsaved_imagefield'
 
@@ -53,6 +53,7 @@ class MediaFileSystemStorage(FileSystemStorage):
 
 def upload_path_handler(instance, filename):
     _, ext = os.path.splitext(filename)
+
     return 'catalog_icons/app_{}{}'.format(instance.pk, ext)
 
 
@@ -123,7 +124,7 @@ class Application(models.Model, MigasLink):
     available_for_attributes = models.ManyToManyField(
         Attribute,
         blank=True,
-        verbose_name=_("available for attributes")
+        verbose_name=_('available for attributes')
     )
 
     def __str__(self):
@@ -170,15 +171,15 @@ class PackagesByProject(models.Model, MigasLink):
 
 class Policy(models.Model, MigasLink):
     name = models.CharField(
-        verbose_name=_("name"),
+        verbose_name=_('name'),
         max_length=50
     )
 
     enabled = models.BooleanField(
-        verbose_name=_("enabled"),
+        verbose_name=_('enabled'),
         default=True,
-        help_text=_("if you uncheck this field, the policy is disabled for"
-                    " all computers.")
+        help_text=_('if you uncheck this field, the policy is disabled for'
+                    ' all computers.')
     )
 
     exclusive = models.BooleanField(
@@ -187,23 +188,23 @@ class Policy(models.Model, MigasLink):
     )
 
     comment = models.TextField(
-        verbose_name=_("comment"),
+        verbose_name=_('comment'),
         null=True,
         blank=True
     )
 
     included_attributes = models.ManyToManyField(
         Attribute,
-        related_name="PolicyIncludedAttributes",
+        related_name='PolicyIncludedAttributes',
         blank=True,
-        verbose_name=_("included attributes"),
+        verbose_name=_('included attributes'),
     )
 
     excluded_attributes = models.ManyToManyField(
         Attribute,
-        related_name="PolicyExcludedAttributes",
+        related_name='PolicyExcludedAttributes',
         blank=True,
-        verbose_name=_("excluded attributes"),
+        verbose_name=_('excluded attributes'),
     )
 
     def __str__(self):
@@ -253,7 +254,7 @@ class Policy(models.Model, MigasLink):
             ):
                 for group in PolicyGroup.objects.filter(
                         policy=policy
-                ).order_by("priority"):
+                ).order_by('priority'):
                     if policy.belongs_excluding(
                             computer,
                             group.included_attributes.all(),
@@ -277,42 +278,42 @@ class Policy(models.Model, MigasLink):
 
     class Meta:
         app_label = 'catalog'
-        verbose_name = _("Policy")
-        verbose_name_plural = _("Policies")
-        unique_together = ("name",)
-        permissions = (("can_save_policy", "Can save Policy"),)
+        verbose_name = _('Policy')
+        verbose_name_plural = _('Policies')
+        unique_together = ('name',)
+        permissions = (('can_save_policy', 'Can save Policy'),)
         ordering = ['name']
 
 
 class PolicyGroup(models.Model, MigasLink):
     priority = models.IntegerField(
-        verbose_name=_("priority")
+        verbose_name=_('priority')
     )
 
     policy = models.ForeignKey(
         Policy,
         on_delete=models.CASCADE,
-        verbose_name=_("policy")
+        verbose_name=_('policy')
     )
 
     included_attributes = models.ManyToManyField(
         Attribute,
-        related_name="PolicyGroupIncludedAttributes",
+        related_name='PolicyGroupIncludedAttributes',
         blank=True,
-        verbose_name=_("included attributes"),
+        verbose_name=_('included attributes'),
     )
 
     excluded_attributes = models.ManyToManyField(
         Attribute,
-        related_name="PolicyGroupExcludedAttributes",
+        related_name='PolicyGroupExcludedAttributes',
         blank=True,
-        verbose_name=_("excluded attributes"),
+        verbose_name=_('excluded attributes'),
     )
 
     applications = models.ManyToManyField(
         Application,
         blank=True,
-        verbose_name=_("application"),
+        verbose_name=_('application'),
     )
 
     def __str__(self):
@@ -320,10 +321,10 @@ class PolicyGroup(models.Model, MigasLink):
 
     class Meta:
         app_label = 'catalog'
-        verbose_name = _("Policy Group")
-        verbose_name_plural = _("Policy Groups")
-        unique_together = (("policy", "priority"),)
-        permissions = (("can_save_policygroup", "Can save Policy Group"),)
+        verbose_name = _('Policy Group')
+        verbose_name_plural = _('Policy Groups')
+        unique_together = (('policy', 'priority'),)
+        permissions = (('can_save_policygroup', 'Can save Policy Group'),)
         ordering = ['policy__name', 'priority']
 
 
