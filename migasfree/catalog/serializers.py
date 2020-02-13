@@ -2,8 +2,9 @@
 
 from rest_framework import serializers
 
-from migasfree.server.utils import to_list
-from migasfree.server.serializers import AttributeInfoSerializer
+from ..server.utils import to_list
+from ..server.serializers import AttributeInfoSerializer
+
 from . import models
 
 
