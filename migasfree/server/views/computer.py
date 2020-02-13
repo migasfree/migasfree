@@ -14,7 +14,7 @@ from django.views.generic import DeleteView
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
-from migasfree.catalog.models import Policy
+from ...catalog.models import Policy
 
 from ..forms import ComputerReplacementForm
 from ..models import (
@@ -34,7 +34,8 @@ class ComputerDelete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('admin:server_computer_changelist')
 
     def get_success_url(self):
-        messages.success(self.request, _("Computer %s deleted!") % self.object)
+        messages.success(self.request, _('Computer %s deleted!') % self.object)
+
         return self.success_url
 
 
@@ -56,7 +57,7 @@ def computer_delete_selected(request):
 
         messages.success(
             request,
-            _("Computers %s, deleted!") % ', '.join([x for x in deleted])
+            _('Computers %s, deleted!') % ', '.join([x for x in deleted])
         )
 
     return redirect(success_url)
@@ -81,7 +82,7 @@ def computer_change_status(request):
 
         messages.success(
             request,
-            _("Computers %s, changed status!") % ', '.join([x for x in changed])
+            _('Computers %s, changed status!') % ', '.join([x for x in changed])
         )
 
     return redirect(success_url)
@@ -228,20 +229,20 @@ def computer_simulate_sync(request, pk):
             )
         else:
             data = {
-                "upload_computer_info": {
-                    "attributes": pack_attributes(
+                'upload_computer_info': {
+                    'attributes': pack_attributes(
                         computer.sync_attributes.values_list(
                             'property_att__prefix', 'property_att__kind', 'value'
                         )
                     ),
-                    "computer": {
-                        "user_fullname": computer.sync_user.fullname,
-                        "pms": project.pms.name,
-                        "ip": computer.ip_address,
-                        "hostname": computer.name,
-                        "platform": project.platform.name,
-                        "project": project.name,
-                        "user": computer.sync_user.name
+                    'computer': {
+                        'user_fullname': computer.sync_user.fullname,
+                        'pms': project.pms.name,
+                        'ip': computer.ip_address,
+                        'hostname': computer.name,
+                        'platform': project.platform.name,
+                        'project': project.name,
+                        'user': computer.sync_user.name
                     }
                 }
             }
@@ -263,32 +264,32 @@ def computer_simulate_sync(request, pk):
             transaction.rollback()  # only simulate sync... not real sync!
             transaction.set_autocommit(True)
 
-            result["attributes"] = computer.sync_attributes.filter(
+            result['attributes'] = computer.sync_attributes.filter(
                 property_att__sort='client'
             )
 
             set_ids = AttributeSet.process(
                 [1, computer.get_cid_attribute().id] +
                 list(computer.tags.values_list('id', flat=True)) +
-                list(result["attributes"].values_list('id', flat=True))
+                list(result['attributes'].values_list('id', flat=True))
             )
 
-            result["sets"] = Attribute.objects.filter(id__in=[1] + set_ids)  # FIXME constant
+            result['sets'] = Attribute.objects.filter(id__in=[1] + set_ids)  # FIXME constant
 
-            result["repositories"] = Deployment.objects.filter(
+            result['repositories'] = Deployment.objects.filter(
                 project__id=project.id,
-                name__in=[item['name'] for item in result.get("repositories", []) if 'name' in item]
+                name__in=[item['name'] for item in result.get('repositories', []) if 'name' in item]
             )
 
-            result["faultsdef"] = FaultDefinition.objects.filter(
-                name__in=[item['name'] for item in result.get("faultsdef", []) if 'name' in item]
+            result['faultsdef'] = FaultDefinition.objects.filter(
+                name__in=[item['name'] for item in result.get('faultsdef', []) if 'name' in item]
             )
 
-            result["default_device"] = result.get("devices", {}).get("default", 0)
+            result['default_device'] = result.get('devices', {}).get('default', 0)
             devices = []
-            for device in result.get("devices", {}).get("logical", []):
+            for device in result.get('devices', {}).get('logical', []):
                 devices.append(DeviceLogical.objects.get(pk=device['PRINTER']['id']))
-            result["devices"] = devices
+            result['devices'] = devices
 
             policy_pkg_to_install, policy_pkg_to_remove = Policy.get_packages(computer)
             result['policies'] = {'to_install': policy_pkg_to_install, 'to_remove': policy_pkg_to_remove}
