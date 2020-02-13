@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from django.db.models import Prefetch
 from django.contrib import admin
 from django.utils.translation import ugettext_lazy as _
-from django.db.models import Prefetch
 
-from ajax_select import make_ajax_form
-
-from migasfree.server.admin.migasfree import MigasAdmin, MigasFields, MigasTabularInline
+from ..server.admin.migasfree import MigasAdmin, MigasFields, MigasTabularInline
 
 from .models import Application, PackagesByProject, Policy, PolicyGroup, Attribute
 from .forms import ApplicationForm, PolicyForm, PolicyGroupForm, PackagesByProjectForm
@@ -53,6 +51,7 @@ class PackagesByProjectLine(MigasTabularInline):
         user = request.user.userprofile
         if not user.is_view_all():
             qs = qs.filter(project__in=user.get_projects())
+
         return qs
 
 
@@ -89,9 +88,9 @@ class ApplicationAdmin(MigasAdmin):
 
     class Media:
         css = {
-            "screen, projection, handheld": ("css/star-rating.min.css",)
+            'screen, projection, handheld': ('css/star-rating.min.css',)
         }
-        js = ("js/star-rating.min.js", "js/app.js")
+        js = ('js/star-rating.min.js', 'js/app.js')
 
 
 @admin.register(PolicyGroup)
@@ -120,6 +119,7 @@ class PolicyGroupAdmin(MigasAdmin):
 
     def get_queryset(self, request):
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(PolicyGroupAdmin, self).get_queryset(
             request
         ).prefetch_related(
@@ -142,6 +142,7 @@ class PolicyGroupLine(MigasTabularInline):
 
     def get_queryset(self, request):
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(PolicyGroupLine, self).get_queryset(
             request
         ).prefetch_related(
@@ -196,6 +197,7 @@ class PolicyAdmin(MigasAdmin):
 
     def get_queryset(self, request):
         qs = Attribute.objects.scope(request.user.userprofile)
+
         return super(PolicyAdmin, self).get_queryset(
             request
         ).prefetch_related(
