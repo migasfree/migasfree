@@ -7,11 +7,12 @@ from rest_framework_filters import backends
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from migasfree.server.permissions import PublicPermission
-from migasfree.server.models import Computer
-from migasfree.server.views import MigasViewSet
-from . import models, serializers
+from ..server.permissions import PublicPermission
+from ..server.models import Computer
+from ..server.views import MigasViewSet
+
 from .filters import ApplicationFilter, PackagesByProjectFilter, PolicyFilter
+from . import models, serializers
 
 
 class ApplicationViewSet(viewsets.ModelViewSet, MigasViewSet):
