@@ -674,6 +674,32 @@ class Computer(models.Model, MigasLink):
 
     faults.short_description = _('Faults')
 
+    def unsync_from(self):
+        if not self.sync_end_date:
+            return ''
+
+        now = datetime.now()
+        diff = now - self.sync_end_date
+
+        appearance = 'info'
+        if 1 <= diff.days < 30:
+            appearance = 'warning'
+        elif diff.days >= 30:
+            appearance = 'danger'
+
+        from_ = strfdelta(diff, _('{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}'))
+        if diff.days < 1:
+            from_ = strfdelta(diff, '{hours:02d}:{minutes:02d}:{seconds:02d}')
+
+        return format_html(
+            '<span class="label label-{}" title="{}">'
+            '<i class="fas fa-stopwatch fa-lg"></i> {}</span>'.format(
+                appearance,
+                _('unsynchronized from'),
+                from_
+            )
+        )
+
     def last_sync_time(self):
         if not self.sync_start_date:
             return ''
