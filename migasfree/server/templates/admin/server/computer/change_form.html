@@ -97,7 +97,7 @@
 
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">{% trans 'Hardware' %}</div>
+            <div class="panel-heading lead">{% trans 'Hardware' %}</div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-4 col-xs-4" title="{% if original.machine == 'P' %}{% trans 'Physical' %}{% elif original.is_docker %}docker{% else %}{% trans 'Virtual' %}{% endif %}">
@@ -174,7 +174,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">{% trans 'Current Situation' %}</div>
+            <div class="panel-heading lead">{% trans 'Current Situation' %}</div>
             <div class="panel-body">
                 {% if has_change_permission %}
                 <p title="{% trans 'status' %}">
@@ -250,7 +250,10 @@
 
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">{% trans 'Synchronization' %}</div>
+            <div class="panel-heading lead">
+                {% trans 'Synchronization' %}
+                <div class="pull-right">{{ original.unsync_from }}</div>
+            </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
@@ -284,7 +287,7 @@
 <div class="row">
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">{% trans 'Software' %}</div>
+            <div class="panel-heading lead">{% trans 'Software' %}</div>
             <div class="panel-body">
                 <div class="col-md-12" title="{% trans 'software inventory' %}">
                     <span class="fas fa-archive"></span>
@@ -300,7 +303,7 @@
 
     <div class="col-md-6">
         <div class="panel panel-default">
-            <div class="panel-heading">{% trans 'Devices' %}</div>
+            <div class="panel-heading lead">{% trans 'Devices' %}</div>
             <div class="panel-body">
                 {% if has_change_permission %}
                 <p title="{% trans 'Assigned' %}">
