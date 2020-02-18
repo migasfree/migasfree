@@ -716,11 +716,15 @@ class Computer(models.Model, MigasLink):
             diff = self.sync_end_date - self.sync_start_date
 
         if self.sync_start_date < delayed_time and is_updating:
+            time_ = strfdelta(diff, _('{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}'))
+            if diff.days < 1:
+                time_ = strfdelta(diff, '{hours:02d}:{minutes:02d}:{seconds:02d}')
+
             return format_html(
                 '<span class="label label-warning" title="{}">'
                 '<i class="fas fa-exclamation-triangle"></i> {}</span>'.format(
                     _('Delayed Computer'),
-                    strfdelta(diff, _('{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}'))
+                    time_
                 )
             )
 
