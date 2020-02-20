@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-17 08:49+0100\n"
+"POT-Creation-Date: 2020-02-20 08:52+0100\n"
 "PO-Revision-Date: 2020-02-17 08:51+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: MeLiSA\n"
@@ -355,7 +355,7 @@ msgstr "Sincronización"
 msgid "Software"
 msgstr "Software"
 
-#: migasfree/server/admin/client.py:134 migasfree/server/models/computer.py:755
+#: migasfree/server/admin/client.py:134 migasfree/server/models/computer.py:759
 #: migasfree/server/templates/admin/server/computer/change_form.html:100
 msgid "Hardware"
 msgstr "Hardware"
@@ -390,7 +390,7 @@ msgstr "%s comprobado/s"
 
 #: migasfree/server/admin/client.py:303 migasfree/server/models/computer.py:636
 #: migasfree/server/models/computer.py:643
-#: migasfree/server/models/computer.py:749 migasfree/server/models/error.py:90
+#: migasfree/server/models/computer.py:753 migasfree/server/models/error.py:90
 #: migasfree/server/templates/admin/server/computer/change_form.html:227
 #: migasfree/server/templates/computer_events.html:29
 #: migasfree/server/templates/includes/breadcrumb.html:49
@@ -407,7 +407,7 @@ msgstr "A comprobación é correcta."
 #: migasfree/server/admin/client.py:363 migasfree/server/models/computer.py:570
 #: migasfree/server/models/computer.py:668
 #: migasfree/server/models/computer.py:675
-#: migasfree/server/models/computer.py:750 migasfree/server/models/fault.py:104
+#: migasfree/server/models/computer.py:754 migasfree/server/models/fault.py:104
 #: migasfree/server/templates/admin/server/computer/change_form.html:233
 #: migasfree/server/templates/computer_events.html:31
 #: migasfree/server/templates/includes/breadcrumb.html:47
@@ -443,7 +443,7 @@ msgid "Users"
 msgstr "Usuarios"
 
 #: migasfree/server/admin/client.py:449 migasfree/server/models/computer.py:567
-#: migasfree/server/models/computer.py:769
+#: migasfree/server/models/computer.py:773
 #: migasfree/server/templates/base.html:200
 #: migasfree/server/templates/includes/computer_messages_result.html:12
 msgid "Computer"
@@ -516,7 +516,7 @@ msgstr "Calendario"
 
 #: migasfree/server/admin/core.py:416 migasfree/server/admin/core.py:657
 #: migasfree/server/admin/device.py:175 migasfree/server/forms.py:301
-#: migasfree/server/models/computer.py:770
+#: migasfree/server/models/computer.py:774
 #: migasfree/server/templates/computer_change_status.html:9
 #: migasfree/server/templates/computer_confirm_delete.html:9
 #: migasfree/server/templates/computer_confirm_delete_selected.html:9
@@ -581,12 +581,12 @@ msgid "time line"
 msgstr "liña temporal"
 
 #: migasfree/server/admin/migasfree.py:257
-#: migasfree/server/admin/migasfree.py:403
+#: migasfree/server/admin/migasfree.py:405
 msgid "empty"
 msgstr "baleiro"
 
 #: migasfree/server/admin/migasfree.py:257
-#: migasfree/server/admin/migasfree.py:403
+#: migasfree/server/admin/migasfree.py:405
 msgid "not empty"
 msgstr "non baleiro"
 
@@ -1154,7 +1154,7 @@ msgid "Unchecked Faults"
 msgstr "Fallos sen comprobar"
 
 #: migasfree/server/models/computer.py:690
-#: migasfree/server/models/computer.py:723
+#: migasfree/server/models/computer.py:719
 #, python-brace-format
 msgid "{days} days, {hours:02d}:{minutes:02d}:{seconds:02d}"
 msgstr "{days} días, {hours:02d}:{minutes:02d}:{seconds:02d}"
@@ -1163,20 +1163,20 @@ msgstr "{days} días, {hours:02d}:{minutes:02d}:{seconds:02d}"
 msgid "unsynchronized from"
 msgstr "sen sincronizar desde"
 
-#: migasfree/server/models/computer.py:722
+#: migasfree/server/models/computer.py:726
 msgid "Delayed Computer"
 msgstr "Ordenador atrasado"
 
-#: migasfree/server/models/computer.py:731
+#: migasfree/server/models/computer.py:735
 msgid "Updating..."
 msgstr "Actualizando..."
 
-#: migasfree/server/models/computer.py:737
+#: migasfree/server/models/computer.py:741
 #: migasfree/server/templates/admin/server/computer/change_form.html:263
 msgid "Last Update Time"
 msgstr "Tempo da última actualización"
 
-#: migasfree/server/models/computer.py:747
+#: migasfree/server/models/computer.py:751
 #: migasfree/server/templates/admin/server/computer/change_form.html:85
 #: migasfree/server/templates/computer_events.html:13
 #: migasfree/server/templates/computer_events.html:18
@@ -1184,7 +1184,7 @@ msgstr "Tempo da última actualización"
 msgid "Events"
 msgstr "Sucesos"
 
-#: migasfree/server/models/computer.py:748
+#: migasfree/server/models/computer.py:752
 #: migasfree/server/models/synchronization.py:58
 #: migasfree/server/templates/computer_events.html:27
 #: migasfree/server/templates/includes/breadcrumb.html:41
@@ -1193,12 +1193,12 @@ msgstr "Sucesos"
 msgid "Synchronizations"
 msgstr "Sincronizacións"
 
-#: migasfree/server/models/computer.py:751
+#: migasfree/server/models/computer.py:755
 #: migasfree/server/models/status_log.py:42
 msgid "Status Log"
 msgstr "Rexistro de Estados"
 
-#: migasfree/server/models/computer.py:752
+#: migasfree/server/models/computer.py:756
 #: migasfree/server/models/migration.py:49
 #: migasfree/server/templates/computer_events.html:35
 #: migasfree/server/templates/includes/breadcrumb.html:43
@@ -1207,26 +1207,26 @@ msgstr "Rexistro de Estados"
 msgid "Migrations"
 msgstr "Migracións"
 
-#: migasfree/server/models/computer.py:754
+#: migasfree/server/models/computer.py:758
 msgid "SIM"
 msgstr "Sim"
 
-#: migasfree/server/models/computer.py:754
+#: migasfree/server/models/computer.py:758
 #: migasfree/server/templates/admin/server/computer/change_form.html:88
 #: migasfree/server/templates/computer_simulate_sync.html:9
 #: migasfree/server/templates/computer_simulate_sync.html:14
 msgid "Simulate sync"
 msgstr "Simular sincronización"
 
-#: migasfree/server/models/computer.py:755
+#: migasfree/server/models/computer.py:759
 msgid "HW"
 msgstr "HW"
 
-#: migasfree/server/models/computer.py:756
+#: migasfree/server/models/computer.py:760
 msgid "ID"
 msgstr "ID"
 
-#: migasfree/server/models/computer.py:756
+#: migasfree/server/models/computer.py:760
 #: migasfree/server/templates/admin/server/computer/change_form.html:91
 msgid "Label"
 msgstr "Etiqueta"
@@ -1677,12 +1677,12 @@ msgstr "Nodos hardware"
 msgid "text"
 msgstr "texto"
 
-#: migasfree/server/models/message.py:53
+#: migasfree/server/models/message.py:54
 #: migasfree/server/templates/includes/computer_messages_result.html:16
 msgid "Message"
 msgstr "Mensaxe"
 
-#: migasfree/server/models/message.py:54
+#: migasfree/server/models/message.py:55
 msgid "Messages"
 msgstr "Mensaxes"
 
@@ -3368,6 +3368,11 @@ msgstr "Almacéns / Proxecto"
 msgid "Totals"
 msgstr "Totais"
 
+#, fuzzy
+#~| msgid "update"
+#~ msgid "updated at"
+#~ msgstr "actualización"
+
 #~ msgid "Packages by default"
 #~ msgstr "Paquetes por defecto"
 
@@ -3582,9 +3587,6 @@ msgstr "Totais"
 
 #~ msgid "updates"
 #~ msgstr "actualizaciones"
-
-#~ msgid "update"
-#~ msgstr "actualización"
 
 #~ msgid "Updated Computers / Day"
 #~ msgstr "Ordenadores actualizados/día"
