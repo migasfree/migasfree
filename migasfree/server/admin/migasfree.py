@@ -253,9 +253,7 @@ class MigasChangeList(ChangeList):
                     for key, value in iteritems(x.used_parameters):
                         lookup_type = key.split('__')[1]
                         if lookup_type == 'isnull':
-                            element += '{}'.format(
-                                _('empty') if value else _('not empty')
-                            )
+                            element += _('empty') if value else _('not empty')
                         else:
                             element += '{}={}'.format(lookup_type, value)
                         params.pop(key, None)
@@ -397,6 +395,9 @@ class MigasChangeList(ChangeList):
                 if k not in remove:
                     try:
                         name, lookup_type = k.split('__')
+                        if name == 'updated_at' or name == 'created_at':
+                            name = 'date'
+                        name = name.replace('_', ' ')
                         if lookup_type == 'isnull':
                             self.append(
                                 name,
@@ -430,12 +431,15 @@ class MigasChangeList(ChangeList):
                         else:
                             self.append(k, params[k], k)
                     except ValueError:
-                        self.append(k, params[k], k)
+                        name = k
+                        if name == 'q':
+                            name = 'search'
+                        self.append(name, params[k], k)
 
         _filter = ", ".join(
             "{}: {}".format(
                 k["name"].capitalize(),
-                '{}'.format(k["value"])
+                k["value"]
             )
             for k in self.filter_description
         )
