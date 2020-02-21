@@ -225,16 +225,17 @@
                                 <a href="#" title="{% trans 'Change Domain' %}" class="dropdown-toggle" data-toggle="dropdown">
                                     <i class="fas fa-globe"></i> {{ current_domain }} <b class="caret"></b>
                                 </a>
-                                <ul class="dropdown-menu">
-                                    <input id="domain-search" class="form-control" type="search" value="" />
-                                    <div id="domain-names">
+                                <div class="dropdown-menu">
+                                    <input id="domain-search" class="form-control" type="search" value=""
+                                           placeholder="{% trans 'search' %}" />
+                                    <ul id="domain-names">
                                         {% for item in domain_names %}
                                             <li>
                                                 <a id="{{ item.0 }}" href="{% url 'change_domain' %}?domain={{ item.0 }}">{{ item.1 }}</a>
                                             </li>
                                         {% endfor %}
-                                    </div>
-                                </ul>
+                                    </ul>
+                                </div>
                             </li>
                             {% endif %}
 
@@ -280,7 +281,7 @@
         </header>
         {% endif %}{# is_popup #}
 
-        <div id="wrapper" class="container">
+        <div id="wrapper" class="container-fluid">
             <article class="col-md-12" role="main">
                 {% block breadcrumbs %}
                     {% include 'includes/breadcrumb.html' %}
@@ -312,7 +313,7 @@
 
         {% if not is_popup %}
             {% block footer %}
-                <footer class="bs-footer container">
+                <footer class="bs-footer container-fluid">
                     <p id="copyright" class="pull-left">
                         &copy; 2010-{% now 'Y' %} <a href="http://www.migasfree.org">migasfree</a>,
                         under <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>, <a href="https://github.com/migasfree/migasfree" title="migasfree-server_{{ migasfree_version }}"><span class="fab fa-github"></span> <span class="sr-only">(code project)</span></a>
