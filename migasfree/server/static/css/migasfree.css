@@ -311,6 +311,31 @@ li .btn-group {
     margin-bottom: 0;
 }
 
+#domain-search {
+    margin: 3px;
+    padding: 3px;
+    width: auto;
+}
+
+#domain-names {
+    margin: 0;
+    padding-left: 0;
+}
+
+#domain-names li {
+    list-style-type: none;
+}
+
+#domain-names li a {
+    display: block;
+    padding: 3px 20px;
+}
+
+#domain-names li a:hover, #domain-names li a:focus {
+    text-decoration: none;
+    background-color: #f5f5f5;
+}
+
 /* Sticky footer: http://css-tricks.com/snippets/css/sticky-footer/ */
 html, body {height: 92.5%;}
 #wrapper {
