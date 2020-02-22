@@ -7,6 +7,7 @@ from django.contrib import admin, messages
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.shortcuts import redirect, render
 from django.urls import resolve, reverse
+from django.utils.html import format_html
 from django.utils.translation import ugettext_lazy as _
 
 from ajax_select.admin import AjaxSelectAdmin
@@ -287,10 +288,11 @@ class ErrorAdmin(MigasCheckAdmin):
     )
 
     def truncated_desc(self, obj):
-        if len(obj.description) <= 250:
-            return obj.description
-        else:
-            return obj.description[:250] + " ..."
+        ret = obj.description
+        if len(obj.description) > 250:
+            ret = '{}  ...'.format(obj.description[:250])
+
+        return format_html('<pre class="normal-pre"><code>{}</code></pre>'.format(ret))
 
     truncated_desc.short_description = _("Truncated error")
     truncated_desc.admin_order_field = 'description'
