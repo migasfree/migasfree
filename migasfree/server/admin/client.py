@@ -11,7 +11,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from ajax_select.admin import AjaxSelectAdmin
 
-from .migasfree import MigasAdmin, MigasFields
+from .migasfree import MigasAdmin, MigasCheckAdmin, MigasFields
 
 from ..filters import (
     ProductiveFilterSpec, UserFaultFilter,
@@ -260,12 +260,12 @@ class ComputerAdmin(AjaxSelectAdmin, MigasAdmin):
 
 
 @admin.register(Error)
-class ErrorAdmin(MigasAdmin):
+class ErrorAdmin(MigasCheckAdmin):
     list_display = (
         'created_at',
         'computer_link',
         'project_link',
-        'my_checked',
+        'check_action',
         'truncated_desc',
     )
     list_display_links = ('created_at',)
@@ -279,7 +279,6 @@ class ErrorAdmin(MigasAdmin):
     exclude = ('computer', 'project')
     actions = ['checked_ok']
 
-    my_checked = MigasFields.boolean(model=Error, name='checked')
     computer_link = MigasFields.link(
         model=Error, name='computer', order='computer__name'
     )
@@ -319,12 +318,12 @@ class ErrorAdmin(MigasAdmin):
 
 
 @admin.register(Fault)
-class FaultAdmin(MigasAdmin):
+class FaultAdmin(MigasCheckAdmin):
     list_display = (
         'created_at',
         'computer_link',
         'project_link',
-        'my_checked',
+        'check_action',
         'result',
         'fault_definition_link',
     )
@@ -345,7 +344,6 @@ class FaultAdmin(MigasAdmin):
     exclude = ('computer', 'project', 'fault_definition')
     actions = ['checked_ok']
 
-    my_checked = MigasFields.boolean(model=Fault, name='checked')
     computer_link = MigasFields.link(
         model=Fault, name='computer', order='computer__name'
     )
@@ -497,8 +495,8 @@ class MigrationAdmin(MigasAdmin):
 
 
 @admin.register(Notification)
-class NotificationAdmin(MigasAdmin):
-    list_display = ('created_at', 'my_checked', 'my_message')
+class NotificationAdmin(MigasCheckAdmin):
+    list_display = ('created_at', 'check_action', 'my_message')
     list_display_links = ('created_at',)
     list_filter = ('checked', 'created_at')
     ordering = ('-created_at',)
@@ -507,7 +505,6 @@ class NotificationAdmin(MigasAdmin):
     exclude = ('message',)
     actions = ['checked_ok']
 
-    my_checked = MigasFields.boolean(model=Notification, name='checked')
     my_message = MigasFields.text(model=Notification, name='message')
 
     def checked_ok(self, request, queryset):
