@@ -73,6 +73,10 @@ class Error(Event):
         self.checked = True
         self.save()
 
+    def uncheck_ok(self):
+        self.checked = False
+        self.save()
+
     def auto_check(self):
         for ace in AutoCheckError.objects.all():
             if re.search(ace.message, self.description):
