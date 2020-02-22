@@ -95,6 +95,10 @@ class Fault(Event):
         self.checked = True
         self.save()
 
+    def uncheck_ok(self):
+        self.checked = False
+        self.save()
+
     def list_users(self):
         return self.fault_definition.list_users()
 
