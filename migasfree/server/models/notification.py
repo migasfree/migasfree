@@ -36,6 +36,10 @@ class Notification(models.Model):
         self.checked = True
         self.save()
 
+    def uncheck_ok(self):
+        self.checked = False
+        self.save()
+
     @staticmethod
     def unchecked_count():
         return Notification.objects.filter(checked=0).count()
