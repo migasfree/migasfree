@@ -108,6 +108,18 @@ td.nowrap, .nowrap {
     color: #f00;
 }
 
+a .boolean-yes, a .boolean-no {
+    color: inherit;
+}
+
+td.field-check_action {
+    text-align: center;
+}
+
+a.changelist-action {
+    width: 40px;
+}
+
 .stat-container {
     width: 80vw;
     margin: 20px auto;
