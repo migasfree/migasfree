@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-22 19:36+0100\n"
-"PO-Revision-Date: 2020-02-22 19:39+0100\n"
+"POT-Creation-Date: 2020-02-22 20:18+0100\n"
+"PO-Revision-Date: 2020-02-22 20:20+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: ca\n"
@@ -589,6 +589,14 @@ msgstr "¡%s comprovat!"
 #, python-format
 msgid "%s unchecked!"
 msgstr "¡%s no comprovat!"
+
+#: migasfree/server/admin/migasfree.py:274
+msgid "check"
+msgstr "comprovar"
+
+#: migasfree/server/admin/migasfree.py:279
+msgid "uncheck"
+msgstr "sense comprovar"
 
 #: migasfree/server/admin/migasfree.py:293 migasfree/server/models/error.py:55
 #: migasfree/server/models/fault.py:70
