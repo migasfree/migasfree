@@ -49,6 +49,11 @@ footer li {
     list-style-type: none;
 }
 
+pre.normal-pre {
+    background-color: inherit;
+    border: none;
+}
+
 p#copyright {
     background: url('../img/migasfree-logo.svg') left center no-repeat;
     background-size: contain;
@@ -110,6 +115,10 @@ td.nowrap, .nowrap {
 
 a .boolean-yes, a .boolean-no {
     color: inherit;
+}
+
+.field-description p {
+    white-space: pre;
 }
 
 td.field-check_action {
