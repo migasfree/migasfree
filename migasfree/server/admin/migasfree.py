@@ -271,12 +271,12 @@ class MigasCheckAdmin(MigasAdmin):
     def check_action(self, obj):
         style = 'btn-danger'
         icon = 'fa-times boolean-no'
-        action = 'check'
+        action = _('check')
         url_ = 'check_{}'.format(self.model._meta.model_name)
         if obj.checked:
             style = 'btn-success'
             icon = 'fa-check boolean-yes'
-            action = 'uncheck'
+            action = _('uncheck')
             url_ = 'uncheck_{}'.format(self.model._meta.model_name)
 
         return format_html(
@@ -284,9 +284,9 @@ class MigasCheckAdmin(MigasAdmin):
             '<span class="fas {}"></span><span class="sr-only">{}</span></a>'.format(
                 style,
                 reverse('admin:{}'.format(url_), kwargs={'pk': obj.id}),
-                _(action),
+                action,
                 icon,
-                _(action)
+                action
             )
         )
 
