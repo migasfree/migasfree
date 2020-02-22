@@ -6,15 +6,18 @@ import datetime
 from six import iteritems
 
 from import_export.admin import ExportActionModelAdmin
-from django.contrib import admin
+
+from django import forms
+from django.apps import apps
+from django.conf.urls import url
+from django.contrib import admin, messages
 from django.contrib.admin.views.main import ChangeList
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.fields import BooleanField, IntegerField
+from django.shortcuts import redirect, reverse, get_object_or_404
 from django.utils.translation import ugettext, ugettext_lazy as _
 from django.utils.html import format_html
-from django.db.models.fields import BooleanField, IntegerField
-from django.apps import apps
 from django.template.loader import render_to_string
-from django import forms
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class MigasFields(object):
@@ -227,6 +230,68 @@ class MigasAdmin(ExportActionModelAdmin):
         ))
 
         return media
+
+
+class MigasCheckAdmin(MigasAdmin):
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            url(
+                r'^check/(?P<pk>\d+)/$',
+                self.my_check,
+                name='check_{}'.format(self.model._meta.model_name)
+            ),
+            url(
+                r'^uncheck/(?P<pk>\d+)/$',
+                self.my_uncheck,
+                name='uncheck_{}'.format(self.model._meta.model_name)
+            ),
+        ]
+
+        return my_urls + urls
+
+    def my_check(self, request, pk):
+        obj = get_object_or_404(self.model, pk=pk)
+        obj.checked_ok()
+        messages.success(request, _("%s checked!") % obj)
+
+        return redirect(
+            'admin:{}_{}_changelist'.format(self.model._meta.app_label, self.model._meta.model_name)
+        )
+
+    def my_uncheck(self, request, pk):
+        obj = get_object_or_404(self.model, pk=pk)
+        obj.uncheck_ok()
+        messages.success(request, _("%s unchecked!") % obj)
+
+        return redirect(
+            'admin:{}_{}_changelist'.format(self.model._meta.app_label, self.model._meta.model_name)
+        )
+
+    def check_action(self, obj):
+        style = 'btn-danger'
+        icon = 'fa-times boolean-no'
+        action = 'check'
+        url_ = 'check_{}'.format(self.model._meta.model_name)
+        if obj.checked:
+            style = 'btn-success'
+            icon = 'fa-check boolean-yes'
+            action = 'uncheck'
+            url_ = 'uncheck_{}'.format(self.model._meta.model_name)
+
+        return format_html(
+            '<a class="btn btn-default {} changelist-action" href="{}" title="{}">'
+            '<span class="fas {}"></span><span class="sr-only">{}</span></a>'.format(
+                style,
+                reverse('admin:{}'.format(url_), kwargs={'pk': obj.id}),
+                _(action),
+                icon,
+                _(action)
+            )
+        )
+
+    check_action.short_description = _('checked')
+    check_action.admin_order_field = 'checked'
 
 
 class MigasTabularInline(admin.TabularInline):
