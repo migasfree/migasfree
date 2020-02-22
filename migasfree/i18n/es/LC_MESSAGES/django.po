@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: migasfree grape edition\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-20 08:52+0100\n"
-"PO-Revision-Date: 2020-02-20 08:54+0100\n"
+"POT-Creation-Date: 2020-02-22 19:36+0100\n"
+"PO-Revision-Date: 2020-02-22 19:37+0100\n"
 "Last-Translator: Jose Antonio Chavarría <jachavar@gmail.com>\n"
 "Language-Team: migasfree Team <fun.with@migasfree.org>\n"
 "Language: es_ES\n"
@@ -37,7 +37,7 @@ msgstr "proyecto"
 #: migasfree/catalog/admin.py:113 migasfree/catalog/admin.py:189
 #: migasfree/catalog/forms.py:29 migasfree/catalog/forms.py:44
 #: migasfree/catalog/models.py:200 migasfree/catalog/models.py:303
-#: migasfree/server/admin/client.py:415 migasfree/server/admin/core.py:790
+#: migasfree/server/admin/client.py:413 migasfree/server/admin/core.py:790
 #: migasfree/server/admin/core.py:835 migasfree/server/forms.py:87
 #: migasfree/server/forms.py:404 migasfree/server/forms.py:451
 #: migasfree/server/forms.py:518 migasfree/server/forms.py:545
@@ -57,7 +57,7 @@ msgstr "atributos incluidos"
 #: migasfree/catalog/admin.py:117 migasfree/catalog/admin.py:193
 #: migasfree/catalog/forms.py:33 migasfree/catalog/forms.py:48
 #: migasfree/catalog/models.py:207 migasfree/catalog/models.py:310
-#: migasfree/server/admin/client.py:419 migasfree/server/admin/core.py:793
+#: migasfree/server/admin/client.py:417 migasfree/server/admin/core.py:793
 #: migasfree/server/admin/core.py:838 migasfree/server/forms.py:91
 #: migasfree/server/forms.py:408 migasfree/server/forms.py:455
 #: migasfree/server/forms.py:522 migasfree/server/forms.py:549
@@ -75,7 +75,7 @@ msgid "excluded attributes"
 msgstr "atributos excluidos"
 
 #: migasfree/catalog/admin.py:168 migasfree/server/admin/client.py:94
-#: migasfree/server/admin/client.py:397 migasfree/server/admin/core.py:279
+#: migasfree/server/admin/client.py:395 migasfree/server/admin/core.py:279
 #: migasfree/server/admin/core.py:307 migasfree/server/admin/core.py:366
 #: migasfree/server/admin/core.py:538 migasfree/server/admin/core.py:589
 #: migasfree/server/admin/core.py:730 migasfree/server/admin/core.py:769
@@ -102,7 +102,7 @@ msgid "application"
 msgstr "aplicación"
 
 #: migasfree/catalog/models.py:62 migasfree/server/admin/client.py:175
-#: migasfree/server/admin/client.py:457 migasfree/server/filters.py:101
+#: migasfree/server/admin/client.py:455 migasfree/server/filters.py:101
 #: migasfree/server/models/user.py:55
 #: migasfree/server/templates/admin/server/computer/change_form.html:268
 #: migasfree/server/templates/computer_simulate_sync.html:43
@@ -378,19 +378,19 @@ msgstr "Borrar %(verbose_name_plural)s seleccionados/as"
 msgid "Change status..."
 msgstr "Cambiar estado..."
 
-#: migasfree/server/admin/client.py:296
+#: migasfree/server/admin/client.py:295
 msgid "Truncated error"
 msgstr "Error truncado"
 
-#: migasfree/server/admin/client.py:303 migasfree/server/admin/client.py:363
-#: migasfree/server/admin/client.py:517
+#: migasfree/server/admin/client.py:302 migasfree/server/admin/client.py:361
+#: migasfree/server/admin/client.py:514
 #, python-format
 msgid "Checked %s"
 msgstr "%s comprobado/s"
 
-#: migasfree/server/admin/client.py:303 migasfree/server/models/computer.py:636
+#: migasfree/server/admin/client.py:302 migasfree/server/models/computer.py:636
 #: migasfree/server/models/computer.py:643
-#: migasfree/server/models/computer.py:753 migasfree/server/models/error.py:90
+#: migasfree/server/models/computer.py:753 migasfree/server/models/error.py:94
 #: migasfree/server/templates/admin/server/computer/change_form.html:227
 #: migasfree/server/templates/computer_events.html:29
 #: migasfree/server/templates/includes/breadcrumb.html:49
@@ -399,15 +399,15 @@ msgstr "%s comprobado/s"
 msgid "Errors"
 msgstr "Errores"
 
-#: migasfree/server/admin/client.py:307 migasfree/server/admin/client.py:367
-#: migasfree/server/admin/client.py:521
+#: migasfree/server/admin/client.py:306 migasfree/server/admin/client.py:365
+#: migasfree/server/admin/client.py:518
 msgid "Checking is O.K."
 msgstr "La comprobación es correcta"
 
-#: migasfree/server/admin/client.py:363 migasfree/server/models/computer.py:570
+#: migasfree/server/admin/client.py:361 migasfree/server/models/computer.py:570
 #: migasfree/server/models/computer.py:668
 #: migasfree/server/models/computer.py:675
-#: migasfree/server/models/computer.py:754 migasfree/server/models/fault.py:104
+#: migasfree/server/models/computer.py:754 migasfree/server/models/fault.py:108
 #: migasfree/server/templates/admin/server/computer/change_form.html:233
 #: migasfree/server/templates/computer_events.html:31
 #: migasfree/server/templates/includes/breadcrumb.html:47
@@ -416,12 +416,12 @@ msgstr "La comprobación es correcta"
 msgid "Faults"
 msgstr "Fallas"
 
-#: migasfree/server/admin/client.py:400 migasfree/server/admin/core.py:288
+#: migasfree/server/admin/client.py:398 migasfree/server/admin/core.py:288
 #: migasfree/server/admin/core.py:317
 msgid "Code"
 msgstr "Código"
 
-#: migasfree/server/admin/client.py:403 migasfree/server/admin/core.py:388
+#: migasfree/server/admin/client.py:401 migasfree/server/admin/core.py:388
 #: migasfree/server/admin/core.py:557 migasfree/server/admin/core.py:615
 #: migasfree/server/admin/core.py:775 migasfree/server/admin/core.py:820
 #: migasfree/server/models/attribute.py:190
@@ -435,36 +435,36 @@ msgstr "Código"
 msgid "Attributes"
 msgstr "Atributos"
 
-#: migasfree/server/admin/client.py:406 migasfree/server/forms.py:559
+#: migasfree/server/admin/client.py:404 migasfree/server/forms.py:559
 #: migasfree/server/models/user.py:56
 #: migasfree/server/templates/admin/server/domain/change_form.html:123
 #: migasfree/server/templates/includes/mining_menu.html:9
 msgid "Users"
 msgstr "Usuarios/as"
 
-#: migasfree/server/admin/client.py:449 migasfree/server/models/computer.py:567
+#: migasfree/server/admin/client.py:447 migasfree/server/models/computer.py:567
 #: migasfree/server/models/computer.py:773
 #: migasfree/server/templates/base.html:200
 #: migasfree/server/templates/includes/computer_messages_result.html:12
 msgid "Computer"
 msgstr "Ordenador"
 
-#: migasfree/server/admin/client.py:453 migasfree/server/models/project.py:114
+#: migasfree/server/admin/client.py:451 migasfree/server/models/project.py:114
 #: migasfree/server/templates/admin/server/computer/change_form.html:56
 #: migasfree/server/templates/computer_simulate_sync.html:39
 #: migasfree/server/templates/includes/computer_messages_result.html:13
 msgid "Project"
 msgstr "Proyecto"
 
-#: migasfree/server/admin/client.py:517
-#: migasfree/server/models/notification.py:64
+#: migasfree/server/admin/client.py:514
+#: migasfree/server/models/notification.py:68
 #: migasfree/server/templates/includes/breadcrumb.html:51
 #: migasfree/server/templates/includes/mining_menu.html:42
 #: migasfree/stats/views/events.py:640
 msgid "Notifications"
 msgstr "Notificaciones"
 
-#: migasfree/server/admin/client.py:603 migasfree/server/models/hw_node.py:322
+#: migasfree/server/admin/client.py:600 migasfree/server/models/hw_node.py:322
 msgid "Hardware Node"
 msgstr "Nodo hardware"
 
@@ -561,36 +561,52 @@ msgstr "Etiquetas disponibles"
 msgid "Device Logical"
 msgstr "Dispositivo lógico"
 
-#: migasfree/server/admin/migasfree.py:25
-#: migasfree/server/admin/migasfree.py:296
+#: migasfree/server/admin/migasfree.py:28
+#: migasfree/server/admin/migasfree.py:359
 #: migasfree/server/templates/computer_simulate_sync.html:168
 msgid "Yes"
 msgstr "Sí"
 
-#: migasfree/server/admin/migasfree.py:28
-#: migasfree/server/admin/migasfree.py:296
+#: migasfree/server/admin/migasfree.py:31
+#: migasfree/server/admin/migasfree.py:359
 #: migasfree/server/templates/computer_simulate_sync.html:170
 msgid "No"
 msgstr "No"
 
-#: migasfree/server/admin/migasfree.py:181
+#: migasfree/server/admin/migasfree.py:184
 #: migasfree/server/templates/admin/server/deployment/change_form.html:350
 #: migasfree/server/templates/admin/server/externalsource/change_form.html:330
 #: migasfree/server/templates/admin/server/internalsource/change_form.html:257
 msgid "time line"
 msgstr "línea temporal"
 
-#: migasfree/server/admin/migasfree.py:257
-#: migasfree/server/admin/migasfree.py:405
+#: migasfree/server/admin/migasfree.py:256
+#, python-format
+msgid "%s checked!"
+msgstr "¡%s comprobado!"
+
+#: migasfree/server/admin/migasfree.py:265
+#, python-format
+msgid "%s unchecked!"
+msgstr "¡%s no comprobado!"
+
+#: migasfree/server/admin/migasfree.py:293 migasfree/server/models/error.py:55
+#: migasfree/server/models/fault.py:70
+#: migasfree/server/models/notification.py:29
+msgid "checked"
+msgstr "comprobado"
+
+#: migasfree/server/admin/migasfree.py:321
+#: migasfree/server/admin/migasfree.py:469
 msgid "empty"
 msgstr "vacío"
 
-#: migasfree/server/admin/migasfree.py:257
-#: migasfree/server/admin/migasfree.py:405
+#: migasfree/server/admin/migasfree.py:321
+#: migasfree/server/admin/migasfree.py:469
 msgid "not empty"
 msgstr "no vacío"
 
-#: migasfree/server/admin/migasfree.py:370
+#: migasfree/server/admin/migasfree.py:433
 msgid "attributeset"
 msgstr "conjunto de atributos"
 
@@ -1512,12 +1528,7 @@ msgstr "Dominio"
 msgid "Domains"
 msgstr "Dominios"
 
-#: migasfree/server/models/error.py:55 migasfree/server/models/fault.py:70
-#: migasfree/server/models/notification.py:29
-msgid "checked"
-msgstr "comprobado"
-
-#: migasfree/server/models/error.py:89 migasfree/server/views/packages.py:90
+#: migasfree/server/models/error.py:93 migasfree/server/views/packages.py:90
 msgid "Error"
 msgstr "Error"
 
@@ -1545,7 +1556,7 @@ msgstr "definición de falla"
 msgid "result"
 msgstr "resultado"
 
-#: migasfree/server/models/fault.py:103
+#: migasfree/server/models/fault.py:107
 msgid "Fault"
 msgstr "Falla"
 
@@ -1678,12 +1689,12 @@ msgstr "Nodos hardware"
 msgid "text"
 msgstr "texto"
 
-#: migasfree/server/models/message.py:54
+#: migasfree/server/models/message.py:53
 #: migasfree/server/templates/includes/computer_messages_result.html:16
 msgid "Message"
 msgstr "Mensaje"
 
-#: migasfree/server/models/message.py:55
+#: migasfree/server/models/message.py:54
 msgid "Messages"
 msgstr "Mensajes"
 
@@ -1691,7 +1702,7 @@ msgstr "Mensajes"
 msgid "Migration"
 msgstr "Migración"
 
-#: migasfree/server/models/notification.py:63
+#: migasfree/server/models/notification.py:67
 msgid "Notification"
 msgstr "Notificación"
 
@@ -2152,7 +2163,7 @@ msgstr "Quitar"
 #: migasfree/server/templates/admin/login.html:4
 #: migasfree/server/templates/admin/login.html:24
 #: migasfree/server/templates/admin/login.html:68
-#: migasfree/server/templates/base.html:276
+#: migasfree/server/templates/base.html:277
 #: migasfree/server/templates/registration/password_reset_complete.html:17
 msgid "Log in"
 msgstr "Iniciar sesión"
@@ -2386,37 +2397,41 @@ msgstr "Buscar"
 msgid "Change Domain"
 msgstr "Cambiar dominio"
 
-#: migasfree/server/templates/base.html:243
+#: migasfree/server/templates/base.html:230
+msgid "search"
+msgstr "buscar"
+
+#: migasfree/server/templates/base.html:244
 msgid "Change Scope"
 msgstr "Cambiar ámbito"
 
-#: migasfree/server/templates/base.html:257
 #: migasfree/server/templates/base.html:258
+#: migasfree/server/templates/base.html:259
 #: migasfree/stats/views/checkings.py:22
 msgid "Alerts"
 msgstr "Alertas"
 
-#: migasfree/server/templates/base.html:268
+#: migasfree/server/templates/base.html:269
 #: migasfree/server/templates/registration/password_change_done.html:7
 #: migasfree/server/templates/registration/password_change_form.html:12
 #: migasfree/server/templates/registration/password_change_form.html:16
 msgid "Password change"
 msgstr "Cambio de contraseña"
 
-#: migasfree/server/templates/base.html:269
+#: migasfree/server/templates/base.html:270
 msgid "Logout"
 msgstr "Salir"
 
-#: migasfree/server/templates/base.html:323
+#: migasfree/server/templates/base.html:324
 msgid "Data Model"
 msgstr "Modelo de datos"
 
-#: migasfree/server/templates/base.html:326
+#: migasfree/server/templates/base.html:327
 msgid "Experimental REST API"
 msgstr "API REST experimental"
 
-#: migasfree/server/templates/base.html:329
-#: migasfree/server/templates/base.html:331
+#: migasfree/server/templates/base.html:330
+#: migasfree/server/templates/base.html:332
 #: migasfree/server/templates/welcome.html:78
 msgid "Fun with migasfree"
 msgstr "Fun with migasfree"
