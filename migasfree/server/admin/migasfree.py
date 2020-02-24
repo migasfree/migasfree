@@ -318,7 +318,7 @@ class MigasChangeList(ChangeList):
                     for key, value in iteritems(x.used_parameters):
                         lookup_type = key.split('__')[1]
                         if lookup_type == 'isnull':
-                            element += _('empty') if value else _('not empty')
+                            element += ugettext('empty') if value else ugettext('not empty')
                         else:
                             element += '{}={}'.format(lookup_type, value)
                         params.pop(key, None)
