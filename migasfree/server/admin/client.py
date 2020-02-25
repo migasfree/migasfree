@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import re
+
 from django.db.models import Prefetch
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -288,9 +290,9 @@ class ErrorAdmin(MigasCheckAdmin):
     )
 
     def truncated_desc(self, obj):
-        ret = obj.description
-        if len(obj.description) > 250:
-            ret = '{}  ...'.format(obj.description[:250])
+        ret = re.sub(r'(\n)+', '\n', obj.description)
+        if len(ret) > 250:
+            ret = '{}  ...'.format(ret[:250])
 
         return format_html('<pre class="normal-pre"><code>{}</code></pre>'.format(ret))
 
