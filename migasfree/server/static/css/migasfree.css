@@ -117,7 +117,7 @@ a .boolean-yes, a .boolean-no {
     color: inherit;
 }
 
-.field-description p {
+.field-description p, td.field-result {
     white-space: pre;
 }
 
