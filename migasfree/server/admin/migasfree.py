@@ -256,7 +256,10 @@ class MigasCheckAdmin(MigasAdmin):
         messages.success(request, _("%s checked!") % obj)
 
         return redirect(
-            'admin:{}_{}_changelist'.format(self.model._meta.app_label, self.model._meta.model_name)
+            request.META.get(
+                'HTTP_REFERER',
+                'admin:{}_{}_changelist'.format(self.model._meta.app_label, self.model._meta.model_name)
+            )
         )
 
     def my_uncheck(self, request, pk):
@@ -265,7 +268,10 @@ class MigasCheckAdmin(MigasAdmin):
         messages.success(request, _("%s unchecked!") % obj)
 
         return redirect(
-            'admin:{}_{}_changelist'.format(self.model._meta.app_label, self.model._meta.model_name)
+            request.META.get(
+                'HTTP_REFERER',
+                'admin:{}_{}_changelist'.format(self.model._meta.app_label, self.model._meta.model_name)
+            )
         )
 
     def check_action(self, obj):
