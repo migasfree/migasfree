@@ -12,7 +12,7 @@ class ComputerResource(resources.ModelResource):
         return computer.project.name
 
     def dehydrate_sync_user(self, computer):
-        return computer.sync_user
+        return computer.sync_user.__str__()
 
     class Meta:
         model = Computer
