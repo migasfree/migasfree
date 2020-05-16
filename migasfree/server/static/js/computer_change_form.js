@@ -105,4 +105,11 @@ $(function() {
         });
         $(this).prop("disabled", false);
     });
+
+    $("#copy-software-inventory").on("click", function() {
+        copyToClipboard("#software-inventory");
+    });
+    $("#copy-software-history").on("click", function() {
+        copyToClipboard("#software-history");
+    });
 });
