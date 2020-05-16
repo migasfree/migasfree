@@ -290,12 +290,24 @@
             <div class="panel-heading lead">{% trans 'Software' %}</div>
             <div class="panel-body">
                 <div class="col-md-12" title="{% trans 'software inventory' %}">
-                    <span class="fas fa-archive"></span>
-                    <pre class="reduced-content">{{ original.software_inventory }}</pre>
+                    <span class="fas fa-archive fa-lg"></span>
+                    <div class="pull-right">
+                        <button id="copy-software-inventory" type="button" class="btn btn-link" title="{% trans 'Copy to clipboard' %}">
+                            <span class="fas fa-copy"></span>
+                            <span class="sr-only">{% trans 'Copy to clipboard' %}</span>
+                        </button>
+                    </div>
+                    <pre id="software-inventory" class="reduced-content clearfix">{{ original.software_inventory }}</pre>
                 </div>
                 <div class="col-md-12" title="{% trans 'software history' %}">
-                    <span class="fas fa-history"></span>
-                    <pre class="reduced-content">{{ original.software_history }}</pre>
+                    <span class="fas fa-history fa-lg"></span>
+                    <div class="pull-right">
+                        <button id="copy-software-history" type="button" class="btn btn-link" title="{% trans 'Copy to clipboard' %}">
+                            <span class="fas fa-copy"></span>
+                            <span class="sr-only">{% trans 'Copy to clipboard' %}</span>
+                        </button>
+                    </div>
+                    <pre id="software-history" class="reduced-content clearfix">{{ original.software_history }}</pre>
                 </div>
             </div>
         </div>
