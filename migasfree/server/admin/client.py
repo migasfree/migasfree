@@ -292,9 +292,9 @@ class ErrorAdmin(MigasCheckAdmin):
     def truncated_desc(self, obj):
         ret = re.sub(r'(\n)+', '\n', obj.description)
         if len(ret) > 250:
-            ret = '{}  ...'.format(ret[:250])
+            ret = '%s  ...' % ret[:250]
 
-        return format_html('<pre class="normal-pre"><code>{}</code></pre>'.format(ret))
+        return format_html('<pre class="normal-pre"><code>%s</code></pre>' % ret)
 
     truncated_desc.short_description = _("Truncated error")
     truncated_desc.admin_order_field = 'description'
