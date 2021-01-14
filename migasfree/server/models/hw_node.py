@@ -308,7 +308,6 @@ class HwNode(models.Model, MigasLink):
     def get_storage(computer_id):
         query = HwNode.objects.filter(
             computer=computer_id,
-            name='disk',
             class_name='disk',
             size__gt=0
         )
