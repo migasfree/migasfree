@@ -9,7 +9,8 @@ import shutil
 import hashlib
 
 from django.conf import settings
-from django.http import HttpResponse, JsonResponse, Http404, HttpResponseRedirect
+from django.http import HttpResponse, JsonResponse, Http404, StreamingHttpResponse
+
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.translation import ugettext as _
@@ -18,7 +19,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework import permissions, views
 from rest_framework.response import Response
 from rest_framework import status
-from threading import Thread
+
 from urllib.error import URLError, HTTPError
 from urllib.request import urlopen, urlretrieve
 from wsgiref.util import FileWrapper
@@ -138,6 +139,22 @@ def external_downloads(url, local_file):
 
 
 def get_source_file(request):
+
+    def read_remote_chunks(local_file, remote, chunk_size=8192):
+        _, tmp = tempfile.mkstemp()
+        with open(tmp, 'wb') as tmp_file:
+            while True:
+                data = remote.read(chunk_size)
+                if not data:
+                    break
+
+                yield data
+                tmp_file.write(data)
+                tmp_file.flush()
+
+            os.fsync(tmp_file.fileno())
+        shutil.move(tmp, local_file)
+
     source = None
 
     _path = request.get_full_path()
@@ -169,12 +186,11 @@ def get_source_file(request):
         url = '{}/{}'.format(source.base_url, resource)
 
         try:
-            Thread(
-                target=external_downloads,
-                args=(url, _file_local)
-            ).start()
-
-            return HttpResponseRedirect(url)
+            ctx = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+            remote_file = urlopen(url, context=ctx)
+            response = StreamingHttpResponse(read_remote_chunks(_file_local, remote_file))
+            response['Content-Type'] = 'application/octet-stream'
+            return response
         except HTTPError as e:
             add_notification_get_source_file("HTTP Error: {}".format(e.code), source, _path, url)
             return HttpResponse(
