@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ]
             )],
             [(
-                "UPDATE server_property SET createrepo=%s WHERE id=1 AND name='yum';",
+                "UPDATE server_pms SET createrepo=%s WHERE id=1 AND name='yum';",
                 [
                     "_DIR=%PATH%/%REPONAME%\nrm -rf $_DIR/repodata\nrm -rf $_DIR/checksum\ncreaterepo -c checksum $_DIR\n",
                 ]
@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ]
             )],
             [(
-                "UPDATE server_property SET createrepo=%s WHERE id=2 AND name='zypper';",
+                "UPDATE server_pms SET createrepo=%s WHERE id=2 AND name='zypper';",
                 [
                     "_DIR=%PATH%/%REPONAME%\nrm -rf $_DIR/repodata\nrm -rf $_DIR/checksum\ncreaterepo -c checksum $_DIR\n",
                 ]
