@@ -12,10 +12,9 @@ from django.http import QueryDict
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
-from rest_framework import viewsets, exceptions, status, mixins, filters
+from rest_framework import viewsets, exceptions, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework_filters import backends
 
 from .. import models, serializers
 from ..filters import (
@@ -70,7 +69,6 @@ class AttributeViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Attribute.objects.all()
     serializer_class = serializers.AttributeSerializer
     filter_class = AttributeFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ['value', 'description']
 
     def get_queryset(self):
@@ -159,7 +157,6 @@ class ComputerViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Computer.objects.all()
     serializer_class = serializers.ComputerSerializer
     filter_class = ComputerFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering = (settings.MIGASFREE_COMPUTER_SEARCH_FIELDS[0],)
 
     def get_serializer_class(self):
@@ -393,7 +390,6 @@ class ErrorViewSet(
     queryset = models.Error.objects.all()
     serializer_class = serializers.ErrorSerializer
     filter_class = ErrorFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ['created_at', 'description']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
@@ -420,7 +416,6 @@ class FaultDefinitionViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.FaultDefinition.objects.all()
     serializer_class = serializers.FaultDefinitionSerializer
     filter_class = FaultDefinitionFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('name',)
 
@@ -440,7 +435,6 @@ class FaultViewSet(
     queryset = models.Fault.objects.all()
     serializer_class = serializers.FaultSerializer
     filter_class = FaultFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ['created_at', 'result']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
@@ -485,7 +479,6 @@ class HardwareViewSet(
     queryset = models.HwNode.objects.all()
     serializer_class = serializers.NodeSerializer
     filter_class = NodeFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('id',)
 
@@ -505,7 +498,6 @@ class MigrationViewSet(
     queryset = models.Migration.objects.all()
     serializer_class = serializers.MigrationSerializer
     filter_class = MigrationFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('-created_at',)
 
@@ -529,7 +521,6 @@ class NotificationViewSet(
     queryset = models.Notification.objects.all()
     serializer_class = serializers.NotificationSerializer
     filter_class = NotificationFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ['message']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
@@ -545,7 +536,6 @@ class PackageViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Package.objects.all()
     serializer_class = serializers.PackageSerializer
     filter_class = PackageFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('name', 'project__name')
 
@@ -606,7 +596,6 @@ class PropertyViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Property.objects.all()
     serializer_class = serializers.PropertySerializer
     filter_class = PropertyFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ['name', 'language', 'code']
     ordering_fields = '__all__'
     ordering = ('prefix', 'name')
@@ -623,7 +612,6 @@ class InternalSourceViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.InternalSource.objects.all()
     serializer_class = serializers.InternalSourceSerializer
     filter_class = DeploymentFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('-start_date', 'name')
 
@@ -662,7 +650,6 @@ class ExternalSourceViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.ExternalSource.objects.all()
     serializer_class = serializers.ExternalSourceSerializer
     filter_class = DeploymentFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('-start_date', 'name')
 
@@ -688,7 +675,6 @@ class ScheduleDelayViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.ScheduleDelay.objects.all()
     serializer_class = serializers.ScheduleDelaySerializer
     filter_class = ScheduleDelayFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('delay',)
 
@@ -703,7 +689,6 @@ class ScheduleDelayViewSet(viewsets.ModelViewSet, MigasViewSet):
 class ScheduleViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Schedule.objects.all()
     serializer_class = serializers.ScheduleSerializer
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('name',)
 
@@ -722,7 +707,6 @@ class StatusLogViewSet(
     queryset = models.StatusLog.objects.all()
     serializer_class = serializers.StatusLogSerializer
     filter_class = StatusLogFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ['status']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
@@ -740,7 +724,6 @@ class StoreViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Store.objects.all()
     serializer_class = serializers.StoreSerializer
     filter_class = StoreFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ['name']
     ordering_fields = '__all__'
     ordering = ('name', 'project__name')
@@ -768,7 +751,6 @@ class SynchronizationViewSet(
     queryset = models.Synchronization.objects.all()
     serializer_class = serializers.SynchronizationSerializer
     filter_class = SynchronizationFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend, filters.SearchFilter)
     search_fields = ['user__name', 'user__fullname']
     ordering_fields = '__all__'
     ordering = ('-created_at',)
@@ -807,7 +789,6 @@ class ProjectViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Project.objects.all()
     serializer_class = serializers.ProjectSerializer
     filter_class = ProjectFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('name',)
 
@@ -830,7 +811,6 @@ class ProjectViewSet(viewsets.ModelViewSet, MigasViewSet):
 class DomainViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Domain.objects.all()
     serializer_class = serializers.DomainSerializer
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('name',)
 
@@ -845,7 +825,6 @@ class DomainViewSet(viewsets.ModelViewSet, MigasViewSet):
 class ScopeViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Scope.objects.all()
     serializer_class = serializers.ScopeSerializer
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('name',)
 
@@ -868,7 +847,6 @@ class DeviceViewSet(viewsets.ModelViewSet, MigasViewSet):
     queryset = models.Device.objects.all()
     serializer_class = serializers.DeviceSerializer
     filter_class = DeviceFilter
-    filter_backends = (filters.OrderingFilter, backends.DjangoFilterBackend)
     ordering_fields = '__all__'
     ordering = ('name',)
 
