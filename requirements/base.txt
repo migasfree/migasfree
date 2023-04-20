@@ -14,7 +14,7 @@ django-rest-auth==0.9.5
 django-rest-swagger==2.2.0
 # django-url-tools==0.0.9
 git+https://bitbucket.org/nlaurance/django-url-tools@17352a923541c610c9c6e7932f1caca7c3beaa02#egg=django-url-tools
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 djangorestframework-filters==0.11.1
 docutils==0.16
 future==0.18.3
@@ -22,7 +22,7 @@ lxml==4.9.2
 MarkupPy==1.14
 odfpy==1.4.1
 openpyxl==3.0.3
-Pillow==9.0.1
+Pillow==9.5.0
 psutil==5.6.7
 psycopg2-binary==2.8.4
 PyYAML==5.4.1
