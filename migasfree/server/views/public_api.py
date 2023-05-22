@@ -21,7 +21,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from urllib.error import URLError, HTTPError
-from urllib.request import urlopen, urlretrieve
+from urllib.request import urlopen, urlretrieve, urlcleanup
 from wsgiref.util import FileWrapper
 
 from ..models import Platform, Project, Deployment, ExternalSource, Notification
@@ -134,6 +134,7 @@ def external_downloads(url, local_file):
 
     if not os.path.exists(temp_file):
         os.makedirs(os.path.dirname(temp_file), exist_ok=True)
+        urlcleanup()
         urlretrieve(url, temp_file)
         shutil.move(temp_file, local_file)
 
