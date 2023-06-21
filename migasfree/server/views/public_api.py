@@ -26,7 +26,7 @@ from wsgiref.util import FileWrapper
 
 from ..models import Platform, Project, Deployment, ExternalSource, Notification
 from ..api import get_computer
-from ..utils import uuid_validate
+from ..utils import uuid_validate, get_client_ip
 from ..secure import gpg_get_key
 
 
@@ -111,16 +111,17 @@ def get_key_repositories(request):
     )
 
 
-def add_notification_get_source_file(error, deployment, resource, remote):
+def add_notification_get_source_file(error, deployment, resource, remote, from_):
     Notification.objects.create(
-        _("Deployment (external source) [%s]: [%s] resource: [%s] remote file: [%s].") % (
+        _("Deployment (external source) [%s]: [%s] resource: [%s], remote file: [%s], from [%s].") % (
             '<a href="{}">{}</a>'.format(
                 reverse('admin:server_externalsource_change', args=(deployment.id,)),
                 deployment
             ),
             error,
             resource,
-            remote
+            remote,
+            from_
         )
     )
 
@@ -193,13 +194,21 @@ def get_source_file(request):
             response['Content-Type'] = 'application/octet-stream'
             return response
         except HTTPError as e:
-            add_notification_get_source_file("HTTP Error: {}".format(e.code), source, _path, url)
+            add_notification_get_source_file(
+                "HTTP Error: {}".format(e.code),
+                source, _path, url,
+                get_client_ip(request)
+            )
             return HttpResponse(
                 'HTTP Error: {} {}'.format(e.code, url),
                 status=e.code
             )
         except URLError as e:
-            add_notification_get_source_file("URL error: {}".format(e.reason), source, _path, url)
+            add_notification_get_source_file(
+                "URL Error: {}".format(e.reason),
+                source, _path, url,
+                get_client_ip(request)
+            )
             return HttpResponse(
                 'URL Error: {} {}'.format(e.reason, url),
                 status=status.HTTP_404_NOT_FOUND
