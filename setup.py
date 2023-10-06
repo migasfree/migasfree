@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-# Copyright (c) 2011-2020 Jose Antonio Chavarría <jachavar@gmail.com>
+# Copyright (c) 2011-2023 Jose Antonio Chavarría <jachavar@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,8 +31,8 @@ __license__ = 'GPLv3'
 
 import sys
 
-if not hasattr(sys, 'version_info') or sys.version_info < (3, 5, 0, 'final'):
-    raise SystemExit('migasfree-server requires Python 3.5 or later.')
+if not hasattr(sys, 'version_info') or sys.version_info < (3, 8, 0, 'final'):
+    raise SystemExit('migasfree-server requires Python 3.8 or later.')
 
 import os
 
