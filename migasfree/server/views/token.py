@@ -870,8 +870,10 @@ class DeviceViewSet(viewsets.ModelViewSet, MigasViewSet):
         query = request.GET.get('q', '')
 
         results = models.Device.objects.filter(
-            available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True)
-        ).order_by('name', 'model__name').distinct()
+            id__in=models.Device.objects.filter(
+                available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True)
+            ).values('id')
+        ).order_by('name', 'model__name')
         if query:
             results = results.filter(Q(name__icontains=query) | Q(data__icontains=query))
 
@@ -934,8 +936,10 @@ class LogicalViewSet(viewsets.ModelViewSet, MigasViewSet):
         device = request.GET.get('did', 0)
 
         results = models.DeviceLogical.objects.filter(
-            device__available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True)
-        ).order_by('device__name', 'feature__name').distinct()
+            id__in=models.DeviceLogical.objects.filter(
+                device__available_for_attributes__in=computer.sync_attributes.values_list('id', flat=True)
+            ).values('id')
+        ).order_by('device__name', 'feature__name')
         if query:
             results = results.filter(Q(device__name__icontains=query) | Q(device__data__icontains=query))
         if device:
