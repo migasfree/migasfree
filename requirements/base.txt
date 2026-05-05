@@ -18,7 +18,7 @@ djangorestframework==3.11.2
 djangorestframework-filters==1.0.0.dev2
 docutils==0.16
 future==0.18.3
-lxml==4.9.2
+lxml==6.1.0
 MarkupPy==1.14
 odfpy==1.4.1
 openpyxl==3.0.3
